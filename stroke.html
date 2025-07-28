@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stroke: An Interactive Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #003f5c;
+            color: #ffffff;
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 300px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .kpi-card {
+            background-color: #2f4b7c;
+            border-left: 5px solid #ffa600;
+        }
+        .flowchart-step {
+            background-color: #2f4b7c;
+            border: 1px solid #665191;
+            transition: all 0.3s ease;
+        }
+        .flowchart-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(255, 166, 0, 0.2), 0 4px 6px -2px rgba(255, 166, 0, 0.1);
+        }
+        .flowchart-arrow {
+            color: #ffa600;
+            font-size: 2rem;
+            line-height: 1;
+        }
+        .rehab-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-top: 4px solid;
+            transition: all 0.3s ease;
+        }
+        .rehab-card:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .pt-card { border-color: #d45087; }
+        .ot-card { border-color: #f95d6a; }
+        .slp-card { border-color: #ff7c43; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+
+        <header class="text-center my-12">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white">
+                Understanding <span class="text-[#ffa600]">Brain Attack</span>
+            </h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">A visual guide to the causes, immediate actions, treatments, and recovery journey of stroke.</p>
+        </header>
+
+        <main class="space-y-16 md:space-y-24">
+
+            <section id="definition" class="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
+                <div class="md:col-span-2">
+                    <div class="chart-container mx-auto">
+                        <canvas id="strokeTypesChart"></canvas>
+                    </div>
+                </div>
+                <div class="md:col-span-3">
+                    <h2 class="text-3xl font-bold text-white">What is a Stroke?</h2>
+                    <p class="mt-4 text-gray-300">A stroke, or "brain attack," happens when blood flow to a part of the brain is cut off. This deprives brain cells of oxygen, causing them to die. There are two main types:</p>
+                    <div class="mt-6 space-y-4">
+                        <div class="p-4 rounded-lg kpi-card">
+                            <h3 class="font-bold text-xl text-white">Ischemic Stroke (87%)</h3>
+                            <p class="text-gray-200">The most common type, caused by a <span class="font-bold text-[#ffa600]">blockage</span> in an artery supplying blood to the brain. This is often due to a blood clot.</p>
+                        </div>
+                        <div class="p-4 rounded-lg kpi-card">
+                            <h3 class="font-bold text-xl text-white">Hemorrhagic Stroke (13%)</h3>
+                            <p class="text-gray-200">A less common but more deadly type, caused by a blood vessel that <span class="font-bold text-[#f95d6a]">bursts or leaks</span>, bleeding into or around the brain.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="recognition">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-white">Recognize the Signs Immediately</h2>
+                    <p class="mt-2 text-lg text-gray-300">Acting F.A.S.T. can save a life and limit long-term disability. If you see these signs, call 911.</p>
+                </div>
+                <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                    <div class="bg-[#2f4b7c] p-6 rounded-lg shadow-lg">
+                        <div class="text-6xl">😟</div>
+                        <h3 class="mt-4 text-2xl font-bold text-white">Face Drooping</h3>
+                        <p class="mt-2 text-gray-300">Does one side of the face droop or is it numb? Ask the person to smile. Is the smile uneven?</p>
+                    </div>
+                    <div class="bg-[#2f4b7c] p-6 rounded-lg shadow-lg">
+                        <div class="text-6xl">💪</div>
+                        <h3 class="mt-4 text-2xl font-bold text-white">Arm Weakness</h3>
+                        <p class="mt-2 text-gray-300">Is one arm weak or numb? Ask the person to raise both arms. Does one arm drift downward?</p>
+                    </div>
+                    <div class="bg-[#2f4b7c] p-6 rounded-lg shadow-lg">
+                        <div class="text-6xl">🗣️</div>
+                        <h3 class="mt-4 text-2xl font-bold text-white">Speech Difficulty</h3>
+                        <p class="mt-2 text-gray-300">Is speech slurred? Are they unable to speak or hard to understand? Ask them to repeat a simple sentence.</p>
+                    </div>
+                    <div class="bg-[#2f4b7c] p-6 rounded-lg shadow-lg">
+                        <div class="text-6xl">⏰</div>
+                        <h3 class="mt-4 text-2xl font-bold text-white">Time to Call 911</h3>
+                        <p class="mt-2 text-gray-300">If you see any of these signs, even if they go away, call 911 and get to a hospital immediately.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="emergency-workflow">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-white">The Emergency Response: Every Second Counts</h2>
+                    <p class="mt-2 text-lg text-gray-300">The "Time is Brain" mantra guides the entire emergency process, from initial call to definitive treatment.</p>
+                </div>
+                <div class="mt-10 flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-0">
+                    <div class="flowchart-step p-4 rounded-lg text-center w-full lg:w-auto">
+                        <div class="text-3xl font-bold text-[#ffa600]">1</div>
+                        <h3 class="mt-2 font-semibold">Call 911</h3>
+                        <p class="text-sm text-gray-300">Immediate EMS activation.</p>
+                    </div>
+                    <div class="flowchart-arrow transform lg:rotate-0 rotate-90">→</div>
+                    <div class="flowchart-step p-4 rounded-lg text-center w-full lg:w-auto">
+                        <div class="text-3xl font-bold text-[#ffa600]">2</div>
+                        <h3 class="mt-2 font-semibold">Neurological Exam</h3>
+                        <p class="text-sm text-gray-300">Rapid assessment (NIHSS).</p>
+                    </div>
+                    <div class="flowchart-arrow transform lg:rotate-0 rotate-90">→</div>
+                    <div class="flowchart-step p-4 rounded-lg text-center w-full lg:w-auto">
+                        <div class="text-3xl font-bold text-[#ffa600]">3</div>
+                        <h3 class="mt-2 font-semibold">Head CT Scan</h3>
+                        <p class="text-sm text-gray-300">Crucial step: rule out bleeding.</p>
+                    </div>
+                    <div class="flowchart-arrow transform lg:rotate-0 rotate-90">→</div>
+                    <div class="flowchart-step p-4 rounded-lg text-center w-full lg:w-auto">
+                        <div class="text-3xl font-bold text-[#ffa600]">4</div>
+                        <h3 class="mt-2 font-semibold">Determine Type</h3>
+                        <p class="text-sm text-gray-300">Ischemic or Hemorrhagic?</p>
+                    </div>
+                    <div class="flowchart-arrow transform lg:rotate-0 rotate-90">→</div>
+                    <div class="flowchart-step p-4 rounded-lg text-center w-full lg:w-auto">
+                        <div class="text-3xl font-bold text-[#ffa600]">5</div>
+                        <h3 class="mt-2 font-semibold">Acute Treatment</h3>
+                        <p class="text-sm text-gray-300">Time-critical intervention.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="treatment">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-white">Two Problems, Two Solutions: Acute Treatment</h2>
+                    <p class="mt-2 text-lg text-gray-300">Treatment goals are opposite for ischemic and hemorrhagic strokes, which is why rapid, accurate diagnosis is vital.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-[#2f4b7c] p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold text-white">Goal: Restore Blood Flow (Ischemic)</h3>
+                        <p class="mt-2 text-gray-300 mb-4">The focus is on removing the clot and reperfusing the threatened brain tissue (penumbra).</p>
+                        <ul class="space-y-3 text-gray-200">
+                            <li class="flex items-start"><span class="text-[#ffa600] mr-2 font-bold">✓</span><div><strong class="text-white">Thrombolysis (t-PA/TNK):</strong> "Clot-busting" drugs given intravenously, most effective within 3 - 4.5 hours of symptom onset.</div></li>
+                            <li class="flex items-start"><span class="text-[#ffa600] mr-2 font-bold">✓</span><div><strong class="text-white">Endovascular Thrombectomy (EVT):</strong> A minimally invasive procedure to physically remove the clot from a large artery, possible up to 24 hours in select patients.</div></li>
+                        </ul>
+                    </div>
+                    <div class="bg-[#2f4b7c] p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold text-white">Goal: Stop the Bleeding (Hemorrhagic)</h3>
+                        <p class="mt-2 text-gray-300 mb-4">The focus is on controlling pressure, stopping the hemorrhage, and preventing re-bleeding.</p>
+                        <ul class="space-y-3 text-gray-200">
+                            <li class="flex items-start"><span class="text-[#f95d6a] mr-2 font-bold">✓</span><div><strong class="text-white">Blood Pressure Control:</strong> Aggressively lowering blood pressure to reduce stress on the ruptured vessel.</div></li>
+                            <li class="flex items-start"><span class="text-[#f95d6a] mr-2 font-bold">✓</span><div><strong class="text-white">Surgical Intervention:</strong> Procedures like coiling or clipping to repair a ruptured aneurysm and prevent another bleed.</div></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="rehabilitation">
+                 <div class="text-center">
+                    <h2 class="text-3xl font-bold text-white">The Road to Recovery: Rehabilitation</h2>
+                    <p class="mt-2 text-lg text-gray-300">Rehabilitation is a critical phase that harnesses the brain's neuroplasticity to relearn skills and regain independence.</p>
+                </div>
+                <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="rehab-card pt-card p-6 rounded-lg text-center">
+                         <div class="text-5xl">🚶</div>
+                         <h3 class="mt-4 text-xl font-bold">Physical Therapy (PT)</h3>
+                         <p class="mt-2 text-gray-300">Focuses on restoring mobility, strength, balance, and coordination to help survivors walk and move safely.</p>
+                    </div>
+                     <div class="rehab-card ot-card p-6 rounded-lg text-center">
+                         <div class="text-5xl">✍️</div>
+                         <h3 class="mt-4 text-xl font-bold">Occupational Therapy (OT)</h3>
+                         <p class="mt-2 text-gray-300">Helps survivors regain independence in activities of daily living like dressing, eating, and bathing.</p>
+                    </div>
+                     <div class="rehab-card slp-card p-6 rounded-lg text-center">
+                         <div class="text-5xl">🗣️</div>
+                         <h3 class="mt-4 text-xl font-bold">Speech-Language Pathology (SLP)</h3>
+                         <p class="mt-2 text-gray-300">Addresses problems with communication (aphasia), speech clarity (dysarthria), and swallowing (dysphagia).</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="prevention" class="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
+                <div class="md:col-span-3">
+                    <h2 class="text-3xl font-bold text-white">Preventing a Recurrence</h2>
+                    <p class="mt-4 text-gray-300">Up to 80% of recurrent strokes are preventable. Long-term management focuses on controlling key risk factors through a combination of lifestyle changes and targeted medications.</p>
+                     <p class="mt-4 text-gray-300">The chart shows the estimated relative importance of key interventions in preventing another stroke. Controlling high blood pressure is the single most effective strategy.</p>
+                </div>
+                <div class="md:col-span-2">
+                    <div class="chart-container mx-auto h-[400px]">
+                        <canvas id="preventionChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-24 py-8 border-t border-gray-700">
+            <p class="text-gray-400">Data synthesized from "A Comprehensive Clinical Review of Cerebrovascular Accidents."</p>
+            <p class="text-gray-500 text-sm mt-2">This infographic is for informational purposes only and does not constitute medical advice.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const FONT_COLOR = '#FFFFFF';
+            const GRID_COLOR = 'rgba(255, 255, 255, 0.2)';
+            
+            const brilliantBlues = {
+                darkBlue: '#003f5c',
+                midBlue: '#2f4b7c',
+                purple1: '#665191',
+                purple2: '#a05195',
+                pink1: '#d45087',
+                pink2: '#f95d6a',
+                orange: '#ff7c43',
+                yellow: '#ffa600'
+            };
+
+            const wrapLabel = (str, maxWidth) => {
+                if (str.length <= maxWidth) {
+                    return str;
+                }
+                const words = str.split(' ');
+                let lines = [];
+                let currentLine = words[0];
+
+                for (let i = 1; i < words.length; i++) {
+                    if ((currentLine + ' ' + words[i]).length > maxWidth) {
+                        lines.push(currentLine);
+                        currentLine = words[i];
+                    } else {
+                        currentLine += ' ' + words[i];
+                    }
+                }
+                lines.push(currentLine);
+                return lines;
+            };
+            
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                  return label.join(' ');
+                } else {
+                  return label;
+                }
+            };
+
+            const strokeTypesCtx = document.getElementById('strokeTypesChart').getContext('2d');
+            new Chart(strokeTypesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ischemic Stroke', 'Hemorrhagic Stroke'],
+                    datasets: [{
+                        label: 'Stroke Types by Prevalence',
+                        data: [87, 13],
+                        backgroundColor: [brilliantBlues.midBlue, brilliantBlues.pink2],
+                        borderColor: brilliantBlues.darkBlue,
+                        borderWidth: 4,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: FONT_COLOR,
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: tooltipTitleCallback
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Stroke Prevalence by Type',
+                            color: FONT_COLOR,
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                bottom: 20
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+
+            const preventionCtx = document.getElementById('preventionChart').getContext('2d');
+            const preventionLabels = [
+                'Blood Pressure Control', 
+                'Statin Therapy (Cholesterol)', 
+                'Antithrombotic Therapy',
+                'Healthy Diet (e.g., DASH)', 
+                'Regular Physical Activity',
+                'Smoking Cessation'
+            ].map(label => wrapLabel(label, 16));
+
+            new Chart(preventionCtx, {
+                type: 'bar',
+                data: {
+                    labels: preventionLabels,
+                    datasets: [{
+                        label: 'Relative Impact on Risk Reduction',
+                        data: [100, 85, 80, 70, 65, 75],
+                        backgroundColor: [
+                            brilliantBlues.yellow,
+                            brilliantBlues.orange,
+                            brilliantBlues.pink2,
+                            brilliantBlues.pink1,
+                            brilliantBlues.purple2,
+                            brilliantBlues.purple1
+                        ],
+                        borderColor: brilliantBlues.darkBlue,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                color: GRID_COLOR
+                            },
+                            ticks: {
+                                color: FONT_COLOR,
+                                callback: function(value) {
+                                    return value + '%'
+                                }
+                            },
+                             title: {
+                                display: true,
+                                text: 'Estimated Impact',
+                                color: FONT_COLOR
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: FONT_COLOR,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: tooltipTitleCallback,
+                                label: function(context) {
+                                    return `Relative Impact: ${context.raw}%`;
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Key Secondary Prevention Strategies',
+                            color: FONT_COLOR,
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                bottom: 20
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
