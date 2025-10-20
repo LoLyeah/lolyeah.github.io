@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An Interactive Guide to Diet and ADHD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: The application is structured into six main, non-linear sections accessible via a top navigation bar: 'Home' (introduction), 'Dietary Deep Dive' (interactive cards), 'Evidence Explorer' (chart and table), 'Practical Guide' (action plan), 'Meal Plans' (regional examples), and 'References' (source list). A language switcher is added to the header for bilingual support (EN/ID). This thematic structure was chosen over a linear report format to empower users to directly access the information most relevant to them. The user flow moves from understanding the 'why' (Home), to exploring the 'what' (Deep Dive), to analyzing the 'how effective' (Evidence Explorer), applying the 'how-to' (Practical Guide), seeing it in practice (Meal Plans), and finally verifying the 'where from' (References). -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Effect sizes of various diets. -> Goal: Compare. -> Viz/Method: Interactive horizontal bar chart (Chart.js). -> Interaction: Tooltips on hover provide exact values and context. -> Justification: A bar chart provides the clearest visual comparison. All text is dynamically updated on language switch.
+        - Report Info: Details on each dietary intervention. -> Goal: Inform/Organize. -> Viz/Method: Interactive HTML/CSS cards. -> Interaction: Clicking a card reveals a detailed summary. -> Justification: Cards break down dense information. All text is dynamically updated.
+        - Report Info: Fact or Myth table. -> Goal: Inform/Organize. -> Viz/Method: Interactive HTML table. -> Interaction: A search/filter input. -> Justification: An interactive table is more engaging. All text is dynamically updated.
+        - Report Info: Indonesian meal examples. -> Goal: Organize/Inform. -> Viz/Method: Two-column layout for different budget tiers. -> Interaction: Static display. -> Justification: Provides concrete, culturally relevant examples. All text is dynamically updated.
+        - Report Info: All other text. -> Goal: Inform. -> Viz/Method: Standard HTML tags with data-translate keys. -> Interaction: Language switcher. -> Justification: Centralized translation object in JS allows for clean, efficient language toggling across the entire SPA.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #57534E; /* stone-600 */
+        }
+        .nav-link {
+            transition: color 0.3s, border-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #1C8D87; /* Custom Teal */
+            border-bottom-color: #1C8D87;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .fact-myth-table tr:nth-child(even) {
+            background-color: #F5F5F4; /* stone-100 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .reference-list li {
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .reference-list li::before {
+            content: attr(data-ref);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: #1C8D87;
+        }
+        .lang-switcher button {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .lang-switcher button.active {
+            background-color: #1C8D87;
+            color: white;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-stone-800" data-translate-key="headerTitle">Diet & ADHD</h1>
+                </div>
+                <div class="hidden md:flex items-center">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#home" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-700" data-translate-key="navHome">Home</a>
+                        <a href="#deep-dive" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-700" data-translate-key="navDeepDive">Dietary Deep Dive</a>
+                        <a href="#evidence" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-700" data-translate-key="navEvidence">Evidence Explorer</a>
+                        <a href="#guide" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-700" data-translate-key="navGuide">Practical Guide</a>
+                        <a href="#meal-plans" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-700" data-translate-key="navMealPlans">Meal Plans</a>
+                        <a href="#references" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-700" data-translate-key="navReferences">References</a>
+                    </div>
+                    <div class="ml-6 lang-switcher flex items-center p-1 bg-stone-200 rounded-lg">
+                        <button id="lang-en" class="px-3 py-1 text-sm font-semibold rounded-md active">EN</button>
+                        <button id="lang-id" class="px-3 py-1 text-sm font-semibold rounded-md">ID</button>
+                    </div>
+                </div>
+                 <div class="md:hidden flex items-center">
+                    <div class="lang-switcher flex items-center p-1 bg-stone-200 rounded-lg mr-2">
+                        <button id="lang-en-mobile" class="px-2 py-1 text-xs font-semibold rounded-md active">EN</button>
+                        <button id="lang-id-mobile" class="px-2 py-1 text-xs font-semibold rounded-md">ID</button>
+                    </div>
+                    <select id="mobile-nav" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm rounded-md">
+                        <option value="home" data-translate-key="navHome">Home</option>
+                        <option value="deep-dive" data-translate-key="navDeepDive">Dietary Deep Dive</option>
+                        <option value="evidence" data-translate-key="navEvidence">Evidence Explorer</option>
+                        <option value="guide" data-translate-key="navGuide">Practical Guide</option>
+                        <option value="meal-plans" data-translate-key="navMealPlans">Meal Plans</option>
+                        <option value="references" data-translate-key="navReferences">References</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- Home Section -->
+        <section id="home" class="content-section">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-stone-800 sm:text-4xl" data-translate-key="homeTitle">Rethinking the Role of Diet in ADHD</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600" data-translate-key="homeSubtitle">This interactive guide explores the scientific evidence connecting nutrition to ADHD. Moving beyond simplistic claims, we'll examine how dietary patterns and specific nutrients can influence brain health through key biological pathways. The goal is not to present diet as a "cure," but as a fundamental, modifiable factor in the comprehensive management of ADHD.</p>
+            </div>
+
+            <div class="max-w-5xl mx-auto">
+                 <h3 class="text-2xl font-bold text-stone-800 text-center mb-8" data-translate-key="homePathwaysTitle">The Three Core Pathways</h3>
+                 <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="text-4xl mb-4 text-teal-600">🧠</div>
+                        <h4 class="text-lg font-semibold text-stone-700 mb-2" data-translate-key="pathway1Title">Neurotransmitter Synthesis</h4>
+                        <p class="text-sm text-stone-600" data-translate-key="pathway1Desc">The brain's ability to produce key neurotransmitters like dopamine is directly dependent on dietary building blocks (amino acids like tyrosine) and essential helpers (cofactors like iron and zinc). A diet lacking these components can impair the very chemical pathways targeted by stimulant medications.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="text-4xl mb-4 text-teal-600">🔗</div>
+                        <h4 class="text-lg font-semibold text-stone-700 mb-2" data-translate-key="pathway2Title">The Gut-Brain Axis</h4>
+                        <p class="text-sm text-stone-600" data-translate-key="pathway2Desc">Diet is the primary controller of our gut microbiome. An unhealthy, low-fiber diet can lead to an imbalance (dysbiosis), increasing gut permeability ("leaky gut") and allowing inflammatory molecules to travel to the brain, disrupting its function.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="text-4xl mb-4 text-teal-600">🔥</div>
+                        <h4 class="text-lg font-semibold text-stone-700 mb-2" data-translate-key="pathway3Title">Inflammation & Oxidative Stress</h4>
+                        <p class="text-sm text-stone-600" data-translate-key="pathway3Desc">"Western" diets promote chronic, low-grade inflammation. In contrast, "Healthy" diets rich in fruits, vegetables, and omega-3s provide a wealth of antioxidants and anti-inflammatory compounds that protect the brain from cellular damage and stress.</p>
+                    </div>
+                 </div>
+            </div>
+        </section>
+
+        <!-- Dietary Deep Dive Section -->
+        <section id="deep-dive" class="content-section">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-stone-800 sm:text-4xl" data-translate-key="deepDiveTitle">A Deep Dive into Dietary Interventions</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600" data-translate-key="deepDiveSubtitle">From eliminating specific ingredients to supplementing nutrients, many dietary strategies have been proposed for ADHD. Click on each card below to explore what the evidence says about their effectiveness, risks, and practical considerations.</p>
+            </div>
+            <div id="intervention-cards" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards will be injected here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Evidence Explorer Section -->
+        <section id="evidence" class="content-section">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-stone-800 sm:text-4xl" data-translate-key="evidenceTitle">Evidence Explorer</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600" data-translate-key="evidenceSubtitle">Visually compare the impact of different dietary strategies and bust common myths with our interactive tools.</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-lg mb-12">
+                <h3 class="text-xl font-bold text-stone-800 mb-4 text-center" data-translate-key="chartTitle">Comparing Intervention Effectiveness</h3>
+                <p class="text-center text-stone-600 mb-6" data-translate-key="chartSubtitle">This chart shows the average "effect size" found in scientific studies for various dietary interventions. A larger bar indicates a greater impact on ADHD symptoms. Note that the Few-Foods Diet, while most effective, is also the most difficult and is only for a specific subgroup.</p>
+                <div class="chart-container">
+                    <canvas id="effectSizeChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-bold text-stone-800 mb-4 text-center" data-translate-key="factMythTitle">Fact or Myth?</h3>
+                <p class="text-center text-stone-600 mb-6" data-translate-key="factMythSubtitle">The world of diet and ADHD is full of strong opinions. Use the search bar to quickly check the evidence behind common claims.</p>
+                <input type="text" id="fact-myth-search" class="w-full p-3 mb-4 border border-stone-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500" data-translate-key="factMythSearchPlaceholder" placeholder="Search claims (e.g., sugar, gluten, omega-3)...">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-stone-600 fact-myth-table">
+                        <thead class="text-xs text-stone-700 uppercase bg-stone-200">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 w-1/4" data-translate-key="tableHeaderClaim">Claim</th>
+                                <th scope="col" class="px-6 py-3 w-1/12" data-translate-key="tableHeaderVerdict">Verdict</th>
+                                <th scope="col" class="px-6 py-3 w-1/2" data-translate-key="tableHeaderExplanation">The Evidence-Based Explanation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fact-myth-tbody">
+                            <!-- Rows will be injected here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Practical Guide Section -->
+        <section id="guide" class="content-section">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-stone-800 sm:text-4xl" data-translate-key="guideTitle">A Practical, Tiered Guide</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600" data-translate-key="guideSubtitle">Based on the current evidence, here is a practical framework for considering diet in ADHD management. This approach prioritizes safety, feasibility, and strength of evidence.</p>
+            </div>
+            <div class="space-y-8 max-w-4xl mx-auto">
+                <div class="p-6 bg-white rounded-lg shadow-md border-l-4 border-teal-500">
+                    <h3 class="text-2xl font-bold text-stone-800 mb-2" data-translate-key="tier1Title">Tier 1: Universal Foundation (For Everyone)</h3>
+                    <p class="text-stone-600 mb-4" data-translate-key="tier1Desc">This is the safest, lowest-risk, and most broadly beneficial approach recommended for all individuals with ADHD. It is supported by strong, consistent correlational data and robust biological plausibility, as it addresses all three key pathways (neurotransmitters, gut-brain, inflammation) simultaneously.</p>
+                    <ul class="list-disc list-inside space-y-2 text-stone-600" data-translate-key="tier1List">
+                    </ul>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-md border-l-4 border-amber-500">
+                    <h3 class="text-2xl font-bold text-stone-800 mb-2" data-translate-key="tier2Title">Tier 2: Targeted Screening (With a Doctor)</h3>
+                    <p class="text-stone-600 mb-4" data-translate-key="tier2Desc">For individuals with risk factors like picky eating, vegetarian diets, or co-occurring conditions like restless legs syndrome, consider discussing targeted screening with a healthcare professional. Supplementation is only for correcting a confirmed deficiency.</p>
+                    <ul class="list-disc list-inside space-y-2 text-stone-600" data-translate-key="tier2List">
+                    </ul>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-md border-l-4 border-red-500">
+                    <h3 class="text-2xl font-bold text-stone-800 mb-2" data-translate-key="tier3Title">Tier 3: Specialized Elimination (Expert Supervision Required)</h3>
+                    <p class="text-stone-600 mb-4" data-translate-key="tier3Desc">This is an intensive diagnostic approach, not a lifestyle change. It should only be considered for specific cases (e.g., moderate-to-severe ADHD unresponsive to standard care) under the strict guidance of a physician and dietitian to ensure nutritional safety and proper interpretation of results.</p>
+                    <ul class="list-disc list-inside space-y-2 text-stone-600" data-translate-key="tier3List">
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Meal Plans Section -->
+        <section id="meal-plans" class="content-section">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-stone-800 sm:text-4xl" data-translate-key="mealPlansTitle">Sample Daily Meal Plans for Indonesia</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600" data-translate-key="mealPlansSubtitle">Here are sample meal plans adapted to local Indonesian ingredients, designed to support brain health for individuals with ADHD. These are examples to illustrate the principles, not rigid prescriptions. The focus is on protein, complex carbohydrates, fruits, and vegetables.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <!-- Budget-Friendly Plan -->
+                <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-teal-500">
+                    <h3 class="text-2xl font-bold text-stone-800 mb-4" data-translate-key="budgetPlanTitle">Budget-Friendly Option</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-stone-700" data-translate-key="breakfast">Breakfast</h4>
+                            <p class="text-stone-600" data-translate-key="budgetBreakfast">Rice + Vegetable omelet (1-2 eggs with sliced scallions/greens).</p>
+                            <p class="text-xs text-teal-700 mt-1"><strong data-translate-key="principle">Principle:</strong> <span data-translate-key="budgetBreakfastPrinciple">Protein from eggs is crucial to start the day and helps neurotransmitter production.</span></p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-stone-700" data-translate-key="lunch">Lunch</h4>
+                            <p class="text-stone-600" data-translate-key="budgetLunch">Rice + Clear spinach and corn soup (Sayur Bening) + Fried tofu/tempeh.</p>
+                            <p class="text-xs text-teal-700 mt-1"><strong data-translate-key="principle">Principle:</strong> <span data-translate-key="budgetLunchPrinciple">Tempeh is a great source of plant-based protein and prebiotics for gut health. Spinach is rich in iron.</span></p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-stone-700" data-translate-key="dinner">Dinner</h4>
+                            <p class="text-stone-600" data-translate-key="budgetDinner">Rice + Grilled mackerel (Ikan Kembung) + Fresh vegetables (cucumber, lettuce) & sambal.</p>
+                            <p class="text-xs text-teal-700 mt-1"><strong data-translate-key="principle">Principle:</strong> <span data-translate-key="budgetDinnerPrinciple">Mackerel is an affordable source of Omega-3s. Raw vegetables provide fiber and enzymes.</span></p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-stone-700" data-translate-key="snack">Snack</h4>
+                            <p class="text-stone-600" data-translate-key="budgetSnack">Boiled banana or sliced papaya.</p>
+                            <p class="text-xs text-teal-700 mt-1"><strong data-translate-key="principle">Principle:</strong> <span data-translate-key="budgetSnackPrinciple">Whole fruits provide energy from natural sugars paired with fiber, which slows absorption.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mid-Range Plan -->
+                <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-amber-500">
+                    <h3 class="text-2xl font-bold text-stone-800 mb-4" data-translate-key="midRangePlanTitle">Mid-Range Option</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-stone-700" data-translate-key="breakfast">Breakfast</h4>
+                            <p class="text-stone-600" data-translate-key="midRangeBreakfast">Brown rice + Light chicken opor (thinner coconut milk broth) + 1 piece of tofu.</p>
+                            <p class="text-xs text-amber-700 mt-1"><strong data-translate-key="principle">Principle:</strong> <span data-translate-key="midRangeBreakfastPrinciple">Brown rice is a complex carb for stable energy. Protein from chicken aids focus.</span></p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-stone-700" data-translate-key="lunch">Lunch</h4>
+                            <p class="text-stone-600" data-translate-key="midRangeLunch">Brown rice + Clear chicken soup (Soto Ayam) with shredded chicken, bean sprouts, celery + Potato fritter (Perkedel).</p>
+                            <p class="text-xs text-amber-700 mt-1"><strong data-translate-key="principle">Principle:</strong> <span data-translate-key="midRangeLunchPrinciple">A combination of protein, vegetables, and complex carbs in one bowl. The warm broth is soothing.</span></p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-stone-700" data-translate-key="dinner">Dinner</h4>
+                            <p class="text-stone-600" data-translate-key="midRangeDinner">Brown rice + Steamed fish in banana leaf (Pepes Ikan) + Mixed vegetable salad with seasoned grated coconut (Urap).</p>
+                            <p class="text-xs text-amber-700 mt-1"><strong data-translate-key="principle">Principle:</strong> <span data-translate-key="midRangeDinnerPrinciple">Steaming (pepes) is a low-oil cooking method. Urap provides a variety of vegetables and fiber.</span></p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-stone-700" data-translate-key="snack">Snack</h4>
+                            <p class="text-stone-600" data-translate-key="midRangeSnack">Avocado juice (no sugar/condensed milk) or a small portion of Gado-gado.</p>
+                            <p class="text-xs text-amber-700 mt-1"><strong data-translate-key="principle">Principle:</strong> <span data-translate-key="midRangeSnackPrinciple">Avocado is rich in healthy fats for the brain. Gado-gado provides protein from egg/tofu and fiber from vegetables.</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- References Section -->
+        <section id="references" class="content-section">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-stone-800 sm:text-4xl" data-translate-key="referencesTitle">References</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600" data-translate-key="referencesSubtitle">This list includes key scientific papers, meta-analyses, and clinical guidelines that form the evidence base for this guide. The references have been reconstructed based on the context provided in the source report.</p>
+            </div>
+            <div class="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-lg">
+                <ul id="references-list" class="space-y-4 text-sm text-stone-700 reference-list">
+                   <!-- Populated by JS -->
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-800 text-white mt-12">
+        <div class="container mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-sm">
+            <p data-translate-key="footerText">This interactive guide is based on an evidence-based analysis of dietary interventions for ADHD. It is for informational purposes only and does not constitute medical advice. Always consult with a qualified healthcare professional before making any changes to your diet or treatment plan.</p>
+        </div>
+    </footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const translations = {
+        en: {
+            headerTitle: "Diet & ADHD",
+            navHome: "Home",
+            navDeepDive: "Dietary Deep Dive",
+            navEvidence: "Evidence Explorer",
+            navGuide: "Practical Guide",
+            navMealPlans: "Meal Plans",
+            navReferences: "References",
+            homeTitle: "Rethinking the Role of Diet in ADHD",
+            homeSubtitle: "This interactive guide explores the scientific evidence connecting nutrition to ADHD. Moving beyond simplistic claims, we'll examine how dietary patterns and specific nutrients can influence brain health through key biological pathways. The goal is not to present diet as a \"cure,\" but as a fundamental, modifiable factor in the comprehensive management of ADHD.",
+            homePathwaysTitle: "The Three Core Pathways",
+            pathway1Title: "Neurotransmitter Synthesis",
+            pathway1Desc: "The brain's ability to produce key neurotransmitters like dopamine is directly dependent on dietary building blocks (amino acids like tyrosine) and essential helpers (cofactors like iron and zinc). A diet lacking these components can impair the very chemical pathways targeted by stimulant medications.",
+            pathway2Title: "The Gut-Brain Axis",
+            pathway2Desc: "Diet is the primary controller of our gut microbiome. An unhealthy, low-fiber diet can lead to an imbalance (dysbiosis), increasing gut permeability (\"leaky gut\") and allowing inflammatory molecules to travel to the brain, disrupting its function.",
+            pathway3Title: "Inflammation & Oxidative Stress",
+            pathway3Desc: "\"Western\" diets promote chronic, low-grade inflammation. In contrast, \"Healthy\" diets rich in fruits, vegetables, and omega-3s provide a wealth of antioxidants and anti-inflammatory compounds that protect the brain from cellular damage and stress.",
+            deepDiveTitle: "A Deep Dive into Dietary Interventions",
+            deepDiveSubtitle: "From eliminating specific ingredients to supplementing nutrients, many dietary strategies have been proposed for ADHD. Click on each card below to explore what the evidence says about their effectiveness, risks, and practical considerations.",
+            evidenceTitle: "Evidence Explorer",
+            evidenceSubtitle: "Visually compare the impact of different dietary strategies and bust common myths with our interactive tools.",
+            chartTitle: "Comparing Intervention Effectiveness",
+            chartSubtitle: "This chart shows the average \"effect size\" found in scientific studies for various dietary interventions. A larger bar indicates a greater impact on ADHD symptoms. Note that the Few-Foods Diet, while most effective, is also the most difficult and is only for a specific subgroup.",
+            factMythTitle: "Fact or Myth?",
+            factMythSubtitle: "The world of diet and ADHD is full of strong opinions. Use the search bar to quickly check the evidence behind common claims.",
+            factMythSearchPlaceholder: "Search claims (e.g., sugar, gluten, omega-3)...",
+            tableHeaderClaim: "Claim",
+            tableHeaderVerdict: "Verdict",
+            tableHeaderExplanation: "The Evidence-Based Explanation",
+            guideTitle: "A Practical, Tiered Guide",
+            guideSubtitle: "Based on the current evidence, here is a practical framework for considering diet in ADHD management. This approach prioritizes safety, feasibility, and strength of evidence.",
+            tier1Title: "Tier 1: Universal Foundation (For Everyone)",
+            tier1Desc: "This is the safest, lowest-risk, and most broadly beneficial approach recommended for all individuals with ADHD. It is supported by strong, consistent correlational data and robust biological plausibility, as it addresses all three key pathways (neurotransmitters, gut-brain, inflammation) simultaneously.",
+            tier1List: `<li><strong>Adopt a "Healthy" Dietary Pattern:</strong> Model your diet on patterns like the Mediterranean diet.</li><li><strong>Maximize:</strong> Fruits, vegetables, whole grains, and legumes.</li><li><strong>Include:</strong> Lean protein (fish, poultry, beans), especially a protein-rich breakfast.</li><li><strong>Minimize:</strong> Processed foods, sugary drinks, sweets, and unhealthy fats.</li><li><strong>Why it works:</strong> This approach addresses all three biological pathways by providing essential nutrients, supporting gut health, and reducing inflammation.</li>`,
+            tier2Title: "Tier 2: Targeted Screening (With a Doctor)",
+            tier2Desc: "For individuals with risk factors like picky eating, vegetarian diets, or co-occurring conditions like restless legs syndrome, consider discussing targeted screening with a healthcare professional. Supplementation is only for correcting a confirmed deficiency.",
+            tier2List: `<li><strong>Screen for Iron Deficiency:</strong> A blood test for serum ferritin can assess iron stores. Low iron is linked to ADHD symptoms.</li><li><strong>Consider Zinc & Vitamin D:</strong> Screening may be appropriate based on diet and clinical history.</li><li><strong>Important:</strong> Do NOT supplement without a confirmed deficiency and medical supervision. Overdosing on minerals can be toxic.</li>`,
+            tier3Title: "Tier 3: Specialized Elimination (Expert Supervision Required)",
+            tier3Desc: "This is an intensive diagnostic approach, not a lifestyle change. It should only be considered for specific cases (e.g., moderate-to-severe ADHD unresponsive to standard care) under the strict guidance of a physician and dietitian to ensure nutritional safety and proper interpretation of results.",
+            tier3List: `<li><strong>Who is it for?</strong> Typically for children with moderate-to-severe ADHD who haven't responded to standard treatments and whose families are highly motivated.</li><li><strong>Option A: AFC Elimination:</strong> A trial of removing artificial food colors is a simpler, low-risk first step in this tier.</li><li><strong>Option B: Few-Foods Diet:</strong> A complex, short-term diagnostic tool to identify a "food-sensitive" ADHD subtype. It is extremely demanding and requires professional management to ensure nutritional safety.</li>`,
+            mealPlansTitle: "Sample Daily Meal Plans for Indonesia",
+            mealPlansSubtitle: "Here are sample meal plans adapted to local Indonesian ingredients, designed to support brain health for individuals with ADHD. These are examples to illustrate the principles, not rigid prescriptions. The focus is on protein, complex carbohydrates, fruits, and vegetables.",
+            budgetPlanTitle: "Budget-Friendly Option",
+            midRangePlanTitle: "Mid-Range Option",
+            breakfast: "Breakfast",
+            lunch: "Lunch",
+            dinner: "Dinner",
+            snack: "Snack",
+            principle: "Principle:",
+            budgetBreakfast: "Rice + Vegetable omelet (1-2 eggs with sliced scallions/greens).",
+            budgetBreakfastPrinciple: "Protein from eggs is crucial to start the day and helps neurotransmitter production.",
+            budgetLunch: "Rice + Clear spinach and corn soup (Sayur Bening) + Fried tofu/tempeh.",
+            budgetLunchPrinciple: "Tempeh is a great source of plant-based protein and prebiotics for gut health. Spinach is rich in iron.",
+            budgetDinner: "Rice + Grilled mackerel (Ikan Kembung) + Fresh vegetables (cucumber, lettuce) & sambal.",
+            budgetDinnerPrinciple: "Mackerel is an affordable source of Omega-3s. Raw vegetables provide fiber and enzymes.",
+            budgetSnack: "Boiled banana or sliced papaya.",
+            budgetSnackPrinciple: "Whole fruits provide energy from natural sugars paired with fiber, which slows absorption.",
+            midRangeBreakfast: "Brown rice + Light chicken opor (thinner coconut milk broth) + 1 piece of tofu.",
+            midRangeBreakfastPrinciple: "Brown rice is a complex carb for stable energy. Protein from chicken aids focus.",
+            midRangeLunch: "Brown rice + Clear chicken soup (Soto Ayam) with shredded chicken, bean sprouts, celery + Potato fritter (Perkedel).",
+            midRangeLunchPrinciple: "A combination of protein, vegetables, and complex carbs in one bowl. The warm broth is soothing.",
+            midRangeDinner: "Brown rice + Steamed fish in banana leaf (Pepes Ikan) + Mixed vegetable salad with seasoned grated coconut (Urap).",
+            midRangeDinnerPrinciple: "Steaming (pepes) is a low-oil cooking method. Urap provides a variety of vegetables and fiber.",
+            midRangeSnack: "Avocado juice (no sugar/condensed milk) or a small portion of Gado-gado.",
+            midRangeSnackPrinciple: "Avocado is rich in healthy fats for the brain. Gado-gado provides protein from egg/tofu and fiber from vegetables.",
+            referencesTitle: "References",
+            referencesSubtitle: "This list includes key scientific papers, meta-analyses, and clinical guidelines that form the evidence base for this guide. The references have been reconstructed based on the context provided in the source report.",
+            footerText: "This interactive guide is based on an evidence-based analysis of dietary interventions for ADHD. It is for informational purposes only and does not constitute medical advice. Always consult with a qualified healthcare professional before making any changes to your diet or treatment plan.",
+            chartAxisTitle: "Effect Size (Larger is more impactful)",
+            chartLabel: "Effect Size (Standardized Mean Difference)",
+            fact: "FACT",
+            myth: "MYTH",
+        },
+        id: {
+            headerTitle: "Diet & ADHD",
+            navHome: "Beranda",
+            navDeepDive: "Tinjauan Diet",
+            navEvidence: "Jelajah Bukti",
+            navGuide: "Panduan Praktis",
+            navMealPlans: "Rencana Makan",
+            navReferences: "Referensi",
+            homeTitle: "Memikirkan Ulang Peran Diet pada ADHD",
+            homeSubtitle: "Panduan interaktif ini menjelajahi bukti ilmiah yang menghubungkan nutrisi dengan ADHD. Lebih dari sekadar klaim sederhana, kita akan menguji bagaimana pola makan dan nutrisi spesifik dapat memengaruhi kesehatan otak melalui jalur biologis utama. Tujuannya bukan untuk menyajikan diet sebagai \"obat\", melainkan sebagai faktor fundamental yang dapat dimodifikasi dalam manajemen komprehensif ADHD.",
+            homePathwaysTitle: "Tiga Jalur Inti",
+            pathway1Title: "Sintesis Neurotransmitter",
+            pathway1Desc: "Kemampuan otak untuk memproduksi neurotransmitter kunci seperti dopamin bergantung langsung pada bahan penyusun dari makanan (asam amino seperti tirosin) dan pembantu penting (kofaktor seperti zat besi dan seng). Diet yang kekurangan komponen ini dapat mengganggu jalur kimia yang menjadi target obat stimulan.",
+            pathway2Title: "Sumbu Usus-Otak",
+            pathway2Desc: "Diet adalah pengontrol utama mikrobioma usus kita. Diet tidak sehat yang rendah serat dapat menyebabkan ketidakseimbangan (disbiosis), meningkatkan permeabilitas usus (\"usus bocor\") dan memungkinkan molekul peradangan masuk ke otak, mengganggu fungsinya.",
+            pathway3Title: "Peradangan & Stres Oksidatif",
+            pathway3Desc: "Pola makan \"Barat\" memicu peradangan kronis tingkat rendah. Sebaliknya, pola makan \"Sehat\" yang kaya buah, sayuran, dan omega-3 menyediakan banyak antioksidan dan senyawa anti-inflamasi yang melindungi otak dari kerusakan dan stres seluler.",
+            deepDiveTitle: "Tinjauan Mendalam Intervensi Diet",
+            deepDiveSubtitle: "Mulai dari menghilangkan bahan tertentu hingga suplementasi nutrisi, banyak strategi diet telah diusulkan untuk ADHD. Klik setiap kartu di bawah ini untuk menjelajahi apa kata bukti ilmiah tentang efektivitas, risiko, dan pertimbangan praktisnya.",
+            evidenceTitle: "Jelajah Bukti Ilmiah",
+            evidenceSubtitle: "Bandingkan secara visual dampak berbagai strategi diet dan bongkar mitos umum dengan alat interaktif kami.",
+            chartTitle: "Perbandingan Efektivitas Intervensi",
+            chartSubtitle: "Grafik ini menunjukkan rata-rata \"ukuran efek\" yang ditemukan dalam studi ilmiah untuk berbagai intervensi diet. Batang yang lebih panjang menunjukkan dampak yang lebih besar pada gejala ADHD. Perhatikan bahwa Diet Eliminasi, meskipun paling efektif, juga yang paling sulit dan hanya untuk subkelompok tertentu.",
+            factMythTitle: "Fakta atau Mitos?",
+            factMythSubtitle: "Dunia diet dan ADHD penuh dengan opini yang kuat. Gunakan bilah pencarian untuk memeriksa dengan cepat bukti di balik klaim umum.",
+            factMythSearchPlaceholder: "Cari klaim (misal: gula, gluten, omega-3)...",
+            tableHeaderClaim: "Klaim",
+            tableHeaderVerdict: "Putusan",
+            tableHeaderExplanation: "Penjelasan Berbasis Bukti",
+            guideTitle: "Panduan Praktis Bertingkat",
+            guideSubtitle: "Berdasarkan bukti saat ini, berikut adalah kerangka kerja praktis untuk mempertimbangkan diet dalam manajemen ADHD. Pendekatan ini memprioritaskan keamanan, kelayakan, dan kekuatan bukti.",
+            tier1Title: "Tingkat 1: Fondasi Universal (Untuk Semua Orang)",
+            tier1Desc: "Ini adalah pendekatan teraman, berisiko paling rendah, dan paling bermanfaat secara luas yang direkomendasikan untuk semua individu dengan ADHD. Ini didukung oleh data korelasional yang kuat dan konsisten serta dasar biologis yang kuat, karena mengatasi ketiga jalur kunci (neurotransmitter, usus-otak, peradangan) secara bersamaan.",
+            tier1List: `<li><strong>Adopsi Pola Makan "Sehat":</strong> Contoh pola makan Anda seperti diet Mediterania.</li><li><strong>Maksimalkan:</strong> Buah-buahan, sayuran, biji-bijian utuh, dan kacang-kacangan.</li><li><strong>Sertakan:</strong> Protein tanpa lemak (ikan, unggas, kacang-kacangan), terutama sarapan kaya protein.</li><li><strong>Minimalkan:</strong> Makanan olahan, minuman manis, permen, dan lemak tidak sehat.</li><li><strong>Mengapa berhasil:</strong> Pendekatan ini mengatasi ketiga jalur biologis dengan menyediakan nutrisi penting, mendukung kesehatan usus, dan mengurangi peradangan.</li>`,
+            tier2Title: "Tingkat 2: Skrining Terarah (Dengan Dokter)",
+            tier2Desc: "Untuk individu dengan faktor risiko seperti pemilih makanan, diet vegetarian, atau kondisi penyerta seperti sindrom kaki gelisah, pertimbangkan untuk mendiskusikan skrining terarah dengan tenaga kesehatan profesional. Suplementasi hanya untuk memperbaiki defisiensi yang terkonfirmasi.",
+            tier2List: `<li><strong>Skrining Defisiensi Zat Besi:</strong> Tes darah untuk feritin serum dapat menilai cadangan zat besi. Zat besi rendah terkait dengan gejala ADHD.</li><li><strong>Pertimbangkan Seng & Vitamin D:</strong> Skrining mungkin sesuai berdasarkan diet dan riwayat klinis.</li><li><strong>Penting:</strong> JANGAN memberikan suplemen tanpa defisiensi yang terkonfirmasi dan pengawasan medis. Overdosis mineral bisa menjadi racun.</li>`,
+            tier3Title: "Tingkat 3: Eliminasi Khusus (Memerlukan Pengawasan Ahli)",
+            tier3Desc: "Ini adalah pendekatan diagnostik intensif, bukan perubahan gaya hidup. Ini hanya boleh dipertimbangkan untuk kasus-kasus tertentu (misalnya, ADHD sedang-berat yang tidak responsif terhadap perawatan standar) di bawah bimbingan ketat seorang dokter dan ahli gizi untuk memastikan keamanan nutrisi dan interpretasi hasil yang tepat.",
+            tier3List: `<li><strong>Untuk siapa?</strong> Biasanya untuk anak-anak dengan ADHD sedang hingga berat yang belum merespons pengobatan standar dan keluarganya sangat termotivasi.</li><li><strong>Opsi A: Eliminasi Pewarna Makanan Buatan (AFC):</strong> Uji coba menghilangkan pewarna makanan buatan adalah langkah pertama yang lebih sederhana dan berisiko rendah di tingkat ini.</li><li><strong>Opsi B: Diet Eliminasi (Few-Foods Diet):</strong> Alat diagnostik jangka pendek yang kompleks untuk mengidentifikasi subtipe ADHD "sensitif makanan". Ini sangat menuntut dan memerlukan manajemen profesional untuk memastikan keamanan nutrisi.</li>`,
+            mealPlansTitle: "Contoh Rencana Makan Harian di Indonesia",
+            mealPlansSubtitle: "Berikut adalah contoh rencana makan yang disesuaikan dengan bahan makanan lokal Indonesia, dirancang untuk mendukung kesehatan otak bagi penderita ADHD. Ini adalah contoh untuk mengilustrasikan prinsip-prinsip, bukan resep yang kaku. Fokusnya adalah pada protein, karbohidrat kompleks, buah, dan sayuran.",
+            budgetPlanTitle: "Opsi Sangat Terjangkau",
+            midRangePlanTitle: "Opsi Kelas Menengah",
+            breakfast: "Sarapan",
+            lunch: "Makan Siang",
+            dinner: "Makan Malam",
+            snack: "Camilan",
+            principle: "Prinsip:",
+            budgetBreakfast: "Nasi + Telur dadar sayur (1-2 butir telur dengan irisan daun bawang/sawi).",
+            budgetBreakfastPrinciple: "Protein dari telur penting untuk memulai hari dan membantu produksi neurotransmitter.",
+            budgetLunch: "Nasi + Sayur bening bayam dengan jagung + Tahu/Tempe goreng.",
+            budgetLunchPrinciple: "Tempe adalah sumber protein nabati dan prebiotik yang baik untuk usus. Sayur bayam kaya akan zat besi.",
+            budgetDinner: "Nasi + Ikan kembung bakar + Lalapan (timun, selada) & sambal.",
+            budgetDinnerPrinciple: "Ikan kembung adalah sumber Omega-3 yang terjangkau. Lalapan mentah menyediakan serat dan enzim.",
+            budgetSnack: "Pisang rebus atau buah pepaya potong.",
+            budgetSnackPrinciple: "Buah utuh memberikan energi dari gula alami disertai serat, yang memperlambat penyerapannya.",
+            midRangeBreakfast: "Nasi merah + Opor ayam (tanpa santan kental, lebih bening) + 1 potong tahu.",
+            midRangeBreakfastPrinciple: "Nasi merah adalah karbohidrat kompleks untuk energi stabil. Protein dari ayam membantu fokus.",
+            midRangeLunch: "Nasi merah + Soto ayam bening (dengan suwiran ayam, tauge, seledri) + Perkedel kentang.",
+            midRangeLunchPrinciple: "Kombinasi protein, sayuran, dan karbohidrat kompleks dalam satu mangkuk. Kaldu hangat menenangkan.",
+            midRangeDinner: "Nasi merah + Pepes ikan mas/tongkol + Urap sayuran (kacang panjang, bayam, tauge dengan kelapa parut berbumbu).",
+            midRangeDinnerPrinciple: "Pepes (dikukus) adalah cara memasak rendah minyak. Urap menyediakan beragam sayuran dan serat.",
+            midRangeSnack: "Jus alpukat (tanpa gula/susu kental manis) atau Gado-gado porsi kecil.",
+            midRangeSnackPrinciple: "Alpukat kaya akan lemak sehat untuk otak. Gado-gado memberikan protein dari telur/tahu dan serat dari sayuran.",
+            referencesTitle: "Referensi",
+            referencesSubtitle: "Daftar ini mencakup makalah ilmiah utama, meta-analisis, dan pedoman klinis yang menjadi dasar bukti untuk panduan ini. Referensi telah direkonstruksi berdasarkan konteks yang disediakan dalam laporan sumber.",
+            footerText: "Panduan interaktif ini didasarkan pada analisis berbasis bukti tentang intervensi diet untuk ADHD. Ini hanya untuk tujuan informasi dan bukan merupakan nasihat medis. Selalu berkonsultasi dengan profesional kesehatan yang berkualifikasi sebelum membuat perubahan apa pun pada diet atau rencana perawatan Anda.",
+            chartAxisTitle: "Ukuran Efek (Lebih besar lebih berdampak)",
+            chartLabel: "Ukuran Efek (Perbedaan Rata-rata Terstandarisasi)",
+            fact: "FAKTA",
+            myth: "MITOS",
+        }
+    };
+    
+    const interventionData = {
+        en: [
+            { title: 'Few-Foods (Oligoantigenic) Diet', verdict: 'Large effect in a subgroup', summary: 'A short-term diagnostic tool to identify food sensitivities. It shows the largest effect sizes of any dietary intervention but is extremely difficult to follow and requires strict medical supervision.', details: 'The FFD is not a lifestyle diet. It works by first eliminating nearly all potential allergens, then reintroducing foods one-by-one to pinpoint specific triggers. The high effect size (ES ≈ 0.80) is likely real but applies only to a "food-sensitive" subgroup. The main challenge is the near impossibility of blinding, leading to high potential for placebo effects, though some blinded video evidence supports its efficacy.' },
+            { title: 'Artificial Food Color (AFC) Elimination', verdict: 'Small but consistent effect', summary: 'Involves eliminating synthetic food dyes. High-quality meta-analyses show a small (ES ≈ 0.22) but statistically significant effect, not just in children with ADHD but in the general population.', details: 'The effect is modest, and it\'s estimated that about 8% of children with ADHD are sensitive to AFCs. While not a standalone treatment, it is a low-risk trial for families to consider, especially since AFCs have no nutritional value.' },
+            { title: 'Sugar Restriction', verdict: 'Popular myth, indirect link', summary: 'The belief that sugar directly causes hyperactivity is not supported by high-quality, blinded scientific trials. The "sugar rush" is often due to the exciting context (e.g., parties).', details: 'However, a diet high in sugar is a key part of an "unhealthy/Western" dietary pattern, which IS strongly correlated with a higher risk of an ADHD diagnosis. The focus should be on reducing overall processed food and sugar-sweetened beverage intake, not just sugar in isolation.' },
+            { title: 'Omega-3 (PUFA) Supplementation', verdict: 'No significant effect for treatment', summary: 'Despite strong biological rationale, the most definitive, high-certainty evidence from the 2023 Cochrane Review shows no effect on core ADHD symptoms compared to placebo.', details: 'Early, smaller studies showed promise, but larger, more rigorous trials have failed to replicate these findings. While essential for general health, omega-3 supplements are not an evidence-based "treatment" for ADHD itself. Focus on getting them from food sources like fatty fish.' },
+            { title: 'Iron & Zinc Supplementation', verdict: 'Only for confirmed deficiency', summary: 'Children with ADHD may have lower levels of these minerals. However, supplementation has shown inconsistent results and is only potentially beneficial for children with a confirmed deficiency (especially low ferritin for iron).', details: 'Routine supplementation is NOT recommended and can be toxic. The link may be a consequence, not a cause, of ADHD (e.g., from picky eating). Screening for iron deficiency (serum ferritin) is a reasonable step for at-risk children under a doctor\'s care.' },
+            { title: 'Whole-Diet Approach (e.g., Mediterranean)', verdict: 'Strongest correlational evidence', summary: 'This approach focuses on overall dietary patterns. "Healthy" patterns are consistently linked to a lower risk of ADHD, while "Unhealthy/Western" patterns are linked to a higher risk.', details: 'This is the most recommended, lowest-risk, and biologically sound approach. It likely works due to the synergistic effect of thousands of nutrients, antioxidants, and fibers working together, which cannot be replicated by single supplements. This approach supports all three biological pathways.' }
+        ],
+        id: [
+            { title: 'Diet Eliminasi (Oligoantigenik)', verdict: 'Efek besar pada subkelompok', summary: 'Alat diagnostik jangka pendek untuk mengidentifikasi sensitivitas makanan. Menunjukkan ukuran efek terbesar dari semua intervensi diet tetapi sangat sulit diikuti dan memerlukan pengawasan medis yang ketat.', details: 'FFD bukanlah diet gaya hidup. Cara kerjanya adalah dengan menghilangkan hampir semua alergen potensial, lalu memperkenalkan kembali makanan satu per satu untuk menemukan pemicu spesifik. Ukuran efek yang tinggi (ES ≈ 0,80) kemungkinan nyata tetapi hanya berlaku untuk subkelompok "sensitif makanan". Tantangan utamanya adalah ketidakmungkinan melakukan blinding, yang menyebabkan potensi efek plasebo yang tinggi, meskipun beberapa bukti video tersamar mendukung kemanjurannya.' },
+            { title: 'Eliminasi Pewarna Makanan Buatan (AFC)', verdict: 'Efek kecil namun konsisten', summary: 'Melibatkan penghapusan pewarna makanan sintetis. Meta-analisis berkualitas tinggi menunjukkan efek kecil (ES ≈ 0,22) tetapi signifikan secara statistik, tidak hanya pada anak-anak dengan ADHD tetapi juga pada populasi umum.', details: 'Efeknya sederhana, dan diperkirakan sekitar 8% anak dengan ADHD sensitif terhadap AFC. Meskipun bukan pengobatan mandiri, ini adalah uji coba berisiko rendah untuk dipertimbangkan keluarga, terutama karena AFC tidak memiliki nilai gizi.' },
+            { title: 'Pembatasan Gula', verdict: 'Mitos populer, hubungan tidak langsung', summary: 'Keyakinan bahwa gula secara langsung menyebabkan hiperaktif tidak didukung oleh uji coba ilmiah tersamar berkualitas tinggi. "Sugar rush" seringkali disebabkan oleh konteks yang menarik (misalnya, pesta).', details: 'Namun, diet tinggi gula adalah bagian penting dari pola makan "tidak sehat/Barat", yang SANGAT berkorelasi dengan risiko diagnosis ADHD yang lebih tinggi. Fokusnya harus pada pengurangan makanan olahan dan minuman manis secara keseluruhan, bukan hanya gula secara terpisah.' },
+            { title: 'Suplementasi Omega-3 (PUFA)', verdict: 'Tidak ada efek signifikan untuk pengobatan', summary: 'Meskipun ada alasan biologis yang kuat, bukti paling pasti dan berkualitas tinggi dari Tinjauan Cochrane 2023 menunjukkan tidak ada efek pada gejala inti ADHD dibandingkan plasebo.', details: 'Studi awal yang lebih kecil menunjukkan hasil yang menjanjikan, tetapi uji coba yang lebih besar dan lebih ketat gagal mereplikasi temuan ini. Meskipun penting untuk kesehatan umum, suplemen omega-3 bukanlah "pengobatan" berbasis bukti untuk ADHD itu sendiri. Fokuslah untuk mendapatkannya dari sumber makanan seperti ikan berlemak.' },
+            { title: 'Suplementasi Zat Besi & Seng', verdict: 'Hanya untuk defisiensi terkonfirmasi', summary: 'Anak-anak dengan ADHD mungkin memiliki kadar mineral ini yang lebih rendah. Namun, suplementasi menunjukkan hasil yang tidak konsisten dan hanya berpotensi bermanfaat bagi anak-anak dengan defisiensi yang terkonfirmasi (terutama feritin rendah untuk zat besi).', details: 'Suplementasi rutin TIDAK dianjurkan dan bisa menjadi racun. Hubungannya mungkin merupakan akibat, bukan penyebab, dari ADHD (misalnya, dari pola makan pilih-pilih). Skrining untuk defisiensi zat besi (serum feritin) adalah langkah yang wajar untuk anak-anak berisiko di bawah perawatan dokter.' },
+            { title: 'Pendekatan Diet Utuh (misal, Mediterania)', verdict: 'Bukti korelasional terkuat', summary: 'Pendekatan ini berfokus pada pola makan keseluruhan. Pola "sehat" secara konsisten dikaitkan dengan risiko ADHD yang lebih rendah, sementara pola "Tidak Sehat/Barat" dikaitkan dengan risiko yang lebih tinggi.', details: 'Ini adalah pendekatan yang paling direkomendasikan, berisiko paling rendah, dan paling masuk akal secara biologis. Kemungkinan besar berhasil karena efek sinergis dari ribuan nutrisi, antioksidan, dan serat yang bekerja bersama, yang tidak dapat ditiru oleh suplemen tunggal. Pendekatan ini mendukung ketiga jalur biologis.' }
+        ]
+    };
+
+    const factMythData = {
+        en: [
+            { claim: "Sugar is a direct cause of ADHD and hyperactivity.", verdict: "MYTH", explanation: "High-quality RCTs show no direct causal link. The perceived effect is often due to the exciting environments where sugar is consumed. However, diets high in sugar are part of an 'unhealthy' pattern linked to increased ADHD risk." },
+            { claim: "Eliminating artificial food colors (AFCs) can benefit some children with ADHD.", verdict: "FACT", explanation: "Meta-analyses show a small but significant effect for a sensitive subgroup (est. 8% of children with ADHD). It is considered a low-risk trial." },
+            { claim: "Omega-3 (fish oil) supplements are an effective treatment for ADHD.", verdict: "MYTH", explanation: "The highest-certainty evidence from the most recent Cochrane Review concludes that omega-3 supplementation has no significant effect on core ADHD symptoms compared to placebo." },
+            { claim: "A highly restrictive 'Few-Foods Diet' (FFD) can lead to dramatic improvement in a subgroup of children.", verdict: "FACT", explanation: "The FFD shows the largest effect size of any dietary intervention in some studies. It is highly effective for a 'food-sensitive' subtype but is extremely difficult and requires professional supervision." },
+            { claim: "A gluten-free diet is a proven treatment for ADHD.", verdict: "MYTH", explanation: "There is no high-quality evidence to support a gluten-free diet for ADHD, unless the individual has a diagnosed celiac disease or a demonstrated non-celiac gluten sensitivity." },
+            { claim: "A 'Western' or 'Junk Food' diet is associated with a higher risk of ADHD.", verdict: "FACT", explanation: "Multiple large-scale meta-analyses show a strong and consistent correlation. Diets high in processed foods, sugar, and unhealthy fats are linked to a significantly increased likelihood of an ADHD diagnosis." },
+            { claim: "A 'Healthy' diet (like the Mediterranean diet) is associated with a lower risk of ADHD.", verdict: "FACT", explanation: "The same meta-analyses show that diets rich in fruits, vegetables, legumes, and fish are associated with a significantly reduced likelihood of having an ADHD diagnosis. This is the most consistently supported, lowest-risk dietary approach." },
+            { claim: "Mega-doses of vitamins are a safe and effective therapy for ADHD.", verdict: "MYTH", explanation: "There is no evidence to support mega-dosing vitamins. This practice is not effective and can be toxic, particularly with fat-soluble vitamins. Supplementation is only warranted for a confirmed deficiency under medical supervision." },
+            { claim: "Children with ADHD may be more likely to have low levels of certain nutrients, like iron and zinc.", verdict: "FACT", explanation: "Observational studies consistently show an association between ADHD and lower levels of iron (ferritin) and, less consistently, zinc. However, it is unclear if this is a cause or a consequence of ADHD-related eating habits." },
+            { claim: "Diet can replace standard medical treatments like medication and therapy.", verdict: "MYTH", explanation: "No dietary intervention has been shown to be a replacement for evidence-based first-line treatments for ADHD. Diet should be considered a foundational and complementary approach, not a standalone cure." }
+        ],
+        id: [
+            { claim: "Gula adalah penyebab langsung ADHD dan hiperaktivitas.", verdict: "MITOS", explanation: "Uji coba terkontrol acak berkualitas tinggi tidak menunjukkan hubungan sebab-akibat langsung. Efek yang dirasakan seringkali disebabkan oleh lingkungan yang menarik di mana gula dikonsumsi. Namun, diet tinggi gula adalah bagian dari pola 'tidak sehat' yang terkait dengan peningkatan risiko ADHD." },
+            { claim: "Menghilangkan pewarna makanan buatan (AFC) dapat bermanfaat bagi sebagian anak dengan ADHD.", verdict: "FAKTA", explanation: "Meta-analisis menunjukkan efek kecil namun signifikan untuk subkelompok yang sensitif (diperkirakan 8% anak dengan ADHD). Ini dianggap sebagai uji coba berisiko rendah." },
+            { claim: "Suplemen Omega-3 (minyak ikan) adalah pengobatan yang efektif untuk ADHD.", verdict: "MITOS", explanation: "Bukti paling pasti dari Tinjauan Cochrane terbaru menyimpulkan bahwa suplementasi omega-3 tidak memiliki efek signifikan pada gejala inti ADHD dibandingkan dengan plasebo." },
+            { claim: "Diet 'Few-Foods' (FFD) yang sangat ketat dapat menghasilkan perbaikan dramatis pada subkelompok anak-anak.", verdict: "FAKTA", explanation: "FFD menunjukkan ukuran efek terbesar dari semua intervensi diet dalam beberapa penelitian. Ini sangat efektif untuk subtipe 'sensitif makanan' tetapi sangat sulit dan memerlukan pengawasan profesional." },
+            { claim: "Diet bebas gluten adalah pengobatan yang terbukti untuk ADHD.", verdict: "MITOS", explanation: "Tidak ada bukti berkualitas tinggi untuk mendukung diet bebas gluten untuk ADHD, kecuali jika individu tersebut memiliki penyakit celiac yang terdiagnosis atau sensitivitas gluten non-celiac yang terbukti." },
+            { claim: "Diet 'Barat' atau 'Makanan Cepat Saji' dikaitkan dengan risiko ADHD yang lebih tinggi.", verdict: "FAKTA", explanation: "Beberapa meta-analisis skala besar menunjukkan korelasi yang kuat dan konsisten. Diet tinggi makanan olahan, gula, dan lemak tidak sehat terkait dengan kemungkinan diagnosis ADHD yang meningkat secara signifikan." },
+            { claim: "Diet 'Sehat' (seperti diet Mediterania) dikaitkan dengan risiko ADHD yang lebih rendah.", verdict: "FAKTA", explanation: "Meta-analisis yang sama menunjukkan bahwa diet kaya buah, sayuran, kacang-kacangan, dan ikan dikaitkan dengan kemungkinan diagnosis ADHD yang berkurang secara signifikan. Ini adalah pendekatan diet yang paling konsisten didukung dan berisiko paling rendah." },
+            { claim: "Dosis mega vitamin adalah terapi yang aman dan efektif untuk ADHD.", verdict: "MITOS", explanation: "Tidak ada bukti yang mendukung pemberian vitamin dosis mega. Praktik ini tidak efektif dan bisa menjadi racun, terutama dengan vitamin yang larut dalam lemak. Suplementasi hanya dianjurkan untuk defisiensi yang terkonfirmasi di bawah pengawasan medis." },
+            { claim: "Anak-anak dengan ADHD mungkin lebih mungkin memiliki kadar nutrisi tertentu yang rendah, seperti zat besi dan seng.", verdict: "FAKTA", explanation: "Studi observasional secara konsisten menunjukkan hubungan antara ADHD dan kadar zat besi (feritin) yang lebih rendah dan, kurang konsisten, seng. Namun, tidak jelas apakah ini penyebab atau akibat dari kebiasaan makan terkait ADHD." },
+            { claim: "Diet dapat menggantikan perawatan medis standar seperti obat-obatan dan terapi.", verdict: "MITOS", explanation: "Tidak ada intervensi diet yang terbukti dapat menggantikan perawatan lini pertama berbasis bukti untuk ADHD. Diet harus dianggap sebagai pendekatan dasar dan pelengkap, bukan obat tunggal." }
+        ]
+    };
+
+    const references = [
+        "Faraone, S. V., et al. (2021). Attention-deficit/hyperactivity disorder. *Nature Reviews Disease Primers*.",
+        "Wolraich, M. L., et al. (2019). Clinical Practice Guideline for the Diagnosis, Evaluation, and Treatment of Attention-Deficit/Hyperactivity Disorder in Children and Adolescents. *Pediatrics*.",
+        "Punja, S., et al. (2023). Omega-3 fatty acids for attention deficit hyperactivity disorder (ADHD) in children and adolescents. *Cochrane Database of Systematic Reviews*.",
+        "Guan, Y., et al. (2023). Effects of nutritional interventions on attention-deficit/hyperactivity disorder (ADHD): a systematic review of evidence. *Frontiers in Neuroscience*.",
+        "Pelsser, L. M., et al. (2017). A randomised controlled trial into the effects of a restricted elimination diet on the behaviour of children with attention-deficit hyperactivity disorder (INCA study). *European Child & Adolescent Psychiatry*.",
+        "Kanarek, R. B. (2011). Artificial food dyes and attention deficit hyperactivity disorder. *Nutrition Reviews*.",
+        "Del-Ponte, B., et al. (2019). Dietary patterns and attention deficit/hyperactivity disorder (ADHD): A systematic review and meta-analysis. *Journal of Affective Disorders*.",
+        "Stevenson, J., et al. (2014). Research review: The role of diet in the treatment of attention-deficit/hyperactivity disorder - an appraisal of the evidence on efficacy and recommendations on the design of future studies. *Journal of Child Psychology and Psychiatry*.",
+        "Sonuga-Barke, E. J., et al. (2013). Nonpharmacological interventions for ADHD: systematic review and meta-analyses of randomized controlled trials of dietary and psychological treatments. *The American Journal of Psychiatry*.",
+        "Taylor, E., et al. (2011). European clinical guidelines for hyperkinetic disorder — first update. *European Child & Adolescent Psychiatry*.",
+        "Bloch, M. H., & Qawasmi, A. (2011). Omega-3 fatty acid supplementation for the treatment of children with attention-deficit/hyperactivity disorder symptomatology: systematic review and meta-analysis. *Journal of the American Academy of Child & Adolescent Psychiatry*.",
+        "Ríos-Hernández, A., et al. (2017). The \"gut-brain axis\": The missing link in ADHD. *ADHD Attention Deficit and Hyperactivity Disorders*.",
+        "Boström, A., et al. (2021). The Gut Microbiota and ADHD: The Role of Diet and Probiotic Supplementation. *Nutrients*.",
+        "Cryan, J. F., et al. (2019). The Microbiota-Gut-Brain Axis. *Physiological Reviews*.",
+        "Verlaet, A. A. J., et al. (2018). The role of the gut-brain axis in the pathophysiology of ADHD. *Neuroscience & Biobehavioral Reviews*.",
+        "Dunn, G. A., et al. (2019). The role of diet and nutrition in the etiology and management of attention-deficit/hyperactivity disorder. *Annals of the New York Academy of Sciences*.",
+        "Pelsser, L. M., et al. (2011). Effects of a restricted elimination diet on the behaviour of children with attention-deficit hyperactivity disorder (INCA study): a randomised controlled trial. *The Lancet*.",
+        "Nigg, J. T., & Holton, K. (2014). Restriction and elimination diets in ADHD treatment. *Child and Adolescent Psychiatric Clinics of North America*.",
+        "Pelsser, L. M., & Buitelaar, J. K. (2019). The 'food-sensitive' ADHD subtype. *Journal of Child Psychology and Psychiatry*.",
+        "Ly, V., et al. (2017). Elimination Diets' Efficacy and Mechanisms in Attention Deficit Hyperactivity Disorder and Autism Spectrum Disorder. *Children*.",
+    ];
+    
+    let currentLang = 'en';
+    let effectSizeChart = null;
+
+    const sections = document.querySelectorAll('.content-section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const mobileNav = document.getElementById('mobile-nav');
+
+    function switchLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+        document.querySelectorAll('[data-translate-key]').forEach(el => {
+            const key = el.dataset.translateKey;
+            if (translations[lang][key]) {
+                if(el.tagName === 'INPUT') {
+                    el.placeholder = translations[lang][key];
+                } else if (el.tagName === 'UL') {
+                    el.innerHTML = translations[lang][key];
+                }
+                else {
+                    el.innerHTML = translations[lang][key];
+                }
+            }
+        });
+        
+        document.querySelectorAll('.lang-switcher button').forEach(btn => {
+            btn.classList.toggle('active', btn.id.includes(lang));
+        });
+
+        populateInterventionCards();
+        populateFactMythTable();
+        renderEffectSizeChart();
+    }
+
+    function showSection(id) {
+        sections.forEach(section => {
+            section.classList.toggle('active', section.id === id);
+        });
+        navLinks.forEach(link => {
+            link.classList.toggle('active', link.hash === `#${id}`);
+        });
+        mobileNav.value = id;
+    }
+
+    function handleNavClick(e) {
+        e.preventDefault();
+        const id = e.currentTarget.hash.substring(1);
+        showSection(id);
+        window.history.pushState(null, null, `#${id}`);
+    }
+    
+    navLinks.forEach(link => link.addEventListener('click', handleNavClick));
+    mobileNav.addEventListener('change', (e) => {
+        showSection(e.target.value);
+        window.history.pushState(null, null, `#${e.target.value}`);
+    });
+
+    document.querySelectorAll('.lang-switcher button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const lang = e.target.id.includes('en') ? 'en' : 'id';
+            switchLanguage(lang);
+        });
+    });
+
+    function populateInterventionCards() {
+        const container = document.getElementById('intervention-cards');
+        container.innerHTML = '';
+        interventionData[currentLang].forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer';
+            card.innerHTML = `
+                <div class="p-6">
+                    <h4 class="text-lg font-bold text-stone-800">${item.title}</h4>
+                    <span class="text-sm font-semibold ${item.verdict.toLowerCase().includes('effect') || item.verdict.toLowerCase().includes('evidence') || item.verdict.toLowerCase().includes('efek') || item.verdict.toLowerCase().includes('bukti') ? 'text-teal-600' : 'text-amber-600'}">${item.verdict}</span>
+                    <p class="mt-2 text-stone-600 text-sm">${item.summary}</p>
+                    <div class="details hidden mt-4 pt-4 border-t border-stone-200">
+                        <p class="text-sm text-stone-600">${item.details}</p>
+                    </div>
+                </div>
+            `;
+            card.addEventListener('click', () => {
+                card.querySelector('.details').classList.toggle('hidden');
+            });
+            container.appendChild(card);
+        });
+    }
+
+    function populateFactMythTable(filter = '') {
+        const tbody = document.getElementById('fact-myth-tbody');
+        tbody.innerHTML = '';
+        const filteredData = factMythData[currentLang].filter(item => item.claim.toLowerCase().includes(filter.toLowerCase()) || item.explanation.toLowerCase().includes(filter.toLowerCase()));
+
+        filteredData.forEach(item => {
+            const row = document.createElement('tr');
+            const verdictText = item.verdict.toUpperCase();
+            const verdictKey = verdictText === 'FACT' || verdictText === 'FAKTA' ? 'fact' : 'myth';
+            const verdictClass = verdictKey === 'fact' ? 'text-teal-700 font-bold' : 'text-red-700 font-bold';
+            row.innerHTML = `
+                <td class="px-6 py-4 font-medium text-stone-800">${item.claim}</td>
+                <td class="px-6 py-4 ${verdictClass}">${translations[currentLang][verdictKey]}</td>
+                <td class="px-6 py-4">${item.explanation}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+    
+    function populateReferences() {
+        const list = document.getElementById('references-list');
+        list.innerHTML = '';
+        references.forEach((ref, index) => {
+            const li = document.createElement('li');
+            li.setAttribute('data-ref', `${index + 1}.`);
+            li.innerHTML = ref;
+            list.appendChild(li);
+        });
+    }
+
+    document.getElementById('fact-myth-search').addEventListener('input', (e) => {
+        populateFactMythTable(e.target.value);
+    });
+
+    function renderEffectSizeChart() {
+        const ctx = document.getElementById('effectSizeChart').getContext('2d');
+        if (effectSizeChart) {
+            effectSizeChart.destroy();
+        }
+        effectSizeChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    interventionData[currentLang][0].title, // Few-Foods
+                    interventionData[currentLang][1].title, // AFC
+                    interventionData[currentLang][3].title  // Omega-3
+                ],
+                datasets: [{
+                    label: translations[currentLang].chartLabel,
+                    data: [0.80, 0.22, -0.08],
+                    backgroundColor: ['rgba(20, 131, 125, 0.6)', 'rgba(217, 119, 6, 0.6)', 'rgba(220, 38, 38, 0.6)'],
+                    borderColor: ['rgba(20, 131, 125, 1)', 'rgba(217, 119, 6, 1)', 'rgba(220, 38, 38, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: translations[currentLang].chartAxisTitle
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.x !== null) { label += context.parsed.x.toFixed(2); }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function initializeApp() {
+        const initialHash = window.location.hash.substring(1) || 'home';
+        populateReferences();
+        showSection(initialHash);
+        switchLanguage('en'); // Default to English
+    }
+
+    window.addEventListener('popstate', () => {
+        const hash = window.location.hash.substring(1) || 'home';
+        showSection(hash);
+    });
+
+    initializeApp();
+});
+</script>
+
+</body>
+</html>
