@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodborne Outbreak: Clinical Field Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .flowchart-node {
+            border: 2px solid;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .flowchart-node.start { border-color: #3b82f6; background-color: #dbeafe; }
+        .flowchart-node.decision { border-color: #f97316; background-color: #ffedd5; }
+        .flowchart-node.process { border-color: #16a34a; background-color: #dcfce7; }
+        .flowchart-node.alert { border-color: #ef4444; background-color: #fee2e2; }
+        .flowchart-node.high-threat { border-color: #8b5cf6; background-color: #ede9fe;}
+        .flowchart-node.end { border-color: #6b7280; background-color: #f3f4f6; }
+
+        .flowchart-arrow {
+            position: relative;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .flowchart-arrow::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -1.5rem;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 1.5rem;
+            background-color: #9ca3af;
+        }
+        .flowchart-arrow::after {
+            content: '▼';
+            position: absolute;
+            left: 50%;
+            top: -0.5rem;
+            transform: translateX(-50%);
+            color: #9ca3af;
+            font-size: 1.25rem;
+        }
+        
+        .tab-button.active {
+            border-color: #3b82f6;
+            background-color: #3b82f6;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .lang-button.active {
+            background-color: #1e40af;
+            color: white;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+        
+        <!-- Header -->
+        <header class="text-center mb-8 relative">
+            <div class="absolute top-0 right-0">
+                <div class="flex space-x-1 border rounded-lg p-1 bg-gray-200">
+                    <button class="lang-button active px-3 py-1 text-sm font-medium rounded-md transition" onclick="switchLanguage('en')">EN</button>
+                    <button class="lang-button px-3 py-1 text-sm font-medium rounded-md transition" onclick="switchLanguage('id')">ID</button>
+                </div>
+            </div>
+            <div class="inline-flex items-center justify-center bg-blue-100 text-blue-800 rounded-full p-3 mb-4">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800" data-lang-en="Foodborne Illness Outbreak" data-lang-id="Wabah Penyakit Bawaan Makanan">Foodborne Illness Outbreak</h1>
+            <p class="text-lg text-gray-600 mt-2" data-lang-en="A Clinical Field Guide for Medical Personnel" data-lang-id="Panduan Lapangan Klinis untuk Tenaga Medis">A Clinical Field Guide for Medical Personnel</p>
+        </header>
+
+        <!-- Disclaimer -->
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-md mb-8" role="alert">
+            <div class="flex">
+                <div class="py-1">
+                    <svg class="h-6 w-6 text-yellow-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="font-bold" data-lang-en="Medical Disclaimer" data-lang-id="Sanggahan Medis">Medical Disclaimer</p>
+                    <p class="text-sm" data-lang-en="This guide is intended for use by trained medical professionals as a quick-reference and educational tool. It is **not a substitute for sound clinical judgment, institutional protocols, or consultation with specialists** (e.g., infectious disease, toxicology, public health). Always adapt procedures to the specific clinical scenario. The authors are not liable for any adverse outcomes." data-lang-id="Panduan ini ditujukan untuk digunakan oleh para profesional medis terlatih sebagai alat referensi cepat dan edukasi. Panduan ini **bukan pengganti penilaian klinis yang cermat, protokol institusional, atau konsultasi dengan spesialis** (mis., penyakit menular, toksikologi, kesehatan masyarakat). Selalu sesuaikan prosedur dengan skenario klinis spesifik. Penulis tidak bertanggung jawab atas hasil yang merugikan.">This guide is intended for use by trained medical professionals as a quick-reference and educational tool. It is **not a substitute for sound clinical judgment, institutional protocols, or consultation with specialists** (e.g., infectious disease, toxicology, public health). Always adapt procedures to the specific clinical scenario. The authors are not liable for any adverse outcomes.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="mb-6 flex flex-wrap justify-center border-b border-gray-300">
+            <button class="tab-button active text-base sm:text-lg font-semibold py-3 px-4 sm:px-6 text-gray-600 border-b-2 border-transparent transition-colors duration-300" onclick="switchTab('gastro')">
+                <span data-lang-en="Standard GI Outbreak" data-lang-id="Wabah GI Standar">Standard GI Outbreak</span>
+            </button>
+            <button class="tab-button text-base sm:text-lg font-semibold py-3 px-4 sm:px-6 text-gray-600 border-b-2 border-transparent transition-colors duration-300" onclick="switchTab('botulism')">
+                <span data-lang-en="RED ALERT - Botulism" data-lang-id="SIAGA MERAH - Botulisme">RED ALERT - Botulism</span>
+            </button>
+            <button class="tab-button text-base sm:text-lg font-semibold py-3 px-4 sm:px-6 text-gray-600 border-b-2 border-transparent transition-colors duration-300" onclick="switchTab('other_alerts')">
+                <span data-lang-en="High-Threat Alerts" data-lang-id="Ancaman Tingkat Tinggi">High-Threat Alerts</span>
+            </button>
+        </div>
+
+        <!-- Tab Content: Standard GI -->
+        <div id="gastroContent" class="tab-content active">
+            <!-- content from previous version -->
+        </div>
+
+        <!-- Tab Content: Botulism -->
+        <div id="botulismContent" class="tab-content">
+            <!-- content from previous version -->
+        </div>
+
+        <!-- Tab Content: Other High-Threat Alerts -->
+        <div id="other_alertsContent" class="tab-content">
+            <div class="p-4 bg-white rounded-lg shadow-md border-4 border-purple-500">
+                <h2 class="text-2xl font-bold text-center text-purple-700 mb-6" data-lang-en="Algorithm: Other High-Threat Neurologic &amp; Systemic Toxins" data-lang-id="Algoritma: Ancaman Neurologis &amp; Toksin Sistemik Lainnya">Algorithm: Other High-Threat Neurologic & Systemic Toxins</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="flowchart-node high-threat">
+                        <h3 class="font-bold text-lg" data-lang-en="PATIENT PRESENTS WITH ATYPICAL SYMPTOMS" data-lang-id="PASIEN DATANG DENGAN GEJALA ATIPikal">PATIENT PRESENTS WITH ATYPICAL SYMPTOMS</h3>
+                        <p data-lang-en="Rapid neurotoxicity, delayed organ failure, etc." data-lang-id="Neurotoksisitas cepat, kegagalan organ tertunda, dll.">Rapid neurotoxicity, delayed organ failure, etc.</p>
+                    </div>
+                    <div class="flowchart-arrow"></div>
+                    <div class="flowchart-node decision">
+                        <h3 class="font-bold text-lg" data-lang-en="IDENTIFY TOXIDROME" data-lang-id="IDENTIFIKASI TOKSIDROM">IDENTIFY TOXIDROME</h3>
+                        <p class="text-sm" data-lang-en="Match clinical picture to likely toxin." data-lang-id="Cocokkan gambaran klinis dengan kemungkinan toksin.">Match clinical picture to likely toxin.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                        <div>
+                            <div class="text-center mb-2 font-semibold text-purple-600" data-lang-en="MUSHROOM (AMATOXIN)" data-lang-id="JAMUR (AMATOXIN)">MUSHROOM (AMATOXIN)</div>
+                            <div class="flowchart-arrow"></div>
+                            <div class="flowchart-node high-threat">
+                                <h3 class="font-bold text-lg" data-lang-en="SYMPTOMS" data-lang-id="GEJALA">SYMPTOMS</h3>
+                                <p class="text-sm" data-lang-en="Severe V/D 6-24h post-ingestion, followed by a 'honeymoon' phase, then acute liver &amp; renal failure." data-lang-id="Muntah/Diare parah 6-24 jam pasca-konsumsi, diikuti fase 'tenang', lalu gagal hati & ginjal akut.">Severe V/D 6-24h post-ingestion, followed by a 'honeymoon' phase, then acute liver & renal failure.</p>
+                            </div>
+                            <div class="flowchart-arrow"></div>
+                            <div class="flowchart-node process">
+                                <h3 class="font-bold text-lg" data-lang-en="IMMEDIATE ACTIONS" data-lang-id="TINDAKAN SEGERA">IMMEDIATE ACTIONS</h3>
+                                <ul class="list-disc list-inside text-left text-sm mt-2">
+                                    <li data-lang-en="Aggressive fluid resuscitation" data-lang-id="Resusitasi cairan agresif">Aggressive fluid resuscitation</li>
+                                    <li data-lang-en="Contact Poison Control / Toxicology" data-lang-id="Hubungi Pusat Racun / Toksikologi">Contact Poison Control / Toxicology</li>
+                                    <li data-lang-en="Activated charcoal if within 1-2h" data-lang-id="Arang aktif jika dalam 1-2 jam">Activated charcoal if within 1-2h</li>
+                                    <li data-lang-en="Monitor LFTs, renal function, glucose" data-lang-id="Pantau LFT, fungsi ginjal, glukosa">Monitor LFTs, renal function, glucose</li>
+                                    <li data-lang-en="Silibinin / N-acetylcysteine per protocol" data-lang-id="Silibinin / N-asetilsistein sesuai protokol">Silibinin / N-acetylcysteine per protocol</li>
+                                    <li data-lang-en="Prepare for liver transplant consult" data-lang-id="Siapkan konsultasi transplantasi hati">Prepare for liver transplant consult</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="text-center mb-2 font-semibold text-purple-600" data-lang-en="PARALYTIC SHELLFISH POISONING (PSP)" data-lang-id="KERACUNAN KERANG PARALITIK (PSP)">PARALYTIC SHELLFISH POISONING (PSP)</div>
+                            <div class="flowchart-arrow"></div>
+                             <div class="flowchart-node high-threat">
+                                <h3 class="font-bold text-lg" data-lang-en="SYMPTOMS" data-lang-id="GEJALA">SYMPTOMS</h3>
+                                <p class="text-sm" data-lang-en="Rapid onset (30-60 min). Perioral numbness/tingling, ataxia, cranial nerve dysfunction, ascending paralysis, respiratory failure." data-lang-id="Onset cepat (30-60 menit). Mati rasa/kesemutan perioral, ataksia, disfungsi saraf kranial, kelumpuhan naik, gagal napas.">Rapid onset (30-60 min). Perioral numbness/tingling, ataxia, cranial nerve dysfunction, ascending paralysis, respiratory failure.</p>
+                            </div>
+                            <div class="flowchart-arrow"></div>
+                            <div class="flowchart-node process">
+                                <h3 class="font-bold text-lg" data-lang-en="IMMEDIATE ACTIONS" data-lang-id="TINDAKAN SEGERA">IMMEDIATE ACTIONS</h3>
+                                <ul class="list-disc list-inside text-left text-sm mt-2">
+                                    <li class="font-bold" data-lang-en="AIRWAY PROTECTION IS PRIORITY" data-lang-id="PERLINDUNGAN JALAN NAPAS ADALAH PRIORITAS">AIRWAY PROTECTION IS PRIORITY</li>
+                                    <li data-lang-en="Low threshold for intubation" data-lang-id="Ambang batas rendah untuk intubasi">Low threshold for intubation</li>
+                                    <li data-lang-en="Intensive supportive care in ICU" data-lang-id="Perawatan suportif intensif di ICU">Intensive supportive care in ICU</li>
+                                    <li data-lang-en="No specific antitoxin exists" data-lang-id="Tidak ada antitoksin spesifik">No specific antitoxin exists</li>
+                                    <li data-lang-en="Activated charcoal may be considered" data-lang-id="Arang aktif dapat dipertimbangkan">Activated charcoal may be considered</li>
+                                    <li data-lang-en="Recovery usually within days with support" data-lang-id="Pemulihan biasanya dalam beberapa hari dengan dukungan">Recovery usually within days with support</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- References -->
+        <div class="mt-12 p-6 bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4" data-lang-en="References &amp; Evidence Base" data-lang-id="Referensi &amp; Basis Bukti Ilmiah">References &amp; Evidence Base</h2>
+            <ul class="list-disc list-inside space-y-3 text-sm text-gray-700">
+                <li>
+                    <span data-lang-en="Shane, A. L., Mody, R. K., Crump, J. A., et al. (2017). 2017 Infectious Diseases Society of America Clinical Practice Guidelines for the Diagnosis and Management of Infectious Diarrhea. *Clinical Infectious Diseases, 65*(12), e45–e80." data-lang-id="Shane, A. L., Mody, R. K., Crump, J. A., et al. (2017). 2017 Infectious Diseases Society of America Clinical Practice Guidelines for the Diagnosis and Management of Infectious Diarrhea. *Clinical Infectious Diseases, 65*(12), e45–e80.">Shane, A. L., Mody, R. K., Crump, J. A., et al. (2017). 2017 Infectious Diseases Society of America Clinical Practice Guidelines for the Diagnosis and Management of Infectious Diarrhea. *Clinical Infectious Diseases, 65*(12), e45–e80.</span> 
+                    <a href="https://doi.org/10.1093/cid/cix669" target="_blank" class="text-blue-600 hover:underline">[Link]</a>
+                </li>
+                <li>
+                    <span data-lang-en="Rao, A. K., Sobel, J., Chatham-Stephens, K., & Luquez, C. (2021). Clinical Guidelines for Diagnosis and Treatment of Botulism, 2021. *MMWR Recomm Rep, 70*(No. RR-2), 1–30." data-lang-id="Rao, A. K., Sobel, J., Chatham-Stephens, K., & Luquez, C. (2021). Clinical Guidelines for Diagnosis and Treatment of Botulism, 2021. *MMWR Recomm Rep, 70*(No. RR-2), 1–30.">Rao, A. K., Sobel, J., Chatham-Stephens, K., & Luquez, C. (2021). Clinical Guidelines for Diagnosis and Treatment of Botulism, 2021. *MMWR Recomm Rep, 70*(No. RR-2), 1–30.</span>
+                    <a href="http://dx.doi.org/10.15585/mmwr.rr7002a1" target="_blank" class="text-blue-600 hover:underline">[Link]</a>
+                </li>
+                <li>
+                    <span data-lang-en="Diaz, J. H. (2018). Amatoxin-Containing Mushroom Poisonings: Species, Toxidromes, Treatments, and Outcomes. *Wilderness & Environmental Medicine, 29*(1), 111-118." data-lang-id="Diaz, J. H. (2018). Amatoxin-Containing Mushroom Poisonings: Species, Toxidromes, Treatments, and Outcomes. *Wilderness & Environmental Medicine, 29*(1), 111-118.">Diaz, J. H. (2018). Amatoxin-Containing Mushroom Poisonings: Species, Toxidromes, Treatments, and Outcomes. *Wilderness & Environmental Medicine, 29*(1), 111-118.</span>
+                    <a href="https://doi.org/10.1016/j.wem.2017.10.002" target="_blank" class="text-blue-600 hover:underline">[Link]</a>
+                </li>
+                 <li>
+                    <span data-lang-en="US National Library of Medicine. (2023). Paralytic Shellfish Poisoning. In *StatPearls*. " data-lang-id="US National Library of Medicine. (2023). Paralytic Shellfish Poisoning. In *StatPearls*. ">US National Library of Medicine. (2023). Paralytic Shellfish Poisoning. In *StatPearls*. </span>
+                    <a href="https://www.ncbi.nlm.nih.gov/books/NBK539863/" target="_blank" class="text-blue-600 hover:underline">[Link]</a>
+                </li>
+            </ul>
+        </div>
+
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 text-sm text-gray-500">
+            <p data-lang-en="&copy; 2025 LoLyeah.github.io. All rights reserved." data-lang-id="&copy; 2025 2025 LoLyeah.github.io. Hak cipta dilindungi undang-undang.">&copy; 2025 LoLyeah.github.io. All rights reserved.</p>
+            <p data-lang-en="Guide Version 3.0 | Last Updated: October 2025" data-lang-id="Versi Panduan 3.0 | Terakhir Diperbarui: Oktober 2025">Guide Version 3.0 | Last Updated: October 2025</p>
+            <p><a href="/index.html" class="text-blue-600 hover:underline" data-lang-en="Home" data-lang-id="Beranda">Home</a></p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Store the original content to repopulate on tab switch
+        const originalGastroContent = document.getElementById('gastroContent').innerHTML;
+        const originalBotulismContent = document.getElementById('botulismContent').innerHTML;
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            // Populate the gastro and botulism tabs with their original content, translated.
+            document.getElementById('gastroContent').innerHTML = `
+            <div class="p-4 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold text-center text-blue-700 mb-6" data-lang-en="Algorithm: Standard Gastroenteritis Outbreak" data-lang-id="Algoritma: Wabah Gastroenteritis Standar">Algorithm: Standard Gastroenteritis Outbreak</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="flowchart-node start">
+                        <h3 class="font-bold text-lg" data-lang-en="PATIENT INFLUX FROM SCHOOL" data-lang-id="ARUS PASIEN DARI SEKOLAH">PATIENT INFLUX FROM SCHOOL</h3>
+                        <p data-lang-en="Mass casualty triage initiated" data-lang-id="Triase bencana massal dimulai">Mass casualty triage initiated</p>
+                    </div>
+                    <div class="flowchart-arrow"></div>
+                    <div class="flowchart-node decision">
+                        <h3 class="font-bold text-lg" data-lang-en="TRIAGE: ASSESS FOR RED FLAGS" data-lang-id="TRIASE: KAJI TANDA BAHAYA">TRIAGE: ASSESS FOR RED FLAGS</h3>
+                        <p class="text-sm" data-lang-en="(Severe Dehydration, High Fever >39°C, Bloody Diarrhea, Neurological Symptoms, Persistent Vomiting)" data-lang-id="(Dehidrasi Berat, Demam Tinggi >39°C, Diare Berdarah, Gejala Neurologis, Muntah Terus-menerus)">(Severe Dehydration, High Fever >39°C, Bloody Diarrhea, Neurological Symptoms, Persistent Vomiting)</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                        <div>
+                            <div class="text-center mb-2 font-semibold text-red-600" data-lang-en="YES - RED FLAGS" data-lang-id="YA - TANDA BAHAYA">YES - RED FLAGS</div>
+                            <div class="flowchart-arrow"></div>
+                            <div class="flowchart-node alert">
+                                <h3 class="font-bold text-lg" data-lang-en="ACUTE CARE PATHWAY" data-lang-id="JALUR PERAWATAN AKUT">ACUTE CARE PATHWAY</h3>
+                                <p data-lang-en="Move to resuscitation bay" data-lang-id="Pindahkan ke ruang resusitasi">Move to resuscitation bay</p>
+                            </div>
+                            <div class="flowchart-arrow"></div>
+                            <div class="flowchart-node process">
+                                <h3 class="font-bold text-lg" data-lang-en="TREATMENT" data-lang-id="PENATALAKSANAAN">TREATMENT</h3>
+                                <ul class="list-disc list-inside text-left text-sm mt-2">
+                                    <li data-lang-en="IV Rehydration (NS/LR)" data-lang-id="Rehidrasi IV (NS/RL)">IV Rehydration (NS/LR)</li>
+                                    <li data-lang-en="Blood Work (Lytes, Renal, CBC)" data-lang-id="Pemeriksaan Darah (Elektrolit, Ginjal, DPL)">Blood Work (Lytes, Renal, CBC)</li>
+                                    <li data-lang-en="Stool Cultures &amp; O&amp;P" data-lang-id="Kultur Feses &amp; O&amp;P">Stool Cultures &amp; O&P</li>
+                                    <li data-lang-en="IV Antiemetics (Ondansetron)" data-lang-id="Antiemetik IV (Ondansetron)">IV Antiemetics (Ondansetron)</li>
+                                    <li data-lang-en="Consider abdomen imaging if severe pain" data-lang-id="Pertimbangkan pencitraan abdomen jika nyeri hebat">Consider abdomen imaging if severe pain</li>
+                                </ul>
+                            </div>
+                             <div class="flowchart-arrow"></div>
+                             <div class="flowchart-node end">
+                                <h3 class="font-bold text-lg" data-lang-en="ADMIT TO HOSPITAL" data-lang-id="RAWAT INAP">ADMIT TO HOSPITAL</h3>
+                                <p data-lang-en="Continue monitoring and supportive care" data-lang-id="Lanjutkan pemantauan dan perawatan suportif">Continue monitoring and supportive care</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-center mb-2 font-semibold text-green-600" data-lang-en="NO - STABLE" data-lang-id="TIDAK - STABIL">NO - STABLE</div>
+                            <div class="flowchart-arrow"></div>
+                            <div class="flowchart-node process">
+                                <h3 class="font-bold text-lg" data-lang-en="OBSERVATION PATHWAY" data-lang-id="JALUR OBSERVASI">OBSERVATION PATHWAY</h3>
+                                <p data-lang-en="Move to designated observation area" data-lang-id="Pindahkan ke area observasi">Move to designated observation area</p>
+                            </div>
+                            <div class="flowchart-arrow"></div>
+                            <div class="flowchart-node process">
+                                <h3 class="font-bold text-lg" data-lang-en="TREATMENT" data-lang-id="PENATALAKSANAAN">TREATMENT</h3>
+                                 <ul class="list-disc list-inside text-left text-sm mt-2">
+                                    <li data-lang-en="Oral Rehydration Solution (ORS) Challenge" data-lang-id="Uji Larutan Rehidrasi Oral (Oralit)">Oral Rehydration Solution (ORS) Challenge</li>
+                                    <li data-lang-en="Bland Diet (BRAT) when tolerated" data-lang-id="Diet Lunak (BRAT) jika dapat ditoleransi">Bland Diet (BRAT) when tolerated</li>
+                                    <li data-lang-en="Symptom control (Oral antiemetics prn)" data-lang-id="Kontrol gejala (Antiemetik oral bila perlu)">Symptom control (Oral antiemetics prn)</li>
+                                </ul>
+                            </div>
+                            <div class="flowchart-arrow"></div>
+                            <div class="flowchart-node end">
+                                <h3 class="font-bold text-lg" data-lang-en="DISCHARGE HOME" data-lang-id="PULANG">DISCHARGE HOME</h3>
+                                <p data-lang-en="With strict return precautions &amp; hygiene education" data-lang-id="Dengan edukasi ketat kapan kembali &amp; kebersihan">With strict return precautions & hygiene education</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flowchart-arrow"></div>
+                    <div class="flowchart-node start mt-8">
+                        <h3 class="font-bold text-lg" data-lang-en="PUBLIC HEALTH ACTION (FOR ALL PATIENTS)" data-lang-id="TINDAKAN KESEHATAN MASYARAKAT (SEMUA PASIEN)">PUBLIC HEALTH ACTION (FOR ALL PATIENTS)</h3>
+                        <p data-lang-en="Gather detailed food history. Report suspected outbreak to Local Health Department immediately." data-lang-id="Kumpulkan riwayat makanan detail. Laporkan dugaan wabah ke Dinas Kesehatan setempat segera.">Gather detailed food history. Report suspected outbreak to Local Health Department immediately.</p>
+                    </div>
+                    <div class="mt-12">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" data-lang-en="Key Clinical Directives" data-lang-id="Arahan Klinis Utama">Key Clinical Directives</h3>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                                <h4 class="font-bold text-red-700" data-lang-en="DO NOT Routinely Use Antibiotics" data-lang-id="JANGAN Gunakan Antibiotik Secara Rutin">DO NOT Routinely Use Antibiotics</h4>
+                                <p class="text-sm text-red-600" data-lang-en="Most cases are viral or toxin-mediated. Antibiotics are useless and can worsen outcomes in certain bacterial infections (e.g., E. coli O157:H7) by increasing toxin release. Reserve for suspected Shigella, Listeria, or septic patients." data-lang-id="Sebagian besar kasus disebabkan oleh virus atau toksin. Antibiotik tidak berguna dan dapat memperburuk hasil pada infeksi bakteri tertentu (mis., E. coli O157:H7) dengan meningkatkan pelepasan toksin. Gunakan hanya untuk dugaan Shigella, Listeria, atau pasien sepsis.">Most cases are viral or toxin-mediated. Antibiotics are useless and can worsen outcomes in certain bacterial infections (e.g., E. coli O157:H7) by increasing toxin release. Reserve for suspected Shigella, Listeria, or septic patients.</p>
+                            </div>
+                            <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                                <h4 class="font-bold text-orange-700" data-lang-en="DO NOT Use Antidiarrheals for Bloody Diarrhea" data-lang-id="JANGAN Gunakan Antidiare untuk Diare Berdarah">DO NOT Use Antidiarrheals for Bloody Diarrhea</h4>
+                                <p class="text-sm text-orange-600" data-lang-en="Inhibiting gut motility can increase toxin absorption time and worsen the illness, potentially leading to complications like toxic megacolon or HUS. Use with extreme caution in non-bloody diarrhea." data-lang-id="Menghambat motilitas usus dapat meningkatkan waktu penyerapan toksin dan memperburuk penyakit, berpotensi menyebabkan komplikasi seperti megakolon toksik atau HUS. Gunakan dengan sangat hati-hati pada diare tanpa darah.">Inhibiting gut motility can increase toxin absorption time and worsen the illness, potentially leading to complications like toxic megacolon or HUS. Use with extreme caution in non-bloody diarrhea.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+            document.getElementById('botulismContent').innerHTML = `
+            <div class="p-4 bg-white rounded-lg shadow-md border-4 border-red-500">
+                <h2 class="text-2xl font-bold text-center text-red-700 mb-6" data-lang-en="Algorithm: RED ALERT - Suspected Botulism" data-lang-id="Algoritma: SIAGA MERAH - Dugaan Botulisme">Algorithm: RED ALERT - Suspected Botulism</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="flowchart-node alert">
+                        <h3 class="font-bold text-lg" data-lang-en="ANY PATIENT PRESENTS WITH NEUROLOGICAL SYMPTOMS" data-lang-id="SETIAP PASIEN DENGAN GEJALA NEUROLOGIS">ANY PATIENT PRESENTS WITH NEUROLOGICAL SYMPTOMS</h3>
+                        <p class="font-semibold text-red-800" data-lang-en="Diplopia, Ptosis, Dysphagia, Dysarthria, Descending Paralysis" data-lang-id="Diplopia, Ptosis, Disfagia, Disartria, Kelumpuhan Menurun">Diplopia, Ptosis, Dysphagia, Dysarthria, Descending Paralysis</p>
+                    </div>
+                    <div class="flowchart-arrow"></div>
+                    <div class="flowchart-node alert">
+                        <h3 class="font-bold text-lg" data-lang-en="DECLARE LEVEL 1 EMERGENCY" data-lang-id="NYATAKAN DARURAT LEVEL 1">DECLARE LEVEL 1 EMERGENCY</h3>
+                        <p data-lang-en="This is a medical and public health crisis. Activate hospital command center." data-lang-id="Ini adalah krisis medis dan kesehatan masyarakat. Aktifkan pusat komando rumah sakit.">This is a medical and public health crisis. Activate hospital command center.</p>
+                    </div>
+                    <div class="flowchart-arrow"></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                         <div>
+                            <div class="flowchart-node process">
+                                <h3 class="font-bold text-lg" data-lang-en="IMMEDIATE CLINICAL ACTIONS" data-lang-id="TINDAKAN KLINIS SEGERA">IMMEDIATE CLINICAL ACTIONS</h3>
+                                 <ul class="list-disc list-inside text-left text-sm mt-2">
+                                    <li class="font-semibold" data-lang-en="ADMIT ALL TO ICU" data-lang-id="RAWAT SEMUA DI ICU">ADMIT ALL TO ICU</li>
+                                    <li data-lang-en="Protect AIRWAY: Frequent respiratory checks. Low threshold for intubation." data-lang-id="Lindungi JALAN NAPAS: Periksa pernapasan sering. Ambang batas rendah untuk intubasi.">Protect AIRWAY: Frequent respiratory checks. Low threshold for intubation.</li>
+                                    <li data-lang-en="SUPPORTIVE CARE: Ventilation, nutrition." data-lang-id="PERAWATAN SUPORTIF: Ventilasi, nutrisi.">SUPPORTIVE CARE: Ventilation, nutrition.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                           <div class="flowchart-node alert">
+                                <h3 class="font-bold text-lg" data-lang-en="IMMEDIATE PHARMACOLOGICAL &amp; PUBLIC HEALTH ACTIONS" data-lang-id="TINDAKAN FARMAKOLOGI &amp; KESMAS SEGERA">IMMEDIATE PHARMACOLOGICAL & PUBLIC HEALTH ACTIONS</h3>
+                                 <ul class="list-disc list-inside text-left text-sm mt-2">
+                                    <li class="font-semibold text-red-700" data-lang-en="REQUEST ANTITOXIN NOW" data-lang-id="MINTA ANTITOKSIN SEKARANG">REQUEST ANTITOXIN NOW</li>
+                                    <li data-lang-en="DO NOT wait for lab confirmation." data-lang-id="JANGAN tunggu konfirmasi lab.">DO NOT wait for lab confirmation.</li>
+                                    <li data-lang-en="Contact State Health Dept / CDC immediately." data-lang-id="Hubungi Dinkes Provinsi / Kemenkes segera.">Contact State Health Dept / CDC immediately.</li>
+                                    <li data-lang-en="Identify and recall ALL exposed individuals." data-lang-id="Identifikasi dan panggil SEMUA individu yang terpapar.">Identify and recall ALL exposed individuals.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-12">
+                         <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" data-lang-en="Botulism vs. Standard Gastroenteritis: The Critical Differences" data-lang-id="Botulisme vs. Gastroenteritis Standar: Perbedaan Kritis">Botulism vs. Standard Gastroenteritis: The Critical Differences</h3>
+                         <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-gray-500">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3" data-lang-en="Feature" data-lang-id="Fitur">Feature</th>
+                                        <th scope="col" class="px-6 py-3 bg-green-50" data-lang-en="Standard GI Outbreak" data-lang-id="Wabah GI Standar">Standard GI Outbreak</th>
+                                        <th scope="col" class="px-6 py-3 bg-red-50" data-lang-en="Botulism Outbreak" data-lang-id="Wabah Botulisme">Botulism Outbreak</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-white border-b"><th scope="row" class="px-6 py-4 font-medium text-gray-900" data-lang-en="Primary System" data-lang-id="Sistem Utama">Primary System</th><td class="px-6 py-4 bg-green-50" data-lang-en="Gastrointestinal" data-lang-id="Gastrointestinal">Gastrointestinal</td><td class="px-6 py-4 bg-red-50 font-bold" data-lang-en="Neurological" data-lang-id="Neurologis">Neurological</td></tr>
+                                    <tr class="bg-white border-b"><th scope="row" class="px-6 py-4 font-medium text-gray-900" data-lang-en="Main Threat" data-lang-id="Ancaman Utama">Main Threat</th><td class="px-6 py-4 bg-green-50" data-lang-en="Dehydration & Electrolyte Imbalance" data-lang-id="Dehidrasi & Ketidakseimbangan Elektrolit">Dehydration & Electrolyte Imbalance</td><td class="px-6 py-4 bg-red-50 font-bold" data-lang-en="Respiratory Failure & Paralysis" data-lang-id="Gagal Napas & Kelumpuhan">Respiratory Failure & Paralysis</td></tr>
+                                    <tr class="bg-white border-b"><th scope="row" class="px-6 py-4 font-medium text-gray-900" data-lang-en="Core Treatment" data-lang-id="Terapi Inti">Core Treatment</th><td class="px-6 py-4 bg-green-50" data-lang-en="Fluid Resuscitation (IV/Oral)" data-lang-id="Resusitasi Cairan (IV/Oral)">Fluid Resuscitation (IV/Oral)</td><td class="px-6 py-4 bg-red-50 font-bold" data-lang-en="Antitoxin & Mechanical Ventilation" data-lang-id="Antitoksin & Ventilasi Mekanis">Antitoxin & Mechanical Ventilation</td></tr>
+                                    <tr class="bg-white border-b"><th scope="row" class="px-6 py-4 font-medium text-gray-900" data-lang-en="Urgency" data-lang-id="Urgensi">Urgency</th><td class="px-6 py-4 bg-green-50" data-lang-en="Urgent" data-lang-id="Urgensi">Urgent</td><td class="px-6 py-4 bg-red-50 font-bold" data-lang-en="EXTREME EMERGENCY" data-lang-id="SANGAT DARURAT">EXTREME EMERGENCY</td></tr>
+                                    <tr class="bg-white"><th scope="row" class="px-6 py-4 font-medium text-gray-900" data-lang-en="Public Health Response" data-lang-id="Respons Kesehatan Masyarakat">Public Health Response</th><td class="px-6 py-4 bg-green-50" data-lang-en="Standard Outbreak Investigation" data-lang-id="Investigasi Wabah Standar">Standard Outbreak Investigation</td><td class="px-6 py-4 bg-red-50 font-bold" data-lang-en="Crisis-level Containment & Prophylaxis" data-lang-id="Penahanan & Profilaksis Tingkat Krisis">Crisis-level Containment & Prophylaxis</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            switchLanguage('en'); // Set default language
+        });
+
+
+        function switchTab(tabName) {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => button.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            document.querySelector(`button[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}Content`).classList.add('active');
+        }
+
+        function switchLanguage(lang) {
+            const elements = document.querySelectorAll('[data-lang-en]');
+            elements.forEach(el => {
+                if (lang === 'id') {
+                    el.innerHTML = el.dataset.langId;
+                } else {
+                    el.innerHTML = el.dataset.langEn;
+                }
+            });
+            
+            document.querySelectorAll('.lang-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.lang-button[onclick="switchLanguage('${lang}')"]`).classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
