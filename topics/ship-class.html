@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naval Ship Class Comparison: The Fleet Spectrum</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Montserrat:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px 40px;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.8em;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        h1::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #3498db;
+            border-radius: 2px;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: #34495e;
+            font-size: 1.8em;
+            margin-top: 35px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+
+        .infographic-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px; /* Spacing between cards */
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .ship-card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex: 1 1 calc(33.333% - 25px); /* Three columns by default */
+            min-width: 300px; /* Minimum width for cards */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .ship-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .ship-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: #3498db;
+            font-size: 1.6em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .ship-card .mission-title {
+            font-style: italic;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Mission Colors */
+        .mission-constabulary { background-color: #2ecc71; } /* Green for patrol/security */
+        .mission-littoral { background-color: #f39c12; } /* Orange for coastal combat */
+        .mission-multirole { background-color: #3498db; } /* Blue for versatile combat */
+        .mission-powerproj { background-color: #e74c3c; } /* Red for power projection/heavy combat */
+        .mission-stealth { background-color: #7f8c8d; } /* Grey for stealth/underwater */
+        .mission-support { background-color: #9b59b6; } /* Purple for support/logistics */
+
+        .ship-card p strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+
+        .ship-card ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        .ship-card ul li {
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .ship-card ul li::before {
+            content: '•';
+            color: #3498db;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .icon {
+            font-size: 1.2em;
+            margin-right: 8px;
+            color: #3498db;
+        }
+
+        .feature-box {
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            border-left: 4px solid #3498db;
+        }
+
+        .feature-box strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 1200px) {
+            .ship-card {
+                flex: 1 1 calc(50% - 25px); /* Two columns */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .ship-card {
+                flex: 1 1 100%; /* Single column */
+                min-width: unset;
+            }
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Naval Ship Class Comparison: The Fleet Spectrum</h1>
+        <p style="text-align: center; font-size: 1.1em; color: #555; margin-bottom: 50px;">
+            From coastal patrol to global power projection, each naval vessel is a specialized tool designed for a unique mission. Explore the diverse capabilities of the world's most powerful ships.
+        </p>
+
+        <h2>The Patrol & Coastal Force</h2>
+        <div class="infographic-grid">
+
+            <div class="ship-card">
+                <h3>Offshore Patrol Vessel (OPV)</h3>
+                <div class="mission-title mission-constabulary">⚓ Maritime Security & Patrol</div>
+                <p>The **maritime police officer**. Designed for long endurance and presence in a nation's territorial waters and Exclusive Economic Zone (EEZ).</p>
+                <div class="feature-box">
+                    <strong>Key Capability:</strong> <span class="icon">🧭</span> **Endurance & Range**
+                </div>
+                <ul>
+                    <li>**Armament:** Light (e.g., 30-76mm cannon, MGs)</li>
+                    <li>**Typical Size:** 1,500 - 3,000 tons</li>
+                    <li>**Cost & Crew:** Lowest; long operational time for low cost</li>
+                    <li>**Role:** Anti-piracy, anti-smuggling, SAR, fishery protection</li>
+                </ul>
+            </div>
+
+            <div class="ship-card">
+                <h3>Corvette</h3>
+                <div class="mission-title mission-littoral">⚔️ Littoral Combat & Fast Attack</div>
+                <p>The **light, fast fighter** for coastal areas. Smallest true warship, optimized for agility and striking power in contested home waters.</p>
+                <div class="feature-box">
+                    <strong>Key Capability:</strong> <span class="icon">⚡</span> **Speed & Offensive Firepower**
+                </div>
+                <ul>
+                    <li>**Armament:** Medium (e.g., 76mm cannon), **Anti-Ship Missiles (key!)**, short-range SAMs</li>
+                    <li>**Typical Size:** 1,000 - 3,500 tons</li>
+                    <li>**Cost & Crew:** Medium; main warship for many smaller navies</li>
+                    <li>**Role:** Coastal defense, sea denial, anti-surface/ASW in shallow waters</li>
+                </ul>
+            </div>
+
+            <div class="ship-card">
+                <h3>Fast Attack Craft (FAC) / Missile Boat</h3>
+                <div class="mission-title mission-littoral">🚀 Rapid Strike & Coastal Denial</div>
+                <p>The **coastal mosquito with a sting**. Very small, very fast, and armed disproportionately with powerful anti-ship missiles. Focus on hit-and-run tactics.</p>
+                <div class="feature-box">
+                    <strong>Key Capability:</strong> <span class="icon">💨</span> **Extreme Speed & Missile Punch**
+                </div>
+                <ul>
+                    <li>**Armament:** Heavy Anti-Ship Missiles, light cannon</li>
+                    <li>**Typical Size:** 50 - 800 tons</li>
+                    <li>**Cost & Crew:** Low; cheap to operate, hard to detect</li>
+                    <li>**Role:** Swarm tactics, anti-access/area denial in choke points</li>
+                </ul>
+            </div>
+
+        </div> <!-- End of Patrol & Coastal Force --><h2>The Blue Water Fleet</h2>
+        <div class="infographic-grid">
+
+            <div class="ship-card">
+                <h3>Frigate</h3>
+                <div class="mission-title mission-multirole">🌊 Multi-Domain Blue Water Warfare</div>
+                <p>The **versatile fleet escort**. A balanced warship designed for independent operations or to protect larger ships against air, surface, and sub-surface threats far from home.</p>
+                <div class="feature-box">
+                    <strong>Key Capability:</strong> <span class="icon">🛡️</span> **Balanced Sensors & Versatility**
+                </div>
+                <ul>
+                    <li>**Armament:** 76-127mm cannon, VLS for SAMs, AShMs, advanced sonar & torpedoes, helicopter(s)</li>
+                    <li>**Typical Size:** 3,500 - 8,000+ tons</li>
+                    <li>**Cost & Crew:** High; workhorse of modern navies</li>
+                    <li>**Role:** ASW, AAW, escort, independent patrol, task group command</li>
+                </ul>
+            </div>
+
+            <div class="ship-card">
+                <h3>Destroyer</h3>
+                <div class="mission-title mission-multirole">💥 Advanced Air & Missile Defense</div>
+                <p>The **primary air defense shield**. Larger and more capable than a frigate, often specialized in advanced Anti-Air Warfare (AAW) with powerful radar and numerous missile cells.</p>
+                <div class="feature-box">
+                    <strong>Key Capability:</strong> <span class="icon">📡</span> **Advanced AAW & Command Capacity**
+                </div>
+                <ul>
+                    <li>**Armament:** 127mm cannon, **Extensive VLS (hundreds of missiles)** for SAMs (long-range), AShMs, land-attack missiles, torpedoes, 2 helicopters</li>
+                    <li>**Typical Size:** 7,000 - 10,000+ tons</li>
+                    <li>**Cost & Crew:** Very High; critical for fleet air defense</li>
+                    <li>**Role:** Fleet escort (especially AAW), ballistic missile defense, strike operations</li>
+                </ul>
+            </div>
+
+            <div class="ship-card">
+                <h3>Cruiser</h3>
+                <div class="mission-title mission-powerproj">💪 Fleet Command & Area Dominance</div>
+                <p>The **heavy-hitter & fleet commander**. Historically a powerful, independent warship, modern cruisers are typically very large destroyers, serving as command ships with maximum firepower and sensor suites.</p>
+                <div class="feature-box">
+                    <strong>Key Capability:</strong> <span class="icon">👑</span> **Command & Overwhelming Firepower**
+                </div>
+                <ul>
+                    <li>**Armament:** Similar to destroyers but *more* of everything. Often dual 127mm guns, vast VLS capacity, advanced sensors.</li>
+                    <li>**Typical Size:** 10,000 - 15,000+ tons (modern)</li>
+                    <li>**Cost & Crew:** Extremely High; few navies operate them today</li>
+                    <li>**Role:** Flagship, major AAW/ASW, surface combat, power projection</li>
+                </ul>
+            </div>
+
+        </div> <!-- End of Blue Water Fleet --><h2>The Strategic Assets</h2>
+        <div class="infographic-grid">
+
+            <div class="ship-card">
+                <h3>Aircraft Carrier (CVN/CV)</h3>
+                <div class="mission-title mission-powerproj">✈️ Global Power Projection & Air Superiority</div>
+                <p>The **floating airbase**. The ultimate symbol of naval power. Carries a large air wing (dozens of aircraft) to project air power thousands of miles from home.</p>
+                <div class="feature-box">
+                    <strong>Key Capability:</strong> <span class="icon">🌍</span> **Project Air Power Globally**
+                </div>
+                <ul>
+                    <li>**Armament:** Its aircraft are its weapons; defensive armament for self-defense</li>
+                    <li>**Typical Size:** 60,000 - 100,000+ tons (Supercarriers)</li>
+                    <li>**Cost & Crew:** Astronomical; decades to build, thousands of crew</li>
+                    <li>**Role:** Strike operations, air defense, force projection, diplomatic presence</li>
+                </ul>
+            </div>
+
+            <div class="ship-card">
+                <h3>Amphibious Assault Ship (LHD/LHA)</h3>
+                <div class="mission-title mission-support">🪖 Marine Expeditionary & Landing Ops</div>
+                <p>The **mobile invasion platform**. Acts as a smaller carrier for helicopters and VSTOL jets, but primarily designed to transport, land, and support thousands of marines and their equipment.</p>
+                <div class="feature-box">
+                    <strong>Key Capability:</strong> <span class="icon">🏝️</span> **Marine Transport & Landing**
+                </div>
+                <ul>
+                    <li>**Armament:** Defensive weapons (SAMs, CIWS); carries helicopters, MV-22 Ospreys, F-35B jets, landing craft, thousands of troops</li>
+                    <li>**Typical Size:** 20,000 - 45,000 tons</li>
+                    <li>**Cost & Crew:** Very High; essential for projecting ground forces over the sea</li>
+                    <li>**Role:** Amphibious assault, humanitarian aid, disaster relief, expeditionary air support</li>
+                </ul>
+            </div>
+
+            <div class="ship-card">
+                <h3>Submarine (SSN/SSBN/SSK)</h3>
+                <div class="mission-title mission-stealth">🤫 Stealth, Surveillance & Silent Strike</div>
+                <p>The **hunter of the deep**. Operates undetected for long periods. Can launch torpedoes, missiles, or nuclear weapons. Comes in attack (SSN/SSK) and ballistic missile (SSBN) variants.</p>
+                <div class="feature-box">
+                    <strong>Key Capability:</strong> <span class="icon">👻</span> **Absolute Stealth & Undersea Dominance**
+                </div>
+                <ul>
+                    <li>**Armament:** Torpedoes, anti-ship missiles, land-attack cruise missiles, ballistic missiles (SSBN)</li>
+                    <li>**Typical Size:** 1,000 - 20,000+ tons (SSBNs)</li>
+                    <li>**Cost & Crew:** Extremely High; complex, highly specialized operations</li>
+                    <li>**Role:** Anti-submarine warfare, anti-surface warfare, intelligence gathering, strategic deterrence</li>
+                </ul>
+            </div>
+
+            <div class="ship-card">
+                <h3>Battleship (Historical)</h3>
+                <div class="mission-title mission-powerproj" style="background-color: #7f8c8d;">🕰️ Historical Naval Dominance</div>
+                <p>The **king of dreadnoughts**. While no longer in active service, battleships were once the most powerful surface combatants, defined by their enormous guns and heavy armor. Pure surface combat.</p>
+                <div class="feature-box">
+                    <strong>Key Capability:</strong> <span class="icon">💣</span> **Massive Guns & Impenetrable Armor**
+                </div>
+                <ul>
+                    <li>**Armament:** Main battery of 9-16 large-caliber guns (e.g., 14-18 inches), secondary guns, AA guns</li>
+                    <li>**Typical Size:** 20,000 - 70,000+ tons</li>
+                    <li>**Cost & Crew:** Very High (in their era); slow, expensive to operate</li>
+                    <li>**Role:** Fleet-on-fleet surface combat, shore bombardment</li>
+                </ul>
+            </div>
+
+            <div class="ship-card">
+                <h3>Support & Auxiliary Ships</h3>
+                <div class="mission-title mission-support">⛽ Resupply & Fleet Support</div>
+                <p>The **unsung heroes of the fleet**. Essential vessels that keep the combat ships operating by providing fuel, ammunition, provisions, repairs, and medical support at sea.</p>
+                <div class="feature-box">
+                    <strong>Key Capability:</strong> <span class="icon">❤️‍🩹</span> **Sustained Operations at Sea**
+                </div>
+                <ul>
+                    <li>**Armament:** Minimal defensive (MGs, light CIWS)</li>
+                    <li>**Typical Size:** Varies wildly (2,000 - 50,000+ tons)</li>
+                    <li>**Cost & Crew:** Moderate to High; vital for global reach</li>
+                    <li>**Role:** Replenishment at Sea (RAS), hospital, salvage, research, tender duties</li>
+                </ul>
+            </div>
+
+        </div> <!-- End of Strategic Assets --><p style="text-align: center; margin-top: 50px; font-size: 0.9em; color: #777;">
+            <em>Note: Tonnage and armament are approximate and can vary significantly by navy and specific ship design. "Mission" reflects primary design intent.</em>
+        </p>
+
+    </div>
+</body>
+</html>
