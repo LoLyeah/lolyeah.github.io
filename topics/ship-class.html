@@ -3,374 +3,704 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Naval Ship Class Comparison: The Fleet Spectrum</title>
+    <title>The Modern Naval Spectrum: Ship Comparison</title>
+    <!-- Importing modern fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Montserrat:wght@400;600&display=swap');
+        /* * AESTHETIC REDESIGN V3
+         * 1. Added Tabbed Interface (Infographic / Table)
+         * 2. Added Category Explanations
+         * 3. Added more key points (Range/Endurance) to cards
+         * 4. Created new comparison table
+        */
+
+        :root {
+            --color-bg: #f0f4f8; /* Light blue-grey background */
+            --color-header-bg: #1a2b3c; /* Deep naval blue */
+            --color-header-text: #ffffff;
+            --color-card-bg: #ffffff;
+            --color-text-primary: #212529;
+            --color-text-secondary: #5a687b;
+            --color-accent: #007bff; /* A clean, modern blue accent */
+            --color-accent-hover: #0056b3;
+            --font-header: 'Oswald', sans-serif;
+            --font-body: 'Roboto', sans-serif;
+            --card-shadow: 0 6px 18px rgba(0, 30, 60, 0.07);
+            --card-shadow-hover: 0 10px 25px rgba(0, 30, 60, 0.12);
+            --card-radius: 12px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: var(--font-body);
             margin: 0;
-            padding: 20px;
-            background-color: #f4f7f6;
-            color: #333;
-            line-height: 1.6;
+            padding: 0;
+            background-color: var(--color-bg);
+            color: var(--color-text-primary);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            padding: 30px 40px;
-        }
-
-        h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            color: #2c3e50;
+        /* --- Header Section --- */
+        .header-container {
+            background-color: var(--color-header-bg);
+            color: var(--color-header-text);
+            padding: 50px 30px 60px 30px;
             text-align: center;
-            margin-bottom: 40px;
-            font-size: 2.8em;
-            position: relative;
-            padding-bottom: 15px;
-        }
-        h1::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background-color: #3498db;
-            border-radius: 2px;
+            background-image: linear-gradient(rgba(26, 43, 60, 0.95), rgba(26, 43, 60, 0.95)), url('https://placehold.co/1920x400/333/555?text=Naval+Fleet+Silhouette');
+            background-size: cover;
+            background-position: center 30%;
+            border-bottom: 4px solid var(--color-accent);
         }
 
-        h2 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            color: #34495e;
-            font-size: 1.8em;
-            margin-top: 35px;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #ecf0f1;
+        .header-container h1 {
+            font-family: var(--font-header);
+            font-weight: 700;
+            font-size: 3.5rem;
+            margin: 0 0 15px 0;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header-container p {
+            font-size: 1.15rem;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* --- Main Content --- */
+        .main-container {
+            max-width: 1800px; /* Increased max-width for wider layout */
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* --- Tab System --- */
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .tab-btn {
+            font-family: var(--font-header);
+            font-size: 1.25rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            background: none;
+            border: none;
+            padding: 15px 30px;
+            cursor: pointer;
+            color: var(--color-text-secondary);
+            border-bottom: 4px solid transparent;
+            transform: translateY(2px); /* Aligns with bottom border */
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--color-accent-hover);
+        }
+
+        .tab-btn.active {
+            color: var(--color-accent);
+            border-bottom-color: var(--color-accent);
+        }
+
+        .tab-content {
+            display: none; /* Hidden by default */
+        }
+
+        .tab-content.active {
+            display: block; /* Shown when active */
+        }
+
+        /* --- Infographic View --- */
+        .category-header {
+            font-family: var(--font-header);
+            font-weight: 500;
+            font-size: 2.5rem;
+            color: var(--color-header-bg);
+            margin-top: 30px;
+            margin-bottom: 15px;
             padding-bottom: 10px;
+            border-bottom: 2px solid rgba(0,0,0,0.08);
+            text-align: left;
+        }
+        
+        .category-explanation {
+            font-size: 1.05rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 25px;
+            max-width: 100%;
         }
 
         .infographic-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 25px; /* Spacing between cards */
+            display: grid;
+            /* Updated to make cards wider */
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 28px;
             justify-content: center;
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         .ship-card {
-            background-color: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            flex: 1 1 calc(33.333% - 25px); /* Three columns by default */
-            min-width: 300px; /* Minimum width for cards */
+            background-color: var(--color-card-bg);
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            overflow: hidden; /* To contain the top border */
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            border-top: 6px solid; /* Color set by mission class */
         }
 
         .ship-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .card-content {
+            padding: 25px 30px 30px 30px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Makes card stretch to fill height */
         }
 
         .ship-card h3 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            color: #3498db;
-            font-size: 1.6em;
+            font-family: var(--font-header);
+            font-weight: 500;
+            font-size: 1.8rem;
+            color: var(--color-text-primary);
             margin-top: 0;
-            margin-bottom: 15px;
-            text-align: center;
+            margin-bottom: 10px;
         }
 
-        .ship-card .mission-title {
-            font-style: italic;
-            font-size: 0.95em;
-            margin-bottom: 15px;
-            padding: 8px 12px;
-            border-radius: 6px;
-            text-align: center;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        /* Mission Colors */
-        .mission-constabulary { background-color: #2ecc71; } /* Green for patrol/security */
-        .mission-littoral { background-color: #f39c12; } /* Orange for coastal combat */
-        .mission-multirole { background-color: #3498db; } /* Blue for versatile combat */
-        .mission-powerproj { background-color: #e74c3c; } /* Red for power projection/heavy combat */
-        .mission-stealth { background-color: #7f8c8d; } /* Grey for stealth/underwater */
-        .mission-support { background-color: #9b59b6; } /* Purple for support/logistics */
-
-        .ship-card p strong {
-            color: #2c3e50;
+        .mission-title {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
             font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: inline-block;
+            align-self: flex-start;
+            color: #fff;
         }
 
-        .ship-card ul {
+        .description {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--color-text-secondary);
+            margin-bottom: 20px;
+            flex-grow: 1; /* Pushes specs to the bottom */
+        }
+
+        .specs {
             list-style: none;
             padding: 0;
-            margin-top: 15px;
+            margin: 0;
+            font-size: 0.95rem;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
         }
 
-        .ship-card ul li {
-            margin-bottom: 8px;
-            font-size: 0.95em;
+        .specs li {
+            margin-bottom: 10px;
             display: flex;
             align-items: flex-start;
         }
-
-        .ship-card ul li::before {
-            content: '•';
-            color: #3498db;
-            font-weight: bold;
-            display: inline-block;
-            width: 1em;
-            margin-left: -1em;
+        
+        .specs li::before {
+            content: '►'; /* Cleaner list icon */
+            font-size: 0.8em;
+            color: var(--color-accent);
+            margin-right: 10px;
+            padding-top: 3px;
         }
 
-        .icon {
-            font-size: 1.2em;
-            margin-right: 8px;
-            color: #3498db;
+        .specs strong {
+            font-weight: 700;
+            color: var(--color-text-primary);
+            width: 120px; /* Adjusted width for new labels */
+            flex-shrink: 0;
         }
 
-        .feature-box {
-            background-color: #ecf0f1;
-            border-radius: 8px;
-            padding: 10px 15px;
-            margin-top: 15px;
+        /* --- Mission Colors --- */
+        .ship-card.mission-constabulary { border-color: #27ae60; }
+        .mission-title.mission-constabulary { background-color: #27ae60; }
+
+        .ship-card.mission-littoral { border-color: #f39c12; }
+        .mission-title.mission-littoral { background-color: #f39c12; }
+
+        .ship-card.mission-multirole { border-color: #2980b9; }
+        .mission-title.mission-multirole { background-color: #2980b9; }
+
+        .ship-card.mission-powerproj { border-color: #c0392b; }
+        .mission-title.mission-powerproj { background-color: #c0392b; }
+
+        .ship-card.mission-stealth { border-color: #34495e; }
+        .mission-title.mission-stealth { background-color: #34495e; }
+
+        .ship-card.mission-support { border-color: #8e44ad; }
+        .mission-title.mission-support { background-color: #8e44ad; }
+
+        .ship-card.mission-historical { border-color: #7f8c8d; }
+        .mission-title.mission-historical { background-color: #7f8c8d; }
+
+
+        /* --- Table View --- */
+        .table-container {
+            width: 100%;
+            overflow-x: auto; /* Allows horizontal scrolling on small screens */
+            background: var(--color-card-bg);
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px; /* Ensures table content isn't too cramped */
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: top;
+        }
+
+        .comparison-table th {
+            font-family: var(--font-header);
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: var(--color-text-primary);
+            background-color: #f8f9fa;
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table td:first-child {
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+        
+        .comparison-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 50px;
             font-size: 0.9em;
-            border-left: 4px solid #3498db;
+            color: var(--color-text-secondary);
         }
 
-        .feature-box strong {
-            display: block;
-            margin-bottom: 5px;
-            color: #2c3e50;
-        }
-
-        /* Media Queries for Responsiveness */
-        @media (max-width: 1200px) {
-            .ship-card {
-                flex: 1 1 calc(50% - 25px); /* Two columns */
+        /* --- Media Queries --- */
+        @media (max-width: 900px) { /* Adjusted breakpoint */
+            .infographic-grid {
+                grid-template-columns: 1fr;
             }
         }
-
+        
         @media (max-width: 768px) {
-            .ship-card {
-                flex: 1 1 100%; /* Single column */
-                min-width: unset;
+            .header-container h1 {
+                font-size: 2.5rem;
             }
-            .container {
+            .header-container p {
+                font-size: 1rem;
+            }
+            .category-header {
+                font-size: 2rem;
+            }
+            .specs strong {
+                width: 110px;
+            }
+            .tab-btn {
+                padding: 12px 15px;
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-container {
+                padding: 40px 20px 50px 20px;
+            }
+            .header-container h1 {
+                font-size: 2.1rem;
+            }
+             .card-content {
                 padding: 20px;
             }
-            h1 {
-                font-size: 2em;
+            .ship-card h3 {
+                font-size: 1.6rem;
             }
-            h2 {
-                font-size: 1.5em;
+            .tab-buttons {
+                flex-wrap: wrap;
+            }
+            .tab-btn {
+                flex-basis: 50%;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Naval Ship Class Comparison: The Fleet Spectrum</h1>
-        <p style="text-align: center; font-size: 1.1em; color: #555; margin-bottom: 50px;">
-            From coastal patrol to global power projection, each naval vessel is a specialized tool designed for a unique mission. Explore the diverse capabilities of the world's most powerful ships.
-        </p>
 
-        <h2>The Patrol & Coastal Force</h2>
-        <div class="infographic-grid">
+    <!-- Header Section -->
+    <header class="header-container">
+        <h1>THE MODERN NAVAL SPECTRUM</h1>
+        <p>A comparative guide to the primary classes of naval vessels, from coastal patrol boats to strategic power-projection flagships.</p>
+    </header>
 
-            <div class="ship-card">
-                <h3>Offshore Patrol Vessel (OPV)</h3>
-                <div class="mission-title mission-constabulary">⚓ Maritime Security & Patrol</div>
-                <p>The **maritime police officer**. Designed for long endurance and presence in a nation's territorial waters and Exclusive Economic Zone (EEZ).</p>
-                <div class="feature-box">
-                    <strong>Key Capability:</strong> <span class="icon">🧭</span> **Endurance & Range**
+    <!-- Main Content -->
+    <main class="main-container">
+
+        <!-- Tab Buttons -->
+        <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="infographic">Infographic View</button>
+            <button class="tab-btn" data-tab="table">Direct Comparison</button>
+        </div>
+
+        <!-- Tab 1: Infographic (Active by default) -->
+        <div id="infographic" class="tab-content active">
+            <!-- Category: Coastal & Patrol -->
+            <h2 class="category-header">COASTAL & PATROL FORCES</h2>
+            <p class="category-explanation">
+                These vessels are designed to operate in a nation's "home" waters (littoral zone). Their focus is on maritime security, coastal defense, and controlling chokepoints rather than high-seas fleet battles.
+            </p>
+            <div class="infographic-grid">
+                
+                <div class="ship-card mission-constabulary">
+                    <div class="card-content">
+                        <h3>Offshore Patrol Vessel (OPV)</h3>
+                        <div class="mission-title mission-constabulary">Maritime Security</div>
+                        <p class="description">The <strong>maritime police officer</strong>. This vessel is not a high-end warfighter but a constabulary ship. Its design prioritizes extremely long range, high fuel efficiency, and seakeeping (the ability to stay at sea in rough weather) for weeks at a time. It patrols vast Exclusive Economic Zones (EEZ) to counter illegal fishing, smuggling, piracy, and to perform search and rescue, enforcing maritime law.</p>
+                        <ul class="specs">
+                            <li><strong>Key Role:</strong> Presence & Constabulary</li>
+                            <li><strong>Size:</strong> 1,500 - 3,000 tons</li>
+                            <li><strong>Typical Range:</strong> Very High (6,000-10,000+ nm)</li>
+                            <li><strong>Endurance:</strong> 21-35+ days</li>
+                        </ul>
+                    </div>
                 </div>
-                <ul>
-                    <li>**Armament:** Light (e.g., 30-76mm cannon, MGs)</li>
-                    <li>**Typical Size:** 1,500 - 3,000 tons</li>
-                    <li>**Cost & Crew:** Lowest; long operational time for low cost</li>
-                    <li>**Role:** Anti-piracy, anti-smuggling, SAR, fishery protection</li>
-                </ul>
+
+                <div class="ship-card mission-littoral">
+                    <div class="card-content">
+                        <h3>Corvette</h3>
+                        <div class="mission-title mission-littoral">Littoral Combat</div>
+                        <p class="description">The <strong>light, fast fighter</strong>. As the smallest "true" warship, the corvette is a versatile combatant optimized for coastal (littoral) warfare. It punches well above its weight, often carrying a potent mix of anti-ship missiles, short-to-medium range air defense systems (SAMs), and sometimes anti-submarine torpedoes. It's a key asset for smaller navies or for sea denial in confined waters.</p>
+                        <ul class="specs">
+                            <li><strong>Key Role:</strong> Coastal Defense & Strike</li>
+                            <li><strong>Size:</strong> 1,000 - 3,500 tons</li>
+                            <li><strong>Typical Range:</strong> Medium (2,000-4,000 nm)</li>
+                            <li><strong>Endurance:</strong> 10-21 days</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="ship-card mission-littoral">
+                    <div class="card-content">
+                        <h3>Fast Attack Craft (FAC)</h3>
+                        <div class="mission-title mission-littoral">Rapid Strike</div>
+                        <p class="description">The <strong>coastal mosquito</strong>. This small, exceptionally fast vessel is built for one purpose: rapid hit-and-run attacks. It's armed with a disproportionately powerful battery of anti-ship missiles, allowing it to threaten much larger warships. It sacrifices endurance and defenses for blistering speed and a low profile, making it ideal for "swarm" tactics in chokepoints and straits.</p>
+                        <ul class="specs">
+                            <li><strong>Key Role:</strong> "Swarm" Tactics & Denial</li>
+                            <li><strong>Size:</strong> 50 - 800 tons</li>
+                            <li><strong>Typical Range:</strong> Low (800-1,500 nm)</li>
+                            <li><strong>Endurance:</strong> 3-7 days</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
-            <div class="ship-card">
-                <h3>Corvette</h3>
-                <div class="mission-title mission-littoral">⚔️ Littoral Combat & Fast Attack</div>
-                <p>The **light, fast fighter** for coastal areas. Smallest true warship, optimized for agility and striking power in contested home waters.</p>
-                <div class="feature-box">
-                    <strong>Key Capability:</strong> <span class="icon">⚡</span> **Speed & Offensive Firepower**
+            <!-- Category: Blue Water Fleet -->
+            <h2 class="category-header">BLUE WATER (OCEAN-GOING) FLEET</h2>
+            <p class="category-explanation">
+                The "Blue Water" fleet consists of major surface combatants designed for high-intensity warfare on the open ocean, far from home. These are the primary ships used for fleet-on-fleet battles, escorting high-value assets, and projecting power.
+            </p>
+            <div class="infographic-grid">
+
+                <div class="ship-card mission-multirole">
+                    <div class="card-content">
+                        <h3>Frigate</h3>
+                        <div class="mission-title mission-multirole">Multi-Role Escort</div>
+                        <p class="description">The <strong>versatile fleet workhorse</strong>. A frigate is the backbone of most modern navies, designed as a multi-mission escort. It possesses a balanced suite of sensors and weapons to independently hunt submarines (ASW), defend against air attacks (AAW), and engage surface ships. It has the endurance to operate far from home, protecting carrier strike groups or merchant convoys.</p>
+                        <ul class="specs">
+                            <li><strong>Key Role:</strong> ASW, AAW, Fleet Escort</li>
+                            <li><strong>Size:</strong> 3,500 - 8,000+ tons</li>
+                            <li><strong>Typical Range:</strong> High (4,000-8,000+ nm)</li>
+                            <li><strong>Endurance:</strong> 21-30+ days</li>
+                        </ul>
+                    </div>
                 </div>
-                <ul>
-                    <li>**Armament:** Medium (e.g., 76mm cannon), **Anti-Ship Missiles (key!)**, short-range SAMs</li>
-                    <li>**Typical Size:** 1,000 - 3,500 tons</li>
-                    <li>**Cost & Crew:** Medium; main warship for many smaller navies</li>
-                    <li>**Role:** Coastal defense, sea denial, anti-surface/ASW in shallow waters</li>
-                </ul>
+
+                <div class="ship-card mission-multirole">
+                    <div class="card-content">
+                        <h3>Destroyer</h3>
+                        <div class="mission-title mission-multirole">Advanced Air Defense</div>
+                        <p class="description">The <strong>fleet's shield</strong>. A destroyer is a large, powerful, and fast surface combatant, typically a step above a frigate in size and capability. Modern destroyers are often specialized as <strong>Anti-Air Warfare (AAW)</strong> platforms, carrying advanced radar systems (like AEGIS) and a large number of vertical launch cells (VLS) to defend a fleet from massed missile and aircraft attacks, including ballistic missiles.</p>
+                        <ul class="specs">
+                            <li><strong>Key Role:</strong> Fleet AAW & Missile Defense</li>
+                            <li><strong>Size:</strong> 7,000 - 10,000+ tons</li>
+                            <li><strong>Typical Range:</strong> High (4,500-8,000+ nm)</li>
+                            <li><strong>Endurance:</strong> 21-30+ days</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="ship-card mission-powerproj">
+                    <div class="card-content">
+                        <h3>Cruiser</h3>
+                        <div class="mission-title mission-powerproj">Fleet Command</div>
+                        <p class="description">The <strong>heavy-hitter & command ship</strong>. The largest and most powerful surface combatant in a modern fleet (excluding carriers). Cruisers are rare today, often serving as the flagship for an admiral, with extensive <strong>command and control</strong> facilities. They carry the heaviest loadout of missiles (often over a hundred) for area dominance, capable of simultaneously engaging air, surface, and sub-surface threats at long range.</p>
+                        <ul class="specs">
+                            <li><strong>Key Role:</strong> Flagship & Area Dominance</li>
+                            <li><strong>Size:</strong> 10,000 - 15,000+ tons</li>
+                            <li><strong>Typical Range:</strong> High (6,000-10,000+ nm)</li>
+                            <li><strong>Endurance:</strong> 30+ days</li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="ship-card">
-                <h3>Fast Attack Craft (FAC) / Missile Boat</h3>
-                <div class="mission-title mission-littoral">🚀 Rapid Strike & Coastal Denial</div>
-                <p>The **coastal mosquito with a sting**. Very small, very fast, and armed disproportionately with powerful anti-ship missiles. Focus on hit-and-run tactics.</p>
-                <div class="feature-box">
-                    <strong>Key Capability:</strong> <span class="icon">💨</span> **Extreme Speed & Missile Punch**
+            <!-- Category: Strategic Assets -->
+            <h2 class="category-header">STRATEGIC & SUPPORT ASSETS</h2>
+            <p class="category-explanation">
+                These are the largest, most powerful, and most specialized vessels. They are not primarily direct combatants (like a frigate) but instead project national power on a global scale (like carriers) or provide the essential logistics to keep the fleet running.
+            </p>
+            <div class="infographic-grid">
+
+                <div class="ship-card mission-powerproj">
+                    <div class="card-content">
+                        <h3>Aircraft Carrier</h3>
+                        <div class="mission-title mission-powerproj">Global Power Projection</div>
+                        <p class="description">The <strong>floating airbase</strong> and ultimate symbol of global power projection. This capital ship's primary weapon is its air wing, a versatile mix of 60-90+ aircraft including multirole fighters, electronic warfare planes, and early warning aircraft. It can establish air superiority and launch devastating strikes thousands of miles from its home country, requiring a full escort group for its own defense.</p>
+                        <ul class="specs">
+                            <li><strong>Key Role:</strong> Project Air Power Globally</li>
+                            <li><strong>Size:</strong> 60,000 - 100,000+ tons</li>
+                            <li><strong>Typical Range:</strong> Unlimited (if nuclear-powered)</li>
+                            <li><strong>Endurance:</strong> 20-25 years (between refueling)</li>
+                        </ul>
+                    </div>
                 </div>
-                <ul>
-                    <li>**Armament:** Heavy Anti-Ship Missiles, light cannon</li>
-                    <li>**Typical Size:** 50 - 800 tons</li>
-                    <li>**Cost & Crew:** Low; cheap to operate, hard to detect</li>
-                    <li>**Role:** Swarm tactics, anti-access/area denial in choke points</li>
-                </ul>
-            </div>
 
-        </div> <!-- End of Patrol & Coastal Force --><h2>The Blue Water Fleet</h2>
-        <div class="infographic-grid">
-
-            <div class="ship-card">
-                <h3>Frigate</h3>
-                <div class="mission-title mission-multirole">🌊 Multi-Domain Blue Water Warfare</div>
-                <p>The **versatile fleet escort**. A balanced warship designed for independent operations or to protect larger ships against air, surface, and sub-surface threats far from home.</p>
-                <div class="feature-box">
-                    <strong>Key Capability:</strong> <span class="icon">🛡️</span> **Balanced Sensors & Versatility**
+                <div class="ship-card mission-powerproj">
+                    <div class="card-content">
+                        <h3>Amphibious Assault Ship</h3>
+                        <div class="mission-title mission-powerproj">Expeditionary Warfare</div>
+                        <p class="description">The <strong>mobile invasion platform</strong>. Often resembling a small aircraft carrier, this ship's mission is to project ground power. It transports, lands, and supports thousands of marines via a fleet of helicopters, tilt-rotor aircraft (like the V-22 Osprey), and landing craft launched from an internal floodable well deck. Many also carry VSTOL jets (like the F-35B) for air support.</p>
+                        <ul class="specs">
+                            <li><strong>Key Role:</strong> Marine Transport & Landing</li>
+                            <li><strong>Size:</strong> 20,000 - 45,000 tons</li>
+                            <li><strong>Typical Range:</strong> High (7,000-9,500+ nm)</li>
+                            <li><strong>Endurance:</strong> 30-45+ days</li>
+                        </ul>
+                    </div>
                 </div>
-                <ul>
-                    <li>**Armament:** 76-127mm cannon, VLS for SAMs, AShMs, advanced sonar & torpedoes, helicopter(s)</li>
-                    <li>**Typical Size:** 3,500 - 8,000+ tons</li>
-                    <li>**Cost & Crew:** High; workhorse of modern navies</li>
-                    <li>**Role:** ASW, AAW, escort, independent patrol, task group command</li>
-                </ul>
-            </div>
 
-            <div class="ship-card">
-                <h3>Destroyer</h3>
-                <div class="mission-title mission-multirole">💥 Advanced Air & Missile Defense</div>
-                <p>The **primary air defense shield**. Larger and more capable than a frigate, often specialized in advanced Anti-Air Warfare (AAW) with powerful radar and numerous missile cells.</p>
-                <div class="feature-box">
-                    <strong>Key Capability:</strong> <span class="icon">📡</span> **Advanced AAW & Command Capacity**
+                <div class="ship-card mission-stealth">
+                    <div class="card-content">
+                        <h3>Submarine (SSN/SSK)</h3>
+                        <div class="mission-title mission-stealth">Stealth Strike & Surveillance</div>
+                        <p class="description">The <strong>silent hunter</strong> and the master of stealth. This warship's primary advantage is its ability to operate undetected underwater for weeks or months. <strong>Attack submarines (SSN/SSK)</strong> are designed to hunt other ships and submarines and launch cruise missiles at land targets. <strong>Ballistic missile submarines (SSBN)</strong> serve as the ultimate strategic deterrent, carrying nuclear-armed intercontinental ballistic missiles.</p>
+                        <ul class="specs">
+                            <li><strong>Key Role:</strong> Stealth & Undersea Dominance</li>
+                            <li><strong>Size:</strong> 1,000 - 20,000+ tons</li>
+                            <li><strong>Typical Range:</strong> Unlimited (Nuclear) / Medium (Diesel)</li>
+                            <li><strong>Endurance:</strong> 90+ days (Nuclear, food limited)</li>
+                        </ul>
+                    </div>
                 </div>
-                <ul>
-                    <li>**Armament:** 127mm cannon, **Extensive VLS (hundreds of missiles)** for SAMs (long-range), AShMs, land-attack missiles, torpedoes, 2 helicopters</li>
-                    <li>**Typical Size:** 7,000 - 10,000+ tons</li>
-                    <li>**Cost & Crew:** Very High; critical for fleet air defense</li>
-                    <li>**Role:** Fleet escort (especially AAW), ballistic missile defense, strike operations</li>
-                </ul>
-            </div>
 
-            <div class="ship-card">
-                <h3>Cruiser</h3>
-                <div class="mission-title mission-powerproj">💪 Fleet Command & Area Dominance</div>
-                <p>The **heavy-hitter & fleet commander**. Historically a powerful, independent warship, modern cruisers are typically very large destroyers, serving as command ships with maximum firepower and sensor suites.</p>
-                <div class="feature-box">
-                    <strong>Key Capability:</strong> <span class="icon">👑</span> **Command & Overwhelming Firepower**
+                <div class="ship-card mission-support">
+                    <div class="card-content">
+                        <h3>Support & Auxiliary</h3>
+                        <div class="mission-title mission-support">Fleet Logistics</div>
+                        <p class="description">The <strong>fleet's lifeline</strong>. These unsung heroes are the logistics backbone that enables a blue-water navy to operate globally. This category includes replenishment oilers (fuel), ammunition ships, and fast combat support ships. Without them, the combat fleet's endurance would be limited to only what it can carry, lasting days instead of months.</p>
+                        <ul class="specs">
+                            <li><strong>Key Role:</strong> Sustained Operations at Sea</li>
+                            <li><strong>Size:</strong> 2,000 - 50,000+ tons</li>
+                            <li><strong>Typical Range:</strong> Very High (10,000+ nm)</li>
+                            <li><strong>Endurance:</strong> 30-45+ days</li>
+                        </ul>
+                    </div>
                 </div>
-                <ul>
-                    <li>**Armament:** Similar to destroyers but *more* of everything. Often dual 127mm guns, vast VLS capacity, advanced sensors.</li>
-                    <li>**Typical Size:** 10,000 - 15,000+ tons (modern)</li>
-                    <li>**Cost & Crew:** Extremely High; few navies operate them today</li>
-                    <li>**Role:** Flagship, major AAW/ASW, surface combat, power projection</li>
-                </ul>
-            </div>
 
-        </div> <!-- End of Blue Water Fleet --><h2>The Strategic Assets</h2>
-        <div class="infographic-grid">
-
-            <div class="ship-card">
-                <h3>Aircraft Carrier (CVN/CV)</h3>
-                <div class="mission-title mission-powerproj">✈️ Global Power Projection & Air Superiority</div>
-                <p>The **floating airbase**. The ultimate symbol of naval power. Carries a large air wing (dozens of aircraft) to project air power thousands of miles from home.</p>
-                <div class="feature-box">
-                    <strong>Key Capability:</strong> <span class="icon">🌍</span> **Project Air Power Globally**
+                <div class="ship-card mission-historical">
+                    <div class="card-content">
+                        <h3>Battleship (Historical)</h3>
+                        <div class="mission-title mission-historical">Historical Dominance</div>
+                        <p class="description">The <strong>armored dreadnought</strong>. (No longer in service). Defined by enormous guns and heavy armor, they were the undisputed kings of surface-to-surface combat in their era. They became obsolete with the rise of air power, which could strike them from beyond the range of their guns, and were finally superseded by the aircraft carrier as the new capital ship.</p>
+                        <ul class="specs">
+                            <li><strong>Key Role:</strong> Surface Combat & Bombardment</li>
+                            <li><strong>Size:</strong> 30,000 - 70,000+ tons</li>
+                            <li><strong>Typical Range:</strong> High (8,000-15,000 nm)</li>
+                            <li><strong>Endurance:</strong> ~30 days</li>
+                        </ul>
+                    </div>
                 </div>
-                <ul>
-                    <li>**Armament:** Its aircraft are its weapons; defensive armament for self-defense</li>
-                    <li>**Typical Size:** 60,000 - 100,000+ tons (Supercarriers)</li>
-                    <li>**Cost & Crew:** Astronomical; decades to build, thousands of crew</li>
-                    <li>**Role:** Strike operations, air defense, force projection, diplomatic presence</li>
-                </ul>
+
             </div>
+        </div>
 
-            <div class="ship-card">
-                <h3>Amphibious Assault Ship (LHD/LHA)</h3>
-                <div class="mission-title mission-support">🪖 Marine Expeditionary & Landing Ops</div>
-                <p>The **mobile invasion platform**. Acts as a smaller carrier for helicopters and VSTOL jets, but primarily designed to transport, land, and support thousands of marines and their equipment.</p>
-                <div class="feature-box">
-                    <strong>Key Capability:</strong> <span class="icon">🏝️</span> **Marine Transport & Landing**
-                </div>
-                <ul>
-                    <li>**Armament:** Defensive weapons (SAMs, CIWS); carries helicopters, MV-22 Ospreys, F-35B jets, landing craft, thousands of troops</li>
-                    <li>**Typical Size:** 20,000 - 45,000 tons</li>
-                    <li>**Cost & Crew:** Very High; essential for projecting ground forces over the sea</li>
-                    <li>**Role:** Amphibious assault, humanitarian aid, disaster relief, expeditionary air support</li>
-                </ul>
+        <!-- Tab 2: Table -->
+        <div id="table" class="tab-content">
+            <h2 class="category-header">DIRECT SHIP-CLASS COMPARISON</h2>
+            <div class="table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Ship Class</th>
+                            <th>Primary Mission</th>
+                            <th>Typical Size (Tons)</th>
+                            <th>Key Armament</th>
+                            <th>Typical Range</th>
+                            <th>Typical Endurance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>OPV</strong></td>
+                            <td>Maritime Security (Police)</td>
+                            <td>1,500 - 3,000</td>
+                            <td>Light cannon (30-76mm), MGs</td>
+                            <td>Very High (6,000+ nm)</td>
+                            <td>21-35+ days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Corvette</strong></td>
+                            <td>Coastal Combat & Strike</td>
+                            <td>1,000 - 3,500</td>
+                            <td>Anti-Ship Missiles, SAMs, 76mm cannon</td>
+                            <td>Medium (2,000-4,000 nm)</td>
+                            <td>10-21 days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fast Attack Craft</strong></td>
+                            <td>Rapid "Hit-and-Run" Strike</td>
+                            <td>50 - 800</td>
+                            <td>Heavy Anti-Ship Missiles</td>
+                            <td>Low (800-1,500 nm)</td>
+                            <td>3-7 days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Frigate</strong></td>
+                            <td>Multi-Role Escort (ASW, AAW)</td>
+                            <td>3,500 - 8,000+</td>
+                            <td>VLS, Torpedoes, AShMs, Medium Cannon</td>
+                            <td>High (4,000-8,000+ nm)</td>
+                            <td>21-30+ days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Destroyer</strong></td>
+                            <td>Advanced Air/Missile Defense</td>
+                            <td>7,000 - 10,000+</td>
+                            <td>Large VLS, Advanced Radar, SAMs, Guns</td>
+                            <td>High (4,500-8,000+ nm)</td>
+                            <td>21-30+ days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cruiser</strong></td>
+                            <td>Fleet Command & Dominance</td>
+                            <td>10,000 - 15,000+</td>
+                            <td>Massive VLS, Command Facilities, Guns</td>
+                            <td>High (6,000-10,000+ nm)</td>
+                            <td>30+ days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Aircraft Carrier</strong></td>
+                            <td>Global Power Projection</td>
+                            <td>60,000 - 100,000+</td>
+                            <td>60-90+ Aircraft (Fighters, EW, etc.)</td>
+                            <td>Unlimited (Nuclear)</td>
+                            <td>Decades (food limited)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Amphibious Assault</strong></td>
+                            <td>Expeditionary Warfare</td>
+                            <td>20,000 - 45,000+</td>
+                            <td>Helicopters, Jets, Landing Craft, Marines</td>
+                            <td>High (7,000-9,500+ nm)</td>
+                            <td>30-45+ days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Submarine</strong></td>
+                            <td>Stealth Strike & Deterrence</td>
+                            <td>1,000 - 20,000+</td>
+                            <td>Torpedoes, Cruise Missiles, (Ballistic Missiles)</td>
+                            <td>Unlimited (Nuclear) / Medium (Diesel)</td>
+                            <td>90+ days (Nuclear, food limited)</td>
+                        </tr>
+                         <tr>
+                            <td><strong>Support Ship</strong></td>
+                            <td>Fleet Logistics & Resupply</td>
+                            <td>2,000 - 50,000+</td>
+                            <td>Minimal (defensive only)</td>
+                            <td>Very High (10,000+ nm)</td>
+                            <td>30-45+ days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Battleship (Hist.)</strong></td>
+                            <td>Surface Combat & Bombardment</td>
+                            <td>30,000 - 70,000+</td>
+                            <td>Massive 14-18 inch guns</td>
+                            <td>High (8,000-15,000 nm)</td>
+                            <td>~30 days</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <div class="ship-card">
-                <h3>Submarine (SSN/SSBN/SSK)</h3>
-                <div class="mission-title mission-stealth">🤫 Stealth, Surveillance & Silent Strike</div>
-                <p>The **hunter of the deep**. Operates undetected for long periods. Can launch torpedoes, missiles, or nuclear weapons. Comes in attack (SSN/SSK) and ballistic missile (SSBN) variants.</p>
-                <div class="feature-box">
-                    <strong>Key Capability:</strong> <span class="icon">👻</span> **Absolute Stealth & Undersea Dominance**
-                </div>
-                <ul>
-                    <li>**Armament:** Torpedoes, anti-ship missiles, land-attack cruise missiles, ballistic missiles (SSBN)</li>
-                    <li>**Typical Size:** 1,000 - 20,000+ tons (SSBNs)</li>
-                    <li>**Cost & Crew:** Extremely High; complex, highly specialized operations</li>
-                    <li>**Role:** Anti-submarine warfare, anti-surface warfare, intelligence gathering, strategic deterrence</li>
-                </ul>
-            </div>
 
-            <div class="ship-card">
-                <h3>Battleship (Historical)</h3>
-                <div class="mission-title mission-powerproj" style="background-color: #7f8c8d;">🕰️ Historical Naval Dominance</div>
-                <p>The **king of dreadnoughts**. While no longer in active service, battleships were once the most powerful surface combatants, defined by their enormous guns and heavy armor. Pure surface combat.</p>
-                <div class="feature-box">
-                    <strong>Key Capability:</strong> <span class="icon">💣</span> **Massive Guns & Impenetrable Armor**
-                </div>
-                <ul>
-                    <li>**Armament:** Main battery of 9-16 large-caliber guns (e.g., 14-18 inches), secondary guns, AA guns</li>
-                    <li>**Typical Size:** 20,000 - 70,000+ tons</li>
-                    <li>**Cost & Crew:** Very High (in their era); slow, expensive to operate</li>
-                    <li>**Role:** Fleet-on-fleet surface combat, shore bombardment</li>
-                </ul>
-            </div>
+        <p class="footer-note">
+            <em>Note: Tonnage and armament are approximate and vary significantly by nation, class, and design. "Key Role" reflects primary design intent.</em>
+        </mit>
+    </main>
 
-            <div class="ship-card">
-                <h3>Support & Auxiliary Ships</h3>
-                <div class="mission-title mission-support">⛽ Resupply & Fleet Support</div>
-                <p>The **unsung heroes of the fleet**. Essential vessels that keep the combat ships operating by providing fuel, ammunition, provisions, repairs, and medical support at sea.</p>
-                <div class="feature-box">
-                    <strong>Key Capability:</strong> <span class="icon">❤️‍🩹</span> **Sustained Operations at Sea**
-                </div>
-                <ul>
-                    <li>**Armament:** Minimal defensive (MGs, light CIWS)</li>
-                    <li>**Typical Size:** Varies wildly (2,000 - 50,000+ tons)</li>
-                    <li>**Cost & Crew:** Moderate to High; vital for global reach</li>
-                    <li>**Role:** Replenishment at Sea (RAS), hospital, salvage, research, tender duties</li>
-                </ul>
-            </div>
+    <script>
+        // Simple JavaScript for tab functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
 
-        </div> <!-- End of Strategic Assets --><p style="text-align: center; margin-top: 50px; font-size: 0.9em; color: #777;">
-            <em>Note: Tonnage and armament are approximate and can vary significantly by navy and specific ship design. "Mission" reflects primary design intent.</em>
-        </p>
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
 
-    </div>
+                    // Deactivate all buttons and content
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    // Activate the clicked button and corresponding content
+                    button.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+   <!-- Footer -->
+        <footer class="text-center mt-12 text-sm text-gray-500">
+            <p data-lang-en="&copy; 2025 LoLyeah.github.io. All rights reserved." data-lang-id="&copy; 2025 2025 LoLyeah.github.io. Hak cipta dilindungi undang-undang.">&copy; 2025 LoLyeah.github.io. All rights reserved.</p>
+            <p><a href="/index.html" class="text-blue-600 hover:underline" data-lang-en="Home" data-lang-id="Beranda">Home</a></p>
+        </footer>
 </body>
 </html>
+
