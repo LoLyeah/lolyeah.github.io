@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indonesian Provincial Independence Analysis</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        emerald: {
+                            850: '#064e3b',
+                            950: '#022c22',
+                        },
+                        gold: {
+                            500: '#d4af37',
+                            600: '#b5952f',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f3f4f6;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .flag-gradient {
+            background: linear-gradient(135deg, #FF0000 0%, #FF0000 50%, #FFFFFF 50%, #FFFFFF 100%);
+        }
+        .sparkle-btn {
+            background: linear-gradient(45deg, #d4af37, #f59e0b);
+            background-size: 200% 200%;
+            animation: gradientBG 3s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #d4af37;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+        .prose p {
+            margin-bottom: 0.75em;
+        }
+        .prose h3 {
+            font-weight: 700;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+        .table-container {
+            max-height: 800px;
+            overflow-y: auto;
+        }
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #f3f4f6; /* Match bg-gray-100 */
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-emerald-950 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-map-location-dot text-gold-500 text-2xl"></i>
+                    <span class="font-bold text-lg tracking-wider hidden sm:block">Nusantara Hypotheticals</span>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <!-- API Key Input (Hidden by default logic, kept for fallback) -->
+                    <div class="relative group">
+                        <button onclick="document.getElementById('api-modal').classList.remove('hidden')" class="text-emerald-300 hover:text-white transition-colors">
+                            <i class="fa-solid fa-key"></i>
+                        </button>
+                    </div>
+
+                    <!-- Language Switcher -->
+                    <div class="flex bg-emerald-800 rounded-lg p-1">
+                        <button onclick="setLanguage('en')" id="btn-en" class="px-3 py-1 rounded-md text-sm font-medium transition-colors bg-white text-emerald-900 shadow">EN</button>
+                        <button onclick="setLanguage('id')" id="btn-id" class="px-3 py-1 rounded-md text-sm font-medium transition-colors text-emerald-100 hover:text-white">ID</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header / Hero -->
+    <header class="bg-emerald-850 text-white py-12 px-4 shadow-inner relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full transform translate-x-1/2 -translate-y-1/2"></div>
+        <div class="max-w-5xl mx-auto relative z-10 text-center">
+            <h1 class="text-3xl md:text-5xl font-serif font-bold mb-4" data-en="The Archipelago Fractured" data-id="Nusantara Yang Terpecah">The Archipelago Fractured</h1>
+            <p class="text-lg md:text-xl text-emerald-100 max-w-3xl mx-auto" 
+               data-en="A comprehensive analysis of economic viability, self-sufficiency, and success potential if Indonesian provinces became sovereign nations."
+               data-id="Analisis komprehensif mengenai kelayakan ekonomi, kemandirian, dan potensi keberhasilan jika provinsi-provinsi di Indonesia menjadi negara berdaulat.">
+                A comprehensive analysis of economic viability, self-sufficiency, and success potential if Indonesian provinces became sovereign nations.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-7xl">
+        
+        <!-- Tabs Navigation -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8 border-b border-gray-300 pb-2">
+            <button onclick="switchTab('analysis')" id="tab-analysis" class="px-4 md:px-6 py-3 text-sm font-medium rounded-t-lg transition-colors border-b-2 border-emerald-600 text-emerald-800 bg-white">
+                <i class="fa-solid fa-chart-pie mr-2"></i><span data-en="Deep Analysis" data-id="Analisis Mendalam">Deep Analysis</span>
+            </button>
+            <button onclick="switchTab('leaderboard')" id="tab-leaderboard" class="px-4 md:px-6 py-3 text-sm font-medium rounded-t-lg transition-colors border-b-2 border-transparent hover:text-emerald-600 text-gray-500">
+                <i class="fa-solid fa-trophy mr-2"></i><span data-en="Full Leaderboard" data-id="Peringkat Lengkap">Full Leaderboard</span>
+            </button>
+            <button onclick="switchTab('scenarios')" id="tab-scenarios" class="px-4 md:px-6 py-3 text-sm font-medium rounded-t-lg transition-colors border-b-2 border-transparent hover:text-emerald-600 text-gray-500">
+                <i class="fa-solid fa-chess-board mr-2"></i><span data-en="Strategic Factors" data-id="Faktor Strategis">Strategic Factors</span>
+            </button>
+            <button onclick="switchTab('ai-architect')" id="tab-ai-architect" class="px-4 md:px-6 py-3 text-sm font-medium rounded-t-lg transition-colors border-b-2 border-transparent hover:text-emerald-600 text-gray-500">
+                <i class="fa-solid fa-wand-magic-sparkles mr-2 text-gold-500"></i><span data-en="AI State Architect" data-id="Arsitek Negara AI">AI State Architect</span>
+            </button>
+            <button onclick="switchTab('citations')" id="tab-citations" class="px-4 md:px-6 py-3 text-sm font-medium rounded-t-lg transition-colors border-b-2 border-transparent hover:text-emerald-600 text-gray-500">
+                <i class="fa-solid fa-book mr-2"></i><span data-en="Citations" data-id="Referensi">Citations</span>
+            </button>
+        </div>
+
+        <!-- TAB 1: Analysis -->
+        <div id="content-analysis" class="tab-content active space-y-8">
+            
+            <!-- Introduction -->
+            <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 border-l-4 border-emerald-500">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800" data-en="The Methodology of Separation" data-id="Metodologi Pemisahan">The Methodology of Separation</h2>
+                <div class="prose max-w-none text-gray-600 leading-relaxed">
+                    <p data-en="To determine the success of a province as an independent nation, we cannot look at GDP alone. We must analyze a 'Viability Triad': 1) Economic Revenue (Natural resources vs. Services), 2) Food Security & Agriculture, and 3) Human Capital & Infrastructure. Some provinces are rich but have no food; others have food but no industry."
+                       data-id="Untuk menentukan keberhasilan suatu provinsi sebagai negara merdeka, kita tidak bisa hanya melihat PDRB saja. Kita harus menganalisis 'Triad Kelayakan': 1) Pendapatan Ekonomi (Sumber daya alam vs. Jasa), 2) Ketahanan Pangan & Pertanian, dan 3) Modal Manusia & Infrastruktur. Beberapa provinsi kaya tetapi tidak memiliki pangan; yang lain memiliki pangan tetapi tidak memiliki industri.">
+                        To determine the success of a province as an independent nation, we cannot look at GDP alone. We must analyze a 'Viability Triad': 1) Economic Revenue (Natural resources vs. Services), 2) Food Security & Agriculture, and 3) Human Capital & Infrastructure. Some provinces are rich but have no food; others have food but no industry.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Top Contenders Grid -->
+            <div class="grid md:grid-cols-2 gap-6">
+                
+                <!-- East Java -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="h-2 bg-blue-600"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-gray-800">East Java (Jawa Timur)</h3>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded" data-en="Most Balanced" data-id="Paling Seimbang">Most Balanced</span>
+                        </div>
+                        <p class="text-gray-600 mb-4 text-sm" data-en="East Java is arguably the most viable independent nation. Unlike Jakarta, it produces its own rice surplus. Unlike resource-heavy provinces, it has a massive industrial manufacturing base in Surabaya and Gresik." 
+                           data-id="Jawa Timur bisa dibilang merupakan negara merdeka yang paling layak. Berbeda dengan Jakarta, Jatim menghasilkan surplus beras sendiri. Berbeda dengan provinsi yang sarat sumber daya, Jatim memiliki basis manufaktur industri yang masif di Surabaya dan Gresik.">
+                            East Java is arguably the most viable independent nation. Unlike Jakarta, it produces its own rice surplus. Unlike resource-heavy provinces, it has a massive industrial manufacturing base in Surabaya and Gresik.
+                        </p>
+                        <ul class="text-sm space-y-2 text-gray-700">
+                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> <span data-en="Largest Navy Base (PT PAL)" data-id="Basis Angkatan Laut Terbesar (PT PAL)">Largest Navy Base (PT PAL)</span></li>
+                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> <span data-en="Rice & Sugar Bowl of Indonesia" data-id="Lumbung Padi & Gula Indonesia">Rice & Sugar Bowl of Indonesia</span></li>
+                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> <span data-en="Surabaya Port (Tanjung Perak)" data-id="Pelabuhan Surabaya (Tanjung Perak)">Surabaya Port (Tanjung Perak)</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Jakarta -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="h-2 bg-purple-600"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-gray-800">DKI Jakarta</h3>
+                            <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded" data-en="Economic Giant" data-id="Raksasa Ekonomi">Economic Giant</span>
+                        </div>
+                        <p class="text-gray-600 mb-4 text-sm" data-en="Jakarta would instantly become a high-income nation, similar to Singapore. It holds 70% of the national money circulation. However, it is extremely vulnerable: it has almost zero natural resources and imports all water and food." 
+                           data-id="Jakarta akan langsung menjadi negara berpenghasilan tinggi, mirip dengan Singapura. Jakarta memegang 70% perputaran uang nasional. Namun, sangat rentan: hampir tidak memiliki sumber daya alam dan mengimpor semua air dan makanan.">
+                            Jakarta would instantly become a high-income nation, similar to Singapore. It holds 70% of the national money circulation. However, it is extremely vulnerable: it has almost zero natural resources and imports all water and food.
+                        </p>
+                        <ul class="text-sm space-y-2 text-gray-700">
+                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> <span data-en="Highest HDI in the region" data-id="IPM Tertinggi di kawasan">Highest HDI in the region</span></li>
+                            <li><i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-2"></i> <span data-en="Total reliance on trade for survival" data-id="Ketergantungan total pada perdagangan">Total reliance on trade for survival</span></li>
+                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> <span data-en="Established financial hub" data-id="Pusat keuangan yang mapan">Established financial hub</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- East Kalimantan -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="h-2 bg-yellow-500"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-gray-800">East Kalimantan (Kaltim)</h3>
+                            <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded" data-en="Resource Wealthy" data-id="Kaya Sumber Daya">Resource Wealthy</span>
+                        </div>
+                        <p class="text-gray-600 mb-4 text-sm" data-en="Kaltim would be the 'Brunei' or 'Qatar' of the region. Massive coal, oil, and gas reserves with a small population (approx 3.7 million). This results in an incredibly high GDP per Capita. The new capital infrastructure (IKN) adds value." 
+                           data-id="Kaltim akan menjadi 'Brunei' atau 'Qatar' di kawasan ini. Cadangan batu bara, minyak, dan gas yang sangat besar dengan populasi kecil (sekitar 3,7 juta). Ini menghasilkan PDB per Kapita yang sangat tinggi. Infrastruktur ibu kota baru (IKN) menambah nilai.">
+                            Kaltim would be the 'Brunei' or 'Qatar' of the region. Massive coal, oil, and gas reserves with a small population (approx 3.7 million). This results in an incredibly high GDP per Capita. The new capital infrastructure (IKN) adds value.
+                        </p>
+                        <ul class="text-sm space-y-2 text-gray-700">
+                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> <span data-en="Energy Superpower" data-id="Negara Adidaya Energi">Energy Superpower</span></li>
+                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> <span data-en="Budget Surplus Guaranteed" data-id="Surplus Anggaran Terjamin">Budget Surplus Guaranteed</span></li>
+                            <li><i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-2"></i> <span data-en="Low Manufacturing Base" data-id="Basis Manufaktur Rendah">Low Manufacturing Base</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Riau -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="h-2 bg-red-600"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-gray-800">Riau</h3>
+                            <span class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded" data-en="Strategic Oil" data-id="Minyak Strategis">Strategic Oil</span>
+                        </div>
+                        <p class="text-gray-600 mb-4 text-sm" data-en="Located on the Malacca Strait, Riau controls the busiest shipping lane in the world. Combined with the Rokan Block (oil) and massive palm oil plantations, Riau is an economic juggernaut. It is historically wealthy and geographically blessed." 
+                           data-id="Terletak di Selat Malaka, Riau menguasai jalur pelayaran tersibuk di dunia. Dikombinasikan dengan Blok Rokan (minyak) dan perkebunan kelapa sawit yang masif, Riau adalah raksasa ekonomi. Secara historis kaya dan diberkati secara geografis.">
+                            Located on the Malacca Strait, Riau controls the busiest shipping lane in the world. Combined with the Rokan Block (oil) and massive palm oil plantations, Riau is an economic juggernaut. It is historically wealthy and geographically blessed.
+                        </p>
+                        <ul class="text-sm space-y-2 text-gray-700">
+                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> <span data-en="Malacca Strait Access" data-id="Akses Selat Malaka">Malacca Strait Access</span></li>
+                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> <span data-en="Palm Oil & Petroleum" data-id="Kelapa Sawit & Minyak Bumi">Palm Oil & Petroleum</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+             <!-- Detailed Text Block -->
+             <div class="bg-white rounded-xl shadow-sm p-6 mt-8">
+                <h3 class="text-xl font-bold mb-3" data-en="The Case of West Java and Central Java" data-id="Kasus Jawa Barat dan Jawa Tengah">The Case of West Java and Central Java</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed" data-en="West Java (Jawa Barat) has the largest population (50 million+) and massive manufacturing zones (Bekasi, Karawang). However, the burden of social welfare for such a large population would be a significant challenge for a new government. Central Java (Jawa Tengah) is agriculturally strong but has a lower GDP per capita compared to its neighbors, likely resulting in it being a stable, middle-income agrarian republic."
+                   data-id="Jawa Barat memiliki populasi terbesar (50 juta+) dan zona manufaktur yang masif (Bekasi, Karawang). Namun, beban kesejahteraan sosial untuk populasi sebesar itu akan menjadi tantangan signifikan bagi pemerintah baru. Jawa Tengah kuat secara pertanian tetapi memiliki PDRB per kapita yang lebih rendah dibandingkan tetangganya, kemungkinan menjadikannya republik agraris berpenghasilan menengah yang stabil.">
+                    West Java (Jawa Barat) has the largest population (50 million+) and massive manufacturing zones (Bekasi, Karawang). However, the burden of social welfare for such a large population would be a significant challenge for a new government. Central Java (Jawa Tengah) is agriculturally strong but has a lower GDP per capita compared to its neighbors, likely resulting in it being a stable, middle-income agrarian republic.
+                </p>
+                
+                <h3 class="text-xl font-bold mb-3" data-en="The Eastern Challenge: Papua & Sulawesi" data-id="Tantangan Timur: Papua & Sulawesi">The Eastern Challenge: Papua & Sulawesi</h3>
+                <p class="text-gray-600 leading-relaxed" data-en="South Sulawesi would undoubtedly become the hegemon of Eastern Indonesia, controlling the flow of goods from Makassar. Papua possesses immense mineral wealth (gold, copper, gas), arguably the richest per square meter. However, infrastructure deficits and human capital challenges (HDI lower than national average) would make the initial years of independence extremely volatile, dependent on foreign mining conglomerates."
+                   data-id="Sulawesi Selatan tidak diragukan lagi akan menjadi hegemon Indonesia Timur, mengendalikan arus barang dari Makassar. Papua memiliki kekayaan mineral yang sangat besar (emas, tembaga, gas), bisa dibilang yang terkaya per meter persegi. Namun, defisit infrastruktur dan tantangan sumber daya manusia (IPM lebih rendah dari rata-rata nasional) akan membuat tahun-tahun awal kemerdekaan sangat fluktuatif, bergantung pada konglomerat pertambangan asing.">
+                   South Sulawesi would undoubtedly become the hegemon of Eastern Indonesia, controlling the flow of goods from Makassar. Papua possesses immense mineral wealth (gold, copper, gas), arguably the richest per square meter. However, infrastructure deficits and human capital challenges (HDI lower than national average) would make the initial years of independence extremely volatile, dependent on foreign mining conglomerates.
+                </p>
+            </div>
+        </div>
+
+        <!-- TAB 2: Leaderboard -->
+        <div id="content-leaderboard" class="tab-content">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col h-[800px]">
+                <div class="p-6 bg-gradient-to-r from-emerald-900 to-emerald-700 text-white shrink-0">
+                    <h2 class="text-2xl font-bold" data-en="Complete Provincial Viability Ranking" data-id="Peringkat Kelayakan Provinsi Lengkap">Complete Provincial Viability Ranking</h2>
+                    <p class="text-emerald-100 text-sm mt-1" data-en="Ranking all 38 provinces based on GRDP, Resources, Infrastructure, and Stability." data-id="Memeringkat seluruh 38 provinsi berdasarkan PDRB, Sumber Daya, Infrastruktur, dan Stabilitas.">Ranking all 38 provinces based on GRDP, Resources, Infrastructure, and Stability.</p>
+                </div>
+                
+                <div class="overflow-y-auto flex-grow table-container">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-100 shadow-sm">
+                            <tr class="text-gray-700 text-sm uppercase tracking-wider border-b border-gray-200">
+                                <th class="p-4 w-16">#</th>
+                                <th class="p-4" data-en="Province" data-id="Provinsi">Province</th>
+                                <th class="p-4" data-en="Tier" data-id="Tingkat">Tier</th>
+                                <th class="p-4" data-en="Primary Assets" data-id="Aset Utama">Primary Assets</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-sm">
+                            
+                            <!-- TIER S -->
+                            <tr class="bg-emerald-50/50">
+                                <td class="p-4 font-bold text-emerald-700">1</td>
+                                <td class="p-4 font-bold text-gray-800">East Java (Jawa Timur)</td>
+                                <td class="p-4"><span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-xs font-bold">S - Sovereign</span></td>
+                                <td class="p-4">Industry, Agriculture (Surplus), Maritime, Military Base</td>
+                            </tr>
+                            <tr class="bg-emerald-50/50">
+                                <td class="p-4 font-bold text-emerald-700">2</td>
+                                <td class="p-4 font-bold text-gray-800">DKI Jakarta</td>
+                                <td class="p-4"><span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-xs font-bold">S - Sovereign</span></td>
+                                <td class="p-4">Finance, Services, Trade Hub, High HDI</td>
+                            </tr>
+                            <tr class="bg-emerald-50/50">
+                                <td class="p-4 font-bold text-emerald-700">3</td>
+                                <td class="p-4 font-bold text-gray-800">East Kalimantan (Kaltim)</td>
+                                <td class="p-4"><span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-xs font-bold">S - Sovereign</span></td>
+                                <td class="p-4">Oil, Gas, Coal, New Capital (IKN) Infrastructure</td>
+                            </tr>
+                            <tr class="bg-emerald-50/50">
+                                <td class="p-4 font-bold text-emerald-700">4</td>
+                                <td class="p-4 font-bold text-gray-800">Riau</td>
+                                <td class="p-4"><span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-xs font-bold">S - Sovereign</span></td>
+                                <td class="p-4">Petroleum (Rokan), Palm Oil, Malacca Strait Access</td>
+                            </tr>
+
+                            <!-- TIER A -->
+                            <tr>
+                                <td class="p-4 font-bold text-gray-600">5</td>
+                                <td class="p-4 font-semibold text-gray-800">West Java (Jawa Barat)</td>
+                                <td class="p-4"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">A - Strong</span></td>
+                                <td class="p-4">Manufacturing (Bekasi/Karawang), Largest Population</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-600">6</td>
+                                <td class="p-4 font-semibold text-gray-800">South Sulawesi (Sulsel)</td>
+                                <td class="p-4"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">A - Strong</span></td>
+                                <td class="p-4">Eastern Hub (Makassar), Agriculture, Cement</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-600">7</td>
+                                <td class="p-4 font-semibold text-gray-800">Bali</td>
+                                <td class="p-4"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">A - Strong</span></td>
+                                <td class="p-4">Global Tourism Brand, Cultural Capital</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-600">8</td>
+                                <td class="p-4 font-semibold text-gray-800">North Sumatra (Sumut)</td>
+                                <td class="p-4"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">A - Strong</span></td>
+                                <td class="p-4">Plantations, Belawan Port, Lake Toba</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-600">9</td>
+                                <td class="p-4 font-semibold text-gray-800">Central Java (Jateng)</td>
+                                <td class="p-4"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">A - Strong</span></td>
+                                <td class="p-4">Agriculture, Textiles, Stability, Population</td>
+                            </tr>
+
+                            <!-- TIER B -->
+                            <tr class="bg-gray-50">
+                                <td class="p-4 font-bold text-gray-500">10</td>
+                                <td class="p-4 font-medium text-gray-700">South Sumatra (Sumsel)</td>
+                                <td class="p-4"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">B - Stable</span></td>
+                                <td class="p-4">Coal, Agriculture, Gas</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="p-4 font-bold text-gray-500">11</td>
+                                <td class="p-4 font-medium text-gray-700">Banten</td>
+                                <td class="p-4"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">B - Stable</span></td>
+                                <td class="p-4">Steel (Krakatau), Port (Merak), Proximity to Jkt</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="p-4 font-bold text-gray-500">12</td>
+                                <td class="p-4 font-medium text-gray-700">Central Sulawesi (Sulteng)</td>
+                                <td class="p-4"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">B - Stable</span></td>
+                                <td class="p-4">Nickel Processing (Morowali), Mining</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="p-4 font-bold text-gray-500">13</td>
+                                <td class="p-4 font-medium text-gray-700">Riau Islands (Kepri)</td>
+                                <td class="p-4"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">B - Stable</span></td>
+                                <td class="p-4">FTZ Batam/Bintan, Electronics, Tourism</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="p-4 font-bold text-gray-500">14</td>
+                                <td class="p-4 font-medium text-gray-700">Lampung</td>
+                                <td class="p-4"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">B - Stable</span></td>
+                                <td class="p-4">Agriculture (Coffee/Pineapple), Sumatra Gateway</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="p-4 font-bold text-gray-500">15</td>
+                                <td class="p-4 font-medium text-gray-700">South Kalimantan (Kalsel)</td>
+                                <td class="p-4"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">B - Stable</span></td>
+                                <td class="p-4">Coal Mining, Trade</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="p-4 font-bold text-gray-500">16</td>
+                                <td class="p-4 font-medium text-gray-700">Papua (Main)</td>
+                                <td class="p-4"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">B - Stable</span></td>
+                                <td class="p-4">Gold & Copper (Freeport), Low HDI Risk</td>
+                            </tr>
+
+                            <!-- TIER C -->
+                            <tr>
+                                <td class="p-4 font-bold text-gray-400">17</td>
+                                <td class="p-4 font-medium text-gray-600">West Sumatra (Sumbar)</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Tourism, Cement, Agriculture, Cultural Hub</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-400">18</td>
+                                <td class="p-4 font-medium text-gray-600">Aceh</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Gas (Declining), Agriculture, Special Autonomy Funds</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-400">19</td>
+                                <td class="p-4 font-medium text-gray-600">DI Yogyakarta</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Education, Tourism, Low Natural Resources</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-400">20</td>
+                                <td class="p-4 font-medium text-gray-600">West Nusa Tenggara (NTB)</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Mining (Amman), Tourism (Mandalika)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-400">21</td>
+                                <td class="p-4 font-medium text-gray-600">West Kalimantan (Kalbar)</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Palm Oil, Bauxite, Border Trade</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-400">22</td>
+                                <td class="p-4 font-medium text-gray-600">Central Kalimantan (Kalteng)</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Palm Oil, Mining, Timber</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-400">23</td>
+                                <td class="p-4 font-medium text-gray-600">North Maluku (Malut)</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Nickel Processing (Booming but dependent)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-400">24</td>
+                                <td class="p-4 font-medium text-gray-600">Jambi</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Palm Oil, Rubber, Oil</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-400">25</td>
+                                <td class="p-4 font-medium text-gray-600">North Sulawesi (Sulut)</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Tourism, Fisheries, Coconut</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-400">26</td>
+                                <td class="p-4 font-medium text-gray-600">Southeast Sulawesi (Sultra)</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Nickel, Asphalt</td>
+                            </tr>
+                             <tr>
+                                <td class="p-4 font-bold text-gray-400">27</td>
+                                <td class="p-4 font-medium text-gray-600">Bangka Belitung (Babel)</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Tin Mining, Pepper, Tourism</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-400">28</td>
+                                <td class="p-4 font-medium text-gray-600">North Kalimantan (Kaltara)</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Hydro Potential, Border Trade, Oil</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-gray-400">29</td>
+                                <td class="p-4 font-medium text-gray-600">Central Papua</td>
+                                <td class="p-4"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">C - Struggling</span></td>
+                                <td class="p-4">Mineral potential, High Dependency</td>
+                            </tr>
+
+                            <!-- TIER D -->
+                            <tr class="bg-red-50/20">
+                                <td class="p-4 font-bold text-gray-400">30</td>
+                                <td class="p-4 font-medium text-gray-500">Bengkulu</td>
+                                <td class="p-4"><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">D - Vulnerable</span></td>
+                                <td class="p-4">Agriculture, Isolated Geography</td>
+                            </tr>
+                            <tr class="bg-red-50/20">
+                                <td class="p-4 font-bold text-gray-400">31</td>
+                                <td class="p-4 font-medium text-gray-500">West Sulawesi (Sulbar)</td>
+                                <td class="p-4"><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">D - Vulnerable</span></td>
+                                <td class="p-4">Cocoa, Agriculture</td>
+                            </tr>
+                            <tr class="bg-red-50/20">
+                                <td class="p-4 font-bold text-gray-400">32</td>
+                                <td class="p-4 font-medium text-gray-500">Gorontalo</td>
+                                <td class="p-4"><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">D - Vulnerable</span></td>
+                                <td class="p-4">Corn, Agriculture, High Subsidy</td>
+                            </tr>
+                            <tr class="bg-red-50/20">
+                                <td class="p-4 font-bold text-gray-400">33</td>
+                                <td class="p-4 font-medium text-gray-500">Maluku</td>
+                                <td class="p-4"><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">D - Vulnerable</span></td>
+                                <td class="p-4">Fisheries, Spices, Island Logistics Issues</td>
+                            </tr>
+                            <tr class="bg-red-50/20">
+                                <td class="p-4 font-bold text-gray-400">34</td>
+                                <td class="p-4 font-medium text-gray-500">East Nusa Tenggara (NTT)</td>
+                                <td class="p-4"><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">D - Vulnerable</span></td>
+                                <td class="p-4">Agriculture, Tourism (Labuan Bajo), High Poverty</td>
+                            </tr>
+                            <tr class="bg-red-50/20">
+                                <td class="p-4 font-bold text-gray-400">35</td>
+                                <td class="p-4 font-medium text-gray-500">West Papua (Pabar)</td>
+                                <td class="p-4"><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">D - Vulnerable</span></td>
+                                <td class="p-4">Gas (Tangguh), but High Dependency</td>
+                            </tr>
+                            <tr class="bg-red-50/20">
+                                <td class="p-4 font-bold text-gray-400">36</td>
+                                <td class="p-4 font-medium text-gray-500">South Papua</td>
+                                <td class="p-4"><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">D - Vulnerable</span></td>
+                                <td class="p-4">Agriculture Potential, Low Infrastructure</td>
+                            </tr>
+                            <tr class="bg-red-50/20">
+                                <td class="p-4 font-bold text-gray-400">37</td>
+                                <td class="p-4 font-medium text-gray-500">Southwest Papua</td>
+                                <td class="p-4"><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">D - Vulnerable</span></td>
+                                <td class="p-4">Tourism (Raja Ampat), Oil/Gas Support</td>
+                            </tr>
+                            <tr class="bg-red-50/20">
+                                <td class="p-4 font-bold text-gray-400">38</td>
+                                <td class="p-4 font-medium text-gray-500">Highland Papua</td>
+                                <td class="p-4"><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">D - Vulnerable</span></td>
+                                <td class="p-4">Isolated, Agriculture, Security Issues</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-4 bg-gray-50 text-xs text-gray-500 border-t border-gray-200 shrink-0">
+                    *Ranking updated for 2025 including all new autonomous regions (DOB) in Papua.
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: Scenarios & Strategic Factors -->
+        <div id="content-scenarios" class="tab-content">
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-money-bill-wave text-indigo-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2" data-en="Currency Strength" data-id="Kekuatan Mata Uang">Currency Strength</h3>
+                    <p class="text-sm text-gray-600" data-en="Jakarta and East Kalimantan would have the strongest currencies due to foreign reserves and oil exports. Agrarian provinces might struggle with inflation initially."
+                       data-id="Jakarta dan Kalimantan Timur akan memiliki mata uang terkuat karena cadangan devisa dan ekspor minyak. Provinsi agraris mungkin berjuang dengan inflasi pada awalnya.">
+                        Jakarta and East Kalimantan would have the strongest currencies due to foreign reserves and oil exports. Agrarian provinces might struggle with inflation initially.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-shield-halved text-red-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2" data-en="Military Defense" data-id="Pertahanan Militer">Military Defense</h3>
+                    <p class="text-sm text-gray-600" data-en="East Java inherits the navy (Koarmada II). West Java inherits the army (Kostrad divisions often train there). Jakarta inherits the command centers but has no strategic depth for defense."
+                       data-id="Jawa Timur mewarisi angkatan laut (Koarmada II). Jawa Barat mewarisi angkatan darat (divisi Kostrad sering berlatih di sana). Jakarta mewarisi pusat komando tetapi tidak memiliki kedalaman strategis untuk pertahanan.">
+                       East Java inherits the navy (Koarmada II). West Java inherits the army (Kostrad divisions often train there). Jakarta inherits the command centers but has no strategic depth for defense.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-wheat-awn text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2" data-en="Food Sovereignty" data-id="Kedaulatan Pangan">Food Sovereignty</h3>
+                    <p class="text-sm text-gray-600" data-en="Sulawesi and Java provinces are secure. Riau, Kepri, and Jakarta are extremely vulnerable to food blockades, as they focus on cash crops (palm oil) or services rather than rice."
+                       data-id="Provinsi di Sulawesi dan Jawa aman. Riau, Kepri, dan Jakarta sangat rentan terhadap blokade pangan, karena mereka fokus pada tanaman komersial (sawit) atau jasa daripada beras.">
+                       Sulawesi and Java provinces are secure. Riau, Kepri, and Jakarta are extremely vulnerable to food blockades, as they focus on cash crops (palm oil) or services rather than rice.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-emerald-50 rounded-xl p-6 border border-emerald-100">
+                <h3 class="font-bold text-emerald-900 mb-2" data-en="The 'Java War' Scenario" data-id="Skenario 'Perang Jawa'">The "Java War" Scenario</h3>
+                <p class="text-emerald-800 text-sm leading-relaxed" data-en="If independence occurred violently, a conflict between East Java and West Java would be devastating. Central Java would become the buffer zone. However, if independence was peaceful (like a looser EU-style federation), these three provinces would form a powerful economic bloc holding 60% of the archipelago's GDP."
+                   data-id="Jika kemerdekaan terjadi secara kekerasan, konflik antara Jawa Timur dan Jawa Barat akan sangat menghancurkan. Jawa Tengah akan menjadi zona penyangga. Namun, jika kemerdekaan terjadi secara damai (seperti federasi gaya Uni Eropa yang lebih longgar), ketiga provinsi ini akan membentuk blok ekonomi kuat yang memegang 60% PDB nusantara.">
+                   If independence occurred violently, a conflict between East Java and West Java would be devastating. Central Java would become the buffer zone. However, if independence was peaceful (like a looser EU-style federation), these three provinces would form a powerful economic bloc holding 60% of the archipelago's GDP.
+                </p>
+            </div>
+        </div>
+        
+        <!-- TAB 4: AI Architect (Gemini API) -->
+        <div id="content-ai-architect" class="tab-content">
+            <div class="bg-emerald-900 text-white rounded-xl shadow-lg p-6 mb-6">
+                 <div class="flex items-center gap-3 mb-2">
+                     <i class="fa-solid fa-robot text-gold-500 text-2xl"></i>
+                     <h2 class="text-2xl font-bold font-serif" data-en="AI State Architect" data-id="Arsitek Negara AI">AI State Architect</h2>
+                 </div>
+                 <p class="text-emerald-200" data-en="Powered by Gemini. Select any of the 38 provinces to draft its future." data-id="Didukung oleh Gemini. Pilih satu dari 38 provinsi untuk merancang masa depannya.">Powered by Gemini. Select any of the 38 provinces to draft its future.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                
+                <!-- Feature 1: The Oracle / Advisor -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 flex flex-col h-full">
+                    <div class="p-4 bg-gray-50 border-b border-gray-200 rounded-t-xl flex justify-between items-center">
+                        <h3 class="font-bold text-gray-800"><i class="fa-solid fa-comments text-emerald-600 mr-2"></i><span data-en="Strategic State Advisor" data-id="Penasihat Strategis Negara">Strategic State Advisor</span></h3>
+                        <div class="relative inline-block text-left w-1/2">
+                            <select id="ai-province-select" class="block w-full pl-3 pr-8 py-2 text-sm border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 rounded-md bg-white border">
+                                <optgroup label="Java">
+                                    <option value="East Java">East Java</option>
+                                    <option value="DKI Jakarta">DKI Jakarta</option>
+                                    <option value="West Java">West Java</option>
+                                    <option value="Central Java">Central Java</option>
+                                    <option value="Banten">Banten</option>
+                                    <option value="DI Yogyakarta">DI Yogyakarta</option>
+                                </optgroup>
+                                <optgroup label="Sumatra">
+                                    <option value="Aceh">Aceh</option>
+                                    <option value="North Sumatra">North Sumatra</option>
+                                    <option value="West Sumatra">West Sumatra</option>
+                                    <option value="Riau">Riau</option>
+                                    <option value="Riau Islands">Riau Islands (Kepri)</option>
+                                    <option value="Jambi">Jambi</option>
+                                    <option value="South Sumatra">South Sumatra</option>
+                                    <option value="Bengkulu">Bengkulu</option>
+                                    <option value="Lampung">Lampung</option>
+                                    <option value="Bangka Belitung">Bangka Belitung</option>
+                                </optgroup>
+                                <optgroup label="Kalimantan">
+                                    <option value="West Kalimantan">West Kalimantan</option>
+                                    <option value="Central Kalimantan">Central Kalimantan</option>
+                                    <option value="South Kalimantan">South Kalimantan</option>
+                                    <option value="East Kalimantan">East Kalimantan</option>
+                                    <option value="North Kalimantan">North Kalimantan</option>
+                                </optgroup>
+                                <optgroup label="Nusa Tenggara & Bali">
+                                    <option value="Bali">Bali</option>
+                                    <option value="West Nusa Tenggara">West Nusa Tenggara (NTB)</option>
+                                    <option value="East Nusa Tenggara">East Nusa Tenggara (NTT)</option>
+                                </optgroup>
+                                <optgroup label="Sulawesi">
+                                    <option value="North Sulawesi">North Sulawesi</option>
+                                    <option value="Gorontalo">Gorontalo</option>
+                                    <option value="Central Sulawesi">Central Sulawesi</option>
+                                    <option value="West Sulawesi">West Sulawesi</option>
+                                    <option value="South Sulawesi">South Sulawesi</option>
+                                    <option value="Southeast Sulawesi">Southeast Sulawesi</option>
+                                </optgroup>
+                                <optgroup label="Maluku">
+                                    <option value="Maluku">Maluku</option>
+                                    <option value="North Maluku">North Maluku</option>
+                                </optgroup>
+                                <optgroup label="Papua">
+                                    <option value="Papua">Papua (Main)</option>
+                                    <option value="West Papua">West Papua</option>
+                                    <option value="South Papua">South Papua</option>
+                                    <option value="Central Papua">Central Papua</option>
+                                    <option value="Highland Papua">Highland Papua</option>
+                                    <option value="Southwest Papua">Southwest Papua</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="p-4 flex-grow flex flex-col space-y-4">
+                        <div id="chat-history" class="flex-grow bg-gray-50 border border-gray-200 rounded-lg p-4 h-64 overflow-y-auto text-sm space-y-3">
+                             <div class="text-gray-500 italic text-center mt-20" data-en="Ask a 'What If' scenario about the selected province..." data-id="Tanyakan skenario 'Bagaimana Jika' tentang provinsi yang dipilih...">Ask a 'What If' scenario about the selected province...</div>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" id="user-query" class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="e.g., How to improve the economy?">
+                            <button onclick="askGemini()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors flex items-center">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 2: Identity Generator -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 flex flex-col">
+                    <div class="p-4 bg-gray-50 border-b border-gray-200 rounded-t-xl">
+                        <h3 class="font-bold text-gray-800"><i class="fa-solid fa-flag text-red-600 mr-2"></i><span data-en="National Identity Generator" data-id="Generator Identitas Nasional">National Identity Generator</span></h3>
+                    </div>
+                    <div class="p-6 flex flex-col items-center justify-center space-y-6 flex-grow">
+                        <p class="text-center text-gray-600 text-sm" data-en="Generate a unique Motto, Flag description, and Anthem based on the province's culture." data-id="Hasilkan Motto, deskripsi Bendera, dan Lagu Kebangsaan unik berdasarkan budaya provinsi.">Generate a unique Motto, Flag description, and Anthem based on the province's culture.</p>
+                        
+                        <button onclick="generateIdentity()" class="sparkle-btn text-white font-bold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-transform flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span data-en="Generate Identity ✨" data-id="Hasilkan Identitas ✨">Generate Identity ✨</span>
+                        </button>
+
+                        <div id="identity-result" class="w-full hidden space-y-4 animate-fade-in">
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Motto</h4>
+                                <p id="result-motto" class="text-lg font-serif font-bold text-emerald-800 italic">"..."</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Flag Concept</h4>
+                                <p id="result-flag" class="text-sm text-gray-700">...</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">National Anthem Snippet</h4>
+                                <p id="result-anthem" class="text-sm font-serif text-gray-600 whitespace-pre-line">...</p>
+                            </div>
+                        </div>
+                        <div id="identity-loader" class="hidden">
+                            <div class="loader"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+         <!-- TAB 5: Citations -->
+         <div id="content-citations" class="tab-content">
+            <div class="bg-white rounded-xl shadow p-8 max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800" data-en="Data Sources & Citations" data-id="Sumber Data & Referensi">Data Sources & Citations</h2>
+                <div class="space-y-4">
+                    <div class="p-4 border-l-4 border-gray-300 bg-gray-50">
+                        <h4 class="font-bold text-gray-900">BPS - Statistics Indonesia (2023/2024)</h4>
+                        <p class="text-sm text-gray-600 italic">"Produk Domestik Regional Bruto (GRDP) by Province" & "Indeks Pembangunan Manusia (HDI) by Province". Used for economic rankings and human capital assessment.</p>
+                    </div>
+                    <div class="p-4 border-l-4 border-gray-300 bg-gray-50">
+                        <h4 class="font-bold text-gray-900">Ministry of Finance (Kemenkeu) RI</h4>
+                        <p class="text-sm text-gray-600 italic">"Regional Transfer Data (TKDD)". Used to identify which provinces are dependent on central government funds (DAU/DAK) versus those that contribute revenue.</p>
+                    </div>
+                    <div class="p-4 border-l-4 border-gray-300 bg-gray-50">
+                        <h4 class="font-bold text-gray-900">Bank Indonesia Regional Economic Reports</h4>
+                        <p class="text-sm text-gray-600 italic">Quarterly reports analyzing export/import performance of regional economies (East Java, Kaltim, Riau).</p>
+                    </div>
+                    <div class="p-4 border-l-4 border-gray-300 bg-gray-50">
+                        <h4 class="font-bold text-gray-900">SKK Migas</h4>
+                        <p class="text-sm text-gray-600 italic">Data regarding oil and gas lifting per working area (Blok Rokan, Blok Mahakam, Blok Cepu) used to determine resource wealth.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- API Modal -->
+    <div id="api-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl p-6 w-96 max-w-full m-4 shadow-2xl">
+            <h3 class="text-lg font-bold mb-4">Gemini API Key</h3>
+            <p class="text-sm text-gray-600 mb-4">Enter your API key to enable AI features. The key is stored temporarily in your browser.</p>
+            <input type="password" id="api-key-input" class="w-full border p-2 rounded mb-4" placeholder="Enter API Key">
+            <div class="flex justify-end gap-2">
+                <button onclick="document.getElementById('api-modal').classList.add('hidden')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancel</button>
+                <button onclick="saveApiKey()" class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2" data-en="Research generated by AI based on real-world economic data." data-id="Penelitian dihasilkan oleh AI berdasarkan data ekonomi dunia nyata.">Research generated by AI based on real-world economic data.</p>
+            <p class="text-xs text-gray-500">&copy; 2024 Nusantara Hypotheticals.</p>
+        </div>
+    </footer>
+
+    <script>
+        // State
+        let currentLang = 'en';
+        let apiKey = ""; // Default empty string
+        
+        // Expanded Context Data for All 38 Provinces
+        const provinceData = {
+            // Java
+            "East Java": "Surplus rice/sugar, strong navy (PT PAL), manufacturing hub (Surabaya), balanced economy.",
+            "DKI Jakarta": "Financial center, 70% money circulation, no natural resources, dependent on food imports, high HDI.",
+            "West Java": "Largest population (50m+), huge manufacturing (Bekasi), Sundanese culture, social welfare burden.",
+            "Central Java": "Agriculture powerhouse, textiles, high stability, Borobudur tourism, middle income.",
+            "Banten": "Heavy industry (Steel), Merak Port, proximity to Jakarta, Baduy culture.",
+            "DI Yogyakarta": "Education hub (UGM), cultural tourism (Sultanate), low natural resources, high stability.",
+            
+            // Sumatra
+            "Aceh": "Special autonomy (Sharia), Gas (Arun - declining), coffee, history of independence movements.",
+            "North Sumatra": "Plantation giant (Palm Oil, Rubber), Lake Toba tourism, Belawan port, diverse demographics.",
+            "West Sumatra": "Minangkabau culture (Matrilineal), tourism, cement (Semen Padang), culinary diplomacy.",
+            "Riau": "Palm oil giant, oil rich (Rokan), Malacca strait access, historically Malay sultanate influence.",
+            "Riau Islands": "Archipelago, Batam/Bintan FTZ, proximity to Singapore, electronics manufacturing, tourism.",
+            "Jambi": "Palm oil, rubber, oil, Muaro Jambi temple history.",
+            "South Sumatra": "Coal powerhouse, natural gas, agriculture, LRT infrastructure, Sriwijaya history.",
+            "Bengkulu": "Isolated west coast, gold mining, agriculture, Rafflesia flower.",
+            "Lampung": "Gateway to Sumatra, coffee, pineapples (Great Giant Foods), Bakauheni port.",
+            "Bangka Belitung": "Tin mining (world class), pepper, beautiful beaches, island economy.",
+
+            // Kalimantan
+            "West Kalimantan": "Kapuas river, Dayak/Malay/Chinese demographics, bauxite, palm oil, border with Malaysia.",
+            "Central Kalimantan": "Vast peatlands, Dayak culture, palm oil, gold mining, former capital candidate.",
+            "South Kalimantan": "Coal mining capital, Banjarmasin river culture, trade hub.",
+            "East Kalimantan": "Oil/Coal/Gas wealthy, new capital (IKN), rich but low population density.",
+            "North Kalimantan": "Newest province in Borneo, hydro potential (Kayan river), oil/gas, border trade.",
+
+            // Nusa Tenggara & Bali
+            "Bali": "Hindu culture, world-famous tourism, agriculture (Subak), creative industry.",
+            "West Nusa Tenggara": "Lombok/Sumbawa, Mining (Amman Mineral), Mandalika circuit, tourism, agriculture.",
+            "East Nusa Tenggara": "Archipelagic (Flores, Sumba, Timor), Komodo dragons, dry climate, high poverty, cattle.",
+
+            // Sulawesi
+            "North Sulawesi": "Christian majority, Minahasa culture, Bunaken marine tourism, coconut, fisheries.",
+            "Gorontalo": "Corn production, fisheries, conservative Islamic culture, spun off from North Sulawesi.",
+            "Central Sulawesi": "Nickel industrial parks (Morowali/IMIP), mining boom, megalithic history.",
+            "West Sulawesi": "Cocoa production, Mandar culture, agriculture.",
+            "South Sulawesi": "Gateway to East Indonesia, Bugis/Makassar maritime culture, rice surplus, nickel (Sorowako).",
+            "Southeast Sulawesi": "Nickel mining (Konawe), Wakatobi marine tourism, asphalt (Buton).",
+
+            // Maluku
+            "Maluku": "Spice islands history (Nutmeg/Clove), Ambon city, fisheries, archipelagic logistics challenges.",
+            "North Maluku": "Nickel processing (Weda Bay), spice history (Ternate/Tidore sultanates), mining boom.",
+
+            // Papua
+            "Papua": "Jayapura, Gold/Copper (Freeport), northern coast, high development cost.",
+            "West Papua": "Bird's head peninsula, gas (Tangguh LNG), forestry.",
+            "South Papua": "Merauke, flatlands, planned food estate (rice/sugar), Trans-Papua road.",
+            "Central Papua": "Timika, proximity to Freeport mine, high mountains (Cartensz).",
+            "Highland Papua": "Wamena, Baliem valley, purely landlocked, tribal agriculture, difficult access.",
+            "Southwest Papua": "Sorong (oil city), Raja Ampat tourism, gateway to Papua."
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            switchTab('analysis'); // Default tab
+            updateLanguageDisplay();
+            
+            // Check local storage for API key user might have entered previously
+            const storedKey = localStorage.getItem('gemini_api_key');
+            if(storedKey) apiKey = storedKey;
+        });
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById(`content-${tabId}`).classList.add('active');
+
+            const tabs = ['analysis', 'leaderboard', 'scenarios', 'citations', 'ai-architect'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if(t === tabId) {
+                    btn.classList.remove('text-gray-500', 'border-transparent');
+                    btn.classList.add('text-emerald-800', 'border-emerald-600', 'bg-white');
+                } else {
+                    btn.classList.add('text-gray-500', 'border-transparent');
+                    btn.classList.remove('text-emerald-800', 'border-emerald-600', 'bg-white');
+                }
+            });
+        }
+
+        // Language Switching
+        function setLanguage(lang) {
+            currentLang = lang;
+            updateLanguageDisplay();
+        }
+
+        function updateLanguageDisplay() {
+            const elements = document.querySelectorAll('[data-en]');
+            elements.forEach(el => {
+                const enText = el.getAttribute('data-en');
+                const idText = el.getAttribute('data-id');
+                if (currentLang === 'id' && idText) {
+                    el.textContent = idText;
+                } else {
+                    el.textContent = enText;
+                }
+            });
+            const btnEn = document.getElementById('btn-en');
+            const btnId = document.getElementById('btn-id');
+            if(currentLang === 'en') {
+                btnEn.classList.add('bg-white', 'text-emerald-900', 'shadow');
+                btnEn.classList.remove('text-emerald-100');
+                btnId.classList.remove('bg-white', 'text-emerald-900', 'shadow');
+                btnId.classList.add('text-emerald-100');
+            } else {
+                btnId.classList.add('bg-white', 'text-emerald-900', 'shadow');
+                btnId.classList.remove('text-emerald-100');
+                btnEn.classList.remove('bg-white', 'text-emerald-900', 'shadow');
+                btnEn.classList.add('text-emerald-100');
+            }
+        }
+
+        function saveApiKey() {
+            const input = document.getElementById('api-key-input').value;
+            if(input) {
+                apiKey = input;
+                localStorage.setItem('gemini_api_key', input);
+                document.getElementById('api-modal').classList.add('hidden');
+                alert('API Key Saved!');
+            }
+        }
+
+        // --- GEMINI API INTEGRATION ---
+
+        async function callGeminiAPI(prompt) {
+            if (!apiKey) {
+                document.getElementById('api-modal').classList.remove('hidden');
+                throw new Error("API Key missing");
+            }
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) throw new Error('API Request Failed');
+                
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error(error);
+                alert("Failed to connect to Gemini. Please check your API Key.");
+                return null;
+            }
+        }
+
+        async function askGemini() {
+            const query = document.getElementById('user-query').value;
+            const province = document.getElementById('ai-province-select').value;
+            const chatBox = document.getElementById('chat-history');
+
+            if (!query) return;
+
+            // Clear placeholder
+            if(chatBox.innerText.includes("Ask a")) chatBox.innerHTML = "";
+
+            // User Message
+            const userDiv = document.createElement('div');
+            userDiv.className = "text-right mb-4";
+            userDiv.innerHTML = `<span class="inline-block bg-gray-200 rounded-lg px-4 py-2 text-sm text-gray-800 shadow-sm">${query}</span>`;
+            chatBox.appendChild(userDiv);
+
+            // Loading state
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = "text-left mb-4";
+            loadingDiv.innerHTML = `<span class="inline-block bg-emerald-100 rounded-lg px-4 py-2 text-sm text-emerald-900 shadow-sm"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Analyzing data...</span>`;
+            chatBox.appendChild(loadingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            document.getElementById('user-query').value = "";
+
+            const context = provinceData[province] || "Standard Indonesian province context.";
+            const prompt = `You are a strategic economic advisor for the independent nation of ${province}. 
+            Context: ${context}.
+            User Question: ${query}.
+            Answer concisely (max 3 sentences) focusing on economic/political reality.`;
+
+            const response = await callGeminiAPI(prompt);
+            
+            chatBox.removeChild(loadingDiv);
+
+            if (response) {
+                const botDiv = document.createElement('div');
+                botDiv.className = "text-left mb-4";
+                botDiv.innerHTML = `<div class="inline-block bg-emerald-50 border border-emerald-100 rounded-lg px-4 py-2 text-sm text-gray-800 shadow-sm prose prose-sm max-w-none">${marked.parse(response)}</div>`;
+                chatBox.appendChild(botDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        async function generateIdentity() {
+            const province = document.getElementById('ai-province-select').value;
+            const btn = document.querySelector('.sparkle-btn');
+            const resultDiv = document.getElementById('identity-result');
+            const loader = document.getElementById('identity-loader');
+
+            // UI State
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            resultDiv.classList.add('hidden');
+            loader.classList.remove('hidden');
+
+            const context = provinceData[province] || "Indonesian culture.";
+            const prompt = `Create a national identity for independent ${province}.
+            Context: ${context}.
+            Return ONLY a JSON object with these keys: "motto" (phrase in native language + english translation), "flag" (1 sentence visual description), "anthem" (4 lines of lyrics in English).
+            Format: {"motto": "...", "flag": "...", "anthem": "..."}`;
+
+            const responseText = await callGeminiAPI(prompt);
+
+            loader.classList.add('hidden');
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            if (responseText) {
+                try {
+                    // Extract JSON if wrapped in markdown
+                    const jsonStr = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+                    const data = JSON.parse(jsonStr);
+
+                    document.getElementById('result-motto').textContent = data.motto;
+                    document.getElementById('result-flag').textContent = data.flag;
+                    document.getElementById('result-anthem').textContent = data.anthem;
+
+                    resultDiv.classList.remove('hidden');
+                } catch (e) {
+                    alert("Error parsing AI response. Try again.");
+                }
+            }
+        }
+    </script>
+</body>
+</html>
