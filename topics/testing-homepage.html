@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InnovateX - Future-Forward Solutions</title>
+    <title>NOVA - Futuristic Solutions</title>
     <style>
         * {
             margin: 0;
@@ -13,23 +13,22 @@
         }
 
         :root {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #334155;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --accent: #38bdf8;
-            --accent-secondary: #818cf8;
-            --accent-pink: #f472b6;
-            --accent-emerald: #34d399;
-            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            --shadow: rgba(0, 0, 0, 0.3);
+            --jet-black: #000000;
+            --deep-gray: #0a0a0a;
+            --mid-gray: #1a1a1a;
+            --light-gray: #2a2a2a;
+            --neon-blue: #00f5ff;
+            --neon-purple: #bf00ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #00ffaa;
+            --neon-orange: #ff6600;
+            --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         body {
             overflow-x: hidden;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            background: var(--jet-black);
+            color: #f0f0f0;
             min-height: 100vh;
         }
 
@@ -38,15 +37,124 @@
             scroll-behavior: smooth;
         }
 
+        /* Background Grid Animation */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: floatParticle linear infinite;
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Geometric Shapes */
+        .shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.05;
+            border: 1px solid var(--neon-blue);
+            animation: rotateShape 30s linear infinite;
+        }
+
+        .shape-circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            top: 10%;
+            left: 10%;
+            animation-duration: 40s;
+        }
+
+        .shape-square {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 15%;
+            animation-duration: 35s;
+        }
+
+        .shape-triangle {
+            width: 0;
+            height: 0;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-bottom: 200px solid rgba(0, 245, 255, 0.05);
+            top: 20%;
+            right: 30%;
+            animation-duration: 45s;
+        }
+
+        @keyframes rotateShape {
+            0% { transform: rotate(0deg) translateZ(0); }
+            100% { transform: rotate(360deg) translateZ(0); }
+        }
+
         /* Header & Navigation */
         header {
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.2);
             transition: var(--transition);
             transform: translateY(-100%);
             animation: slideDown 0.6s ease-out 0.2s forwards;
@@ -67,27 +175,40 @@
 
         .logo {
             font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -1px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: '';
+            width: 15px;
+            height: 15px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--neon-blue);
         }
 
         .nav-links {
             display: flex;
-            gap: 1.5rem;
+            gap: 2rem;
             list-style: none;
         }
 
         .nav-links a {
             text-decoration: none;
-            color: var(--text-secondary);
+            color: #a0a0a0;
             font-weight: 500;
             position: relative;
             transition: var(--transition);
             font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .nav-links a::after {
@@ -97,12 +218,14 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: var(--accent);
+            background: var(--neon-blue);
             transition: var(--transition);
+            box-shadow: 0 0 5px var(--neon-blue);
         }
 
         .nav-links a:hover {
-            color: var(--accent);
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
         }
 
         .nav-links a:hover::after {
@@ -120,10 +243,11 @@
 
         .menu-toggle span {
             width: 25px;
-            height: 3px;
-            background: var(--text-primary);
-            border-radius: 3px;
+            height: 2px;
+            background: var(--neon-blue);
+            border-radius: 2px;
             transition: var(--transition);
+            box-shadow: 0 0 5px var(--neon-blue);
         }
 
         /* Hero Section */
@@ -144,8 +268,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 70%),
-                        radial-gradient(circle at 80% 20%, rgba(129, 140, 248, 0.08) 0%, transparent 60%);
+            background: radial-gradient(circle at 50% 50%, rgba(0, 245, 255, 0.1) 0%, transparent 50%);
             z-index: -1;
         }
 
@@ -154,6 +277,26 @@
             max-width: 1000px;
             animation: fadeInUp 1s ease-out;
             padding: 0 1rem;
+            position: relative;
+        }
+
+        .hero-content::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 245, 255, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.5; }
         }
 
         @keyframes fadeInUp {
@@ -172,37 +315,43 @@
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            text-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
         }
 
         .hero p {
             font-size: clamp(1rem, 2vw, 1.25rem);
-            color: var(--text-secondary);
+            color: #a0a0a0;
             margin-bottom: 2.5rem;
             line-height: 1.6;
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
+            letter-spacing: 0.5px;
         }
 
         .cta-button {
             display: inline-block;
-            padding: 1rem 2.5rem;
-            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-            color: var(--bg-primary);
+            padding: 1rem 3rem;
+            background: transparent;
+            color: var(--neon-blue);
             text-decoration: none;
             border-radius: 50px;
             font-weight: 700;
             font-size: 1.1rem;
             transition: var(--transition);
-            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.25);
+            border: 2px solid var(--neon-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
             position: relative;
             overflow: hidden;
-            border: none;
             cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 245, 255, 0.2);
         }
 
         .cta-button::before {
@@ -212,13 +361,14 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.2), transparent);
             transition: 0.5s;
         }
 
         .cta-button:hover {
+            background: rgba(0, 245, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(56, 189, 248, 0.4);
         }
 
         .cta-button:hover::before {
@@ -246,20 +396,30 @@
         .section-title {
             text-align: center;
             margin-bottom: 3rem;
+            position: relative;
         }
 
         .section-title h2 {
             font-size: clamp(1.8rem, 4vw, 2.5rem);
             font-weight: 800;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--text-primary), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
+        }
+
+        .section-title h2::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            margin: 1rem auto;
         }
 
         .section-title p {
-            color: var(--text-secondary);
+            color: #888;
             font-size: clamp(1rem, 2vw, 1.2rem);
             max-width: 600px;
             margin: 0 auto;
@@ -275,10 +435,10 @@
         }
 
         .about-card {
-            background: var(--bg-card);
+            background: var(--deep-gray);
             padding: 2rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid var(--light-gray);
             transition: var(--transition);
             opacity: 0;
             transform: translateY(30px);
@@ -292,10 +452,10 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
-            transform: scaleX(0);
-            transform-origin: left;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, transparent 0%, rgba(0, 245, 255, 0.05) 50%, transparent 100%);
+            opacity: 0;
             transition: var(--transition);
         }
 
@@ -305,42 +465,54 @@
         }
 
         .about-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-5px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.1);
         }
 
         .about-card:hover::before {
-            transform: scaleX(1);
+            opacity: 1;
         }
 
         .icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-            border-radius: 15px;
+            width: 70px;
+            height: 70px;
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--bg-primary);
+            color: var(--neon-blue);
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
             transition: var(--transition);
+            position: relative;
+            z-index: 1;
         }
 
         .about-card:hover .icon {
-            transform: scale(1.1) rotate(5deg);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
+            background: rgba(0, 245, 255, 0.1);
         }
 
         .about-card h3 {
             font-size: 1.3rem;
             margin-bottom: 1rem;
-            color: var(--text-primary);
+            color: var(--neon-blue);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
         }
 
         .about-card p {
-            color: var(--text-secondary);
+            color: #aaa;
             line-height: 1.6;
             font-size: 0.95rem;
+            position: relative;
+            z-index: 1;
         }
 
         /* Services */
@@ -351,10 +523,10 @@
         }
 
         .service-card {
-            background: var(--bg-card);
-            border-radius: 20px;
+            background: var(--deep-gray);
+            border-radius: 10px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--light-gray);
             transition: var(--transition);
             position: relative;
         }
@@ -366,15 +538,16 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-pink));
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));
             transform: scaleX(0);
             transform-origin: left;
             transition: var(--transition);
         }
 
         .service-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-5px);
+            border-color: var(--neon-purple);
+            box-shadow: 0 10px 30px rgba(191, 0, 255, 0.1);
         }
 
         .service-card:hover::before {
@@ -383,56 +556,73 @@
 
         .service-content {
             padding: 1.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .service-content h3 {
             font-size: 1.2rem;
             margin-bottom: 0.8rem;
-            color: var(--text-primary);
+            color: var(--neon-purple);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .service-content p {
-            color: var(--text-secondary);
+            color: #aaa;
             line-height: 1.6;
             font-size: 0.9rem;
         }
 
         /* Statistics */
         .stats {
-            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
-            color: var(--text-primary);
+            background: transparent;
+            color: var(--neon-blue);
             padding: 3rem 5%;
-            border-radius: 20px;
+            border-radius: 10px;
             margin: 4rem 0;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, transparent 0%, rgba(0, 245, 255, 0.03) 50%, transparent 100%);
+            z-index: -1;
         }
 
         .stat-item h3 {
             font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 800;
+            font-weight: 900;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--accent), var(--accent-pink));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
         }
 
         .stat-item p {
             font-size: 0.9rem;
-            color: var(--text-secondary);
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* Testimonials */
         .testimonials-container {
             position: relative;
             overflow: hidden;
-            border-radius: 20px;
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            background: var(--deep-gray);
+            border: 1px solid var(--light-gray);
             padding: 2rem 1rem;
         }
 
@@ -450,18 +640,41 @@
         .testimonial-text {
             font-size: clamp(1rem, 2vw, 1.2rem);
             font-style: italic;
-            color: var(--text-secondary);
+            color: #aaa;
             margin-bottom: 1.5rem;
             line-height: 1.7;
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
+            position: relative;
+        }
+
+        .testimonial-text::before,
+        .testimonial-text::after {
+            content: '"';
+            font-size: 2rem;
+            color: var(--neon-blue);
+            opacity: 0.3;
+            position: absolute;
+            font-family: serif;
+        }
+
+        .testimonial-text::before {
+            top: -15px;
+            left: -20px;
+        }
+
+        .testimonial-text::after {
+            bottom: -25px;
+            right: -20px;
         }
 
         .testimonial-author {
             font-weight: 600;
-            color: var(--accent);
+            color: var(--neon-blue);
             font-size: 1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .testimonial-nav {
@@ -475,14 +688,21 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--light-gray);
             cursor: pointer;
             transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .nav-dot:hover {
+            background: var(--neon-blue);
+            box-shadow: 0 0 5px var(--neon-blue);
         }
 
         .nav-dot.active {
-            background: var(--accent);
-            transform: scale(1.3);
+            background: var(--neon-blue);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
         }
 
         /* Contact Section */
@@ -494,17 +714,33 @@
         }
 
         .contact-info {
-            background: linear-gradient(135deg, var(--bg-card), #2d3748);
-            color: var(--text-primary);
+            background: var(--deep-gray);
+            color: #f0f0f0;
             padding: 2.5rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid var(--light-gray);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, transparent 0%, rgba(191, 0, 255, 0.05) 50%, transparent 100%);
+            z-index: -1;
         }
 
         .contact-info h3 {
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
-            color: var(--text-primary);
+            color: var(--neon-purple);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .contact-info p {
@@ -512,54 +748,73 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            color: var(--text-secondary);
+            color: #aaa;
             font-size: 0.95rem;
+            letter-spacing: 0.5px;
         }
 
         .contact-info p strong {
-            color: var(--accent);
+            color: var(--neon-purple);
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .contact-form {
-            background: var(--bg-card);
+            background: var(--deep-gray);
             padding: 2.5rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid var(--light-gray);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, transparent 0%, rgba(0, 245, 255, 0.05) 50%, transparent 100%);
+            z-index: -1;
         }
 
         .form-group {
             margin-bottom: 1.5rem;
             position: relative;
+            z-index: 1;
         }
 
         .form-group input,
         .form-group textarea {
             width: 100%;
             padding: 1rem;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
             font-size: 1rem;
             transition: var(--transition);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
+            background: var(--mid-gray);
+            color: #f0f0f0;
         }
 
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: var(--accent);
-            background: rgba(56, 189, 248, 0.1);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 245, 255, 0.2);
+            background: var(--deep-gray);
         }
 
         .form-group label {
             position: absolute;
             left: 1rem;
             top: 1rem;
-            color: var(--text-secondary);
+            color: #666;
             transition: var(--transition);
             pointer-events: none;
-            background: transparent;
+            background: var(--deep-gray);
             padding: 0 0.5rem;
         }
 
@@ -569,40 +824,58 @@
         .form-group textarea:not(:placeholder-shown) + label {
             top: -10px;
             font-size: 0.8rem;
-            color: var(--accent);
-            background: var(--bg-card);
+            color: var(--neon-blue);
+            background: var(--deep-gray);
         }
 
         .submit-button {
-            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-            color: var(--bg-primary);
-            border: none;
+            background: transparent;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
             padding: 1rem 2rem;
-            border-radius: 10px;
+            border-radius: 5px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
             transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
         }
 
         .submit-button:hover {
+            background: rgba(0, 245, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
         }
 
         .submit-button:disabled {
-            opacity: 0.7;
+            opacity: 0.5;
             cursor: not-allowed;
         }
 
         /* Footer */
         footer {
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
+            background: var(--deep-gray);
+            color: #aaa;
             padding: 3rem 5% 2rem;
             text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--light-gray);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, transparent 0%, rgba(0, 245, 255, 0.02) 50%, transparent 100%);
+            z-index: -1;
         }
 
         .footer-content {
@@ -618,7 +891,9 @@
         .footer-col h4 {
             font-size: 1.1rem;
             margin-bottom: 1.2rem;
-            color: var(--accent);
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .footer-col ul {
@@ -630,14 +905,15 @@
         }
 
         .footer-col ul li a {
-            color: var(--text-secondary);
+            color: #aaa;
             text-decoration: none;
             transition: var(--transition);
             font-size: 0.9rem;
+            letter-spacing: 0.5px;
         }
 
         .footer-col ul li a:hover {
-            color: var(--accent);
+            color: var(--neon-blue);
             padding-left: 5px;
         }
 
@@ -650,55 +926,67 @@
         .social-icon {
             width: 40px;
             height: 40px;
-            background: rgba(255, 255, 255, 0.1);
+            background: transparent;
+            border: 1px solid var(--light-gray);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: var(--transition);
-            color: var(--text-primary);
+            color: #aaa;
             text-decoration: none;
             font-weight: 600;
         }
 
         .social-icon:hover {
-            background: var(--accent);
-            color: var(--bg-primary);
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
             transform: translateY(-3px);
         }
 
         .footer-newsletter input {
             width: 100%;
             padding: 0.8rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+            background: var(--mid-gray);
+            color: #f0f0f0;
             margin-bottom: 0.8rem;
             font-size: 0.9rem;
+        }
+
+        .footer-newsletter input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 245, 255, 0.2);
         }
 
         .footer-newsletter button {
             width: 100%;
             padding: 0.8rem;
-            background: var(--accent);
-            color: var(--bg-primary);
-            border: none;
-            border-radius: 8px;
+            background: transparent;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            border-radius: 5px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .footer-newsletter button:hover {
-            background: var(--accent-secondary);
+            background: rgba(0, 245, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
         }
 
         .copyright {
             padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
+            border-top: 1px solid var(--light-gray);
+            color: #666;
             font-size: 0.85rem;
+            letter-spacing: 0.5px;
         }
 
         /* Scroll to Top */
@@ -708,8 +996,9 @@
             right: 20px;
             width: 45px;
             height: 45px;
-            background: var(--accent);
-            color: var(--bg-primary);
+            background: transparent;
+            color: var(--neon-blue);
+            border: 2px solid var(--neon-blue);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -718,10 +1007,9 @@
             opacity: 0;
             transform: translateY(20px);
             transition: var(--transition);
-            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
+            box-shadow: 0 0 10px rgba(0, 245, 255, 0.2);
             z-index: 999;
             font-weight: bold;
-            border: none;
         }
 
         .scroll-top.visible {
@@ -730,7 +1018,8 @@
         }
 
         .scroll-top:hover {
-            transform: translateY(-3px);
+            background: rgba(0, 245, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.4);
         }
 
         /* Loading Animation */
@@ -740,7 +1029,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bg-primary);
+            background: var(--jet-black);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -754,12 +1043,26 @@
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid var(--accent);
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(0, 245, 255, 0.2);
+            border-top: 2px solid var(--neon-blue);
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            position: relative;
+        }
+
+        .spinner::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--neon-purple);
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
         }
 
         @keyframes spin {
@@ -809,14 +1112,14 @@
             width: 80%;
             max-width: 300px;
             height: 100vh;
-            background: var(--bg-secondary);
+            background: var(--deep-gray);
             z-index: 1000;
             transition: right 0.3s ease;
             padding: 5rem 2rem 2rem;
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            box-shadow: -5px 0 20px var(--shadow);
+            border-left: 1px solid var(--light-gray);
         }
 
         .mobile-menu.active {
@@ -824,18 +1127,21 @@
         }
 
         .mobile-menu a {
-            color: var(--text-primary);
+            color: #f0f0f0;
             text-decoration: none;
             font-size: 1.2rem;
             font-weight: 500;
             padding: 0.8rem;
-            border-radius: 8px;
+            border-radius: 5px;
             transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .mobile-menu a:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--accent);
+            background: rgba(0, 245, 255, 0.1);
+            color: var(--neon-blue);
+            border-left: 3px solid var(--neon-blue);
         }
 
         .mobile-overlay {
@@ -844,7 +1150,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             z-index: 999;
             opacity: 0;
             visibility: hidden;
@@ -854,6 +1160,15 @@
         .mobile-overlay.active {
             opacity: 1;
             visibility: visible;
+        }
+
+        /* Ripple Animation */
+        @keyframes ripple {
+            to {
+                width: 200px;
+                height: 200px;
+                opacity: 0;
+            }
         }
 
         /* Responsive Design - Mobile First */
@@ -885,7 +1200,8 @@
             }
 
             .hero h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
+                letter-spacing: 1px;
             }
 
             .about-grid {
@@ -902,7 +1218,7 @@
             }
 
             .stat-item p {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
             }
 
             .footer-content {
@@ -930,20 +1246,25 @@
             section {
                 padding: 3rem 5%;
             }
+
+            .shape {
+                display: none;
+            }
         }
 
         @media (max-width: 480px) {
             .hero h1 {
-                font-size: 1.75rem;
+                font-size: 1.5rem;
             }
 
             .hero p {
-                font-size: 0.95rem;
+                font-size: 0.9rem;
             }
 
             .cta-button {
                 padding: 0.8rem 2rem;
-                font-size: 1rem;
+                font-size: 0.9rem;
+                letter-spacing: 1px;
             }
 
             .stats {
@@ -962,11 +1283,11 @@
         /* Tab Portrait */
         @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
 
             .section-title h2 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
 
             .about-grid {
@@ -981,41 +1302,18 @@
                 grid-template-columns: 1fr;
             }
         }
-
-        /* Ripple Animation */
-        @keyframes ripple {
-            to {
-                width: 200px;
-                height: 200px;
-                opacity: 0;
-            }
-        }
-
-        /* Added animation for the floating shapes in hero */
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-
-        /* Smooth gradient backgrounds for hero */
-        .hero-bg::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
+    <!-- Background Effects -->
+    <div class="bg-grid"></div>
+    <div class="particles" id="particles"></div>
+    <div class="shapes">
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+        <div class="shape shape-triangle"></div>
+    </div>
+
     <!-- Loader -->
     <div class="loader" id="loader">
         <div class="spinner"></div>
@@ -1024,7 +1322,7 @@
     <!-- Header -->
     <header>
         <nav>
-            <div class="logo">InnovateX</div>
+            <div class="logo">NOVA</div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
@@ -1054,33 +1352,33 @@
     <section class="hero" id="home">
         <div class="hero-bg"></div>
         <div class="hero-content">
-            <h1 class="float">Building Tomorrow's Digital World</h1>
-            <p>We transform innovative ideas into reality through cutting-edge technology and strategic thinking. Join us on a journey to redefine what's possible.</p>
-            <a href="#contact" class="cta-button">Start Your Project</a>
+            <h1 class="float">Future-Ready Solutions</h1>
+            <p>Transforming vision into reality through cutting-edge technology and strategic innovation. We build what others can only imagine.</p>
+            <a href="#contact" class="cta-button">Initiate Protocol</a>
         </div>
     </section>
 
     <!-- About Section -->
     <section id="about">
         <div class="section-title fade-in">
-            <h2>Why Choose Us?</h2>
-            <p>With over a decade of experience, we've pioneered solutions that drive real business impact.</p>
+            <h2>Why Choose NOVA?</h2>
+            <p>Pioneering digital transformation for enterprises worldwide.</p>
         </div>
         <div class="about-grid">
             <div class="about-card fade-in">
-                <div class="icon">🚀</div>
-                <h3>Rapid Innovation</h3>
-                <p>We stay ahead of the curve, implementing the latest technologies to keep your business competitive in a fast-paced digital landscape.</p>
+                <div class="icon">⚡</div>
+                <h3>Quantum Velocity</h3>
+                <p>We leverage bleeding-edge frameworks to deliver solutions that operate at unprecedented speeds and efficiency.</p>
             </div>
             <div class="about-card fade-in" style="transition-delay: 0.1s;">
-                <div class="icon">🎯</div>
-                <h3>Strategic Focus</h3>
-                <p>Every solution is crafted with your specific business goals in mind, ensuring maximum ROI and sustainable growth.</p>
+                <div class="icon">🔮</div>
+                <h3>Predictive Intelligence</h3>
+                <p>AI-driven analytics that anticipate market trends and optimize your digital strategy before competitors even react.</p>
             </div>
             <div class="about-card fade-in" style="transition-delay: 0.2s;">
-                <div class="icon">🤝</div>
-                <h3>Collaborative Partnership</h3>
-                <p>We work as an extension of your team, fostering transparent communication and shared success throughout every project phase.</p>
+                <div class="icon">🌐</div>
+                <h3>Global Ecosystem</h3>
+                <p>Connect with our worldwide network of innovators, developers, and strategists working in unison for your success.</p>
             </div>
         </div>
     </section>
@@ -1089,63 +1387,63 @@
     <div class="stats">
         <div class="stat-item">
             <h3 class="count" data-target="500">0</h3>
-            <p>Projects Delivered</p>
+            <p>Projects Deployed</p>
         </div>
         <div class="stat-item">
-            <h3 class="count" data-target="98">0</h3>
-            <p>Client Satisfaction (%)</p>
+            <h3 class="count" data-target="99">0</h3>
+            <p>Success Rate (%)</p>
         </div>
         <div class="stat-item">
             <h3 class="count" data-target="50">0</h3>
-            <p>Industry Awards</p>
+            <p>Global Awards</p>
         </div>
         <div class="stat-item">
             <h3 class="count" data-target="15">0</h3>
-            <p>Years Experience</p>
+            <p>Years Innovation</p>
         </div>
     </div>
 
     <!-- Services Section -->
     <section id="services">
         <div class="section-title fade-in">
-            <h2>Our Services</h2>
-            <p>Comprehensive solutions tailored to elevate your digital presence and operational efficiency.</p>
+            <h2>Our Capabilities</h2>
+            <p>Comprehensive tech stack for the digital era.</p>
         </div>
         <div class="services-grid">
             <div class="service-card fade-in">
                 <div class="service-content">
-                    <h3>Web Development</h3>
-                    <p>Custom websites and web applications built with modern frameworks, focusing on performance, scalability, and user experience.</p>
+                    <h3>Web Evolution</h3>
+                    <p>Next-gen web applications built with React, Vue, and Svelte for maximum performance and user engagement.</p>
                 </div>
             </div>
             <div class="service-card fade-in" style="transition-delay: 0.1s;">
                 <div class="service-content">
-                    <h3>Mobile Applications</h3>
-                    <p>Native and cross-platform mobile apps that deliver seamless experiences across iOS and Android devices.</p>
+                    <h3>Mobile Nexus</h3>
+                    <p>Native and cross-platform mobile experiences using Flutter and React Native for seamless performance.</p>
                 </div>
             </div>
             <div class="service-card fade-in" style="transition-delay: 0.2s;">
                 <div class="service-content">
-                    <h3>Cloud Solutions</h3>
-                    <p>Enterprise-grade cloud infrastructure, migration services, and managed cloud operations for optimal performance.</p>
+                    <h3>Cloud Infrastructure</h3>
+                    <p>Scalable cloud architectures on AWS, Azure, and Google Cloud with Kubernetes orchestration.</p>
                 </div>
             </div>
             <div class="service-card fade-in">
                 <div class="service-content">
-                    <h3>Data Analytics</h3>
-                    <p>Transform your data into actionable insights with advanced analytics, machine learning, and visualization solutions.</p>
+                    <h3>Neural Analytics</h3>
+                    <p>AI and machine learning solutions that transform data into actionable insights and predictive models.</p>
                 </div>
             </div>
             <div class="service-card fade-in" style="transition-delay: 0.1s;">
                 <div class="service-content">
-                    <h3>UI/UX Design</h3>
-                    <p>User-centered design approaches that create intuitive, engaging, and beautiful digital experiences.</p>
+                    <h3>Quantum Design</h3>
+                    <p>UI/UX design that merges aesthetic excellence with intuitive functionality across all platforms.</p>
                 </div>
             </div>
             <div class="service-card fade-in" style="transition-delay: 0.2s;">
                 <div class="service-content">
-                    <h3>Digital Marketing</h3>
-                    <p>Comprehensive digital strategies including SEO, content marketing, and social media management.</p>
+                    <h3>Digital Operations</h3>
+                    <p>Complete digital marketing, SEO optimization, and growth hacking strategies for market dominance.</p>
                 </div>
             </div>
         </div>
@@ -1154,22 +1452,22 @@
     <!-- Testimonials Section -->
     <section id="testimonials">
         <div class="section-title fade-in">
-            <h2>What Our Clients Say</h2>
-            <p>Hear from businesses that have transformed their operations with our solutions.</p>
+            <h2>Client Transmission</h2>
+            <p>Voices from our global network of pioneers.</p>
         </div>
         <div class="testimonials-container fade-in">
             <div class="testimonials-track" id="testimonialsTrack">
                 <div class="testimonial">
-                    <p class="testimonial-text">"InnovateX completely transformed our digital presence. Their team's expertise and dedication exceeded our expectations at every turn."</p>
-                    <p class="testimonial-author">Sarah Johnson, CEO of TechStart Inc.</p>
+                    <p class="testimonial-text">NOVA's quantum infrastructure reduced our latency by 70%. Their team operates at a level of precision that's simply unmatched in the industry.</p>
+                    <p class="testimonial-author">Sarah Chen, CTO of Nexus Dynamics</p>
                 </div>
                 <div class="testimonial">
-                    <p class="testimonial-text">"The mobile app they developed for us has increased our customer engagement by 300%. Their attention to detail is unparalleled."</p>
-                    <p class="testimonial-author">Michael Chen, Director of Operations at RetailMax</p>
+                    <p class="testimonial-text">The predictive analytics platform they built for us has become our competitive advantage. We're anticipating market shifts weeks before they occur.</p>
+                    <p class="testimonial-author">Michael Torres, CEO of Horizon Analytics</p>
                 </div>
                 <div class="testimonial">
-                    <p class="testimonial-text">"Working with InnovateX was a game-changer. Their strategic approach to our cloud migration saved us time and money while improving performance."</p>
-                    <p class="testimonial-author">Emily Rodriguez, CTO of Global Logistics</p>
+                    <p class="testimonial-text">From concept to global deployment in under 90 days. NOVA doesn't just meet deadlines—they redefine what's possible within them.</p>
+                    <p class="testimonial-author">Elena Rodriguez, Founder of StellarTech</p>
                 </div>
             </div>
             <div class="testimonial-nav">
@@ -1183,16 +1481,16 @@
     <!-- Contact Section -->
     <section id="contact">
         <div class="section-title fade-in">
-            <h2>Let's Start a Conversation</h2>
-            <p>Ready to transform your business? Get in touch with our team of experts today.</p>
+            <h2>Establish Connection</h2>
+            <p>Ready to initiate your digital transformation? Contact our command center.</p>
         </div>
         <div class="contact-container">
             <div class="contact-info slide-in-left">
-                <h3>Get In Touch</h3>
-                <p><strong>📍 Address:</strong> 123 Innovation Drive, Tech City, TC 12345</p>
-                <p><strong>📞 Phone:</strong> +1 (555) 123-4567</p>
-                <p><strong>✉️ Email:</strong> hello@innovatex.com</p>
-                <p><strong>🕒 Hours:</strong> Mon-Fri: 9:00 AM - 6:00 PM</p>
+                <h3>Communication Channels</h3>
+                <p><strong>📍 Coordinates:</strong> 123 Innovation Drive, Tech City, TC 12345</p>
+                <p><strong>📞 Frequency:</strong> +1 (555) 123-4567</p>
+                <p><strong>✉️ Signal:</strong> transmissions@nova.inc</p>
+                <p><strong>🕒 Active Hours:</strong> 0900 - 1800 UTC-5</p>
                 <div class="social-links" style="justify-content: flex-start;">
                     <a href="#" class="social-icon">f</a>
                     <a href="#" class="social-icon">t</a>
@@ -1204,21 +1502,21 @@
                 <form id="contactForm">
                     <div class="form-group">
                         <input type="text" id="name" placeholder=" " required>
-                        <label for="name">Your Name</label>
+                        <label for="name">Your Identification</label>
                     </div>
                     <div class="form-group">
                         <input type="email" id="email" placeholder=" " required>
-                        <label for="email">Email Address</label>
+                        <label for="email">Transmission Address</label>
                     </div>
                     <div class="form-group">
                         <input type="text" id="subject" placeholder=" " required>
-                        <label for="subject">Subject</label>
+                        <label for="subject">Subject Frequency</label>
                     </div>
                     <div class="form-group">
                         <textarea id="message" rows="4" placeholder=" " required></textarea>
-                        <label for="message">Your Message</label>
+                        <label for="message">Encrypted Message</label>
                     </div>
-                    <button type="submit" class="submit-button">Send Message</button>
+                    <button type="submit" class="submit-button">Transmit Signal</button>
                 </form>
             </div>
         </div>
@@ -1228,8 +1526,8 @@
     <footer>
         <div class="footer-content">
             <div class="footer-col">
-                <h4>InnovateX</h4>
-                <p>Building digital futures through innovation, strategy, and excellence in technology solutions.</p>
+                <h4>NOVA</h4>
+                <p>Pioneering the future of digital transformation through innovation, precision, and strategic excellence.</p>
                 <div class="social-links">
                     <a href="#" class="social-icon">f</a>
                     <a href="#" class="social-icon">t</a>
@@ -1238,45 +1536,64 @@
                 </div>
             </div>
             <div class="footer-col">
-                <h4>Quick Links</h4>
+                <h4>Navigational Links</h4>
                 <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#testimonials">Testimonials</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#home">Home Base</a></li>
+                    <li><a href="#about">About NOVA</a></li>
+                    <li><a href="#services">Capabilities</a></li>
+                    <li><a href="#testimonials">Transmissions</a></li>
+                    <li><a href="#contact">Establish Contact</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>Services</h4>
+                <h4>Service Modules</h4>
                 <ul>
-                    <li><a href="#">Web Development</a></li>
-                    <li><a href="#">Mobile Apps</a></li>
-                    <li><a href="#">Cloud Solutions</a></li>
-                    <li><a href="#">Data Analytics</a></li>
-                    <li><a href="#">UI/UX Design</a></li>
+                    <li><a href="#">Web Evolution</a></li>
+                    <li><a href="#">Mobile Nexus</a></li>
+                    <li><a href="#">Cloud Infrastructure</a></li>
+                    <li><a href="#">Neural Analytics</a></li>
+                    <li><a href="#">Quantum Design</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>Newsletter</h4>
-                <p>Subscribe to get the latest insights and updates.</p>
+                <h4>Frequency Updates</h4>
+                <p>Subscribe to our transmission feed for the latest insights.</p>
                 <form class="footer-newsletter" style="margin-top: 1rem;">
-                    <input type="email" placeholder="Your email" required>
+                    <input type="email" placeholder="Your transmission address" required>
                     <button type="submit">Subscribe</button>
                 </form>
             </div>
         </div>
         <div class="copyright">
-            <p>&copy; 2024 InnovateX. All rights reserved. | Designed with ❤️ for the future</p>
+            <p>&copy; 2024 NOVA Industries. All transmissions encrypted. | Building Tomorrow's Digital Reality</p>
         </div>
     </footer>
 
-    <!-- Scroll to Top Button -->
+    <!-- Scroll to Top -->
     <button class="scroll-top" id="scrollTop">↑</button>
 
     <script>
+        // Generate Floating Particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            const colors = ['#00f5ff', '#bf00ff', '#ff00ff', '#00ffaa'];
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.boxShadow = `0 0 ${Math.random() * 5 + 2}px ${particle.style.background}`;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
         // Page Load Animation
         window.addEventListener('load', () => {
+            createParticles();
             const loader = document.getElementById('loader');
             setTimeout(() => {
                 loader.classList.add('hidden');
@@ -1336,11 +1653,11 @@
             const currentScroll = window.pageYOffset;
             
             if (currentScroll > 100) {
-                header.style.background = 'rgba(15, 23, 42, 0.98)';
-                header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.3)';
+                header.style.background = 'rgba(0, 0, 0, 0.98)';
+                header.style.boxShadow = '0 2px 20px rgba(0, 245, 255, 0.2)';
             } else {
-                header.style.background = 'rgba(15, 23, 42, 0.95)';
-                header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.2)';
+                header.style.background = 'rgba(0, 0, 0, 0.95)';
+                header.style.boxShadow = '0 2px 20px rgba(0, 245, 255, 0.1)';
             }
 
             // Show/Hide Scroll to Top
@@ -1425,7 +1742,7 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    const headerOffset = 70; // Account for fixed header
+                    const headerOffset = 70;
                     const elementPosition = target.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -1443,18 +1760,22 @@
             
             const submitButton = e.target.querySelector('.submit-button');
             const originalText = submitButton.textContent;
-            submitButton.textContent = 'Sending...';
+            submitButton.textContent = 'Transmitting...';
             submitButton.disabled = true;
 
             setTimeout(() => {
-                submitButton.textContent = 'Message Sent! ✓';
-                submitButton.style.background = 'linear-gradient(135deg, #34d399, #10b981)';
+                submitButton.textContent = 'Signal Received ✓';
+                submitButton.style.background = 'rgba(0, 255, 170, 0.1)';
+                submitButton.style.color = '#00ffaa';
+                submitButton.style.borderColor = '#00ffaa';
                 
                 setTimeout(() => {
                     e.target.reset();
                     submitButton.textContent = originalText;
                     submitButton.disabled = false;
-                    submitButton.style.background = 'linear-gradient(135deg, var(--accent), var(--accent-secondary))';
+                    submitButton.style.background = 'transparent';
+                    submitButton.style.color = 'var(--neon-blue)';
+                    submitButton.style.borderColor = 'var(--neon-blue)';
                 }, 2000);
             }, 1500);
         });
@@ -1465,12 +1786,16 @@
             const button = e.target.querySelector('button');
             const originalText = button.textContent;
             button.textContent = 'Subscribed! ✓';
-            button.style.background = '#34d399';
+            button.style.background = 'rgba(0, 255, 170, 0.1)';
+            button.style.color = '#00ffaa';
+            button.style.borderColor = '#00ffaa';
             
             setTimeout(() => {
                 e.target.reset();
                 button.textContent = originalText;
-                button.style.background = 'var(--accent)';
+                button.style.background = 'transparent';
+                button.style.color = 'var(--neon-blue)';
+                button.style.borderColor = 'var(--neon-blue)';
             }, 2000);
         });
 
@@ -1483,7 +1808,7 @@
             }
         });
 
-        // Mouse move effect for cards
+        // Add subtle mouse move effect to cards
         document.querySelectorAll('.about-card, .service-card').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
@@ -1493,14 +1818,14 @@
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
                 
-                const rotateX = (y - centerY) / 30;
-                const rotateY = (centerX - x) / 30;
+                const rotateX = (y - centerY) / 50;
+                const rotateY = (centerX - x) / 50;
                 
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(5px)`;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
             });
             
             card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
             });
         });
 
@@ -1518,7 +1843,7 @@
                 ripple.style.width = '0';
                 ripple.style.height = '0';
                 ripple.style.borderRadius = '50%';
-                ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+                ripple.style.background = 'rgba(0, 245, 255, 0.3)';
                 ripple.style.transform = 'translate(-50%, -50%)';
                 ripple.style.animation = 'ripple 0.6s linear';
                 ripple.style.pointerEvents = 'none';
@@ -1530,26 +1855,6 @@
                 setTimeout(() => ripple.remove(), 600);
             });
         });
-
-        // Add random floating shapes to hero section for visual interest
-        const hero = document.querySelector('.hero');
-        const colors = ['#38bdf8', '#818cf8', '#f472b6', '#34d399', '#f59e0b'];
-        
-        for (let i = 0; i < 8; i++) {
-            const shape = document.createElement('div');
-            shape.style.position = 'absolute';
-            const size = Math.random() * 60 + 20;
-            shape.style.width = size + 'px';
-            shape.style.height = size + 'px';
-            shape.style.background = `radial-gradient(circle, ${colors[Math.floor(Math.random() * colors.length)]}55, transparent)`;
-            shape.style.borderRadius = Math.random() > 0.5 ? '50%' : '10%';
-            shape.style.left = Math.random() * 100 + '%';
-            shape.style.top = Math.random() * 100 + '%';
-            shape.style.opacity = '0.1';
-            shape.style.zIndex = '-1';
-            shape.style.animation = `float ${8 + Math.random() * 6}s ease-in-out infinite`;
-            hero.appendChild(shape);
-        }
     </script>
 </body>
 </html>
