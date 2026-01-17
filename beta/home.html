@@ -324,11 +324,6 @@
             text-decoration: none;
             color: inherit;
             position: relative;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .topic-card.visible {
             opacity: 1;
             transform: translateY(0);
         }
@@ -678,6 +673,8 @@
         // Generate Floating Particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
+            if (!particlesContainer) return; // Safety check
+            
             const particleCount = 25;
             const colors = ['#00f5ff', '#bf00ff', '#ff00ff', '#1C8D87'];
             
@@ -698,13 +695,17 @@
             createParticles();
             const loader = document.getElementById('loader');
             setTimeout(() => {
-                loader.classList.add('hidden');
+                if (loader) loader.classList.add('hidden');
             }, 800);
 
-            // Initialize scroll animations
+            // Force all cards to be visible immediately
             setTimeout(() => {
-                checkAnimations();
-            }, 1000);
+                const cards = document.querySelectorAll('.topic-card');
+                cards.forEach(card => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                });
+            }, 100);
         });
 
         // Language Switcher
@@ -724,57 +725,42 @@
             document.querySelectorAll('.lang-switcher button').forEach(btn => {
                 btn.classList.toggle('active', btn.id.includes(lang));
             });
-
-            // Re-run animations for new content
-            checkAnimations();
         }
 
         // Add event listeners to switcher buttons
-        document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
-        document.getElementById('lang-id').addEventListener('click', () => switchLanguage('id'));
+        const langEN = document.getElementById('lang-en');
+        const langID = document.getElementById('lang-id');
+        
+        if (langEN) {
+            langEN.addEventListener('click', () => switchLanguage('en'));
+        }
+        
+        if (langID) {
+            langID.addEventListener('click', () => switchLanguage('id'));
+        }
 
         // Set default language on initial load
         switchLanguage('en');
 
-        // Scroll Animation Observer
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        // Function to check and apply animations
-        function checkAnimations() {
-            const cards = document.querySelectorAll('.topic-card[data-animate]');
-            cards.forEach(card => {
-                observer.observe(card);
-            });
-        }
-
         // Scroll to Top
         const scrollTopBtn = document.getElementById('scrollTop');
         
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            
-            // Show/Hide Scroll to Top
-            if (currentScroll > 500) {
-                scrollTopBtn.classList.add('visible');
-            } else {
-                scrollTopBtn.classList.remove('visible');
-            }
-        });
+        if (scrollTopBtn) {
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                // Show/Hide Scroll to Top
+                if (currentScroll > 500) {
+                    scrollTopBtn.classList.add('visible');
+                } else {
+                    scrollTopBtn.classList.remove('visible');
+                }
+            });
 
-        scrollTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+            scrollTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
 
         // Add ripple effect to cards
         document.querySelectorAll('.topic-card').forEach(card => {
@@ -824,11 +810,16 @@
             });
         });
 
-        // Initialize animations on page load
-        window.addEventListener('resize', () => {
-            // Re-check animations on resize
-            checkAnimations();
+        // Prevent card click if it's just an anchor
+        document.querySelectorAll('.topic-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // The link will work naturally since it's an <a> tag
+                // No need to prevent default
+            });
         });
+
+        // Initialize
+        console.log('LoLyeah Interactive Guides loaded successfully!');
     </script>
 
 </body>
