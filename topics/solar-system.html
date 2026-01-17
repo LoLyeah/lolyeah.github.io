@@ -14,6 +14,16 @@
             --text-dark: #000000;
             --glass-bg: rgba(20, 20, 35, 0.7);
             --glass-border: rgba(100, 120, 255, 0.1);
+
+            /* Orbit Distances (Base Size 800px system) */
+            --mercury-dist: 60px;
+            --venus-dist: 90px;
+            --earth-dist: 125px;
+            --mars-dist: 160px;
+            --jupiter-dist: 220px;
+            --saturn-dist: 280px;
+            --uranus-dist: 335px;
+            --neptune-dist: 390px;
         }
         
         * {
@@ -23,110 +33,120 @@
         }
         
         body {
-            background: var(--primary-dark);
+            /* DEEP SPACE BACKGROUND SETUP */
+            background-color: #000;
             color: var(--text-light);
             font-family: 'Segoe UI', 'Roboto', sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
-            background-image: 
-                radial-gradient(1.5px 1.5px at 10% 20%, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 30% 40%, rgba(255,255,255,0.9), transparent),
-                radial-gradient(1.5px 1.5px at 50% 60%, rgba(255,255,255,0.7), transparent),
-                radial-gradient(1px 1px at 70% 80%, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1.5px 1.5px at 90% 10%, rgba(255,255,255,0.8), transparent);
-            background-size: 200px 200px, 300px 300px, 400px 400px, 250px 250px, 350px 350px;
-            background-color: #000;
-        }
-        
-        /* Main Layout */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            min-height: 100vh;
+
+            /* Background Layers (Top to Bottom):
+               1-2. Small white stars (repeating patterns)
+               3. The main "Glow" gradient (Brighter center, dark edges)
+            */
+            background-image: 
+                /* Stars Layer 1 (Tiny/Distant) */
+                radial-gradient(1px 1px at 10% 10%, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 20% 20%, rgba(255,255,255,0.7), transparent),
+                radial-gradient(2px 2px at 30% 30%, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 40% 40%, rgba(255,255,255,0.9), transparent),
+                radial-gradient(2px 2px at 50% 50%, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 60% 60%, rgba(255,255,255,0.8), transparent),
+                radial-gradient(2px 2px at 70% 70%, rgba(255,255,255,0.7), transparent),
+                radial-gradient(1px 1px at 80% 80%, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 90% 90%, rgba(255,255,255,0.8), transparent),
+                
+                /* Main Cosmic Gradient: Deep Blue/Purple center -> Pure Black edges */
+                radial-gradient(circle at 50% 50%, #202035 0%, #151525 30%, #050510 60%, #000000 100%);
+            
+            /* Sizes for the star patterns */
+            background-size: 
+                350px 350px, 300px 300px, 250px 250px, 
+                200px 200px, 150px 150px, 400px 400px, 
+                300px 300px, 200px 200px, 450px 450px,
+                100% 100%; /* The gradient covers full screen */
+                
+            background-repeat: repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
         }
         
         /* Header */
         header {
             text-align: center;
-            padding: 15px 0;
+            padding: 10px 0;
+            z-index: 10;
+            flex-shrink: 0;
+            /* Made header slightly more transparent to see the new stars */
+            background: rgba(10, 10, 26, 0.3); 
+            backdrop-filter: blur(2px);
         }
         
         h1 {
             color: var(--accent-light);
-            font-size: 2rem;
+            font-size: 1.8rem;
             text-shadow: 0 0 15px rgba(78, 204, 163, 0.5);
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         
         #subtitle {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #b0c4ff;
             max-width: 800px;
             margin: 0 auto;
-            line-height: 1.5;
         }
         
         /* Language Switcher */
         .language-switcher {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
-            margin: 15px 0;
-            padding: 8px;
-            background: rgba(30, 30, 50, 0.5);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(100, 120, 255, 0.1);
+            margin-top: 10px;
         }
         
         .lang-btn {
             background: rgba(40, 40, 60, 0.7);
             color: var(--text-light);
             border: 1px solid rgba(100, 120, 255, 0.2);
-            padding: 10px 20px;
+            padding: 5px 15px;
             border-radius: 15px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
-            font-size: 1rem;
-            min-width: 120px;
-            text-align: center;
+            font-size: 0.8rem;
             backdrop-filter: blur(5px);
         }
         
         .lang-btn:hover {
             background: rgba(78, 204, 163, 0.3);
             border-color: var(--accent);
-            transform: translateY(-2px);
         }
         
         .lang-btn.active {
             background: linear-gradient(135deg, rgba(78, 204, 163, 0.5), rgba(78, 204, 163, 0.8));
             color: white;
             border-color: var(--accent);
-            box-shadow: 0 0 15px rgba(78, 204, 163, 0.3);
         }
         
         /* Solar System Container */
-        .solar-system-container {
+        .solar-system-wrapper {
+            flex: 1; 
             display: flex;
             justify-content: center;
             align-items: center;
-            flex: 1;
-            padding: 20px;
             position: relative;
+            overflow: hidden;
+            width: 100%;
         }
         
         #solar-system {
             position: relative;
-            width: 400px;
-            height: 400px;
-            margin: 0 auto;
+            width: 800px; 
+            height: 800px;
+            transform-origin: center center;
+            transition: transform 0.1s ease-out;
         }
         
         /* Sun */
@@ -134,17 +154,17 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             transform: translate(-50%, -50%);
             background: radial-gradient(circle at 30% 30%, #fff7cc, #ffcc00, #ff9900, #ff6600);
-            z-index: 10;
+            z-index: 100;
             cursor: pointer;
             box-shadow: 
-                0 0 20px #ffcc00,
-                0 0 40px #ff9900,
-                0 0 60px #ff6600;
+                0 0 30px #ffcc00,
+                0 0 60px #ff9900,
+                0 0 90px #ff6600; /* Increased glow for new dark background */
             transition: transform 0.3s ease;
         }
         
@@ -152,156 +172,155 @@
             transform: translate(-50%, -50%) scale(1.2);
         }
         
-        /* Planets with proper orbital animation */
+        /* Orbital Lines */
+        .orbit-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            /* Made orbit lines slightly more visible against the gradient */
+            border: 1px dashed rgba(255, 255, 255, 0.2); 
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Planets Common Styles */
         .planet {
             position: absolute;
-            top: 0;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
             border-radius: 50%;
             cursor: pointer;
-            transition: transform 0.2s ease, filter 0.2s ease;
-            z-index: 5;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform-origin: center center;
         }
         
         .planet:hover {
-            transform: translateX(-50%) scale(1.3);
-            filter: brightness(1.3);
-            z-index: 20;
+            z-index: 100;
+            box-shadow: 0 0 15px white;
         }
-        
-        /* Gradients for planets */
+
+        /* Specific Planet Styles using Variables */
+        .mercury-orbit { width: calc(var(--mercury-dist) * 2); height: calc(var(--mercury-dist) * 2); }
         .mercury { 
-            width: 10px; 
-            height: 10px; 
-            background: radial-gradient(circle at 30% 30%, #e0e0e0, #a0a0a0, #606060); 
+            width: 12px; height: 12px;
+            background: radial-gradient(circle at 30% 30%, #e0e0e0, #a0a0a0, #606060);
             animation: orbitMercury 4s linear infinite;
         }
-        
+
+        .venus-orbit { width: calc(var(--venus-dist) * 2); height: calc(var(--venus-dist) * 2); }
         .venus { 
-            width: 14px; 
-            height: 14px; 
-            background: radial-gradient(circle at 30% 30%, #fff5d1, #ffdc9b, #b8860b); 
+            width: 18px; height: 18px;
+            background: radial-gradient(circle at 30% 30%, #fff5d1, #ffdc9b, #b8860b);
             animation: orbitVenus 6s linear infinite;
         }
-        
+
+        .earth-orbit { width: calc(var(--earth-dist) * 2); height: calc(var(--earth-dist) * 2); }
         .earth { 
-            width: 16px; 
-            height: 16px; 
-            background: radial-gradient(circle at 30% 30%, #9cd7ff, #4a90e2, #2e5c3e); 
+            width: 20px; height: 20px;
+            background: radial-gradient(circle at 30% 30%, #9cd7ff, #4a90e2, #2e5c3e);
             animation: orbitEarth 8s linear infinite;
         }
-        
+
+        .mars-orbit { width: calc(var(--mars-dist) * 2); height: calc(var(--mars-dist) * 2); }
         .mars { 
-            width: 12px; 
-            height: 12px; 
-            background: radial-gradient(circle at 30% 30%, #ff9975, #cc4400, #8b1a00); 
+            width: 16px; height: 16px;
+            background: radial-gradient(circle at 30% 30%, #ff9975, #cc4400, #8b1a00);
             animation: orbitMars 10s linear infinite;
         }
-        
+
+        .jupiter-orbit { width: calc(var(--jupiter-dist) * 2); height: calc(var(--jupiter-dist) * 2); }
         .jupiter { 
-            width: 30px; 
-            height: 30px; 
-            background: radial-gradient(circle at 30% 30%, #f8f3d6, #d8ca9d, #a67c52); 
+            width: 40px; height: 40px;
+            background: radial-gradient(circle at 30% 30%, #f8f3d6, #d8ca9d, #a67c52);
             animation: orbitJupiter 14s linear infinite;
         }
-        
+
+        .saturn-orbit { width: calc(var(--saturn-dist) * 2); height: calc(var(--saturn-dist) * 2); }
         .saturn { 
-            width: 25px; 
-            height: 25px; 
-            background: radial-gradient(circle at 30% 30%, #fff8d2, #f4e4a6, #d4b45e); 
+            width: 35px; height: 35px;
+            background: radial-gradient(circle at 30% 30%, #fff8d2, #f4e4a6, #d4b45e);
             animation: orbitSaturn 18s linear infinite;
         }
-        
-        .uranus { 
-            width: 18px; 
-            height: 18px; 
-            background: radial-gradient(circle at 30% 30%, #c0f0ff, #7dd3e0, #4fa8c5); 
-            animation: orbitUranus 22s linear infinite;
-        }
-        
-        .neptune { 
-            width: 16px; 
-            height: 16px; 
-            background: radial-gradient(circle at 30% 30%, #a0d0ff, #4169e1, #254898); 
-            animation: orbitNeptune 26s linear infinite;
-        }
-        
-        /* Saturn's ring */
         .saturn::after {
             content: '';
             position: absolute;
-            width: 35px;
-            height: 8px;
-            background: radial-gradient(ellipse at center, rgba(210, 180, 140, 0.7) 0%, rgba(210, 180, 140, 0.3) 50%, transparent 70%);
+            width: 50px; height: 12px;
+            background: radial-gradient(ellipse at center, rgba(210, 180, 140, 0.8) 0%, rgba(210, 180, 140, 0.4) 50%, transparent 70%);
             border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotateX(70deg);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-20deg);
             pointer-events: none;
-            border: 1px solid rgba(210, 180, 140, 0.2);
+            border: 1px solid rgba(210, 180, 140, 0.3);
         }
-        
-        /* Orbital Animations - CORRECTED VERSION */
-        /* These animations will rotate the planet around the sun */
+
+        .uranus-orbit { width: calc(var(--uranus-dist) * 2); height: calc(var(--uranus-dist) * 2); }
+        .uranus { 
+            width: 24px; height: 24px;
+            background: radial-gradient(circle at 30% 30%, #c0f0ff, #7dd3e0, #4fa8c5);
+            animation: orbitUranus 22s linear infinite;
+        }
+
+        .neptune-orbit { width: calc(var(--neptune-dist) * 2); height: calc(var(--neptune-dist) * 2); }
+        .neptune { 
+            width: 22px; height: 22px;
+            background: radial-gradient(circle at 30% 30%, #a0d0ff, #4169e1, #254898);
+            animation: orbitNeptune 26s linear infinite;
+        }
+
+        /* Animations */
         @keyframes orbitMercury {
-            0% { transform: translateX(-50%) rotate(0deg) translateX(30px) rotate(0deg); }
-            100% { transform: translateX(-50%) rotate(360deg) translateX(30px) rotate(-360deg); }
+            from { transform: rotate(0deg) translateX(var(--mercury-dist)) rotate(0deg) translate(-50%, -50%); }
+            to   { transform: rotate(360deg) translateX(var(--mercury-dist)) rotate(-360deg) translate(-50%, -50%); }
         }
-        
         @keyframes orbitVenus {
-            0% { transform: translateX(-50%) rotate(0deg) translateX(45px) rotate(0deg); }
-            100% { transform: translateX(-50%) rotate(360deg) translateX(45px) rotate(-360deg); }
+            from { transform: rotate(0deg) translateX(var(--venus-dist)) rotate(0deg) translate(-50%, -50%); }
+            to   { transform: rotate(360deg) translateX(var(--venus-dist)) rotate(-360deg) translate(-50%, -50%); }
         }
-        
         @keyframes orbitEarth {
-            0% { transform: translateX(-50%) rotate(0deg) translateX(60px) rotate(0deg); }
-            100% { transform: translateX(-50%) rotate(360deg) translateX(60px) rotate(-360deg); }
+            from { transform: rotate(0deg) translateX(var(--earth-dist)) rotate(0deg) translate(-50%, -50%); }
+            to   { transform: rotate(360deg) translateX(var(--earth-dist)) rotate(-360deg) translate(-50%, -50%); }
         }
-        
         @keyframes orbitMars {
-            0% { transform: translateX(-50%) rotate(0deg) translateX(75px) rotate(0deg); }
-            100% { transform: translateX(-50%) rotate(360deg) translateX(75px) rotate(-360deg); }
+            from { transform: rotate(0deg) translateX(var(--mars-dist)) rotate(0deg) translate(-50%, -50%); }
+            to   { transform: rotate(360deg) translateX(var(--mars-dist)) rotate(-360deg) translate(-50%, -50%); }
         }
-        
         @keyframes orbitJupiter {
-            0% { transform: translateX(-50%) rotate(0deg) translateX(100px) rotate(0deg); }
-            100% { transform: translateX(-50%) rotate(360deg) translateX(100px) rotate(-360deg); }
+            from { transform: rotate(0deg) translateX(var(--jupiter-dist)) rotate(0deg) translate(-50%, -50%); }
+            to   { transform: rotate(360deg) translateX(var(--jupiter-dist)) rotate(-360deg) translate(-50%, -50%); }
         }
-        
         @keyframes orbitSaturn {
-            0% { transform: translateX(-50%) rotate(0deg) translateX(125px) rotate(0deg); }
-            100% { transform: translateX(-50%) rotate(360deg) translateX(125px) rotate(-360deg); }
+            from { transform: rotate(0deg) translateX(var(--saturn-dist)) rotate(0deg) translate(-50%, -50%); }
+            to   { transform: rotate(360deg) translateX(var(--saturn-dist)) rotate(-360deg) translate(-50%, -50%); }
         }
-        
         @keyframes orbitUranus {
-            0% { transform: translateX(-50%) rotate(0deg) translateX(150px) rotate(0deg); }
-            100% { transform: translateX(-50%) rotate(360deg) translateX(150px) rotate(-360deg); }
+            from { transform: rotate(0deg) translateX(var(--uranus-dist)) rotate(0deg) translate(-50%, -50%); }
+            to   { transform: rotate(360deg) translateX(var(--uranus-dist)) rotate(-360deg) translate(-50%, -50%); }
         }
-        
         @keyframes orbitNeptune {
-            0% { transform: translateX(-50%) rotate(0deg) translateX(175px) rotate(0deg); }
-            100% { transform: translateX(-50%) rotate(360deg) translateX(175px) rotate(-360deg); }
+            from { transform: rotate(0deg) translateX(var(--neptune-dist)) rotate(0deg) translate(-50%, -50%); }
+            to   { transform: rotate(360deg) translateX(var(--neptune-dist)) rotate(-360deg) translate(-50%, -50%); }
         }
         
-        /* Planet Label (appears on hover) */
+        /* Planet Label */
         .planet-label {
             position: absolute;
             color: white;
-            font-size: 10px;
-            text-shadow: 0 0 2px black;
+            font-size: 14px;
+            text-shadow: 0 0 3px black;
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
-            z-index: 25;
+            z-index: 200;
             background: rgba(0, 0, 0, 0.7);
-            padding: 2px 6px;
+            padding: 4px 8px;
             border-radius: 4px;
             white-space: nowrap;
             top: 100%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%); 
             margin-top: 5px;
             border: 1px solid rgba(78, 204, 163, 0.3);
         }
@@ -309,8 +328,12 @@
         .planet:hover .planet-label {
             opacity: 1;
         }
+
+        .planet:hover {
+            animation-play-state: paused;
+        }
         
-        /* Modal for Planet Information - Minimal Design */
+        /* Modal for Planet Information */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -366,7 +389,6 @@
             font-size: 1.8rem;
             color: var(--accent-light);
             font-weight: 700;
-            text-shadow: 0 0 10px rgba(78, 204, 163, 0.3);
         }
         
         .close-modal {
@@ -381,34 +403,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-        }
-        
-        .close-modal:hover {
-            background: rgba(255, 128, 128, 0.2);
-            transform: scale(1.2);
         }
         
         .planet-visual {
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             margin: 0 auto 20px;
             border: 2px solid var(--accent);
             box-shadow: 0 0 20px rgba(78, 204, 163, 0.2);
             position: relative;
             overflow: hidden;
-        }
-        
-        .planet-visual::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent);
-            border-radius: 50%;
         }
         
         .info-section {
@@ -421,230 +426,97 @@
         
         .section-title {
             color: var(--accent-light);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             margin-bottom: 10px;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .section-title::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 10px var(--accent);
-        }
-        
-        .facts-list {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .facts-list li {
-            padding: 8px 0;
-            position: relative;
-            padding-left: 20px;
-            line-height: 1.5;
-        }
-        
-        .facts-list li::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            color: var(--accent-light);
-            font-size: 1.2em;
         }
         
         .stat-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 10px;
-            margin-top: 10px;
         }
         
         .stat-item {
             background: rgba(60, 60, 90, 0.4);
-            padding: 10px;
-            border-radius: 8px;
+            padding: 8px;
+            border-radius: 6px;
             text-align: center;
         }
         
         .stat-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #a0b0ff;
-            margin-bottom: 5px;
         }
         
         .stat-value {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--accent-light);
         }
-        
+
+        .facts-list {
+            padding-left: 20px;
+            line-height: 1.4;
+        }
+
         /* Footer */
         footer {
             text-align: center;
-            padding: 20px;
+            padding: 10px;
             color: #7080a0;
-            font-size: 0.9rem;
-            margin-top: auto;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            background: rgba(10, 10, 26, 0.3);
+            backdrop-filter: blur(2px);
         }
         
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            #solar-system {
-                width: 300px;
-                height: 300px;
-            }
-            
-            .sun {
-                width: 40px;
-                height: 40px;
-            }
-            
-            .mercury { width: 8px; height: 8px; }
-            .venus { width: 10px; height: 10px; }
-            .earth { width: 12px; height: 12px; }
-            .mars { width: 9px; height: 9px; }
-            .jupiter { width: 20px; height: 20px; }
-            .saturn { width: 18px; height: 18px; }
-            .uranus { width: 12px; height: 12px; }
-            .neptune { width: 11px; height: 11px; }
-            
-            /* Adjust orbital distances for mobile */
-            @keyframes orbitMercury {
-                0% { transform: translateX(-50%) rotate(0deg) translateX(25px) rotate(0deg); }
-                100% { transform: translateX(-50%) rotate(360deg) translateX(25px) rotate(-360deg); }
-            }
-            
-            @keyframes orbitVenus {
-                0% { transform: translateX(-50%) rotate(0deg) translateX(35px) rotate(0deg); }
-                100% { transform: translateX(-50%) rotate(360deg) translateX(35px) rotate(-360deg); }
-            }
-            
-            @keyframes orbitEarth {
-                0% { transform: translateX(-50%) rotate(0deg) translateX(45px) rotate(0deg); }
-                100% { transform: translateX(-50%) rotate(360deg) translateX(45px) rotate(-360deg); }
-            }
-            
-            @keyframes orbitMars {
-                0% { transform: translateX(-50%) rotate(0deg) translateX(55px) rotate(0deg); }
-                100% { transform: translateX(-50%) rotate(360deg) translateX(55px) rotate(-360deg); }
-            }
-            
-            @keyframes orbitJupiter {
-                0% { transform: translateX(-50%) rotate(0deg) translateX(70px) rotate(0deg); }
-                100% { transform: translateX(-50%) rotate(360deg) translateX(70px) rotate(-360deg); }
-            }
-            
-            @keyframes orbitSaturn {
-                0% { transform: translateX(-50%) rotate(0deg) translateX(85px) rotate(0deg); }
-                100% { transform: translateX(-50%) rotate(360deg) translateX(85px) rotate(-360deg); }
-            }
-            
-            @keyframes orbitUranus {
-                0% { transform: translateX(-50%) rotate(0deg) translateX(100px) rotate(0deg); }
-                100% { transform: translateX(-50%) rotate(360deg) translateX(100px) rotate(-360deg); }
-            }
-            
-            @keyframes orbitNeptune {
-                0% { transform: translateX(-50%) rotate(0deg) translateX(115px) rotate(0deg); }
-                100% { transform: translateX(-50%) rotate(360deg) translateX(115px) rotate(-360deg); }
-            }
-            
-            .modal-content {
-                padding: 20px;
-                width: 95%;
-            }
-            
-            .modal-title {
-                font-size: 1.4rem;
-            }
-            
-            .planet-visual {
-                width: 100px;
-                height: 100px;
-            }
-        }
-        
-        /* Custom Scrollbar for Modal */
-        .modal-content::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .modal-content::-webkit-scrollbar-track {
-            background: rgba(30, 30, 50, 0.3);
-        }
-        
-        .modal-content::-webkit-scrollbar-thumb {
-            background: rgba(78, 204, 163, 0.5);
-            border-radius: 3px;
-        }
-        
-        .modal-content::-webkit-scrollbar-thumb:hover {
-            background: var(--accent);
-        }
+        /* Scrollbar */
+        .modal-content::-webkit-scrollbar { width: 6px; }
+        .modal-content::-webkit-scrollbar-track { background: rgba(30, 30, 50, 0.3); }
+        .modal-content::-webkit-scrollbar-thumb { background: rgba(78, 204, 163, 0.5); border-radius: 3px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Solar System Explorer</h1>
-            <p id="subtitle">Click on any planet to discover its secrets / Klik pada planet untuk menemukan rahasianya</p>
-            
-            <div class="language-switcher">
-                <button id="lang-en" class="lang-btn active">English</button>
-                <button id="lang-id" class="lang-btn">Bahasa Indonesia</button>
-            </div>
-        </header>
+    <header>
+        <h1>Solar System Explorer</h1>
+        <p id="subtitle">Click on any planet to discover its secrets / Klik pada planet untuk menemukan rahasianya</p>
         
-        <div class="solar-system-container">
-            <div id="solar-system">
-                <!-- Sun -->
-                <div class="sun" data-planet="sun"></div>
-                
-                <!-- Planets will be added by JavaScript -->
-            </div>
+        <div class="language-switcher">
+            <button id="lang-en" class="lang-btn active">English</button>
+            <button id="lang-id" class="lang-btn">Bahasa Indonesia</button>
         </div>
-        
-        <footer>
-            <p id="credits">Educational visualization. Data from NASA, ESA, and scientific sources.</p>
-        </footer>
+    </header>
+    
+    <div class="solar-system-wrapper" id="solar-wrapper">
+        <div id="solar-system">
+            <div class="sun" data-planet="sun"></div>
+            </div>
     </div>
+    
+    <footer>
+        <p id="credits">Educational visualization. Data from NASA, ESA, and scientific sources.</p>
+    </footer>
 
-    <!-- Modal for Planet Information -->
     <div class="modal-overlay" id="planet-modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="modal-title">Planet Name</h2>
                 <button class="close-modal" onclick="closeModal()">×</button>
             </div>
-            
             <div class="planet-visual" id="planet-visual"></div>
-            
             <div class="info-section">
                 <h3 class="section-title" id="key-facts-title">Key Facts</h3>
                 <div class="stat-grid" id="stats-grid"></div>
             </div>
-            
             <div class="info-section">
                 <h3 class="section-title" id="composition-title">Composition</h3>
                 <p id="composition-content"></p>
             </div>
-            
             <div class="info-section">
                 <h3 class="section-title" id="interesting-facts-title">Interesting Facts</h3>
                 <ul class="facts-list" id="facts-list"></ul>
             </div>
-            
             <div class="info-section" id="curiosities-section">
                 <h3 class="section-title" id="curiosities-title">Cosmic Curiosities</h3>
                 <ul class="facts-list" id="curiosities-list"></ul>
@@ -875,17 +747,17 @@
                         gravity: "11.0 m/s²",
                         composition: "80% H₂, 19% He, 1.5% CH₄",
                         facts: [
-                            "Strongest winds in solar system",
-                            "First planet located by math calculations",
-                            "Has Great Dark Spot storm",
-                            "16 known moons, Triton largest",
-                            "Blue color from methane in atmosphere"
+                            "Angin terkuat dalam tata surya",
+                            "Planet pertama ditemukan dengan matematika",
+                            "Punya Bintik Gelap Besar",
+                            "16 bulan terkenal, Triton terbesar",
+                            "Warna biru dari metana di atmosfer"
                         ],
                         curiosities: [
-                            "Triton is only large moon with retrograde orbit",
-                            "Has ring system discovered in 1989",
-                            "Triton may be captured Kuiper Belt object",
-                            "First planet discovered after telescope invention"
+                            "Triton satu-satunya bulan besar dengan orbit retrograde",
+                            "Punya sistem cincin ditemukan 1989",
+                            "Triton bisa benda Kuiper Belt tertangkap",
+                            "Planet pertama ditemukan setelah teleskop"
                         ],
                         gradient: "radial-gradient(circle at 30% 30%, #a0d0ff, #4169e1, #254898)"
                     }
@@ -1137,16 +1009,54 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeSolarSystem();
             setupEventListeners();
+            resizeSolarSystem(); // Initial resize
+            
+            // Add resize listener
+            window.addEventListener('resize', resizeSolarSystem);
         });
+
+        // ----------------------------------------------------
+        // AUTO-RESIZE LOGIC
+        // ----------------------------------------------------
+        function resizeSolarSystem() {
+            const solarSystem = document.getElementById('solar-system');
+            const wrapper = document.getElementById('solar-wrapper');
+            
+            // The base size we designed for (largest orbit is Neptune at 390px radius -> 780px diameter)
+            // We use 850px to have some padding
+            const baseSize = 850; 
+            
+            // Get available space in the wrapper
+            const availableWidth = wrapper.clientWidth;
+            const availableHeight = wrapper.clientHeight;
+            
+            // Calculate scale factor (keep some padding)
+            const padding = 40;
+            const scaleX = (availableWidth - padding) / baseSize;
+            const scaleY = (availableHeight - padding) / baseSize;
+            
+            // Use the smaller scale to ensure it fits both width and height
+            const scale = Math.min(scaleX, scaleY);
+            
+            // Apply scale
+            solarSystem.style.transform = `scale(${scale})`;
+        }
 
         function initializeSolarSystem() {
             const solarSystem = document.getElementById('solar-system');
+            // Clear current content but keep sun
             solarSystem.innerHTML = '<div class="sun" data-planet="sun"></div>';
             
             // Add planets
             const planets = ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'];
             
             planets.forEach(planet => {
+                // 1. Create the visual orbit line
+                const orbitLine = document.createElement('div');
+                orbitLine.className = `orbit-line ${planet}-orbit`;
+                solarSystem.appendChild(orbitLine);
+
+                // 2. Create the planet
                 const planetEl = document.createElement('div');
                 planetEl.className = `planet ${planet}`;
                 planetEl.dataset.planet = planet;
@@ -1303,9 +1213,6 @@
             // Show modal
             modal.classList.add('active');
             selectedPlanet = planet;
-            
-            // Update planet labels to show selected planet name
-            updatePlanetLabels();
         }
 
         function closeModal() {
