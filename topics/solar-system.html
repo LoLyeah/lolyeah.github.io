@@ -15,7 +15,7 @@
             --glass-bg: rgba(20, 20, 35, 0.7);
             --glass-border: rgba(100, 120, 255, 0.1);
 
-            /* Orbit Distances (Base Size 800px system) */
+            /* Orbit Distances (Base Size 850px system) */
             --mercury-dist: 60px;
             --venus-dist: 90px;
             --earth-dist: 125px;
@@ -43,10 +43,6 @@
             display: flex;
             flex-direction: column;
 
-            /* Background Layers (Top to Bottom):
-               1-2. Small white stars (repeating patterns)
-               3. The main "Glow" gradient (Brighter center, dark edges)
-            */
             background-image: 
                 /* Stars Layer 1 (Tiny/Distant) */
                 radial-gradient(1px 1px at 10% 10%, rgba(255,255,255,0.9), transparent),
@@ -62,12 +58,11 @@
                 /* Main Cosmic Gradient: Deep Blue/Purple center -> Pure Black edges */
                 radial-gradient(circle at 50% 50%, #202035 0%, #151525 30%, #050510 60%, #000000 100%);
             
-            /* Sizes for the star patterns */
             background-size: 
                 350px 350px, 300px 300px, 250px 250px, 
                 200px 200px, 150px 150px, 400px 400px, 
                 300px 300px, 200px 200px, 450px 450px,
-                100% 100%; /* The gradient covers full screen */
+                100% 100%;
                 
             background-repeat: repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
         }
@@ -78,7 +73,6 @@
             padding: 10px 0;
             z-index: 10;
             flex-shrink: 0;
-            /* Made header slightly more transparent to see the new stars */
             background: rgba(10, 10, 26, 0.3); 
             backdrop-filter: blur(2px);
         }
@@ -143,8 +137,8 @@
         
         #solar-system {
             position: relative;
-            width: 800px; 
-            height: 800px;
+            width: 850px; 
+            height: 850px;
             transform-origin: center center;
             transition: transform 0.1s ease-out;
         }
@@ -164,7 +158,7 @@
             box-shadow: 
                 0 0 30px #ffcc00,
                 0 0 60px #ff9900,
-                0 0 90px #ff6600; /* Increased glow for new dark background */
+                0 0 90px #ff6600;
             transition: transform 0.3s ease;
         }
         
@@ -177,7 +171,6 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            /* Made orbit lines slightly more visible against the gradient */
             border: 1px dashed rgba(255, 255, 255, 0.2); 
             border-radius: 50%;
             transform: translate(-50%, -50%);
@@ -370,6 +363,8 @@
             border: 1px solid var(--glass-border);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             color: var(--text-light);
+            display: flex;
+            flex-direction: column;
         }
         
         .modal-overlay.active .modal-content {
@@ -414,6 +409,7 @@
             box-shadow: 0 0 20px rgba(78, 204, 163, 0.2);
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
         
         .info-section {
@@ -458,6 +454,30 @@
         .facts-list {
             padding-left: 20px;
             line-height: 1.4;
+        }
+
+        /* Read More Button Styles */
+        .read-more-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: linear-gradient(135deg, rgba(78, 204, 163, 0.2), rgba(78, 204, 163, 0.4));
+            color: var(--accent-light);
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            border: 1px solid var(--accent);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(78, 204, 163, 0.1);
+        }
+
+        .read-more-btn:hover {
+            background: linear-gradient(135deg, rgba(78, 204, 163, 0.4), rgba(78, 204, 163, 0.7));
+            color: white;
+            box-shadow: 0 0 20px rgba(78, 204, 163, 0.4);
+            transform: translateY(-2px);
         }
 
         /* Footer */
@@ -521,6 +541,10 @@
                 <h3 class="section-title" id="curiosities-title">Cosmic Curiosities</h3>
                 <ul class="facts-list" id="curiosities-list"></ul>
             </div>
+            
+            <a href="#" target="_blank" class="read-more-btn" id="read-more-btn">
+                Read More on Wikipedia
+            </a>
         </div>
     </div>
 
@@ -534,6 +558,7 @@
                 compositionTitle: "Composition",
                 interestingFactsTitle: "Interesting Facts",
                 curiositiesTitle: "Cosmic Curiosities",
+                readMoreLabel: "Read More on Wikipedia",
                 credits: "Educational visualization. Data from NASA, ESA, and scientific sources.",
                 planets: {
                     sun: {
@@ -546,6 +571,7 @@
                         moons: "N/A",
                         gravity: "274 m/s²",
                         composition: "Hydrogen (73%), Helium (25%), Other elements (2%)",
+                        wikiUrl: "https://en.wikipedia.org/wiki/Sun",
                         facts: [
                             "Contains 99.86% of solar system mass",
                             "Light reaches Earth in 8 minutes",
@@ -571,6 +597,7 @@
                         moons: "0",
                         gravity: "3.7 m/s²",
                         composition: "Metal core (42%), Mantle (42%), Crust (16%)",
+                        wikiUrl: "https://en.wikipedia.org/wiki/Mercury_(planet)",
                         facts: [
                             "Smallest planet in solar system",
                             "No atmosphere and no moons",
@@ -596,6 +623,7 @@
                         moons: "0",
                         gravity: "8.87 m/s²",
                         composition: "96.5% CO₂, 3.5% N₂, 0.015% SO₂",
+                        wikiUrl: "https://en.wikipedia.org/wiki/Venus",
                         facts: [
                             "Hottest planet due to CO₂ atmosphere",
                             "Retrograde rotation (spins backward)",
@@ -621,6 +649,7 @@
                         moons: "1",
                         gravity: "9.8 m/s²",
                         composition: "65% O, 18% Si, 10% Al, 5% Fe",
+                        wikiUrl: "https://en.wikipedia.org/wiki/Earth",
                         facts: [
                             "Only known planet with life",
                             "71% covered by water",
@@ -646,6 +675,7 @@
                         moons: "2",
                         gravity: "3.7 m/s²",
                         composition: "50% Silicate crust, 30% Core, 20% Mantle",
+                        wikiUrl: "https://en.wikipedia.org/wiki/Mars",
                         facts: [
                             "Red Planet from iron oxide (rust)",
                             "Largest volcano in solar system",
@@ -671,6 +701,7 @@
                         moons: "95",
                         gravity: "24.8 m/s²",
                         composition: "90% H₂, 10% He, 0.1% CH₄",
+                        wikiUrl: "https://en.wikipedia.org/wiki/Jupiter",
                         facts: [
                             "Largest planet",
                             "Great Red Spot is giant storm larger than Earth",
@@ -696,6 +727,7 @@
                         moons: "146",
                         gravity: "10.7 m/s²",
                         composition: "96% H₂, 3% He, 0.4% CH₄",
+                        wikiUrl: "https://en.wikipedia.org/wiki/Saturn",
                         facts: [
                             "Famous for prominent ring system",
                             "Least dense planet - would float in water",
@@ -721,6 +753,7 @@
                         moons: "27",
                         gravity: "8.7 m/s²",
                         composition: "83% H₂, 15% He, 2.3% CH₄",
+                        wikiUrl: "https://en.wikipedia.org/wiki/Uranus",
                         facts: [
                             "Rotates on its side (98° tilt)",
                             "Coldest planetary atmosphere",
@@ -746,18 +779,19 @@
                         moons: "16",
                         gravity: "11.0 m/s²",
                         composition: "80% H₂, 19% He, 1.5% CH₄",
+                        wikiUrl: "https://en.wikipedia.org/wiki/Neptune",
                         facts: [
-                            "Angin terkuat dalam tata surya",
-                            "Planet pertama ditemukan dengan matematika",
-                            "Punya Bintik Gelap Besar",
-                            "16 bulan terkenal, Triton terbesar",
-                            "Warna biru dari metana di atmosfer"
+                            "Strongest winds in solar system",
+                            "First planet located by math calculations",
+                            "Has Great Dark Spot storm",
+                            "16 known moons, Triton largest",
+                            "Blue color from methane in atmosphere"
                         ],
                         curiosities: [
-                            "Triton satu-satunya bulan besar dengan orbit retrograde",
-                            "Punya sistem cincin ditemukan 1989",
-                            "Triton bisa benda Kuiper Belt tertangkap",
-                            "Planet pertama ditemukan setelah teleskop"
+                            "Triton is only large moon with retrograde orbit",
+                            "Has ring system discovered in 1989",
+                            "Triton may be captured Kuiper Belt object",
+                            "First planet discovered after telescope invention"
                         ],
                         gradient: "radial-gradient(circle at 30% 30%, #a0d0ff, #4169e1, #254898)"
                     }
@@ -770,6 +804,7 @@
                 compositionTitle: "Komposisi",
                 interestingFactsTitle: "Fakta Menarik",
                 curiositiesTitle: "Keingintahuan Kosmik",
+                readMoreLabel: "Baca Selengkapnya di Wikipedia",
                 credits: "Visualisasi edukasional. Data dari NASA, ESA, dan sumber ilmiah.",
                 planets: {
                     sun: {
@@ -782,6 +817,7 @@
                         moons: "N/A",
                         gravity: "274 m/s²",
                         composition: "Hidrogen (73%), Helium (25%), Elemen lain (2%)",
+                        wikiUrl: "https://id.wikipedia.org/wiki/Matahari",
                         facts: [
                             "Menyumbang 99,86% massa tata surya",
                             "Cahaya sampai Bumi dalam 8 menit",
@@ -807,6 +843,7 @@
                         moons: "0",
                         gravity: "3,7 m/s²",
                         composition: "Inti logam (42%), Mantel (42%), Kerak (16%)",
+                        wikiUrl: "https://id.wikipedia.org/wiki/Merkurius",
                         facts: [
                             "Planet terkecil dalam tata surya",
                             "Tidak ada atmosfer dan tidak ada bulan",
@@ -832,6 +869,7 @@
                         moons: "0",
                         gravity: "8,87 m/s²",
                         composition: "96,5% CO₂, 3,5% N₂, 0,015% SO₂",
+                        wikiUrl: "https://id.wikipedia.org/wiki/Venus",
                         facts: [
                             "Planet terpanas karena CO₂ atmosfer",
                             "Rotasi retrograde (mundur)",
@@ -857,6 +895,7 @@
                         moons: "1",
                         gravity: "9,8 m/s²",
                         composition: "65% O, 18% Si, 10% Al, 5% Fe",
+                        wikiUrl: "https://id.wikipedia.org/wiki/Bumi",
                         facts: [
                             "Satu-satunya planet dengan kehidupan",
                             "71% tertutup air",
@@ -882,6 +921,7 @@
                         moons: "2",
                         gravity: "3,7 m/s²",
                         composition: "50% Kerak silikat, 30% Inti, 20% Mantel",
+                        wikiUrl: "https://id.wikipedia.org/wiki/Mars",
                         facts: [
                             "Planet Merah dari besi oksida",
                             "Gunung berapi terbesar dalam tata surya",
@@ -907,6 +947,7 @@
                         moons: "95",
                         gravity: "24,8 m/s²",
                         composition: "90% H₂, 10% He, 0,1% CH₄",
+                        wikiUrl: "https://id.wikipedia.org/wiki/Jupiter",
                         facts: [
                             "Planet terbesar",
                             "Bintik Merah Besar adalah badai raksasa",
@@ -932,6 +973,7 @@
                         moons: "146",
                         gravity: "10,7 m/s²",
                         composition: "96% H₂, 3% He, 0,4% CH₄",
+                        wikiUrl: "https://id.wikipedia.org/wiki/Saturnus",
                         facts: [
                             "Terkenal dengan sistem cincinnya",
                             "Kerapatan terendah - bisa terapung di air",
@@ -957,6 +999,7 @@
                         moons: "27",
                         gravity: "8,7 m/s²",
                         composition: "83% H₂, 15% He, 2,3% CH₄",
+                        wikiUrl: "https://id.wikipedia.org/wiki/Uranus",
                         facts: [
                             "Berputar miring (98°)",
                             "Atmosfer terdingin",
@@ -982,6 +1025,7 @@
                         moons: "16",
                         gravity: "11,0 m/s²",
                         composition: "80% H₂, 19% He, 1,5% CH₄",
+                        wikiUrl: "https://id.wikipedia.org/wiki/Neptunus",
                         facts: [
                             "Angin terkuat dalam tata surya",
                             "Planet pertama ditemukan dengan matematika",
@@ -1022,46 +1066,35 @@
             const solarSystem = document.getElementById('solar-system');
             const wrapper = document.getElementById('solar-wrapper');
             
-            // The base size we designed for (largest orbit is Neptune at 390px radius -> 780px diameter)
-            // We use 850px to have some padding
             const baseSize = 850; 
             
-            // Get available space in the wrapper
             const availableWidth = wrapper.clientWidth;
             const availableHeight = wrapper.clientHeight;
             
-            // Calculate scale factor (keep some padding)
             const padding = 40;
             const scaleX = (availableWidth - padding) / baseSize;
             const scaleY = (availableHeight - padding) / baseSize;
             
-            // Use the smaller scale to ensure it fits both width and height
             const scale = Math.min(scaleX, scaleY);
             
-            // Apply scale
             solarSystem.style.transform = `scale(${scale})`;
         }
 
         function initializeSolarSystem() {
             const solarSystem = document.getElementById('solar-system');
-            // Clear current content but keep sun
             solarSystem.innerHTML = '<div class="sun" data-planet="sun"></div>';
             
-            // Add planets
             const planets = ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'];
             
             planets.forEach(planet => {
-                // 1. Create the visual orbit line
                 const orbitLine = document.createElement('div');
                 orbitLine.className = `orbit-line ${planet}-orbit`;
                 solarSystem.appendChild(orbitLine);
 
-                // 2. Create the planet
                 const planetEl = document.createElement('div');
                 planetEl.className = `planet ${planet}`;
                 planetEl.dataset.planet = planet;
                 
-                // Add label
                 const label = document.createElement('div');
                 label.className = 'planet-label';
                 label.textContent = translations[currentLang].planets[planet].name;
@@ -1070,7 +1103,6 @@
                 solarSystem.appendChild(planetEl);
             });
             
-            // Add click listeners
             document.querySelectorAll('.planet, .sun').forEach(body => {
                 body.addEventListener('click', function() {
                     const planet = this.dataset.planet;
@@ -1078,12 +1110,10 @@
                 });
             });
             
-            // Update labels with current language
             updatePlanetLabels();
         }
 
         function setupEventListeners() {
-            // Language switchers
             document.getElementById('lang-en').addEventListener('click', function() {
                 if (currentLang !== 'en') {
                     currentLang = 'en';
@@ -1098,14 +1128,12 @@
                 }
             });
             
-            // Close modal on overlay click
             document.getElementById('planet-modal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeModal();
                 }
             });
             
-            // Close modal on Escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     closeModal();
@@ -1114,19 +1142,15 @@
         }
 
         function updateLanguage() {
-            // Update UI text
             document.querySelector('h1').textContent = translations[currentLang].title;
             document.getElementById('subtitle').textContent = translations[currentLang].subtitle;
             document.getElementById('credits').textContent = translations[currentLang].credits;
             
-            // Update language buttons
             document.getElementById('lang-en').classList.toggle('active', currentLang === 'en');
             document.getElementById('lang-id').classList.toggle('active', currentLang === 'id');
             
-            // Update planet labels
             updatePlanetLabels();
             
-            // Update modal if open
             if (selectedPlanet) {
                 showPlanetInfo(selectedPlanet);
             }
@@ -1148,18 +1172,15 @@
             const info = t.planets[planet];
             const modal = document.getElementById('planet-modal');
             
-            // Update modal content
             document.getElementById('modal-title').textContent = info.name;
             document.getElementById('key-facts-title').textContent = t.keyFactsTitle;
             document.getElementById('composition-title').textContent = t.compositionTitle;
             document.getElementById('interesting-facts-title').textContent = t.interestingFactsTitle;
             document.getElementById('curiosities-title').textContent = t.curiositiesTitle;
             
-            // Update visual
             const visual = document.getElementById('planet-visual');
             visual.style.background = info.gradient;
             
-            // Update stats grid
             const statsGrid = document.getElementById('stats-grid');
             statsGrid.innerHTML = `
                 <div class="stat-item">
@@ -1192,14 +1213,11 @@
                 </div>
             `;
             
-            // Update composition
             document.getElementById('composition-content').textContent = info.composition;
             
-            // Update facts
             const factsList = document.getElementById('facts-list');
             factsList.innerHTML = info.facts.map(fact => `<li>${fact}</li>`).join('');
             
-            // Update curiosities
             const curiositiesList = document.getElementById('curiosities-list');
             const curiositiesSection = document.getElementById('curiosities-section');
             
@@ -1209,8 +1227,12 @@
             } else {
                 curiositiesSection.style.display = 'none';
             }
+
+            // Update Read More Button
+            const readMoreBtn = document.getElementById('read-more-btn');
+            readMoreBtn.href = info.wikiUrl;
+            readMoreBtn.textContent = t.readMoreLabel;
             
-            // Show modal
             modal.classList.add('active');
             selectedPlanet = planet;
         }
@@ -1221,7 +1243,6 @@
             selectedPlanet = null;
         }
 
-        // Make closeModal accessible globally
         window.closeModal = closeModal;
     </script>
 </body>
