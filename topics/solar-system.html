@@ -9,10 +9,11 @@
         :root {
             --primary-dark: #0a0a1a;
             --accent: #4ecca3;
+            --accent-light: #6fffd4;
             --text-light: #e0e0ff;
-            --panel-bg: rgba(20, 20, 40, 0.95);
-            --orbit-color: rgba(100, 200, 255, 0.2);
-            --sun-color: #ffcc00;
+            --text-dark: #000000;
+            --glass-bg: rgba(20, 20, 35, 0.7);
+            --glass-border: rgba(100, 120, 255, 0.1);
         }
         
         * {
@@ -28,432 +29,401 @@
             overflow-x: hidden;
             min-height: 100vh;
             background-image: 
-                radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.9), transparent),
-                radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.7), transparent),
-                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 200px 150px, rgba(255,255,255,0.5), transparent),
-                radial-gradient(1px 1px at 240px 180px, rgba(255,255,255,0.7), transparent),
-                radial-gradient(1px 1px at 280px 210px, rgba(255,255,255,0.9), transparent),
-                radial-gradient(1px 1px at 320px 240px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1px 1px at 360px 270px, rgba(255,255,255,0.8), transparent);
-            background-size: 400px 400px, 300px 300px, 200px 200px, 250px 250px, 500px 500px, 
-                            350px 350px, 450px 450px, 300px 300px, 400px 400px, 500px 500px;
+                radial-gradient(1.5px 1.5px at 10% 20%, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 30% 40%, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1.5px 1.5px at 50% 60%, rgba(255,255,255,0.7), transparent),
+                radial-gradient(1px 1px at 70% 80%, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1.5px 1.5px at 90% 10%, rgba(255,255,255,0.8), transparent);
+            background-size: 200px 200px, 300px 300px, 400px 400px, 250px 250px, 350px 350px;
             background-color: #000;
-            transition: background 2s ease;
         }
         
         /* Main Layout */
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 20px;
+            min-height: 100vh;
         }
         
         /* Header */
         header {
-            background: var(--panel-bg);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid var(--accent);
-            box-shadow: 0 0 20px rgba(78, 204, 163, 0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            animation: headerGlow 3s infinite;
+            text-align: center;
+            padding: 15px 0;
         }
         
         h1 {
-            color: var(--accent);
-            font-size: 2.5rem;
-            text-shadow: 0 0 15px rgba(78, 204, 163, 0.7);
-            letter-spacing: 1px;
-            text-align: center;
+            color: var(--accent-light);
+            font-size: 2rem;
+            text-shadow: 0 0 15px rgba(78, 204, 163, 0.5);
+            font-weight: 700;
+            margin-bottom: 10px;
         }
         
         #subtitle {
-            font-size: 1.1rem;
-            text-align: center;
+            font-size: 1rem;
             color: #b0c4ff;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.5;
         }
         
         /* Language Switcher */
         .language-switcher {
             display: flex;
             gap: 15px;
-            margin-top: 10px;
-            background: rgba(30, 30, 60, 0.8);
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: 1px solid rgba(78, 204, 163, 0.3);
+            justify-content: center;
+            margin: 15px 0;
+            padding: 8px;
+            background: rgba(30, 30, 50, 0.5);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 120, 255, 0.1);
         }
         
         .lang-btn {
-            background: transparent;
-            color: #a0b0ff;
-            border: 1px solid rgba(160, 180, 255, 0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
+            background: rgba(40, 40, 60, 0.7);
+            color: var(--text-light);
+            border: 1px solid rgba(100, 120, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 15px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            font-size: 1rem;
+            min-width: 120px;
+            text-align: center;
+            backdrop-filter: blur(5px);
         }
         
-        .lang-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 100%;
-            background: var(--accent);
-            z-index: -1;
-            transition: width 0.3s ease;
+        .lang-btn:hover {
+            background: rgba(78, 204, 163, 0.3);
+            border-color: var(--accent);
+            transform: translateY(-2px);
         }
         
-        .lang-btn:hover, .lang-btn.active {
-            color: #000;
-            border-color: transparent;
-        }
-        
-        .lang-btn:hover::before, .lang-btn.active::before {
-            width: 100%;
-        }
-        
-        /* Solar System Display */
-        .solar-system-wrapper {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .orbit-display {
-            flex: 1;
-            min-width: 300px;
-            height: 70vh;
-            min-height: 500px;
-            background: rgba(10, 10, 30, 0.5);
-            border-radius: 20px;
-            border: 1px solid rgba(78, 204, 163, 0.2);
-            position: relative;
-            overflow: hidden;
-            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Starfield Background for Solar System */
-        .starfield {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(1.5px 1.5px at 10% 20%, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 30% 40%, rgba(255,255,255,0.9), transparent),
-                radial-gradient(1.5px 1.5px at 50% 60%, rgba(255,255,255,0.7), transparent),
-                radial-gradient(1px 1px at 70% 80%, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1.5px 1.5px at 90% 10%, rgba(255,255,255,0.8), transparent);
-            animation: twinkle 8s infinite;
-            pointer-events: none;
-        }
-        
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 0.4; }
+        .lang-btn.active {
+            background: linear-gradient(135deg, rgba(78, 204, 163, 0.5), rgba(78, 204, 163, 0.8));
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(78, 204, 163, 0.3);
         }
         
         /* Solar System Container */
+        .solar-system-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            padding: 20px;
+            position: relative;
+        }
+        
         #solar-system {
             position: relative;
-            width: 500px;
-            height: 500px;
+            width: 400px;
+            height: 400px;
             margin: 0 auto;
-            transition: transform 0.5s ease;
         }
         
-        .orbit {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid var(--orbit-color);
-            pointer-events: none;
-            transition: border-color 0.3s ease;
-            animation: orbitPulse 4s infinite;
-        }
-        
-        @keyframes orbitPulse {
-            0%, 100% { border-color: var(--orbit-color); }
-            50% { border-color: rgba(78, 204, 163, 0.5); }
-        }
-        
-        /* Sun - Glowing effect */
+        /* Sun */
         .sun {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            background: url('https://upload.wikimedia.org/wikipedia/commons/9/99/The_Sun_in_visible_light.jpg');
-            background-size: cover;
-            background-position: center;
+            background: radial-gradient(circle at 30% 30%, #fff7cc, #ffcc00, #ff9900, #ff6600);
             z-index: 10;
             cursor: pointer;
             box-shadow: 
                 0 0 20px #ffcc00,
                 0 0 40px #ff9900,
                 0 0 60px #ff6600;
-            animation: sunGlow 3s infinite alternate;
             transition: transform 0.3s ease;
         }
         
         .sun:hover {
             transform: translate(-50%, -50%) scale(1.2);
-            box-shadow: 
-                0 0 30px #ffcc00,
-                0 0 60px #ff9900,
-                0 0 90px #ff6600;
         }
         
-        @keyframes sunGlow {
-            0% { box-shadow: 0 0 20px #ffcc00, 0 0 40px #ff9900; }
-            100% { box-shadow: 0 0 30px #ffcc00, 0 0 60px #ff9900, 0 0 80px #ff6600; }
-        }
-        
-        /* Planet Styles with Orbital Animation */
+        /* Planets with proper orbital animation */
         .planet {
             position: absolute;
-            top: 50%;
+            top: 0;
             left: 50%;
+            transform: translateX(-50%);
             border-radius: 50%;
-            transform: translate(-50%, -50%);
             cursor: pointer;
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.3s ease, filter 0.3s ease;
-            pointer-events: auto;
+            transition: transform 0.2s ease, filter 0.2s ease;
             z-index: 5;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .planet:hover {
-            transform: translate(-50%, -50%) scale(1.3);
-            filter: brightness(1.2);
+            transform: translateX(-50%) scale(1.3);
+            filter: brightness(1.3);
             z-index: 20;
         }
         
-        .planet-label {
-            position: absolute;
-            color: white;
-            font-size: 10px;
-            text-shadow: 0 0 3px black;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            z-index: 15;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 2px 5px;
-            border-radius: 3px;
-            white-space: nowrap;
+        /* Gradients for planets */
+        .mercury { 
+            width: 10px; 
+            height: 10px; 
+            background: radial-gradient(circle at 30% 30%, #e0e0e0, #a0a0a0, #606060); 
+            animation: orbitMercury 4s linear infinite;
         }
         
-        .planet:hover .planet-label {
-            opacity: 1;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
+        .venus { 
+            width: 14px; 
+            height: 14px; 
+            background: radial-gradient(circle at 30% 30%, #fff5d1, #ffdc9b, #b8860b); 
+            animation: orbitVenus 6s linear infinite;
         }
         
-        /* Specific Planet Styling */
-        .mercury { width: 10px; height: 10px; background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/30/Mercury_in_color_-_Prockter07_centered.jpg'); }
-        .venus { width: 16px; height: 16px; background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/54/Venus_-_Magellan_-_C1-MIDR.jpg'); }
-        .earth { width: 18px; height: 18px; background-image: url('https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg'); }
-        .mars { width: 12px; height: 12px; background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg'); }
-        .jupiter { width: 40px; height: 40px; background-image: url('https://upload.wikimedia.org/wikipedia/commons/e/e2/Jupiter.jpg'); }
-        .saturn { width: 35px; height: 35px; background-image: url('https://upload.wikimedia.org/wikipedia/commons/c/c7/Saturn_during_Equinox.jpg'); }
-        .uranus { width: 24px; height: 24px; background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/3d/Uranus2.jpg'); }
-        .neptune { width: 22px; height: 22px; background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/56/Neptune_Full.jpg'); }
+        .earth { 
+            width: 16px; 
+            height: 16px; 
+            background: radial-gradient(circle at 30% 30%, #9cd7ff, #4a90e2, #2e5c3e); 
+            animation: orbitEarth 8s linear infinite;
+        }
         
-        /* Saturn's rings */
+        .mars { 
+            width: 12px; 
+            height: 12px; 
+            background: radial-gradient(circle at 30% 30%, #ff9975, #cc4400, #8b1a00); 
+            animation: orbitMars 10s linear infinite;
+        }
+        
+        .jupiter { 
+            width: 30px; 
+            height: 30px; 
+            background: radial-gradient(circle at 30% 30%, #f8f3d6, #d8ca9d, #a67c52); 
+            animation: orbitJupiter 14s linear infinite;
+        }
+        
+        .saturn { 
+            width: 25px; 
+            height: 25px; 
+            background: radial-gradient(circle at 30% 30%, #fff8d2, #f4e4a6, #d4b45e); 
+            animation: orbitSaturn 18s linear infinite;
+        }
+        
+        .uranus { 
+            width: 18px; 
+            height: 18px; 
+            background: radial-gradient(circle at 30% 30%, #c0f0ff, #7dd3e0, #4fa8c5); 
+            animation: orbitUranus 22s linear infinite;
+        }
+        
+        .neptune { 
+            width: 16px; 
+            height: 16px; 
+            background: radial-gradient(circle at 30% 30%, #a0d0ff, #4169e1, #254898); 
+            animation: orbitNeptune 26s linear infinite;
+        }
+        
+        /* Saturn's ring */
         .saturn::after {
             content: '';
             position: absolute;
-            width: 50px;
-            height: 10px;
-            border: 2px solid rgba(210, 180, 140, 0.7);
+            width: 35px;
+            height: 8px;
+            background: radial-gradient(ellipse at center, rgba(210, 180, 140, 0.7) 0%, rgba(210, 180, 140, 0.3) 50%, transparent 70%);
             border-radius: 50%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotateX(70deg);
             pointer-events: none;
-            box-shadow: 0 0 5px rgba(210, 180, 140, 0.5);
+            border: 1px solid rgba(210, 180, 140, 0.2);
         }
         
-        /* Orbital Animations */
-        .mercury-orbit { width: 60px; height: 60px; animation: orbitMercury 4s linear infinite; }
-        .venus-orbit { width: 90px; height: 90px; animation: orbitVenus 6s linear infinite; }
-        .earth-orbit { width: 120px; height: 120px; animation: orbitEarth 8s linear infinite; }
-        .mars-orbit { width: 150px; height: 150px; animation: orbitMars 10s linear infinite; }
-        .jupiter-orbit { width: 200px; height: 200px; animation: orbitJupiter 14s linear infinite; }
-        .saturn-orbit { width: 250px; height: 250px; animation: orbitSaturn 18s linear infinite; }
-        .uranus-orbit { width: 300px; height: 300px; animation: orbitUranus 22s linear infinite; }
-        .neptune-orbit { width: 350px; height: 350px; animation: orbitNeptune 26s linear infinite; }
-        
+        /* Orbital Animations - CORRECTED VERSION */
+        /* These animations will rotate the planet around the sun */
         @keyframes orbitMercury {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% { transform: translateX(-50%) rotate(0deg) translateX(30px) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg) translateX(30px) rotate(-360deg); }
         }
         
         @keyframes orbitVenus {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% { transform: translateX(-50%) rotate(0deg) translateX(45px) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg) translateX(45px) rotate(-360deg); }
         }
         
         @keyframes orbitEarth {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% { transform: translateX(-50%) rotate(0deg) translateX(60px) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg) translateX(60px) rotate(-360deg); }
         }
         
         @keyframes orbitMars {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% { transform: translateX(-50%) rotate(0deg) translateX(75px) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg) translateX(75px) rotate(-360deg); }
         }
         
         @keyframes orbitJupiter {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% { transform: translateX(-50%) rotate(0deg) translateX(100px) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg) translateX(100px) rotate(-360deg); }
         }
         
         @keyframes orbitSaturn {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% { transform: translateX(-50%) rotate(0deg) translateX(125px) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg) translateX(125px) rotate(-360deg); }
         }
         
         @keyframes orbitUranus {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% { transform: translateX(-50%) rotate(0deg) translateX(150px) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg) translateX(150px) rotate(-360deg); }
         }
         
         @keyframes orbitNeptune {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% { transform: translateX(-50%) rotate(0deg) translateX(175px) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg) translateX(175px) rotate(-360deg); }
         }
         
-        /* Info Panel */
-        .info-panel {
-            flex: 1;
-            min-width: 350px;
-            background: var(--panel-bg);
-            border-radius: 15px;
+        /* Planet Label (appears on hover) */
+        .planet-label {
+            position: absolute;
+            color: white;
+            font-size: 10px;
+            text-shadow: 0 0 2px black;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 25;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 5px;
             border: 1px solid rgba(78, 204, 163, 0.3);
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            overflow-y: auto;
-            max-height: 70vh;
-            position: relative;
-            backdrop-filter: blur(5px);
         }
         
-        .info-header {
+        .planet:hover .planet-label {
+            opacity: 1;
+        }
+        
+        /* Modal for Planet Information - Minimal Design */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            color: var(--text-light);
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px solid rgba(78, 204, 163, 0.3);
+            border-bottom: 1px solid rgba(100, 120, 255, 0.1);
         }
         
-        .info-title {
+        .modal-title {
             font-size: 1.8rem;
-            color: var(--accent);
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(78, 204, 163, 0.5);
+            color: var(--accent-light);
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(78, 204, 163, 0.3);
         }
         
-        .info-subtitle {
-            font-size: 1rem;
-            color: #a0b0ff;
-            margin-bottom: 10px;
-        }
-        
-        .close-btn {
-            background: transparent;
-            border: 1px solid rgba(200, 80, 80, 0.5);
+        .close-modal {
+            background: none;
+            border: none;
             color: #ff8080;
-            padding: 5px 12px;
-            border-radius: 15px;
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .close-btn:hover {
-            background: rgba(200, 80, 80, 0.2);
-            transform: scale(1.05);
-        }
-        
-        .planet-image-container {
-            text-align: center;
-            margin: 15px 0;
-        }
-        
-        .planet-large-image {
-            max-width: 250px;
-            max-height: 200px;
-            border-radius: 10px;
-            border: 2px solid var(--accent);
-            box-shadow: 0 0 20px rgba(78, 204, 163, 0.3);
-            transition: transform 0.3s;
-        }
-        
-        .planet-large-image:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(78, 204, 163, 0.5);
-        }
-        
-        .info-content {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            font-size: 1rem;
-            line-height: 1.6;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         }
         
-        .facts-section, .composition-section, .curiosities-section {
-            background: rgba(30, 30, 50, 0.6);
-            border-radius: 10px;
+        .close-modal:hover {
+            background: rgba(255, 128, 128, 0.2);
+            transform: scale(1.2);
+        }
+        
+        .planet-visual {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px rgba(78, 204, 163, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .planet-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent);
+            border-radius: 50%;
+        }
+        
+        .info-section {
+            background: rgba(40, 40, 60, 0.4);
+            border-radius: 12px;
             padding: 15px;
+            margin-bottom: 15px;
             border-left: 3px solid var(--accent);
         }
         
         .section-title {
-            color: var(--accent);
+            color: var(--accent-light);
             font-size: 1.2rem;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -461,129 +431,58 @@
         
         .section-title::before {
             content: '';
-            display: block;
             width: 8px;
             height: 8px;
-            border-radius: 50%;
             background: var(--accent);
+            border-radius: 50%;
+            display: inline-block;
             box-shadow: 0 0 10px var(--accent);
         }
         
-        ul {
+        .facts-list {
             list-style: none;
-            padding-left: 0;
+            padding: 0;
         }
         
-        li {
-            padding: 5px 0;
+        .facts-list li {
+            padding: 8px 0;
             position: relative;
             padding-left: 20px;
+            line-height: 1.5;
         }
         
-        li::before {
+        .facts-list li::before {
             content: '•';
             position: absolute;
             left: 0;
-            color: var(--accent);
+            color: var(--accent-light);
+            font-size: 1.2em;
         }
         
-        .placeholder {
-            text-align: center;
-            padding: 50px 20px;
-            color: #8090b0;
-        }
-        
-        .placeholder h2 {
-            margin-bottom: 15px;
-            color: #a0b0d0;
-        }
-        
-        .placeholder p {
-            font-size: 1.1rem;
-            max-width: 400px;
-            margin: 0 auto;
-            line-height: 1.8;
-        }
-        
-        /* Controls */
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
-        
-        .control-btn {
-            background: rgba(30, 30, 60, 0.8);
-            color: var(--text-light);
-            border: 1px solid rgba(78, 204, 163, 0.3);
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .control-btn:hover {
-            background: rgba(78, 204, 163, 0.2);
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(78, 204, 163, 0.2);
-        }
-        
-        .control-btn.active {
-            background: var(--accent);
-            color: var(--primary-dark);
-            border-color: transparent;
-        }
-        
-        .control-btn i {
-            font-size: 1.1rem;
-        }
-        
-        /* Additional Info */
-        .additional-info {
-            background: var(--panel-bg);
-            border-radius: 15px;
-            border: 1px solid rgba(78, 204, 163, 0.2);
-            padding: 20px;
-            margin-top: 20px;
-        }
-        
-        .info-grid {
+        .stat-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
         }
         
-        .info-card {
-            background: rgba(30, 30, 50, 0.7);
-            border-radius: 10px;
-            padding: 15px;
-            border-left: 3px solid var(--accent);
-            transition: transform 0.3s;
+        .stat-item {
+            background: rgba(60, 60, 90, 0.4);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
         }
         
-        .info-card:hover {
-            transform: translateY(-3px);
-            background: rgba(40, 40, 70, 0.8);
+        .stat-label {
+            font-size: 0.8rem;
+            color: #a0b0ff;
+            margin-bottom: 5px;
         }
         
-        .info-card h3 {
-            color: var(--accent);
-            margin-bottom: 8px;
+        .stat-value {
             font-size: 1.1rem;
-        }
-        
-        .info-card p {
-            font-size: 0.95rem;
-            color: #c0d0f0;
-            line-height: 1.5;
+            font-weight: 600;
+            color: var(--accent-light);
         }
         
         /* Footer */
@@ -592,1110 +491,831 @@
             padding: 20px;
             color: #7080a0;
             font-size: 0.9rem;
-            margin-top: 20px;
-            border-top: 1px solid rgba(78, 204, 163, 0.1);
+            margin-top: auto;
         }
         
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .solar-system-wrapper {
-                flex-direction: column;
-            }
-            
-            .orbit-display, .info-panel {
-                width: 100%;
-                min-height: 400px;
-                height: auto;
-            }
-            
-            #solar-system {
-                width: 400px;
-                height: 400px;
-            }
-        }
-        
+        /* Responsive */
         @media (max-width: 768px) {
             h1 {
-                font-size: 2rem;
-            }
-            
-            .orbit-display {
-                height: 50vh;
+                font-size: 1.5rem;
             }
             
             #solar-system {
-                width: 350px;
-                height: 350px;
-            }
-            
-            .planet {
-                transform: translate(-50%, -50%) scale(0.8);
+                width: 300px;
+                height: 300px;
             }
             
             .sun {
-                width: 45px;
-                height: 45px;
+                width: 40px;
+                height: 40px;
             }
             
             .mercury { width: 8px; height: 8px; }
-            .venus { width: 12px; height: 12px; }
-            .earth { width: 14px; height: 14px; }
-            .mars { width: 10px; height: 10px; }
-            .jupiter { width: 30px; height: 30px; }
-            .saturn { width: 25px; height: 25px; }
-            .uranus { width: 18px; height: 18px; }
-            .neptune { width: 16px; height: 16px; }
+            .venus { width: 10px; height: 10px; }
+            .earth { width: 12px; height: 12px; }
+            .mars { width: 9px; height: 9px; }
+            .jupiter { width: 20px; height: 20px; }
+            .saturn { width: 18px; height: 18px; }
+            .uranus { width: 12px; height: 12px; }
+            .neptune { width: 11px; height: 11px; }
             
-            .controls {
-                flex-direction: column;
-                align-items: center;
+            /* Adjust orbital distances for mobile */
+            @keyframes orbitMercury {
+                0% { transform: translateX(-50%) rotate(0deg) translateX(25px) rotate(0deg); }
+                100% { transform: translateX(-50%) rotate(360deg) translateX(25px) rotate(-360deg); }
+            }
+            
+            @keyframes orbitVenus {
+                0% { transform: translateX(-50%) rotate(0deg) translateX(35px) rotate(0deg); }
+                100% { transform: translateX(-50%) rotate(360deg) translateX(35px) rotate(-360deg); }
+            }
+            
+            @keyframes orbitEarth {
+                0% { transform: translateX(-50%) rotate(0deg) translateX(45px) rotate(0deg); }
+                100% { transform: translateX(-50%) rotate(360deg) translateX(45px) rotate(-360deg); }
+            }
+            
+            @keyframes orbitMars {
+                0% { transform: translateX(-50%) rotate(0deg) translateX(55px) rotate(0deg); }
+                100% { transform: translateX(-50%) rotate(360deg) translateX(55px) rotate(-360deg); }
+            }
+            
+            @keyframes orbitJupiter {
+                0% { transform: translateX(-50%) rotate(0deg) translateX(70px) rotate(0deg); }
+                100% { transform: translateX(-50%) rotate(360deg) translateX(70px) rotate(-360deg); }
+            }
+            
+            @keyframes orbitSaturn {
+                0% { transform: translateX(-50%) rotate(0deg) translateX(85px) rotate(0deg); }
+                100% { transform: translateX(-50%) rotate(360deg) translateX(85px) rotate(-360deg); }
+            }
+            
+            @keyframes orbitUranus {
+                0% { transform: translateX(-50%) rotate(0deg) translateX(100px) rotate(0deg); }
+                100% { transform: translateX(-50%) rotate(360deg) translateX(100px) rotate(-360deg); }
+            }
+            
+            @keyframes orbitNeptune {
+                0% { transform: translateX(-50%) rotate(0deg) translateX(115px) rotate(0deg); }
+                100% { transform: translateX(-50%) rotate(360deg) translateX(115px) rotate(-360deg); }
+            }
+            
+            .modal-content {
+                padding: 20px;
+                width: 95%;
+            }
+            
+            .modal-title {
+                font-size: 1.4rem;
+            }
+            
+            .planet-visual {
+                width: 100px;
+                height: 100px;
             }
         }
         
-        /* Animation Classes */
-        .paused {
-            animation-play-state: paused !important;
+        /* Custom Scrollbar for Modal */
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
         }
         
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(30, 30, 50, 0.3);
         }
         
-        ::-webkit-scrollbar-track {
-            background: rgba(20, 20, 40, 0.5);
-        }
-        
-        ::-webkit-scrollbar-thumb {
+        .modal-content::-webkit-scrollbar-thumb {
             background: rgba(78, 204, 163, 0.5);
-            border-radius: 4px;
+            border-radius: 3px;
         }
         
-        ::-webkit-scrollbar-thumb:hover {
+        .modal-content::-webkit-scrollbar-thumb:hover {
             background: var(--accent);
-        }
-        
-        /* Loading Animation */
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1 id="main-title">Solar System Explorer</h1>
-            <p id="subtitle">Click on any celestial body to discover its secrets / Klik pada benda langit untuk menemukan rahasianya</p>
+            <h1>Solar System Explorer</h1>
+            <p id="subtitle">Click on any planet to discover its secrets / Klik pada planet untuk menemukan rahasianya</p>
             
             <div class="language-switcher">
                 <button id="lang-en" class="lang-btn active">English</button>
                 <button id="lang-id" class="lang-btn">Bahasa Indonesia</button>
             </div>
-            
-            <div class="controls">
-                <button id="pause-btn" class="control-btn">
-                    <i>⏸</i> <span id="pause-text">Pause Orbits</span>
-                </button>
-                <button id="reset-btn" class="control-btn">
-                    <i>🔄</i> <span id="reset-text">Reset View</span>
-                </button>
-                <button id="speed-up-btn" class="control-btn">
-                    <i>⏩</i> <span id="speed-text">Speed Up</span>
-                </button>
-            </div>
         </header>
         
-        <div class="solar-system-wrapper">
-            <div class="orbit-display">
-                <div class="starfield"></div>
-                <div id="solar-system">
-                    <div class="sun" data-planet="sun"></div>
-                    
-                    <!-- Orbits and planets will be added by JavaScript -->
-                </div>
-            </div>
-            
-            <div class="info-panel" id="info-panel">
-                <div class="placeholder" id="placeholder">
-                    <h2 id="placeholder-title">Select a Planet</h2>
-                    <p id="placeholder-text">Click on the Sun or any planet to see detailed information about it in both English and Bahasa Indonesia.</p>
-                </div>
+        <div class="solar-system-container">
+            <div id="solar-system">
+                <!-- Sun -->
+                <div class="sun" data-planet="sun"></div>
                 
-                <!-- Planet Info Containers (Will be populated by JavaScript) -->
-                <div id="planet-info-container"></div>
-            </div>
-        </div>
-        
-        <div class="additional-info">
-            <h2 id="add-info-title">Cosmic Fun Facts</h2>
-            <div class="info-grid" id="fun-facts-grid">
-                <!-- Will be populated by JavaScript -->
+                <!-- Planets will be added by JavaScript -->
             </div>
         </div>
         
         <footer>
-            <p id="credits">Images sourced from Wikimedia Commons. Scientific data from NASA, ESA, and other space agencies.</p>
-            <p>Interactive Educational Tool - Created for Learning & Exploration</p>
+            <p id="credits">Educational visualization. Data from NASA, ESA, and scientific sources.</p>
         </footer>
     </div>
 
+    <!-- Modal for Planet Information -->
+    <div class="modal-overlay" id="planet-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Planet Name</h2>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            
+            <div class="planet-visual" id="planet-visual"></div>
+            
+            <div class="info-section">
+                <h3 class="section-title" id="key-facts-title">Key Facts</h3>
+                <div class="stat-grid" id="stats-grid"></div>
+            </div>
+            
+            <div class="info-section">
+                <h3 class="section-title" id="composition-title">Composition</h3>
+                <p id="composition-content"></p>
+            </div>
+            
+            <div class="info-section">
+                <h3 class="section-title" id="interesting-facts-title">Interesting Facts</h3>
+                <ul class="facts-list" id="facts-list"></ul>
+            </div>
+            
+            <div class="info-section" id="curiosities-section">
+                <h3 class="section-title" id="curiosities-title">Cosmic Curiosities</h3>
+                <ul class="facts-list" id="curiosities-list"></ul>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Translations - Enhanced Content
+        // Translations
         const translations = {
             en: {
                 title: "Solar System Explorer",
-                subtitle: "Click on any celestial body to discover its secrets",
-                pauseText: "Pause Orbits",
-                resetText: "Reset View",
-                speedText: "Speed Up",
-                placeholderTitle: "Select a Planet",
-                placeholderText: "Click on the Sun or any planet to see detailed information about it in both English and Bahasa Indonesia.",
-                addInfoTitle: "Cosmic Fun Facts",
-                credits: "Images sourced from Wikimedia Commons. Scientific data from NASA, ESA, and other space agencies.",
+                subtitle: "Click on any planet to discover its secrets",
+                keyFactsTitle: "Key Facts",
+                compositionTitle: "Composition",
+                interestingFactsTitle: "Interesting Facts",
+                curiositiesTitle: "Cosmic Curiosities",
+                credits: "Educational visualization. Data from NASA, ESA, and scientific sources.",
                 planets: {
                     sun: {
                         name: "The Sun",
-                        type: "Star (G-type main-sequence)",
-                        diameter: "1,392,700 km (109 times Earth)",
-                        mass: "1.989 × 10³⁰ kg (99.86% of solar system)",
-                        surfaceTemp: "5,500°C",
-                        coreTemp: "15,000,000°C",
-                        age: "4.6 billion years",
-                        composition: "Hydrogen (73%), Helium (25%), Oxygen (1%), Carbon (0.3%), Other elements (0.7%)",
+                        type: "Star",
+                        diameter: "1,392,700 km",
+                        distance: "Center",
+                        orbitalPeriod: "N/A",
+                        temperature: "5,500°C (surface)",
+                        moons: "N/A",
+                        gravity: "274 m/s²",
+                        composition: "Hydrogen (73%), Helium (25%), Other elements (2%)",
                         facts: [
-                            "The Sun accounts for 99.86% of the solar system's mass.",
-                            "It takes light 8 minutes to travel from the Sun to Earth.",
-                            "The Sun's energy output is 386 billion billion megawatts.",
-                            "Solar wind travels at 450 km/s and creates the auroras on Earth.",
-                            "The Sun will become a red giant in about 5 billion years.",
-                            "It has been burning for 4.6 billion years and has enough fuel for another 5 billion."
+                            "Contains 99.86% of solar system mass",
+                            "Light reaches Earth in 8 minutes",
+                            "Giant ball of hot plasma",
+                            "4.6 billion years old",
+                            "Will become a red giant in 5 billion years"
                         ],
                         curiosities: [
-                            "The Sun's surface gravity is 274 m/s², 28 times stronger than Earth's.",
-                            "If the Sun were a basketball, Earth would be a tiny grain of sand 30 meters away.",
-                            "The Sun rotates faster at its equator (25 days) than at its poles (35 days).",
-                            "Solar flares can release energy equivalent to millions of hydrogen bombs."
-                        ]
+                            "Gravity is 28 times Earth's",
+                            "Rotates faster at equator than poles",
+                            "Solar flares release huge energy",
+                            "If Sun were a basketball, Earth would be a grain of sand 30m away"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #fff7cc, #ffcc00, #ff9900, #ff6600)"
                     },
                     mercury: {
                         name: "Mercury",
-                        type: "Terrestrial Planet",
-                        diameter: "4,879 km (38% of Earth's)",
-                        distance: "57.9 million km from Sun",
+                        type: "Terrestrial",
+                        diameter: "4,879 km",
+                        distance: "57.9 million km",
                         orbitalPeriod: "88 Earth days",
-                        dayLength: "59 Earth days",
-                        surfaceTemp: "-180°C to 430°C",
+                        temperature: "-180°C to 430°C",
                         moons: "0",
-                        gravity: "3.7 m/s² (38% of Earth)",
+                        gravity: "3.7 m/s²",
+                        composition: "Metal core (42%), Mantle (42%), Crust (16%)",
                         facts: [
-                            "Smallest planet in our solar system.",
-                            "Has no moons and almost no atmosphere.",
-                            "One day on Mercury equals 59 Earth days.",
-                            "Mercury's orbit is the most elliptical among planets.",
-                            "The surface is covered in craters, similar to Earth's Moon.",
-                            "Water ice exists in permanently shadowed craters at the poles."
-                        ],
-                        composition: [
-                            "42% metal core (mostly iron)",
-                            "42% mantle (silicate rock)",
-                            "16% crust (silicate rock)"
+                            "Smallest planet in solar system",
+                            "No atmosphere and no moons",
+                            "One day equals 59 Earth days",
+                            "Most elliptical orbit of all planets",
+                            "Has water ice in polar craters"
                         ],
                         curiosities: [
-                            "Mercury is shrinking as its core cools, causing 'scarps' or cliffs on the surface.",
-                            "It's one of only two planets without a tilt (0.03°)",
-                            "Mercury experiences extreme temperature variations.",
-                            "Mariner 10 was the first spacecraft to visit Mercury in 1974."
-                        ]
+                            "Shrinking as core cools",
+                            "Has 0.03° tilt (almost no tilt)",
+                            "Extreme temperature variations",
+                            "Visited by Mariner 10 in 1974"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #e0e0e0, #a0a0a0, #606060)"
                     },
                     venus: {
                         name: "Venus",
-                        type: "Terrestrial Planet",
-                        diameter: "12,104 km (95% of Earth's)",
-                        distance: "108.2 million km from Sun",
+                        type: "Terrestrial",
+                        diameter: "12,104 km",
+                        distance: "108.2 million km",
                         orbitalPeriod: "225 Earth days",
-                        dayLength: "243 Earth days (retrograde)",
-                        surfaceTemp: "465°C (average)",
-                        pressure: "92 Earth atmospheres",
+                        temperature: "465°C (average)",
                         moons: "0",
-                        gravity: "8.87 m/s² (90% of Earth)",
+                        gravity: "8.87 m/s²",
+                        composition: "96.5% CO₂, 3.5% N₂, 0.015% SO₂",
                         facts: [
-                            "Hottest planet due to thick CO₂ atmosphere and runaway greenhouse effect.",
-                            "Rotates backwards compared to other planets (retrograde rotation).",
-                            "Has no moons and no seasons due to lack of axial tilt.",
-                            "Surface pressure is 92 times that of Earth.",
-                            "The surface is volcanic with thousands of volcanoes.",
-                            "A day on Venus is longer than its year."
-                        ],
-                        composition: [
-                            "96.5% Carbon dioxide (CO₂)",
-                            "3.5% Nitrogen (N₂)",
-                            "0.015% Sulfur dioxide (SO₂)",
-                            "0.007% Argon (Ar)"
+                            "Hottest planet due to CO₂ atmosphere",
+                            "Retrograde rotation (spins backward)",
+                            "No moons or seasons",
+                            "Surface pressure 92x Earth's",
+                            "Volcanic surface with thousands of volcanoes"
                         ],
                         curiosities: [
-                            "Venus has a double sunrise every 117 Earth days.",
-                            "Its clouds are made of sulfuric acid droplets.",
-                            "The surface is so hot that lead and zinc melt.",
-                            "Venus was once thought to be Earth's twin."
-                        ]
+                            "Double sunrise every 117 Earth days",
+                            "Clouds made of sulfuric acid",
+                            "So hot lead and zinc melt",
+                            "Once thought to be Earth's twin"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #fff5d1, #ffdc9b, #b8860b)"
                     },
                     earth: {
                         name: "Earth",
-                        type: "Terrestrial Planet",
-                        diameter: "12,742 km (baseline)",
-                        distance: "149.6 million km from Sun (1 AU)",
+                        type: "Terrestrial",
+                        diameter: "12,742 km",
+                        distance: "149.6 million km (1 AU)",
                         orbitalPeriod: "365.25 days",
-                        dayLength: "24 hours",
-                        surfaceTemp: "15°C (average)",
-                        atmosphere: "78% N₂, 21% O₂, 1% other",
-                        moons: "1 (The Moon)",
+                        temperature: "15°C (average)",
+                        moons: "1",
                         gravity: "9.8 m/s²",
+                        composition: "65% O, 18% Si, 10% Al, 5% Fe",
                         facts: [
-                            "Only known planet with life in the universe (so far).",
-                            "71% of surface covered by water.",
-                            "The Moon is relatively large compared to Earth's size.",
-                            "Earth's atmosphere protects from most solar radiation.",
-                            "Earth has a magnetic field that protects from solar wind.",
-                            "Earth's core generates the magnetic field through dynamo effect."
-                        ],
-                        composition: [
-                            "65% Oxygen (O)",
-                            "18% Silicon (Si)",
-                            "10% Aluminum (Al)",
-                            "5% Iron (Fe)",
-                            "2% Other elements"
+                            "Only known planet with life",
+                            "71% covered by water",
+                            "Moon is relatively large",
+                            "Atmosphere protects from radiation",
+                            "Magnetic field protects from solar wind"
                         ],
                         curiosities: [
-                            "Earth is the only planet not named after a Greek/Roman god.",
-                            "Earth's rotation is slowing down by 1.7 milliseconds per century.",
-                            "The Earth would fit inside Jupiter 1,300 times.",
-                            "Earth's surface is constantly moving due to plate tectonics."
-                        ]
+                            "Only planet not named after god",
+                            "Rotation slowing by 1.7ms/century",
+                            "Would fit inside Jupiter 1,300 times",
+                            "Constant surface movement from plate tectonics"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #9cd7ff, #4a90e2, #2e5c3e)"
                     },
                     mars: {
                         name: "Mars",
-                        type: "Terrestrial Planet",
-                        diameter: "6,779 km (53% of Earth's)",
-                        distance: "227.9 million km from Sun",
+                        type: "Terrestrial",
+                        diameter: "6,779 km",
+                        distance: "227.9 million km",
                         orbitalPeriod: "687 Earth days",
-                        dayLength: "24.6 hours",
-                        surfaceTemp: "-65°C (average)",
-                        atmosphere: "95% CO₂, 2.7% N₂, 1.6% Ar",
-                        moons: "2 (Phobos and Deimos)",
-                        gravity: "3.7 m/s² (38% of Earth)",
+                        temperature: "-65°C (average)",
+                        moons: "2",
+                        gravity: "3.7 m/s²",
+                        composition: "50% Silicate crust, 30% Core, 20% Mantle",
                         facts: [
-                            "Known as the Red Planet due to iron oxide (rust) on surface.",
-                            "Has the largest volcano (Olympus Mons) in the solar system.",
-                            "Has a canyon system (Valles Marineris) longer than the Grand Canyon.",
-                            "Seasons occur due to 25° axial tilt.",
-                            "Evidence suggests liquid water once existed on surface.",
-                            "The north polar ice cap is primarily water ice."
-                        ],
-                        composition: [
-                            "50% Silicate crust",
-                            "30% Metallic core (mostly iron)",
-                            "20% Silicate mantle"
+                            "Red Planet from iron oxide (rust)",
+                            "Largest volcano in solar system",
+                            "Canyon longer than Grand Canyon",
+                            "Seasons from 25° axial tilt",
+                            "North polar ice cap is water ice"
                         ],
                         curiosities: [
-                            "Mars has dust storms that can cover the entire planet.",
-                            "The Martian day is only 37 minutes longer than Earth's.",
-                            "The atmosphere is thin - surface pressure is 0.6% of Earth's.",
-                            "Mars has two small, irregularly shaped moons captured asteroids."
-                        ]
+                            "Dust storms can cover entire planet",
+                            "Day is 37 minutes longer than Earth's",
+                            "Atmosphere 0.6% of Earth's pressure",
+                            "Two small captured asteroid moons"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #ff9975, #cc4400, #8b1a00)"
                     },
                     jupiter: {
                         name: "Jupiter",
                         type: "Gas Giant",
-                        diameter: "139,820 km (11 times Earth)",
-                        distance: "778.5 million km from Sun",
+                        diameter: "139,820 km",
+                        distance: "778.5 million km",
                         orbitalPeriod: "11.9 Earth years",
-                        dayLength: "10 hours",
-                        cloudTopTemp: "-110°C",
-                        atmosphere: "90% H₂, 10% He",
-                        moons: "95 known",
-                        gravity: "24.8 m/s² (2.5 times Earth)",
+                        temperature: "-110°C (cloud tops)",
+                        moons: "95",
+                        gravity: "24.8 m/s²",
+                        composition: "90% H₂, 10% He, 0.1% CH₄",
                         facts: [
-                            "Largest planet in our solar system.",
-                            "The Great Red Spot is a storm larger than Earth that has raged for centuries.",
-                            "Jupiter has over 95 known moons, with 4 large Galilean moons.",
-                            "It emits more heat than it receives from the Sun due to gravitational compression.",
-                            "Jupiter's magnetic field is 20,000 times stronger than Earth's.",
-                            "The planet has a faint ring system discovered by Voyager 1."
-                        ],
-                        composition: [
-                            "90% Hydrogen (H₂)",
-                            "10% Helium (He)",
-                            "0.1% Methane (CH₄)",
-                            "0.1% Water vapor (H₂O)",
-                            "0.01% Other compounds"
+                            "Largest planet",
+                            "Great Red Spot is giant storm larger than Earth",
+                            "Over 95 known moons",
+                            "Emits more heat than receives from Sun",
+                            "Magnetic field 20,000x Earth's"
                         ],
                         curiosities: [
-                            "Jupiter acts like a vacuum cleaner, protecting inner planets from asteroids.",
-                            "Its moons could have subsurface oceans suitable for life.",
-                            "Jupiter's day is the shortest among planets.",
-                            "It would take 1,300 Earths to fill Jupiter's volume."
-                        ]
+                            "Protects inner planets from asteroids",
+                            "Moons may have subsurface oceans",
+                            "Shortest day among planets",
+                            "1,300 Earths would fill its volume"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #f8f3d6, #d8ca9d, #a67c52)"
                     },
                     saturn: {
                         name: "Saturn",
                         type: "Gas Giant",
-                        diameter: "116,460 km (9 times Earth)",
-                        distance: "1,434 million km from Sun",
+                        diameter: "116,460 km",
+                        distance: "1,434 million km",
                         orbitalPeriod: "29.5 Earth years",
-                        dayLength: "10.7 hours",
-                        cloudTopTemp: "-140°C",
-                        atmosphere: "96% H₂, 3% He, 1% other",
-                        moons: "146 known",
-                        gravity: "10.7 m/s² (1.1 times Earth)",
+                        temperature: "-140°C (cloud tops)",
+                        moons: "146",
+                        gravity: "10.7 m/s²",
+                        composition: "96% H₂, 3% He, 0.4% CH₄",
                         facts: [
-                            "Famous for its prominent ring system made of ice and rock.",
-                            "Least dense planet - would float in water if there was a bathtub big enough.",
-                            "Has 146 known moons, with Titan being the largest and having a thick atmosphere.",
-                            "Saturn's rings are 282,000 km wide but only 10 meters thick on average.",
-                            "The planet's interior is similar to Jupiter's but with more ice.",
-                            "Saturn's moon Enceladus has geysers of water ice."
-                        ],
-                        composition: [
-                            "96% Hydrogen (H₂)",
-                            "3% Helium (He)",
-                            "0.4% Methane (CH₄)",
-                            "0.1% Ammonia (NH₃)"
+                            "Famous for prominent ring system",
+                            "Least dense planet - would float in water",
+                            "146 known moons, Titan largest",
+                            "Rings are 282,000 km wide but 10m thick",
+                            "Moon Enceladus has water ice geysers"
                         ],
                         curiosities: [
-                            "Saturn's rings may have formed when a moon was torn apart by tidal forces.",
-                            "The rings are divided into named sections with gaps.",
-                            "Saturn's moon Titan has rivers and lakes of liquid methane.",
-                            "Saturn was known to ancient civilizations and was named after the Roman god of agriculture."
-                        ]
+                            "Rings may form from torn apart moon",
+                            "Ring system has named sections",
+                            "Titan has liquid methane rivers and lakes",
+                            "Known to ancient civilizations"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #fff8d2, #f4e4a6, #d4b45e)"
                     },
                     uranus: {
                         name: "Uranus",
                         type: "Ice Giant",
-                        diameter: "50,724 km (4 times Earth)",
-                        distance: "2,871 million km from Sun",
+                        diameter: "50,724 km",
+                        distance: "2,871 million km",
                         orbitalPeriod: "84 Earth years",
-                        dayLength: "17.2 hours",
-                        cloudTopTemp: "-195°C",
-                        atmosphere: "83% H₂, 15% He, 2.3% CH₄",
-                        moons: "27 known",
-                        gravity: "8.7 m/s² (89% of Earth)",
+                        temperature: "-195°C (cloud tops)",
+                        moons: "27",
+                        gravity: "8.7 m/s²",
+                        composition: "83% H₂, 15% He, 2.3% CH₄",
                         facts: [
-                            "Rotates on its side with a 98° axial tilt, causing extreme seasons.",
-                            "Coldest planetary atmosphere (-224°C at cloud tops).",
-                            "Has a system of rings discovered in 1977.",
-                            "Uranus emits more light than it receives from the Sun.",
-                            "It has 27 known moons, with five major ones.",
-                            "The planet has a blue-green color due to methane in its atmosphere."
-                        ],
-                        composition: [
-                            "83% Hydrogen (H₂)",
-                            "15% Helium (He)",
-                            "2.3% Methane (CH₄)",
-                            "0.1% Other compounds (water, ammonia, methane ices)"
+                            "Rotates on its side (98° tilt)",
+                            "Coldest planetary atmosphere",
+                            "Has system of rings discovered in 1977",
+                            "Emits more light than receives from Sun",
+                            "27 known moons with 5 major ones"
                         ],
                         curiosities: [
-                            "Uranus rotates clockwise (retrograde) like Venus.",
-                            "It was the first planet discovered with a telescope (1781).",
-                            "Uranus has 'hurricane-like' storms with speeds up to 900 km/h.",
-                            "The planet has a unique magnetic field that is off-center."
-                        ]
+                            "Rotates clockwise (retrograde)",
+                            "First planet discovered with telescope",
+                            "Has 'hurricane-like' storms up to 900 km/h",
+                            "Unique off-center magnetic field"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #c0f0ff, #7dd3e0, #4fa8c5)"
                     },
                     neptune: {
                         name: "Neptune",
                         type: "Ice Giant",
-                        diameter: "49,244 km (3.9 times Earth)",
-                        distance: "4,495 million km from Sun",
+                        diameter: "49,244 km",
+                        distance: "4,495 million km",
                         orbitalPeriod: "165 Earth years",
-                        dayLength: "16.1 hours",
-                        cloudTopTemp: "-200°C",
-                        atmosphere: "80% H₂, 19% He, 1.5% CH₄",
-                        moons: "16 known",
-                        gravity: "11.0 m/s² (1.1 times Earth)",
+                        temperature: "-200°C (cloud tops)",
+                        moons: "16",
+                        gravity: "11.0 m/s²",
+                        composition: "80% H₂, 19% He, 1.5% CH₄",
                         facts: [
-                            "Strongest winds in the solar system - up to 2,100 km/h.",
-                            "First planet located through mathematical calculations (1846).",
-                            "Has a dark, rapidly shifting storm called the Great Dark Spot.",
-                            "The planet has 16 known moons, with Triton being the largest.",
-                            "Neptune's blue color comes from methane in its atmosphere.",
-                            "It takes 165 Earth years to orbit the Sun, so it has yet to complete one full orbit since discovery."
-                        ],
-                        composition: [
-                            "80% Hydrogen (H₂)",
-                            "19% Helium (He)",
-                            "1.5% Methane (CH₄)",
-                            "0.5% Other compounds (water, ammonia, methane ices)"
+                            "Strongest winds in solar system",
+                            "First planet located by math calculations",
+                            "Has Great Dark Spot storm",
+                            "16 known moons, Triton largest",
+                            "Blue color from methane in atmosphere"
                         ],
                         curiosities: [
-                            "Neptune's moon Triton is the only large moon with a retrograde orbit.",
-                            "It has a ring system that was discovered in 1989.",
-                            "The planet has a 'companion' planet, Triton, which is thought to be a captured Kuiper Belt object.",
-                            "Neptune was the first planet discovered after the invention of the telescope."
-                        ]
+                            "Triton is only large moon with retrograde orbit",
+                            "Has ring system discovered in 1989",
+                            "Triton may be captured Kuiper Belt object",
+                            "First planet discovered after telescope invention"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #a0d0ff, #4169e1, #254898)"
                     }
-                },
-                funFacts: [
-                    {
-                        title: "Cosmic Distances",
-                        content: "Light travels from the Sun to Earth in 8 minutes, but takes 4 years to reach the nearest star (Proxima Centauri). The Voyager 1 spacecraft, launched in 1977, is now over 24 billion km away from Earth and has entered interstellar space."
-                    },
-                    {
-                        title: "Solar System Age",
-                        content: "Our solar system formed about 4.6 billion years ago from a giant molecular cloud. The Sun is about midway through its 10-billion-year main sequence lifetime."
-                    },
-                    {
-                        title: "Planetary Protection",
-                        content: "Jupiter's massive gravity has acted like a cosmic vacuum cleaner, protecting the inner solar system from many asteroids and comets that could threaten Earth."
-                    },
-                    {
-                        title: "Extreme Environments",
-                        content: "Venus has surface temperatures hot enough to melt lead, while the dark side of Mercury can reach -180°C. Saturn's moon Titan has liquid methane lakes at -180°C."
-                    },
-                    {
-                        title: "Future of the Solar System",
-                        content: "In about 5 billion years, the Sun will expand into a red giant, likely engulfing Mercury, Venus, and possibly Earth. Eventually, it will shed its outer layers and become a white dwarf."
-                    },
-                    {
-                        title: "Beyond Neptune",
-                        content: "The Kuiper Belt contains thousands of icy bodies, including Pluto and other dwarf planets. The Oort Cloud, far beyond, is thought to be the source of long-period comets."
-                    }
-                ],
-                controls: {
-                    pause: "Pause Orbits",
-                    resume: "Resume Orbits",
-                    reset: "Reset View",
-                    speedUp: "Speed Up",
-                    normalSpeed: "Normal Speed"
                 }
             },
             id: {
                 title: "Penjelajah Sistem Tata Surya",
-                subtitle: "Klik pada benda langit untuk menemukan rahasianya",
-                pauseText: "Jeda Orbit",
-                resetText: "Atur Ulang Tampilan",
-                speedText: "Percepat",
-                placeholderTitle: "Pilih Planet",
-                placeholderText: "Klik pada Matahari atau planet mana pun untuk melihat informasi detail tentangnya dalam Bahasa Indonesia dan Inggris.",
-                addInfoTitle: "Fakta Menarik Kosmik",
-                credits: "Gambar dari Wikimedia Commons. Data ilmiah dari NASA, ESA, dan agensi ruang angkasa lainnya.",
+                subtitle: "Klik pada planet untuk menemukan rahasianya",
+                keyFactsTitle: "Fakta Utama",
+                compositionTitle: "Komposisi",
+                interestingFactsTitle: "Fakta Menarik",
+                curiositiesTitle: "Keingintahuan Kosmik",
+                credits: "Visualisasi edukasional. Data dari NASA, ESA, dan sumber ilmiah.",
                 planets: {
                     sun: {
                         name: "Matahari",
-                        type: "Bintang (G-type main-sequence)",
-                        diameter: "1.392.700 km (109 kali Bumi)",
-                        mass: "1.989 × 10³⁰ kg (99,86% tata surya)",
-                        surfaceTemp: "5.500°C",
-                        coreTemp: "15.000.000°C",
-                        age: "4,6 miliar tahun",
-                        composition: "Hidrogen (73%), Helium (25%), Oksigen (1%), Karbon (0,3%), Elemen lain (0,7%)",
+                        type: "Bintang",
+                        diameter: "1.392.700 km",
+                        distance: "Pusat",
+                        orbitalPeriod: "N/A",
+                        temperature: "5.500°C (permukaan)",
+                        moons: "N/A",
+                        gravity: "274 m/s²",
+                        composition: "Hidrogen (73%), Helium (25%), Elemen lain (2%)",
                         facts: [
-                            "Matahari menyumbang 99,86% massa tata surya.",
-                            "Cahaya membutuhkan 8 menit untuk sampai dari Matahari ke Bumi.",
-                            "Output energi Matahari setara dengan 386 miliar miliar megawatt.",
-                            "Angin matahari bergerak 450 km/detik dan menciptakan aurora di Bumi.",
-                            "Matahari akan menjadi raksasa merah dalam sekitar 5 miliar tahun.",
-                            "Telah menyala selama 4,6 miliar tahun dan memiliki bahan bakar untuk 5 miliar tahun lagi."
+                            "Menyumbang 99,86% massa tata surya",
+                            "Cahaya sampai Bumi dalam 8 menit",
+                            "Bola plasma panas raksasa",
+                            "Berusia 4,6 miliar tahun",
+                            "Akan menjadi raksasa merah dalam 5 miliar tahun"
                         ],
                         curiosities: [
-                            "Gravitas permukaan Matahari 274 m/s², 28 kali lebih kuat dari Bumi.",
-                            "Jika Matahari adalah bola basket, Bumi akan menjadi butiran pasir kecil 30 meter jauhnya.",
-                            "Matahari berputar lebih cepat di ekuator (25 hari) daripada di kutub (35 hari).",
-                            "Letusan matahari bisa melepaskan energi setara jutaan bom hidrogen."
-                        ]
+                            "Gravitas 28x Bumi",
+                            "Berputar lebih cepat di ekuator",
+                            "Letusan matahari melepaskan energi besar",
+                            "Jika Matahari bola basket, Bumi pasir 30m jauhnya"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #fff7cc, #ffcc00, #ff9900, #ff6600)"
                     },
                     mercury: {
                         name: "Merkurius",
                         type: "Planet Berbatu",
-                        diameter: "4.879 km (38% Bumi)",
-                        distance: "57,9 juta km dari Matahari",
+                        diameter: "4.879 km",
+                        distance: "57,9 juta km",
                         orbitalPeriod: "88 hari Bumi",
-                        dayLength: "59 hari Bumi",
-                        surfaceTemp: "-180°C hingga 430°C",
+                        temperature: "-180°C hingga 430°C",
                         moons: "0",
-                        gravity: "3,7 m/s² (38% Bumi)",
+                        gravity: "3,7 m/s²",
+                        composition: "Inti logam (42%), Mantel (42%), Kerak (16%)",
                         facts: [
-                            "Planet terkecil di tata surya kita.",
-                            "Tidak memiliki bulan dan hampir tidak memiliki atmosfer.",
-                            "Satu hari di Merkurius sama dengan 59 hari Bumi.",
-                            "Orbit Merkurius adalah yang paling elips di antara planet.",
-                            "Permukaannya ditutupi kawah, mirip dengan Bulan Bumi.",
-                            "Es air ada di kawah yang teduh permanen di kutub."
-                        ],
-                        composition: [
-                            "42% inti logam (terutama besi)",
-                            "42% mantel (batuan silikat)",
-                            "16% kerak (batuan silikat)"
+                            "Planet terkecil dalam tata surya",
+                            "Tidak ada atmosfer dan tidak ada bulan",
+                            "Satu hari = 59 hari Bumi",
+                            "Orbit paling elips di antara planet",
+                            "Es air di kawah kutub"
                         ],
                         curiosities: [
-                            "Merkurius menyusut karena inti mendingin, menyebabkan 'tebing' di permukaan.",
-                            "Ini adalah salah satu dari dua planet tanpa kemiringan (0,03°)",
-                            "Merkurius mengalami variasi suhu ekstrem.",
-                            "Mariner 10 adalah pesawat ruang angkasa pertama yang mengunjungi Merkurius pada 1974."
-                        ]
+                            "Menyusut saat inti mendingin",
+                            "Kemiringan hampir nol (0,03°)",
+                            "Variasi suhu ekstrem",
+                            "Dikunjungi Mariner 10 tahun 1974"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #e0e0e0, #a0a0a0, #606060)"
                     },
                     venus: {
                         name: "Venus",
                         type: "Planet Berbatu",
-                        diameter: "12.104 km (95% Bumi)",
-                        distance: "108,2 juta km dari Matahari",
+                        diameter: "12.104 km",
+                        distance: "108,2 juta km",
                         orbitalPeriod: "225 hari Bumi",
-                        dayLength: "230 hari Bumi (retrograde)",
-                        surfaceTemp: "465°C (rata-rata)",
-                        pressure: "92 atmosfer Bumi",
+                        temperature: "465°C (rata-rata)",
                         moons: "0",
-                        gravity: "8,87 m/s² (90% Bumi)",
+                        gravity: "8,87 m/s²",
+                        composition: "96,5% CO₂, 3,5% N₂, 0,015% SO₂",
                         facts: [
-                            "Planet terpanas karena atmosfer CO₂ tebal dan efek rumah kaca yang tak terkendali.",
-                            "Berputar mundur dibandingkan planet lain (rotasi retrograde).",
-                            "Tidak memiliki bulan dan tidak memiliki musim karena tidak ada kemiringan sumbu.",
-                            "Tekanan permukaan 92 kali lipat dari Bumi.",
-                            "Permukaannya berapi dengan ribuan gunung berapi.",
-                            "Satu hari di Venus lebih panjang dari tahunnya."
-                        ],
-                        composition: [
-                            "96,5% Karbon dioksida (CO₂)",
-                            "3,5% Nitrogen (N₂)",
-                            "0,015% Sulfur dioksida (SO₂)",
-                            "0,007% Argon (Ar)"
+                            "Planet terpanas karena CO₂ atmosfer",
+                            "Rotasi retrograde (mundur)",
+                            "Tidak ada bulan atau musim",
+                            "Tekanan permukaan 92x Bumi",
+                            "Permukaan berapi dengan ribuan gunung berapi"
                         ],
                         curiosities: [
-                            "Venus memiliki matahari ganda setiap 117 hari Bumi.",
-                            "Awannya terdiri dari tetesan asam sulfat.",
-                            "Permukaannya sangat panas sehingga timah dan seng mencair.",
-                            "Venus pernah dianggap sebagai kembaran Bumi."
-                        ]
+                            "Matahari ganda setiap 117 hari Bumi",
+                            "Awan terbuat dari asam sulfat",
+                            "Sangat panas timah dan seng mencair",
+                            "Dikira kembaran Bumi dulu"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #fff5d1, #ffdc9b, #b8860b)"
                     },
                     earth: {
                         name: "Bumi",
                         type: "Planet Berbatu",
-                        diameter: "12.742 km (baseline)",
-                        distance: "149,6 juta km dari Matahari (1 AU)",
+                        diameter: "12.742 km",
+                        distance: "149,6 juta km (1 AU)",
                         orbitalPeriod: "365,25 hari",
-                        dayLength: "24 jam",
-                        surfaceTemp: "15°C (rata-rata)",
-                        atmosphere: "78% N₂, 21% O₂, 1% lainnya",
-                        moons: "1 (Bulan)",
+                        temperature: "15°C (rata-rata)",
+                        moons: "1",
                         gravity: "9,8 m/s²",
+                        composition: "65% O, 18% Si, 10% Al, 5% Fe",
                         facts: [
-                            "Satu-satunya planet yang diketahui memiliki kehidupan di alam semesta (sejauh ini).",
-                            "71% permukaan tertutup air.",
-                            "Bulan relatif besar dibandingkan ukuran Bumi.",
-                            "Atmosfer Bumi melindungi dari sebagian besar radiasi matahari.",
-                            "Bumi memiliki medan magnet yang melindungi dari angin matahari.",
-                            "Inti Bumi menghasilkan medan magnet melalui efek dinamo."
-                        ],
-                        composition: [
-                            "65% Oksigen (O)",
-                            "18% Silikon (Si)",
-                            "10% Aluminium (Al)",
-                            "5% Besi (Fe)",
-                            "2% Elemen lain"
+                            "Satu-satunya planet dengan kehidupan",
+                            "71% tertutup air",
+                            "Bulan relatif besar",
+                            "Atmosfer melindungi dari radiasi",
+                            "Medan magnet melindungi dari angin matahari"
                         ],
                         curiosities: [
-                            "Bumi adalah satu-satunya planet yang tidak dinamai dewa Yunani/Romawi.",
-                            "Rotasi Bumi melambat 1,7 milidetik per abad.",
-                            "Bumi bisa muat di dalam Jupiter 1.300 kali.",
-                            "Permukaan Bumi terus bergerak akibat lempeng tektonik."
-                        ]
+                            "Satu-satunya planet tidak dinamai dewa",
+                            "Rotasi melambat 1,7ms/abad",
+                            "Bisa muat di Jupiter 1.300x",
+                            "Permukaan selalu bergerak dari lempeng tektonik"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #9cd7ff, #4a90e2, #2e5c3e)"
                     },
                     mars: {
                         name: "Mars",
                         type: "Planet Berbatu",
-                        diameter: "6.779 km (53% Bumi)",
-                        distance: "227,9 juta km dari Matahari",
+                        diameter: "6.779 km",
+                        distance: "227,9 juta km",
                         orbitalPeriod: "687 hari Bumi",
-                        dayLength: "24,6 jam",
-                        surfaceTemp: "-65°C (rata-rata)",
-                        atmosphere: "95% CO₂, 2,7% N₂, 1,6% Ar",
-                        moons: "2 (Fobos dan Deimos)",
-                        gravity: "3,7 m/s² (38% Bumi)",
+                        temperature: "-65°C (rata-rata)",
+                        moons: "2",
+                        gravity: "3,7 m/s²",
+                        composition: "50% Kerak silikat, 30% Inti, 20% Mantel",
                         facts: [
-                            "Dikenal sebagai Planet Merah karena besi oksida (karat) di permukaan.",
-                            "Memiliki gunung berapi terbesar (Olympus Mons) di tata surya.",
-                            "Memiliki sistem jurang (Valles Marineris) lebih panjang dari Grand Canyon.",
-                            "Musim terjadi karena kemiringan sumbu 25°.",
-                            "Bukti menunjukkan air cair pernah ada di permukaan.",
-                            "Kutub utara sebagian besar adalah es air."
-                        ],
-                        composition: [
-                            "50% Kerak silikat",
-                            "30% Inti logam (terutama besi)",
-                            "20% Mantel silikat"
+                            "Planet Merah dari besi oksida",
+                            "Gunung berapi terbesar dalam tata surya",
+                            "Jurang lebih panjang dari Grand Canyon",
+                            "Musim dari kemiringan sumbu 25°",
+                            "Es air di kutub utara"
                         ],
                         curiosities: [
-                            "Mars memiliki badai debu yang bisa menutupi seluruh planet.",
-                            "Hari Mars hanya 37 menit lebih lama dari Bumi.",
-                            "Atmosfer tipis - tekanan permukaan 0,6% dari Bumi.",
-                            "Mars memiliki dua bulan kecil yang tidak beraturan, asteroid tertangkap."
-                        ]
+                            "Badai debu bisa menutup seluruh planet",
+                            "Hari 37 menit lebih lama dari Bumi",
+                            "Atmosfer 0,6% tekanan Bumi",
+                            "Dua bulan kecil asteroid tertangkap"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #ff9975, #cc4400, #8b1a00)"
                     },
                     jupiter: {
                         name: "Jupiter",
                         type: "Raksasa Gas",
-                        diameter: "139.820 km (11 kali Bumi)",
-                        distance: "778,5 juta km dari Matahari",
+                        diameter: "139.820 km",
+                        distance: "778,5 juta km",
                         orbitalPeriod: "11,9 tahun Bumi",
-                        dayLength: "10 jam",
-                        cloudTopTemp: "-110°C",
-                        atmosphere: "90% H₂, 10% He",
-                        moons: "95 diketahui",
-                        gravity: "24,8 m/s² (2,5 kali Bumi)",
+                        temperature: "-110°C (puncak awan)",
+                        moons: "95",
+                        gravity: "24,8 m/s²",
+                        composition: "90% H₂, 10% He, 0,1% CH₄",
                         facts: [
-                            "Planet terbesar di tata surya kita.",
-                            "Bintik Merah Besar adalah badai lebih besar dari Bumi yang telah berlangsung selama berabad-abad.",
-                            "Jupiter memiliki lebih dari 95 bulan yang diketahui, dengan 4 bulan Galileo yang besar.",
-                            "Mengeluarkan lebih banyak panas daripada yang diterimanya dari Matahari karena kompresi gravitasi.",
-                            "Medan magnet Jupiter 20.000 kali lebih kuat dari Bumi.",
-                            "Planet memiliki sistem cincin redup yang ditemukan oleh Voyager 1."
-                        ],
-                        composition: [
-                            "90% Hidrogen (H₂)",
-                            "10% Helium (He)",
-                            "0,1% Metana (CH₄)",
-                            "0,1% Uap air (H₂O)",
-                            "0,01% Senyawa lain"
+                            "Planet terbesar",
+                            "Bintik Merah Besar adalah badai raksasa",
+                            "Lebih dari 95 bulan terkenal",
+                            "Mengeluarkan panas lebih dari yang diterima",
+                            "Medan magnet 20.000x Bumi"
                         ],
                         curiosities: [
-                            "Jupiter bertindak seperti penyedot debu, melindungi planet dalam dari asteroid.",
-                            "Bulan-bulannya bisa memiliki lautan bawah permukaan yang cocok untuk kehidupan.",
-                            "Hari Jupiter adalah yang terpendek di antara planet.",
-                            "Dibutuhkan 1.300 Bumi untuk mengisi volume Jupiter."
-                        ]
+                            "Melindungi planet dalam dari asteroid",
+                            "Bulan mungkin punya lautan bawah permukaan",
+                            "Hari terpendek di antara planet",
+                            "1.300 Bumi akan mengisi volumenya"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #f8f3d6, #d8ca9d, #a67c52)"
                     },
                     saturn: {
                         name: "Saturnus",
                         type: "Raksasa Gas",
-                        diameter: "116.460 km (9 kali Bumi)",
-                        distance: "1.434 juta km dari Matahari",
+                        diameter: "116.460 km",
+                        distance: "1.434 juta km",
                         orbitalPeriod: "29,5 tahun Bumi",
-                        dayLength: "10,7 jam",
-                        cloudTopTemp: "-140°C",
-                        atmosphere: "96% H₂, 3% He, 1% lainnya",
-                        moons: "146 diketahui",
-                        gravity: "10,7 m/s² (1,1 kali Bumi)",
+                        temperature: "-140°C (puncak awan)",
+                        moons: "146",
+                        gravity: "10,7 m/s²",
+                        composition: "96% H₂, 3% He, 0,4% CH₄",
                         facts: [
-                            "Terkenal dengan sistem cincinnya yang menonjol terbuat dari es dan batuan.",
-                            "Planet dengan kerapatan terendah - bisa mengapung di air jika ada bak mandi yang cukup besar.",
-                            "Memiliki 146 bulan yang diketahui, dengan Titan sebagai yang terbesar dan memiliki atmosfer tebal.",
-                            "Cincin Saturnus lebar 282.000 km tetapi hanya 10 meter tebalnya rata-rata.",
-                            "Interior Saturnus mirip dengan Jupiter tetapi dengan lebih banyak es.",
-                            "Bulan Saturnus Enceladus memiliki geyser es air."
-                        ],
-                        composition: [
-                            "96% Hidrogen (H₂)",
-                            "3% Helium (He)",
-                            "0,4% Metana (CH₄)",
-                            "0,1% Amonia (NH₃)"
+                            "Terkenal dengan sistem cincinnya",
+                            "Kerapatan terendah - bisa terapung di air",
+                            "146 bulan terkenal, Titan terbesar",
+                            "Cincin lebar 282.000 km tapi 10m tebal",
+                            "Bulan Enceladus punya geyser es air"
                         ],
                         curiosities: [
-                            "Cincin Saturnus mungkin terbentuk ketika bulan robek oleh gaya pasang surut.",
-                            "Cincin dibagi menjadi bagian bernama dengan celah.",
-                            "Bulan Titan memiliki sungai dan danau metana cair.",
-                            "Saturnus dikenal peradaban kuno dan dinamai dewa Romawi pertanian."
-                        ]
+                            "Cincin dari bulan yang robek",
+                            "Sistem cincin punya bagian bernama",
+                            "Titan punya sungai dan danau metana cair",
+                            "Dikenal peradaban kuno"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #fff8d2, #f4e4a6, #d4b45e)"
                     },
                     uranus: {
                         name: "Uranus",
                         type: "Raksasa Es",
-                        diameter: "50.724 km (4 kali Bumi)",
-                        distance: "2.871 juta km dari Matahari",
+                        diameter: "50.724 km",
+                        distance: "2.871 juta km",
                         orbitalPeriod: "84 tahun Bumi",
-                        dayLength: "17,2 jam",
-                        cloudTopTemp: "-195°C",
-                        atmosphere: "83% H₂, 15% He, 2,3% CH₄",
-                        moons: "27 diketahui",
-                        gravity: "8,7 m/s² (89% Bumi)",
+                        temperature: "-195°C (puncak awan)",
+                        moons: "27",
+                        gravity: "8,7 m/s²",
+                        composition: "83% H₂, 15% He, 2,3% CH₄",
                         facts: [
-                            "Berputar miring dengan kemiringan sumbu 98°, menyebabkan musim ekstrem.",
-                            "Atmosfer terdingin (-224°C di puncak awan).",
-                            "Memiliki sistem cincin yang ditemukan pada 1977.",
-                            "Uranus memancarkan lebih banyak cahaya daripada yang diterimanya dari Matahari.",
-                            "Memiliki 27 bulan yang diketahui, dengan lima bulan utama.",
-                            "Planet berwarna biru-hijau karena metana di atmosfernya."
-                        ],
-                        composition: [
-                            "83% Hidrogen (H₂)",
-                            "15% Helium (He)",
-                            "2,3% Metana (CH₄)",
-                            "0,1% Senyawa lain (es air, amonia, es metana)"
+                            "Berputar miring (98°)",
+                            "Atmosfer terdingin",
+                            "Punya sistem cincin ditemukan 1977",
+                            "Mengeluarkan cahaya lebih dari yang diterima",
+                            "27 bulan terkenal, 5 utama"
                         ],
                         curiosities: [
-                            "Uranus berputar searah jarum jam (retrograde) seperti Venus.",
-                            "Itu adalah planet pertama yang ditemukan dengan teleskop (1781).",
-                            "Uranus memiliki badai 'mirip badai topan' dengan kecepatan hingga 900 km/jam.",
-                            "Memiliki medan magnet yang unik yang tidak berpusat."
-                        ]
+                            "Berputar searah jarum jam (retrograde)",
+                            "Planet pertama ditemukan teleskop",
+                            "Badai mirip topan hingga 900 km/jam",
+                            "Medan magnet unik tidak berpusat"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #c0f0ff, #7dd3e0, #4fa8c5)"
                     },
                     neptune: {
                         name: "Neptunus",
                         type: "Raksasa Es",
-                        diameter: "49.244 km (3,9 kali Bumi)",
-                        distance: "4.495 juta km dari Matahari",
+                        diameter: "49.244 km",
+                        distance: "4.495 juta km",
                         orbitalPeriod: "165 tahun Bumi",
-                        dayLength: "16,1 jam",
-                        cloudTopTemp: "-200°C",
-                        atmosphere: "80% H₂, 19% He, 1,5% CH₄",
-                        moons: "16 diketahui",
-                        gravity: "11,0 m/s² (1,1 kali Bumi)",
+                        temperature: "-200°C (puncak awan)",
+                        moons: "16",
+                        gravity: "11,0 m/s²",
+                        composition: "80% H₂, 19% He, 1,5% CH₄",
                         facts: [
-                            "Angin terkuat di tata surya - hingga 2.100 km/jam.",
-                            "Planet pertama yang ditemukan melalui perhitungan matematika (1846).",
-                            "Memiliki badai gelap yang cepat bergeser disebut Bintik Gelap Besar.",
-                            "Memiliki 16 bulan yang diketahui, dengan Triton sebagai yang terbesar.",
-                            "Warna biru Neptunus berasal dari metana di atmosfernya.",
-                            "Butuh 165 tahun Bumi untuk mengorbit Matahari, jadi belum menyelesaikan satu orbit penuh sejak ditemukan."
-                        ],
-                        composition: [
-                            "80% Hidrogen (H₂)",
-                            "19% Helium (He)",
-                            "1,5% Metana (CH₄)",
-                            "0,5% Senyawa lain (es air, amonia, es metana)"
+                            "Angin terkuat dalam tata surya",
+                            "Planet pertama ditemukan dengan matematika",
+                            "Punya Bintik Gelap Besar",
+                            "16 bulan terkenal, Triton terbesar",
+                            "Warna biru dari metana di atmosfer"
                         ],
                         curiosities: [
-                            "Bulan Neptunus Triton adalah satu-satunya bulan besar dengan orbit retrograde.",
-                            "Memiliki sistem cincin yang ditemukan pada 1989.",
-                            "Planet ini memiliki 'pendamping' planet, Triton, yang diperkirakan adalah benda Kuiper Belt yang ditangkap.",
-                            "Neptunus adalah planet pertama yang ditemukan setelah penemuan teleskop."
-                        ]
+                            "Triton satu-satunya bulan besar dengan orbit retrograde",
+                            "Punya sistem cincin ditemukan 1989",
+                            "Triton bisa benda Kuiper Belt tertangkap",
+                            "Planet pertama ditemukan setelah teleskop"
+                        ],
+                        gradient: "radial-gradient(circle at 30% 30%, #a0d0ff, #4169e1, #254898)"
                     }
-                },
-                funFacts: [
-                    {
-                        title: "Jarak Kosmik",
-                        content: "Cahaya bepergian dari Matahari ke Bumi dalam 8 menit, tetapi membutuhkan 4 tahun untuk mencapai bintang terdekat (Proxima Centauri). Pesawat ruang angkasa Voyager 1, diluncurkan pada 1977, sekarang lebih dari 24 miliar km dari Bumi dan telah memasuki ruang antarbintang."
-                    },
-                    {
-                        title: "Usia Tata Surya",
-                        content: "Tata surya kita terbentuk sekitar 4,6 miliar tahun yang lalu dari awan molekul raksasa. Matahari berada di tengah umur urutan utama 10 miliar tahunnya."
-                    },
-                    {
-                        title: "Perlindungan Planet",
-                        content: "Gravitas Jupiter yang masif telah bertindak seperti penyedot debu kosmik, melindungi tata surya dalam dari banyak asteroid dan komet yang bisa mengancam Bumi."
-                    },
-                    {
-                        title: "Lingkungan Ekstrem",
-                        content: "Venus memiliki suhu permukaan cukup panas untuk mencairkan timah, sementara sisi gelap Merkurius bisa mencapai -180°C. Bulan Titan memiliki danau metana cair di -180°C."
-                    },
-                    {
-                        title: "Masa Depan Tata Surya",
-                        content: "Dalam sekitar 5 miliar tahun, Matahari akan membesar menjadi raksasa merah, kemungkinan menelan Merkurius, Venus, dan mungkin Bumi. Akhirnya, akan mengeluarkan lapisan luarnya dan menjadi katai putih."
-                    },
-                    {
-                        title: "Di Luar Neptunus",
-                        content: "Sabuk Kuiper berisi ribuan benda beres, termasuk Pluto dan planet katai lainnya. Awan Oort, jauh di luar, diperkirakan sebagai sumber komet jangka panjang."
-                    }
-                ],
-                controls: {
-                    pause: "Jeda Orbit",
-                    resume: "Lanjutkan Orbit",
-                    reset: "Atur Ulang Tampilan",
-                    speedUp: "Percepat",
-                    normalSpeed: "Kecepatan Normal"
                 }
             }
         };
 
-        // State Management
+        // State
         let currentLang = 'en';
-        let isPaused = false;
-        let isSpedUp = false;
         let selectedPlanet = null;
-
-        // Orbital Distances (arbitrary units for visualization)
-        const orbits = {
-            mercury: 50,
-            venus: 80,
-            earth: 110,
-            mars: 140,
-            jupiter: 180,
-            saturn: 220,
-            uranus: 260,
-            neptune: 300
-        };
 
         // Initialization
         document.addEventListener('DOMContentLoaded', function() {
             initializeSolarSystem();
-            updateLanguage();
             setupEventListeners();
-            displayFunFacts();
         });
 
         function initializeSolarSystem() {
             const solarSystem = document.getElementById('solar-system');
+            solarSystem.innerHTML = '<div class="sun" data-planet="sun"></div>';
             
-            // Add Orbits and Planets
+            // Add planets
             const planets = ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'];
             
             planets.forEach(planet => {
-                // Create orbit
-                const orbit = document.createElement('div');
-                orbit.className = `orbit ${planet}-orbit`;
-                solarSystem.appendChild(orbit);
-                
-                // Create planet
                 const planetEl = document.createElement('div');
                 planetEl.className = `planet ${planet}`;
                 planetEl.dataset.planet = planet;
                 
-                // Create label
+                // Add label
                 const label = document.createElement('div');
                 label.className = 'planet-label';
-                label.textContent = planet.charAt(0).toUpperCase() + planet.slice(1);
+                label.textContent = translations[currentLang].planets[planet].name;
                 planetEl.appendChild(label);
-                
-                // Position planet at a random angle on orbit for initial position
-                const angle = Math.random() * 360;
-                const x = Math.cos(angle * Math.PI / 180) * orbits[planet];
-                const y = Math.sin(angle * Math.PI / 180) * orbits[planet];
-                planetEl.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
                 
                 solarSystem.appendChild(planetEl);
             });
             
-            // Add click listeners to Sun and planets
+            // Add click listeners
             document.querySelectorAll('.planet, .sun').forEach(body => {
                 body.addEventListener('click', function() {
                     const planet = this.dataset.planet;
                     showPlanetInfo(planet);
-                    selectedPlanet = planet;
                 });
             });
+            
+            // Update labels with current language
+            updatePlanetLabels();
         }
 
         function setupEventListeners() {
             // Language switchers
             document.getElementById('lang-en').addEventListener('click', function() {
-                currentLang = 'en';
-                updateLanguage();
+                if (currentLang !== 'en') {
+                    currentLang = 'en';
+                    updateLanguage();
+                }
             });
             
             document.getElementById('lang-id').addEventListener('click', function() {
-                currentLang = 'id';
-                updateLanguage();
+                if (currentLang !== 'id') {
+                    currentLang = 'id';
+                    updateLanguage();
+                }
             });
             
-            // Control buttons
-            document.getElementById('pause-btn').addEventListener('click', togglePause);
-            document.getElementById('reset-btn').addEventListener('click', resetView);
-            document.getElementById('speed-up-btn').addEventListener('click', toggleSpeed);
+            // Close modal on overlay click
+            document.getElementById('planet-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+            
+            // Close modal on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
         }
 
         function updateLanguage() {
-            const t = translations[currentLang];
-            
-            // Update text content
-            document.getElementById('main-title').textContent = t.title;
-            document.getElementById('subtitle').textContent = t.subtitle;
-            document.getElementById('pause-text').textContent = isPaused ? t.controls.resume : t.controls.pause;
-            document.getElementById('reset-text').textContent = t.controls.reset;
-            document.getElementById('speed-text').textContent = isSpedUp ? t.controls.normalSpeed : t.controls.speedUp;
-            document.getElementById('placeholder-title').textContent = t.placeholderTitle;
-            document.getElementById('placeholder-text').textContent = t.placeholderText;
-            document.getElementById('add-info-title').textContent = t.addInfoTitle;
-            document.getElementById('credits').textContent = t.credits;
+            // Update UI text
+            document.querySelector('h1').textContent = translations[currentLang].title;
+            document.getElementById('subtitle').textContent = translations[currentLang].subtitle;
+            document.getElementById('credits').textContent = translations[currentLang].credits;
             
             // Update language buttons
             document.getElementById('lang-en').classList.toggle('active', currentLang === 'en');
             document.getElementById('lang-id').classList.toggle('active', currentLang === 'id');
             
-            // Update placeholder title
-            document.getElementById('placeholder-title').textContent = t.placeholderTitle;
+            // Update planet labels
+            updatePlanetLabels();
             
-            // If a planet is selected, update its info
+            // Update modal if open
             if (selectedPlanet) {
                 showPlanetInfo(selectedPlanet);
             }
-            
-            // Update fun facts
-            displayFunFacts();
-            
-            // Update control text
-            document.getElementById('pause-text').textContent = isPaused ? t.controls.resume : t.controls.pause;
-            document.getElementById('speed-text').textContent = isSpedUp ? t.controls.normalSpeed : t.controls.speedUp;
+        }
+
+        function updatePlanetLabels() {
+            const planets = document.querySelectorAll('.planet');
+            planets.forEach(planet => {
+                const planetName = planet.dataset.planet;
+                const label = planet.querySelector('.planet-label');
+                if (label) {
+                    label.textContent = translations[currentLang].planets[planetName].name;
+                }
+            });
         }
 
         function showPlanetInfo(planet) {
             const t = translations[currentLang];
             const info = t.planets[planet];
-            const container = document.getElementById('planet-info-container');
-            const placeholder = document.getElementById('placeholder');
+            const modal = document.getElementById('planet-modal');
             
-            // Hide placeholder
-            placeholder.style.display = 'none';
+            // Update modal content
+            document.getElementById('modal-title').textContent = info.name;
+            document.getElementById('key-facts-title').textContent = t.keyFactsTitle;
+            document.getElementById('composition-title').textContent = t.compositionTitle;
+            document.getElementById('interesting-facts-title').textContent = t.interestingFactsTitle;
+            document.getElementById('curiosities-title').textContent = t.curiositiesTitle;
             
-            // Create info HTML
-            let html = `
-                <div class="info-header">
-                    <h2 class="info-title">${info.name}</h2>
-                    <button class="close-btn" onclick="closeInfoPanel()">✕</button>
+            // Update visual
+            const visual = document.getElementById('planet-visual');
+            visual.style.background = info.gradient;
+            
+            // Update stats grid
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-label">${currentLang === 'en' ? 'Type' : 'Tipe'}</div>
+                    <div class="stat-value">${info.type}</div>
                 </div>
-                <div class="planet-image-container">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/${getWikiImage(planet)}" 
-                         alt="${info.name}" class="planet-large-image">
+                <div class="stat-item">
+                    <div class="stat-label">${currentLang === 'en' ? 'Diameter' : 'Diameter'}</div>
+                    <div class="stat-value">${info.diameter}</div>
                 </div>
-                <div class="info-content">
-                    <div class="facts-section">
-                        <h3 class="section-title">${currentLang === 'en' ? 'Key Facts' : 'Fakta Utama'}</h3>
-                        <ul>
-                            <li><strong>${currentLang === 'en' ? 'Type:' : 'Tipe:'}</strong> ${info.type}</li>
-                            <li><strong>${currentLang === 'en' ? 'Diameter:' : 'Diameter:'}</strong> ${info.diameter}</li>
-                            <li><strong>${currentLang === 'en' ? 'Distance from Sun:' : 'Jarak dari Matahari:'}</strong> ${info.distance || 'N/A'}</li>
-                            <li><strong>${currentLang === 'en' ? 'Orbital Period:' : 'Periode Orbit:'}</strong> ${info.orbitalPeriod || 'N/A'}</li>
-                            <li><strong>${currentLang === 'en' ? 'Day Length:' : 'Panjang Hari:'}</strong> ${info.dayLength || 'N/A'}</li>
-                            <li><strong>${currentLang === 'en' ? 'Temperature:' : 'Suhu:'}</strong> ${info.surfaceTemp || info.temp || 'N/A'}</li>
-                            <li><strong>${currentLang === 'en' ? 'Moons:' : 'Bulan:'}</strong> ${info.moons || 'N/A'}</li>
-                            <li><strong>${currentLang === 'en' ? 'Gravity:' : 'Gravitas:'}</strong> ${info.gravity || 'N/A'}</li>
-                            ${info.pressure ? `<li><strong>${currentLang === 'en' ? 'Pressure:' : 'Tekanan:'}</strong> ${info.pressure}</li>` : ''}
-                        </ul>
-                    </div>
-                    
-                    <div class="composition-section">
-                        <h3 class="section-title">${currentLang === 'en' ? 'Composition' : 'Komposisi'}</h3>
-                        <p>${info.composition}</p>
-                    </div>
-                    
-                    <div class="facts-section">
-                        <h3 class="section-title">${currentLang === 'en' ? 'Interesting Facts' : 'Fakta Menarik'}</h3>
-                        <ul>
-                            ${info.facts.map(fact => `<li>${fact}</li>`).join('')}
-                        </ul>
-                    </div>
-                    
-                    ${info.curiosities ? `
-                    <div class="curiosities-section">
-                        <h3 class="section-title">${currentLang === 'en' ? 'Cosmic Curiosities' : 'Keingintahuan Kosmik'}</h3>
-                        <ul>
-                            ${info.curiosities.map(curiosity => `<li>${curiosity}</li>`).join('')}
-                        </ul>
-                    </div>
-                    ` : ''}
+                <div class="stat-item">
+                    <div class="stat-label">${currentLang === 'en' ? 'Distance' : 'Jarak'}</div>
+                    <div class="stat-value">${info.distance}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">${currentLang === 'en' ? 'Orbit' : 'Orbit'}</div>
+                    <div class="stat-value">${info.orbitalPeriod}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">${currentLang === 'en' ? 'Temp' : 'Suhu'}</div>
+                    <div class="stat-value">${info.temperature}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">${currentLang === 'en' ? 'Moons' : 'Bulan'}</div>
+                    <div class="stat-value">${info.moons}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">${currentLang === 'en' ? 'Gravity' : 'Gravitas'}</div>
+                    <div class="stat-value">${info.gravity}</div>
                 </div>
             `;
             
-            container.innerHTML = html;
+            // Update composition
+            document.getElementById('composition-content').textContent = info.composition;
             
-            // Add animation to the new content
-            container.style.opacity = '0';
-            setTimeout(() => {
-                container.style.transition = 'opacity 0.5s ease';
-                container.style.opacity = '1';
-            }, 10);
-        }
-
-        function getWikiImage(planet) {
-            const images = {
-                sun: '9/99/The_Sun_in_visible_light.jpg',
-                mercury: '3/30/Mercury_in_color_-_Prockter07_centered.jpg',
-                venus: '5/54/Venus_-_Magellan_-_C1-MIDR.jpg',
-                earth: '9/97/The_Earth_seen_from_Apollo_17.jpg',
-                mars: '0/02/OSIRIS_Mars_true_color.jpg',
-                jupiter: 'e/e2/Jupiter.jpg',
-                saturn: 'c/c7/Saturn_during_Equinox.jpg',
-                uranus: '3/3d/Uranus2.jpg',
-                neptune: '5/56/Neptune_Full.jpg'
-            };
-            return images[planet];
-        }
-
-        function closeInfoPanel() {
-            const container = document.getElementById('planet-info-container');
-            const placeholder = document.getElementById('placeholder');
+            // Update facts
+            const factsList = document.getElementById('facts-list');
+            factsList.innerHTML = info.facts.map(fact => `<li>${fact}</li>`).join('');
             
-            container.style.opacity = '0';
-            setTimeout(() => {
-                container.innerHTML = '';
-                placeholder.style.display = 'flex';
-                container.style.opacity = '1';
-                selectedPlanet = null;
-            }, 300);
-        }
-
-        function togglePause() {
-            isPaused = !isPaused;
-            const t = translations[currentLang];
+            // Update curiosities
+            const curiositiesList = document.getElementById('curiosities-list');
+            const curiositiesSection = document.getElementById('curiosities-section');
             
-            // Update button text
-            document.getElementById('pause-text').textContent = isPaused ? t.controls.resume : t.controls.pause;
-            document.getElementById('pause-btn').classList.toggle('active', isPaused);
-            
-            // Toggle animation
-            document.querySelectorAll('.planet, .sun').forEach(body => {
-                body.classList.toggle('paused', isPaused);
-            });
-            
-            // Toggle orbit animations
-            document.querySelectorAll('.orbit').forEach(orbit => {
-                if (isPaused) {
-                    orbit.style.animationPlayState = 'paused';
-                } else {
-                    orbit.style.animationPlayState = 'running';
-                }
-            });
-        }
-
-        function resetView() {
-            // Stop any ongoing animations
-            const solarSystem = document.getElementById('solar-system');
-            solarSystem.style.transform = 'scale(1) rotate(0deg)';
-            
-            // Reset planets to initial positions
-            document.querySelectorAll('.planet').forEach(planet => {
-                const planetName = planet.dataset.planet;
-                const angle = Math.random() * 360;
-                const x = Math.cos(angle * Math.PI / 180) * orbits[planetName];
-                const y = Math.sin(angle * Math.PI / 180) * orbits[planetName];
-                planet.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-            });
-            
-            // Reset speed
-            isSpedUp = false;
-            updateSpeed();
-            
-            // Close info panel if open
-            if (selectedPlanet) {
-                closeInfoPanel();
+            if (info.curiosities && info.curiosities.length > 0) {
+                curiositiesList.innerHTML = info.curiosities.map(curiosity => `<li>${curiosity}</li>`).join('');
+                curiositiesSection.style.display = 'block';
+            } else {
+                curiositiesSection.style.display = 'none';
             }
+            
+            // Show modal
+            modal.classList.add('active');
+            selectedPlanet = planet;
+            
+            // Update planet labels to show selected planet name
+            updatePlanetLabels();
         }
 
-        function toggleSpeed() {
-            isSpedUp = !isSpedUp;
-            updateSpeed();
+        function closeModal() {
+            const modal = document.getElementById('planet-modal');
+            modal.classList.remove('active');
+            selectedPlanet = null;
         }
 
-        function updateSpeed() {
-            const t = translations[currentLang];
-            document.getElementById('speed-text').textContent = isSpedUp ? t.controls.normalSpeed : t.controls.speedUp;
-            document.getElementById('speed-up-btn').classList.toggle('active', isSpedUp);
-            
-            // Adjust orbit speeds
-            const speedFactor = isSpedUp ? 0.2 : 1; // Faster = shorter duration
-            
-            document.querySelectorAll('.orbit').forEach(orbit => {
-                const baseDuration = parseFloat(getComputedStyle(orbit).animationDuration);
-                orbit.style.animationDuration = `${baseDuration * speedFactor}s`;
-            });
-            
-            // Adjust planet rotations
-            document.querySelectorAll('.planet').forEach(planet => {
-                planet.style.animationDuration = `${5 * speedFactor}s`;
-            });
-        }
-
-        function displayFunFacts() {
-            const t = translations[currentLang];
-            const container = document.getElementById('fun-facts-grid');
-            
-            container.innerHTML = t.funFacts.map(fact => `
-                <div class="info-card">
-                    <h3>${fact.title}</h3>
-                    <p>${fact.content}</p>
-                </div>
-            `).join('');
-        }
-
-        // Make closeInfoPanel accessible globally
-        window.closeInfoPanel = closeInfoPanel;
+        // Make closeModal accessible globally
+        window.closeModal = closeModal;
     </script>
 </body>
 </html>
