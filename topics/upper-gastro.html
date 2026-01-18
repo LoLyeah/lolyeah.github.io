@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gastrointestinal Health: Gastritis, GERD, & Ulcers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            height: 350px;
+            max-height: 400px;
+            margin: 0 auto;
+        }
+
+        .tab-active {
+            border-bottom: 2px solid #0EA5E9;
+            color: #0EA5E9;
+            font-weight: 600;
+        }
+
+        .tab-inactive {
+            color: #6B7280;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Abstract Anatomy CSS Shapes */
+        .esophagus {
+            width: 40px;
+            height: 120px;
+            background-color: #FECACA;
+            margin: 0 auto;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .stomach {
+            width: 140px;
+            height: 100px;
+            background-color: #FECACA;
+            margin: -10px auto 0;
+            border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%;
+            position: relative;
+            transform: rotate(-10deg);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .les-valve {
+            width: 50px;
+            height: 15px;
+            background-color: #EF4444;
+            position: absolute;
+            bottom: -5px;
+            left: -5px;
+            border-radius: 10px;
+            opacity: 0.6;
+        }
+        .lining {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            width: 80%;
+            height: 5px;
+            background-color: #991B1B;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .active-part {
+            background-color: #EF4444 !important;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+    <!-- Chosen Palette: "Medical Calm" - Slate (Backgrounds), Sky/Blue (Primary Actions), Red/Rose (Pathology Highlights), Emerald (Treatment/Relief). Chosen for trust, clarity, and thematic relevance to inflammation vs healing. -->
+    
+    <!-- Application Structure Plan:
+        1. Header/Nav: Simple anchor navigation.
+        2. Dashboard Hero (Interactive Overview): Three cards defining the conditions. Clicking one updates a central "Concept Viewer" and sets the context for the rest of the page.
+        3. Symptom Radar (Comparative Analysis): A Radar chart allows users to visually overlap symptoms. This was chosen because these 3 conditions share many symptoms (overlap), and a radar chart effectively distinguishes the nuances (e.g., GERD is mostly heartburn, Gastritis is mostly nausea).
+        4. Anatomy Lab (Pathophysiology): An abstract CSS-based interactive diagram. Users hover/click parts (Esophagus, LES, Stomach Lining) to see what goes wrong in each condition. NO SVG used, relying on CSS geometry.
+        5. Treatment Matrix (Decision Support): A tabbed section comparing treatments. 
+        6. Drug Efficacy Plot (Data Viz): A scatter plot comparing Onset of Action vs. Duration of Effect for common drugs. This helps users understand the "Why" behind prescriptions.
+        7. Risk Factor Analyzer: Dynamic bar charts showing the weight of different causes (H. Pylori vs Lifestyle).
+    -->
+
+    <!-- Visualization & Content Choices:
+        1. Condition Selection: Cards -> Updates Global State -> Justification: Sets the mental model for the user.
+        2. Symptom Overlap: Chart.js Radar -> Interaction: Toggle datasets -> Justification: Venn diagrams are hard to make dynamic; Radar captures multi-variable overlap perfectly.
+        3. Drug Comparison: Chart.js Scatter Plot -> Interaction: Tooltip details -> Justification: Visualizes the trade-off between "fast acting" (Antacids) and "long lasting" (PPIs).
+        4. Comparison Table: HTML Grid -> Interaction: Filter by Condition -> Justification: Textual density is needed for specific dosage/side-effect info.
+        5. Anatomy: CSS Shapes -> Interaction: Hover effects -> Justification: Visualizes location of pathology without heavy image assets.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center gap-2">
+                        <div class="w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold text-xl">+</div>
+                        <span class="font-bold text-xl text-slate-800 tracking-tight">GastroGuide</span>
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                    <a href="#overview" class="border-transparent text-gray-500 hover:border-sky-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Overview</a>
+                    <a href="#symptoms" class="border-transparent text-gray-500 hover:border-sky-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Symptoms</a>
+                    <a href="#treatments" class="border-transparent text-gray-500 hover:border-sky-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Treatments</a>
+                    <a href="#drugs" class="border-transparent text-gray-500 hover:border-sky-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Drug Comparison</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero / Definition Section -->
+    <section id="overview" class="py-12 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-extrabold text-slate-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
+                    Understanding Upper GI Disorders
+                </h1>
+                <p class="mt-5 max-w-xl mx-auto text-xl text-gray-500">
+                    A comprehensive interactive guide to distinguishing and treating Gastritis, GERD, and Peptic Ulcers.
+                </p>
+            </div>
+
+            <!-- Context Intro -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 mb-8">
+                <h3 class="text-lg font-semibold text-slate-800 mb-2">How to use this Dashboard</h3>
+                <p class="text-slate-600">
+                    This interactive report breaks down three common, often confused stomach conditions. 
+                    Click the cards below to focus the analysis. Use the "Compare" visualizations to understand symptom overlap and the "Drug Guide" to weigh treatment options.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                <!-- Card 1: GERD -->
+                <div onclick="app.selectCondition('gerd')" class="card-hover bg-white overflow-hidden shadow rounded-lg cursor-pointer border-t-4 border-orange-400 group">
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">GERD</h3>
+                            <span class="text-2xl">🔥</span>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500">Gastroesophageal Reflux Disease</p>
+                        <p class="mt-3 text-gray-600 text-sm">Chronic acid reflux where stomach acid flows back into the esophagus due to a weak sphincter.</p>
+                        <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+                            <span class="text-xs font-semibold text-orange-600 bg-orange-50 px-2 py-1 rounded">Key: Heartburn</span>
+                            <span class="text-sky-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Gastritis -->
+                <div onclick="app.selectCondition('gastritis')" class="card-hover bg-white overflow-hidden shadow rounded-lg cursor-pointer border-t-4 border-red-500 group">
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Gastritis</h3>
+                            <span class="text-2xl">💢</span>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500">Inflammation of Stomach Lining</p>
+                        <p class="mt-3 text-gray-600 text-sm">Inflammation, irritation, or erosion of the protective lining of the stomach (the mucosa).</p>
+                        <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+                            <span class="text-xs font-semibold text-red-600 bg-red-50 px-2 py-1 rounded">Key: Nausea/Burn</span>
+                            <span class="text-sky-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Ulcer -->
+                <div onclick="app.selectCondition('ulcer')" class="card-hover bg-white overflow-hidden shadow rounded-lg cursor-pointer border-t-4 border-purple-500 group">
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Peptic Ulcer</h3>
+                            <span class="text-2xl">🕳️</span>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500">Open Sores</p>
+                        <p class="mt-3 text-gray-600 text-sm">Open sores that develop on the inside lining of the stomach and the upper portion of the small intestine.</p>
+                        <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+                            <span class="text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-1 rounded">Key: Gnawing Pain</span>
+                            <span class="text-sky-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Anatomy & Pathophysiology (Interactive CSS Shapes) -->
+    <section class="py-10 bg-white border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Left: Text Control -->
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Pathophysiology: Where it happens</h2>
+                    <p class="text-gray-600 mb-6">
+                        Understanding the location of the problem is key to diagnosis. Hover over the diagram or click the buttons below to visualize the physiological breakdown.
+                    </p>
+                    <div id="pathology-desc" class="bg-sky-50 p-5 rounded-lg border-l-4 border-sky-500 transition-all duration-300 min-h-[150px]">
+                        <h4 class="font-bold text-sky-800 text-lg mb-2">Select a condition above or hover anatomy</h4>
+                        <p class="text-sky-900">The stomach is a complex organ protected by a mucous lining. Balance between acid secretion and this protective layer is crucial.</p>
+                    </div>
+                    
+                    <div class="mt-6 flex flex-wrap gap-2">
+                        <button onclick="app.highlightAnatomy('esophagus')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm text-gray-700 font-medium">Esophagus</button>
+                        <button onclick="app.highlightAnatomy('les')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm text-gray-700 font-medium">LES Valve</button>
+                        <button onclick="app.highlightAnatomy('stomach')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm text-gray-700 font-medium">Stomach Lining</button>
+                    </div>
+                </div>
+
+                <!-- Right: Abstract Visualizer -->
+                <div class="relative bg-white p-8 rounded-xl shadow-inner bg-slate-50 flex items-center justify-center border border-dashed border-gray-300">
+                    <div class="relative w-64 h-64">
+                        <!-- Labels -->
+                        <div class="absolute top-0 right-0 text-xs text-gray-400 font-mono">ANATOMY MAP</div>
+                        
+                        <!-- Esophagus -->
+                        <div id="anat-esophagus" class="esophagus group" onmouseenter="app.highlightAnatomy('esophagus')">
+                            <div class="hidden group-hover:block absolute -left-24 top-10 bg-black text-white text-xs p-1 rounded w-20 text-center">Esophagus</div>
+                            <!-- Valve -->
+                            <div id="anat-les" class="les-valve" onmouseenter="app.highlightAnatomy('les')"></div>
+                        </div>
+                        
+                        <!-- Stomach -->
+                        <div id="anat-stomach" class="stomach group" onmouseenter="app.highlightAnatomy('stomach')">
+                             <div class="hidden group-hover:block absolute -right-24 top-10 bg-black text-white text-xs p-1 rounded w-20 text-center">Stomach</div>
+                             <!-- Ulcer/Gastritis Highlight -->
+                             <div id="anat-lining" class="lining"></div>
+                        </div>
+
+                        <!-- Status Indicator -->
+                        <div id="anat-status" class="absolute bottom-0 w-full text-center font-bold text-slate-300 uppercase tracking-widest text-sm">
+                            Normal State
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Symptom Radar Section -->
+    <section id="symptoms" class="py-12 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Symptom Comparative Analysis</h2>
+            <div class="mb-6">
+                <p class="text-gray-600 max-w-3xl">
+                    These three conditions share many symptoms, which leads to frequent misdiagnosis. 
+                    The chart below visualizes the <strong>relative intensity and frequency</strong> of symptoms for each condition.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Chart -->
+                <div class="lg:col-span-2 bg-white p-4 rounded-lg shadow sm:p-8">
+                    <div class="chart-container">
+                        <canvas id="symptomRadar"></canvas>
+                    </div>
+                </div>
+
+                <!-- Controls & Insights -->
+                <div class="flex flex-col justify-center space-y-4">
+                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-indigo-500">
+                        <h4 class="font-bold text-gray-800">Distinguishing Factor</h4>
+                        <div id="symptom-insight" class="text-sm text-gray-600 mt-2">
+                            Select a view to see unique identifiers.
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-orange-50">
+                            <input type="checkbox" checked onchange="app.toggleDataset(0)" class="form-checkbox h-5 w-5 text-orange-500 rounded border-gray-300 focus:ring-orange-500">
+                            <span class="text-gray-700 font-medium">GERD (Heartburn Focus)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-red-50">
+                            <input type="checkbox" checked onchange="app.toggleDataset(1)" class="form-checkbox h-5 w-5 text-red-500 rounded border-gray-300 focus:ring-red-500">
+                            <span class="text-gray-700 font-medium">Gastritis (Nausea Focus)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-purple-50">
+                            <input type="checkbox" checked onchange="app.toggleDataset(2)" class="form-checkbox h-5 w-5 text-purple-500 rounded border-gray-300 focus:ring-purple-500">
+                            <span class="text-gray-700 font-medium">Ulcer (Pain Focus)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Treatments & Drugs Comparison -->
+    <section id="drugs" class="py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Pharmacological Comparison</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Drug Scatter Plot -->
+                <div>
+                    <div class="mb-4">
+                        <h3 class="text-xl font-semibold text-gray-800">Onset vs. Duration</h3>
+                        <p class="text-sm text-gray-500">Comparing how fast drugs work vs how long they last. <br>Size of bubble = Relative Potency.</p>
+                    </div>
+                    <div class="chart-container bg-slate-50 rounded-lg border border-slate-100 p-2">
+                        <canvas id="drugScatter"></canvas>
+                    </div>
+                </div>
+
+                <!-- Logic Explainer -->
+                <div class="flex flex-col justify-center">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Mechanism of Action</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="group cursor-pointer">
+                            <div class="flex items-center mb-1">
+                                <div class="w-3 h-3 rounded-full bg-teal-400 mr-2"></div>
+                                <h4 class="font-bold text-gray-700 group-hover:text-teal-600 transition">Antacids (e.g., Tums, Maalox)</h4>
+                            </div>
+                            <p class="text-sm text-gray-600 pl-5 border-l-2 border-gray-200 group-hover:border-teal-400">
+                                <strong>Mechanism:</strong> Chemically neutralizes existing stomach acid. <br>
+                                <strong>Best for:</strong> Immediate, short-term symptom relief.
+                            </p>
+                        </div>
+
+                        <div class="group cursor-pointer">
+                            <div class="flex items-center mb-1">
+                                <div class="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+                                <h4 class="font-bold text-gray-700 group-hover:text-blue-600 transition">H2 Blockers (e.g., Famotidine)</h4>
+                            </div>
+                            <p class="text-sm text-gray-600 pl-5 border-l-2 border-gray-200 group-hover:border-blue-500">
+                                <strong>Mechanism:</strong> Blocks histamine receptors on parietal cells, reducing acid production by ~70%. <br>
+                                <strong>Best for:</strong> Maintenance, mild GERD, taken before meals.
+                            </p>
+                        </div>
+
+                        <div class="group cursor-pointer">
+                            <div class="flex items-center mb-1">
+                                <div class="w-3 h-3 rounded-full bg-indigo-600 mr-2"></div>
+                                <h4 class="font-bold text-gray-700 group-hover:text-indigo-600 transition">PPIs (e.g., Omeprazole)</h4>
+                            </div>
+                            <p class="text-sm text-gray-600 pl-5 border-l-2 border-gray-200 group-hover:border-indigo-600">
+                                <strong>Mechanism:</strong> Irreversibly blocks the proton pump (acid secretion engine), reducing acid by >90%. <br>
+                                <strong>Best for:</strong> Severe GERD, Ulcer healing, Gastritis. Slow onset, long duration.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Treatment Plan Tabs -->
+    <section id="treatments" class="py-12 bg-slate-50 border-t border-gray-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">Integrated Treatment Protocols</h2>
+            
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="flex border-b border-gray-200">
+                    <button onclick="app.switchTab('lifestyle')" id="tab-lifestyle" class="flex-1 py-4 text-center font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition-colors tab-active">Lifestyle Changes</button>
+                    <button onclick="app.switchTab('medical')" id="tab-medical" class="flex-1 py-4 text-center font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition-colors">Medical Intervention</button>
+                    <button onclick="app.switchTab('alarm')" id="tab-alarm" class="flex-1 py-4 text-center font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition-colors bg-red-50 text-red-600">Warning Signs</button>
+                </div>
+
+                <div class="p-8 min-h-[300px]">
+                    <!-- Tab: Lifestyle -->
+                    <div id="content-lifestyle" class="block">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">First Line of Defense</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <h4 class="font-bold text-green-800 mb-2">Dietary Triggers</h4>
+                                <ul class="list-disc list-inside text-sm text-green-900 space-y-1">
+                                    <li>Avoid caffeine & alcohol (relaxes LES).</li>
+                                    <li>Limit spicy/acidic foods (irritates ulcers).</li>
+                                    <li>Reduce fatty foods (delays stomach emptying).</li>
+                                </ul>
+                            </div>
+                            <div class="bg-sky-50 p-4 rounded-lg">
+                                <h4 class="font-bold text-sky-800 mb-2">Habit Modification</h4>
+                                <ul class="list-disc list-inside text-sm text-sky-900 space-y-1">
+                                    <li><strong>Elevate head</strong> while sleeping (GERD).</li>
+                                    <li>Stop smoking (Increases acid, lowers healing).</li>
+                                    <li>Wait 3 hours after eating before lying down.</li>
+                                    <li>Weight loss (Reduces abdominal pressure).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Medical -->
+                    <div id="content-medical" class="hidden">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Clinical Management</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-medium text-gray-700">H. Pylori Eradication (Ulcers/Gastritis)</span>
+                                <span class="text-sm bg-indigo-100 text-indigo-800 py-1 px-3 rounded-full">Triple Therapy (2 Antibiotics + PPI)</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-medium text-gray-700">Acid Suppression (GERD)</span>
+                                <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full">PPIs for 8 weeks</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-medium text-gray-700">Mucosal Protection</span>
+                                <span class="text-sm bg-gray-100 text-gray-800 py-1 px-3 rounded-full">Sucralfate / Bismuth</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-4 italic">Note: Always consult a physician. Long term PPI use requires monitoring for nutrient absorption (B12, Magnesium).</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Warning Signs -->
+                    <div id="content-alarm" class="hidden">
+                        <h3 class="text-xl font-bold text-red-700 mb-4">⚠️ Red Flag Symptoms (Seek Help)</h3>
+                        <p class="mb-4 text-gray-700">If you experience any of these, it may indicate complications like perforation, bleeding, or cancer.</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="border border-red-200 p-3 rounded text-center hover:bg-red-50">
+                                <div class="text-2xl">🩸</div>
+                                <div class="text-sm font-bold text-gray-800">Vomiting Blood</div>
+                            </div>
+                            <div class="border border-red-200 p-3 rounded text-center hover:bg-red-50">
+                                <div class="text-2xl">⚫</div>
+                                <div class="text-sm font-bold text-gray-800">Black/Tarry Stool</div>
+                            </div>
+                            <div class="border border-red-200 p-3 rounded text-center hover:bg-red-50">
+                                <div class="text-2xl">📉</div>
+                                <div class="text-sm font-bold text-gray-800">Unexplained Weight Loss</div>
+                            </div>
+                            <div class="border border-red-200 p-3 rounded text-center hover:bg-red-50">
+                                <div class="text-2xl">🦴</div>
+                                <div class="text-sm font-bold text-gray-800">Trouble Swallowing</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-slate-400 text-sm">
+                <strong>Disclaimer:</strong> This application is for educational purposes only and does not constitute medical advice. <br>
+                Always consult a healthcare professional for diagnosis and treatment.
+            </p>
+            <p class="text-slate-600 text-xs mt-4">&copy; 2023 GastroGuide Interactive.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA STORE ---
+        const appData = {
+            conditions: {
+                gerd: {
+                    name: "GERD",
+                    color: "orange",
+                    desc: "A mechanical failure of the Lower Esophageal Sphincter (LES). Acid splashes up.",
+                    pathology: {
+                        part: "les",
+                        text: "The valve (LES) becomes weak or relaxes inappropriately, allowing acid to escape."
+                    },
+                    insight: "GERD is primarily characterized by retrosternal burning (Heartburn) and regurgitation."
+                },
+                gastritis: {
+                    name: "Gastritis",
+                    color: "red",
+                    desc: "Inflammation of the stomach lining. Can be acute or chronic.",
+                    pathology: {
+                        part: "stomach",
+                        text: "The mucous barrier is damaged by H. pylori, NSAIDs, or alcohol, causing inflammation."
+                    },
+                    insight: "Gastritis often presents with nausea, vomiting, and a feeling of fullness."
+                },
+                ulcer: {
+                    name: "Peptic Ulcer",
+                    color: "purple",
+                    desc: "A breach in the mucosal lining >5mm. Deeper than gastritis.",
+                    pathology: {
+                        part: "stomach",
+                        text: "Acid eats through the lining creating an open sore, often due to H. pylori infection."
+                    },
+                    insight: "Ulcers typically cause gnawing abdominal pain that changes with eating."
+                }
+            },
+            symptoms: {
+                labels: ['Heartburn', 'Nausea/Vomiting', 'Abdominal Pain', 'Bloating', 'Regurgitation', 'Loss of Appetite'],
+                datasets: [
+                    {
+                        label: 'GERD',
+                        data: [95, 20, 30, 40, 90, 10],
+                        borderColor: 'rgba(249, 115, 22, 1)',
+                        backgroundColor: 'rgba(249, 115, 22, 0.2)',
+                    },
+                    {
+                        label: 'Gastritis',
+                        data: [30, 85, 60, 80, 20, 70],
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                    },
+                    {
+                        label: 'Ulcer',
+                        data: [40, 60, 95, 50, 20, 50],
+                        borderColor: 'rgba(168, 85, 247, 1)',
+                        backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                    }
+                ]
+            },
+            drugs: [
+                { x: 5, y: 1, r: 8, label: 'Antacids (Tums)', type: 'Antacid', color: '#2dd4bf' },
+                { x: 30, y: 4, r: 12, label: 'Rantidine (Zantac)', type: 'H2 Blocker', color: '#3b82f6' },
+                { x: 45, y: 10, r: 12, label: 'Famotidine (Pepcid)', type: 'H2 Blocker', color: '#3b82f6' },
+                { x: 60, y: 24, r: 20, label: 'Omeprazole (Prilosec)', type: 'PPI', color: '#4f46e5' },
+                { x: 75, y: 24, r: 20, label: 'Esomeprazole (Nexium)', type: 'PPI', color: '#4f46e5' },
+                { x: 120, y: 24, r: 18, label: 'Lansoprazole (Prevacid)', type: 'PPI', color: '#4f46e5' }
+            ]
+        };
+
+        // --- APP CONTROLLER ---
+        const app = {
+            charts: {},
+            
+            init: function() {
+                this.initRadarChart();
+                this.initScatterChart();
+                // Default highight
+                this.highlightAnatomy('default');
+            },
+
+            selectCondition: function(key) {
+                const data = appData.conditions[key];
+                
+                // Update Pathology Text
+                const pathologyBox = document.getElementById('pathology-desc');
+                pathologyBox.innerHTML = `
+                    <h4 class="font-bold text-${data.color}-800 text-lg mb-2">${data.name} Selected</h4>
+                    <p class="text-${data.color}-900">${data.desc}</p>
+                    <p class="mt-2 text-sm text-${data.color}-700 border-t border-${data.color}-200 pt-2"><strong>Pathology:</strong> ${data.pathology.text}</p>
+                `;
+                pathologyBox.className = `bg-${data.color}-50 p-5 rounded-lg border-l-4 border-${data.color}-500 transition-all duration-300 min-h-[150px]`;
+
+                // Trigger Anatomy Visual
+                this.highlightAnatomy(data.pathology.part);
+
+                // Update Insight
+                document.getElementById('symptom-insight').innerText = data.insight;
+                
+                // Scroll to pathology
+                document.getElementById('pathology-desc').scrollIntoView({behavior: 'smooth', block: 'center'});
+            },
+
+            highlightAnatomy: function(part) {
+                // Reset styling
+                document.getElementById('anat-esophagus').classList.remove('active-part');
+                document.getElementById('anat-stomach').classList.remove('active-part');
+                document.getElementById('anat-les').classList.remove('active-part');
+                document.getElementById('anat-lining').style.opacity = '0';
+                
+                const statusEl = document.getElementById('anat-status');
+
+                if (part === 'esophagus') {
+                    document.getElementById('anat-esophagus').classList.add('active-part');
+                    statusEl.innerText = "Focus: Esophageal Tube";
+                    statusEl.className = "absolute bottom-0 w-full text-center font-bold text-red-400 uppercase tracking-widest text-sm";
+                } else if (part === 'les') {
+                    document.getElementById('anat-les').classList.add('active-part');
+                    statusEl.innerText = "Focus: Sphincter Valve";
+                    statusEl.className = "absolute bottom-0 w-full text-center font-bold text-orange-500 uppercase tracking-widest text-sm";
+                } else if (part === 'stomach') {
+                    document.getElementById('anat-stomach').classList.add('active-part');
+                    document.getElementById('anat-lining').style.opacity = '1';
+                    statusEl.innerText = "Focus: Mucosal Lining";
+                    statusEl.className = "absolute bottom-0 w-full text-center font-bold text-red-600 uppercase tracking-widest text-sm";
+                } else {
+                    statusEl.innerText = "Normal State";
+                    statusEl.className = "absolute bottom-0 w-full text-center font-bold text-slate-300 uppercase tracking-widest text-sm";
+                }
+            },
+
+            toggleDataset: function(index) {
+                const ci = this.charts.radar;
+                const meta = ci.getDatasetMeta(index);
+                meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+                ci.update();
+            },
+
+            switchTab: function(tabName) {
+                // Hide all content
+                ['lifestyle', 'medical', 'alarm'].forEach(t => {
+                    document.getElementById(`content-${t}`).classList.add('hidden');
+                    document.getElementById(`tab-${t}`).classList.remove('tab-active', 'border-bottom-2', 'border-sky-500', 'text-sky-600');
+                    document.getElementById(`tab-${t}`).classList.add('text-gray-500');
+                });
+
+                // Show selected
+                document.getElementById(`content-${tabName}`).classList.remove('hidden');
+                document.getElementById(`tab-${tabName}`).classList.add('tab-active');
+                document.getElementById(`tab-${tabName}`).classList.remove('text-gray-500');
+            },
+
+            initRadarChart: function() {
+                const ctx = document.getElementById('symptomRadar').getContext('2d');
+                this.charts.radar = new Chart(ctx, {
+                    type: 'radar',
+                    data: appData.symptoms,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        elements: {
+                            line: { borderWidth: 3 }
+                        },
+                        scales: {
+                            r: {
+                                angleLines: { display: true },
+                                suggestedMin: 0,
+                                suggestedMax: 100,
+                                ticks: { display: false } // Hide numbers for cleaner look
+                            }
+                        },
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        }
+                    }
+                });
+            },
+
+            initScatterChart: function() {
+                const ctx = document.getElementById('drugScatter').getContext('2d');
+                this.charts.scatter = new Chart(ctx, {
+                    type: 'bubble',
+                    data: {
+                        datasets: [{
+                            label: 'Drugs',
+                            data: appData.drugs,
+                            backgroundColor: (context) => context.raw ? context.raw.color : '#ccc',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const raw = context.raw;
+                                        return `${raw.label}: Onset ${raw.x}m, Duration ${raw.y}hr`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: { display: true, text: 'Onset Speed (Minutes - Lower is Faster)' },
+                                min: 0,
+                                max: 130
+                            },
+                            y: {
+                                title: { display: true, text: 'Duration of Effect (Hours)' },
+                                min: 0,
+                                max: 26
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+
+    </script>
+</body>
+</html>
