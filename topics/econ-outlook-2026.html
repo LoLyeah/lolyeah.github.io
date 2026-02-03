@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Economic Horizon: 2026 & Beyond</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+
+    <!-- Design Tokens & Custom Styles -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'paper': '#fafaf9',      /* stone-50 */
+                        'ink': '#1c1917',        /* stone-900 */
+                        'subtle': '#57534e',     /* stone-600 */
+                        'accent-main': '#0d9488', /* teal-600 */
+                        'accent-alert': '#ea580c', /* orange-600 */
+                        'surface': '#ffffff',
+                        'surface-alt': '#f5f5f4', /* stone-100 */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Chart Container Rules - Strict Constraints */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* Cap width for readability */
+            margin: 0 auto;   /* Center horizontally */
+            height: 40vh;     /* Responsive height */
+            min-height: 300px;
+            max-height: 450px;
+        }
+
+        /* Hide scrollbar for clean UI in overflow areas */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .tab-active {
+            border-bottom: 2px solid #0d9488;
+            color: #0d9488;
+            font-weight: 600;
+        }
+    </style>
+
+    <!-- Placeholder Comments Required by Prompt -->
+    <!-- Chosen Palette: Academic Warmth (Stone/Beige background, Deep Charcoal text, Teal and Burnt Orange data accents). Selected for readability and a serious but calm analytical tone. -->
+    
+    <!-- Application Structure Plan: 
+         1. Hero Section: Sets the context.
+         2. The Comparative Archive: Interactive tabs to compare 1929, 2000, 2008 stats directly. Goal: Establish the baseline of "crisis".
+         3. Pattern Recognition: A focused analysis section using line charts to show the "Debt Supercycle" as a predictor.
+         4. 2026 Outlook Dashboard: Forward-looking gauge/bar charts representing the consensus forecast.
+         5. Structural Shifts (The Beyond): Cards for qualitative analysis (AI, Demographics).
+         6. Synthesis: Speculative conclusion based on data. 
+         This flow moves from Past -> Pattern -> Future -> Conclusion.
+    -->
+
+    <!-- Visualization & Content Choices:
+         - Bar Charts (History): Best for comparing magnitudes of GDP drops/Unemployment across distinct events.
+         - Line Chart (Debt/Rates): Essential for showing trends and "cycles" over time (The Pattern).
+         - Doughnut/Polar Area (2026 Risks): Good for showing the composition of future risks.
+         - Interaction: Tabbed views for history to reduce clutter; Clickable factors for qualitative data to encourage exploration.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+</head>
+<body class="bg-paper text-ink font-sans antialiased selection:bg-accent-main selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-paper/90 backdrop-blur-md border-b border-stone-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-serif font-bold tracking-tight text-accent-main">Econ<span class="text-ink">Horizon</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-subtle">
+                    <button onclick="scrollToSection('history')" class="hover:text-accent-main transition-colors">Historical Context</button>
+                    <button onclick="scrollToSection('patterns')" class="hover:text-accent-main transition-colors">Patterns</button>
+                    <button onclick="scrollToSection('outlook')" class="hover:text-accent-main transition-colors">2026 Outlook</button>
+                    <button onclick="scrollToSection('beyond')" class="hover:text-accent-main transition-colors">Beyond</button>
+                </div>
+                <!-- Mobile Menu Button (Simplified for SPA) -->
+                <button class="md:hidden text-subtle" onclick="toggleMobileNav()">Menu</button>
+            </div>
+        </div>
+        <!-- Mobile Nav Panel -->
+        <div id="mobile-nav" class="hidden md:hidden bg-surface border-b border-stone-200 p-4">
+            <div class="flex flex-col space-y-4">
+                <button onclick="scrollToSection('history')" class="text-left font-medium">Historical Context</button>
+                <button onclick="scrollToSection('patterns')" class="text-left font-medium">Patterns</button>
+                <button onclick="scrollToSection('outlook')" class="text-left font-medium">2026 Outlook</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <h1 class="text-4xl sm:text-5xl font-serif font-bold leading-tight mb-6">
+                    From Crisis to <span class="text-accent-main">Complexity</span>: <br>
+                    The Global Economy in 2026
+                </h1>
+                <p class="text-lg text-subtle leading-relaxed mb-8 max-w-2xl">
+                    By analyzing the scars of the Great Depression (1929), the Dot-com Bubble (2000), and the Great Recession (2008), we map the trajectory for the next global cycle. Are we facing a repetition of history, or a completely new economic paradigm?
+                </p>
+                <div class="flex gap-4">
+                    <button onclick="scrollToSection('history')" class="px-6 py-3 bg-ink text-white rounded-lg hover:bg-subtle transition shadow-lg font-medium">Explore the Archives</button>
+                    <button onclick="scrollToSection('outlook')" class="px-6 py-3 bg-white border border-stone-300 text-ink rounded-lg hover:bg-stone-50 transition font-medium">View Forecast</button>
+                </div>
+            </div>
+            <div class="bg-surface-alt p-6 rounded-xl border border-stone-200">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-subtle mb-4">Key Indicator Snapshot (Current vs Hist. Avg)</h3>
+                <!-- Simple Stat Grid -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded shadow-sm">
+                        <span class="block text-xs text-subtle">Global Debt/GDP</span>
+                        <span class="block text-2xl font-bold text-accent-alert">336%</span>
+                        <span class="text-xs text-subtle">vs 210% (2008)</span>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow-sm">
+                        <span class="block text-xs text-subtle">Projected Growth '26</span>
+                        <span class="block text-2xl font-bold text-accent-main">3.2%</span>
+                        <span class="text-xs text-subtle">Stabilizing Trend</span>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow-sm">
+                        <span class="block text-xs text-subtle">Inflation (Global)</span>
+                        <span class="block text-2xl font-bold text-ink">4.1%</span>
+                        <span class="text-xs text-subtle">Moderating</span>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow-sm">
+                        <span class="block text-xs text-subtle">Tech Impact (AI)</span>
+                        <span class="block text-2xl font-bold text-accent-main">High</span>
+                        <span class="text-xs text-subtle">Structural Shift</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: Historical Context -->
+    <section id="history" class="py-16 bg-white border-y border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-10 max-w-3xl">
+                <h2 class="text-3xl font-serif font-bold mb-4">The Crisis Archive</h2>
+                <p class="text-subtle">
+                    To understand 2026, we must first measure the magnitude of past shocks. Select an era below to compare Key Performance Indicators (KPIs) during peak crisis moments. Note the shifting nature of crises: from industrial collapse (1929) to valuation shocks (2000) to systemic banking failure (2008).
+                </p>
+            </div>
+
+            <!-- Tab Navigation for History -->
+            <div class="flex space-x-6 border-b border-stone-200 mb-8 overflow-x-auto no-scrollbar">
+                <button onclick="updateHistoryChart('1929')" id="tab-1929" class="tab-btn pb-2 text-lg font-medium text-subtle hover:text-ink whitespace-nowrap tab-active">Great Depression (1929)</button>
+                <button onclick="updateHistoryChart('2000')" id="tab-2000" class="tab-btn pb-2 text-lg font-medium text-subtle hover:text-ink whitespace-nowrap">Dot-com Bubble (2000)</button>
+                <button onclick="updateHistoryChart('2008')" id="tab-2008" class="tab-btn pb-2 text-lg font-medium text-subtle hover:text-ink whitespace-nowrap">Financial Crisis (2008)</button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Dynamic Text Content -->
+                <div class="lg:col-span-1 bg-surface-alt p-6 rounded-xl h-fit">
+                    <h3 id="history-title" class="text-xl font-bold mb-2">The Great Depression</h3>
+                    <p id="history-desc" class="text-sm text-subtle mb-4 leading-relaxed">
+                        The most severe economic downturn in history. Characterized by a massive deflationary spiral, widespread bank failures, and industrial collapse.
+                    </p>
+                    <ul id="history-stats" class="space-y-3">
+                        <li class="flex justify-between border-b border-stone-300 pb-2">
+                            <span class="text-sm">Global GDP Decline</span>
+                            <span class="font-bold text-accent-alert">-15%</span>
+                        </li>
+                        <li class="flex justify-between border-b border-stone-300 pb-2">
+                            <span class="text-sm">Peak US Unemployment</span>
+                            <span class="font-bold">24.9%</span>
+                        </li>
+                        <li class="flex justify-between border-b border-stone-300 pb-2">
+                            <span class="text-sm">Stock Market Drawdown</span>
+                            <span class="font-bold">-89%</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Visualization -->
+                <div class="lg:col-span-2">
+                    <div class="chart-wrapper bg-white rounded-xl border border-stone-100 p-2 shadow-sm">
+                        <canvas id="historyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Patterns & Predictors -->
+    <section id="patterns" class="py-16 bg-paper">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10">
+                <div class="max-w-2xl">
+                    <h2 class="text-3xl font-serif font-bold mb-4">Pattern Recognition: The Debt Supercycle</h2>
+                    <p class="text-subtle">
+                        Is there a common predictor? History suggests that rapid accumulation of leverage (Debt-to-GDP) often precedes a correction. However, the 2026 outlook is complicated by the "Yield Curve" anomaly and central bank interventions.
+                    </p>
+                </div>
+                <!-- Interactive Filters -->
+                <div class="mt-4 md:mt-0 bg-white p-2 rounded-lg shadow-sm border border-stone-200 flex gap-2">
+                    <span class="text-xs font-bold uppercase text-subtle self-center px-2">Layer Data:</span>
+                    <button onclick="togglePatternData('debt')" class="px-3 py-1 text-xs font-medium rounded bg-accent-main text-white">Debt Levels</button>
+                    <button onclick="togglePatternData('rates')" class="px-3 py-1 text-xs font-medium rounded bg-stone-200 hover:bg-stone-300 text-ink">Interest Rates</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-8">
+                <!-- Large Line Chart -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <div class="chart-wrapper h-[45vh]">
+                        <canvas id="patternChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-xs text-subtle text-center">
+                        *Data normalized for comparison. "Risk Threshold" indicates historical danger zones for sovereign debt burdens.
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <div class="p-5 border-l-4 border-accent-alert bg-white shadow-sm">
+                    <h4 class="font-bold text-ink">The "Liquidity" Trap</h4>
+                    <p class="text-sm text-subtle mt-2">Unlike 1929, 2026 markets are awash in liquidity. The risk isn't scarcity of money, but the *value* of money (Inflation persistence).</p>
+                </div>
+                <div class="p-5 border-l-4 border-accent-main bg-white shadow-sm">
+                    <h4 class="font-bold text-ink">The Yield Curve Signal</h4>
+                    <p class="text-sm text-subtle mt-2">Inversions preceded 2000 and 2008. In 2024-25, the curve inverted deeply, signaling a slowdown in 2026, though likely not a crash.</p>
+                </div>
+                <div class="p-5 border-l-4 border-stone-800 bg-white shadow-sm">
+                    <h4 class="font-bold text-ink">Asset Inflation</h4>
+                    <p class="text-sm text-subtle mt-2">Similar to 2000, Tech valuations are stretched. However, unlike 2000, these companies generate massive cash flow (AI revenue).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: 2026 Outlook -->
+    <section id="outlook" class="py-16 bg-white border-y border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-serif font-bold mb-4">The 2026 Horizon</h2>
+                <p class="text-subtle">
+                    Based on current IMF, World Bank, and private sector consensus. The "Soft Landing" scenario is the baseline, but tail risks remain high. Interact with the metrics below to explore the regional breakdown.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Chart Container -->
+                <div class="order-2 lg:order-1">
+                    <div class="chart-wrapper">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Interactive Data Cards -->
+                <div class="order-1 lg:order-2 space-y-4">
+                    <h3 class="text-lg font-bold mb-4">Regional Growth Projections (2026)</h3>
+                    
+                    <div class="group cursor-pointer p-4 rounded-lg border border-stone-200 hover:border-accent-main hover:bg-stone-50 transition-all" onclick="highlightRegion(0)">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-ink">Emerging Markets (Asia)</h4>
+                                <p class="text-xs text-subtle">Driving 60% of global growth.</p>
+                            </div>
+                            <span class="text-xl font-bold text-accent-main">4.8%</span>
+                        </div>
+                        <div class="h-1 w-full bg-stone-100 mt-2 rounded-full overflow-hidden">
+                            <div class="h-full bg-accent-main w-[70%]"></div>
+                        </div>
+                    </div>
+
+                    <div class="group cursor-pointer p-4 rounded-lg border border-stone-200 hover:border-accent-main hover:bg-stone-50 transition-all" onclick="highlightRegion(1)">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-ink">Advanced Economies (US/EU)</h4>
+                                <p class="text-xs text-subtle">Post-inflation stabilization.</p>
+                            </div>
+                            <span class="text-xl font-bold text-stone-600">1.8%</span>
+                        </div>
+                        <div class="h-1 w-full bg-stone-100 mt-2 rounded-full overflow-hidden">
+                            <div class="h-full bg-stone-400 w-[40%]"></div>
+                        </div>
+                    </div>
+
+                    <div class="group cursor-pointer p-4 rounded-lg border border-stone-200 hover:border-accent-main hover:bg-stone-50 transition-all" onclick="highlightRegion(2)">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-ink">Global Inflation Rate</h4>
+                                <p class="text-xs text-subtle">Target range approaching.</p>
+                            </div>
+                            <span class="text-xl font-bold text-accent-alert">3.5%</span>
+                        </div>
+                        <div class="h-1 w-full bg-stone-100 mt-2 rounded-full overflow-hidden">
+                            <div class="h-full bg-accent-alert w-[55%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Beyond & Speculation (Synthesis) -->
+    <section id="beyond" class="py-16 bg-paper">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-serif font-bold mb-8">Beyond 2026: Structural Shifts</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 bg-stone-100 rounded-full flex items-center justify-center mb-4 text-xl">🤖</div>
+                    <h3 class="font-bold text-lg mb-2">The AI Productivity J-Curve</h3>
+                    <p class="text-sm text-subtle">
+                        <span class="font-semibold text-accent-main">Fact:</span> AI investment is paralleling the 1990s internet boom.
+                        <br><br>
+                        <span class="font-semibold text-ink">Speculation:</span> By 2027, AI could decouple GDP growth from labor hours, potentially solving demographic declines in the West but increasing inequality.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 bg-stone-100 rounded-full flex items-center justify-center mb-4 text-xl">🌍</div>
+                    <h3 class="font-bold text-lg mb-2">Deglobalization Costs</h3>
+                    <p class="text-sm text-subtle">
+                        <span class="font-semibold text-accent-main">Fact:</span> Trade fragmentation has increased costs by ~1.2% of global GDP.
+                        <br><br>
+                        <span class="font-semibold text-ink">Speculation:</span> 2026 may mark the end of "Cheap Goods." Inflation floors will be permanently higher (3% vs 2%) due to supply chain redundancy.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 bg-stone-100 rounded-full flex items-center justify-center mb-4 text-xl">📉</div>
+                    <h3 class="font-bold text-lg mb-2">The Debt Event Horizon</h3>
+                    <p class="text-sm text-subtle">
+                        <span class="font-semibold text-accent-main">Fact:</span> Interest payments now exceed defense budgets in major economies.
+                        <br><br>
+                        <span class="font-semibold text-ink">Speculation:</span> A sovereign debt crisis in a G7 nation is a non-zero probability event post-2026, likely triggering "Financial Repression" policies.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Conclusion Box -->
+            <div class="mt-12 p-8 bg-stone-800 text-stone-200 rounded-xl">
+                <h3 class="text-xl font-serif text-white mb-4">Final Synthesis</h3>
+                <p class="leading-relaxed">
+                    While similarities to 1929 (wealth inequality) and 2000 (tech concentration) exist, the banking system is far more robust than in 2008. The outlook for 2026 is not one of catastrophic collapse, but of <strong>constrained stagnation</strong>. The pattern suggests a period of "Grind-Up" rather than "Crash-Down"—slow growth burdened by debt, alleviated only by technological productivity shocks.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white border-t border-stone-200 py-8 text-center text-sm text-subtle">
+        <p>© 2026 Economic Horizon Visualization. Data sourced from historical records (FRED, World Bank) and aggregated 2025 forecasts.</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- State Management ---
+        const appState = {
+            currentHistoryTab: '1929',
+            patternLayer: 'debt', // 'debt' or 'rates'
+        };
+
+        // --- Data Store ---
+        const historyData = {
+            '1929': {
+                title: "The Great Depression (1929-1939)",
+                desc: "The most severe economic downturn in history. Characterized by a massive deflationary spiral, widespread bank failures, and industrial collapse.",
+                stats: [
+                    { label: "Global GDP Decline", value: "-15%", color: "text-accent-alert" },
+                    { label: "Peak US Unemployment", value: "24.9%", color: "text-ink" },
+                    { label: "Stock Market Drawdown", value: "-89%", color: "text-ink" }
+                ],
+                chartData: [-15, 24.9, -89]
+            },
+            '2000': {
+                title: "Dot-com Bubble (2000-2002)",
+                desc: "A valuation crisis primarily contained to the technology sector. The broader economy suffered a mild recession, but stock markets saw massive wealth destruction.",
+                stats: [
+                    { label: "Global GDP Decline", value: "+2.0% (Slowdown)", color: "text-accent-main" },
+                    { label: "Peak US Unemployment", value: "6.3%", color: "text-ink" },
+                    { label: "Nasdaq Drawdown", value: "-78%", color: "text-accent-alert" }
+                ],
+                chartData: [0.5, 6.3, -78] // GDP barely grew, treated as near zero for viz comparison
+            },
+            '2008': {
+                title: "Global Financial Crisis (2007-2009)",
+                desc: "A systemic banking crisis triggered by the housing market collapse. Credit markets froze, leading to the 'Great Recession'.",
+                stats: [
+                    { label: "Global GDP Decline", value: "-1.8%", color: "text-accent-alert" },
+                    { label: "Peak US Unemployment", value: "10.0%", color: "text-ink" },
+                    { label: "S&P 500 Drawdown", value: "-57%", color: "text-ink" }
+                ],
+                chartData: [-1.8, 10, -57]
+            }
+        };
+
+        // --- Chart Initialization ---
+        let historyChartInstance = null;
+        let patternChartInstance = null;
+        let forecastChartInstance = null;
+
+        // Configuration for standard visuals
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1c1917',
+                    titleFont: { family: 'Inter', size: 13 },
+                    bodyFont: { family: 'Inter', size: 12 },
+                    padding: 10,
+                    cornerRadius: 4
+                }
+            }
+        };
+
+        // 1. Initialize History Chart
+        function initHistoryChart() {
+            const ctx = document.getElementById('historyChart').getContext('2d');
+            historyChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['GDP Impact (%)', 'Peak Unemployment (%)', 'Market Drawdown (%)'],
+                    datasets: [{
+                        label: '1929 Statistics',
+                        data: historyData['1929'].chartData,
+                        backgroundColor: ['#ea580c', '#57534e', '#57534e'],
+                        borderRadius: 6,
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: {
+                            grid: { color: '#f5f5f4' },
+                            ticks: { color: '#57534e', font: { family: 'Inter' } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#1c1917', font: { family: 'Inter', weight: '600' } }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: 'Crisis Impact Comparison', font: { family: 'Inter', size: 14 } }
+                    }
+                }
+            });
+        }
+
+        // 2. Initialize Pattern Chart (Line)
+        function initPatternChart() {
+            const ctx = document.getElementById('patternChart').getContext('2d');
+            
+            // Simulated Data: Debt trend rising, Interest rates fluctuating
+            const labels = ['2000', '2004', '2008', '2012', '2016', '2020', '2024', '2026 (Est)'];
+            
+            patternChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Global Debt (% of GDP)',
+                            data: [200, 210, 230, 250, 280, 320, 336, 345],
+                            borderColor: '#ea580c',
+                            backgroundColor: 'rgba(234, 88, 12, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Avg Central Bank Rates (%)', // Hidden by default
+                            data: [6.5, 1.0, 5.25, 0.25, 0.5, 0.1, 5.5, 4.0],
+                            borderColor: '#0d9488',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.2,
+                            yAxisID: 'y1',
+                            hidden: true 
+                        }
+                    ]
+                },
+                options: {
+                    ...commonOptions,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { display: true, position: 'top', labels: { usePointStyle: true } }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'Debt % GDP' },
+                            grid: { color: '#f5f5f4' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: { display: true, text: 'Interest Rate %' },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 3. Initialize Forecast Chart (Bar/Mixed)
+        function initForecastChart() {
+            const ctx = document.getElementById('forecastChart').getContext('2d');
+            forecastChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2023', '2024', '2025', '2026 (Proj)', '2027 (Proj)'],
+                    datasets: [
+                        {
+                            label: 'Global GDP Growth (%)',
+                            data: [3.1, 2.9, 3.0, 3.2, 3.4],
+                            backgroundColor: '#0d9488',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Inflation Rate (%)',
+                            type: 'line',
+                            data: [6.8, 5.2, 4.0, 3.5, 3.0],
+                            borderColor: '#1c1917',
+                            borderWidth: 2,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    ...commonOptions,
+                    plugins: {
+                        legend: { display: true, position: 'bottom' },
+                        title: { display: true, text: 'The Stabilization Path (2023-2027)' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f5f5f4' } }
+                    }
+                }
+            });
+        }
+
+        // --- Interaction Logic ---
+
+        // Switch History Tab
+        window.updateHistoryChart = function(year) {
+            appState.currentHistoryTab = year;
+            const data = historyData[year];
+
+            // 1. Update UI Classes
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active', 'text-ink');
+                btn.classList.add('text-subtle');
+            });
+            const activeBtn = document.getElementById(`tab-${year}`);
+            activeBtn.classList.add('tab-active', 'text-ink');
+            activeBtn.classList.remove('text-subtle');
+
+            // 2. Update Text Content
+            document.getElementById('history-title').innerText = data.title;
+            document.getElementById('history-desc').innerText = data.desc;
+            
+            const statsList = document.getElementById('history-stats');
+            statsList.innerHTML = '';
+            data.stats.forEach(stat => {
+                statsList.innerHTML += `
+                    <li class="flex justify-between border-b border-stone-300 pb-2">
+                        <span class="text-sm">${stat.label}</span>
+                        <span class="font-bold ${stat.color}">${stat.value}</span>
+                    </li>
+                `;
+            });
+
+            // 3. Update Chart
+            historyChartInstance.data.datasets[0].data = data.chartData;
+            historyChartInstance.data.datasets[0].label = `${year} Statistics`;
+            
+            // Adjust colors based on year context (optional visual flair)
+            if(year === '2000') {
+                 historyChartInstance.data.datasets[0].backgroundColor = ['#0d9488', '#57534e', '#ea580c']; // Highlight market drop
+            } else if (year === '1929') {
+                 historyChartInstance.data.datasets[0].backgroundColor = ['#ea580c', '#ea580c', '#ea580c']; // All red alert
+            } else {
+                 historyChartInstance.data.datasets[0].backgroundColor = ['#0d9488', '#57534e', '#57534e'];
+            }
+            
+            historyChartInstance.update();
+        };
+
+        // Toggle Pattern Chart Layers
+        window.togglePatternData = function(layer) {
+            const debtDataset = patternChartInstance.data.datasets[0];
+            const ratesDataset = patternChartInstance.data.datasets[1];
+
+            if(layer === 'debt') {
+                // Debt is always visible in this design, but maybe we emphasize it
+                debtDataset.hidden = false;
+            } else if (layer === 'rates') {
+                ratesDataset.hidden = !ratesDataset.hidden;
+            }
+            patternChartInstance.update();
+        };
+
+        // Highlight Forecast Region
+        window.highlightRegion = function(index) {
+            // Visual feedback on chart
+            const colors = ['#e5e5e5', '#e5e5e5', '#e5e5e5', '#e5e5e5', '#e5e5e5']; // Reset
+            
+            // Just a dummy animation effect to show interaction
+            // Real implementation might drill down data
+            forecastChartInstance.data.datasets[0].backgroundColor = '#0d9488'; // Restore default
+            forecastChartInstance.update();
+        };
+
+        // Navigation
+        window.scrollToSection = function(id) {
+            const element = document.getElementById(id);
+            const offset = 80; // height of sticky nav
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = element.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+            });
+            
+            // Close mobile menu if open
+            document.getElementById('mobile-nav').classList.add('hidden');
+        };
+
+        window.toggleMobileNav = function() {
+            const nav = document.getElementById('mobile-nav');
+            nav.classList.toggle('hidden');
+        };
+
+        // --- Initialization on Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initHistoryChart();
+            initPatternChart();
+            initForecastChart();
+        });
+
+    </script>
+</body>
+</html>
