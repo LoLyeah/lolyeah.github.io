@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zerolol | Enterprise AI Data Intelligence</title>
+    <style>
+        /* Base Variables */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f4f4f4;
+            --text-primary: #000000;
+            --text-secondary: #555555;
+            --border-light: #e0e0e0;
+            --border-dark: #000000;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Courier New', Courier, monospace;
+        }
+
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: opacity 0.2s ease;
+        }
+
+        a:hover {
+            opacity: 0.6;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-weight: 500;
+            letter-spacing: -0.02em;
+        }
+
+        .mono {
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.05em;
+        }
+
+        .logo-placeholder {
+            width: 24px;
+            height: 24px;
+            background-color: var(--text-primary);
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--border-dark);
+            background: transparent;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 5% 6rem;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            background-image: linear-gradient(var(--border-light) 1px, transparent 1px),
+                              linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center center;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, transparent 0%, var(--bg-primary) 80%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid var(--border-dark);
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            min-height: 1.1em; /* Prevents layout shift during typing */
+        }
+
+        /* Blinking cursor for typing effect */
+        .cursor {
+            display: inline-block;
+            width: 0.5em;
+            height: 1em;
+            background-color: var(--text-primary);
+            vertical-align: text-bottom;
+            animation: blink 1s step-end infinite;
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            animation-delay: 1.5s; /* Appears after typing mostly finishes */
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            animation-delay: 2s;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 5%;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1px; 
+            background-color: var(--border-light);
+            border: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        /* Mouse tracking hover effect */
+        .feature-card {
+            background-color: var(--bg-primary);
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(
+                800px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(0, 0, 0, 0.04),
+                transparent 40%
+            );
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Metrics/Ticker Section */
+        .metrics {
+            padding: 4rem 5%;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .metric-item {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 3rem;
+            font-weight: 300;
+            font-family: var(--font-mono);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: #aaaaaa;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 8rem 5%;
+            text-align: center;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .cta h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 5% 2rem;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-col ul a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom {
+            width: 100%;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; 
+            }
+            .hero h1 {
+                font-size: 3rem;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <span class="logo-placeholder"></span>
+            zerolol
+        </div>
+        <div class="nav-links">
+            <a href="#">Platform</a>
+            <a href="#">Solutions</a>
+            <a href="#">Developers</a>
+            <a href="#">Company</a>
+        </div>
+        <div>
+            <a href="#" class="btn btn-primary">Book Demo</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <div class="hero-badge mono">v.2.0 Intelligence Engine</div>
+            <h1 id="typewriter"></h1>
+            <p>zerolol provides autonomous AI infrastructure for enterprise data teams. Connect your silos, deploy predictive models, and scale intelligence without writing a single line of ETL code.</p>
+            <div class="hero-actions">
+                <a href="#" class="btn btn-primary">Start Building</a>
+                <a href="#" class="btn btn-outline">Read Documentation</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="metrics">
+        <div class="metric-item">
+            <div class="metric-value">100M+</div>
+            <div class="metric-label mono">Nodes Processed</div>
+        </div>
+        <div class="metric-item">
+            <div class="metric-value">&lt;5ms</div>
+            <div class="metric-label mono">Query Latency</div>
+        </div>
+        <div class="metric-item">
+            <div class="metric-value">99.99%</div>
+            <div class="metric-label mono">Uptime SLA</div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="section-header">
+            <div>
+                <span class="mono">Capabilities</span>
+                <h2>Architected for Scale</h2>
+            </div>
+            <a href="#" class="btn btn-outline">View Architecture</a>
+        </div>
+        
+        <div class="features-grid" id="features">
+            <div class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon">⎈</div>
+                    <h3>Autonomous Pipelines</h3>
+                    <p>Self-healing data ingestion that automatically maps schemas, handles drift, and standardizes formats across hundreds of disparate enterprise sources.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon">⌘</div>
+                    <h3>Neural Query Engine</h3>
+                    <p>Query billions of rows using natural language or complex SQL. Our specialized LLM understands your specific business context and terminology.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon">⌗</div>
+                    <h3>Predictive Synthesis</h3>
+                    <p>Move beyond historical analytics. zerolol continuously trains on your unified data to surface anomalies and forecast trends before they occur.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon">⚲</div>
+                    <h3>Zero-Trust Security</h3>
+                    <p>Enterprise-grade governance built into the core. Field-level encryption, granular RBAC, and comprehensive audit logs for absolute compliance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <span class="mono">Deployment</span>
+        <h2>Ready to integrate?</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">Deploy on your VPC or use our managed cloud. Get your infrastructure running in under 15 minutes.</p>
+        <a href="#" class="btn btn-primary">Initialize Workspace</a>
+    </section>
+
+    <footer>
+        <div class="footer-col">
+            <div class="logo" style="margin-bottom: 1rem;">
+                <span class="logo-placeholder"></span>
+                zerolol
+            </div>
+            <p style="color: var(--text-secondary); max-width: 250px; font-size: 0.85rem;">
+                The operating system for enterprise data intelligence.
+            </p>
+        </div>
+        <div class="footer-col">
+            <h4 class="mono">Platform</h4>
+            <ul>
+                <li><a href="#">Engine</a></li>
+                <li><a href="#">Security</a></li>
+                <li><a href="#">Integrations</a></li>
+                <li><a href="#">Pricing</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4 class="mono">Resources</h4>
+            <ul>
+                <li><a href="#">Documentation</a></li>
+                <li><a href="#">API Reference</a></li>
+                <li><a href="#">Case Studies</a></li>
+                <li><a href="#">Blog</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2026 zerolol Inc. All rights reserved.</div>
+            <div style="display: flex; gap: 1rem;">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Status</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Typing Animation Script ---
+        const textToType = "Synthesize raw data into strategic truth.";
+        const typeTarget = document.getElementById("typewriter");
+        let i = 0;
+        
+        // Add cursor initially
+        typeTarget.innerHTML = '<span class="cursor"></span>';
+
+        function typeWriter() {
+            if (i < textToType.length) {
+                // Insert character right before the cursor
+                typeTarget.innerHTML = textToType.substring(0, i + 1) + '<span class="cursor"></span>';
+                i++;
+                // Randomize typing speed slightly for realism
+                const speed = Math.random() * 50 + 30;
+                setTimeout(typeWriter, speed);
+            }
+        }
+
+        // Start typing after a short delay
+        setTimeout(typeWriter, 400);
+
+        // --- Mouse Tracking Hover Script ---
+        const featuresGrid = document.getElementById("features");
+        
+        featuresGrid.onmousemove = e => {
+            for(const card of document.getElementsByClassName("feature-card")) {
+                const rect = card.getBoundingClientRect(),
+                      x = e.clientX - rect.left,
+                      y = e.clientY - rect.top;
+
+                // Set CSS variables for the pseudo-element gradient
+                card.style.setProperty("--mouse-x", `${x}px`);
+                card.style.setProperty("--mouse-y", `${y}px`);
+            };
+        }
+    </script>
+</body>
+</html>
