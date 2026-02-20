@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoLyeah | Interactive Intelligence</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Outfit:wght@300;400;600&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        moss: '#2E4036',
+                        clay: '#CC5833',
+                        cream: '#F2F0E9',
+                        charcoal: '#1A1A1A',
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        outfit: ['"Outfit"', 'sans-serif'],
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    transitionTimingFunction: {
+                        'spring': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        /* Base Architecture & Variables */
+        body {
+            background-color: #F2F0E9; /* Cream */
+            color: #1A1A1A; /* Charcoal */
+            overflow-x: hidden;
+        }
+
+        /* The Organic Tech Noise Overlay */
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.05;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Clinical Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F2F0E9; }
+        ::-webkit-scrollbar-thumb { background: #2E4036; border-radius: 10px; }
+
+        ::selection {
+            background: #CC5833;
+            color: #F2F0E9;
+        }
+
+        /* Prevent FOUC during GSAP load */
+        .gsap-reveal, .gsap-split { visibility: hidden; }
+    </style>
+</head>
+<body class="antialiased selection:bg-clay selection:text-cream">
+
+    <div class="noise-overlay"></div>
+
+    <nav id="navbar" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 rounded-full px-6 py-4 flex items-center justify-between w-[90%] max-w-5xl bg-transparent text-cream">
+        <div class="font-outfit font-semibold tracking-tighter text-xl uppercase" data-translate-key="navBrand">LoLyeah</div>
+        
+        <div class="flex items-center gap-4 bg-black/20 backdrop-blur-md px-2 py-1 rounded-full border border-white/10" id="lang-container">
+            <button id="lang-en" class="font-mono text-xs px-3 py-1 rounded-full transition-colors duration-300 bg-clay text-white">EN</button>
+            <button id="lang-id" class="font-mono text-xs px-3 py-1 rounded-full transition-colors duration-300 text-white hover:text-clay">ID</button>
+        </div>
+    </nav>
+
+    <section class="relative h-[100dvh] w-full flex items-end pb-24 px-8 md:px-16 overflow-hidden rounded-b-[3rem]">
+        <div class="absolute inset-0 z-0 bg-charcoal">
+            <img src="https://images.unsplash.com/photo-1470115636492-6d2b56f9146d?q=80&w=2000&auto=format&fit=crop" alt="Dark Forest Environment" class="w-full h-full object-cover opacity-80" />
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-moss/60 to-transparent"></div>
+        </div>
+        
+        <div class="relative z-10 w-full max-w-7xl mx-auto flex flex-col justify-end">
+            <h1 class="text-cream leading-[0.85]">
+                <span class="block gsap-reveal font-sans font-bold text-5xl md:text-7xl tracking-tighter uppercase" data-translate-key="heroTitle1">Interactive</span>
+                <span class="block gsap-reveal font-serif italic text-7xl md:text-[10rem] text-clay pr-12" data-translate-key="heroTitle2">Intelligence.</span>
+            </h1>
+            <p class="gsap-reveal mt-8 text-cream/80 max-w-lg font-outfit text-lg" data-translate-key="headerSubtitle">
+                An evolving collection of deep dives into clinical and systemic topics.
+            </p>
+        </div>
+    </section>
+
+    <section id="philosophy" class="relative py-40 px-8 bg-charcoal text-cream overflow-hidden rounded-[3rem] mx-4 md:mx-8 mt-12">
+        <div class="absolute inset-0 z-0 opacity-20">
+            <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2000&auto=format&fit=crop" alt="Organic Texture" class="parallax-bg w-full h-[130%] object-cover -top-[15%]" />
+        </div>
+        <div class="relative z-10 max-w-5xl mx-auto text-center">
+            <h2 class="text-4xl md:text-6xl font-outfit font-light tracking-tight leading-tight">
+                <span class="block text-gray-500 mb-4 gsap-split" data-translate-key="manifesto1">Standard guides ask:</span>
+                <span class="block font-serif italic text-5xl md:text-7xl text-clay mb-12 gsap-split" data-translate-key="manifesto2">What is the topic?</span>
+                <span class="block text-cream mb-4 gsap-split" data-translate-key="manifesto3">We ask:</span>
+                <span class="block font-serif italic text-5xl md:text-7xl text-cream gsap-split" data-translate-key="manifesto4">How deep is the telemetry?</span>
+            </h2>
+        </div>
+    </section>
+
+    <section class="py-32 px-8 md:px-16 max-w-7xl mx-auto">
+        <div class="flex items-center gap-4 mb-16">
+            <div class="w-2 h-2 rounded-full bg-moss animate-pulse"></div>
+            <span class="font-mono text-sm uppercase text-moss tracking-widest" data-translate-key="mainTitle">Explore The Archive</span>
+            <div class="h-[1px] flex-1 bg-moss/20 ml-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <a href="./topics/adhd-diet-guide.html" class="topic-card group block relative p-8 rounded-[2rem] bg-white border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden h-[320px] flex flex-col justify-between gsap-reveal">
+                <div class="absolute inset-0 bg-moss translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-spring z-0"></div>
+                <div class="relative z-10 flex-1 flex flex-col group-hover:text-cream transition-colors duration-500">
+                    <span class="font-mono text-xs text-gray-400 group-hover:text-white/60 mb-4 block">01 // NEURO</span>
+                    <h3 class="font-outfit text-2xl font-semibold text-charcoal group-hover:text-white mb-3 leading-tight" data-translate-key="adhdCardTitle">An Interactive Guide to Diet and ADHD</h3>
+                    <p class="font-sans text-sm text-gray-500 group-hover:text-white/80 line-clamp-3" data-translate-key="adhdCardDesc">Explore the evidence-based connections between nutrition, dietary patterns, and the management of ADHD symptoms.</p>
+                </div>
+                <div class="relative z-10 flex items-center gap-2 font-mono text-sm text-clay group-hover:text-clay transition-colors mt-4">
+                    <span data-translate-key="adhdCardLink">Initialize Protocol</span> 
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <a href="./topics/stroke.html" class="topic-card group block relative p-8 rounded-[2rem] bg-moss text-cream border border-moss hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden h-[320px] flex flex-col justify-between gsap-reveal">
+                <div class="absolute inset-0 bg-clay translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-spring z-0"></div>
+                <div class="relative z-10 flex-1 flex flex-col">
+                    <span class="font-mono text-xs text-cream/60 mb-4 block">02 // VASCULAR</span>
+                    <h3 class="font-outfit text-2xl font-semibold mb-3 leading-tight" data-translate-key="strokeCardTitle">Stroke: An Interactive Infographic</h3>
+                    <p class="font-sans text-sm text-cream/80 line-clamp-3" data-translate-key="strokeCardDesc">A visual guide to the causes, immediate actions, treatments, and recovery journey of stroke.</p>
+                </div>
+                <div class="relative z-10 flex items-center gap-2 font-mono text-sm text-cream mt-4">
+                    <span data-translate-key="infoCardLink">View Telemetry</span> 
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <a href="./topics/diabetes-guide.html" class="topic-card group block relative p-8 rounded-[2rem] bg-white border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden h-[320px] flex flex-col justify-between gsap-reveal">
+                <div class="absolute inset-0 bg-moss translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-spring z-0"></div>
+                <div class="relative z-10 flex-1 flex flex-col group-hover:text-cream transition-colors duration-500">
+                    <span class="font-mono text-xs text-gray-400 group-hover:text-white/60 mb-4 block">03 // METABOLIC</span>
+                    <h3 class="font-outfit text-2xl font-semibold text-charcoal group-hover:text-white mb-3 leading-tight" data-translate-key="diabetesCardTitle">Comprehensive Guide to Diabetes</h3>
+                    <p class="font-sans text-sm text-gray-500 group-hover:text-white/80 line-clamp-3" data-translate-key="diabetesCardDesc">A comprehensive guide to the causes, immediate actions, treatments, and recovery journey of diabetes.</p>
+                </div>
+                <div class="relative z-10 flex items-center gap-2 font-mono text-sm text-clay mt-4">
+                    <span data-translate-key="guideCardLink">Initialize Protocol</span> 
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <a href="./topics/foodborne-outbreak.html" class="topic-card group block relative p-8 rounded-[2rem] bg-white border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden h-[320px] flex flex-col justify-between gsap-reveal">
+                <div class="absolute inset-0 bg-moss translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-spring z-0"></div>
+                <div class="relative z-10 flex-1 flex flex-col group-hover:text-cream transition-colors duration-500">
+                    <span class="font-mono text-xs text-gray-400 group-hover:text-white/60 mb-4 block">04 // PATHOGEN</span>
+                    <h3 class="font-outfit text-2xl font-semibold text-charcoal group-hover:text-white mb-3 leading-tight" data-translate-key="foodborneCardTitle">Foodborne Outbreak Clinical Guide</h3>
+                    <p class="font-sans text-sm text-gray-500 group-hover:text-white/80 line-clamp-3" data-translate-key="foodborneCardDesc">A clinical guide to the causes, immediate actions, treatments, and recovery.</p>
+                </div>
+                <div class="relative z-10 flex items-center gap-2 font-mono text-sm text-clay mt-4">
+                    <span data-translate-key="guideCardLink">Initialize Protocol</span> 
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <a href="./topics/laxative-comparison.html" class="topic-card group block relative p-8 rounded-[2rem] bg-white border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden h-[320px] flex flex-col justify-between gsap-reveal">
+                <div class="absolute inset-0 bg-clay translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-spring z-0"></div>
+                <div class="relative z-10 flex-1 flex flex-col group-hover:text-cream transition-colors duration-500">
+                    <span class="font-mono text-xs text-gray-400 group-hover:text-white/60 mb-4 block">05 // PHARMA</span>
+                    <h3 class="font-outfit text-2xl font-semibold text-charcoal group-hover:text-white mb-3 leading-tight" data-translate-key="laxativeCardTitle">Comprehensive Laxatives Comparison</h3>
+                    <p class="font-sans text-sm text-gray-500 group-hover:text-white/80 line-clamp-3" data-translate-key="laxativeCardDesc">A comprehensive clinical comparison between various laxative mechanisms.</p>
+                </div>
+                <div class="relative z-10 flex items-center gap-2 font-mono text-sm text-moss group-hover:text-white mt-4">
+                    <span data-translate-key="comparisonCardLink">View Comparison</span> 
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <a href="./topics/ship-class.html" class="topic-card group block relative p-8 rounded-[2rem] bg-charcoal text-cream border border-charcoal hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden h-[320px] flex flex-col justify-between gsap-reveal">
+                <div class="absolute inset-0 bg-moss translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-spring z-0"></div>
+                <div class="relative z-10 flex-1 flex flex-col">
+                    <span class="font-mono text-xs text-cream/60 mb-4 block">06 // MARITIME</span>
+                    <h3 class="font-outfit text-2xl font-semibold mb-3 leading-tight" data-translate-key="navalCardTitle">Naval Ship Class Comparison</h3>
+                    <p class="font-sans text-sm text-cream/80 line-clamp-3" data-translate-key="navalCardDesc">A structural comparison between naval ship classes in a nutshell.</p>
+                </div>
+                <div class="relative z-10 flex items-center gap-2 font-mono text-sm text-clay mt-4">
+                    <span data-translate-key="comparisonCardLink">View Comparison</span> 
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <a href="./topics/what-if-nusantara.html" class="topic-card group block relative p-8 rounded-[2rem] bg-white border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden h-[320px] flex flex-col justify-between gsap-reveal">
+                 <div class="absolute inset-0 bg-moss translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-spring z-0"></div>
+                <div class="relative z-10 flex-1 flex flex-col group-hover:text-cream transition-colors duration-500">
+                    <span class="font-mono text-xs text-gray-400 group-hover:text-white/60 mb-4 block">07 // GEOPOLITICS</span>
+                    <h3 class="font-outfit text-2xl font-semibold text-charcoal group-hover:text-white mb-3 leading-tight" data-translate-key="nusantaraCardTitle">What If Nusantara</h3>
+                    <p class="font-sans text-sm text-gray-500 group-hover:text-white/80 line-clamp-3" data-translate-key="nusantaraCardDesc">Indonesian Provincial Independence Analysis and systemic comparisons.</p>
+                </div>
+                <div class="relative z-10 flex items-center gap-2 font-mono text-sm text-clay mt-4">
+                    <span data-translate-key="comparisonCardLink">View Comparison</span> 
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+             <a href="./topics/testing-homepage.html" class="topic-card group block relative p-8 rounded-[2rem] bg-white border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden h-[320px] flex flex-col justify-between gsap-reveal">
+                <div class="absolute inset-0 bg-clay translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-spring z-0"></div>
+                <div class="relative z-10 flex-1 flex flex-col group-hover:text-cream transition-colors duration-500">
+                    <span class="font-mono text-xs text-gray-400 group-hover:text-white/60 mb-4 block">08 // SYSTEM</span>
+                    <h3 class="font-outfit text-2xl font-semibold text-charcoal group-hover:text-white mb-3 leading-tight" data-translate-key="testingCardTitle">On Progress Web Page</h3>
+                    <p class="font-sans text-sm text-gray-500 group-hover:text-white/80 line-clamp-3" data-translate-key="testingCardDesc">Based on Xiaomi MiMo V2 LLM integration and architecture.</p>
+                </div>
+                <div class="relative z-10 flex items-center gap-2 font-mono text-sm text-moss group-hover:text-white mt-4">
+                    <span data-translate-key="comparisonCardLink">Access Log</span> 
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <a href="./topics/solar-system.html" class="topic-card group block relative p-8 rounded-[2rem] bg-charcoal border border-charcoal hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden h-[320px] flex flex-col justify-between gsap-reveal">
+                <div class="absolute inset-0 bg-moss translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-spring z-0"></div>
+                <div class="relative z-10 flex-1 flex flex-col text-cream">
+                    <span class="font-mono text-xs text-cream/60 mb-4 block">09 // ASTROPHYSICS</span>
+                    <h3 class="font-outfit text-2xl font-semibold mb-3 leading-tight" data-translate-key="solarCardTitle">Solar System Explorer</h3>
+                    <p class="font-sans text-sm text-cream/80 line-clamp-3" data-translate-key="solarCardDesc">High-fidelity Solar System simulation, rendered natively in your browser.</p>
+                </div>
+                <div class="relative z-10 flex items-center gap-2 font-mono text-sm text-clay mt-4">
+                    <span data-translate-key="guideCardLink">Initialize Protocol</span> 
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <a href="./topics/upper-gastro.html" class="topic-card group block relative p-8 rounded-[2rem] bg-white border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden h-[320px] flex flex-col justify-between gsap-reveal lg:col-span-3 lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
+                <div class="absolute inset-0 bg-moss translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-spring z-0"></div>
+                <div class="relative z-10 flex flex-col group-hover:text-cream transition-colors duration-500">
+                    <span class="font-mono text-xs text-gray-400 group-hover:text-white/60 mb-4 block">10 // GASTROENTEROLOGY</span>
+                    <h3 class="font-outfit text-3xl md:text-4xl font-semibold text-charcoal group-hover:text-white mb-3 leading-tight" data-translate-key="upperGastroCardTitle">Upper Gastrointestinal Disorders</h3>
+                    <p class="font-sans text-base text-gray-500 group-hover:text-white/80 max-w-lg" data-translate-key="upperGastroCardDesc">An advanced interactive mapping of Gastritis, GERD, and Peptic Ulcer pathways.</p>
+                </div>
+                <div class="relative z-10 flex items-center justify-start lg:justify-end gap-2 font-mono text-sm text-clay mt-8 lg:mt-0 group-hover:text-clay">
+                    <span class="px-6 py-3 border border-clay rounded-full hover:bg-clay hover:text-white transition-colors" data-translate-key="guideCardLink">Initialize Protocol</span>
+                </div>
+            </a>
+
+        </div>
+    </section>
+
+    <footer class="bg-charcoal pt-16 pb-12 px-8 rounded-t-[4rem] relative z-10 text-cream mt-24">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center text-sm border-t border-white/10 pt-8">
+            <div class="flex gap-8 mb-4 md:mb-0 font-outfit text-cream/60">
+                <span data-translate-key="footerText">&copy; 2026 LoLyeah. All Rights Reserved.</span>
+            </div>
+            <div class="flex items-center gap-3 font-mono bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-[pulse_2s_ease-in-out_infinite]"></div>
+                <span class="text-xs tracking-wider text-cream/80">SYSTEM OPERATIONAL</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. Core Translation Dictionary
+        const translations = {
+            en: {
+                navBrand: "LoLyeah",
+                heroTitle1: "Interactive",
+                heroTitle2: "Intelligence.",
+                headerSubtitle: "An evolving collection of deep dives into clinical and systemic topics.",
+                manifesto1: "Standard guides ask:",
+                manifesto2: "What is the topic?",
+                manifesto3: "We ask:",
+                manifesto4: "How deep is the telemetry?",
+                mainTitle: "Explore The Archive",
+                adhdCardTitle: "An Interactive Guide to Diet and ADHD",
+                adhdCardDesc: "Explore the evidence-based connections between nutrition, dietary patterns, and the management of ADHD symptoms.",
+                adhdCardLink: "Initialize Protocol",
+                strokeCardTitle: "Stroke: An Interactive Infographic",
+                strokeCardDesc: "A visual guide to the causes, immediate actions, treatments, and recovery journey of stroke.",
+                infoCardLink: "View Telemetry",
+                diabetesCardTitle: "Comprehensive Guide to Diabetes",
+                diabetesCardDesc: "A comprehensive guide to the causes, immediate actions, treatments, and recovery journey of diabetes.",
+                guideCardLink: "Initialize Protocol",
+                foodborneCardTitle: "Foodborne Outbreak Clinical Guide",
+                foodborneCardDesc: "A clinical guide to the causes, immediate actions, treatments, and recovery.",
+                laxativeCardTitle: "Comprehensive Laxatives Comparison",
+                laxativeCardDesc: "A comprehensive clinical comparison between various laxative mechanisms.",
+                navalCardTitle: "Naval Ship Class Comparison",
+                navalCardDesc: "A structural comparison between naval ship classes in a nutshell.",
+                nusantaraCardTitle: "What If Nusantara",
+                nusantaraCardDesc: "Indonesian Provincial Independence Analysis and systemic comparisons.",
+                comparisonCardLink: "View Comparison",
+                testingCardTitle: "On Progress Web Page",
+                testingCardDesc: "Based on Xiaomi MiMo V2 LLM integration and architecture.",
+                solarCardTitle: "Solar System Explorer",
+                solarCardDesc: "High-fidelity Solar System simulation, rendered natively in your browser.",
+                upperGastroCardTitle: "Upper Gastrointestinal Disorders",
+                upperGastroCardDesc: "An advanced interactive mapping of Gastritis, GERD, and Peptic Ulcer pathways.",
+                footerText: "&copy; 2026 LoLyeah. All Rights Reserved."
+            },
+            id: {
+                navBrand: "LoLyeah",
+                heroTitle1: "Kecerdasan",
+                heroTitle2: "Interaktif.",
+                headerSubtitle: "Kumpulan panduan mendalam tentang topik klinis dan sistemik.",
+                manifesto1: "Panduan standar bertanya:",
+                manifesto2: "Apa topiknya?",
+                manifesto3: "Kami bertanya:",
+                manifesto4: "Seberapa dalam telemetrinya?",
+                mainTitle: "Jelajahi Arsip",
+                adhdCardTitle: "Panduan Interaktif Diet dan ADHD",
+                adhdCardDesc: "Jelajahi hubungan berbasis bukti antara nutrisi, pola makan, dan pengelolaan gejala ADHD.",
+                adhdCardLink: "Inisiasi Protokol",
+                strokeCardTitle: "Stroke: Infografik Interaktif",
+                strokeCardDesc: "Panduan visual tentang penyebab, tindakan segera, perawatan, dan perjalanan pemulihan stroke.",
+                infoCardLink: "Lihat Telemetri",
+                diabetesCardTitle: "Panduan Lengkap Diabetes",
+                diabetesCardDesc: "Panduan lengkap tentang penyebab, tindakan segera, perawatan, dan perjalanan pemulihan diabetes.",
+                guideCardLink: "Inisiasi Protokol",
+                foodborneCardTitle: "Panduan Klinis Wabah Bawaan Makanan",
+                foodborneCardDesc: "Panduan klinis tentang penyebab, tindakan segera, perawatan, dan pemulihan.",
+                laxativeCardTitle: "Perbandingan Lengkap Laksatif",
+                laxativeCardDesc: "Perbandingan klinis lengkap antara berbagai mekanisme laksatif.",
+                navalCardTitle: "Perbandingan Kelas Kapal",
+                navalCardDesc: "Perbandingan struktural antara kelas kapal angkatan laut dalam ringkasan.",
+                nusantaraCardTitle: "Apa Jika Nusantara",
+                nusantaraCardDesc: "Analisis Kemerdekaan Provinsi Indonesia dan perbandingan sistemik.",
+                comparisonCardLink: "Lihat Perbandingan",
+                testingCardTitle: "Halaman Web Dalam Proses",
+                testingCardDesc: "Berdasarkan integrasi dan arsitektur LLM Xiaomi MiMo V2.",
+                solarCardTitle: "Penjelajah Tata Surya",
+                solarCardDesc: "Simulasi Tata Surya beresolusi tinggi, dirender langsung di peramban Anda.",
+                upperGastroCardTitle: "Gangguan Gastrointestinal Atas",
+                upperGastroCardDesc: "Pemetaan interaktif tingkat lanjut untuk jalur Gastritis, GERD, dan Tukak Lambung.",
+                footerText: "&copy; 2026 LoLyeah. Hak Cipta Dilindungi."
+            }
+        };
+
+        // 2. Language Engine
+        let currentLang = 'en';
+        function switchLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-translate-key]').forEach(el => {
+                const key = el.dataset.translateKey;
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+
+            // Toggle active pill UI
+            document.getElementById('lang-en').className = lang === 'en' 
+                ? 'font-mono text-xs px-3 py-1 rounded-full transition-colors duration-300 bg-clay text-white' 
+                : 'font-mono text-xs px-3 py-1 rounded-full transition-colors duration-300 text-white hover:text-clay';
+            document.getElementById('lang-id').className = lang === 'id' 
+                ? 'font-mono text-xs px-3 py-1 rounded-full transition-colors duration-300 bg-clay text-white' 
+                : 'font-mono text-xs px-3 py-1 rounded-full transition-colors duration-300 text-white hover:text-clay';
+        }
+
+        document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
+        document.getElementById('lang-id').addEventListener('click', () => switchLanguage('id'));
+        switchLanguage('en'); // Init
+
+        // 3. Cinematic Animation Engine (GSAP)
+        document.addEventListener("DOMContentLoaded", (event) => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Make elements visible for GSAP taking over
+            gsap.set('.gsap-reveal, .gsap-split', { visibility: 'visible' });
+
+            // Navbar Morph Logic
+            const navbar = document.getElementById('navbar');
+            const langContainer = document.getElementById('lang-container');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.remove('bg-transparent', 'text-cream');
+                    navbar.classList.add('bg-white/70', 'backdrop-blur-xl', 'border', 'border-moss/10', 'text-moss', 'shadow-2xl');
+                    langContainer.classList.remove('bg-black/20', 'border-white/10');
+                    langContainer.classList.add('bg-moss/10', 'border-moss/10');
+                    
+                    // Modify inactive text colors for light navbar
+                    if(currentLang === 'en') {
+                        document.getElementById('lang-id').classList.replace('text-white', 'text-moss');
+                    } else {
+                        document.getElementById('lang-en').classList.replace('text-white', 'text-moss');
+                    }
+                } else {
+                    navbar.classList.add('bg-transparent', 'text-cream');
+                    navbar.classList.remove('bg-white/70', 'backdrop-blur-xl', 'border', 'border-moss/10', 'text-moss', 'shadow-2xl');
+                    langContainer.classList.add('bg-black/20', 'border-white/10');
+                    langContainer.classList.remove('bg-moss/10', 'border-moss/10');
+                    
+                    document.getElementById('lang-en').classList.replace('text-moss', 'text-white');
+                    document.getElementById('lang-id').classList.replace('text-moss', 'text-white');
+                }
+            });
+
+            // Hero Build In
+            gsap.from('.gsap-reveal', {
+                y: 60,
+                opacity: 0,
+                duration: 1.4,
+                stagger: 0.2,
+                ease: 'power4.out',
+                delay: 0.1
+            });
+
+            // Manifesto Split Reveal
+            gsap.from('.gsap-split', {
+                scrollTrigger: {
+                    trigger: '#philosophy',
+                    start: 'top 60%',
+                },
+                y: 40,
+                opacity: 0,
+                stagger: 0.15,
+                duration: 1,
+                ease: 'back.out(1.4)'
+            });
+
+            // Parallax Background
+            gsap.to('.parallax-bg', {
+                yPercent: 30,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '#philosophy',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            });
+
+            // The Archive Cards Stagger
+            gsap.from('.topic-card', {
+                scrollTrigger: {
+                    trigger: '.topic-card',
+                    start: 'top 85%',
+                },
+                y: 60,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: 'power3.out'
+            });
+        });
+    </script>
+</body>
+</html>
