@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>zerolol | Enterprise AI Data Intelligence</title>
+    <title>LoLyeah Interactive Guides</title>
     <style>
-        /* Base Variables */
+        /* Base Variables (zerolol style) */
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f4f4f4;
@@ -30,16 +30,12 @@
             color: var(--text-primary);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
         a {
             text-decoration: none;
             color: var(--text-primary);
-            transition: opacity 0.2s ease;
-        }
-
-        a:hover {
-            opacity: 0.6;
         }
 
         /* Typography */
@@ -85,48 +81,33 @@
             display: inline-block;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .btn {
-            padding: 0.6rem 1.2rem;
-            border: 1px solid var(--border-dark);
+        .lang-switcher button {
             background: transparent;
-            color: var(--text-primary);
+            border: none;
             font-family: var(--font-mono);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            display: inline-block;
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
         }
 
-        .btn-primary {
-            background: var(--text-primary);
-            color: var(--bg-primary);
-        }
-
-        .btn-primary:hover {
-            background: transparent;
+        .lang-switcher button:hover {
             color: var(--text-primary);
         }
 
-        .btn-outline:hover {
-            background: var(--text-primary);
-            color: var(--bg-primary);
+        .lang-switcher button.active {
+            color: var(--text-primary);
+            font-weight: bold;
+        }
+
+        .lang-separator {
+            color: var(--border-light);
+            margin: 0 0.5rem;
         }
 
         /* Hero Section */
         .hero {
-            padding: 8rem 5% 6rem;
-            min-height: 80vh;
+            padding: 6rem 5% 4rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -135,6 +116,7 @@
                               linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
             background-size: 40px 40px;
             background-position: center center;
+            border-bottom: 1px solid var(--border-light);
         }
 
         .hero::after {
@@ -159,66 +141,29 @@
         }
 
         .hero h1 {
-            font-size: 4.5rem;
+            font-size: 3.5rem;
             line-height: 1.1;
-            margin-bottom: 1.5rem;
-            min-height: 1.1em; /* Prevents layout shift during typing */
-        }
-
-        /* Blinking cursor for typing effect */
-        .cursor {
-            display: inline-block;
-            width: 0.5em;
-            height: 1em;
-            background-color: var(--text-primary);
-            vertical-align: text-bottom;
-            animation: blink 1s step-end infinite;
-            margin-left: 5px;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+            margin-bottom: 1rem;
         }
 
         .hero p {
             font-size: 1.25rem;
             color: var(--text-secondary);
-            margin-bottom: 2.5rem;
             max-width: 600px;
-            opacity: 0;
-            animation: fadeIn 1s forwards;
-            animation-delay: 1.5s; /* Appears after typing mostly finishes */
         }
 
-        .hero-actions {
-            display: flex;
-            gap: 1rem;
-            opacity: 0;
-            animation: fadeIn 1s forwards;
-            animation-delay: 2s;
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        /* Features Section */
-        .features {
-            padding: 6rem 5%;
-            border-top: 1px solid var(--border-light);
+        /* Features/Topics Grid */
+        .topics {
+            padding: 0 5% 6rem;
         }
 
         .section-header {
-            margin-bottom: 4rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
+            padding: 4rem 0 2rem;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 1px; 
             background-color: var(--border-light);
             border: 1px solid var(--border-light);
@@ -228,10 +173,11 @@
         /* Mouse tracking hover effect */
         .feature-card {
             background-color: var(--bg-primary);
-            padding: 3rem 2rem;
+            padding: 2.5rem 2rem;
             position: relative;
             overflow: hidden;
-            cursor: default;
+            display: block;
+            cursor: pointer;
         }
 
         .feature-card::before {
@@ -256,10 +202,13 @@
         .feature-card-content {
             position: relative;
             z-index: 2;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .feature-icon {
-            font-size: 1.5rem;
+            color: var(--text-secondary);
             margin-bottom: 1.5rem;
             display: inline-block;
         }
@@ -267,83 +216,35 @@
         .feature-card h3 {
             font-size: 1.25rem;
             margin-bottom: 1rem;
+            line-height: 1.3;
         }
 
         .feature-card p {
             color: var(--text-secondary);
             font-size: 0.95rem;
+            margin-bottom: 2rem;
+            flex-grow: 1;
         }
 
-        /* Metrics/Ticker Section */
-        .metrics {
-            padding: 4rem 5%;
-            background: var(--text-primary);
-            color: var(--bg-primary);
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-
-        .metric-item {
-            text-align: center;
-        }
-
-        .metric-value {
-            font-size: 3rem;
-            font-weight: 300;
+        .card-link {
             font-family: var(--font-mono);
-            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.2s ease;
         }
 
-        .metric-label {
-            color: #aaaaaa;
-        }
-
-        /* CTA Section */
-        .cta {
-            padding: 8rem 5%;
-            text-align: center;
-            border-top: 1px solid var(--border-light);
-        }
-
-        .cta h2 {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
+        .feature-card:hover .card-link {
+            gap: 0.8rem;
         }
 
         /* Footer */
         footer {
-            padding: 4rem 5% 2rem;
-            border-top: 1px solid var(--border-light);
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-
-        .footer-col h4 {
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-        }
-
-        .footer-col ul {
-            list-style: none;
-        }
-
-        .footer-col ul li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-col ul a {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .footer-bottom {
-            width: 100%;
-            margin-top: 4rem;
-            padding-top: 2rem;
+            padding: 3rem 5%;
             border-top: 1px solid var(--border-light);
             display: flex;
             justify-content: space-between;
@@ -351,19 +252,40 @@
             font-size: 0.85rem;
         }
 
-        /* Responsive */
+        /* Scroll to Top - Minimalist */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 40px;
+            height: 40px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 999;
+            font-family: var(--font-mono);
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-top:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
         @media (max-width: 768px) {
-            .nav-links {
-                display: none; 
-            }
-            .hero h1 {
-                font-size: 3rem;
-            }
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
+            .hero h1 { font-size: 2.5rem; }
+            footer { flex-direction: column; gap: 1rem; text-align: center; }
         }
     </style>
 </head>
@@ -372,156 +294,219 @@
     <nav>
         <div class="logo">
             <span class="logo-placeholder"></span>
-            zerolol
+            LoLyeah
         </div>
-        <div class="nav-links">
-            <a href="#">Platform</a>
-            <a href="#">Solutions</a>
-            <a href="#">Developers</a>
-            <a href="#">Company</a>
-        </div>
-        <div>
-            <a href="#" class="btn btn-primary">Book Demo</a>
+        <div class="lang-switcher">
+            <button id="lang-en" class="active">EN</button>
+            <span class="lang-separator">|</span>
+            <button id="lang-id">ID</button>
         </div>
     </nav>
 
     <header class="hero">
         <div class="hero-content">
-            <div class="hero-badge mono">v.2.0 Intelligence Engine</div>
-            <h1 id="typewriter"></h1>
-            <p>zerolol provides autonomous AI infrastructure for enterprise data teams. Connect your silos, deploy predictive models, and scale intelligence without writing a single line of ETL code.</p>
-            <div class="hero-actions">
-                <a href="#" class="btn btn-primary">Start Building</a>
-                <a href="#" class="btn btn-outline">Read Documentation</a>
-            </div>
+            <div class="hero-badge mono" data-translate-key="headerSubtitle">An evolving collection of deep dives into various topics.</div>
+            <h1 data-translate-key="headerTitle">LoLyeah Interactive Guides</h1>
         </div>
     </header>
 
-    <section class="metrics">
-        <div class="metric-item">
-            <div class="metric-value">100M+</div>
-            <div class="metric-label mono">Nodes Processed</div>
-        </div>
-        <div class="metric-item">
-            <div class="metric-value">&lt;5ms</div>
-            <div class="metric-label mono">Query Latency</div>
-        </div>
-        <div class="metric-item">
-            <div class="metric-value">99.99%</div>
-            <div class="metric-label mono">Uptime SLA</div>
-        </div>
-    </section>
-
-    <section class="features">
+    <section class="topics">
         <div class="section-header">
-            <div>
-                <span class="mono">Capabilities</span>
-                <h2>Architected for Scale</h2>
-            </div>
-            <a href="#" class="btn btn-outline">View Architecture</a>
+            <h2 class="mono" data-translate-key="mainTitle">Explore a Topic</h2>
         </div>
         
         <div class="features-grid" id="features">
-            <div class="feature-card">
+            
+            <a href="./topics/adhd-diet-guide.html" class="feature-card">
                 <div class="feature-card-content">
-                    <div class="feature-icon">⎈</div>
-                    <h3>Autonomous Pipelines</h3>
-                    <p>Self-healing data ingestion that automatically maps schemas, handles drift, and standardizes formats across hundreds of disparate enterprise sources.</p>
+                    <div class="feature-icon mono">01</div>
+                    <h3 data-translate-key="adhdCardTitle">An Interactive Guide to Diet and ADHD</h3>
+                    <p data-translate-key="adhdCardDesc">Explore the evidence-based connections between nutrition, dietary patterns, and the management of ADHD symptoms through an interactive, bilingual guide.</p>
+                    <div class="card-link" data-translate-key="adhdCardLink">View Guide &rarr;</div>
                 </div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon">⌘</div>
-                    <h3>Neural Query Engine</h3>
-                    <p>Query billions of rows using natural language or complex SQL. Our specialized LLM understands your specific business context and terminology.</p>
-                </div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon">⌗</div>
-                    <h3>Predictive Synthesis</h3>
-                    <p>Move beyond historical analytics. zerolol continuously trains on your unified data to surface anomalies and forecast trends before they occur.</p>
-                </div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon">⚲</div>
-                    <h3>Zero-Trust Security</h3>
-                    <p>Enterprise-grade governance built into the core. Field-level encryption, granular RBAC, and comprehensive audit logs for absolute compliance.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+            </a>
 
-    <section class="cta">
-        <span class="mono">Deployment</span>
-        <h2>Ready to integrate?</h2>
-        <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">Deploy on your VPC or use our managed cloud. Get your infrastructure running in under 15 minutes.</p>
-        <a href="#" class="btn btn-primary">Initialize Workspace</a>
+            <a href="./topics/stroke.html" class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon mono">02</div>
+                    <h3 data-translate-key="strokeCardTitle">Stroke: An Interactive Infographic (EN)</h3>
+                    <p data-translate-key="strokeCardDesc">A visual guide to the causes, immediate actions, treatments, and recovery journey of stroke.</p>
+                    <div class="card-link" data-translate-key="infoCardLink">View Infographic &rarr;</div>
+                </div>
+            </a>
+
+            <a href="./topics/diabetes-guide.html" class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon mono">03</div>
+                    <h3 data-translate-key="diabetesCardTitle">Comprehensive Guide to Diabetes</h3>
+                    <p data-translate-key="diabetesCardDesc">A comprehensive guide to the causes, immediate actions, treatments, and recovery journey of diabetes.</p>
+                    <div class="card-link" data-translate-key="guideCardLink">View Guide &rarr;</div>
+                </div>
+            </a>
+
+            <a href="./topics/foodborne-outbreak.html" class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon mono">04</div>
+                    <h3 data-translate-key="foodborneCardTitle">Foodborne Outbreak Clinical Guide</h3>
+                    <p data-translate-key="foodborneCardDesc">A clinical guide to the causes, immediate actions, treatments, and recovery of foodborne outbreak.</p>
+                    <div class="card-link" data-translate-key="guideCardLink">View Guide &rarr;</div>
+                </div>
+            </a>
+
+            <a href="./topics/laxative-comparison.html" class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon mono">05</div>
+                    <h3 data-translate-key="laxativeCardTitle">Comprehensive Laxatives Comparison</h3>
+                    <p data-translate-key="laxativeCardDesc">A comprehensive comparison between laxatives.</p>
+                    <div class="card-link" data-translate-key="comparisonCardLink">View Comparison &rarr;</div>
+                </div>
+            </a>
+
+            <a href="./topics/ship-class.html" class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon mono">06</div>
+                    <h3 data-translate-key="navalCardTitle">Naval Ship Class Comparison (EN)</h3>
+                    <p data-translate-key="navalCardDesc">A comparison between naval ship class in a nutshell.</p>
+                    <div class="card-link" data-translate-key="comparisonCardLink">View Comparison &rarr;</div>
+                </div>
+            </a>
+
+            <a href="./topics/what-if-nusantara.html" class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon mono">07</div>
+                    <h3 data-translate-key="nusantaraCardTitle">What If Nusantara - Indonesian Provincial Independence Analysis</h3>
+                    <p data-translate-key="nusantaraCardDesc">A comparison between every province in Indonesia if every one of them become a sovereign state.</p>
+                    <div class="card-link" data-translate-key="comparisonCardLink">View Comparison &rarr;</div>
+                </div>
+            </a>
+
+            <a href="./topics/testing-homepage.html" class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon mono">08</div>
+                    <h3 data-translate-key="testingCardTitle">On Progress Web Page of LoLyeah</h3>
+                    <p data-translate-key="testingCardDesc">Based on Xiaomi MiMo V2 LLM.</p>
+                    <div class="card-link" data-translate-key="comparisonCardLink">View Page &rarr;</div>
+                </div>
+            </a>
+
+            <a href="./topics/solar-system.html" class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon mono">09</div>
+                    <h3 data-translate-key="solarCardTitle">Solar System Explorer</h3>
+                    <p data-translate-key="solarCardDesc">Solar System simulation, right on your browser.</p>
+                    <div class="card-link" data-translate-key="guideCardLink">View Guide &rarr;</div>
+                </div>
+            </a>
+
+            <a href="./topics/upper-gastro.html" class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-icon mono">10</div>
+                    <h3 data-translate-key="upperGastroCardTitle">Upper Gastrointestinal Disorders (EN)</h3>
+                    <p data-translate-key="upperGastroCardDesc">Interactive guide to Gastritis, GERD, and Peptic Ulcers.</p>
+                    <div class="card-link" data-translate-key="guideCardLink">View Guide &rarr;</div>
+                </div>
+            </a>
+
+        </div>
     </section>
 
     <footer>
-        <div class="footer-col">
-            <div class="logo" style="margin-bottom: 1rem;">
-                <span class="logo-placeholder"></span>
-                zerolol
-            </div>
-            <p style="color: var(--text-secondary); max-width: 250px; font-size: 0.85rem;">
-                The operating system for enterprise data intelligence.
-            </p>
+        <div class="logo">
+            <span class="logo-placeholder"></span>
+            LoLyeah
         </div>
-        <div class="footer-col">
-            <h4 class="mono">Platform</h4>
-            <ul>
-                <li><a href="#">Engine</a></li>
-                <li><a href="#">Security</a></li>
-                <li><a href="#">Integrations</a></li>
-                <li><a href="#">Pricing</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h4 class="mono">Resources</h4>
-            <ul>
-                <li><a href="#">Documentation</a></li>
-                <li><a href="#">API Reference</a></li>
-                <li><a href="#">Case Studies</a></li>
-                <li><a href="#">Blog</a></li>
-            </ul>
-        </div>
-        <div class="footer-bottom">
-            <div>© 2026 zerolol Inc. All rights reserved.</div>
-            <div style="display: flex; gap: 1rem;">
-                <a href="#">Privacy</a>
-                <a href="#">Terms</a>
-                <a href="#">Status</a>
-            </div>
+        <div data-translate-key="footerText">
+            &copy; 2026 LoLyeah. All Rights Reserved.
         </div>
     </footer>
 
-    <script>
-        // --- Typing Animation Script ---
-        const textToType = "Synthesize raw data into strategic truth.";
-        const typeTarget = document.getElementById("typewriter");
-        let i = 0;
-        
-        // Add cursor initially
-        typeTarget.innerHTML = '<span class="cursor"></span>';
+    <button class="scroll-top" id="scrollTop">UP</button>
 
-        function typeWriter() {
-            if (i < textToType.length) {
-                // Insert character right before the cursor
-                typeTarget.innerHTML = textToType.substring(0, i + 1) + '<span class="cursor"></span>';
-                i++;
-                // Randomize typing speed slightly for realism
-                const speed = Math.random() * 50 + 30;
-                setTimeout(typeWriter, speed);
+    <script>
+        // --- Translations ---
+        const translations = {
+            en: {
+                headerTitle: "LoLyeah Interactive Guides",
+                headerSubtitle: "An evolving collection of deep dives into various topics.",
+                mainTitle: "Explore a Topic",
+                adhdCardTitle: "An Interactive Guide to Diet and ADHD",
+                adhdCardDesc: "Explore the evidence-based connections between nutrition, dietary patterns, and the management of ADHD symptoms through an interactive, bilingual guide.",
+                adhdCardLink: "View Guide &rarr;",
+                strokeCardTitle: "Stroke: An Interactive Infographic (EN)",
+                strokeCardDesc: "A visual guide to the causes, immediate actions, treatments, and recovery journey of stroke.",
+                infoCardLink: "View Infographic &rarr;",
+                diabetesCardTitle: "Comprehensive Guide to Diabetes",
+                diabetesCardDesc: "A comprehensive guide to the causes, immediate actions, treatments, and recovery journey of diabetes.",
+                guideCardLink: "View Guide &rarr;",
+                foodborneCardTitle: "Foodborne Outbreak Clinical Guide",
+                foodborneCardDesc: "A clinical guide to the causes, immediate actions, treatments, and recovery of foodborne outbreak.",
+                laxativeCardTitle: "Comprehensive Laxatives Comparison",
+                laxativeCardDesc: "A comprehensive comparison between laxatives.",
+                navalCardTitle: "Naval Ship Class Comparison (EN)",
+                navalCardDesc: "A comparison between naval ship class in a nutshell.",
+                nusantaraCardTitle: "What If Nusantara - Indonesian Provincial Independence Analysis",
+                nusantaraCardDesc: "A comparison between every province in Indonesia if every one of them become a sovereign state.",
+                comparisonCardLink: "View Comparison &rarr;",
+                testingCardTitle: "On Progress Web Page of LoLyeah",
+                testingCardDesc: "Based on Xiaomi MiMo V2 LLM.",
+                solarCardTitle: "Solar System Explorer",
+                solarCardDesc: "Solar System simulation, right on your browser.",
+                upperGastroCardTitle: "Upper Gastrointestinal Disorders (EN)",
+                upperGastroCardDesc: "Interactive guide to Gastritis, GERD, and Peptic Ulcers.",
+                footerText: "&copy; 2026 LoLyeah. All Rights Reserved."
+            },
+            id: {
+                headerTitle: "Panduan Interaktif LoLyeah",
+                headerSubtitle: "Kumpulan panduan mendalam tentang berbagai topik yang terus berkembang.",
+                mainTitle: "Jelajahi Topik",
+                adhdCardTitle: "Panduan Interaktif Diet dan ADHD",
+                adhdCardDesc: "Jelajahi hubungan berbasis bukti antara nutrisi, pola makan, dan pengelolaan gejala ADHD melalui panduan interaktif dwibahasa.",
+                adhdCardLink: "Lihat Panduan &rarr;",
+                strokeCardTitle: "Stroke: Infografik Interaktif (EN)",
+                strokeCardDesc: "Panduan visual tentang penyebab, tindakan segera, perawatan, dan perjalanan pemulihan stroke.",
+                infoCardLink: "Lihat Infografik &rarr;",
+                diabetesCardTitle: "Panduan Lengkap Diabetes",
+                diabetesCardDesc: "Panduan lengkap tentang penyebab, tindakan segera, perawatan, dan perjalanan pemulihan diabetes.",
+                guideCardLink: "Lihat Panduan &rarr;",
+                foodborneCardTitle: "Panduan Klinis Wabah Penyakit Bawaan Makanan",
+                foodborneCardDesc: "Panduan klinis tentang penyebab, tindakan segera, perawatan, dan pemulihan wabah penyakit bawaan makanan.",
+                laxativeCardTitle: "Perbandingan Lengkap Laksatif",
+                laxativeCardDesc: "Perbandingan lengkap antara laksatif.",
+                navalCardTitle: "Perbandingan Kelas Kapal Angkatan Laut (EN)",
+                navalCardDesc: "Perbandingan antara kelas kapal angkatan laut dalam ringkasan.",
+                nusantaraCardTitle: "Apa Jika Nusantara - Analisis Kemerdekaan Provinsi Indonesia",
+                nusantaraCardDesc: "Perbandingan antara setiap provinsi di Indonesia jika setiap provinsi menjadi negara berdaulat.",
+                comparisonCardLink: "Lihat Perbandingan &rarr;",
+                testingCardTitle: "Halaman Web LoLyeah Dalam Proses",
+                testingCardDesc: "Berdasarkan Xiaomi MiMo V2 LLM.",
+                solarCardTitle: "Penjelajah Tata Surya",
+                solarCardDesc: "Simulasi Tata Surya, langsung di browser Anda.",
+                upperGastroCardTitle: "Gangguan Saluran Cerna Atas (EN)",
+                upperGastroCardDesc: "Panduan interaktif untuk Gastritis, GERD, dan Tukak Lambung.",
+                footerText: "&copy; 2026 LoLyeah. Hak Cipta Dilindungi."
             }
+        };
+
+        // --- Language Switcher Logic ---
+        function switchLanguage(lang) {
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-translate-key]').forEach(el => {
+                const key = el.dataset.translateKey;
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+            document.getElementById('lang-id').classList.toggle('active', lang === 'id');
         }
 
-        // Start typing after a short delay
-        setTimeout(typeWriter, 400);
+        document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
+        document.getElementById('lang-id').addEventListener('click', () => switchLanguage('id'));
+        switchLanguage('en'); // Default
 
-        // --- Mouse Tracking Hover Script ---
+        // --- Mouse Tracking Hover Effect ---
         const featuresGrid = document.getElementById("features");
         
         featuresGrid.onmousemove = e => {
@@ -530,11 +515,25 @@
                       x = e.clientX - rect.left,
                       y = e.clientY - rect.top;
 
-                // Set CSS variables for the pseudo-element gradient
                 card.style.setProperty("--mouse-x", `${x}px`);
                 card.style.setProperty("--mouse-y", `${y}px`);
             };
         }
+
+        // --- Scroll to Top Logic ---
+        const scrollTopBtn = document.getElementById('scrollTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     </script>
 </body>
 </html>
