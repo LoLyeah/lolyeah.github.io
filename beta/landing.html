@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoLyeah Interactive Guides</title>
     <style>
-        /* Base Variables (zerolol style) */
+        /* Base Variables - Light Mode */
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f4f4f4;
@@ -13,8 +13,20 @@
             --text-secondary: #555555;
             --border-light: #e0e0e0;
             --border-dark: #000000;
+            --hover-glow: rgba(0, 0, 0, 0.05);
             --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --font-mono: 'JetBrains Mono', 'Courier New', Courier, monospace;
+        }
+
+        /* Variables - Dark Mode */
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --text-primary: #ffffff;
+            --text-secondary: #999999;
+            --border-light: #222222;
+            --border-dark: #ffffff;
+            --hover-glow: rgba(255, 255, 255, 0.06);
         }
 
         /* Reset & Base Styles */
@@ -31,6 +43,7 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         a {
@@ -62,6 +75,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .logo {
@@ -79,9 +93,16 @@
             background-color: var(--text-primary);
             border-radius: 2px;
             display: inline-block;
+            transition: background-color 0.3s ease;
         }
 
-        .lang-switcher button {
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-controls button {
             background: transparent;
             border: none;
             font-family: var(--font-mono);
@@ -91,7 +112,7 @@
             transition: color 0.2s ease;
         }
 
-        .lang-switcher button:hover {
+        .nav-controls button:hover {
             color: var(--text-primary);
         }
 
@@ -100,9 +121,22 @@
             font-weight: bold;
         }
 
-        .lang-separator {
+        .separator {
             color: var(--border-light);
-            margin: 0 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        #theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+
+        #theme-toggle:hover {
+            border-color: var(--text-primary);
         }
 
         /* Hero Section */
@@ -117,6 +151,7 @@
             background-size: 40px 40px;
             background-position: center center;
             border-bottom: 1px solid var(--border-light);
+            transition: border-color 0.3s ease;
         }
 
         .hero::after {
@@ -125,6 +160,7 @@
             top: 0; left: 0; right: 0; bottom: 0;
             background: radial-gradient(circle at center, transparent 0%, var(--bg-primary) 80%);
             pointer-events: none;
+            transition: background 0.3s ease;
         }
 
         .hero-content {
@@ -138,12 +174,30 @@
             padding: 0.25rem 0.75rem;
             border: 1px solid var(--border-dark);
             margin-bottom: 2rem;
+            transition: border-color 0.3s ease;
         }
 
         .hero h1 {
             font-size: 3.5rem;
             line-height: 1.1;
             margin-bottom: 1rem;
+            min-height: 1.2em; /* Prevents layout shifting during typing */
+        }
+
+        /* Terminal Cursor */
+        .cursor {
+            display: inline-block;
+            width: 0.5em;
+            height: 1em;
+            background-color: var(--text-primary);
+            vertical-align: text-bottom;
+            animation: blink 1s step-end infinite;
+            margin-left: 6px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
         .hero p {
@@ -168,6 +222,7 @@
             background-color: var(--border-light);
             border: 1px solid var(--border-light);
             position: relative;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         /* Mouse tracking hover effect */
@@ -178,6 +233,7 @@
             overflow: hidden;
             display: block;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         .feature-card::before {
@@ -186,7 +242,7 @@
             top: 0; left: 0; right: 0; bottom: 0;
             background: radial-gradient(
                 800px circle at var(--mouse-x) var(--mouse-y), 
-                rgba(0, 0, 0, 0.04),
+                var(--hover-glow),
                 transparent 40%
             );
             z-index: 1;
@@ -235,7 +291,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            transition: gap 0.2s ease;
+            transition: gap 0.2s ease, color 0.3s ease;
         }
 
         .feature-card:hover .card-link {
@@ -250,6 +306,7 @@
             justify-content: space-between;
             color: var(--text-secondary);
             font-size: 0.85rem;
+            transition: border-color 0.3s ease;
         }
 
         /* Scroll to Top - Minimalist */
@@ -286,6 +343,7 @@
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
             footer { flex-direction: column; gap: 1rem; text-align: center; }
+            .nav-controls { gap: 0.75rem; }
         }
     </style>
 </head>
@@ -296,17 +354,24 @@
             <span class="logo-placeholder"></span>
             LoLyeah
         </div>
-        <div class="lang-switcher">
-            <button id="lang-en" class="active">EN</button>
-            <span class="lang-separator">|</span>
-            <button id="lang-id">ID</button>
+        <div class="nav-controls">
+            <div class="lang-switcher">
+                <button id="lang-en" class="active">EN</button>
+                <span class="separator">|</span>
+                <button id="lang-id">ID</button>
+            </div>
+            <span class="separator">/</span>
+            <button id="theme-toggle">
+                <span id="theme-icon">◐</span>
+                <span id="theme-text">DARK</span>
+            </button>
         </div>
     </nav>
 
     <header class="hero">
         <div class="hero-content">
             <div class="hero-badge mono" data-translate-key="headerSubtitle">An evolving collection of deep dives into various topics.</div>
-            <h1 data-translate-key="headerTitle">LoLyeah Interactive Guides</h1>
+            <h1 id="typewriter-title" data-translate-key="headerTitle">LoLyeah Interactive Guides</h1>
         </div>
     </header>
 
@@ -487,6 +552,25 @@
             }
         };
 
+        // --- Typewriter Animation ---
+        let typingTimeout;
+        function runTypewriter(element, text) {
+            clearTimeout(typingTimeout);
+            element.innerHTML = '<span class="cursor"></span>';
+            let i = 0;
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
+                    i++;
+                    const speed = Math.random() * 40 + 30; // Randomize typing speed
+                    typingTimeout = setTimeout(type, speed);
+                }
+            }
+            // Small delay before starting
+            typingTimeout = setTimeout(type, 300);
+        }
+
         // --- Language Switcher Logic ---
         function switchLanguage(lang) {
             document.documentElement.lang = lang;
@@ -494,7 +578,12 @@
             document.querySelectorAll('[data-translate-key]').forEach(el => {
                 const key = el.dataset.translateKey;
                 if (translations[lang][key]) {
-                    el.innerHTML = translations[lang][key];
+                    // Check if the element is our main header to trigger the typing animation
+                    if(el.id === 'typewriter-title') {
+                        runTypewriter(el, translations[lang][key]);
+                    } else {
+                        el.innerHTML = translations[lang][key];
+                    }
                 }
             });
 
@@ -504,7 +593,23 @@
 
         document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
         document.getElementById('lang-id').addEventListener('click', () => switchLanguage('id'));
-        switchLanguage('en'); // Default
+        switchLanguage('en'); // Default init
+
+        // --- Dark Mode Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeText = document.getElementById('theme-text');
+        
+        // Check for saved user preference, if any, on load
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeText.innerText = currentTheme === 'light' ? 'DARK' : 'LIGHT';
+
+        themeToggle.addEventListener('click', () => {
+            let targetTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('theme', targetTheme);
+            themeText.innerText = targetTheme === 'light' ? 'DARK' : 'LIGHT';
+        });
 
         // --- Mouse Tracking Hover Effect ---
         const featuresGrid = document.getElementById("features");
