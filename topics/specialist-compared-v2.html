@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Specialists | zerolol Intelligence</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Base Variables - Light Mode */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f4f4f4;
+            --text-primary: #000000;
+            --text-secondary: #555555;
+            --border-light: #e0e0e0;
+            --border-dark: #000000;
+            --hover-glow: rgba(0, 0, 0, 0.03);
+            --chart-grid: #eeeeee;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Courier New', Courier, monospace;
+        }
+
+        /* Variables - Dark Mode */
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --text-primary: #ffffff;
+            --text-secondary: #999999;
+            --border-light: #222222;
+            --border-dark: #ffffff;
+            --hover-glow: rgba(255, 255, 255, 0.04);
+            --chart-grid: #1a1a1a;
+        }
+
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a { text-decoration: none; color: var(--text-primary); }
+        ul { list-style: none; }
+
+        /* Typography */
+        h1, h2, h3, h4 { font-weight: 500; letter-spacing: -0.02em; }
+        .mono {
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.05em;
+        }
+
+        .logo-placeholder {
+            width: 24px;
+            height: 24px;
+            background-color: var(--text-primary);
+            border-radius: 2px;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-controls { display: flex; align-items: center; gap: 1.5rem; }
+        
+        button {
+            background: transparent;
+            border: none;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        #theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+
+        #theme-toggle:hover { border-color: var(--text-primary); }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 5% 4rem;
+            position: relative;
+            background-image: linear-gradient(var(--border-light) 1px, transparent 1px),
+                              linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center center;
+            border-bottom: 1px solid var(--border-light);
+            transition: border-color 0.3s ease;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, transparent 0%, var(--bg-primary) 80%);
+            pointer-events: none;
+            transition: background 0.3s ease;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid var(--border-dark);
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            min-height: 1.2em;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 0.5em; height: 1em;
+            background-color: var(--text-primary);
+            vertical-align: text-bottom;
+            animation: blink 1s step-end infinite;
+            margin-left: 6px;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .hero p { font-size: 1.15rem; color: var(--text-secondary); max-width: 700px; }
+
+        /* Tabs Navigation */
+        .tabs-container {
+            padding: 2rem 5% 0;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border-light);
+            border-bottom: none;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+
+        .tab-btn:hover { background: var(--bg-primary); color: var(--text-primary); }
+
+        .tab-btn.active {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border-color: var(--border-dark);
+            border-bottom: 2px solid var(--bg-primary);
+            margin-bottom: -1px;
+            font-weight: 600;
+        }
+
+        /* Main Content Area */
+        main { padding: 4rem 5%; min-height: 60vh; }
+        
+        .section-header { margin-bottom: 2rem; }
+        .section-header h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .section-header p { color: var(--text-secondary); font-size: 0.95rem; }
+
+        .fade-enter { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden { display: none !important; }
+
+        /* UI Elements */
+        .panel {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            padding: 2rem;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+            position: relative;
+        }
+
+        /* Dropdown */
+        .select-wrapper { margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        select {
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            outline: none;
+            width: 100%;
+            max-width: 400px;
+            cursor: pointer;
+        }
+        select:focus { border-color: var(--text-primary); }
+
+        /* Grid Layouts */
+        .grid-split {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Tracking Card (Deep Dive) */
+        .tracking-card {
+            overflow: hidden;
+            cursor: default;
+        }
+        .tracking-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient( 800px circle at var(--mouse-x) var(--mouse-y), var(--hover-glow), transparent 40% );
+            z-index: 1; opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .tracking-card:hover::before { opacity: 1; }
+        .tracking-card-content { position: relative; z-index: 2; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border: 1px solid var(--text-primary);
+            font-size: 0.75rem;
+        }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .stat-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            padding: 1rem;
+            text-align: center;
+        }
+        .stat-val { font-size: 1.5rem; font-weight: 600; margin-top: 0.25rem; }
+
+        .desc-block { margin-bottom: 1.5rem; }
+        .desc-block h4 { color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .desc-block p { font-size: 0.95rem; }
+
+        /* Chart Containers */
+        .chart-wrapper { width: 100%; height: 55vh; min-height: 400px; position: relative; }
+        .scrollable-y { overflow-y: auto; overflow-x: hidden; border: 1px solid var(--border-light); }
+        .scrollable-y::-webkit-scrollbar { width: 6px; }
+        .scrollable-y::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        .scrollable-y::-webkit-scrollbar-thumb { background: var(--border-light); }
+        .scrollable-y::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            transition: border-color 0.3s ease;
+        }
+
+        @media (max-width: 900px) {
+            .grid-split { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <span class="logo-placeholder"></span>
+            zerolol
+        </div>
+        <div class="nav-controls">
+            <button id="theme-toggle" class="mono">
+                <span id="theme-icon">◐</span>
+                <span id="theme-text">DARK</span>
+            </button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <div class="hero-badge mono">Database: 30+ Specialties</div>
+            <h1 id="typewriter-title"></h1>
+            <p>An exhaustive analysis of every recognized medical specialty (Sp.) in Indonesia. Compare Income, Work-Life Balance, and Market Demand.</p>
+        </div>
+    </header>
+
+    <div class="tabs-container">
+        <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn mono active">Bar: Full Ranking</button>
+        <button onclick="switchTab('deepdive')" id="tab-deepdive" class="tab-btn mono">Radar: Deep Dive</button>
+        <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn mono">Scatter: Ecosystem</button>
+    </div>
+
+    <main id="content-area">
+        
+        <section id="section-overview" class="fade-enter">
+            <div class="section-header">
+                <h2>Macro Income Ranking</h2>
+                <p>Horizontal bar chart displaying all specialties. Scroll down within the chart area to view lower-earning tiers.</p>
+            </div>
+            
+            <div class="scrollable-y" style="height: 60vh;">
+                <div id="dynamic-chart-wrapper" style="position: relative; width: 100%;">
+                    <canvas id="overviewChart"></canvas>
+                </div>
+            </div>
+            <div class="mono" style="margin-top: 1rem; font-size: 0.7rem; color: var(--text-secondary); text-align: right;">
+                *Estimates reflect mid-career urban specialists combining BPJS and private practice.
+            </div>
+        </section>
+
+        <section id="section-deepdive" class="hidden">
+            <div class="section-header">
+                <h2>Specialty Profiler</h2>
+                <p>Select any of the 30+ specialties to view its unique lifestyle and earning profile.</p>
+            </div>
+
+            <div class="select-wrapper">
+                <label for="specialty-select" class="mono">Query:</label>
+                <select id="specialty-select" onchange="updateDeepDive()"></select>
+            </div>
+
+            <div class="grid-split">
+                <div class="panel tracking-card" id="tracking-panel">
+                    <div class="tracking-card-content">
+                        <div class="card-header">
+                            <div>
+                                <h3 id="card-title" style="font-size: 1.5rem; margin-bottom: 0.25rem;">Name</h3>
+                                <p id="card-subtitle" class="mono" style="color: var(--text-secondary);">Gelar</p>
+                            </div>
+                            <span id="card-badge" class="badge mono">Category</span>
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <span class="mono" style="font-size: 0.7rem; color: var(--text-secondary);">Est. Income</span>
+                                <div class="stat-val mono" id="card-salary">--</div>
+                            </div>
+                            <div class="stat-box">
+                                <span class="mono" style="font-size: 0.7rem; color: var(--text-secondary);">WLB Score</span>
+                                <div class="stat-val mono" id="card-wlb">--</div>
+                            </div>
+                            <div class="stat-box">
+                                <span class="mono" style="font-size: 0.7rem; color: var(--text-secondary);">Avg Hours</span>
+                                <div class="stat-val mono" id="card-hours">--</div>
+                            </div>
+                        </div>
+                        
+                        <div class="desc-block">
+                            <h4 class="mono">Context & Reality</h4>
+                            <p id="card-desc">Description...</p>
+                        </div>
+                        
+                        <div class="desc-block">
+                            <h4 class="mono">Primary Stressors</h4>
+                            <p id="card-stress">Stress...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h3 class="mono" style="text-align: center; margin-bottom: 0.5rem; font-size: 0.85rem;">Career Shape Matrix (0-10)</h3>
+                    <div class="chart-wrapper" style="height: 350px; min-height: 350px;">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-matrix" class="hidden">
+            <div class="section-header">
+                <h2>Ecosystem Scatter Plot</h2>
+                <p>X = Work-Life Balance. Y = Monthly Income. Bubble Size = Future Demand. Organized by clinical category.</p>
+            </div>
+
+            <div class="panel">
+                <div class="chart-wrapper" style="height: 65vh;">
+                    <canvas id="matrixChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer>
+        <div class="logo">
+            <span class="logo-placeholder"></span>
+            zerolol
+        </div>
+        <div>
+            &copy; 2026 Intelligence Engine. Synthesized for analytical modeling.
+        </div>
+    </footer>
+
+    <script>
+        // --- DATASET ---
+        const medicalData = [
+            { cat: "Surgical", id: "spbs", name: "Neurosurgeon", titleID: "Sp.BS", salary: 150, wlb: 2.0, hours: "70-90", prospects: 90, desc: "Highest earning potential but universally lowest WLB. Critical shortages outside Java. Brain/spine surgeries are intensely long.", stress: "Extreme micro-surgical precision required. Devastating patient outcomes. Constant emergency trauma calls." },
+            { cat: "Surgical", id: "spbpre", name: "Plastic & Reconstructive", titleID: "Sp.BP-RE", salary: 140, wlb: 6.5, hours: "45-55", prospects: 95, desc: "Massive income through aesthetic cash-pay procedures, balanced with hospital reconstructive (burns, clefts) work.", stress: "Perfectionist patient demands in aesthetics. Reconstructive trauma can be grueling." },
+            { cat: "Surgical", id: "spbtkv", name: "Cardiothoracic", titleID: "Sp.BTKV", salary: 140, wlb: 2.5, hours: "70-80", prospects: 85, desc: "Elite surgical tier handling heart bypasses and lung resections. Extremely limited number of specialists in Indonesia.", stress: "Highest mortality risk surgeries. Long, grueling hours in the OR." },
+            { cat: "Surgical", id: "spot", name: "Orthopedic Surgeon", titleID: "Sp.OT", salary: 130, wlb: 3.5, hours: "65-75", prospects: 88, desc: "High volume of trauma (motorcycle accidents) and aging population (joint replacements) ensures massive demand and high pay.", stress: "Physically exhausting surgeries. Heavy emergency trauma call burden." },
+            { cat: "Surgical", id: "spb", name: "General Surgeon", titleID: "Sp.B", salary: 110, wlb: 3.5, hours: "65-80+", prospects: 85, desc: "The essential backbone of any hospital. Handles everything from appendectomies to trauma.", stress: "Unpredictable hours, chronic sleep deprivation, and high volume of acute abdomens/trauma." },
+            { cat: "Surgical", id: "spog", name: "Ob/Gyn", titleID: "Sp.OG", salary: 105, wlb: 3.0, hours: "65-80", prospects: 90, desc: "Extremely lucrative due to patient volume and private maternity clinics. Indonesia's birth rate keeps demand perpetual.", stress: "Babies dictate the schedule. High litigation risk, frequent night-time emergencies." },
+            { cat: "Surgical", id: "spm", name: "Ophthalmologist", titleID: "Sp.M", salary: 95, wlb: 7.5, hours: "40-50", prospects: 85, desc: "The 'sweet spot' of surgery. Short, high-turnover procedures (Cataracts, Lasik) yield high income.", stress: "High patient volume in clinic. Microsurgical precision requires intense focus." },
+            { cat: "Surgical", id: "spu", name: "Urologist", titleID: "Sp.U", salary: 105, wlb: 6.0, hours: "50-60", prospects: 85, desc: "Excellent mix of clinic and procedural work (endourology, stones, prostate).", stress: "Some emergency calls (torsions, severe retention), but generally manageable." },
+            { cat: "Surgical", id: "sptht", name: "ENT Surgeon", titleID: "Sp.THT", salary: 85, wlb: 7.0, hours: "45-55", prospects: 80, desc: "Solid outpatient volume with varied surgical interventions (tonsils, sinus, head/neck).", stress: "Airway emergencies (rare but terrifying). High volume of minor clinic complaints." },
+            { cat: "Surgical", id: "spba", name: "Pediatric Surgeon", titleID: "Sp.BA", salary: 110, wlb: 3.0, hours: "60-75", prospects: 85, desc: "Niche, highly specialized surgery for congenital defects and pediatric trauma.", stress: "Operating on neonates is incredibly high pressure. Emotionally taxing." },
+            
+            { cat: "Medical", id: "spjp", name: "Cardiologist", titleID: "Sp.JP", salary: 115, wlb: 4.0, hours: "60-70", prospects: 95, desc: "Top earner in non-surgical (though cath lab is procedural). Massive burden of cardiovascular disease.", stress: "Acute myocardial infarctions (STEMI) require immediate catheterization at all hours." },
+            { cat: "Medical", id: "spdv", name: "Dermatologist", titleID: "Sp.DV", salary: 95, wlb: 8.5, hours: "35-45", prospects: 92, desc: "Ultimate lifestyle specialty. Booming aesthetic industry provides cash income.", stress: "Dealing with patient vanity and aesthetic complaints. Virtually zero emergencies." },
+            { cat: "Medical", id: "sppd", name: "Internal Medicine", titleID: "Sp.PD", salary: 80, wlb: 4.5, hours: "55-65", prospects: 88, desc: "The diagnosticians of the adult ward. High volume of chronic diseases.", stress: "Managing highly complex, multi-morbid patients. High administrative/BPJS burden." },
+            { cat: "Medical", id: "spa", name: "Pediatrician", titleID: "Sp.A", salary: 75, wlb: 6.0, hours: "50-60", prospects: 85, desc: "High outpatient volume (vaccines, common illnesses) with neonatal inpatient coverage.", stress: "Seasonal infectious disease spikes. Managing anxious parents is often harder than the disease." },
+            { cat: "Medical", id: "spp", name: "Pulmonologist", titleID: "Sp.P", salary: 85, wlb: 4.0, hours: "55-65", prospects: 90, desc: "Extremely busy post-COVID and due to Indonesia's high TB and smoking rates.", stress: "Dealing with critical respiratory failure and highly infectious diseases." },
+            { cat: "Medical", id: "sps", name: "Neurologist", titleID: "Sp.S", salary: 75, wlb: 5.5, hours: "50-60", prospects: 88, desc: "Managing strokes, epilepsy, and neurodegenerative diseases.", stress: "Acute stroke codes require rapid response. Many chronic diseases have poor long-term outcomes." },
+            { cat: "Medical", id: "spkj", name: "Psychiatrist", titleID: "Sp.KJ", salary: 60, wlb: 8.0, hours: "35-45", prospects: 98, desc: "Massively surging demand as mental health stigma drops. Excellent hours.", stress: "Emotional exhaustion, compassion fatigue, managing suicidal ideation." },
+            { cat: "Medical", id: "spkfr", name: "Rehab Medicine", titleID: "Sp.KFR", salary: 60, wlb: 8.5, hours: "35-45", prospects: 85, desc: "Focuses on post-stroke, post-op, and sports injury recovery.", stress: "Very low stress. Outcomes are slow but rewarding." },
+            { cat: "Medical", id: "spand", name: "Andrologist", titleID: "Sp.And", salary: 65, wlb: 8.0, hours: "40-45", prospects: 80, desc: "Male fertility and sexual health. Niche, largely private pay (IVF clinics).", stress: "Managing sensitive patient psychology regarding infertility." },
+            { cat: "Medical", id: "spem", name: "Emergency Med", titleID: "Sp.EM", salary: 60, wlb: 4.0, hours: "50-60", prospects: 95, desc: "A newer specialty replacing GPs as the head of the ER. Shift work.", stress: "Constant chaos, trauma, shift-work sleep disruption, frontline abuse." },
+
+            { cat: "Diagnostic", id: "span", name: "Anesthesiologist", titleID: "Sp.An", salary: 95, wlb: 4.5, hours: "55-70+", prospects: 85, desc: "Tied to the operating room. Excellent income per case.", stress: "Seconds away from disaster at all times. Schedule is hostage to surgeons' speed." },
+            { cat: "Diagnostic", id: "sprad", name: "Radiologist", titleID: "Sp.Rad", salary: 80, wlb: 7.5, hours: "40-50", prospects: 88, desc: "The 'doctor's doctor'. Reads imaging (CT, MRI) in a dark room.", stress: "Eye strain, repetitive task fatigue. Missing a subtle finding has huge legal consequences." },
+            { cat: "Diagnostic", id: "sppk", name: "Clinical Pathologist", titleID: "Sp.PK", salary: 50, wlb: 8.5, hours: "35-45", prospects: 80, desc: "Manages hospital laboratories, blood banks, and fluid diagnostics.", stress: "Very low clinical stress. Ensuring lab QC/QA and managing lab tech staff." },
+            { cat: "Diagnostic", id: "sppa", name: "Anatomical Pathologist", titleID: "Sp.PA", salary: 55, wlb: 8.5, hours: "35-45", prospects: 85, desc: "Diagnoses cancer from tissue biopsies. Sits at a microscope.", stress: "Making the definitive cancer diagnosis carries heavy responsibility." },
+            { cat: "Diagnostic", id: "spmk", name: "Clinical Microbiologist", titleID: "Sp.MK", salary: 45, wlb: 8.5, hours: "35-40", prospects: 82, desc: "Focuses on infectious diseases, antibiotic resistance, and infection control.", stress: "Low clinical stress. Outbreak management causes temporary intense workload." },
+            { cat: "Diagnostic", id: "sponkrad", name: "Radiation Oncologist", titleID: "Sp.Onk.Rad", salary: 85, wlb: 7.0, hours: "40-50", prospects: 90, desc: "Plans and delivers radiation therapy for cancer. Highly scheduled.", stress: "Dealing entirely with cancer patients. Calculating precise radiation doses." },
+            { cat: "Diagnostic", id: "spf", name: "Forensic Pathologist", titleID: "Sp.F", salary: 40, wlb: 7.0, hours: "40-50", prospects: 70, desc: "Medicolegal investigations, autopsies, clinical forensics.", stress: "Gruesome work environments, court testimonies, dealing with grieving families." },
+
+            { cat: "Specialized", id: "spgk", name: "Clinical Nutrition", titleID: "Sp.GK", salary: 50, wlb: 8.0, hours: "40-45", prospects: 88, desc: "Manages therapeutic diets and weight management.", stress: "Low stress. Frustration primarily from patient non-compliance with diets." },
+            { cat: "Specialized", id: "spko", name: "Sports Medicine", titleID: "Sp.KO", salary: 45, wlb: 8.0, hours: "35-45", prospects: 82, desc: "Injury prevention and rehab for athletes.", stress: "Very low stress. Building a client base outside of sports teams can take time." },
+            { cat: "Specialized", id: "spkp", name: "Aviation Medicine", titleID: "Sp.KP", salary: 45, wlb: 8.5, hours: "35-45", prospects: 75, desc: "Assessing pilot fitness and flight physiology.", stress: "Regulatory burden. Grounding a pilot ruins their career." },
+            { cat: "Specialized", id: "spfk", name: "Clinical Pharmacologist", titleID: "Sp.FK", salary: 40, wlb: 9.0, hours: "35-40", prospects: 75, desc: "Experts in drug interactions and clinical trials.", stress: "Lowest clinical stress. Mostly advisory and academic pressure." },
+            { cat: "Specialized", id: "spkklp", name: "Primary Care", titleID: "Sp.KKLP", salary: 45, wlb: 7.0, hours: "45-55", prospects: 95, desc: "Holistic family management at Faskes 1 clinics.", stress: "Massive patient volume under BPJS capitation. Acting as the gatekeeper." }
+        ];
+        medicalData.sort((a, b) => b.salary - a.salary);
+
+        // --- GLOBAL THEME UTILS ---
+        function getCSSVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+        
+        // Convert hex/rgb to rgba
+        function getChartColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const textPrimary = getCSSVar('--text-primary');
+            const bgPrimary = getCSSVar('--bg-primary');
+            const gridColor = getCSSVar('--chart-grid');
+            
+            // Generate shades based on current text color for categories
+            return {
+                text: textPrimary,
+                bg: bgPrimary,
+                grid: gridColor,
+                catStyles: {
+                    "Surgical": { bg: textPrimary, border: textPrimary }, // Solid
+                    "Medical": { bg: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)', border: textPrimary },
+                    "Diagnostic": { bg: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', border: textPrimary },
+                    "Specialized": { bg: 'transparent', border: textPrimary } // Hollow
+                }
+            };
+        }
+
+        // --- TYPEWRITER ---
+        const titleText = "Indonesian Medical Specialists Database";
+        const titleEl = document.getElementById("typewriter-title");
+        let i = 0;
+        titleEl.innerHTML = '<span class="cursor"></span>';
+        
+        function typeWriter() {
+            if (i < titleText.length) {
+                titleEl.innerHTML = titleText.substring(0, i + 1) + '<span class="cursor"></span>';
+                i++;
+                setTimeout(typeWriter, Math.random() * 40 + 30);
+            }
+        }
+        setTimeout(typeWriter, 300);
+
+        // --- TABS & NAVIGATION ---
+        let overviewChartInst, radarChartInst, matrixChartInst;
+        let activeTab = 'overview';
+
+        function switchTab(tabId) {
+            activeTab = tabId;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+
+            document.querySelectorAll('main > section').forEach(sec => {
+                sec.classList.add('hidden');
+                sec.classList.remove('fade-enter');
+            });
+            
+            const activeSec = document.getElementById(`section-${tabId}`);
+            activeSec.classList.remove('hidden');
+            void activeSec.offsetWidth; // trigger reflow
+            activeSec.classList.add('fade-enter');
+
+            renderCharts();
+        }
+
+        function renderCharts() {
+            if (activeTab === 'overview') renderOverviewChart();
+            if (activeTab === 'deepdive') { populateDropdown(); updateDeepDive(); }
+            if (activeTab === 'matrix') renderMatrixChart();
+        }
+
+        // --- CHART GENERATORS ---
+        Chart.defaults.font.family = "'JetBrains Mono', 'Courier New', Courier, monospace";
+
+        function renderOverviewChart() {
+            const wrapper = document.getElementById('dynamic-chart-wrapper');
+            wrapper.style.height = `${medicalData.length * 35}px`;
+            const ctx = document.getElementById('overviewChart').getContext('2d');
+            const colors = getChartColors();
+
+            if (overviewChartInst) overviewChartInst.destroy();
+
+            overviewChartInst = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: medicalData.map(d => `${d.titleID}`),
+                    datasets: [{
+                        label: 'Avg Monthly Income (m IDR)',
+                        data: medicalData.map(d => d.salary),
+                        backgroundColor: medicalData.map(d => colors.catStyles[d.cat].bg),
+                        borderColor: medicalData.map(d => colors.catStyles[d.cat].border),
+                        borderWidth: 1,
+                        borderRadius: 2
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    color: colors.text,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { titleFont: { family: 'JetBrains Mono' }, bodyFont: { family: 'JetBrains Mono' } }
+                    },
+                    scales: {
+                        x: { 
+                            grid: { color: colors.grid }, 
+                            ticks: { color: colors.text } 
+                        },
+                        y: { 
+                            grid: { display: false }, 
+                            ticks: { autoSkip: false, font: {size: 11}, color: colors.text } 
+                        }
+                    }
+                }
+            });
+        }
+
+        function populateDropdown() {
+            const select = document.getElementById('specialty-select');
+            if(select.options.length > 0) return;
+            const groups = ["Surgical", "Medical", "Diagnostic", "Specialized"];
+            groups.forEach(cat => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = `-- ${cat.toUpperCase()} --`;
+                medicalData.filter(d => d.cat === cat).forEach(role => {
+                    const opt = document.createElement('option');
+                    opt.value = role.id;
+                    opt.textContent = `${role.titleID} - ${role.name}`;
+                    optgroup.appendChild(opt);
+                });
+                select.appendChild(optgroup);
+            });
+        }
+
+        function updateDeepDive() {
+            const id = document.getElementById('specialty-select').value;
+            const role = medicalData.find(d => d.id === id);
+            
+            document.getElementById('card-title').textContent = role.name;
+            document.getElementById('card-subtitle').textContent = role.titleID;
+            document.getElementById('card-salary').innerHTML = `${role.salary}m <span style="font-size:0.5em; font-weight:normal;">IDR</span>`;
+            document.getElementById('card-wlb').innerHTML = `${role.wlb} <span style="font-size:0.5em; font-weight:normal;">/10</span>`;
+            document.getElementById('card-hours').innerHTML = `${role.hours} <span style="font-size:0.5em; font-weight:normal;">H</span>`;
+            document.getElementById('card-desc').textContent = role.desc;
+            document.getElementById('card-stress').textContent = role.stress;
+            document.getElementById('card-badge').textContent = role.cat;
+
+            renderRadarChart(role);
+        }
+
+        function renderRadarChart(role) {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            const colors = getChartColors();
+            if (radarChartInst) radarChartInst.destroy();
+
+            radarChartInst = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['INCOME', 'DEMAND', 'WLB'],
+                    datasets: [{
+                        label: role.titleID,
+                        data: [ (role.salary/160)*10, (role.prospects/100)*10, role.wlb ],
+                        backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                        borderColor: colors.text,
+                        pointBackgroundColor: colors.bg,
+                        pointBorderColor: colors.text,
+                        borderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, color: colors.text,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        r: {
+                            angleLines: { color: colors.grid },
+                            grid: { color: colors.grid, circular: false },
+                            pointLabels: { font: { size: 11, family: 'JetBrains Mono' }, color: colors.text },
+                            ticks: { display: false, min: 0, max: 10 }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderMatrixChart() {
+            const ctx = document.getElementById('matrixChart').getContext('2d');
+            const colors = getChartColors();
+            if (matrixChartInst) matrixChartInst.destroy();
+
+            const categories = ["Surgical", "Medical", "Diagnostic", "Specialized"];
+            const datasets = categories.map(cat => ({
+                label: cat,
+                data: medicalData.filter(d => d.cat === cat).map(role => ({
+                    x: role.wlb, y: role.salary, r: role.prospects / 4, rawRole: role
+                })),
+                backgroundColor: colors.catStyles[cat].bg,
+                borderColor: colors.catStyles[cat].border,
+                borderWidth: 1.5
+            }));
+
+            matrixChartInst = new Chart(ctx, {
+                type: 'bubble',
+                data: { datasets: datasets },
+                options: {
+                    responsive: true, maintainAspectRatio: false, color: colors.text,
+                    plugins: { 
+                        legend: { position: 'top', labels: { color: colors.text, font: {family: 'JetBrains Mono'} } },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `${ctx.raw.rawRole.titleID}: ${ctx.raw.rawRole.salary}m | WLB: ${ctx.raw.rawRole.wlb}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'WLB (10=Ideal)', color: colors.text }, grid: { color: colors.grid }, ticks: { color: colors.text }, min: 1, max: 10 },
+                        y: { title: { display: true, text: 'Income (m IDR)', color: colors.text }, grid: { color: colors.grid }, ticks: { color: colors.text } }
+                    }
+                }
+            });
+        }
+
+        // --- DARK MODE TOGGLE ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeText = document.getElementById('theme-text');
+        
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeText.innerText = currentTheme === 'light' ? 'DARK' : 'LIGHT';
+
+        themeToggle.addEventListener('click', () => {
+            let targetTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('theme', targetTheme);
+            themeText.innerText = targetTheme === 'light' ? 'DARK' : 'LIGHT';
+            
+            // Re-render charts to update axis colors dynamically
+            renderCharts(); 
+        });
+
+        // --- MOUSE TRACKING ---
+        const trackingPanel = document.getElementById("tracking-panel");
+        trackingPanel.onmousemove = e => {
+            const rect = trackingPanel.getBoundingClientRect();
+            trackingPanel.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+            trackingPanel.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+        };
+
+        // Init
+        window.onload = () => renderOverviewChart();
+
+    </script>
+</body>
+</html>
