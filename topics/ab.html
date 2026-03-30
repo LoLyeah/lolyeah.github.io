@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>痛い</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Zen+Kurenaido&family=Yuji+Syuku&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --chalk: rgba(230, 228, 220, 0.88);
+    --chalk-dim: rgba(200, 198, 190, 0.55);
+    --chalk-faint: rgba(180, 178, 170, 0.3);
+    --bg: #000;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--chalk);
+    font-family: 'Yuji Syuku', 'Zen Kurenaido', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    cursor: none;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+    mix-blend-mode: overlay;
+  }
+
+  /* Vignette */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.85) 100%);
+    pointer-events: none;
+    z-index: 99;
+  }
+
+  .canvas {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding: 2vw;
+    display: grid;
+    grid-template-columns: 22% 28% 24% 26%;
+    grid-template-rows: auto;
+    gap: 0;
+    align-items: start;
+  }
+
+  .col {
+    padding: 1vw 1.2vw;
+    position: relative;
+  }
+
+  .line {
+    display: block;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    white-space: pre;
+    color: var(--chalk);
+    text-shadow:
+      0 0 8px rgba(255,255,255,0.07),
+      1px 1px 0 rgba(0,0,0,0.8);
+    position: relative;
+  }
+
+  .line.dim { color: var(--chalk-dim); }
+  .line.faint { color: var(--chalk-faint); }
+  .line.emphasis {
+    color: rgba(240,236,228,0.95);
+    text-shadow: 0 0 12px rgba(255,255,255,0.15), 1px 1px 0 rgba(0,0,0,0.9);
+  }
+
+  /* Scattered glyphs column - left edge */
+  .col-glyphs {
+    font-size: clamp(10px, 1.1vw, 15px);
+    opacity: 0.7;
+  }
+
+  /* Main lyric columns */
+  .col-main {
+    font-size: clamp(11px, 1.25vw, 17px);
+  }
+
+  .col-center {
+    font-size: clamp(10px, 1.15vw, 16px);
+    padding-top: 28vh;
+  }
+
+  .col-right {
+    font-size: clamp(11px, 1.2vw, 16px);
+    padding-top: 2vh;
+    text-align: right;
+  }
+
+  /* Spaced-out dramatic lines */
+  .spaced {
+    letter-spacing: 0.35em;
+    font-size: 1.1em;
+  }
+
+  .spaced-wide {
+    letter-spacing: 0.6em;
+  }
+
+  .indent { padding-left: 2em; }
+  .indent2 { padding-left: 4em; }
+
+  /* Glitch flicker on hover */
+  .line:hover {
+    animation: flicker 0.15s steps(1) infinite;
+    color: rgba(255,255,255,0.98);
+  }
+
+  @keyframes flicker {
+    0%   { opacity: 1; transform: translateX(0); }
+    25%  { opacity: 0.6; transform: translateX(-1px); }
+    50%  { opacity: 1; transform: translateX(1px); }
+    75%  { opacity: 0.8; transform: translateX(0); }
+    100% { opacity: 1; }
+  }
+
+  /* Slow ambient pulse */
+  @keyframes ambient {
+    0%, 100% { opacity: 0.88; }
+    50%       { opacity: 0.72; }
+  }
+
+  .canvas { animation: ambient 8s ease-in-out infinite; }
+
+  /* Random glitch bursts */
+  @keyframes glitch-burst {
+    0%  { clip-path: inset(0 0 100% 0); transform: translateX(0); }
+    10% { clip-path: inset(30% 0 50% 0); transform: translateX(-3px); }
+    20% { clip-path: inset(10% 0 70% 0); transform: translateX(2px); }
+    30% { clip-path: inset(60% 0 20% 0); transform: translateX(-1px); }
+    40% { clip-path: inset(0 0 0 0);     transform: translateX(0); }
+    100%{ clip-path: inset(0 0 0 0);     transform: translateX(0); }
+  }
+
+  .glitch-zone {
+    position: relative;
+  }
+
+  .glitch-zone::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0; top: 0;
+    color: rgba(200,200,255,0.15);
+    animation: glitch-burst 12s steps(1) infinite;
+    pointer-events: none;
+    white-space: pre;
+  }
+
+  /* Cursor */
+  .cursor {
+    position: fixed;
+    width: 6px; height: 6px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 200;
+    transform: translate(-50%,-50%);
+    mix-blend-mode: difference;
+    transition: transform 0.05s;
+  }
+
+  /* Scanline */
+  .scanline {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: rgba(255,255,255,0.03);
+    animation: scan 6s linear infinite;
+    pointer-events: none;
+    z-index: 101;
+  }
+
+  @keyframes scan {
+    from { top: -2px; }
+    to   { top: 100vh; }
+  }
+
+  /* Top right isolated phrase */
+  .top-right-phrase {
+    position: absolute;
+    top: 2.5vh;
+    right: 3vw;
+    font-size: clamp(12px, 1.3vw, 18px);
+    letter-spacing: 0.08em;
+    color: var(--chalk);
+    z-index: 10;
+  }
+
+  /* Breathing pain lines */
+  .pain-line {
+    animation: pain-pulse 4s ease-in-out infinite;
+  }
+  .pain-line:nth-child(odd) { animation-delay: -2s; }
+
+  @keyframes pain-pulse {
+    0%, 100% { opacity: 0.88; letter-spacing: 0.04em; }
+    50%       { opacity: 1;    letter-spacing: 0.08em; }
+  }
+
+  br.gap { display: block; content: ''; margin: 0.6em 0; }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="scanline"></div>
+
+<div style="position:relative;">
+  <div class="top-right-phrase">
+    <span class="line">しだけでも気を付けていて</span>
+    <br>
+    <span class="line indent2" style="margin-top:0.8em; display:block;">ね</span>
+  </div>
+
+  <div class="canvas">
+
+    <!-- COL 1: Glyphs / abstract scrawl -->
+    <div class="col col-glyphs">
+      <span class="line faint">｜　／｜　＼　　　　｜　＜｛｜　＼</span><br>
+      <span class="line faint">＼　｜＜ー｜　＼ー（ーー　　　＼</span><br>
+      <span class="line faint">｜　／｜　＼　　　｜｜　＜｛｜　＼</span><br>
+      <span class="line faint">＼ー｜ー　ーー（ーー　　　／　｜ーー</span><br>
+      <br>
+      <span class="line faint">｜｜｜　／｜｜｜　　　｜｜　＜｛ん　＼</span><br>
+      <span class="line faint">し　｜＜ー｜｜＼ー（ーーし</span><br>
+      <br>
+      <span class="line faint">｛｜｜　／｜ん　　　｛｜　＜｛ん　＼</span><br>
+      <span class="line faint">し　｜＜ー｜｜が｜ー（ーーし</span><br>
+      <span class="line faint">も－　痛　い　　とても痛　い</span><br>
+      <span class="line faint">どうしてこんなにとても痛　い</span><br>
+      <span class="line faint">あー　痛　いキミに伝　えたい</span><br>
+      <span class="line faint">キミにだけは伝　えておきたい</span><br>
+      <span class="line faint">も－　つらい　　とてもつらい</span><br>
+      <span class="line faint">どうしてこんなにとてもつらい</span><br>
+      <span class="line faint">会　　いたいキミに　会いたい</span><br>
+      <span class="line faint">胸　のこの辺　がとても痛　い</span><br>
+      <span class="line faint">さっかけは自分　だったのです</span><br>
+      <span class="line faint">傷　を　付けてしまったのです</span><br>
+      <span class="line faint">放　っておけば自然　消　滅　でも</span><br>
+      <span class="line faint">痛　みがいちいち主張　してくるよ</span><br>
+      <span class="line faint">閉じていたら何　も見え　ない</span><br>
+      <span class="line faint">なったモノにしか分から　ない</span><br>
+      <span class="line faint">そんなの理不尽　極　まり無いよ</span><br>
+      <span class="line faint">誰　か　ボクの苦　しみを知ってよ</span><br>
+      <span class="line faint">こーないで－　　こーないで－</span><br>
+      <span class="line faint">そんなに刺激　を与　えない　で</span><br>
+      <span class="line faint">ドンマイで　　すドンマイで　　す</span><br>
+      <span class="line faint">いちいちあねき　散らさ　ないで</span><br>
+    </div>
+
+    <!-- COL 2: Main left block -->
+    <div class="col col-main">
+      <span class="line spaced emphasis glitch-zone" data-text="ゴーア　ウェイ　　ゴーア　ウェイそう">ゴーア　ウェイ　　ゴーア　ウェイそう</span><br>
+      <span class="line">私　　はそのうち消え去るよだから</span><br>
+      <span class="line">平　気なフリして耐えきって</span><br>
+      <span class="line indent2 dim">よ</span><br>
+      <br>
+      <span class="line pain-line spaced">も－　痛　い　　とても痛　い</span><br>
+      <span class="line pain-line">どうしてこんなにとても痛　い</span><br>
+      <span class="line pain-line">あー　痛　いキミに伝　えたい</span><br>
+      <span class="line pain-line">キミにだけは伝　えておきたい</span><br>
+      <span class="line pain-line spaced">も－　つらい　　とてもつらい</span><br>
+      <span class="line pain-line">どうしてこんなにとてもつらい</span><br>
+      <span class="line pain-line">会　　いたいキミに　会いたい</span><br>
+      <span class="line pain-line">胸　のこの辺　がとても痛　い</span><br>
+      <span class="line">ま　　た　　できたのです</span><br>
+      <span class="line spaced-wide">原　因　特　定　できま　せん</span><br>
+      <span class="line">デカいヤツがのさばっています</span><br>
+      <span class="line glitch-zone" data-text="痛　みがヒリヒリズキズキビリビリ">痛　みがヒリヒリズキズキビリビリ</span><br>
+      <span class="line">默　っていれば　知られ　ない</span><br>
+      <span class="line">ボク以外　には　分から　ない</span><br>
+      <span class="line">だから叫　ばない波　風　立てない</span><br>
+      <span class="line">何　も無いままのライフを送　るよ</span><br>
+      <span class="line">そうだ　ね　　そうだ　ね</span><br>
+      <span class="line">アナタが耐えれば済むことだからね</span><br>
+      <span class="line">そうやって　　　そうやって</span><br>
+      <span class="line">自分　をごまかし続　け　て</span><br>
+      <span class="line spaced">フライア　ウェイ　　フライア　ウェイもう</span><br>
+      <span class="line">私　　の方　からサインを送　るよ</span><br>
+      <span class="line">強　がりばかりじゃ疲　れるで</span><br>
+      <span class="line indent2 dim" style="margin-top:0.3em;">しょ</span><br>
+    </div>
+
+    <!-- COL 3: Center scattered block -->
+    <div class="col col-center">
+      <span class="line spaced-wide" style="letter-spacing:0.5em">脳　内　で　操　作して　痛　みさ</span><br>
+      <span class="line">え　快　楽　と　化　し　て　際</span><br>
+      <span class="line">限　なんて　無　く　て　欲　張り</span><br>
+      <span class="line">で　コンプートしたくて　　BUT</span><br>
+      <span class="line">詰んで　頭　拭して　猛　反　省</span><br>
+      <span class="line">過ぎた時間　巻き戻　して良いとこ</span><br>
+      <span class="line">だけスロー再　生　神　回　避しちゃ</span><br>
+      <span class="line">て　なんて　無理だよね</span><br>
+      <br>
+      <span class="line pain-line spaced">痛　みにね　　痛　みにね</span><br>
+      <span class="line">隠　されてるのは何　でしょね</span><br>
+      <span class="line spaced">無理ならね　　　無理ならね</span><br>
+      <span class="line">ちゃんと助　けを　求　めてね</span><br>
+      <span class="line spaced">そろそろね　　そろそろね</span><br>
+      <br>
+      <span class="line">私　　の役　目も終わっちゃうからね</span><br>
+      <span class="line spaced">ようやくね　　ようやくね</span><br>
+      <span class="line">カ　イ　ホ　ウ　してあげるからね</span><br>
+      <span class="line spaced">でもですね　　でもですね</span><br>
+      <span class="line">時　々　思　い出して欲しいからね</span><br>
+      <span class="line">忘　れた頃　にまた顔　出すからね</span><br>
+      <span class="line">あんまり調　子に乗らずにほんの少</span><br>
+    </div>
+
+    <!-- COL 4: Right block -->
+    <div class="col col-right">
+      <span class="line emphasis">もう　無い　どこにも無い</span><br>
+      <span class="line">アイツはどこにも見当たらない</span><br>
+      <span class="line">あの痛　みはもうどこにも無い</span><br>
+      <span class="line">もう　つらい　　ことは　無い</span><br>
+      <span class="line emphasis">もう　無い　どこにも無い</span><br>
+      <span class="line">キミは　どこにも見当たらない</span><br>
+      <span class="line">痛　みはどこにも無いはずなのに</span><br>
+      <span class="line">つらいことなんが無いはずなのに</span><br>
+      <span class="line pain-line">もう　つらい　　なぜかつらい</span><br>
+      <span class="line pain-line">どうしてこんなに何　がつらい</span><br>
+      <span class="line">待ち望　んでいたことなのに</span><br>
+      <span class="line">なんだか何　かが物　足りないよ</span><br>
+      <span class="line pain-line spaced">もう　痛　い　　とても痛　い</span><br>
+      <span class="line pain-line">今　度は何　が　とても痛　い</span><br>
+      <span class="line pain-line">もう痛　くな　いはずなのに　また</span><br>
+      <span class="line pain-line">胸　のこの辺　がとても痛　い</span><br>
+      <br>
+      <span class="line faint">｜　／｜　＼　　　　｜　＜｛｜　＼</span><br>
+      <span class="line faint">＼　｜＜ー　｜＼ー（ーー</span><br>
+      <span class="line faint">｜　／｜　＼　　｜｜　＜｛｜　＼</span><br>
+      <span class="line faint">＼ー｜ーーー（ーー　ーー／　｜ーー</span><br>
+      <br>
+      <span class="line faint">｜｜｜　／｜｜　　　　｜｜　＜｛ん　＼</span><br>
+      <span class="line faint">し　｜＜ー｜｜が｜ー（ーーし</span><br>
+      <br>
+      <span class="line faint">何　が痛　い　　何　で痛　い</span><br>
+      <span class="line faint">どうしてこんなに痛　がりたい</span><br>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+
+  // Random glitch: briefly distort a random line
+  const lines = document.querySelectorAll('.line');
+  function randomGlitch() {
+    const el = lines[Math.floor(Math.random() * lines.length)];
+    el.style.transform = `translateX(${(Math.random()-0.5)*6}px)`;
+    el.style.opacity = (0.3 + Math.random() * 0.7).toString();
+    setTimeout(() => {
+      el.style.transform = '';
+      el.style.opacity = '';
+    }, 80 + Math.random() * 120);
+    setTimeout(randomGlitch, 800 + Math.random() * 3000);
+  }
+  randomGlitch();
+
+  // Occasional full-canvas shake
+  const canvas = document.querySelector('.canvas');
+  function shake() {
+    canvas.style.transform = `translateX(${(Math.random()-0.5)*3}px)`;
+    setTimeout(() => { canvas.style.transform = ''; }, 60);
+    setTimeout(shake, 5000 + Math.random() * 10000);
+  }
+  shake();
+</script>
+</body>
+</html>
