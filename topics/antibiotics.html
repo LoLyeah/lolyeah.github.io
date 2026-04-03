@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antibiotic Reference — Clinical Spectrum Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050810;
+    --bg-card: #0c1120;
+    --bg-card2: #111827;
+    --border: rgba(255,255,255,0.06);
+    --border-glow: rgba(0,210,170,0.3);
+    --teal: #00d2aa;
+    --teal-dim: rgba(0,210,170,0.15);
+    --blue: #5b9cff;
+    --blue-dim: rgba(91,156,255,0.12);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.12);
+    --amber: #fbbf24;
+    --amber-dim: rgba(251,191,36,0.12);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.12);
+    --green: #4ade80;
+    --green-dim: rgba(74,222,128,0.12);
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    background-size: 200px;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,210,170,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,210,170,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  main { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 80px 40px 60px;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+    animation: fadeUp 0.9s ease both;
+  }
+  .hero-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--teal);
+    background: var(--teal-dim);
+    border: 1px solid rgba(0,210,170,0.2);
+    padding: 6px 14px; border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  .hero-label::before {
+    content: '';
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal);
+    animation: pulse 2s infinite;
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 6vw, 72px);
+    line-height: 1.05;
+    background: linear-gradient(135deg, #ffffff 0%, #a0aec0 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+  }
+  h1 em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--teal), var(--blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    font-size: 16px; color: var(--text-dim); max-width: 560px; margin: 0 auto 40px;
+    line-height: 1.7; font-weight: 400;
+  }
+
+  /* ── STATS ROW ── */
+  .stats {
+    display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+    margin-bottom: 60px; animation: fadeUp 0.9s 0.15s ease both;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 28px; font-weight: 500;
+    color: var(--teal);
+  }
+  .stat-lbl { font-size: 12px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+
+  /* ── FILTER BAR ── */
+  .filter-wrap {
+    padding: 0 40px 48px;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+    animation: fadeUp 0.9s 0.2s ease both;
+  }
+  .filter-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
+  .filter-bar {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  }
+  .filter-btn {
+    font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 8px 18px; border-radius: 100px;
+    border: 1px solid var(--border);
+    background: transparent; color: var(--text-muted);
+    cursor: pointer; transition: all 0.25s ease;
+  }
+  .filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .filter-btn.active {
+    background: var(--teal-dim); color: var(--teal);
+    border-color: rgba(0,210,170,0.4);
+    box-shadow: 0 0 20px rgba(0,210,170,0.1);
+  }
+
+  /* ── GRID ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 20px;
+    padding: 0 40px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.4s ease;
+    animation: cardIn 0.6s ease both;
+    position: relative;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-color, var(--teal)), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .card:hover::before { opacity: 1; }
+  .card:hover { border-color: rgba(255,255,255,0.12); }
+  .card.hidden { opacity: 0; pointer-events: none; transform: scale(0.97); }
+
+  .card-header {
+    padding: 22px 24px 16px;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-title-group { flex: 1; }
+  .card-class {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent-color, var(--teal));
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .card-class::before {
+    content: '';
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent-color, var(--teal));
+  }
+  .card-name {
+    font-size: 20px; font-weight: 700; color: #fff; line-height: 1.2;
+  }
+  .card-examples {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--text-muted); margin-top: 4px;
+  }
+  .badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    padding: 4px 10px; border-radius: 6px; white-space: nowrap; flex-shrink: 0;
+    text-transform: uppercase; font-family: 'DM Mono', monospace;
+  }
+  .badge-new { background: rgba(167,139,250,0.15); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+  .badge-emerging { background: rgba(251,191,36,0.12); color: var(--amber); border: 1px solid rgba(251,191,36,0.3); }
+  .badge-classic { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid rgba(74,222,128,0.25); }
+  .badge-last-resort { background: rgba(248,113,113,0.12); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+
+  .card-body { padding: 20px 24px; }
+
+  /* ── SPECTRUM BARS ── */
+  .spectrum-title {
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 12px; font-weight: 600;
+  }
+  .spectrum-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+  }
+  .spectrum-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--text-dim); width: 100px; flex-shrink: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .spectrum-bar-wrap {
+    flex: 1; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;
+  }
+  .spectrum-bar {
+    height: 100%; border-radius: 3px;
+    background: var(--accent-color, var(--teal));
+    transform: scaleX(0); transform-origin: left;
+    animation: barFill 0.8s ease forwards;
+    animation-delay: var(--delay, 0s);
+  }
+  .spectrum-bar.partial { opacity: 0.45; }
+
+  /* ── BUGS ── */
+  .bugs-wrap { margin-top: 18px; }
+  .bugs-title {
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 10px; font-weight: 600;
+  }
+  .bug-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .bug-tag {
+    font-size: 11px; padding: 4px 10px; border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    background: rgba(255,255,255,0.05);
+    color: var(--text-dim);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.2s;
+  }
+  .bug-tag.highlight {
+    background: var(--teal-dim); color: var(--teal);
+    border-color: rgba(0,210,170,0.25);
+  }
+  .bug-tag.warn {
+    background: var(--amber-dim); color: var(--amber);
+    border-color: rgba(251,191,36,0.2);
+  }
+  .bug-tag.danger {
+    background: var(--red-dim); color: var(--red);
+    border-color: rgba(248,113,113,0.2);
+  }
+
+  /* ── SIDE EFFECTS / NOTES ── */
+  .card-footer {
+    padding: 14px 24px 20px;
+    border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .note-row {
+    display: flex; gap: 8px; align-items: flex-start;
+    font-size: 12px; color: var(--text-muted); line-height: 1.5;
+  }
+  .note-icon { flex-shrink: 0; margin-top: 1px; }
+
+  /* ── EMERGING SECTION ── */
+  .section-head {
+    padding: 60px 40px 32px;
+    max-width: 1400px; margin: 0 auto;
+    animation: fadeUp 0.7s ease both;
+  }
+  .section-head h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(26px, 4vw, 42px);
+    color: #fff; margin-bottom: 10px;
+  }
+  .section-head p { font-size: 14px; color: var(--text-muted); max-width: 520px; line-height: 1.7; }
+
+  /* ── EMERGING TIMELINE ── */
+  .timeline {
+    padding: 0 40px 80px;
+    max-width: 1400px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .tl-item {
+    display: grid;
+    grid-template-columns: 120px 1px 1fr;
+    gap: 0 24px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .tl-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; color: var(--teal);
+    text-align: right; padding: 20px 0 0;
+    font-weight: 500;
+  }
+  .tl-line-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 24px;
+  }
+  .tl-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--teal); flex-shrink: 0;
+    box-shadow: 0 0 10px var(--teal);
+  }
+  .tl-seg { flex: 1; width: 1px; background: rgba(0,210,170,0.2); min-height: 20px; }
+  .tl-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 22px; margin: 12px 0;
+    transition: border-color 0.3s;
+  }
+  .tl-card:hover { border-color: rgba(0,210,170,0.25); }
+  .tl-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+  .tl-brand { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+  .tl-desc { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+  .tl-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .tl-tag {
+    font-size: 10px; padding: 3px 9px; border-radius: 5px;
+    font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .tl-tag.mech { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(91,156,255,0.2); }
+  .tl-tag.target { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(0,210,170,0.2); }
+  .tl-tag.novel { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+
+  /* ── RESISTANCE BANNER ── */
+  .resistance-banner {
+    margin: 0 40px 60px;
+    max-width: 1320px;
+    padding: 28px 32px;
+    background: linear-gradient(135deg, rgba(248,113,113,0.08) 0%, rgba(251,191,36,0.06) 100%);
+    border: 1px solid rgba(248,113,113,0.2);
+    border-radius: 16px;
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 20px; align-items: start;
+    animation: fadeUp 0.6s ease both;
+  }
+  .resist-icon { font-size: 32px; }
+  .resist-title { font-size: 15px; font-weight: 700; color: var(--red); margin-bottom: 8px; }
+  .resist-text { font-size: 13px; color: var(--text-dim); line-height: 1.7; }
+  .resist-list {
+    margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .resist-item {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    padding: 4px 10px; border-radius: 6px;
+    background: rgba(248,113,113,0.1); color: var(--red);
+    border: 1px solid rgba(248,113,113,0.2);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+    font-size: 12px; color: var(--text-muted); font-family: 'DM Mono', monospace;
+  }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes barFill {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  /* ── STAGGER ── */
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.10s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+  .card:nth-child(4) { animation-delay: 0.20s; }
+  .card:nth-child(5) { animation-delay: 0.25s; }
+  .card:nth-child(6) { animation-delay: 0.30s; }
+  .card:nth-child(7) { animation-delay: 0.35s; }
+  .card:nth-child(8) { animation-delay: 0.40s; }
+  .card:nth-child(9) { animation-delay: 0.45s; }
+  .card:nth-child(10) { animation-delay: 0.50s; }
+  .card:nth-child(11) { animation-delay: 0.55s; }
+  .card:nth-child(12) { animation-delay: 0.60s; }
+
+  .tl-item:nth-child(1) { animation-delay: 0.1s; }
+  .tl-item:nth-child(2) { animation-delay: 0.2s; }
+  .tl-item:nth-child(3) { animation-delay: 0.3s; }
+  .tl-item:nth-child(4) { animation-delay: 0.4s; }
+  .tl-item:nth-child(5) { animation-delay: 0.5s; }
+  .tl-item:nth-child(6) { animation-delay: 0.6s; }
+  .tl-item:nth-child(7) { animation-delay: 0.7s; }
+  .tl-item:nth-child(8) { animation-delay: 0.8s; }
+
+  /* ── SEARCH ── */
+  .search-wrap {
+    padding: 0 40px 20px; display: flex; justify-content: center;
+    animation: fadeUp 0.7s 0.25s ease both;
+  }
+  .search-input {
+    width: 100%; max-width: 460px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 18px 12px 44px;
+    color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.25s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 14px center;
+    background-size: 16px;
+  }
+  .search-input::placeholder { color: var(--text-muted); }
+  .search-input:focus { border-color: rgba(0,210,170,0.4); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 20px 40px;
+  }
+
+  @media (max-width: 640px) {
+    .hero { padding: 60px 20px 40px; }
+    .filter-wrap, .grid, .timeline, .search-wrap, .section-head { padding-left: 20px; padding-right: 20px; }
+    .grid { grid-template-columns: 1fr; }
+    .resistance-banner { margin-left: 20px; margin-right: 20px; grid-template-columns: 1fr; }
+    .tl-year { font-size: 11px; }
+    footer { padding: 24px 20px; }
+    .stats { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-label">Clinical Reference 2024–2025</div>
+    <h1>Antibiotic<br><em>Spectrum Guide</em></h1>
+    <p class="hero-sub">A comprehensive overview of antibiotic classes, bacterial coverage, pharmacology, and the newest emerging agents against resistant pathogens.</p>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><div class="stat-num">11</div><div class="stat-lbl">Drug Classes</div></div>
+    <div class="stat"><div class="stat-num">8</div><div class="stat-lbl">Emerging Agents</div></div>
+    <div class="stat"><div class="stat-num">40+</div><div class="stat-lbl">Organisms Covered</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-lbl">Resistance Profiles</div></div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <input class="search-input" type="text" id="searchInput" placeholder="Search antibiotic, bacteria, or class…">
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-wrap">
+    <div class="filter-label">Filter by target</div>
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="gram-positive">Gram-Positive</button>
+      <button class="filter-btn" data-filter="gram-negative">Gram-Negative</button>
+      <button class="filter-btn" data-filter="atypical">Atypicals</button>
+      <button class="filter-btn" data-filter="anaerobic">Anaerobes</button>
+      <button class="filter-btn" data-filter="resistant">Resistant Pathogens</button>
+    </div>
+  </div>
+
+  <!-- CARDS GRID -->
+  <div class="grid" id="cardGrid">
+
+    <!-- PENICILLINS -->
+    <article class="card" data-tags="gram-positive gram-negative" style="--accent-color: #00d2aa;">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-class">β-Lactams · Penicillins</div>
+          <div class="card-name">Penicillins</div>
+          <div class="card-examples">Amoxicillin, Pip-Tazo, Ampicillin-Sulbactam</div>
+        </div>
+        <span class="badge badge-classic">Classic</span>
+      </div>
+      <div class="card-body">
+        <div class="spectrum-title">Gram Coverage</div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Positive</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:90%; --delay:0.3s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Negative</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:65%; --delay:0.4s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Anaerobes</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:55%; --delay:0.5s;"></div></div>
+        </div>
+        <div class="bugs-wrap">
+          <div class="bugs-title">Effective Against</div>
+          <div class="bug-tags">
+            <span class="bug-tag highlight">S. pneumoniae</span>
+            <span class="bug-tag highlight">Streptococcus spp.</span>
+            <span class="bug-tag">Enterococcus faecalis</span>
+            <span class="bug-tag">H. influenzae</span>
+            <span class="bug-tag">E. coli (amox)</span>
+            <span class="bug-tag highlight">Pseudomonas (pip-tazo)</span>
+            <span class="bug-tag">Bacteroides</span>
+            <span class="bug-tag warn">NOT MRSA</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="note-row"><span class="note-icon">⚙️</span><span>Mechanism: Inhibits transpeptidase → disrupts cell wall synthesis</span></div>
+        <div class="note-row"><span class="note-icon">⚠️</span><span>Resistance: β-lactamase production (overcome with BLI combinations)</span></div>
+      </div>
+    </article>
+
+    <!-- CEPHALOSPORINS -->
+    <article class="card" data-tags="gram-positive gram-negative resistant" style="--accent-color: #5b9cff;">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-class" style="color:var(--blue)">β-Lactams · Cephalosporins</div>
+          <div class="card-name">Cephalosporins</div>
+          <div class="card-examples">Cefazolin, Ceftriaxone, Cefepime, Ceftaroline</div>
+        </div>
+        <span class="badge badge-classic">1st–5th Gen</span>
+      </div>
+      <div class="card-body">
+        <div class="spectrum-title">Gram Coverage (by generation)</div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Positive</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:85%; background:var(--blue); --delay:0.3s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Negative</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:80%; background:var(--blue); --delay:0.4s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">MRSA (5th gen)</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:40%; background:var(--blue); --delay:0.5s;"></div></div>
+        </div>
+        <div class="bugs-wrap">
+          <div class="bugs-title">Effective Against</div>
+          <div class="bug-tags">
+            <span class="bug-tag" style="color:var(--blue); background:var(--blue-dim); border-color:rgba(91,156,255,0.25)">MSSA (1st gen)</span>
+            <span class="bug-tag" style="color:var(--blue); background:var(--blue-dim); border-color:rgba(91,156,255,0.25)">S. pneumoniae</span>
+            <span class="bug-tag">E. coli (3rd)</span>
+            <span class="bug-tag">Klebsiella</span>
+            <span class="bug-tag">Pseudomonas (4th)</span>
+            <span class="bug-tag highlight">MRSA (ceftaroline)</span>
+            <span class="bug-tag">N. meningitidis</span>
+            <span class="bug-tag warn">NOT Enterococci</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="note-row"><span class="note-icon">⚙️</span><span>Mechanism: β-lactam ring binds PBPs → bactericidal cell wall disruption</span></div>
+        <div class="note-row"><span class="note-icon">✳️</span><span>5th gen (ceftaroline) has anti-MRSA activity via PBP2a binding</span></div>
+      </div>
+    </article>
+
+    <!-- CARBAPENEMS -->
+    <article class="card" data-tags="gram-positive gram-negative anaerobic resistant" style="--accent-color: #f87171;">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-class" style="color:var(--red)">β-Lactams · Carbapenems</div>
+          <div class="card-name">Carbapenems</div>
+          <div class="card-examples">Meropenem, Imipenem, Ertapenem, Doripenem</div>
+        </div>
+        <span class="badge badge-last-resort">Last Resort</span>
+      </div>
+      <div class="card-body">
+        <div class="spectrum-title">Gram Coverage</div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Positive</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:85%; background:var(--red); --delay:0.3s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Negative</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:95%; background:var(--red); --delay:0.4s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Anaerobes</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:90%; background:var(--red); --delay:0.5s;"></div></div>
+        </div>
+        <div class="bugs-wrap">
+          <div class="bugs-title">Effective Against</div>
+          <div class="bug-tags">
+            <span class="bug-tag danger">Pseudomonas (mero/imi)</span>
+            <span class="bug-tag danger">ESBL-producing Enterobact.</span>
+            <span class="bug-tag danger">Acinetobacter baumannii</span>
+            <span class="bug-tag">Streptococcus spp.</span>
+            <span class="bug-tag">Bacteroides fragilis</span>
+            <span class="bug-tag">Klebsiella pneumoniae</span>
+            <span class="bug-tag warn">NOT MRSA</span>
+            <span class="bug-tag warn">NOT CRE (KPC)</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="note-row"><span class="note-icon">⚙️</span><span>Mechanism: Broadest β-lactam spectrum; resistant to most β-lactamases</span></div>
+        <div class="note-row"><span class="note-icon">⚠️</span><span>Reserve for serious infections; overuse drives CRE emergence</span></div>
+      </div>
+    </article>
+
+    <!-- FLUOROQUINOLONES -->
+    <article class="card" data-tags="gram-positive gram-negative atypical" style="--accent-color: #fbbf24;">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-class" style="color:var(--amber)">Fluoroquinolones</div>
+          <div class="card-name">Fluoroquinolones</div>
+          <div class="card-examples">Ciprofloxacin, Levofloxacin, Moxifloxacin</div>
+        </div>
+        <span class="badge badge-classic">Classic</span>
+      </div>
+      <div class="card-body">
+        <div class="spectrum-title">Gram Coverage</div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Positive</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:65%; background:var(--amber); --delay:0.3s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Negative</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:88%; background:var(--amber); --delay:0.4s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Atypicals</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:95%; background:var(--amber); --delay:0.5s;"></div></div>
+        </div>
+        <div class="bugs-wrap">
+          <div class="bugs-title">Effective Against</div>
+          <div class="bug-tags">
+            <span class="bug-tag" style="color:var(--amber); background:var(--amber-dim); border-color:rgba(251,191,36,0.25)">E. coli (UTI)</span>
+            <span class="bug-tag" style="color:var(--amber); background:var(--amber-dim); border-color:rgba(251,191,36,0.25)">Legionella</span>
+            <span class="bug-tag" style="color:var(--amber); background:var(--amber-dim); border-color:rgba(251,191,36,0.25)">Mycoplasma</span>
+            <span class="bug-tag">Chlamydia</span>
+            <span class="bug-tag">Pseudomonas (cipro)</span>
+            <span class="bug-tag">S. pneumoniae (levo)</span>
+            <span class="bug-tag">Salmonella, Shigella</span>
+            <span class="bug-tag">Mycobacteria (partial)</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="note-row"><span class="note-icon">⚙️</span><span>Mechanism: Inhibits DNA gyrase (topoisomerase II/IV) → DNA replication failure</span></div>
+        <div class="note-row"><span class="note-icon">⚠️</span><span>ADRs: QTc prolongation, tendinopathy, CNS effects; FDA black box warning</span></div>
+      </div>
+    </article>
+
+    <!-- MACROLIDES -->
+    <article class="card" data-tags="gram-positive atypical" style="--accent-color: #a78bfa;">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-class" style="color:var(--purple)">Macrolides</div>
+          <div class="card-name">Macrolides</div>
+          <div class="card-examples">Azithromycin, Clarithromycin, Erythromycin</div>
+        </div>
+        <span class="badge badge-classic">Classic</span>
+      </div>
+      <div class="card-body">
+        <div class="spectrum-title">Gram Coverage</div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Positive</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:70%; background:var(--purple); --delay:0.3s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Negative</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:30%; background:var(--purple); --delay:0.4s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Atypicals</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:95%; background:var(--purple); --delay:0.5s;"></div></div>
+        </div>
+        <div class="bugs-wrap">
+          <div class="bugs-title">Effective Against</div>
+          <div class="bug-tags">
+            <span class="bug-tag" style="color:var(--purple); background:var(--purple-dim); border-color:rgba(167,139,250,0.25)">Mycoplasma pneumoniae</span>
+            <span class="bug-tag" style="color:var(--purple); background:var(--purple-dim); border-color:rgba(167,139,250,0.25)">Chlamydophila</span>
+            <span class="bug-tag" style="color:var(--purple); background:var(--purple-dim); border-color:rgba(167,139,250,0.25)">Legionella</span>
+            <span class="bug-tag">S. pneumoniae</span>
+            <span class="bug-tag">Streptococcus A</span>
+            <span class="bug-tag">H. pylori (clarithro)</span>
+            <span class="bug-tag warn">NOT MRSA</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="note-row"><span class="note-icon">⚙️</span><span>Mechanism: Binds 50S ribosomal subunit → inhibits translocation</span></div>
+        <div class="note-row"><span class="note-icon">⚠️</span><span>QTc prolongation risk; growing macrolide-resistant pneumococcus globally</span></div>
+      </div>
+    </article>
+
+    <!-- AMINOGLYCOSIDES -->
+    <article class="card" data-tags="gram-negative" style="--accent-color: #34d399;">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-class" style="color:var(--green)">Aminoglycosides</div>
+          <div class="card-name">Aminoglycosides</div>
+          <div class="card-examples">Gentamicin, Tobramycin, Amikacin</div>
+        </div>
+        <span class="badge badge-classic">Classic</span>
+      </div>
+      <div class="card-body">
+        <div class="spectrum-title">Gram Coverage</div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Positive</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:30%; background:var(--green); --delay:0.3s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Negative</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:90%; background:var(--green); --delay:0.4s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Synergy (combo)</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:80%; background:var(--green); --delay:0.5s;"></div></div>
+        </div>
+        <div class="bugs-wrap">
+          <div class="bugs-title">Effective Against</div>
+          <div class="bug-tags">
+            <span class="bug-tag" style="color:var(--green); background:var(--green-dim); border-color:rgba(74,222,128,0.25)">Pseudomonas aeruginosa</span>
+            <span class="bug-tag" style="color:var(--green); background:var(--green-dim); border-color:rgba(74,222,128,0.25)">Klebsiella</span>
+            <span class="bug-tag">E. coli</span>
+            <span class="bug-tag">Serratia</span>
+            <span class="bug-tag">Acinetobacter</span>
+            <span class="bug-tag">Enterococcus (synergy)</span>
+            <span class="bug-tag warn">NOT anaerobes</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="note-row"><span class="note-icon">⚙️</span><span>Mechanism: 30S ribosomal binding → misreading of mRNA → bactericidal</span></div>
+        <div class="note-row"><span class="note-icon">⚠️</span><span>Nephrotoxicity & ototoxicity; monitor troughs; use once-daily dosing</span></div>
+      </div>
+    </article>
+
+    <!-- GLYCOPEPTIDES -->
+    <article class="card" data-tags="gram-positive resistant" style="--accent-color: #fb923c;">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-class" style="color:#fb923c">Glycopeptides</div>
+          <div class="card-name">Glycopeptides</div>
+          <div class="card-examples">Vancomycin, Teicoplanin, Dalbavancin, Oritavancin</div>
+        </div>
+        <span class="badge badge-last-resort">MRSA Core</span>
+      </div>
+      <div class="card-body">
+        <div class="spectrum-title">Gram Coverage</div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Positive</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:95%; background:#fb923c; --delay:0.3s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Negative</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:0%; background:#fb923c; --delay:0.4s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Anaerobes (oral)</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:40%; background:#fb923c; --delay:0.5s;"></div></div>
+        </div>
+        <div class="bugs-wrap">
+          <div class="bugs-title">Effective Against</div>
+          <div class="bug-tags">
+            <span class="bug-tag" style="color:#fb923c; background:rgba(251,146,60,0.12); border-color:rgba(251,146,60,0.25)">MRSA</span>
+            <span class="bug-tag" style="color:#fb923c; background:rgba(251,146,60,0.12); border-color:rgba(251,146,60,0.25)">CoNS</span>
+            <span class="bug-tag" style="color:#fb923c; background:rgba(251,146,60,0.12); border-color:rgba(251,146,60,0.25)">Enterococcus (non-VRE)</span>
+            <span class="bug-tag">C. difficile (oral)</span>
+            <span class="bug-tag">S. pneumoniae</span>
+            <span class="bug-tag warn">NOT VRE (vancomycin)</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="note-row"><span class="note-icon">⚙️</span><span>Mechanism: Binds D-Ala-D-Ala → inhibits cell wall peptidoglycan synthesis</span></div>
+        <div class="note-row"><span class="note-icon">⚠️</span><span>Red man syndrome with rapid infusion; AKI risk; monitor vancomycin AUC/MIC</span></div>
+      </div>
+    </article>
+
+    <!-- TETRACYCLINES -->
+    <article class="card" data-tags="gram-positive gram-negative atypical resistant" style="--accent-color: #22d3ee;">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-class" style="color:#22d3ee">Tetracyclines / Glycylcyclines</div>
+          <div class="card-name">Tetracyclines</div>
+          <div class="card-examples">Doxycycline, Minocycline, Tigecycline, Omadacycline</div>
+        </div>
+        <span class="badge badge-new">Expanded</span>
+      </div>
+      <div class="card-body">
+        <div class="spectrum-title">Gram Coverage</div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Positive</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:80%; background:#22d3ee; --delay:0.3s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Negative</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:75%; background:#22d3ee; --delay:0.4s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Atypicals</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:98%; background:#22d3ee; --delay:0.5s;"></div></div>
+        </div>
+        <div class="bugs-wrap">
+          <div class="bugs-title">Effective Against</div>
+          <div class="bug-tags">
+            <span class="bug-tag" style="color:#22d3ee; background:rgba(34,211,238,0.1); border-color:rgba(34,211,238,0.25)">Rickettsia</span>
+            <span class="bug-tag" style="color:#22d3ee; background:rgba(34,211,238,0.1); border-color:rgba(34,211,238,0.25)">Chlamydia</span>
+            <span class="bug-tag" style="color:#22d3ee; background:rgba(34,211,238,0.1); border-color:rgba(34,211,238,0.25)">Borrelia (Lyme)</span>
+            <span class="bug-tag">MRSA (doxy/mino)</span>
+            <span class="bug-tag">MDR gram-neg (tigecycline)</span>
+            <span class="bug-tag">Acinetobacter</span>
+            <span class="bug-tag">Mycoplasma</span>
+            <span class="bug-tag warn">Static, not cidal</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="note-row"><span class="note-icon">⚙️</span><span>Mechanism: 30S binding, blocks aa-tRNA; glycylcyclines evade efflux pumps</span></div>
+        <div class="note-row"><span class="note-icon">⚠️</span><span>Photosensitivity; avoid in pregnancy; tigecycline FDA warning for mortality</span></div>
+      </div>
+    </article>
+
+    <!-- OXAZOLIDINONES -->
+    <article class="card" data-tags="gram-positive resistant" style="--accent-color: #e879f9;">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-class" style="color:#e879f9">Oxazolidinones</div>
+          <div class="card-name">Oxazolidinones</div>
+          <div class="card-examples">Linezolid, Tedizolid</div>
+        </div>
+        <span class="badge badge-new">MRSA/VRE</span>
+      </div>
+      <div class="card-body">
+        <div class="spectrum-title">Gram Coverage</div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Positive</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:98%; background:#e879f9; --delay:0.3s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Negative</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:5%; background:#e879f9; --delay:0.4s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Mycobacteria</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:55%; background:#e879f9; --delay:0.5s;"></div></div>
+        </div>
+        <div class="bugs-wrap">
+          <div class="bugs-title">Effective Against</div>
+          <div class="bug-tags">
+            <span class="bug-tag" style="color:#e879f9; background:rgba(232,121,249,0.1); border-color:rgba(232,121,249,0.25)">MRSA</span>
+            <span class="bug-tag" style="color:#e879f9; background:rgba(232,121,249,0.1); border-color:rgba(232,121,249,0.25)">VRE</span>
+            <span class="bug-tag" style="color:#e879f9; background:rgba(232,121,249,0.1); border-color:rgba(232,121,249,0.25)">MDR-TB (linezolid)</span>
+            <span class="bug-tag">S. pneumoniae</span>
+            <span class="bug-tag">Streptococcus spp.</span>
+            <span class="bug-tag warn">Bacteriostatic</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="note-row"><span class="note-icon">⚙️</span><span>Mechanism: Unique 50S binding site → blocks translation initiation complex</span></div>
+        <div class="note-row"><span class="note-icon">⚠️</span><span>Myelosuppression with prolonged use; serotonin syndrome with MAOIs/SSRIs</span></div>
+      </div>
+    </article>
+
+    <!-- LIPOPEPTIDES -->
+    <article class="card" data-tags="gram-positive resistant" style="--accent-color: #f43f5e;">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-class" style="color:#f43f5e">Lipopeptides</div>
+          <div class="card-name">Daptomycin</div>
+          <div class="card-examples">Cubicin, Cubicin RF</div>
+        </div>
+        <span class="badge badge-last-resort">VRE/MRSA</span>
+      </div>
+      <div class="card-body">
+        <div class="spectrum-title">Gram Coverage</div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Positive</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:98%; background:#f43f5e; --delay:0.3s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Negative</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:0%; background:#f43f5e; --delay:0.4s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Pulmonary (NOT)</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:0%; background:#f43f5e; --delay:0.5s;"></div></div>
+        </div>
+        <div class="bugs-wrap">
+          <div class="bugs-title">Effective Against</div>
+          <div class="bug-tags">
+            <span class="bug-tag danger">MRSA (bacteremia)</span>
+            <span class="bug-tag danger">VRE (vanB)</span>
+            <span class="bug-tag">Enterococcus spp.</span>
+            <span class="bug-tag">CoNS</span>
+            <span class="bug-tag">S. aureus endocarditis</span>
+            <span class="bug-tag warn">Inactivated by surfactant</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="note-row"><span class="note-icon">⚙️</span><span>Mechanism: Disrupts cell membrane potential → depolarization → cell death</span></div>
+        <div class="note-row"><span class="note-icon">⚠️</span><span>Do NOT use for pneumonia; CPK monitoring for myopathy; dose 6–10 mg/kg</span></div>
+      </div>
+    </article>
+
+    <!-- POLYMYXINS -->
+    <article class="card" data-tags="gram-negative resistant" style="--accent-color: #f87171;">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-class" style="color:var(--red)">Polymyxins</div>
+          <div class="card-name">Polymyxins</div>
+          <div class="card-examples">Colistin (Polymyxin E), Polymyxin B</div>
+        </div>
+        <span class="badge badge-last-resort">Last Resort</span>
+      </div>
+      <div class="card-body">
+        <div class="spectrum-title">Gram Coverage</div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Positive</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:0%; background:var(--red); --delay:0.3s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">MDR Gram-Neg</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:85%; background:var(--red); --delay:0.4s;"></div></div>
+        </div>
+        <div class="bugs-wrap">
+          <div class="bugs-title">Effective Against</div>
+          <div class="bug-tags">
+            <span class="bug-tag danger">MDR Acinetobacter baumannii</span>
+            <span class="bug-tag danger">CRE (carbapenem-resistant)</span>
+            <span class="bug-tag danger">MDR Pseudomonas</span>
+            <span class="bug-tag">Klebsiella</span>
+            <span class="bug-tag warn">NOT Proteus/Serratia</span>
+            <span class="bug-tag warn">NOT Gram-positives</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="note-row"><span class="note-icon">⚙️</span><span>Mechanism: Disrupts outer membrane of gram-negative LPS → rapid bactericidal</span></div>
+        <div class="note-row"><span class="note-icon">⚠️</span><span>Significant nephrotoxicity & neurotoxicity; use only when no alternatives exist</span></div>
+      </div>
+    </article>
+
+    <!-- NITROIMIDAZOLES -->
+    <article class="card" data-tags="anaerobic" style="--accent-color: #86efac;">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-class" style="color:#86efac">Nitroimidazoles</div>
+          <div class="card-name">Metronidazole</div>
+          <div class="card-examples">Flagyl, Tinidazole, Secnidazole</div>
+        </div>
+        <span class="badge badge-classic">Anaerobe Core</span>
+      </div>
+      <div class="card-body">
+        <div class="spectrum-title">Coverage</div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Anaerobes</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:98%; background:#86efac; --delay:0.3s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Protozoa</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar" style="width:95%; background:#86efac; --delay:0.4s;"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Gram-Positive</span>
+          <div class="spectrum-bar-wrap"><div class="spectrum-bar partial" style="width:20%; background:#86efac; --delay:0.5s;"></div></div>
+        </div>
+        <div class="bugs-wrap">
+          <div class="bugs-title">Effective Against</div>
+          <div class="bug-tags">
+            <span class="bug-tag" style="color:#86efac; background:rgba(134,239,172,0.1); border-color:rgba(134,239,172,0.25)">Bacteroides fragilis</span>
+            <span class="bug-tag" style="color:#86efac; background:rgba(134,239,172,0.1); border-color:rgba(134,239,172,0.25)">C. difficile</span>
+            <span class="bug-tag" style="color:#86efac; background:rgba(134,239,172,0.1); border-color:rgba(134,239,172,0.25)">Trichomonas</span>
+            <span class="bug-tag">Giardia lamblia</span>
+            <span class="bug-tag">Entamoeba histolytica</span>
+            <span class="bug-tag">H. pylori (combo)</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="note-row"><span class="note-icon">⚙️</span><span>Mechanism: Reduced to toxic radical metabolites → DNA strand breakage</span></div>
+        <div class="note-row"><span class="note-icon">⚠️</span><span>Disulfiram-like reaction with alcohol; metallic taste; peripheral neuropathy</span></div>
+      </div>
+    </article>
+
+  </div><!-- end grid -->
+
+  <!-- DIVIDER -->
+  <div class="divider" style="margin: 40px 40px 0;"></div>
+
+  <!-- RESISTANCE BANNER -->
+  <div class="resistance-banner">
+    <div class="resist-icon">🦠</div>
+    <div>
+      <div class="resist-title">Critical Priority Resistant Pathogens (WHO 2024)</div>
+      <div class="resist-text">The WHO defines Priority Pathogens requiring urgent novel antibiotic development. These organisms exhibit extreme multidrug resistance and are driving development of the newest agents listed below.</div>
+      <div class="resist-list">
+        <span class="resist-item">CRE (Carbapenem-Resistant Enterobacterales)</span>
+        <span class="resist-item">CR-Acinetobacter baumannii</span>
+        <span class="resist-item">CR-Pseudomonas aeruginosa</span>
+        <span class="resist-item">MRSA</span>
+        <span class="resist-item">VRE</span>
+        <span class="resist-item">ESBL Enterobacterales</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMERGING SECTION -->
+  <div class="section-head">
+    <h2>Newest & Emerging <em style="font-style:italic; color:var(--teal)">Agents</em></h2>
+    <p>Novel antibiotics approved 2015–2025, targeting resistant organisms where classical antibiotics fail. Many exploit new mechanisms or β-lactamase inhibitor (BLI) combinations.</p>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-year">2015</div>
+      <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-seg"></div></div>
+      <div class="tl-card">
+        <div class="tl-name">Ceftazidime-Avibactam</div>
+        <div class="tl-brand">Avycaz · AstraZeneca/Pfizer</div>
+        <div class="tl-desc">A cephalosporin + novel non-β-lactam BLI (avibactam) combination. Inhibits KPC, OXA-48, and AmpC β-lactamases. Key treatment for KPC-producing Klebsiella and difficult Pseudomonas where meropenem has failed.</div>
+        <div class="tl-tags">
+          <span class="tl-tag mech">BLI Combo</span>
+          <span class="tl-tag target">KPC · OXA-48 · AmpC</span>
+          <span class="tl-tag novel">Non-β-lactam BLI</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">2015</div>
+      <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-seg"></div></div>
+      <div class="tl-card">
+        <div class="tl-name">Ceftolozane-Tazobactam</div>
+        <div class="tl-brand">Zerbaxa · Merck</div>
+        <div class="tl-desc">Novel cephalosporin with enhanced affinity for Pseudomonas PBPs, combined with tazobactam BLI. Specifically developed for MDR and XDR Pseudomonas aeruginosa, particularly in ventilator-associated pneumonia and UTI settings.</div>
+        <div class="tl-tags">
+          <span class="tl-tag mech">PBP Binding</span>
+          <span class="tl-tag target">MDR Pseudomonas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">2018</div>
+      <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-seg"></div></div>
+      <div class="tl-card">
+        <div class="tl-name">Meropenem-Vaborbactam</div>
+        <div class="tl-brand">Vabomere · Melinta</div>
+        <div class="tl-desc">Carbapenem + cyclic boronate BLI combination. Vaborbactam potently inhibits KPC serine carbapenemases while meropenem retains its broad-spectrum activity. Approved for KPC-producing carbapenem-resistant Enterobacterales (CRE).</div>
+        <div class="tl-tags">
+          <span class="tl-tag mech">Boronate BLI</span>
+          <span class="tl-tag target">KPC-CRE</span>
+          <span class="tl-tag novel">Cyclic Boronate</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">2019</div>
+      <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-seg"></div></div>
+      <div class="tl-card">
+        <div class="tl-name">Imipenem-Cilastatin-Relebactam</div>
+        <div class="tl-brand">Recarbrio · Merck</div>
+        <div class="tl-desc">Imipenem-cilastatin enhanced with relebactam, a new diazabicyclooctane (DBO) BLI that inhibits class A and C β-lactamases including KPC. Approved for hospital-acquired and ventilator-associated bacterial pneumonia and complicated UTI caused by susceptible organisms.</div>
+        <div class="tl-tags">
+          <span class="tl-tag mech">DBO BLI</span>
+          <span class="tl-tag target">KPC · AmpC</span>
+          <span class="tl-tag novel">Diazabicyclooctane</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">2019</div>
+      <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-seg"></div></div>
+      <div class="tl-card">
+        <div class="tl-name">Cefiderocol</div>
+        <div class="tl-brand">Fetroja · Shionogi</div>
+        <div class="tl-desc">A siderophore cephalosporin — exploits bacterial iron-uptake pathways to deliver high concentrations into the periplasm, bypassing outer membrane impermeability. Active against pan-drug-resistant gram-negatives including MBL-producing organisms where all other β-lactams fail. Notable activity against Stenotrophomonas maltophilia.</div>
+        <div class="tl-tags">
+          <span class="tl-tag novel">Siderophore Trojan Horse</span>
+          <span class="tl-tag target">MBL · CR-Acinetobacter · XDR</span>
+          <span class="tl-tag mech">Iron-Chelation Uptake</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">2019</div>
+      <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-seg"></div></div>
+      <div class="tl-card">
+        <div class="tl-name">Omadacycline</div>
+        <div class="tl-brand">Nuzyra · Paratek</div>
+        <div class="tl-desc">A first-in-class aminomethylcycline tetracycline with enhanced binding to 30S ribosomes. Overcomes both tetracycline efflux pumps and ribosomal protection. Oral and IV formulations. Approved for CAP and ABSSSI including MRSA, atypicals, and tetracycline-resistant organisms.</div>
+        <div class="tl-tags">
+          <span class="tl-tag novel">Aminomethylcycline</span>
+          <span class="tl-tag target">MRSA · Atypicals · CABP</span>
+          <span class="tl-tag mech">Enhanced 30S Binding</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">2020</div>
+      <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-seg"></div></div>
+      <div class="tl-card">
+        <div class="tl-name">Lefamulin</div>
+        <div class="tl-brand">Xenleta · Nabriva</div>
+        <div class="tl-desc">First systemic pleuromutilin antibiotic approved for humans. Inhibits protein synthesis via a unique binding site in the 50S ribosomal peptidyl transferase center — distinct from other ribosomal antibiotics. IV and oral forms for community-acquired bacterial pneumonia (CABP) including MRSA, S. pneumoniae, Mycoplasma, and Legionella.</div>
+        <div class="tl-tags">
+          <span class="tl-tag novel">First Systemic Pleuromutilin</span>
+          <span class="tl-tag target">CABP · MRSA · Atypicals</span>
+          <span class="tl-tag mech">PTC Binding</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">2024–25</div>
+      <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-seg"></div></div>
+      <div class="tl-card">
+        <div class="tl-name">Zoliflodacin & Gepotidacin</div>
+        <div class="tl-brand">Zoliflodacin (Entasis) · Gepotidacin (GSK/Haleon) — GEPOTAZ</div>
+        <div class="tl-desc">Two novel antibiotics in late-stage development / recently approved targeting N. gonorrhoeae and UTIs. Zoliflodacin: first-in-class spiropyrimidinetrione, novel topoisomerase II inhibitor with no cross-resistance to fluoroquinolones. Gepotidacin: triazaacenaphthylene, also inhibits DNA gyrase via a distinct mechanism — effective against fluoroquinolone-resistant and ESBL-producing uropathogens.</div>
+        <div class="tl-tags">
+          <span class="tl-tag novel">First-in-Class Spiropyrimidinetrione</span>
+          <span class="tl-tag target">XDR Gonorrhea · UTI</span>
+          <span class="tl-tag mech">Novel GyrB/ParE Binding</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>⚕ Antibiotic Reference Guide · For educational purposes only</span>
+    <span>Always consult local sensitivity data & clinical guidelines</span>
+    <span style="color:var(--teal)">Spectrum · Mechanisms · Resistance</span>
+  </footer>
+
+</main>
+
+<script>
+  // ── FILTER ──
+  const btns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.card');
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      cards.forEach(card => {
+        const tags = card.dataset.tags || '';
+        if (filter === 'all' || tags.includes(filter)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  // ── SEARCH ──
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase();
+    cards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      if (!q || text.includes(q)) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+    // Reset filter buttons
+    if (q) {
+      btns.forEach(b => b.classList.remove('active'));
+    }
+  });
+
+  // ── INTERSECTION OBSERVER for bar animations ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.spectrum-bar').forEach(bar => {
+          bar.style.animationPlayState = 'running';
+        });
+      }
+    });
+  }, { threshold: 0.1 });
+
+  cards.forEach(card => {
+    card.querySelectorAll('.spectrum-bar').forEach(bar => {
+      bar.style.animationPlayState = 'paused';
+    });
+    observer.observe(card);
+  });
+</script>
+<footer class="text-center mt-8 py-6 border-t border-slate-200 text-xs text-slate-500 max-w-4xl mx-auto px-4">
+  <p class="font-semibold mb-2">DISCLAIMER</p>
+  <p class="mb-2">This information is for educational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+  <p>Informasi ini hanya untuk tujuan pendidikan dan bukan pengganti nasihat medis profesional, diagnosis, atau pengobatan. Selalu minta nasihat dari dokter Anda atau penyedia layanan kesehatan lain yang memenuhi syarat jika ada pertanyaan yang Anda miliki mengenai kondisi medis.</p>
+  <p class="mt-4">&copy; 2025 LoLyeah.github.io. All rights reserved. | <a href="/index.html" class="text-blue-600 hover:underline">Home</a></p>
+</footer>
+</body>
+</html>
