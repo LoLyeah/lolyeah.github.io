@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bacteriology & Antimicrobial Therapeutics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 400px; }
+        }
+        body { background-color: #f5f5f4; }
+        
+        .tab-btn.active {
+            border-bottom: 2px solid #444;
+            color: #111;
+            font-weight: 600;
+        }
+        .bact-btn.active-gp { background-color: #7e22ce; color: white; border-color: #7e22ce; }
+        .bact-btn.active-gn { background-color: #be123c; color: white; border-color: #be123c; }
+        .bact-btn.active-my { background-color: #0f766e; color: white; border-color: #0f766e; }
+        
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="font-sans text-stone-800 antialiased selection:bg-stone-300">
+
+    <!-- Chosen Palette: Warm Neutrals (Stone/Off-white) with Semantic Accents (Purple for G+, Crimson for G-, Teal for Mycobacterium) -->
+
+    <!-- Application Structure Plan: The SPA is structured as a dynamic dashboard divided into four primary interactive views (Tabs). 
+         1. Cellular Architecture: Provides foundational understanding through visual CSS-based models and a comparative matrix. 
+         2. Pathogen Profiles: A drill-down view allowing users to select a specific bacteria type to explore its traits via a radar chart and descriptive text. 
+         3. Standard Therapeutics: Maps conventional antibiotics to their targets using visual distribution charts and categorized lists. 
+         4. Emerging Innovations: Highlights the newest drugs (pipeline) to address resistance, using a card grid for easy scanning. 
+         This non-linear, tabbed approach prevents overwhelming the user with a massive wall of text, allowing them to explore morphology first, then standard treatments, and finally cutting-edge solutions at their own pace. -->
+
+    <!-- Visualization & Content Choices: 
+         - CSS Block Diagrams (Structure Tab): Goal: Inform on cell wall differences. Method: Stacked colored divs. Justification: Provides immediate visual distinction without external assets. No SVG used.
+         - Comparison Table (Structure Tab): Goal: Organize traits. Method: HTML Table. Justification: Best for direct side-by-side metric comparison.
+         - Radar Chart (Profiles Tab): Goal: Compare intrinsic traits. Method: Chart.js Radar. Justification: Excellent for visualizing multivariate data (thickness, lipid content, resistance, growth rate) across different biological profiles simultaneously.
+         - Doughnut Chart (Standard Tx Tab): Goal: Show proportion of drug mechanisms. Method: Chart.js Doughnut. Justification: Quickly illustrates how different classes of drugs attack the pathogen.
+         - Filterable Cards (Emerging Tx Tab): Goal: Organize new drugs. Method: HTML Grid with JS filtering. Justification: Allows quick scanning of complex pharmacological data.
+         - Confirming NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-stone-800 flex items-center justify-center text-white font-bold text-xs">BA</div>
+                    <span class="font-bold text-xl tracking-tight text-stone-900">BacterioPharm Analysis</span>
+                </div>
+                <div class="hidden md:flex space-x-8" id="nav-tabs">
+                    <button data-target="view-structure" class="tab-btn active text-stone-500 hover:text-stone-900 px-1 py-5 text-sm font-medium transition-colors">Cellular Architecture</button>
+                    <button data-target="view-profiles" class="tab-btn text-stone-500 hover:text-stone-900 px-1 py-5 text-sm font-medium transition-colors">Pathogen Profiles</button>
+                    <button data-target="view-standard-tx" class="tab-btn text-stone-500 hover:text-stone-900 px-1 py-5 text-sm font-medium transition-colors">Standard Therapeutics</button>
+                    <button data-target="view-emerging-tx" class="tab-btn text-stone-500 hover:text-stone-900 px-1 py-5 text-sm font-medium transition-colors">Emerging Innovations</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <section id="view-structure" class="view-section fade-in">
+            <header class="mb-8 max-w-3xl">
+                <h1 class="text-3xl font-extrabold text-stone-900 mb-4">Cellular Architecture & Morphology</h1>
+                <p class="text-lg text-stone-600">This section establishes the foundational differences between Gram-positive, Gram-negative, and Mycobacterial cell structures. Understanding the physical barriers of these pathogens is critical, as the cellular envelope dictates intrinsic antibiotic resistance and determines which therapeutic agents can successfully penetrate and neutralize the bacteria.</p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 flex flex-col items-center">
+                    <h3 class="text-lg font-bold text-purple-700 mb-2">Gram-Positive</h3>
+                    <p class="text-sm text-stone-500 text-center mb-6">Thick porous peptidoglycan layer. Retains crystal violet stain.</p>
+                    <div class="w-48 flex flex-col gap-1 mt-auto">
+                        <div class="h-24 bg-purple-500 rounded-sm flex items-center justify-center text-white text-xs font-bold shadow-inner border-t-2 border-purple-400">Peptidoglycan (Thick)</div>
+                        <div class="h-8 bg-amber-400 rounded-sm flex items-center justify-center text-amber-900 text-xs font-bold">Plasma Membrane</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 flex flex-col items-center">
+                    <h3 class="text-lg font-bold text-crimson-700" style="color: #be123c;">Gram-Negative</h3>
+                    <p class="text-sm text-stone-500 text-center mb-6">Complex triple-layer. Outer membrane blocks many large drugs.</p>
+                    <div class="w-48 flex flex-col gap-1 mt-auto">
+                        <div class="h-6 bg-rose-600 rounded-sm flex items-center justify-center text-white text-xs font-bold shadow-inner">Outer Membrane (LPS)</div>
+                        <div class="h-6 bg-purple-400 rounded-sm flex items-center justify-center text-white text-xs font-bold">Peptidoglycan (Thin)</div>
+                        <div class="h-8 bg-amber-400 rounded-sm flex items-center justify-center text-amber-900 text-xs font-bold">Plasma Membrane</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 flex flex-col items-center">
+                    <h3 class="text-lg font-bold text-teal-700">Mycobacterium</h3>
+                    <p class="text-sm text-stone-500 text-center mb-6">Extremely waxy, lipid-rich mycolic acid layer. Slow growth.</p>
+                    <div class="w-48 flex flex-col gap-1 mt-auto">
+                        <div class="h-16 bg-teal-600 rounded-sm flex items-center justify-center text-white text-xs font-bold shadow-inner border-t-2 border-teal-500">Mycolic Acids / Lipids</div>
+                        <div class="h-6 bg-blue-300 rounded-sm flex items-center justify-center text-stone-800 text-xs font-bold">Arabinogalactan</div>
+                        <div class="h-4 bg-purple-400 rounded-sm"></div>
+                        <div class="h-8 bg-amber-400 rounded-sm flex items-center justify-center text-amber-900 text-xs font-bold">Plasma Membrane</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+                <table class="min-w-full divide-y divide-stone-200">
+                    <thead class="bg-stone-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Characteristic</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-purple-700 uppercase tracking-wider">Gram-Positive</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-rose-700 uppercase tracking-wider">Gram-Negative</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-teal-700 uppercase tracking-wider">Mycobacterium</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-stone-200 text-sm">
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-stone-900">Cell Wall Thickness</td>
+                            <td class="px-6 py-4 text-stone-600">20-80 nm (Thick)</td>
+                            <td class="px-6 py-4 text-stone-600">8-11 nm (Thin)</td>
+                            <td class="px-6 py-4 text-stone-600">Highly complex, thick waxy envelope</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-stone-900">Outer Membrane</td>
+                            <td class="px-6 py-4 text-stone-600">Absent</td>
+                            <td class="px-6 py-4 text-stone-600">Present (contains Porins)</td>
+                            <td class="px-6 py-4 text-stone-600">Absent (has pseudo-outer lipid layer)</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-stone-900">Lipid Content</td>
+                            <td class="px-6 py-4 text-stone-600">Low (1-4%)</td>
+                            <td class="px-6 py-4 text-stone-600">High (11-22%)</td>
+                            <td class="px-6 py-4 text-stone-600">Very High (Up to 60%)</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-stone-900">Primary Endotoxin</td>
+                            <td class="px-6 py-4 text-stone-600">Teichoic acids (Exotoxins more common)</td>
+                            <td class="px-6 py-4 text-stone-600">Lipopolysaccharide (LPS)</td>
+                            <td class="px-6 py-4 text-stone-600">Lipoarabinomannan (LAM)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="view-profiles" class="view-section hidden fade-in">
+            <header class="mb-8 max-w-3xl">
+                <h1 class="text-3xl font-extrabold text-stone-900 mb-4">Pathogen Intrinsic Profiles</h1>
+                <p class="text-lg text-stone-600">Interact with the options below to isolate the physiological and resistance profiles of each bacterial category. The radar visualization quantifies key survival attributes, demonstrating why certain bacteria require highly specialized pharmaceutical interventions.</p>
+            </header>
+
+            <div class="flex flex-wrap gap-4 mb-8">
+                <button data-bact="gp" class="bact-btn active-gp border-2 border-stone-300 rounded-lg px-6 py-3 font-semibold transition-all">Gram-Positive</button>
+                <button data-bact="gn" class="bact-btn border-2 border-stone-300 rounded-lg px-6 py-3 font-semibold text-stone-600 hover:border-rose-700 transition-all">Gram-Negative</button>
+                <button data-bact="my" class="bact-btn border-2 border-stone-300 rounded-lg px-6 py-3 font-semibold text-stone-600 hover:border-teal-700 transition-all">Mycobacterium</button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-8">
+                    <h2 id="profile-title" class="text-2xl font-bold text-purple-700 mb-4">Gram-Positive Organisms</h2>
+                    <p id="profile-desc" class="text-stone-600 mb-6 leading-relaxed">
+                        Characterized by a thick, cross-linked peptidoglycan layer that provides structural integrity but remains relatively porous to small molecules. Without an outer membrane, they are historically more susceptible to beta-lactam antibiotics that disrupt cell wall synthesis.
+                    </p>
+                    
+                    <div class="mb-6">
+                        <h4 class="text-sm uppercase tracking-wider font-bold text-stone-400 mb-2">Common Pathogens</h4>
+                        <div id="profile-pathogens" class="flex flex-wrap gap-2">
+                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full font-medium">Staphylococcus aureus (MRSA)</span>
+                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full font-medium">Streptococcus pneumoniae</span>
+                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full font-medium">Enterococcus faecalis</span>
+                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full font-medium">Clostridium difficile</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm uppercase tracking-wider font-bold text-stone-400 mb-2">Primary Resistance Mechanisms</h4>
+                        <ul id="profile-resistance" class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                            <li>Target modification (e.g., PBP2a in MRSA)</li>
+                            <li>Enzymatic degradation (beta-lactamases)</li>
+                            <li>Target structural bypass (Vancomycin resistance in VRE)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-4">
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-stone-400 mt-2">Relative biological metrics (0-100 scale)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-standard-tx" class="view-section hidden fade-in">
+            <header class="mb-8 max-w-3xl">
+                <h1 class="text-3xl font-extrabold text-stone-900 mb-4">Standard Therapeutics Arsenal</h1>
+                <p class="text-lg text-stone-600">Review the established pharmacological agents used against these pathogens. The effectiveness of a drug class is intrinsically linked to the bacterial cell structure explored in the previous sections. Visualizations here depict the primary mechanism of action utilized by standard protocols.</p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <div class="lg:col-span-4 bg-white rounded-xl shadow-sm border border-stone-200 p-6">
+                    <h3 class="text-lg font-bold text-stone-800 mb-4">Mechanism Distribution</h3>
+                    <select id="tx-selector" class="w-full bg-stone-50 border border-stone-300 text-stone-900 text-sm rounded-lg focus:ring-stone-500 focus:border-stone-500 block p-2.5 mb-6">
+                        <option value="gp">Gram-Positive Focus</option>
+                        <option value="gn">Gram-Negative Focus</option>
+                        <option value="my">Mycobacterium Focus (TB)</option>
+                    </select>
+                    <div class="chart-container h-64">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 bg-white rounded-xl shadow-sm border border-stone-200 p-6">
+                    <div class="flex justify-between items-end mb-6 border-b border-stone-100 pb-4">
+                        <div>
+                            <h3 id="tx-list-title" class="text-xl font-bold text-stone-800">Gram-Positive Standard Regimens</h3>
+                            <p id="tx-list-desc" class="text-sm text-stone-500 mt-1">Focuses heavily on cell wall synthesis inhibition.</p>
+                        </div>
+                    </div>
+
+                    <div id="tx-list-container" class="space-y-4">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-emerging-tx" class="view-section hidden fade-in">
+            <header class="mb-8 max-w-3xl">
+                <h1 class="text-3xl font-extrabold text-stone-900 mb-4">Emerging Pharmacological Pipelines</h1>
+                <p class="text-lg text-stone-600">As intrinsic and acquired resistance outpaces standard therapies (AMR crisis), novel agents are required. Explore the newest and most sophisticated antimicrobial agents recently approved or currently progressing through advanced clinical trials, categorized by their target pathogen group.</p>
+            </header>
+
+            <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+                <button class="filter-btn bg-stone-800 text-white px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap" data-filter="all">All Emerging</button>
+                <button class="filter-btn bg-stone-200 text-stone-700 hover:bg-stone-300 px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors" data-filter="gp">Anti-Gram-Positive</button>
+                <button class="filter-btn bg-stone-200 text-stone-700 hover:bg-stone-300 px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors" data-filter="gn">Anti-Gram-Negative</button>
+                <button class="filter-btn bg-stone-200 text-stone-700 hover:bg-stone-300 px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors" data-filter="my">Anti-Mycobacterial</button>
+            </div>
+
+            <div id="emerging-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-900 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-stone-400 text-sm">Interactive Bacteriological Analysis Tool. For educational synthesis of pathogen morphologies and pharmacological strategies.</p>
+        </div>
+    </footer>
+
+    <script>
+        const navBtns = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('.view-section');
+
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                navBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const targetId = btn.getAttribute('data-target');
+                sections.forEach(sec => {
+                    if (sec.id === targetId) {
+                        sec.classList.remove('hidden');
+                    } else {
+                        sec.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        const bactData = {
+            gp: {
+                title: "Gram-Positive Organisms",
+                color: "#7e22ce", 
+                lightColor: "#f3e8ff",
+                desc: "Characterized by a thick, cross-linked peptidoglycan layer that provides structural integrity but remains relatively porous to small molecules. Without an outer membrane, they are historically more susceptible to beta-lactam antibiotics that disrupt cell wall synthesis.",
+                pathogens: ["Staphylococcus aureus (MRSA)", "Streptococcus pneumoniae", "Enterococcus faecalis", "Clostridium difficile"],
+                resistance: ["Target modification (e.g., PBP2a in MRSA)", "Enzymatic degradation (beta-lactamases)", "Target structural bypass (Vancomycin resistance in VRE)"],
+                stats: [90, 10, 85, 30] 
+            },
+            gn: {
+                title: "Gram-Negative Organisms",
+                color: "#be123c", 
+                lightColor: "#ffe4e6",
+                desc: "Defined by a complex outer membrane containing lipopolysaccharides (LPS) and porin channels. This outer lipid layer acts as a formidable selective barrier, actively excluding many large or lipophilic antibiotics, making empirical treatment significantly more challenging.",
+                pathogens: ["Escherichia coli", "Pseudomonas aeruginosa", "Klebsiella pneumoniae", "Acinetobacter baumannii"],
+                resistance: ["Porin channel deletion (limits drug entry)", "Hyperactive efflux pumps (expels drugs)", "Advanced Beta-lactamases (ESBLs, Carbapenemases)"],
+                stats: [15, 85, 95, 75] 
+            },
+            my: {
+                title: "Mycobacterium",
+                color: "#0f766e", 
+                lightColor: "#ccfbf1",
+                desc: "Possesses a highly unique, lipid-rich cell envelope dominated by waxy mycolic acids. This creates a nearly impenetrable barrier to standard Gram stains and conventional antibiotics, requiring extremely long combination therapies to penetrate and eradicate.",
+                pathogens: ["Mycobacterium tuberculosis", "Mycobacterium leprae", "Mycobacterium avium complex (MAC)"],
+                resistance: ["Intrinsic impermeability due to lipid shield", "Extremely slow replication rate (dormancy)", "Intracellular survival within macrophages"],
+                stats: [40, 95, 15, 90] 
+            }
+        };
+
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        let radarChart = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['Peptidoglycan Mass', 'Lipid Envelope Density', 'Replication Rate', 'Intrinsic Permeability Barrier'],
+                datasets: [{
+                    label: 'Gram-Positive',
+                    data: bactData.gp.stats,
+                    backgroundColor: 'rgba(126, 34, 206, 0.2)',
+                    borderColor: '#7e22ce',
+                    pointBackgroundColor: '#7e22ce',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0,0,0,0.1)' },
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        pointLabels: { font: { size: 11, family: "'Inter', sans-serif" }, color: '#444' },
+                        ticks: { display: false, min: 0, max: 100 }
+                    }
+                },
+                plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(28, 25, 23, 0.9)' } }
+            }
+        });
+
+        const bactBtns = document.querySelectorAll('.bact-btn');
+        bactBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                bactBtns.forEach(b => {
+                    b.classList.remove('active-gp', 'active-gn', 'active-my', 'text-white');
+                    b.classList.add('text-stone-600');
+                    b.style.borderColor = '#d6d3d1';
+                });
+                
+                const type = btn.getAttribute('data-bact');
+                const conf = bactData[type];
+                
+                btn.classList.remove('text-stone-600');
+                if(type==='gp') btn.classList.add('active-gp');
+                if(type==='gn') btn.classList.add('active-gn');
+                if(type==='my') btn.classList.add('active-my');
+
+                document.getElementById('profile-title').textContent = conf.title;
+                document.getElementById('profile-title').style.color = conf.color;
+                document.getElementById('profile-desc').textContent = conf.desc;
+                
+                const pathCont = document.getElementById('profile-pathogens');
+                pathCont.innerHTML = '';
+                conf.pathogens.forEach(p => {
+                    const span = document.createElement('span');
+                    span.className = `text-xs px-3 py-1 rounded-full font-medium`;
+                    span.style.backgroundColor = conf.lightColor;
+                    span.style.color = conf.color;
+                    span.textContent = p;
+                    pathCont.appendChild(span);
+                });
+
+                const resCont = document.getElementById('profile-resistance');
+                resCont.innerHTML = '';
+                conf.resistance.forEach(r => {
+                    const li = document.createElement('li');
+                    li.textContent = r;
+                    resCont.appendChild(li);
+                });
+
+                radarChart.data.datasets[0].label = conf.title;
+                radarChart.data.datasets[0].data = conf.stats;
+                radarChart.data.datasets[0].backgroundColor = conf.color + '33'; 
+                radarChart.data.datasets[0].borderColor = conf.color;
+                radarChart.data.datasets[0].pointBackgroundColor = conf.color;
+                radarChart.update();
+            });
+        });
+
+        const txData = {
+            gp: {
+                title: "Gram-Positive Standard Regimens",
+                desc: "Therapy focuses heavily on breaching the thick peptidoglycan layer or inhibiting protein synthesis.",
+                chartData: [60, 30, 10], 
+                drugs: [
+                    { class: "Penicillins & Cephalosporins", mech: "Cell Wall Synthesis Inhibition", detail: "Binds PBPs. Narrow spectrum (Pen G) to anti-staphylococcal (Nafcillin) and 1st Gen Cephalosporins (Cefazolin)." },
+                    { class: "Glycopeptides (Vancomycin)", mech: "Cell Wall Synthesis Inhibition", detail: "Binds D-ala-D-ala. Crucial for MRSA. Cannot cross Gram-negative outer membrane." },
+                    { class: "Oxazolidinones (Linezolid)", mech: "Protein Synthesis (50S)", detail: "Bacteriostatic against MRSA and VRE. Prevents formation of initiation complex." },
+                    { class: "Lipopeptides (Daptomycin)", mech: "Membrane Depolarization", detail: "Inserts into Gram-positive membrane causing rapid depolarization. Inactivated by pulmonary surfactant." }
+                ]
+            },
+            gn: {
+                title: "Gram-Negative Standard Regimens",
+                desc: "Therapy must bypass the outer membrane porins or utilize highly specific transport mechanisms.",
+                chartData: [40, 40, 20], 
+                drugs: [
+                    { class: "Extended-Spectrum Beta-Lactams", mech: "Cell Wall Synthesis Inhibition", detail: "3rd/4th Gen Cephalosporins (Ceftriaxone, Cefepime) and Piperacillin/Tazobactam. Engineered to cross porins." },
+                    { class: "Carbapenems", mech: "Cell Wall Synthesis Inhibition", detail: "Imipenem, Meropenem. Highly resistant to most beta-lactamases; broad spectrum G- coverage." },
+                    { class: "Aminoglycosides (Gentamicin)", mech: "Protein Synthesis (30S)", detail: "Requires oxygen for uptake. Highly bactericidal, often used in synergy with beta-lactams." },
+                    { class: "Fluoroquinolones (Ciprofloxacin)", mech: "DNA Replication (Gyrase)", detail: "Excellent tissue penetration and oral bioavailability. Increasing resistance rates globally." }
+                ]
+            },
+            my: {
+                title: "Mycobacterial Standard Regimens",
+                desc: "Requires long-term combination therapy to prevent resistance and penetrate the mycolic acid barrier.",
+                chartData: [50, 30, 20], 
+                drugs: [
+                    { class: "Isoniazid (INH)", mech: "Mycolic Acid Synthesis Inhibition", detail: "Prodrug activated by KatG. Highly specific to Mycobacteria cell wall." },
+                    { class: "Rifampin", mech: "RNA Synthesis Inhibition", detail: "Binds RNA polymerase. Penetrates cells well, eradicating intracellular bacilli." },
+                    { class: "Ethambutol", mech: "Arabinogalactan Synthesis", detail: "Inhibits arabinosyl transferase, weakening the complex cell wall structure." },
+                    { class: "Pyrazinamide", mech: "Membrane Energy Disruption", detail: "Exact mechanism debated, but highly active against dormant bacilli in acidic environments (macrophages)." }
+                ]
+            }
+        };
+
+        const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+        let doughnutChart = new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: ['Cell Wall / Envelope', 'Protein Synthesis', 'Nucleic Acid / Other'],
+                datasets: [{
+                    data: txData.gp.chartData,
+                    backgroundColor: ['#6366f1', '#14b8a6', '#f59e0b'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { family: "'Inter', sans-serif" } } },
+                    tooltip: { backgroundColor: 'rgba(28, 25, 23, 0.9)' }
+                }
+            }
+        });
+
+        const txSelector = document.getElementById('tx-selector');
+        const txListContainer = document.getElementById('tx-list-container');
+        const txListTitle = document.getElementById('tx-list-title');
+        const txListDesc = document.getElementById('tx-list-desc');
+
+        function updateTxView(type) {
+            const data = txData[type];
+            txListTitle.textContent = data.title;
+            txListDesc.textContent = data.desc;
+            
+            doughnutChart.data.datasets[0].data = data.chartData;
+            if(type === 'gp') doughnutChart.data.datasets[0].backgroundColor = ['#9333ea', '#3b82f6', '#f59e0b'];
+            if(type === 'gn') doughnutChart.data.datasets[0].backgroundColor = ['#e11d48', '#0d9488', '#ea580c'];
+            if(type === 'my') doughnutChart.data.datasets[0].backgroundColor = ['#0f766e', '#8b5cf6', '#d97706'];
+            doughnutChart.update();
+
+            txListContainer.innerHTML = '';
+            data.drugs.forEach(d => {
+                txListContainer.innerHTML += `
+                    <div class="p-4 rounded-lg bg-stone-50 border border-stone-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h4 class="font-bold text-stone-800">${d.class}</h4>
+                            <p class="text-xs text-stone-500 mt-1 uppercase tracking-wide font-semibold">${d.mech}</p>
+                        </div>
+                        <p class="text-sm text-stone-600 md:w-1/2 md:text-right">${d.detail}</p>
+                    </div>
+                `;
+            });
+        }
+
+        txSelector.addEventListener('change', (e) => updateTxView(e.target.value));
+        updateTxView('gp'); 
+
+        const pipelineData = [
+            { name: "Cefiderocol", class: "Siderophore Cephalosporin", target: "gn", targetName: "Gram-Negative", bg: "bg-rose-50", border: "border-rose-200", text: "text-rose-700", desc: "A 'Trojan horse' antibiotic that binds to free iron and is actively transported across the Gram-negative outer membrane via iron transporter systems. Highly effective against multidrug-resistant Pseudomonas and Acinetobacter." },
+            { name: "Meropenem-Vaborbactam", class: "Carbapenem + BLI", target: "gn", targetName: "Gram-Negative", bg: "bg-rose-50", border: "border-rose-200", text: "text-rose-700", desc: "Combines a standard carbapenem with a novel cyclic boronic acid beta-lactamase inhibitor. Specifically designed to defeat KPC (Klebsiella pneumoniae carbapenemase) producing Enterobacteriaceae." },
+            { name: "Plazomicin", class: "Next-Gen Aminoglycoside", target: "gn", targetName: "Gram-Negative", bg: "bg-rose-50", border: "border-rose-200", text: "text-rose-700", desc: "Engineered to evade common aminoglycoside-modifying enzymes (AMEs). Used for complicated UTIs caused by highly resistant Gram-negative pathogens." },
+            
+            { name: "Oritavancin", class: "Lipoglycopeptide", target: "gp", targetName: "Gram-Positive", bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-700", desc: "Possesses three mechanisms: inhibits transglycosylation, transpeptidation, and disrupts cell membrane integrity. Extremely long half-life allows for single-dose treatment of acute bacterial skin infections (MRSA)." },
+            { name: "Dalbavancin", class: "Lipoglycopeptide", target: "gp", targetName: "Gram-Positive", bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-700", desc: "Similar to oritavancin, a second-generation glycopeptide with a lipophilic tail enhancing membrane anchoring. Administered as a one or two-dose regimen for deep Gram-positive infections." },
+            { name: "Tedizolid", class: "Next-Gen Oxazolidinone", target: "gp", targetName: "Gram-Positive", bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-700", desc: "Binds to the 50S ribosomal subunit. Structurally modified from Linezolid to offer increased potency against MRSA and VRE, with potentially fewer hematologic side effects." },
+
+            { name: "Bedaquiline", class: "Diarylquinoline", target: "my", targetName: "Mycobacterium", bg: "bg-teal-50", border: "border-teal-200", text: "text-teal-700", desc: "A groundbreaking first-in-class drug that specifically targets mycobacterial ATP synthase, cutting off the energy supply of dormant and active TB bacilli. Crucial for MDR-TB." },
+            { name: "Pretomanid", class: "Nitroimidazooxazine", target: "my", targetName: "Mycobacterium", bg: "bg-teal-50", border: "border-teal-200", text: "text-teal-700", desc: "Inhibits mycolic acid biosynthesis in replicating TB and acts as a respiratory poison under anaerobic conditions (dormancy). Used in the BPaL regimen for highly resistant TB." },
+            { name: "Delamanid", class: "Nitro-dihydro-imidazooxazole", target: "my", targetName: "Mycobacterium", bg: "bg-teal-50", border: "border-teal-200", text: "text-teal-700", desc: "Inhibits the synthesis of methoxy-mycolic and keto-mycolic acids, components of the mycobacterial cell wall. Approved for MDR-TB when other regimens fail." }
+        ];
+
+        const grid = document.getElementById('emerging-grid');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        function renderPipeline(filter) {
+            grid.innerHTML = '';
+            const filteredData = filter === 'all' ? pipelineData : pipelineData.filter(d => d.target === filter);
+            
+            filteredData.forEach(d => {
+                grid.innerHTML += `
+                    <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-5 flex flex-col h-full hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-lg font-bold text-stone-900">${d.name}</h3>
+                            <span class="text-[10px] uppercase font-bold px-2 py-1 rounded-full ${d.bg} ${d.text} border ${d.border}">${d.targetName}</span>
+                        </div>
+                        <p class="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-3">${d.class}</p>
+                        <p class="text-sm text-stone-600 flex-grow">${d.desc}</p>
+                    </div>
+                `;
+            });
+        }
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-stone-800', 'text-white');
+                    b.classList.add('bg-stone-200', 'text-stone-700');
+                });
+                btn.classList.remove('bg-stone-200', 'text-stone-700');
+                btn.classList.add('bg-stone-800', 'text-white');
+                
+                renderPipeline(btn.getAttribute('data-filter'));
+            });
+        });
+
+        renderPipeline('all');
+    </script>
+</body>
+</html>
