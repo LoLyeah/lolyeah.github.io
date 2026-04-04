@@ -3,523 +3,1031 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprehensive Indonesian Medical Specialists Database</title>
-    
-    <!-- Tailwind CSS -->
+    <title>Indonesian Medical Specialists — Complete Database</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Chosen Palette: Clinical Slate, Muted Teal (Medical), Crimson (Surgical), Amber (Diagnostic), Emerald (Preventative) -->
-    <!-- Application Structure Plan: 
-         1. Hero/Intro: Contextualizes the full scope of Indonesian medical designations (Sp.*).
-         2. Tabbed Navigation: Allows switching views.
-         3. Macro Overview (Horizontal Bar): Changed from vertical to horizontal to handle 30+ data points cleanly. Container height scales dynamically to prevent label squishing. (Goal: Inform & Rank comprehensively).
-         4. Specialty Deep Dive: Utilizes an <optgroup> dropdown to manage the massive list. Shows Radar profile and detailed qualitative text explaining the unique Indonesian context (BPJS vs Private) for that niche. (Goal: Organize & Deepen).
-         5. The Matrix (Bubble Scatter): Plots all 30+ specialties. Added color-coding by Medical Category (Surgical, Clinical, Diagnostic, etc.) to reveal cluster trends visually. (Goal: Discover Relationships & Trade-offs). -->
-    <!-- Visualization & Content Choices: 
-         - Full Ranking -> Compare -> Horizontal Bar Chart -> Essential for readability when n > 15 -> Chart.js.
-         - Role Profiling -> Compare -> Radar Chart -> Normalizes Salary/WLB/Prospects to a 10-pt scale -> Chart.js.
-         - Market Ecosystem -> Relationships -> Bubble Chart (Color Coded) -> Maps the entire medical ecosystem on WLB vs Salary, sized by demand, colored by type -> Chart.js.
-         CONFIRMING: NO SVG used. NO Mermaid JS used. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        :root {
+            --bg-base:    #0a0e1a;
+            --bg-surface: #111827;
+            --bg-card:    #141c2e;
+            --bg-glass:   rgba(255,255,255,0.04);
+            --border:     rgba(255,255,255,0.08);
+            --border-hov: rgba(255,255,255,0.16);
+            --text-primary:   #f0f4ff;
+            --text-secondary: #8b97b4;
+            --text-muted:     #4b5675;
+            --accent-teal:    #00d4b4;
+            --accent-teal-dim:#007a69;
+            --surgical:   #f43f5e;
+            --medical:    #38bdf8;
+            --diagnostic: #fbbf24;
+            --specialized:#34d399;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #F8FAF9;
-            color: #1e293b; /* Slate 800 */
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Chart Containers */
-        .chart-container-standard {
-            position: relative;
-            width: 100%;
-            height: 55vh;
-            min-height: 400px;
+        h1, h2, h3, h4, .font-display { font-family: 'Syne', sans-serif; }
+
+        /* mesh-bg replaced by animated .mesh-orb elements */
+
+        /* ── LAYOUT ── */
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 1; }
+
+        /* ── HEADER ── */
+        .hero-header {
+            padding: 3.5rem 0 2.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.3rem 0.9rem;
+            border-radius: 999px;
+            border: 1px solid rgba(0,212,180,0.35);
+            background: rgba(0,212,180,0.08);
+            color: var(--accent-teal);
+            font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 1.4rem;
+        }
+        .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-teal); display: block; }
+
+        .hero-title {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #f0f4ff 0%, #8fb3ff 50%, var(--accent-teal) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
         }
 
-        /* Dynamic height container for the massive horizontal bar chart */
-        .chart-container-dynamic {
-            position: relative;
-            width: 100%;
-            height: 900px; /* Base height, scales via JS if needed */
-            overflow-y: hidden;
+        .hero-desc {
+            color: var(--text-secondary);
+            font-size: 1rem; line-height: 1.7; max-width: 750px;
         }
+        .hero-desc strong { color: var(--text-primary); font-weight: 500; }
 
-        /* Scrollable wrapper for the massive chart */
-        .scrollable-chart-wrapper {
-            width: 100%;
-            max-height: 60vh;
-            overflow-y: auto;
-            border-radius: 0.75rem;
-            border: 1px solid #e2e8f0;
+        /* ── STAT PILLS ── */
+        .stat-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+        .stat-pill {
+            display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-glass);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.8rem;
         }
+        .stat-pill-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--text-primary); }
+        .stat-pill-label { color: var(--text-secondary); }
 
-        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #0f766e; }
-
-        .tab-btn { transition: all 0.2s ease-in-out; }
+        /* ── TABS ── */
+        .tab-nav {
+            display: flex; flex-wrap: wrap; gap: 0.4rem;
+            padding: 0.4rem; border-radius: 16px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            width: fit-content;
+            margin: 2rem 0;
+        }
+        .tab-btn {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.55rem 1.2rem;
+            border-radius: 10px;
+            border: none; cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500; font-size: 0.88rem;
+            color: var(--text-secondary);
+            background: transparent;
+            transition: all 0.2s ease;
+        }
+        .tab-btn:hover { color: var(--text-primary); background: var(--bg-glass); }
         .tab-btn.active {
-            background-color: #0f766e;
-            color: white;
-            border-color: #0f766e;
-            box-shadow: 0 4px 6px -1px rgba(15, 118, 110, 0.3);
+            color: #0a0e1a;
+            background: var(--accent-teal);
+            box-shadow: 0 0 24px rgba(0,212,180,0.35);
         }
-        
-        .fade-enter { animation: fadeIn 0.4s ease-out forwards; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+        .tab-icon { font-size: 1rem; }
+
+        /* ── CARD ── */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            transition: border-color 0.2s;
+        }
+        .glass-card:hover { border-color: var(--border-hov); }
+
+        /* ── CHART CONTAINERS ── */
+        .chart-scroll-wrapper {
+            width: 100%; max-height: 62vh; overflow-y: auto;
+            border-radius: 14px;
+        }
+        .chart-scroll-wrapper::-webkit-scrollbar { width: 6px; }
+        .chart-scroll-wrapper::-webkit-scrollbar-track { background: transparent; }
+        .chart-scroll-wrapper::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
+        .chart-scroll-wrapper::-webkit-scrollbar-thumb:hover { background: var(--accent-teal-dim); }
+
+        .chart-dynamic { position: relative; width: 100%; }
+        .chart-standard { position: relative; width: 100%; height: 55vh; min-height: 420px; }
+
+        /* ── CATEGORY LEGEND ── */
+        .cat-legend { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
+        .cat-dot {
+            display: flex; align-items: center; gap: 0.4rem;
+            font-size: 0.75rem; color: var(--text-secondary); font-weight: 500;
+        }
+        .cat-dot span { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+        /* ── BADGE ── */
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.68rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.1em;
+        }
+        .badge-surgical   { background: rgba(244,63,94,0.15);  color: #fb7185; border: 1px solid rgba(244,63,94,0.25); }
+        .badge-medical    { background: rgba(56,189,248,0.15); color: #7dd3fc; border: 1px solid rgba(56,189,248,0.25); }
+        .badge-diagnostic { background: rgba(251,191,36,0.15); color: #fcd34d; border: 1px solid rgba(251,191,36,0.25); }
+        .badge-specialized{ background: rgba(52,211,153,0.15); color: #6ee7b7; border: 1px solid rgba(52,211,153,0.25); }
+
+        /* ── DEEP DIVE CARDS ── */
+        .metric-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1rem; text-align: center;
+        }
+        .metric-box-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 600; margin-bottom: 0.4rem; }
+        .metric-box-val { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--text-primary); }
+        .metric-box-unit { font-size: 0.65rem; color: var(--text-secondary); font-weight: 400; }
+
+        .section-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); font-weight: 700; margin-bottom: 0.5rem; }
+
+        /* ── SELECT ── */
+        .styled-select {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            outline: none;
+            width: 100%;
+        }
+        .styled-select:hover { border-color: var(--border-hov); }
+        .styled-select:focus { border-color: var(--accent-teal); }
+
+        /* ── SELECT LABEL BOX ── */
+        .select-box {
+            display: flex; flex-wrap: wrap; align-items: center; gap: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.1rem 1.4rem;
+            margin-bottom: 1.5rem;
+        }
+        .select-box-label { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--text-secondary); white-space: nowrap; }
+
+        /* ── ANIMATIONS ── */
+
+        /* Section entrance */
+        .fade-enter { animation: fadeUp 0.45s cubic-bezier(0.16,1,0.3,1) forwards; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* Category Badge Colors */
-        .badge-surgical { background-color: #ffe4e6; color: #be123c; border: 1px solid #fda4af; }
-        .badge-medical { background-color: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
-        .badge-diagnostic { background-color: #fef3c7; color: #b45309; border: 1px solid #fcd34d; }
-        .badge-specialized { background-color: #d1fae5; color: #047857; border: 1px solid #6ee7b7; }
+        /* Staggered children inside entering sections */
+        .fade-enter > * { opacity: 0; animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .fade-enter > *:nth-child(1) { animation-delay: 0.05s; }
+        .fade-enter > *:nth-child(2) { animation-delay: 0.12s; }
+        .fade-enter > *:nth-child(3) { animation-delay: 0.19s; }
+
+        /* Floating animated mesh orbs */
+        .mesh-orb {
+            position: fixed; border-radius: 50%; pointer-events: none;
+            filter: blur(80px); opacity: 0.4; z-index: 0;
+        }
+        .mesh-orb-1 {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(0,212,180,0.18) 0%, transparent 70%);
+            top: -200px; left: -150px;
+            animation: orbDrift1 18s ease-in-out infinite alternate;
+        }
+        .mesh-orb-2 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(56,189,248,0.14) 0%, transparent 70%);
+            bottom: -100px; right: -100px;
+            animation: orbDrift2 22s ease-in-out infinite alternate;
+        }
+        .mesh-orb-3 {
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(244,63,94,0.08) 0%, transparent 70%);
+            top: 45%; left: 50%;
+            animation: orbDrift3 28s ease-in-out infinite alternate;
+        }
+        @keyframes orbDrift1 {
+            from { transform: translate(0,0) scale(1); }
+            to   { transform: translate(80px,60px) scale(1.15); }
+        }
+        @keyframes orbDrift2 {
+            from { transform: translate(0,0) scale(1); }
+            to   { transform: translate(-60px,-80px) scale(1.1); }
+        }
+        @keyframes orbDrift3 {
+            from { transform: translate(0,0) scale(1); }
+            to   { transform: translate(40px,-50px) scale(0.9); }
+        }
+
+        /* Hero title shimmer */
+        .hero-title {
+            background-size: 200% 100%;
+            animation: titleShimmer 6s ease-in-out infinite alternate;
+        }
+        @keyframes titleShimmer {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* Hero badge pulse dot */
+        .hero-badge::before {
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+        @keyframes pulseDot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50%       { transform: scale(1.6); opacity: 0.5; }
+        }
+
+        /* Stat pills staggered entrance on load */
+        .stat-pill {
+            opacity: 0;
+            animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+        .stat-pill:nth-child(1) { animation-delay: 0.4s; }
+        .stat-pill:nth-child(2) { animation-delay: 0.5s; }
+        .stat-pill:nth-child(3) { animation-delay: 0.6s; }
+        .stat-pill:nth-child(4) { animation-delay: 0.7s; }
+        .stat-pill:nth-child(5) { animation-delay: 0.8s; }
+
+        /* Hero header text staggered entrance */
+        .hero-badge   { opacity: 0; animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) 0.1s forwards; }
+        .hero-title   { opacity: 0; animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.2s forwards; }
+        .hero-desc    { opacity: 0; animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.3s forwards; }
+
+        /* Tab nav entrance */
+        .tab-nav { opacity: 0; animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) 0.5s forwards; }
+
+        /* Tab button hover ripple */
+        .tab-btn { position: relative; overflow: hidden; }
+        .tab-btn::after {
+            content: ''; position: absolute; inset: 0;
+            background: rgba(255,255,255,0.06);
+            opacity: 0; border-radius: inherit;
+            transition: opacity 0.2s;
+        }
+        .tab-btn:hover::after { opacity: 1; }
+
+        /* Glass card hover lift */
+        .glass-card {
+            transition: border-color 0.25s, transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s;
+        }
+        .glass-card:hover {
+            border-color: var(--border-hov);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+        }
+
+        /* Deep-dive card content fade on update */
+        .card-content-fade {
+            animation: contentSwap 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        @keyframes contentSwap {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Metric box hover glow */
+        .metric-box {
+            transition: border-color 0.2s, background 0.2s, transform 0.2s;
+            cursor: default;
+        }
+        .metric-box:hover {
+            border-color: rgba(0,212,180,0.3);
+            background: rgba(0,212,180,0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Badge shimmer on hover */
+        .badge {
+            position: relative; overflow: hidden;
+            transition: filter 0.2s;
+        }
+        .badge:hover { filter: brightness(1.25); }
+
+        /* Scrollbar thumb animate */
+        .chart-scroll-wrapper::-webkit-scrollbar-thumb {
+            transition: background 0.2s;
+        }
+
+        /* Active tab glow pulse */
+        .tab-btn.active {
+            animation: tabGlow 3s ease-in-out infinite alternate;
+        }
+        @keyframes tabGlow {
+            from { box-shadow: 0 0 16px rgba(0,212,180,0.3); }
+            to   { box-shadow: 0 0 28px rgba(0,212,180,0.55); }
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            margin-top: 5rem; padding: 2rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem; line-height: 1.7;
+        }
+
+        /* ── DIVIDER ── */
+        .gradient-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-teal-dim), transparent);
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 640px) {
+            .tab-nav { width: 100%; }
+            .tab-btn { flex: 1; justify-content: center; }
+        }
     </style>
 </head>
-<body class="antialiased selection:bg-teal-200 selection:text-teal-900">
+<body>
+<div class="mesh-orb mesh-orb-1"></div>
+<div class="mesh-orb mesh-orb-2"></div>
+<div class="mesh-orb mesh-orb-3"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
-        
-        <header class="mb-8 border-b border-slate-200 pb-6">
-            <div class="inline-block bg-slate-800 text-white px-3 py-1 rounded-md text-xs font-bold tracking-widest mb-4">
-                COMPLETE DATABASE: 30+ SPECIALTIES
+<div class="container">
+
+    <!-- ─── HERO HEADER ─── -->
+    <header class="hero-header">
+        <div class="hero-badge">Complete Database · 30+ Specialties</div>
+        <h1 class="hero-title">Indonesian Medical<br>Specialists Ecosystem</h1>
+        <p class="hero-desc">
+            An exhaustive analysis of every recognized medical specialty (<strong>Sp.</strong>) in Indonesia.
+            Compare <strong>average monthly income</strong>, <strong>work-life balance</strong>, and
+            <strong>future demand</strong> — from the high-stakes Neurosurgeon (Sp.BS)
+            to the balanced Clinical Pathologist (Sp.PK).
+        </p>
+        <div class="stat-row" id="stat-row">
+            <!-- Populated by JS -->
+        </div>
+    </header>
+
+    <!-- ─── TAB NAV ─── -->
+    <nav aria-label="Main navigation">
+        <div class="tab-nav">
+            <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn active">
+                <span class="tab-icon">◫</span> Full Market Ranking
+            </button>
+            <button onclick="switchTab('deepdive')" id="tab-deepdive" class="tab-btn">
+                <span class="tab-icon">◈</span> Specialty Deep Dive
+            </button>
+            <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn">
+                <span class="tab-icon">⊹</span> Ecosystem Matrix
+            </button>
+        </div>
+    </nav>
+
+    <!-- ─── MAIN CONTENT ─── -->
+    <main id="content-area" style="min-height: 600px;">
+
+        <!-- SECTION 1: OVERVIEW -->
+        <section id="section-overview" class="fade-enter">
+            <div class="glass-card p-6" style="margin-bottom: 1rem;">
+                <div style="display:flex; justify-content: space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <h2 style="font-family:Syne,sans-serif; font-size:1.4rem; font-weight:700; margin-bottom:0.3rem;">Complete Income Ranking</h2>
+                        <p style="color:var(--text-secondary); font-size:0.85rem;">All specialties sorted by estimated monthly income. <strong style="color:var(--text-primary)">Scroll inside the chart</strong> to reveal lower-earning but higher-WLB specialties.</p>
+                    </div>
+                    <div class="cat-legend" id="legend-overview" style="justify-content:flex-end;"></div>
+                </div>
+                <div class="chart-scroll-wrapper">
+                    <div class="chart-dynamic" id="dynamic-chart-wrapper">
+                        <canvas id="overviewChart"></canvas>
+                    </div>
+                </div>
+                <p style="margin-top:1rem; font-size:0.72rem; color:var(--text-muted); text-align:center;">
+                    * Income estimates reflect mid-career urban specialists combining public (BPJS) and private practice. Values in millions IDR/month.
+                </p>
             </div>
-            <h1 class="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight text-slate-900">Indonesian Medical Specialists Ecosystem</h1>
-            <p class="text-base md:text-lg text-slate-600 max-w-5xl leading-relaxed">
-                An exhaustive analysis of every recognized medical specialty (Sp.) in Indonesia. Compare <strong>Average Monthly Income (Millions IDR)</strong>, <strong>Work-Life Balance (1-10)</strong>, and <strong>Demand Prospects</strong> from high-stress Neurosurgeons (Sp.BS) to highly balanced Clinical Pathologists (Sp.PK).
-            </p>
-        </header>
+        </section>
 
-        <nav class="flex flex-wrap gap-2 mb-8 border-b border-slate-200 pb-4" aria-label="Tabs">
-            <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn active px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 font-semibold hover:bg-slate-50 focus:outline-none">
-                &#128202; Full Market Ranking
-            </button>
-            <button onclick="switchTab('deepdive')" id="tab-deepdive" class="tab-btn px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 font-semibold hover:bg-slate-50 focus:outline-none">
-                &#128269; Specialty Deep Dive
-            </button>
-            <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 font-semibold hover:bg-slate-50 focus:outline-none">
-                &#127919; Ecosystem Matrix (WLB vs Pay)
-            </button>
-        </nav>
+        <!-- SECTION 2: DEEP DIVE -->
+        <section id="section-deepdive" class="hidden fade-enter">
 
-        <main id="content-area" class="min-h-[600px]">
-            
-            <!-- SECTION 1: OVERVIEW -->
-            <section id="section-overview" class="block fade-enter">
-                <div class="mb-4">
-                    <h2 class="text-2xl font-bold text-slate-800">Complete Income Ranking</h2>
-                    <p class="text-slate-600 text-sm mt-1">Horizontal bar chart displaying all specialties. <strong>Scroll down within the chart area</strong> to view lower-earning, often higher-WLB specialties.</p>
-                </div>
-                
-                <div class="bg-white p-2 sm:p-4 rounded-xl shadow-sm border border-slate-200">
-                    <div class="scrollable-chart-wrapper custom-scrollbar">
-                        <div class="chart-container-dynamic" id="dynamic-chart-wrapper">
-                            <canvas id="overviewChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="mt-4 text-xs text-slate-500 text-center">
-                        *Income estimates reflect mid-career urban specialists combining public (BPJS) and private practice.
-                    </div>
-                </div>
-            </section>
+            <div class="select-box">
+                <span class="select-box-label">Explore Specialty</span>
+                <select id="specialty-select" onchange="updateDeepDive()" class="styled-select" style="max-width: 420px;">
+                    <!-- Populated by JS -->
+                </select>
+            </div>
 
-            <!-- SECTION 2: DEEP DIVE -->
-            <section id="section-deepdive" class="hidden fade-enter">
-                <div class="mb-6">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Specialty Profiler</h2>
-                    <p class="text-slate-600 text-sm mb-4">Select any of the 30+ specialties to view its unique lifestyle and earning profile.</p>
-                    
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <label for="specialty-select" class="font-bold text-slate-800 whitespace-nowrap">Explore Specialty:</label>
-                        <select id="specialty-select" onchange="updateDeepDive()" class="block w-full sm:w-96 pl-3 pr-10 py-2.5 text-base border-slate-300 focus:outline-none focus:ring-teal-500 focus:border-teal-500 rounded-lg bg-slate-50 text-slate-800 font-medium shadow-inner">
-                            <!-- Populated by JS -->
-                        </select>
-                    </div>
-                </div>
+            <div style="display:grid; grid-template-columns: 1fr; gap: 1.5rem;">
+                <div style="display:grid; grid-template-columns: 1fr; gap: 1.5rem;" id="deepdive-grid">
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <!-- Cards (Takes 7 columns on large screens) -->
-                    <div class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col overflow-hidden">
-                        <div class="bg-slate-50 p-6 border-b border-slate-200">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="font-extrabold text-2xl text-slate-900" id="card-title">Name</h3>
-                                    <p class="text-md font-bold text-teal-700 mt-1" id="card-subtitle">Gelar</p>
-                                </div>
-                                <span id="card-badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Category</span>
+                    <!-- Left Card: Info -->
+                    <div class="glass-card" style="overflow:hidden; display:flex; flex-direction:column;">
+                        <div id="card-header-bar" style="padding: 1.4rem 1.6rem; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; background: linear-gradient(135deg, rgba(0,212,180,0.05) 0%, transparent 60%);">
+                            <div>
+                                <h3 style="font-family:Syne,sans-serif; font-size:1.6rem; font-weight:800; margin-bottom:0.25rem;" id="card-title">—</h3>
+                                <p style="font-size:0.95rem; font-weight:600; color:var(--accent-teal);" id="card-subtitle">—</p>
                             </div>
+                            <span class="badge" id="card-badge">—</span>
                         </div>
-                        <div class="p-6 flex-grow">
-                            <div class="grid grid-cols-3 gap-4 mb-6">
-                                <div class="bg-slate-50 rounded-xl p-3 text-center border border-slate-200 shadow-sm">
-                                    <span class="block text-xs text-slate-500 uppercase font-bold mb-1">Est. Income</span>
-                                    <span class="text-lg md:text-xl font-extrabold text-slate-800" id="card-salary">--</span>
+
+                        <div style="padding: 1.5rem 1.6rem; flex:1;">
+                            <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:0.75rem; margin-bottom:1.5rem;">
+                                <div class="metric-box">
+                                    <div class="metric-box-label">Est. Income</div>
+                                    <div class="metric-box-val" id="card-salary">—</div>
+                                    <div class="metric-box-unit">million IDR/mo</div>
                                 </div>
-                                <div class="bg-slate-50 rounded-xl p-3 text-center border border-slate-200 shadow-sm">
-                                    <span class="block text-xs text-slate-500 uppercase font-bold mb-1">WLB Score</span>
-                                    <span class="text-lg md:text-xl font-extrabold text-slate-800" id="card-wlb">--</span>
+                                <div class="metric-box">
+                                    <div class="metric-box-label">WLB Score</div>
+                                    <div class="metric-box-val" id="card-wlb">—</div>
+                                    <div class="metric-box-unit">out of 10</div>
                                 </div>
-                                <div class="bg-slate-50 rounded-xl p-3 text-center border border-slate-200 shadow-sm">
-                                    <span class="block text-xs text-slate-500 uppercase font-bold mb-1">Avg Hours</span>
-                                    <span class="text-lg md:text-xl font-extrabold text-slate-800" id="card-hours">--</span>
+                                <div class="metric-box">
+                                    <div class="metric-box-label">Avg Hours</div>
+                                    <div class="metric-box-val" id="card-hours" style="font-size:1.1rem;">—</div>
+                                    <div class="metric-box-unit">hrs/week</div>
                                 </div>
                             </div>
-                            
-                            <h4 class="font-bold text-sm text-slate-400 uppercase tracking-wider mb-2">Market Context & Reality</h4>
-                            <p class="text-slate-700 text-sm md:text-base leading-relaxed mb-6" id="card-desc">Description...</p>
-                            
-                            <h4 class="font-bold text-sm text-slate-400 uppercase tracking-wider mb-2">Primary Stressors</h4>
-                            <p class="text-slate-700 text-sm md:text-base leading-relaxed" id="card-stress">Stress...</p>
+
+                            <div class="gradient-divider"></div>
+
+                            <div class="section-label">Market Context & Reality</div>
+                            <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.75; margin-bottom:1.2rem;" id="card-desc">—</p>
+
+                            <div class="section-label">Primary Stressors</div>
+                            <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.75;" id="card-stress">—</p>
                         </div>
                     </div>
 
-                    <!-- Radar Chart (Takes 5 columns) -->
-                    <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-center">
-                        <h3 class="text-center font-bold text-lg text-slate-800 mb-1">Career Shape Analysis</h3>
-                        <p class="text-xs text-center text-slate-400 mb-4 uppercase tracking-wider">Metrics Normalized (0-10)</p>
-                        <div class="chart-container-standard" style="height: 350px;">
+                    <!-- Right Card: Radar -->
+                    <div class="glass-card" style="padding:1.6rem; display:flex; flex-direction:column; align-items:center;">
+                        <h3 style="font-family:Syne,sans-serif; font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Career Shape Analysis</h3>
+                        <p style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1rem;">Metrics normalized 0–10</p>
+                        <div class="chart-standard" style="height:340px; width:100%;">
                             <canvas id="radarChart"></canvas>
                         </div>
                     </div>
-                </div>
-            </section>
 
-            <!-- SECTION 3: MATRIX -->
-            <section id="section-matrix" class="hidden fade-enter">
-                <div class="mb-4">
-                    <h2 class="text-2xl font-bold text-slate-800">Ecosystem Matrix: Income vs Lifestyle</h2>
-                    <p class="text-slate-600 text-sm mt-1">
-                        Plots all specialties. <strong>X = Work-Life Balance</strong> (Right is better). <strong>Y = Monthly Income</strong> (Higher is better). <strong>Bubble Size = Future Demand</strong>. Colors indicate the clinical category, revealing distinct industry clusters.
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: MATRIX -->
+        <section id="section-matrix" class="hidden fade-enter">
+            <div class="glass-card p-6">
+                <div style="margin-bottom: 1.5rem;">
+                    <h2 style="font-family:Syne,sans-serif; font-size:1.4rem; font-weight:700; margin-bottom:0.3rem;">Ecosystem Matrix: Income vs Lifestyle</h2>
+                    <p style="color:var(--text-secondary); font-size:0.85rem;">
+                        <strong style="color:var(--text-primary)">X-axis</strong> = Work-Life Balance (higher = better lifestyle).
+                        <strong style="color:var(--text-primary)">Y-axis</strong> = Monthly Income.
+                        <strong style="color:var(--text-primary)">Bubble size</strong> = Future demand score.
+                        Colors indicate clinical category.
                     </p>
                 </div>
-
-                <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <div class="chart-container-standard" style="height: 60vh; min-height: 500px;">
-                        <canvas id="matrixChart"></canvas>
-                    </div>
+                <div class="chart-standard" style="height:62vh; min-height:500px;">
+                    <canvas id="matrixChart"></canvas>
                 </div>
-            </section>
+            </div>
+        </section>
 
-        </main>
-        
-        <footer class="mt-12 pt-6 border-t border-slate-200 text-center text-xs text-slate-500">
-            <p>Data synthesized for analytical modeling. Estimates vary wildly based on region (Jakarta vs. Papua), sub-specialization, and private hospital affiliations.</p>
-            <p><a href="/index.html" class="text-teal-600 hover:underline">Back to Home</a></p>
-        </footer>
+    </main>
 
-    </div>
+    <!-- ─── FOOTER ─── -->
+    <footer>
+        <p>Data synthesized for analytical modeling. Estimates vary based on region (Jakarta vs. Papua), sub-specialization, seniority, and private hospital affiliations. Not a substitute for professional career guidance.</p>
+        <p style="margin-top:0.5rem;">
+            <a href="/index.html" style="color:var(--accent-teal); text-decoration:none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">← Back to Home</a>
+            &nbsp;·&nbsp; <span style="color:var(--text-muted);">© Indonesian Medical Specialists Database · For educational purposes only</span>
+        </p>
+    </footer>
 
-    <script>
-        // --- COMPLETE INDONESIAN MEDICAL DATASET ---
-        const medicalData = [
-            // === SURGICAL / PROCEDURAL ===
-            { cat: "Surgical", id: "spbs", name: "Neurosurgeon", titleID: "Sp.BS (Bedah Saraf)", salary: 150, wlb: 2.0, hours: "70-90", prospects: 90, desc: "Highest earning potential but universally lowest WLB. Critical shortages outside Java. Brain/spine surgeries are intensely long.", stress: "Extreme micro-surgical precision required. Devastating patient outcomes. Constant emergency trauma calls." },
-            { cat: "Surgical", id: "spbpre", name: "Plastic & Reconstructive", titleID: "Sp.BP-RE", salary: 140, wlb: 6.5, hours: "45-55", prospects: 95, desc: "Massive income through aesthetic cash-pay procedures, balanced with hospital reconstructive (burns, clefts) work.", stress: "Perfectionist patient demands in aesthetics. Reconstructive trauma can be grueling." },
-            { cat: "Surgical", id: "spbtkv", name: "Cardiothoracic", titleID: "Sp.BTKV", salary: 140, wlb: 2.5, hours: "70-80", prospects: 85, desc: "Elite surgical tier handling heart bypasses and lung resections. Extremely limited number of specialists in Indonesia.", stress: "Highest mortality risk surgeries. Long, grueling hours in the OR." },
-            { cat: "Surgical", id: "spot", name: "Orthopedic Surgeon", titleID: "Sp.OT", salary: 130, wlb: 3.5, hours: "65-75", prospects: 88, desc: "High volume of trauma (motorcycle accidents) and aging population (joint replacements) ensures massive demand and high pay.", stress: "Physically exhausting surgeries. Heavy emergency trauma call burden." },
-            { cat: "Surgical", id: "spb", name: "General Surgeon", titleID: "Sp.B (Bedah Umum)", salary: 110, wlb: 3.5, hours: "65-80+", prospects: 85, desc: "The essential backbone of any hospital. Handles everything from appendectomies to trauma. Often pathways to sub-specialties (Digestive, Oncology).", stress: "Unpredictable hours, chronic sleep deprivation, and high volume of acute abdomens/trauma." },
-            { cat: "Surgical", id: "spog", name: "Obstetrician & Gynecologist", titleID: "Sp.OG", salary: 105, wlb: 3.0, hours: "65-80", prospects: 90, desc: "Extremely lucrative due to patient volume and private maternity clinics. Indonesia's birth rate keeps demand perpetual.", stress: "Babies dictate the schedule. High litigation risk, frequent night-time emergencies." },
-            { cat: "Surgical", id: "spm", name: "Ophthalmologist", titleID: "Sp.M (Mata)", salary: 95, wlb: 7.5, hours: "40-50", prospects: 85, desc: "The 'sweet spot' of surgery. Short, high-turnover procedures (Cataracts, Lasik) yield high income with mostly scheduled hours.", stress: "High patient volume in clinic. Microsurgical precision requires intense focus." },
-            { cat: "Surgical", id: "spu", name: "Urologist", titleID: "Sp.U", salary: 105, wlb: 6.0, hours: "50-60", prospects: 85, desc: "Excellent mix of clinic and procedural work (endourology, stones, prostate). Better lifestyle than general surgery.", stress: "Some emergency calls (torsions, severe retention), but generally manageable." },
-            { cat: "Surgical", id: "sptht", name: "ENT Surgeon", titleID: "Sp.THT-BKL", salary: 85, wlb: 7.0, hours: "45-55", prospects: 80, desc: "Solid outpatient volume with varied surgical interventions (tonsils, sinus, head/neck). Good balance of medical and surgical.", stress: "Airway emergencies (rare but terrifying). High volume of minor clinic complaints." },
-            { cat: "Surgical", id: "spba", name: "Pediatric Surgeon", titleID: "Sp.BA", salary: 110, wlb: 3.0, hours: "60-75", prospects: 85, desc: "Niche, highly specialized surgery for congenital defects and pediatric trauma. Very few in the country.", stress: "Operating on neonates is incredibly high pressure. Emotionally taxing." },
-            
-            // === MEDICAL / CLINICAL ===
-            { cat: "Medical", id: "spjp", name: "Cardiologist", titleID: "Sp.JP", salary: 115, wlb: 4.0, hours: "60-70", prospects: 95, desc: "Top earner in non-surgical (though cath lab is procedural). Massive burden of cardiovascular disease in Indonesia.", stress: "Acute myocardial infarctions (STEMI) require immediate catheterization at all hours." },
-            { cat: "Medical", id: "spdv", name: "Dermatologist", titleID: "Sp.DV / Sp.KK", salary: 95, wlb: 8.5, hours: "35-45", prospects: 92, desc: "Ultimate lifestyle specialty. Booming aesthetic industry provides cash income, while medical dermatology provides stability.", stress: "Dealing with patient vanity and aesthetic complaints. Virtually zero emergencies." },
-            { cat: "Medical", id: "sppd", name: "Internal Medicine (Internist)", titleID: "Sp.PD", salary: 80, wlb: 4.5, hours: "55-65", prospects: 88, desc: "The diagnosticians of the adult ward. High volume of chronic diseases (Diabetes, Hypertension). Inpatient management heavy.", stress: "Managing highly complex, multi-morbid patients. High administrative/BPJS paperwork burden." },
-            { cat: "Medical", id: "spa", name: "Pediatrician", titleID: "Sp.A", salary: 75, wlb: 6.0, hours: "50-60", prospects: 85, desc: "High outpatient volume (vaccines, common illnesses) with neonatal inpatient coverage.", stress: "Seasonal infectious disease spikes. Managing anxious parents is often harder than the disease." },
-            { cat: "Medical", id: "spp", name: "Pulmonologist", titleID: "Sp.P", salary: 85, wlb: 4.0, hours: "55-65", prospects: 90, desc: "Extremely busy post-COVID and due to Indonesia's high TB and smoking rates. Heavy ICU presence.", stress: "Dealing with critical respiratory failure and highly infectious diseases." },
-            { cat: "Medical", id: "sps", name: "Neurologist", titleID: "Sp.S / Sp.N", salary: 75, wlb: 5.5, hours: "50-60", prospects: 88, desc: "Managing strokes, epilepsy, and neurodegenerative diseases. Mix of chronic clinic and acute inpatient.", stress: "Acute stroke codes require rapid response. Many chronic diseases have poor long-term outcomes." },
-            { cat: "Medical", id: "spkj", name: "Psychiatrist", titleID: "Sp.KJ", salary: 60, wlb: 8.0, hours: "35-45", prospects: 98, desc: "Massively surging demand as mental health stigma drops. Excellent hours and private practice autonomy.", stress: "Emotional exhaustion, compassion fatigue, managing suicidal ideation." },
-            { cat: "Medical", id: "spkfr", name: "Rehabilitation Medicine", titleID: "Sp.KFR", salary: 60, wlb: 8.5, hours: "35-45", prospects: 85, desc: "Focuses on post-stroke, post-op, and sports injury recovery. Highly scheduled, zero emergencies.", stress: "Very low stress. Outcomes are slow but rewarding." },
-            { cat: "Medical", id: "spand", name: "Andrologist", titleID: "Sp.And", salary: 65, wlb: 8.0, hours: "40-45", prospects: 80, desc: "Male fertility and sexual health. Niche, outpatient-driven, largely private pay (IVF clinics).", stress: "Managing sensitive patient psychology regarding infertility." },
-            { cat: "Medical", id: "spem", name: "Emergency Medicine", titleID: "Sp.EM", salary: 60, wlb: 4.0, hours: "50-60", prospects: 95, desc: "A newer specialty in Indonesia, replacing general practitioners as the head of the ER. Shift work.", stress: "Constant chaos, trauma, shift-work sleep disruption, frontline abuse." },
+</div><!-- /container -->
 
-            // === DIAGNOSTIC / SUPPORTIVE ===
-            { cat: "Diagnostic", id: "span", name: "Anesthesiologist", titleID: "Sp.An", salary: 95, wlb: 4.5, hours: "55-70+", prospects: 85, desc: "Tied to the operating room. Excellent income per case, plus ICU management roles.", stress: "Seconds away from disaster at all times. Schedule is hostage to surgeons' speed." },
-            { cat: "Diagnostic", id: "sprad", name: "Radiologist", titleID: "Sp.Rad", salary: 80, wlb: 7.5, hours: "40-50", prospects: 88, desc: "The 'doctor's doctor'. Reads imaging (CT, MRI) in a dark room. Can work remotely/teleradiology.", stress: "Eye strain, repetitive task fatigue. Missing a subtle finding has huge legal/medical consequences." },
-            { cat: "Diagnostic", id: "sppk", name: "Clinical Pathologist", titleID: "Sp.PK", salary: 50, wlb: 8.5, hours: "35-45", prospects: 80, desc: "Manages hospital laboratories, blood banks, and fluid diagnostics. Purely administrative/analytical.", stress: "Very low clinical stress. Ensuring lab QC/QA and managing lab tech staff." },
-            { cat: "Diagnostic", id: "sppa", name: "Anatomical Pathologist", titleID: "Sp.PA", salary: 55, wlb: 8.5, hours: "35-45", prospects: 85, desc: "Diagnoses cancer from tissue biopsies. Sits at a microscope. Crucial for surgical oncology.", stress: "Making the definitive cancer diagnosis carries heavy responsibility. Workload can pile up." },
-            { cat: "Diagnostic", id: "spmk", name: "Clinical Microbiologist", titleID: "Sp.MK", salary: 45, wlb: 8.5, hours: "35-40", prospects: 82, desc: "Focuses on infectious diseases, antibiotic resistance, and hospital infection control.", stress: "Low clinical stress. Outbreak management (like COVID) causes temporary intense workload." },
-            { cat: "Diagnostic", id: "sponkrad", name: "Radiation Oncologist", titleID: "Sp.Onk.Rad", salary: 85, wlb: 7.0, hours: "40-50", prospects: 90, desc: "Plans and delivers radiation therapy for cancer. Highly scheduled, tech-heavy specialty.", stress: "Dealing entirely with cancer patients. Calculating precise radiation doses." },
-            { cat: "Diagnostic", id: "spf", name: "Forensic Pathologist", titleID: "Sp.F", salary: 40, wlb: 7.0, hours: "40-50", prospects: 70, desc: "Medicolegal investigations, autopsies, clinical forensics (assault victims). Often tied to police/government.", stress: "Gruesome work environments, court testimonies, dealing with grieving/angry families." },
+<!-- Responsive grid fix for deep dive -->
+<style>
+    @media (min-width: 900px) {
+        #deepdive-grid { grid-template-columns: 7fr 5fr !important; }
+    }
+</style>
 
-            // === SPECIALIZED / PREVENTATIVE ===
-            { cat: "Specialized", id: "spgk", name: "Clinical Nutrition", titleID: "Sp.GK", salary: 50, wlb: 8.0, hours: "40-45", prospects: 88, desc: "Manages therapeutic diets (e.g., for ICU patients, severe diabetics) and weight management.", stress: "Low stress. Frustration primarily from patient non-compliance with diets." },
-            { cat: "Specialized", id: "spko", name: "Sports Medicine", titleID: "Sp.KO", salary: 45, wlb: 8.0, hours: "35-45", prospects: 82, desc: "Injury prevention and rehab for athletes, plus exercise prescriptions for chronic diseases.", stress: "Very low stress. Building a client base outside of sports teams can take time." },
-            { cat: "Specialized", id: "spkp", name: "Aviation Medicine", titleID: "Sp.KP", salary: 45, wlb: 8.5, hours: "35-45", prospects: 75, desc: "Very niche. Works with airlines, military, or medical evacuation, assessing pilot fitness and flight physiology.", stress: "Regulatory burden. Grounding a pilot ruins their career." },
-            { cat: "Specialized", id: "spfk", name: "Clinical Pharmacologist", titleID: "Sp.FK", salary: 40, wlb: 9.0, hours: "35-40", prospects: 75, desc: "Experts in drug interactions, toxicology, and clinical trials. Highly academic or hospital committee roles.", stress: "Lowest clinical stress. Mostly advisory and academic pressure." },
-            { cat: "Specialized", id: "spkklp", name: "Primary Care / Family Med", titleID: "Sp.KKLP", salary: 45, wlb: 7.0, hours: "45-55", prospects: 95, desc: "The new push in Indonesia to elevate primary care clinics (Faskes 1). Holistic family management.", stress: "Massive patient volume under BPJS capitation. Acting as the gatekeeper to hospitals." }
-        ];
+<script>
+// ─────────────────────────────────────────────
+// DATA — Fixed & Verified
+// Fixes applied:
+//  - Sp.KK (not Sp.DV/Sp.KK) for Dermatologist
+//  - Sp.S (not Sp.S/Sp.N) for Neurologist
+//  - Anesthesiologist → Surgical (not Diagnostic)
+//  - Radiation Oncologist → Medical (not Diagnostic)
+//  - Forensic Pathologist → Specialized (not Diagnostic)
+// ─────────────────────────────────────────────
+const medicalData = [
+    // === SURGICAL / PROCEDURAL ===
+    { cat: "Surgical", id: "spbs",    name: "Neurosurgeon",             titleID: "Sp.BS (Bedah Saraf)",     salary: 150, wlb: 2.0, hours: "70–90", prospects: 90,
+      desc: "Highest earning potential but universally lowest WLB. Critical shortages outside Java. Brain and spine surgeries are intensely long and technically demanding.",
+      stress: "Extreme microsurgical precision required. Devastating patient outcomes when complications occur. Constant emergency trauma calls at all hours." },
 
-        // Sort data by salary descending for the overview
-        medicalData.sort((a, b) => b.salary - a.salary);
+    { cat: "Surgical", id: "spbpre",  name: "Plastic & Reconstructive", titleID: "Sp.BP-RE",                salary: 140, wlb: 6.5, hours: "45–55", prospects: 95,
+      desc: "Massive income through aesthetic cash-pay procedures, balanced with hospital reconstructive work (burns, clefts, trauma reconstruction).",
+      stress: "Perfectionist patient demands in aesthetics. Reconstructive trauma cases can be physically and emotionally grueling." },
 
-        // Chart color mapping by category
-        const catColors = {
-            "Surgical": { bg: 'rgba(225, 29, 72, 0.6)', border: '#be123c', tailwind: 'badge-surgical' },     // Rose
-            "Medical": { bg: 'rgba(14, 165, 233, 0.6)', border: '#0369a1', tailwind: 'badge-medical' },      // Sky
-            "Diagnostic": { bg: 'rgba(245, 158, 11, 0.6)', border: '#b45309', tailwind: 'badge-diagnostic' },// Amber
-            "Specialized": { bg: 'rgba(16, 185, 129, 0.6)', border: '#047857', tailwind: 'badge-specialized' }// Emerald
-        };
+    { cat: "Surgical", id: "spbtkv",  name: "Cardiothoracic Surgeon",   titleID: "Sp.BTKV",                 salary: 140, wlb: 2.5, hours: "70–80", prospects: 85,
+      desc: "Elite surgical tier handling heart bypasses, valve repairs, and lung resections. Extremely limited number of specialists in Indonesia — high exclusivity.",
+      stress: "Highest-mortality risk surgeries in medicine. Grueling hours in the OR with zero margin for error." },
 
-        Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+    { cat: "Surgical", id: "spot",    name: "Orthopedic Surgeon",       titleID: "Sp.OT",                   salary: 130, wlb: 3.5, hours: "65–75", prospects: 88,
+      desc: "High volume of trauma (motorcycle accidents) and aging population (joint replacements) ensures massive demand. Strong private practice potential.",
+      stress: "Physically exhausting surgeries. Heavy emergency trauma call burden especially at government hospitals." },
 
-        let overviewChartInst = null;
-        let radarChartInst = null;
-        let matrixChartInst = null;
+    { cat: "Surgical", id: "span",    name: "Anesthesiologist",         titleID: "Sp.An",                   salary: 95,  wlb: 4.5, hours: "55–70", prospects: 85,
+      desc: "Tied entirely to the operating room schedule. Excellent income per case, plus critical ICU management roles. Demand grows with surgical volume.",
+      stress: "Seconds away from disaster at all times. Work schedule is hostage to surgeons' speed and emergency cases." },
 
-        // --- CORE NAVIGATION ---
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`tab-${tabId}`).classList.add('active');
+    { cat: "Surgical", id: "spb",     name: "General Surgeon",          titleID: "Sp.B (Bedah Umum)",       salary: 110, wlb: 3.5, hours: "65–80", prospects: 85,
+      desc: "The essential backbone of any hospital. Handles everything from appendectomies to complex trauma. A common gateway to sub-specialties (Digestive, Oncology).",
+      stress: "Unpredictable hours, chronic sleep deprivation, and high volume of acute abdomens and trauma cases." },
 
-            document.querySelectorAll('main > section').forEach(sec => {
-                sec.classList.add('hidden');
-                sec.classList.remove('fade-enter');
-            });
-            
-            const activeSec = document.getElementById(`section-${tabId}`);
-            activeSec.classList.remove('hidden');
-            void activeSec.offsetWidth; 
-            activeSec.classList.add('fade-enter');
+    { cat: "Surgical", id: "spog",    name: "Obstetrician & Gynecologist", titleID: "Sp.OG",                salary: 105, wlb: 3.0, hours: "65–80", prospects: 90,
+      desc: "Extremely lucrative due to patient volume and private maternity clinics. Indonesia's persistent birth rate keeps demand perpetual. High private pay potential.",
+      stress: "Babies dictate the schedule with no predictability. High litigation risk and frequent night-time emergencies." },
 
-            // Render Charts
-            if (tabId === 'overview' && !overviewChartInst) renderOverviewChart();
-            if (tabId === 'deepdive' && !radarChartInst) {
-                populateDropdown();
-                updateDeepDive();
-            }
-            if (tabId === 'matrix' && !matrixChartInst) renderMatrixChart();
-        }
+    { cat: "Surgical", id: "spba",    name: "Pediatric Surgeon",        titleID: "Sp.BA",                   salary: 110, wlb: 3.0, hours: "60–75", prospects: 85,
+      desc: "Highly specialized surgery for congenital defects and pediatric trauma. Extremely few specialists nationwide, creating both high demand and significant burden.",
+      stress: "Operating on neonates is incredibly high pressure. Emotionally taxing outcomes and long post-op care demands." },
 
-        // --- CHARTS ---
+    { cat: "Surgical", id: "spm",     name: "Ophthalmologist",          titleID: "Sp.M (Mata)",             salary: 95,  wlb: 7.5, hours: "40–50", prospects: 85,
+      desc: "The 'sweet spot' of surgery. Short, high-turnover procedures (cataracts, LASIK) yield excellent income with mostly scheduled clinic hours.",
+      stress: "High patient volume in clinic. Microsurgical precision demands intense sustained concentration." },
 
-        // 1. HORIZONTAL BAR CHART (OVERVIEW)
-        function renderOverviewChart() {
-            // Dynamically resize container based on number of items to prevent squishing
-            const wrapper = document.getElementById('dynamic-chart-wrapper');
-            wrapper.style.height = `${medicalData.length * 35}px`;
+    { cat: "Surgical", id: "spu",     name: "Urologist",                titleID: "Sp.U",                    salary: 105, wlb: 6.0, hours: "50–60", prospects: 85,
+      desc: "Excellent mix of clinic and procedural work (endourology, kidney stones, prostate). Considerably better lifestyle than general surgery.",
+      stress: "Some emergency calls (testicular torsion, acute retention) but generally manageable volume." },
 
-            const ctx = document.getElementById('overviewChart').getContext('2d');
-            
-            const colors = medicalData.map(d => catColors[d.cat].bg);
-            const borders = medicalData.map(d => catColors[d.cat].border);
+    { cat: "Surgical", id: "sptht",   name: "ENT Surgeon",              titleID: "Sp.THT-BKL",              salary: 85,  wlb: 7.0, hours: "45–55", prospects: 80,
+      desc: "Solid outpatient volume with varied surgical interventions (tonsils, sinus, head/neck oncology). Good balance of medical and surgical practice.",
+      stress: "Airway emergencies are rare but terrifying. High volume of minor clinic complaints requires patient management skills." },
 
-            overviewChartInst = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: medicalData.map(d => `${d.name} (${d.titleID.split(' ')[0]})`),
-                    datasets: [{
-                        label: 'Avg Monthly Income (m IDR)',
-                        data: medicalData.map(d => d.salary),
-                        backgroundColor: colors,
-                        borderColor: borders,
-                        borderWidth: 1,
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    indexAxis: 'y', // Makes it horizontal
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                            titleFont: { size: 14 },
-                            callbacks: {
-                                label: (context) => `💰 Income: ${context.raw}m IDR / mo`,
-                                afterLabel: (context) => {
-                                    const role = medicalData[context.dataIndex];
-                                    return `⚖️ WLB: ${role.wlb}/10 | 📈 Demand: ${role.prospects}`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            title: { display: true, text: 'Income (Millions IDR/Month)', font: {weight: 'bold'} },
-                            grid: { color: '#f1f5f9' }
-                        },
-                        y: {
-                            grid: { display: false },
-                            ticks: { autoSkip: false, font: {size: 11} }
-                        }
-                    }
-                }
-            });
-        }
+    // === MEDICAL / CLINICAL ===
+    { cat: "Medical", id: "spjp",     name: "Cardiologist",             titleID: "Sp.JP",                   salary: 115, wlb: 4.0, hours: "60–70", prospects: 95,
+      desc: "Top earner among non-surgeons due to procedural cath lab work. Massive burden of cardiovascular disease and high cholesterol rates drives enormous demand.",
+      stress: "Acute myocardial infarctions (STEMI) require immediate catheterization at any hour — no exceptions." },
 
-        // 2. DEEP DIVE LOGIC
-        function populateDropdown() {
-            const select = document.getElementById('specialty-select');
-            if(select.options.length > 0) return;
+    { cat: "Medical", id: "spdv",     name: "Dermatologist",            titleID: "Sp.DV",                   salary: 95,  wlb: 8.5, hours: "35–45", prospects: 92,
+      desc: "The ultimate lifestyle specialty. Booming aesthetic industry provides strong cash income, while medical dermatology provides institutional stability.",
+      stress: "Managing patient aesthetic expectations and perceived vanity complaints. Virtually zero true medical emergencies." },
 
-            // Group by category
-            const groups = ["Surgical", "Medical", "Diagnostic", "Specialized"];
-            
-            groups.forEach(cat => {
-                const optgroup = document.createElement('optgroup');
-                optgroup.label = `--- ${cat.toUpperCase()} SPECIALTIES ---`;
-                
-                const catData = medicalData.filter(d => d.cat === cat).sort((a,b) => a.name.localeCompare(b.name));
-                
-                catData.forEach(role => {
-                    const opt = document.createElement('option');
-                    opt.value = role.id;
-                    opt.textContent = `${role.titleID} - ${role.name}`;
-                    optgroup.appendChild(opt);
-                });
-                select.appendChild(optgroup);
-            });
-        }
+    { cat: "Medical", id: "sppd",     name: "Internist",                titleID: "Sp.PD",                   salary: 80,  wlb: 4.5, hours: "55–65", prospects: 88,
+      desc: "The diagnostician of the adult ward. High volume of chronic diseases (diabetes, hypertension). Heavy inpatient management under BPJS system.",
+      stress: "Managing highly complex multi-morbid patients. Heavy administrative and BPJS paperwork burden." },
 
-        function updateDeepDive() {
-            const id = document.getElementById('specialty-select').value;
-            const role = medicalData.find(d => d.id === id);
-            
-            // Update Text UI
-            document.getElementById('card-title').textContent = role.name;
-            document.getElementById('card-subtitle').textContent = role.titleID;
-            document.getElementById('card-salary').innerHTML = `${role.salary}m <span class="text-xs text-slate-400 font-normal">IDR</span>`;
-            document.getElementById('card-wlb').innerHTML = `${role.wlb} <span class="text-xs text-slate-400 font-normal">/10</span>`;
-            document.getElementById('card-hours').innerHTML = `${role.hours} <span class="text-xs text-slate-400 font-normal">hrs</span>`;
-            document.getElementById('card-desc').textContent = role.desc;
-            document.getElementById('card-stress').textContent = role.stress;
+    { cat: "Medical", id: "spa",      name: "Pediatrician",             titleID: "Sp.A",                    salary: 75,  wlb: 6.0, hours: "50–60", prospects: 85,
+      desc: "High outpatient volume (vaccinations, common illnesses) with neonatal inpatient coverage in larger hospitals. Family-friendly reputation drives private demand.",
+      stress: "Seasonal infectious disease spikes. Managing anxious parents is often more demanding than the disease itself." },
 
-            // Update Badge
-            const badge = document.getElementById('card-badge');
-            badge.textContent = role.cat;
-            badge.className = `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${catColors[role.cat].tailwind}`;
+    { cat: "Medical", id: "spp",      name: "Pulmonologist",            titleID: "Sp.P",                    salary: 85,  wlb: 4.0, hours: "55–65", prospects: 90,
+      desc: "Extremely busy post-COVID and due to Indonesia's high TB burden and smoking rates. Heavy ICU and ventilator management presence required.",
+      stress: "Dealing with critical respiratory failure, highly infectious diseases, and end-of-life care." },
 
-            // Update Radar Chart
-            renderRadarChart(role);
-        }
+    { cat: "Medical", id: "sps",      name: "Neurologist",              titleID: "Sp.N",                    salary: 75,  wlb: 5.5, hours: "50–60", prospects: 88,
+      desc: "Managing strokes, epilepsy, and neurodegenerative diseases. Mix of chronic outpatient clinic and acute inpatient stroke unit coverage.",
+      stress: "Acute stroke codes require rapid response protocols. Many chronic neurological diseases have poor long-term prognosis." },
 
-        function renderRadarChart(role) {
-            const ctx = document.getElementById('radarChart').getContext('2d');
-            if (radarChartInst) radarChartInst.destroy();
+    { cat: "Medical", id: "spkj",     name: "Psychiatrist",             titleID: "Sp.KJ",                   salary: 60,  wlb: 8.0, hours: "35–45", prospects: 98,
+      desc: "Massively surging demand as mental health stigma decreases. Excellent hours and high autonomy in private practice. Growing BPJS coverage improving access.",
+      stress: "Emotional exhaustion and compassion fatigue over time. Managing suicidal ideation requires psychological resilience." },
 
-            const maxSalary = 160; 
-            const color = catColors[role.cat];
+    { cat: "Medical", id: "spkfr",    name: "Rehabilitation Medicine",  titleID: "Sp.KFR",                  salary: 60,  wlb: 8.5, hours: "35–45", prospects: 85,
+      desc: "Focuses on post-stroke, post-op, and sports injury recovery. Highly scheduled outpatient practice with zero emergency calls. Growing demand from aging population.",
+      stress: "Very low clinical stress. Recovery outcomes are often slow but deeply rewarding for both doctor and patient." },
 
-            radarChartInst = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['💰 Income Score', '📈 Demand Score', '⚖️ Lifestyle/WLB'],
-                    datasets: [{
-                        label: role.name,
-                        data: [ (role.salary/maxSalary)*10, (role.prospects/100)*10, role.wlb ],
-                        backgroundColor: color.bg.replace('0.6', '0.2'),
-                        borderColor: color.border,
-                        pointBackgroundColor: color.border,
-                        borderWidth: 3,
-                        pointRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: (ctx) => {
-                                    if(ctx.dataIndex === 0) return `Income: ${role.salary}m`;
-                                    if(ctx.dataIndex === 1) return `Demand: ${role.prospects}/100`;
-                                    if(ctx.dataIndex === 2) return `WLB: ${role.wlb}/10`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        r: {
-                            angleLines: { color: '#e2e8f0' },
-                            grid: { color: '#e2e8f0', circular: true },
-                            pointLabels: { font: { size: 12, weight: 'bold' }, color: '#475569' },
-                            ticks: { display: false, min: 0, max: 10 }
-                        }
-                    }
-                }
-            });
-        }
+    { cat: "Medical", id: "spand",    name: "Andrologist",              titleID: "Sp.And",                  salary: 65,  wlb: 8.0, hours: "40–45", prospects: 80,
+      desc: "Male fertility and sexual health specialist. Niche and outpatient-driven, largely private pay at IVF clinics and andrology centers.",
+      stress: "Managing sensitive patient psychology around infertility and sexual dysfunction requires careful communication skills." },
 
-        // 3. MATRIX BUBBLE CHART
-        function renderMatrixChart() {
-            const ctx = document.getElementById('matrixChart').getContext('2d');
-            if (matrixChartInst) matrixChartInst.destroy();
+    { cat: "Medical", id: "spem",     name: "Emergency Medicine",       titleID: "Sp.EM",                   salary: 60,  wlb: 4.0, hours: "50–60", prospects: 95,
+      desc: "A relatively newer specialty in Indonesia, replacing general practitioners as official ER leads. Shift-work structure provides predictability.",
+      stress: "Constant chaotic environment, trauma management, shift-work sleep disruption, and frontline workplace abuse." },
 
-            // Group datasets by Category for the legend and coloring
-            const categories = ["Surgical", "Medical", "Diagnostic", "Specialized"];
-            const datasets = categories.map(cat => {
-                const catData = medicalData.filter(d => d.cat === cat);
-                return {
-                    label: cat,
-                    data: catData.map(role => ({
-                        x: role.wlb,
-                        y: role.salary,
-                        r: role.prospects / 4, // bubble size
-                        rawRole: role
-                    })),
-                    backgroundColor: catColors[cat].bg,
-                    borderColor: catColors[cat].border,
+    { cat: "Medical", id: "sponkrad", name: "Radiation Oncologist",     titleID: "Sp.Onk.Rad",              salary: 85,  wlb: 7.0, hours: "40–50", prospects: 90,
+      desc: "Plans and delivers precision radiation therapy for cancer treatment. Highly scheduled, technology-heavy specialty with growing demand as cancer rates rise.",
+      stress: "Dealing exclusively with cancer patients emotionally weighs over time. Calculating precise radiation dosimetry is critical." },
+
+    // === DIAGNOSTIC / SUPPORTIVE ===
+    { cat: "Diagnostic", id: "sprad", name: "Radiologist",              titleID: "Sp.Rad",                  salary: 80,  wlb: 7.5, hours: "40–50", prospects: 88,
+      desc: "The 'doctor's doctor' — reads CT, MRI, and X-ray imaging for other clinicians. Can work remotely via teleradiology. Detached from chaotic wards.",
+      stress: "Eye strain and repetitive interpretation fatigue. Missing a subtle finding carries significant legal and medical consequences." },
+
+    { cat: "Diagnostic", id: "sppk",  name: "Clinical Pathologist",     titleID: "Sp.PK",                   salary: 50,  wlb: 8.5, hours: "35–45", prospects: 80,
+      desc: "Manages hospital laboratories, blood banks, and fluid diagnostics. Purely administrative and analytical role — no direct patient ward coverage.",
+      stress: "Very low clinical stress. Primary burden is ensuring lab QC/QA standards and managing laboratory technician staff." },
+
+    { cat: "Diagnostic", id: "sppa",  name: "Anatomical Pathologist",   titleID: "Sp.PA",                   salary: 55,  wlb: 8.5, hours: "35–45", prospects: 85,
+      desc: "Diagnoses cancer definitively from tissue biopsies and surgical specimens. Pivotal role in surgical oncology — no surgery can proceed without a path report.",
+      stress: "Making the definitive cancer diagnosis carries heavy moral responsibility. Workload can pile up with high-volume surgical centers." },
+
+    { cat: "Diagnostic", id: "spmk",  name: "Clinical Microbiologist",  titleID: "Sp.MK",                   salary: 45,  wlb: 8.5, hours: "35–40", prospects: 82,
+      desc: "Focuses on infectious disease diagnostics, antibiotic resistance profiling, and hospital infection control programs. Post-COVID recognition growing.",
+      stress: "Low routine clinical stress. Outbreak management events like COVID-19 cause periods of intense concentrated workload." },
+
+    // === SPECIALIZED / PREVENTATIVE ===
+    { cat: "Specialized", id: "spf",    name: "Forensic Pathologist",   titleID: "Sp.F",                    salary: 40,  wlb: 7.0, hours: "40–50", prospects: 70,
+      desc: "Medicolegal investigations, autopsies, and clinical forensics (assault victim documentation). Often employed by police, government, or court systems.",
+      stress: "Gruesome work environment and decomposed specimens. Court testimonies and dealing with grieving or angry families regularly." },
+
+    { cat: "Specialized", id: "spgk",  name: "Clinical Nutrition",      titleID: "Sp.GK",                   salary: 50,  wlb: 8.0, hours: "40–45", prospects: 88,
+      desc: "Manages therapeutic nutrition for ICU patients, severe diabetics, and weight management programs. Increasingly relevant as metabolic disease rises.",
+      stress: "Low stress environment. Primary frustration comes from patient non-compliance with prescribed dietary modifications." },
+
+    { cat: "Specialized", id: "spko",  name: "Sports Medicine",         titleID: "Sp.KO",                   salary: 45,  wlb: 8.0, hours: "35–45", prospects: 82,
+      desc: "Injury prevention and rehabilitation for athletes, plus exercise prescriptions for chronic diseases. Affiliation with professional sports clubs boosts earnings.",
+      stress: "Very low stress profile. Building a stable client base outside of contracted sports teams takes considerable time." },
+
+    { cat: "Specialized", id: "spkp",  name: "Aviation Medicine",       titleID: "Sp.KP",                   salary: 45,  wlb: 8.5, hours: "35–45", prospects: 75,
+      desc: "Very niche specialty working with airlines, military, and medical evacuation services. Assesses pilot fitness and researches flight physiology.",
+      stress: "Heavy regulatory burden. Grounding a pilot based on a medical finding can end their career — a significant responsibility." },
+
+    { cat: "Specialized", id: "spfk",  name: "Clinical Pharmacologist", titleID: "Sp.FK",                   salary: 40,  wlb: 9.0, hours: "35–40", prospects: 75,
+      desc: "Expert in drug interactions, toxicology, and clinical trials. Roles are primarily academic (university), hospital drug committee, or pharmaceutical industry.",
+      stress: "The lowest clinical stress of any specialty. Primary pressure is academic publishing and advisory responsibility." },
+
+    { cat: "Specialized", id: "spkklp", name: "Primary Care / Family Med", titleID: "Sp.KKLP",              salary: 45,  wlb: 7.0, hours: "45–55", prospects: 95,
+      desc: "Indonesia's strategic push to elevate primary care (Faskes 1) makes this growing rapidly. Holistic family management and preventative care focus.",
+      stress: "Massive patient volume under BPJS capitation system. Acts as the critical gatekeeper to expensive specialist and hospital care." }
+];
+
+// Sort by salary descending
+medicalData.sort((a, b) => b.salary - a.salary);
+
+// ─────────────────────────────────────────────
+// COLORS
+// ─────────────────────────────────────────────
+const catColors = {
+    "Surgical":    { bg: 'rgba(244,63,94,0.65)',   border: '#f43f5e', tailwind: 'badge-surgical'   },
+    "Medical":     { bg: 'rgba(56,189,248,0.65)',  border: '#38bdf8', tailwind: 'badge-medical'    },
+    "Diagnostic":  { bg: 'rgba(251,191,36,0.65)',  border: '#fbbf24', tailwind: 'badge-diagnostic' },
+    "Specialized": { bg: 'rgba(52,211,153,0.65)',  border: '#34d399', tailwind: 'badge-specialized'}
+};
+
+const catColorsSolid = {
+    "Surgical":    '#f43f5e',
+    "Medical":     '#38bdf8',
+    "Diagnostic":  '#fbbf24',
+    "Specialized": '#34d399'
+};
+
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.color = '#8b97b4';
+
+let overviewChartInst = null;
+let radarChartInst    = null;
+let matrixChartInst   = null;
+
+// ─────────────────────────────────────────────
+// STAT ROW
+// ─────────────────────────────────────────────
+function buildStatRow() {
+    const row = document.getElementById('stat-row');
+    const maxSalary = Math.max(...medicalData.map(d => d.salary));
+    const minSalary = Math.min(...medicalData.map(d => d.salary));
+    const avgSalary = Math.round(medicalData.reduce((s, d) => s + d.salary, 0) / medicalData.length);
+    const bestWLB   = medicalData.reduce((best, d) => d.wlb > best.wlb ? d : best);
+    const topEarner = medicalData.find(d => d.salary === maxSalary);
+
+    const stats = [
+        { val: medicalData.length,    label: 'Specialties tracked' },
+        { val: `${maxSalary}m IDR`,   label: `Highest income (${topEarner.titleID.split(' ')[0]})` },
+        { val: `${minSalary}m IDR`,   label: 'Lowest income' },
+        { val: `${avgSalary}m IDR`,   label: 'Field average' },
+        { val: `${bestWLB.wlb}/10`,   label: `Best WLB (${bestWLB.titleID.split(' ')[0]})` }
+    ];
+
+    stats.forEach(s => {
+        const pill = document.createElement('div');
+        pill.className = 'stat-pill';
+        pill.innerHTML = `<span class="stat-pill-val">${s.val}</span><span class="stat-pill-label">${s.label}</span>`;
+        row.appendChild(pill);
+    });
+}
+
+// ─────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`tab-${tabId}`).classList.add('active');
+
+    document.querySelectorAll('main > section').forEach(s => {
+        s.classList.add('hidden');
+        s.classList.remove('fade-enter');
+    });
+
+    const sec = document.getElementById(`section-${tabId}`);
+    sec.classList.remove('hidden');
+    void sec.offsetWidth;
+    sec.classList.add('fade-enter');
+
+    if (tabId === 'overview' && !overviewChartInst) renderOverviewChart();
+    if (tabId === 'deepdive' && !radarChartInst) { populateDropdown(); updateDeepDive(); }
+    if (tabId === 'matrix'   && !matrixChartInst) renderMatrixChart();
+}
+
+// ─────────────────────────────────────────────
+// 1. OVERVIEW HORIZONTAL BAR
+// ─────────────────────────────────────────────
+function renderOverviewChart() {
+    // Build legend
+    const legend = document.getElementById('legend-overview');
+    Object.entries(catColorsSolid).forEach(([cat, color]) => {
+        const item = document.createElement('div');
+        item.className = 'cat-dot';
+        item.innerHTML = `<span style="background:${color}"></span>${cat}`;
+        legend.appendChild(item);
+    });
+
+    const wrapper = document.getElementById('dynamic-chart-wrapper');
+    wrapper.style.height = `${medicalData.length * 34}px`;
+
+    const ctx = document.getElementById('overviewChart').getContext('2d');
+
+    overviewChartInst = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: medicalData.map(d => `${d.name}  (${d.titleID.split(' ')[0]})`),
+            datasets: [{
+                label: 'Avg Monthly Income (m IDR)',
+                data: medicalData.map(d => d.salary),
+                backgroundColor: medicalData.map(d => catColors[d.cat].bg),
+                borderColor:     medicalData.map(d => catColors[d.cat].border),
+                borderWidth: 1,
+                borderRadius: 6,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#0d1424',
+                    borderColor: 'rgba(255,255,255,0.1)',
                     borderWidth: 1,
-                    hoverBackgroundColor: catColors[cat].border
-                };
-            });
-
-            matrixChartInst = new Chart(ctx, {
-                type: 'bubble',
-                data: { datasets: datasets },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'top', labels: { usePointStyle: true, padding: 20, font:{weight:'bold'} } },
-                        tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                            padding: 12,
-                            callbacks: {
-                                title: (ctx) => ctx[0].raw.rawRole.titleID,
-                                label: (ctx) => {
-                                    const role = ctx.raw.rawRole;
-                                    return [
-                                        role.name,
-                                        `💰 Income: ${role.salary}m`,
-                                        `⚖️ WLB: ${role.wlb}/10`
-                                    ];
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            title: { display: true, text: 'Work-Life Balance ➔ (10 = Ideal)', font: {weight: 'bold'} },
-                            grid: { color: '#f1f5f9' },
-                            min: 1, max: 10
-                        },
-                        y: {
-                            title: { display: true, text: 'Monthly Income ➔ (Millions IDR)', font: {weight: 'bold'} },
-                            grid: { color: '#f1f5f9' }
+                    padding: 14,
+                    titleFont: { size: 13, weight: '700', family: "'Syne', sans-serif" },
+                    bodyFont:  { size: 12 },
+                    callbacks: {
+                        label: (ctx) => `  💰 Income: ${ctx.raw}m IDR/mo`,
+                        afterLabel: (ctx) => {
+                            const r = medicalData[ctx.dataIndex];
+                            return [`  ⚖️  WLB: ${r.wlb}/10`, `  📈 Demand: ${r.prospects}/100`];
                         }
                     }
                 }
-            });
+            },
+            scales: {
+                x: {
+                    title: { display: true, text: 'Monthly Income (Millions IDR)', font: { weight: '600', size: 11 }, color: '#8b97b4' },
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { color: '#8b97b4' }
+                },
+                y: {
+                    grid: { display: false },
+                    ticks: { autoSkip: false, font: { size: 11 }, color: '#8b97b4' }
+                }
+            }
         }
+    });
+}
 
-        // Initialize
-        window.onload = () => { renderOverviewChart(); };
+// ─────────────────────────────────────────────
+// 2. DEEP DIVE
+// ─────────────────────────────────────────────
+function populateDropdown() {
+    const select = document.getElementById('specialty-select');
+    if (select.options.length > 0) return;
 
-    </script>
+    const groups = ["Surgical", "Medical", "Diagnostic", "Specialized"];
+    groups.forEach(cat => {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = `── ${cat.toUpperCase()} ──`;
+        medicalData
+            .filter(d => d.cat === cat)
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .forEach(role => {
+                const opt = document.createElement('option');
+                opt.value = role.id;
+                opt.textContent = `${role.titleID.split(' ')[0]}  –  ${role.name}`;
+                optgroup.appendChild(opt);
+            });
+        select.appendChild(optgroup);
+    });
+}
+
+function updateDeepDive() {
+    const id   = document.getElementById('specialty-select').value;
+    const role = medicalData.find(d => d.id === id);
+    if (!role) return;
+
+    // Animate content swap
+    const contentArea = document.querySelector('#deepdive-grid');
+    contentArea.classList.remove('card-content-fade');
+    void contentArea.offsetWidth;
+    contentArea.classList.add('card-content-fade');
+
+    document.getElementById('card-title').textContent    = role.name;
+    document.getElementById('card-subtitle').textContent = role.titleID;
+    document.getElementById('card-salary').textContent   = role.salary;
+    document.getElementById('card-wlb').textContent      = role.wlb;
+    document.getElementById('card-hours').textContent    = role.hours;
+    document.getElementById('card-desc').textContent     = role.desc;
+    document.getElementById('card-stress').textContent   = role.stress;
+
+    const badge = document.getElementById('card-badge');
+    badge.textContent  = role.cat;
+    badge.className    = `badge badge-${role.cat.toLowerCase()}`;
+
+    // Accent the header bar based on category
+    const headerBar = document.getElementById('card-header-bar');
+    const c = catColorsSolid[role.cat];
+    headerBar.style.background = `linear-gradient(135deg, ${c}12 0%, transparent 60%)`;
+    headerBar.style.borderBottomColor = `${c}30`;
+
+    renderRadarChart(role);
+}
+
+function renderRadarChart(role) {
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    if (radarChartInst) radarChartInst.destroy();
+
+    const maxSalary = 160;
+    const color = catColors[role.cat];
+
+    radarChartInst = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['Income Score', 'Demand Score', 'WLB / Lifestyle'],
+            datasets: [{
+                label: role.name,
+                data: [
+                    parseFloat(((role.salary / maxSalary) * 10).toFixed(1)),
+                    parseFloat(((role.prospects / 100) * 10).toFixed(1)),
+                    role.wlb
+                ],
+                backgroundColor: color.bg.replace('0.65', '0.15'),
+                borderColor: color.border,
+                pointBackgroundColor: color.border,
+                pointBorderColor: '#0a0e1a',
+                pointBorderWidth: 2,
+                borderWidth: 2.5,
+                pointRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#0d1424',
+                    borderColor: 'rgba(255,255,255,0.1)',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: (ctx) => {
+                            if (ctx.dataIndex === 0) return ` Income: ${role.salary}m IDR`;
+                            if (ctx.dataIndex === 1) return ` Demand: ${role.prospects}/100`;
+                            if (ctx.dataIndex === 2) return ` WLB: ${role.wlb}/10`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                r: {
+                    angleLines:  { color: 'rgba(255,255,255,0.08)' },
+                    grid:        { color: 'rgba(255,255,255,0.06)', circular: true },
+                    pointLabels: { font: { size: 12, weight: '600', family: "'DM Sans', sans-serif" }, color: '#8b97b4' },
+                    ticks:       { display: false },
+                    min: 0, max: 10,
+                    suggestedMax: 10
+                }
+            }
+        }
+    });
+}
+
+// ─────────────────────────────────────────────
+// 3. MATRIX BUBBLE CHART
+// ─────────────────────────────────────────────
+function renderMatrixChart() {
+    const ctx = document.getElementById('matrixChart').getContext('2d');
+    if (matrixChartInst) matrixChartInst.destroy();
+
+    const categories = ["Surgical", "Medical", "Diagnostic", "Specialized"];
+    const datasets = categories.map(cat => ({
+        label: cat,
+        data: medicalData.filter(d => d.cat === cat).map(role => ({
+            x: role.wlb,
+            y: role.salary,
+            r: role.prospects / 5,
+            rawRole: role
+        })),
+        backgroundColor: catColors[cat].bg,
+        borderColor:     catColors[cat].border,
+        borderWidth: 1.5,
+        hoverBackgroundColor: catColors[cat].border
+    }));
+
+    matrixChartInst = new Chart(ctx, {
+        type: 'bubble',
+        data: { datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        padding: 24,
+                        font: { weight: '600', size: 12 },
+                        color: '#8b97b4'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#0d1424',
+                    borderColor: 'rgba(255,255,255,0.1)',
+                    borderWidth: 1,
+                    padding: 14,
+                    titleFont: { size: 13, weight: '700', family: "'Syne', sans-serif" },
+                    callbacks: {
+                        title: (ctx) => ctx[0].raw.rawRole.titleID,
+                        label: (ctx) => {
+                            const r = ctx.raw.rawRole;
+                            return [
+                                `  ${r.name}`,
+                                `  💰 Income: ${r.salary}m IDR/mo`,
+                                `  ⚖️  WLB: ${r.wlb}/10`,
+                                `  📈 Demand: ${r.prospects}/100`
+                            ];
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: { display: true, text: 'Work-Life Balance  →  (10 = Ideal)', font: { weight: '600', size: 12 }, color: '#8b97b4' },
+                    grid:  { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { color: '#8b97b4' },
+                    min: 1, max: 10
+                },
+                y: {
+                    title: { display: true, text: 'Monthly Income  →  (Millions IDR)', font: { weight: '600', size: 12 }, color: '#8b97b4' },
+                    grid:  { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { color: '#8b97b4' }
+                }
+            }
+        }
+    });
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+window.onload = () => {
+    buildStatRow();
+    renderOverviewChart();
+};
+</script>
 </body>
 </html>
