@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiology Landscape: Indonesia vs. The World</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Warm Neutrals with Subdued Teal and Slate Accents -->
+    <!-- Application Structure Plan: A single-page scrollable dashboard divided into thematic comparative sections (Overview, Scope, Education, Compensation). This structure allows a linear narrative flow comparing the two entities (Indonesia vs. World) across different professional dimensions. Navigation is sticky for quick jumping. Tabbed interactions prevent text overload in the Education section. -->
+    <!-- Visualization & Content Choices: 
+         1. Density -> Goal: Compare scarcity -> Viz: Bar Chart (Chart.js) -> Interaction: Hover tooltips -> Justifies stark contrast in workload.
+         2. Scope/Workload -> Goal: Compare daily professional life -> Viz: Radar Chart (Chart.js) -> Interaction: Hover for exact metrics -> Shows generalist vs subspecialist divide.
+         3. Education -> Goal: Compare pathways -> Viz: Interactive HTML/CSS Tabs -> Interaction: Click to switch -> Keeps content digestible.
+         4. Salary -> Goal: Financial comparison -> Viz: Horizontal Bar Chart (Chart.js) -> Interaction: Tooltips explaining PPP context -> Visualizes the absolute gap.
+         Library: Chart.js for all charts. HTML/CSS/Tailwind for UI.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafaf9; /* stone-50 */
+            color: #292524; /* stone-800 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-active {
+            border-bottom: 2px solid #0f766e; /* teal-700 */
+            color: #0f766e;
+            font-weight: 600;
+        }
+        .tab-active {
+            background-color: #0f766e;
+            color: white;
+        }
+        .tab-inactive {
+            background-color: #e7e5e4; /* stone-200 */
+            color: #57534e; /* stone-500 */
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-teal-200 selection:text-teal-900">
+
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-stone-200 z-50 transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-stone-800 tracking-tight">&#9673; Rad<span class="text-teal-700">Compare</span></span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#overview" class="nav-link text-sm text-stone-600 hover:text-teal-700 transition-colors py-5 nav-active">Overview</a>
+                    <a href="#scope" class="nav-link text-sm text-stone-600 hover:text-teal-700 transition-colors py-5">Scope of Work</a>
+                    <a href="#education" class="nav-link text-sm text-stone-600 hover:text-teal-700 transition-colors py-5">Education</a>
+                    <a href="#compensation" class="nav-link text-sm text-stone-600 hover:text-teal-700 transition-colors py-5">Compensation</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-stone-900 mb-6 leading-tight">
+            The Radiological Divide: <br><span class="text-teal-700">Indonesia vs. The World</span>
+        </h1>
+        <p class="text-lg text-stone-600 max-w-2xl mx-auto">
+            An interactive comparative analysis exploring the critical differences in workforce density, daily scope of work, educational pathways, and compensation for radiologists operating in Indonesia compared to global averages (skewed towards developed healthcare systems).
+        </p>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-24">
+
+        <section id="overview" class="scroll-mt-24">
+            <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 md:p-10">
+                <div class="mb-8 max-w-3xl">
+                    <h2 class="text-2xl font-bold text-stone-800 mb-4 flex items-center">
+                        <span class="text-teal-600 mr-2">&#9632;</span> Workforce & Demographics
+                    </h2>
+                    <p class="text-stone-600 leading-relaxed">
+                        This section establishes the foundational difference: supply and demand. Indonesia faces a severe shortage of radiologists relative to its population of over 270 million. While developed nations average between 50 to 150 radiologists per million people, Indonesia operates with significantly fewer, driving systemic differences in how the profession operates locally.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="chart-container">
+                        <canvas id="densityChart"></canvas>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-stone-50 p-6 rounded-xl border border-stone-100">
+                            <h3 class="text-lg font-semibold text-stone-800 mb-2">Global Average</h3>
+                            <p class="text-3xl font-bold text-slate-700 mb-1">~90 <span class="text-sm font-normal text-stone-500">per 1M population</span></p>
+                            <p class="text-sm text-stone-600">Standard ratio in developed healthcare systems, allowing for reasonable workloads and deep subspecialization.</p>
+                        </div>
+                        <div class="bg-teal-50 p-6 rounded-xl border border-teal-100">
+                            <h3 class="text-lg font-semibold text-teal-900 mb-2">Indonesia</h3>
+                            <p class="text-3xl font-bold text-teal-700 mb-1">~6 <span class="text-sm font-normal text-teal-700/70">per 1M population</span></p>
+                            <p class="text-sm text-teal-800/80">A critical shortage. Approximately 1,500-2,000 radiologists serve the entire archipelago, leading to high-volume generic reads.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="scope" class="scroll-mt-24">
+            <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 md:p-10">
+                <div class="mb-8 max-w-3xl mx-auto text-center">
+                    <h2 class="text-2xl font-bold text-stone-800 mb-4 flex items-center justify-center">
+                        <span class="text-teal-600 mr-2">&#9650;</span> Scope of Work & Practice Metrics
+                    </h2>
+                    <p class="text-stone-600 leading-relaxed">
+                        Due to demographic realities, the daily life of an Indonesian radiologist differs vastly from an international counterpart. Explore the radar chart below to see how factors like subspecialization, raw case volume, and patient interaction compare.
+                    </p>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="scopeChart"></canvas>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+                    <div class="p-5 border border-stone-200 rounded-lg">
+                        <div class="font-bold text-stone-800 mb-2">Subspecialization</div>
+                        <p class="text-sm text-stone-600"><strong>Global:</strong> High. Many read only Neuro, MSK, or Breast imaging. <br><br><strong>Indonesia:</strong> Low. Most are forced to be generalists (Sp.Rad) to cover all modalities due to staff shortages.</p>
+                    </div>
+                    <div class="p-5 border border-stone-200 rounded-lg">
+                        <div class="font-bold text-stone-800 mb-2">Ultrasound (USG) Duty</div>
+                        <p class="text-sm text-stone-600"><strong>Global:</strong> Often performed by sonographers; radiologist only reads. <br><br><strong>Indonesia:</strong> Radiologists physically perform a large percentage of ultrasound examinations themselves.</p>
+                    </div>
+                    <div class="p-5 border border-stone-200 rounded-lg">
+                        <div class="font-bold text-stone-800 mb-2">Multiple Practices</div>
+                        <p class="text-sm text-stone-600"><strong>Global:</strong> Usually tied to one major hospital or private group. <br><br><strong>Indonesia:</strong> Very common to practice at 2-3 different hospitals/clinics daily to maximize income and cover regional shortages.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="scroll-mt-24">
+            <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 md:p-10">
+                <div class="mb-8 max-w-3xl">
+                    <h2 class="text-2xl font-bold text-stone-800 mb-4 flex items-center">
+                        <span class="text-teal-600 mr-2">&#9670;</span> Educational Pathways
+                    </h2>
+                    <p class="text-stone-600 leading-relaxed">
+                        The journey to becoming a certified radiologist varies in length and structure. Interact with the tabs below to compare the typical medical education timeline in Indonesia versus the standard global (US/UK influenced) model.
+                    </p>
+                </div>
+
+                <div class="flex space-x-2 mb-6 border-b border-stone-200 pb-2 overflow-x-auto">
+                    <button onclick="switchTab('indo')" id="tab-indo" class="tab-active px-6 py-2 rounded-t-lg font-medium transition-colors whitespace-nowrap">Indonesian Pathway</button>
+                    <button onclick="switchTab('global')" id="tab-global" class="tab-inactive px-6 py-2 rounded-t-lg font-medium transition-colors whitespace-nowrap">Global Standard (US/UK Model)</button>
+                </div>
+
+                <div id="content-indo" class="space-y-4 animate-fade-in">
+                    <div class="flex items-start">
+                        <div class="w-16 font-bold text-teal-700 pt-1">Years 1-4</div>
+                        <div class="flex-1 bg-stone-50 p-4 rounded border border-stone-100">
+                            <h4 class="font-semibold text-stone-800">Pre-Clinical (S.Ked)</h4>
+                            <p class="text-sm text-stone-600">Bachelor of Medicine. Classroom and laboratory based medical sciences.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-16 font-bold text-teal-700 pt-1">Years 5-6</div>
+                        <div class="flex-1 bg-stone-50 p-4 rounded border border-stone-100">
+                            <h4 class="font-semibold text-stone-800">Clinical Rotations (Co-Ass)</h4>
+                            <p class="text-sm text-stone-600">Clinical clerkship in various hospital departments. Graduates as Medical Doctor (dr.).</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-16 font-bold text-teal-700 pt-1">Year 7</div>
+                        <div class="flex-1 bg-stone-50 p-4 rounded border border-stone-100">
+                            <h4 class="font-semibold text-stone-800">Internship (PTT/Internsip)</h4>
+                            <p class="text-sm text-stone-600">Mandatory government service in regional hospitals or primary care centers (Puskesmas).</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-16 font-bold text-teal-700 pt-1">Years 8-11</div>
+                        <div class="flex-1 bg-teal-50 p-4 rounded border border-teal-200 shadow-sm">
+                            <h4 class="font-semibold text-teal-900">Residency (PPDS Radiologi)</h4>
+                            <p class="text-sm text-teal-800">4 years of specialized radiology training. Highly competitive. Graduates as Sp.Rad (Spesialis Radiologi).</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-16 font-bold text-teal-700 pt-1">Optional</div>
+                        <div class="flex-1 bg-stone-50 p-4 rounded border border-stone-100">
+                            <h4 class="font-semibold text-stone-800">Fellowship (Subspecialty)</h4>
+                            <p class="text-sm text-stone-600">1-2 years (e.g., Neuroradiology, Interventional). Less common historically but growing in demand.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="content-global" class="space-y-4 hidden animate-fade-in">
+                    <div class="flex items-start">
+                        <div class="w-16 font-bold text-slate-600 pt-1">Years 1-4</div>
+                        <div class="flex-1 bg-stone-50 p-4 rounded border border-stone-100">
+                            <h4 class="font-semibold text-stone-800">Undergraduate Degree</h4>
+                            <p class="text-sm text-stone-600">Pre-med bachelor's degree (any major, but usually sciences).</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-16 font-bold text-slate-600 pt-1">Years 5-8</div>
+                        <div class="flex-1 bg-stone-50 p-4 rounded border border-stone-100">
+                            <h4 class="font-semibold text-stone-800">Medical School (MD/DO)</h4>
+                            <p class="text-sm text-stone-600">2 years pre-clinical, 2 years clinical rotations.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-16 font-bold text-slate-600 pt-1">Year 9</div>
+                        <div class="flex-1 bg-stone-50 p-4 rounded border border-stone-100">
+                            <h4 class="font-semibold text-stone-800">Transitional Year / Prelim</h4>
+                            <p class="text-sm text-stone-600">General clinical internship year (Internal Med, Surgery, etc.) before starting radiology.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-16 font-bold text-slate-600 pt-1">Yrs 10-13</div>
+                        <div class="flex-1 bg-slate-50 p-4 rounded border border-slate-200 shadow-sm">
+                            <h4 class="font-semibold text-slate-800">Radiology Residency</h4>
+                            <p class="text-sm text-slate-700">4 years dedicated Diagnostic Radiology training.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-16 font-bold text-slate-600 pt-1">Yrs 14+</div>
+                        <div class="flex-1 bg-stone-50 p-4 rounded border border-stone-100">
+                            <h4 class="font-semibold text-stone-800">Fellowship (Standard)</h4>
+                            <p class="text-sm text-stone-600">1-2 years. It is highly standard in the US/UK to complete at least one fellowship.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="compensation" class="scroll-mt-24">
+            <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 md:p-10">
+                <div class="mb-8 max-w-3xl">
+                    <h2 class="text-2xl font-bold text-stone-800 mb-4 flex items-center">
+                        <span class="text-teal-600 mr-2">&#9672;</span> Compensation & Technology
+                    </h2>
+                    <p class="text-stone-600 leading-relaxed">
+                        Financial compensation shows the most dramatic variance. While Indonesian figures appear low in direct USD conversion, they represent top-tier earnings within the local economy (especially when operating across multiple private clinics). Globally, radiology remains one of the highest-compensated medical specialties outright.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div class="flex flex-col justify-center">
+                        <div class="chart-container">
+                            <canvas id="salaryChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-500 mt-4 text-center">Note: Direct USD conversion. Does not account for Purchasing Power Parity (PPP). Indonesian figures represent combined income from multiple practices.</p>
+                    </div>
+
+                    <div class="space-y-6 flex flex-col justify-center">
+                        <h3 class="text-xl font-bold text-stone-800 border-b border-stone-200 pb-2">Technological Environment</h3>
+                        
+                        <div>
+                            <div class="flex justify-between text-sm font-medium mb-1">
+                                <span class="text-stone-700">AI Triage & Integration</span>
+                            </div>
+                            <div class="w-full bg-stone-200 rounded-full h-2">
+                                <div class="bg-slate-400 h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                            <p class="text-xs text-stone-500 mt-1">Global: Standard in modern setups. Indonesia: Emerging in top Jakarta hospitals, rare elsewhere.</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-sm font-medium mb-1">
+                                <span class="text-stone-700">Advanced Modality Access (PET/3T MRI)</span>
+                            </div>
+                            <div class="w-full bg-stone-200 rounded-full h-2">
+                                <div class="bg-slate-400 h-2 rounded-full" style="width: 70%"></div>
+                            </div>
+                            <p class="text-xs text-stone-500 mt-1">Global: Widespread. Indonesia: Concentrated in major tier-1 cities.</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-sm font-medium mb-1">
+                                <span class="text-stone-700">Teleradiology Infrastructure</span>
+                            </div>
+                            <div class="w-full bg-stone-200 rounded-full h-2">
+                                <div class="bg-slate-400 h-2 rounded-full" style="width: 90%"></div>
+                            </div>
+                            <p class="text-xs text-stone-500 mt-1">Global: Ubiquitous for on-call. Indonesia: Rapidly growing to cover rural shortages, but internet infrastructure in remote areas limits throughput.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-900 py-8 text-center border-t border-stone-800">
+        <p class="text-stone-400 text-sm">Interactive Synthesis built for informational comparison.</p>
+    </footer>
+
+    <script>
+        // Setup Chart defaults
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#57534e';
+        Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(28, 25, 23, 0.9)';
+        Chart.defaults.plugins.tooltip.padding = 10;
+        Chart.defaults.plugins.tooltip.cornerRadius = 4;
+
+        // 1. Density Bar Chart
+        const ctxDensity = document.getElementById('densityChart').getContext('2d');
+        new Chart(ctxDensity, {
+            type: 'bar',
+            data: {
+                labels: ['Global Avg (Developed)', 'Indonesia'],
+                datasets: [{
+                    label: 'Radiologists per 1M People',
+                    data: [90, 6],
+                    backgroundColor: ['#94a3b8', '#0f766e'],
+                    borderRadius: 6,
+                    barPercentage: 0.6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + ' per 1 Million People';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#e7e5e4', drawBorder: false },
+                        title: { display: true, text: 'Professionals per 1M' }
+                    },
+                    x: {
+                        grid: { display: false, drawBorder: false }
+                    }
+                }
+            }
+        });
+
+        // 2. Scope Radar Chart
+        const ctxScope = document.getElementById('scopeChart').getContext('2d');
+        new Chart(ctxScope, {
+            type: 'radar',
+            data: {
+                labels: [
+                    'General X-Ray Volume', 
+                    'Ultrasound Performance', 
+                    'Subspecialization', 
+                    'Multiple Practice Locations', 
+                    'AI Tool Usage'
+                ],
+                datasets: [
+                    {
+                        label: 'Indonesia',
+                        data: [95, 90, 20, 95, 30],
+                        backgroundColor: 'rgba(15, 118, 110, 0.2)',
+                        borderColor: '#0f766e',
+                        pointBackgroundColor: '#0f766e',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Global Average',
+                        data: [50, 20, 85, 30, 80],
+                        backgroundColor: 'rgba(148, 163, 184, 0.2)',
+                        borderColor: '#94a3b8',
+                        pointBackgroundColor: '#94a3b8',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#e7e5e4' },
+                        grid: { color: '#e7e5e4' },
+                        pointLabels: { font: { size: 12 }, color: '#44403c' },
+                        ticks: { display: false, min: 0, max: 100 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.r + ' (Relative Scale)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 3. Salary Horizontal Bar Chart
+        const ctxSalary = document.getElementById('salaryChart').getContext('2d');
+        new Chart(ctxSalary, {
+            type: 'bar',
+            data: {
+                labels: ['US/Global Avg', 'Indonesia (Combined)'],
+                datasets: [{
+                    label: 'Est. Annual Salary (USD)',
+                    data: [420000, 45000],
+                    backgroundColor: ['#cbd5e1', '#0d9488'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '$' + context.parsed.x.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: '#e7e5e4', drawBorder: false },
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + (value/1000) + 'k';
+                            }
+                        }
+                    },
+                    y: {
+                        grid: { display: false, drawBorder: false }
+                    }
+                }
+            }
+        });
+
+        // Education Tab Logic
+        function switchTab(tabId) {
+            // Reset buttons
+            document.getElementById('tab-indo').className = 'tab-inactive px-6 py-2 rounded-t-lg font-medium transition-colors whitespace-nowrap';
+            document.getElementById('tab-global').className = 'tab-inactive px-6 py-2 rounded-t-lg font-medium transition-colors whitespace-nowrap';
+            
+            // Hide content
+            document.getElementById('content-indo').classList.add('hidden');
+            document.getElementById('content-global').classList.add('hidden');
+
+            // Set active
+            document.getElementById('tab-' + tabId).className = 'tab-active px-6 py-2 rounded-t-lg font-medium transition-colors whitespace-nowrap';
+            document.getElementById('content-' + tabId).classList.remove('hidden');
+        }
+
+        // Smooth Scroll & Active Nav State
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('nav-active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('nav-active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

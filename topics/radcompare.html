@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiology Landscape: Indonesia vs. The World</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-base:     #080c18;
+            --bg-surface:  #0e1424;
+            --bg-card:     #111828;
+            --bg-glass:    rgba(255,255,255,0.035);
+            --border:      rgba(255,255,255,0.07);
+            --border-hov:  rgba(255,255,255,0.14);
+            --text-primary:   #eef2ff;
+            --text-secondary: #7f8faf;
+            --text-muted:     #3d4a66;
+            --accent:      #00cfb0;
+            --accent-dim:  #006e5d;
+            --accent-glow: rgba(0,207,176,0.18);
+            --indo:        #00cfb0;
+            --global:      #7b9cff;
+            --indo-bg:     rgba(0,207,176,0.12);
+            --global-bg:   rgba(123,156,255,0.12);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, .syne { font-family: 'Syne', sans-serif; }
+
+        /* ── ANIMATED BACKGROUND ORBS ── */
+        .orb {
+            position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+            filter: blur(90px);
+        }
+        .orb-1 {
+            width: 700px; height: 700px; top: -250px; left: -200px;
+            background: radial-gradient(circle, rgba(0,207,176,0.14) 0%, transparent 70%);
+            animation: orbA 20s ease-in-out infinite alternate;
+        }
+        .orb-2 {
+            width: 550px; height: 550px; bottom: 0; right: -150px;
+            background: radial-gradient(circle, rgba(123,156,255,0.12) 0%, transparent 70%);
+            animation: orbB 25s ease-in-out infinite alternate;
+        }
+        .orb-3 {
+            width: 400px; height: 400px; top: 50%; left: 40%;
+            background: radial-gradient(circle, rgba(244,63,94,0.07) 0%, transparent 70%);
+            animation: orbC 30s ease-in-out infinite alternate;
+        }
+        @keyframes orbA { from { transform: translate(0,0) scale(1); } to { transform: translate(80px,70px) scale(1.2); } }
+        @keyframes orbB { from { transform: translate(0,0) scale(1); } to { transform: translate(-70px,-90px) scale(1.15); } }
+        @keyframes orbC { from { transform: translate(0,0) scale(1); } to { transform: translate(50px,-60px) scale(0.85); } }
+
+        /* ── NAVBAR ── */
+        nav {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(8,12,24,0.85);
+            backdrop-filter: blur(18px) saturate(160%);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            transition: background 0.3s;
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+            height: 64px;
+        }
+        .nav-logo {
+            font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800;
+            letter-spacing: -0.03em; color: var(--text-primary);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-logo-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+            animation: pulseDot 2.5s ease-in-out infinite;
+        }
+        @keyframes pulseDot { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.7);opacity:0.5;} }
+
+        .nav-links { display: flex; gap: 0.25rem; }
+        .nav-link {
+            font-size: 0.82rem; font-weight: 500; padding: 0.4rem 0.9rem;
+            border-radius: 8px; color: var(--text-secondary);
+            text-decoration: none; transition: all 0.2s;
+        }
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-glass); }
+        .nav-link.active {
+            color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        @media (max-width: 700px) { .nav-links { display: none; } }
+
+        /* ── LAYOUT ── */
+        .wrap { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 1; }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 9rem 1.5rem 5rem;
+            text-align: center; position: relative; z-index: 1;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.3rem 1rem; border-radius: 999px;
+            border: 1px solid rgba(0,207,176,0.3);
+            background: rgba(0,207,176,0.07);
+            color: var(--accent); font-size: 0.72rem;
+            font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+            margin-bottom: 1.6rem;
+            opacity: 0; animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+        }
+        .hero-badge-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--accent); flex-shrink: 0;
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+        .hero-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.4rem, 6vw, 4.2rem);
+            font-weight: 800; line-height: 1.08;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.4rem;
+            opacity: 0; animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
+        }
+        .hero-title .grad {
+            background: linear-gradient(135deg, #eef2ff 0%, #7b9cff 40%, var(--accent) 100%);
+            background-size: 200% 100%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 7s ease-in-out infinite alternate;
+        }
+        @keyframes shimmer { from{background-position:0% 50%;} to{background-position:100% 50%;} }
+        .hero-desc {
+            color: var(--text-secondary); font-size: 1.05rem; line-height: 1.75;
+            max-width: 680px; margin: 0 auto;
+            opacity: 0; animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
+        }
+
+        /* ── LEGEND PILLS ── */
+        .legend-row {
+            display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;
+            opacity: 0; animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) 0.45s forwards;
+        }
+        .legend-pill {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.4rem 1rem; border-radius: 999px;
+            font-size: 0.8rem; font-weight: 600;
+            border: 1px solid;
+        }
+        .legend-pill-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .pill-indo  { background: var(--indo-bg);   border-color: rgba(0,207,176,0.3);  color: var(--indo); }
+        .pill-global{ background: var(--global-bg); border-color: rgba(123,156,255,0.3);color: var(--global); }
+
+        /* ── SECTIONS ── */
+        .page-section {
+            scroll-margin-top: 80px;
+            padding: 2rem 0 1.5rem;
+        }
+
+        /* ── CARD ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .card::before {
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,207,176,0.4), transparent);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .card:hover { border-color: var(--border-hov); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+        .card:hover::before { opacity: 1; }
+
+        @media (max-width: 640px) { .card { padding: 1.5rem; border-radius: 18px; } }
+
+        /* ── SECTION HEADER ── */
+        .section-eyebrow {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem;
+        }
+        .section-eyebrow-line { width: 24px; height: 1.5px; background: var(--accent); }
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.4rem, 3vw, 1.9rem);
+            font-weight: 700; line-height: 1.2;
+            margin-bottom: 0.8rem;
+        }
+        .section-desc { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.75; max-width: 700px; }
+
+        /* ── STAT CARDS ── */
+        .stat-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 480px) { .stat-pair { grid-template-columns: 1fr; } }
+        .stat-box {
+            border-radius: 16px; padding: 1.4rem;
+            border: 1px solid;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .stat-box:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.35); }
+        .stat-box-indo  { background: var(--indo-bg);   border-color: rgba(0,207,176,0.25); }
+        .stat-box-global{ background: var(--global-bg); border-color: rgba(123,156,255,0.25); }
+        .stat-box-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+        .label-indo   { color: var(--indo); }
+        .label-global { color: var(--global); }
+        .stat-box-val { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; line-height: 1; margin-bottom: 0.3rem; }
+        .val-indo   { color: var(--indo); }
+        .val-global { color: var(--global); }
+        .stat-box-sub { font-size: 0.72rem; color: var(--text-secondary); line-height: 1.55; }
+
+        /* ── GRIDS ── */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+        @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+        @media (max-width: 700px) { .grid-3 { grid-template-columns: 1fr; } }
+
+        /* ── CHART CONTAINER ── */
+        .chart-wrap { position: relative; width: 100%; height: 340px; }
+        .chart-wrap-radar { position: relative; width: 100%; height: 380px; max-width: 620px; margin: 0 auto; }
+        .chart-wrap-salary { position: relative; width: 100%; height: 200px; }
+
+        /* ── SCOPE FEATURE CARDS ── */
+        .feature-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border);
+            border-radius: 14px; padding: 1.2rem;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .feature-card:hover { border-color: var(--border-hov); transform: translateY(-2px); }
+        .feature-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; margin-bottom: 0.75rem; }
+        .feature-row { display: flex; gap: 0.5rem; font-size: 0.82rem; line-height: 1.6; margin-bottom: 0.5rem; }
+        .feature-row:last-child { margin-bottom: 0; }
+        .feature-tag {
+            flex-shrink: 0; padding: 0.1rem 0.5rem; border-radius: 5px;
+            font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+            align-self: flex-start; margin-top: 0.2rem;
+        }
+        .tag-indo   { background: var(--indo-bg);   color: var(--indo);   border: 1px solid rgba(0,207,176,0.3); }
+        .tag-global { background: var(--global-bg); color: var(--global); border: 1px solid rgba(123,156,255,0.3); }
+
+        /* ── EDUCATION TABS ── */
+        .tab-row { display: flex; gap: 0.4rem; margin-bottom: 1.5rem; }
+        .edu-tab {
+            padding: 0.5rem 1.3rem; border-radius: 10px;
+            font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 600;
+            border: 1px solid var(--border); background: transparent;
+            color: var(--text-secondary); cursor: pointer;
+            transition: all 0.2s;
+        }
+        .edu-tab:hover { color: var(--text-primary); background: var(--bg-glass); }
+        .edu-tab.active-indo   { background: var(--indo-bg);   color: var(--indo);   border-color: rgba(0,207,176,0.35);  box-shadow: 0 0 18px rgba(0,207,176,0.2); }
+        .edu-tab.active-global { background: var(--global-bg); color: var(--global); border-color: rgba(123,156,255,0.35); box-shadow: 0 0 18px rgba(123,156,255,0.2); }
+
+        /* ── TIMELINE ── */
+        .timeline { display: flex; flex-direction: column; gap: 0.6rem; }
+        .timeline-item { display: flex; gap: 1rem; align-items: stretch; }
+        .timeline-yr {
+            flex-shrink: 0; width: 72px;
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.78rem;
+            padding-top: 1rem; text-align: right;
+        }
+        .timeline-connector { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 24px; }
+        .timeline-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 1rem; }
+        .timeline-line { flex: 1; width: 2px; background: var(--border); margin: 4px 0; }
+        .timeline-item:last-child .timeline-line { display: none; }
+        .timeline-body {
+            flex: 1; padding: 0.9rem 1.1rem; border-radius: 12px;
+            border: 1px solid var(--border); background: var(--bg-glass);
+            margin-bottom: 0; transition: border-color 0.2s;
+        }
+        .timeline-body:hover { border-color: var(--border-hov); }
+        .timeline-body.highlight-indo   { background: var(--indo-bg);   border-color: rgba(0,207,176,0.3); }
+        .timeline-body.highlight-global { background: var(--global-bg); border-color: rgba(123,156,255,0.3); }
+        .timeline-body h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; margin-bottom: 0.2rem; }
+        .timeline-body p  { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; }
+
+        /* ── TECH COMPARISON BARS ── */
+        .tech-item { margin-bottom: 1.5rem; }
+        .tech-item:last-child { margin-bottom: 0; }
+        .tech-label { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.6rem; }
+        .tech-bar-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.3rem; }
+        .tech-bar-tag { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; width: 52px; flex-shrink: 0; text-align: right; }
+        .tech-bar-track {
+            flex: 1; height: 8px; border-radius: 999px;
+            background: rgba(255,255,255,0.06); overflow: hidden;
+        }
+        .tech-bar-fill {
+            height: 100%; border-radius: 999px;
+            transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
+        }
+        .bar-indo   { background: linear-gradient(90deg, var(--accent-dim), var(--indo)); }
+        .bar-global { background: linear-gradient(90deg, #4a6adc, var(--global)); }
+        .tech-bar-pct { font-size: 0.72rem; font-weight: 700; width: 32px; text-align: right; flex-shrink: 0; }
+        .pct-indo   { color: var(--indo); }
+        .pct-global { color: var(--global); }
+        .tech-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; margin-top: 0.3rem; }
+
+        /* ── COMPENSATION SUMMARY ── */
+        .comp-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+        @media (max-width: 480px) { .comp-stat-grid { grid-template-columns: 1fr; } }
+        .comp-stat-box {
+            border-radius: 14px; padding: 1.2rem;
+            border: 1px solid var(--border); background: var(--bg-glass);
+            text-align: center; transition: transform 0.2s;
+        }
+        .comp-stat-box:hover { transform: translateY(-2px); }
+        .comp-stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700; margin-bottom: 0.4rem; }
+        .comp-stat-val { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; }
+        .comp-stat-note { font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.3rem; line-height: 1.5; }
+
+        /* ── DIVIDER ── */
+        .grad-line { height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); margin: 0; }
+
+        /* ── SCROLL ANIMATIONS ── */
+        .reveal {
+            opacity: 0; transform: translateY(22px);
+            transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.08s; }
+        .reveal-delay-2 { transition-delay: 0.16s; }
+        .reveal-delay-3 { transition-delay: 0.24s; }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative; z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+        }
+        footer p { color: var(--text-muted); font-size: 0.8rem; line-height: 1.8; }
+        footer a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
+        footer a:hover { opacity: 0.7; }
+
+        /* ── BASE ANIMATION ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- ── NAVBAR ── -->
+<nav>
+    <div class="nav-inner">
+        <div class="nav-logo">
+            <div class="nav-logo-dot"></div>
+            Rad<span>Compare</span>
+        </div>
+        <div class="nav-links">
+            <a href="#overview"      class="nav-link active">Overview</a>
+            <a href="#scope"         class="nav-link">Scope of Work</a>
+            <a href="#education"     class="nav-link">Education</a>
+            <a href="#compensation"  class="nav-link">Compensation</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+    <div class="hero-badge"><div class="hero-badge-dot"></div>Interactive Comparative Analysis</div>
+    <h1 class="hero-title">
+        The Radiological Divide:<br>
+        <span class="grad">Indonesia vs. The World</span>
+    </h1>
+    <p class="hero-desc">
+        Exploring critical differences in workforce density, daily scope of work, educational pathways, and compensation for radiologists in Indonesia compared to global averages — weighted toward developed healthcare systems.
+    </p>
+    <div class="legend-row">
+        <div class="legend-pill pill-indo">
+            <div class="legend-pill-dot" style="background:var(--indo);"></div>
+            Indonesia
+        </div>
+        <div class="legend-pill pill-global">
+            <div class="legend-pill-dot" style="background:var(--global);"></div>
+            Global Average
+        </div>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main class="wrap" style="padding-bottom: 5rem;">
+
+    <!-- ══ SECTION 1: WORKFORCE OVERVIEW ══ -->
+    <section id="overview" class="page-section">
+        <div class="card reveal">
+            <div class="section-eyebrow"><div class="section-eyebrow-line"></div>Section 01</div>
+            <h2 class="section-title">Workforce & Demographics</h2>
+            <p class="section-desc">
+                Indonesia faces a severe shortage of radiologists relative to its 275+ million population. While developed nations average 50–150 specialists per million people, Indonesia operates at a fraction of that, driving profound systemic differences in how the profession functions locally.
+            </p>
+
+            <div style="height:1.5rem;"></div>
+
+            <div class="grid-2" style="gap:2rem; align-items:center;">
+                <div class="chart-wrap reveal reveal-delay-1">
+                    <canvas id="densityChart"></canvas>
+                </div>
+                <div class="reveal reveal-delay-2">
+                    <div class="stat-pair">
+                        <div class="stat-box stat-box-global">
+                            <div class="stat-box-label label-global">Global Avg (Developed)</div>
+                            <div class="stat-box-val val-global">~90</div>
+                            <div class="stat-box-sub" style="font-size:0.7rem; color:var(--global); opacity:0.7;">per 1M population</div>
+                            <div class="stat-box-sub" style="margin-top:0.5rem;">Standard ratio in developed healthcare systems, enabling reasonable workloads and deep subspecialization.</div>
+                        </div>
+                        <div class="stat-box stat-box-indo">
+                            <div class="stat-box-label label-indo">Indonesia</div>
+                            <div class="stat-box-val val-indo">~7</div>
+                            <div class="stat-box-sub" style="font-size:0.7rem; color:var(--indo); opacity:0.7;">per 1M population</div>
+                            <div class="stat-box-sub" style="margin-top:0.5rem;">Approximately 2,000–2,500 radiologists serve the entire archipelago, forcing high-volume generalist reads.</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:1rem; padding:1rem 1.2rem; background:var(--bg-glass); border:1px solid var(--border); border-radius:12px;">
+                        <p style="font-size:0.8rem; color:var(--text-secondary); line-height:1.7;">
+                            <strong style="color:var(--text-primary);">Key consequence:</strong>
+                            A single Indonesian radiologist may read the same daily caseload that would be handled by 10–15 specialists in a developed system — often covering all modalities without the luxury of subspecialization.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ SECTION 2: SCOPE OF WORK ══ -->
+    <section id="scope" class="page-section" style="margin-top:2rem;">
+        <div class="card reveal">
+            <div class="section-eyebrow"><div class="section-eyebrow-line"></div>Section 02</div>
+            <h2 class="section-title">Scope of Work & Practice Metrics</h2>
+            <p class="section-desc">
+                Due to workforce scarcity, the daily professional life of an Indonesian radiologist differs vastly from an international counterpart. The radar below maps six key practice dimensions on a relative 0–100 scale.
+            </p>
+
+            <div style="height:1.5rem;"></div>
+
+            <div class="chart-wrap-radar reveal reveal-delay-1">
+                <canvas id="scopeChart"></canvas>
+            </div>
+
+            <div style="height:1.5rem;"></div>
+            <div class="grad-line"></div>
+            <div style="height:1.5rem;"></div>
+
+            <div class="grid-3 reveal reveal-delay-2">
+                <div class="feature-card">
+                    <div class="feature-title">Subspecialization</div>
+                    <div class="feature-row">
+                        <span class="feature-tag tag-global">Global</span>
+                        <span style="color:var(--text-secondary);">High. Many read only a single modality — Neuro, MSK, or Breast imaging exclusively.</span>
+                    </div>
+                    <div class="feature-row">
+                        <span class="feature-tag tag-indo">Indo</span>
+                        <span style="color:var(--text-secondary);">Low. Most Sp.Rad remain generalists to cover all modalities — a necessity given staffing shortages.</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">Ultrasound (USG) Performance</div>
+                    <div class="feature-row">
+                        <span class="feature-tag tag-global">Global</span>
+                        <span style="color:var(--text-secondary);">Mostly delegated to trained sonographers; the radiologist only interprets the final report.</span>
+                    </div>
+                    <div class="feature-row">
+                        <span class="feature-tag tag-indo">Indo</span>
+                        <span style="color:var(--text-secondary);">Radiologists personally perform a large proportion of USG examinations — a major time cost.</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">Multi-Site Practice</div>
+                    <div class="feature-row">
+                        <span class="feature-tag tag-global">Global</span>
+                        <span style="color:var(--text-secondary);">Typically one anchor hospital or private group. Teleradiology for remote reads is becoming common.</span>
+                    </div>
+                    <div class="feature-row">
+                        <span class="feature-tag tag-indo">Indo</span>
+                        <span style="color:var(--text-secondary);">Very common to practice across 2–3 hospitals and clinics daily — both to maximize income and fill regional gaps.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ SECTION 3: EDUCATION ══ -->
+    <section id="education" class="page-section" style="margin-top:2rem;">
+        <div class="card reveal">
+            <div class="section-eyebrow"><div class="section-eyebrow-line"></div>Section 03</div>
+            <h2 class="section-title">Educational Pathways</h2>
+            <p class="section-desc">
+                The journey to becoming a certified radiologist differs in structure, duration, and prerequisite burden. Select a pathway below to compare timelines.
+            </p>
+
+            <div style="height:1.5rem;"></div>
+
+            <div class="tab-row">
+                <button onclick="switchEduTab('indo')"   id="tab-indo"   class="edu-tab active-indo">Indonesian Pathway</button>
+                <button onclick="switchEduTab('global')" id="tab-global" class="edu-tab">Global Standard (US Model)</button>
+            </div>
+
+            <!-- Indonesian Pathway -->
+            <div id="content-indo" class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-yr" style="color:var(--indo);">Yr 1–4</div>
+                    <div class="timeline-connector">
+                        <div class="timeline-dot" style="background:var(--indo);"></div>
+                        <div class="timeline-line"></div>
+                    </div>
+                    <div class="timeline-body">
+                        <h4>Pre-Clinical (S.Ked — Sarjana Kedokteran)</h4>
+                        <p>Undergraduate medical sciences: anatomy, physiology, biochemistry, and pathology. Classroom and laboratory-based. Approximately 3.5–4 years depending on university.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-yr" style="color:var(--indo);">Yr 5–6</div>
+                    <div class="timeline-connector">
+                        <div class="timeline-dot" style="background:var(--indo);"></div>
+                        <div class="timeline-line"></div>
+                    </div>
+                    <div class="timeline-body">
+                        <h4>Clinical Clerkship (Ko-Ass / Koas)</h4>
+                        <p>1.5–2 years of clinical rotations across hospital departments. Completed with the UKMPPD national competency exam. Graduates as Medical Doctor (dr.).</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-yr" style="color:var(--indo);">Yr 7</div>
+                    <div class="timeline-connector">
+                        <div class="timeline-dot" style="background:var(--indo);"></div>
+                        <div class="timeline-line"></div>
+                    </div>
+                    <div class="timeline-body">
+                        <h4>Internship — PIDI (Program Internsip Dokter Indonesia)</h4>
+                        <p>1-year mandatory government internship at designated hospitals or Puskesmas. <em>Note: distinct from PTT (Pegawai Tidak Tetap)</em>, which is a separate, optional rural service obligation and not part of the standard specialist pipeline.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-yr" style="color:var(--indo);">Yr 8–11</div>
+                    <div class="timeline-connector">
+                        <div class="timeline-dot" style="background:var(--indo); box-shadow: 0 0 10px var(--indo);"></div>
+                        <div class="timeline-line" style="background:rgba(0,207,176,0.3);"></div>
+                    </div>
+                    <div class="timeline-body highlight-indo">
+                        <h4 style="color:var(--indo);">Radiology Residency — PPDS Radiologi</h4>
+                        <p>4–4.5 years of specialist radiology training (PPDS). Highly competitive entry. Covers all imaging modalities: X-ray, USG, CT, MRI, and nuclear medicine. Graduates as <strong>Sp.Rad</strong> (Spesialis Radiologi).</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-yr" style="color:var(--text-muted);">Optional</div>
+                    <div class="timeline-connector">
+                        <div class="timeline-dot" style="background:var(--text-muted);"></div>
+                    </div>
+                    <div class="timeline-body">
+                        <h4>Fellowship / Subspecialty (KIC)</h4>
+                        <p>1–2 additional years in Neuroradiology, Interventional Radiology, Breast Imaging, or Nuclear Medicine. Historically uncommon but rapidly growing as subspecialization demand increases in major centers.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global (US) Pathway -->
+            <div id="content-global" class="timeline hidden">
+                <div class="timeline-item">
+                    <div class="timeline-yr" style="color:var(--global);">Yr 1–4</div>
+                    <div class="timeline-connector">
+                        <div class="timeline-dot" style="background:var(--global);"></div>
+                        <div class="timeline-line"></div>
+                    </div>
+                    <div class="timeline-body">
+                        <h4>Undergraduate Degree (Pre-Med)</h4>
+                        <p>4-year bachelor's degree in any major (sciences preferred). Must include prerequisites: biology, chemistry, organic chemistry, and physics. MCAT exam required for med school entry.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-yr" style="color:var(--global);">Yr 5–8</div>
+                    <div class="timeline-connector">
+                        <div class="timeline-dot" style="background:var(--global);"></div>
+                        <div class="timeline-line"></div>
+                    </div>
+                    <div class="timeline-body">
+                        <h4>Medical School (MD / DO)</h4>
+                        <p>4 years: 2 years pre-clinical sciences + 2 years clinical rotations. USMLE Step 1 and Step 2 board exams taken during this period. Graduates as MD or DO.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-yr" style="color:var(--global);">Yr 9</div>
+                    <div class="timeline-connector">
+                        <div class="timeline-dot" style="background:var(--global);"></div>
+                        <div class="timeline-line"></div>
+                    </div>
+                    <div class="timeline-body">
+                        <h4>Transitional / Preliminary Year (Intern Year)</h4>
+                        <p>1 year of general clinical training (Internal Medicine, Surgery, or mixed) required before beginning radiology. Some programs now offer "integrated" pathways that incorporate this year internally.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-yr" style="color:var(--global);">Yr 10–13</div>
+                    <div class="timeline-connector">
+                        <div class="timeline-dot" style="background:var(--global); box-shadow: 0 0 10px var(--global);"></div>
+                        <div class="timeline-line" style="background:rgba(123,156,255,0.3);"></div>
+                    </div>
+                    <div class="timeline-body highlight-global">
+                        <h4 style="color:var(--global);">Diagnostic Radiology Residency</h4>
+                        <p>4 years of dedicated Diagnostic Radiology (DR) training. Covers all imaging modalities plus nuclear medicine fundamentals. ABR (American Board of Radiology) board exams throughout. Qualifies for independent practice.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-yr" style="color:var(--text-muted);">Yr 14+</div>
+                    <div class="timeline-connector">
+                        <div class="timeline-dot" style="background:var(--text-muted);"></div>
+                    </div>
+                    <div class="timeline-body" style="background:var(--global-bg); border-color:rgba(123,156,255,0.25);">
+                        <h4>Fellowship (Standard in US Practice)</h4>
+                        <p>1–2 years. Unlike Indonesia, completing at least one fellowship is near-standard in the US. Common tracks: Neuroradiology, Interventional Radiology (IR — now its own board), MSK, Body Imaging, Breast Imaging, and Pediatric Radiology.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ══ SECTION 4: COMPENSATION ══ -->
+    <section id="compensation" class="page-section" style="margin-top:2rem;">
+        <div class="card reveal">
+            <div class="section-eyebrow"><div class="section-eyebrow-line"></div>Section 04</div>
+            <h2 class="section-title">Compensation & Technology</h2>
+            <p class="section-desc">
+                Financial compensation shows the most dramatic variance. Indonesian figures appear modest in direct USD conversion but represent top-tier domestic earnings — especially when spanning multiple private practices. Globally, radiology remains one of the highest-compensated medical specialties outright.
+            </p>
+
+            <div style="height:1.5rem;"></div>
+
+            <div class="grid-2" style="gap:2rem; align-items:start;">
+
+                <!-- Salary Chart + Stats -->
+                <div class="reveal reveal-delay-1">
+                    <div class="chart-wrap-salary">
+                        <canvas id="salaryChart"></canvas>
+                    </div>
+                    <p style="font-size:0.72rem; color:var(--text-muted); text-align:center; margin-top:0.75rem; line-height:1.6;">
+                        Direct USD conversion. Does not account for Purchasing Power Parity (PPP).<br>Indonesian figure reflects estimated combined multi-practice income.
+                    </p>
+
+                    <div class="comp-stat-grid">
+                        <div class="comp-stat-box" style="background:var(--indo-bg); border-color:rgba(0,207,176,0.2);">
+                            <div class="comp-stat-label" style="color:var(--indo);">Indonesia Combined</div>
+                            <div class="comp-stat-val" style="color:var(--indo);">~$60k</div>
+                            <div class="comp-stat-note">≈ 960m IDR/yr at ~80m IDR/mo combined. Top-tier within Indonesian economy.</div>
+                        </div>
+                        <div class="comp-stat-box" style="background:var(--global-bg); border-color:rgba(123,156,255,0.2);">
+                            <div class="comp-stat-label" style="color:var(--global);">US Median</div>
+                            <div class="comp-stat-val" style="color:var(--global);">~$450k</div>
+                            <div class="comp-stat-note">Among the highest-paid US specialties. Interventional subspecialists often exceed $600k.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technology Comparison -->
+                <div class="reveal reveal-delay-2">
+                    <h3 style="font-family:Syne,sans-serif; font-weight:700; font-size:1rem; margin-bottom:1.2rem; color:var(--text-primary);">Technological Environment</h3>
+
+                    <div class="tech-item">
+                        <div class="tech-label">AI Triage &amp; CAD Integration</div>
+                        <div class="tech-bar-row">
+                            <div class="tech-bar-tag" style="color:var(--global);">Global</div>
+                            <div class="tech-bar-track"><div class="tech-bar-fill bar-global" id="bar-ai-global" style="width:0%"></div></div>
+                            <div class="tech-bar-pct pct-global">85%</div>
+                        </div>
+                        <div class="tech-bar-row">
+                            <div class="tech-bar-tag" style="color:var(--indo);">Indo</div>
+                            <div class="tech-bar-track"><div class="tech-bar-fill bar-indo" id="bar-ai-indo" style="width:0%"></div></div>
+                            <div class="tech-bar-pct pct-indo">25%</div>
+                        </div>
+                        <div class="tech-desc">Standard in modern developed systems. Emerging in top Jakarta private hospitals; rare in regional centers.</div>
+                    </div>
+
+                    <div class="tech-item">
+                        <div class="tech-label">Advanced Modality Access (PET-CT / 3T MRI)</div>
+                        <div class="tech-bar-row">
+                            <div class="tech-bar-tag" style="color:var(--global);">Global</div>
+                            <div class="tech-bar-track"><div class="tech-bar-fill bar-global" id="bar-adv-global" style="width:0%"></div></div>
+                            <div class="tech-bar-pct pct-global">75%</div>
+                        </div>
+                        <div class="tech-bar-row">
+                            <div class="tech-bar-tag" style="color:var(--indo);">Indo</div>
+                            <div class="tech-bar-track"><div class="tech-bar-fill bar-adv-indo" id="bar-adv-indo" style="width:0%"></div></div>
+                            <div class="tech-bar-pct pct-indo">20%</div>
+                        </div>
+                        <div class="tech-desc">Widely available in developed systems. In Indonesia, concentrated in Tier-1 cities (Jakarta, Surabaya, Medan).</div>
+                    </div>
+
+                    <div class="tech-item">
+                        <div class="tech-label">Teleradiology Infrastructure</div>
+                        <div class="tech-bar-row">
+                            <div class="tech-bar-tag" style="color:var(--global);">Global</div>
+                            <div class="tech-bar-track"><div class="tech-bar-fill bar-global" id="bar-tele-global" style="width:0%"></div></div>
+                            <div class="tech-bar-pct pct-global">90%</div>
+                        </div>
+                        <div class="tech-bar-row">
+                            <div class="tech-bar-tag" style="color:var(--indo);">Indo</div>
+                            <div class="tech-bar-track"><div class="tech-bar-fill bar-indo" id="bar-tele-indo" style="width:0%"></div></div>
+                            <div class="tech-bar-pct pct-indo">45%</div>
+                        </div>
+                        <div class="tech-desc">Ubiquitous globally for on-call coverage. Rapidly expanding in Indonesia to bridge rural shortages; limited by internet bandwidth in remote regions.</div>
+                    </div>
+
+                    <div class="tech-item">
+                        <div class="tech-label">PACS / RIS Adoption</div>
+                        <div class="tech-bar-row">
+                            <div class="tech-bar-tag" style="color:var(--global);">Global</div>
+                            <div class="tech-bar-track"><div class="tech-bar-fill bar-global" id="bar-pacs-global" style="width:0%"></div></div>
+                            <div class="tech-bar-pct pct-global">95%</div>
+                        </div>
+                        <div class="tech-bar-row">
+                            <div class="tech-bar-tag" style="color:var(--indo);">Indo</div>
+                            <div class="tech-bar-track"><div class="tech-bar-fill bar-indo" id="bar-pacs-indo" style="width:0%"></div></div>
+                            <div class="tech-bar-pct pct-indo">55%</div>
+                        </div>
+                        <div class="tech-desc">Near-universal in developed hospitals. In Indonesia, major private hospital groups are fully digital; many district hospitals (RSUD) still rely on film or hybrid systems.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <p>Data synthesized for analytical and educational comparison. Salary figures are estimates; actual compensation varies significantly by seniority, region, and private practice portfolio.</p>
+    <p style="margin-top:0.5rem;">
+        <a href="/index.html">← Back to Home</a>
+        &nbsp;·&nbsp;
+        <span>© RadCompare · Indonesia Medical Reference Series</span>
+    </p>
+</footer>
+
+<script>
+    // ──────────────────────────────────────────────────
+    // CHART DEFAULTS
+    // ──────────────────────────────────────────────────
+    Chart.defaults.font.family = "'DM Sans', sans-serif";
+    Chart.defaults.color = '#7f8faf';
+
+    const tooltipDefaults = {
+        backgroundColor: '#0e1424',
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        padding: 14,
+        titleFont: { size: 13, weight: '700', family: "'Syne', sans-serif" },
+        bodyFont:  { size: 12 },
+        cornerRadius: 10
+    };
+    Object.assign(Chart.defaults.plugins.tooltip, tooltipDefaults);
+
+    // ──────────────────────────────────────────────────
+    // 1. DENSITY BAR CHART
+    // ──────────────────────────────────────────────────
+    new Chart(document.getElementById('densityChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: ['Global Avg (Developed)', 'Indonesia'],
+            datasets: [{
+                label: 'Radiologists per 1M People',
+                data: [90, 7],
+                backgroundColor: ['rgba(123,156,255,0.6)', 'rgba(0,207,176,0.6)'],
+                borderColor:     ['#7b9cff', '#00cfb0'],
+                borderWidth: 1.5,
+                borderRadius: 10,
+                barPercentage: 0.5
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => `  ${ctx.parsed.y} radiologists per 1 million people`
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    title: { display: true, text: 'Specialists per 1M population', font: { size: 11 } }
+                },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // ──────────────────────────────────────────────────
+    // 2. SCOPE RADAR CHART
+    // ──────────────────────────────────────────────────
+    new Chart(document.getElementById('scopeChart').getContext('2d'), {
+        type: 'radar',
+        data: {
+            labels: [
+                'Plain X-Ray Volume',
+                'USG Performance Duty',
+                'Subspecialization',
+                'Multi-Site Practice',
+                'AI Tool Adoption',
+                'Dedicated Reporting Time'
+            ],
+            datasets: [
+                {
+                    label: 'Indonesia',
+                    data: [95, 90, 20, 95, 25, 35],
+                    backgroundColor: 'rgba(0,207,176,0.12)',
+                    borderColor: '#00cfb0',
+                    pointBackgroundColor: '#00cfb0',
+                    pointBorderColor: '#080c18',
+                    pointBorderWidth: 2,
+                    borderWidth: 2.5,
+                    pointRadius: 5
+                },
+                {
+                    label: 'Global Average',
+                    data: [50, 18, 88, 28, 82, 78],
+                    backgroundColor: 'rgba(123,156,255,0.12)',
+                    borderColor: '#7b9cff',
+                    pointBackgroundColor: '#7b9cff',
+                    pointBorderColor: '#080c18',
+                    pointBorderWidth: 2,
+                    borderWidth: 2.5,
+                    pointRadius: 5
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true, pointStyle: 'circle',
+                        padding: 20, font: { size: 12, weight: '600' }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => `  ${ctx.dataset.label}: ${ctx.parsed.r} (relative scale)`
+                    }
+                }
+            },
+            scales: {
+                r: {
+                    angleLines: { color: 'rgba(255,255,255,0.06)' },
+                    grid:       { color: 'rgba(255,255,255,0.06)' },
+                    pointLabels:{ font: { size: 11, weight: '500' }, color: '#7f8faf' },
+                    ticks:      { display: false },
+                    min: 0, max: 100
+                }
+            }
+        }
+    });
+
+    // ──────────────────────────────────────────────────
+    // 3. SALARY HORIZONTAL BAR CHART
+    // ──────────────────────────────────────────────────
+    new Chart(document.getElementById('salaryChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: ['US Median', 'Indonesia (Combined)'],
+            datasets: [{
+                label: 'Annual Income (USD)',
+                data: [450000, 60000],
+                backgroundColor: ['rgba(123,156,255,0.65)', 'rgba(0,207,176,0.65)'],
+                borderColor:     ['#7b9cff', '#00cfb0'],
+                borderWidth: 1.5,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => `  $${ctx.parsed.x.toLocaleString()} USD / year`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { callback: v => '$' + (v/1000) + 'k' }
+                },
+                y: { grid: { display: false } }
+            }
+        }
+    });
+
+    // ──────────────────────────────────────────────────
+    // EDUCATION TAB LOGIC
+    // ──────────────────────────────────────────────────
+    function switchEduTab(id) {
+        const tabIndo   = document.getElementById('tab-indo');
+        const tabGlobal = document.getElementById('tab-global');
+        const cIndo     = document.getElementById('content-indo');
+        const cGlobal   = document.getElementById('content-global');
+
+        if (id === 'indo') {
+            tabIndo.className   = 'edu-tab active-indo';
+            tabGlobal.className = 'edu-tab';
+            cIndo.classList.remove('hidden');
+            cGlobal.classList.add('hidden');
+        } else {
+            tabGlobal.className = 'edu-tab active-global';
+            tabIndo.className   = 'edu-tab';
+            cGlobal.classList.remove('hidden');
+            cIndo.classList.add('hidden');
+        }
+        // Animate in
+        const active = id === 'indo' ? cIndo : cGlobal;
+        active.style.opacity = '0'; active.style.transform = 'translateY(10px)';
+        requestAnimationFrame(() => {
+            active.style.transition = 'opacity 0.35s cubic-bezier(0.16,1,0.3,1), transform 0.35s cubic-bezier(0.16,1,0.3,1)';
+            active.style.opacity = '1'; active.style.transform = 'translateY(0)';
+        });
+    }
+
+    // ──────────────────────────────────────────────────
+    // SCROLL REVEAL
+    // ──────────────────────────────────────────────────
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                // Animate tech bars when comp section comes in
+                if (e.target.closest('#compensation')) animateBars();
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ──────────────────────────────────────────────────
+    // TECH BAR ANIMATION
+    // ──────────────────────────────────────────────────
+    let barsAnimated = false;
+    function animateBars() {
+        if (barsAnimated) return;
+        barsAnimated = true;
+        const bars = [
+            { id: 'bar-ai-global',   pct: 85 },
+            { id: 'bar-ai-indo',     pct: 25 },
+            { id: 'bar-adv-global',  pct: 75 },
+            { id: 'bar-adv-indo',    pct: 20 },
+            { id: 'bar-tele-global', pct: 90 },
+            { id: 'bar-tele-indo',   pct: 45 },
+            { id: 'bar-pacs-global', pct: 95 },
+            { id: 'bar-pacs-indo',   pct: 55 }
+        ];
+        bars.forEach((b, i) => {
+            setTimeout(() => {
+                const el = document.getElementById(b.id);
+                if (el) el.style.width = b.pct + '%';
+            }, i * 80);
+        });
+    }
+
+    // ──────────────────────────────────────────────────
+    // ACTIVE NAV ON SCROLL
+    // ──────────────────────────────────────────────────
+    const sections  = document.querySelectorAll('section[id]');
+    const navLinks  = document.querySelectorAll('.nav-link');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(s => {
+            if (pageYOffset >= s.offsetTop - 140) current = s.id;
+        });
+        navLinks.forEach(l => {
+            l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+        });
+    }, { passive: true });
+</script>
+</body>
+</html>
