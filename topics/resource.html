@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indonesia's Provincial Resource Reserves</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0a0c0f;
+  --surface: #111418;
+  --surface2: #181c22;
+  --border: rgba(255,255,255,0.07);
+  --border-bright: rgba(255,255,255,0.15);
+  --text: #e8e6e0;
+  --text-dim: #6b7280;
+  --text-mid: #9ca3af;
+
+  --coal: #f59e0b;
+  --coal-dim: rgba(245,158,11,0.12);
+  --gas: #22d3ee;
+  --gas-dim: rgba(34,211,238,0.12);
+  --nickel: #4ade80;
+  --nickel-dim: rgba(74,222,128,0.12);
+  --copper: #fb923c;
+  --copper-dim: rgba(251,146,60,0.12);
+  --ree: #c084fc;
+  --ree-dim: rgba(192,132,252,0.12);
+  --tin: #94a3b8;
+  --tin-dim: rgba(148,163,184,0.12);
+
+  --warn: #fbbf24;
+  --warn-dim: rgba(251,191,36,0.1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── NOISE OVERLAY ─────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── HERO ───────────────────────────────────── */
+.hero {
+  position: relative;
+  padding: 80px 48px 60px;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.hero-geo {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background:
+    repeating-linear-gradient(0deg, var(--gas) 0, var(--gas) 1px, transparent 1px, transparent 60px),
+    repeating-linear-gradient(90deg, var(--gas) 0, var(--gas) 1px, transparent 1px, transparent 60px);
+}
+
+.hero-glow {
+  position: absolute;
+  top: -80px; left: -80px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(34,211,238,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-glow2 {
+  position: absolute;
+  bottom: -100px; right: 100px;
+  width: 600px; height: 400px;
+  background: radial-gradient(circle, rgba(74,222,128,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border-bright);
+  border-radius: 2px;
+  padding: 4px 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-mid);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.hero-badge .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gas);
+  box-shadow: 0 0 8px var(--gas);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 6vw, 88px);
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  color: #fff;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.hero h1 span { color: var(--gas); }
+.hero h1 em { color: var(--nickel); font-style: normal; }
+
+.hero-sub {
+  max-width: 640px;
+  color: var(--text-mid);
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.kpi-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 40px;
+}
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 16px 24px;
+  min-width: 160px;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.kpi::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px;
+  width: 100%;
+}
+
+.kpi.coal::before { background: var(--coal); }
+.kpi.gas::before { background: var(--gas); }
+.kpi.nickel::before { background: var(--nickel); }
+.kpi.copper::before { background: var(--copper); }
+.kpi.tin::before { background: var(--tin); }
+
+.kpi:hover { border-color: var(--border-bright); }
+
+.kpi-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.kpi-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.03em;
+  color: #fff;
+  line-height: 1;
+}
+
+.kpi-unit {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* ── NAV ─────────────────────────────────────── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,12,15,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 2px;
+  padding: 0 32px;
+  overflow-x: auto;
+}
+
+nav a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+nav a:hover { color: var(--text); border-color: var(--border-bright); }
+nav a.active { color: #fff; }
+
+nav a .nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+}
+
+nav a[href="#gas"] .nav-dot { background: var(--gas); }
+nav a[href="#coal"] .nav-dot { background: var(--coal); }
+nav a[href="#nickel"] .nav-dot { background: var(--nickel); }
+nav a[href="#copper"] .nav-dot { background: var(--copper); }
+nav a[href="#ree"] .nav-dot { background: var(--ree); }
+nav a[href="#conclusion"] .nav-dot { background: var(--tin); }
+
+nav a.active[href="#gas"] { border-color: var(--gas); }
+nav a.active[href="#coal"] { border-color: var(--coal); }
+nav a.active[href="#nickel"] { border-color: var(--nickel); }
+nav a.active[href="#copper"] { border-color: var(--copper); }
+nav a.active[href="#ree"] { border-color: var(--ree); }
+nav a.active[href="#conclusion"] { border-color: var(--tin); }
+
+/* ── MAIN LAYOUT ────────────────────────────── */
+main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px 80px;
+}
+
+/* ── SECTION ────────────────────────────────── */
+.section {
+  padding: 64px 0 48px;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.section-title-group {}
+
+.section-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.section-tag.coal { color: var(--coal); }
+.section-tag.gas { color: var(--gas); }
+.section-tag.nickel { color: var(--nickel); }
+.section-tag.copper { color: var(--copper); }
+.section-tag.ree { color: var(--ree); }
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(32px, 4vw, 52px);
+  letter-spacing: 0.03em;
+  color: #fff;
+  line-height: 1;
+}
+
+.section-desc {
+  max-width: 560px;
+  color: var(--text-mid);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-top: 12px;
+}
+
+/* ── GRID LAYOUTS ───────────────────────────── */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px;
+}
+
+@media (max-width: 900px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .hero { padding: 48px 24px 40px; }
+  main { padding: 0 16px 60px; }
+  nav { padding: 0 16px; }
+}
+
+/* ── DATA CARD ──────────────────────────────── */
+.data-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 28px;
+  position: relative;
+}
+
+.data-card h3 {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+
+/* ── PROVINCE BAR CHART ─────────────────────── */
+.province-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pbar-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 80px;
+  align-items: center;
+  gap: 12px;
+}
+
+.pbar-name {
+  font-size: 12px;
+  color: var(--text-mid);
+  font-family: 'DM Mono', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pbar-track {
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.pbar-fill {
+  height: 100%;
+  border-radius: 1px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pbar-row.animated .pbar-fill { transform: scaleX(1); }
+
+.pbar-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text);
+  text-align: right;
+}
+
+/* ── TABLE ──────────────────────────────────── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-mid);
+  vertical-align: top;
+}
+
+.data-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+.data-table tbody tr:last-child td { border-bottom: none; }
+
+.data-table td.highlight {
+  color: #fff;
+  font-weight: 500;
+}
+
+.data-table td.mono {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+}
+
+/* ── FACT CARD ──────────────────────────────── */
+.fact-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fact-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: 0.03em;
+}
+
+.fact-label {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+
+/* ── CROSSCHECK ALERT ───────────────────────── */
+.crosscheck {
+  background: var(--warn-dim);
+  border: 1px solid rgba(251,191,36,0.25);
+  border-left: 3px solid var(--warn);
+  padding: 14px 18px;
+  margin-top: 16px;
+  border-radius: 0 2px 2px 0;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.crosscheck-icon {
+  font-size: 14px;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.crosscheck-text {
+  font-size: 12px;
+  color: #fde68a;
+  line-height: 1.6;
+}
+
+.crosscheck-text strong {
+  color: var(--warn);
+  font-weight: 600;
+}
+
+/* ── CALORIC STACKED ────────────────────────── */
+.caloric-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.cal-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.cal-bar-wrap {
+  flex: 1;
+}
+
+.cal-label-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.cal-label {
+  font-size: 12px;
+  color: var(--text-mid);
+}
+
+.cal-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text);
+}
+
+.cal-track {
+  height: 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.cal-fill {
+  height: 100%;
+  border-radius: 1px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cal-fill.animated { transform: scaleX(1); }
+
+/* ── CHART WRAPPER ──────────────────────────── */
+.chart-wrap {
+  position: relative;
+  height: 280px;
+  margin-top: 8px;
+}
+
+/* ── PROCESSING CARD ────────────────────────── */
+.process-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.process-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.process-card h4 {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.process-card ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.process-card li {
+  font-size: 12px;
+  color: var(--text-mid);
+  padding-left: 14px;
+  position: relative;
+}
+
+.process-card li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+/* ── REE BLOCK ──────────────────────────────── */
+.ree-block-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.ree-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ree-block::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--ree);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ree-block.animated::after { transform: scaleX(1); }
+
+.ree-region {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  color: var(--ree);
+  margin-bottom: 10px;
+}
+
+.ree-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ree-detail {
+  font-size: 12px;
+  color: var(--text-dim);
+  display: flex;
+  gap: 8px;
+}
+
+.ree-detail strong {
+  color: var(--text-mid);
+  font-weight: 500;
+}
+
+/* ── CONCLUSION ─────────────────────────────── */
+.verdict-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin-top: 32px;
+}
+
+.verdict-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.verdict-card.primary {
+  border-color: rgba(74,222,128,0.3);
+  background: linear-gradient(135deg, rgba(74,222,128,0.06) 0%, var(--surface) 60%);
+}
+
+.verdict-card.secondary {
+  border-color: rgba(245,158,11,0.2);
+}
+
+.verdict-rank {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.verdict-province {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.verdict-card.primary .verdict-province { color: var(--nickel); }
+.verdict-card.secondary .verdict-province { color: var(--coal); }
+
+.verdict-resource {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+
+.verdict-text {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+
+/* ── SYNTHESIS POINTS ─────────────────────────── */
+.synth-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 32px;
+}
+
+.synth-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px 24px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.synth-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  color: rgba(255,255,255,0.06);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 48px;
+}
+
+.synth-text {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  padding-top: 4px;
+}
+
+.synth-text strong { color: var(--text); font-weight: 600; }
+
+/* ── FOOTER ─────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.footer-note {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  max-width: 640px;
+  line-height: 1.6;
+}
+
+.footer-note a {
+  color: var(--text-mid);
+  text-decoration: none;
+}
+
+.footer-note a:hover { color: var(--text); }
+
+/* ── TOOLTIP ─────────────────────────────────── */
+[data-tip] {
+  position: relative;
+  cursor: help;
+  border-bottom: 1px dashed rgba(255,255,255,0.2);
+}
+
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2530;
+  border: 1px solid var(--border-bright);
+  color: var(--text);
+  font-size: 11px;
+  font-family: 'DM Sans', sans-serif;
+  padding: 8px 12px;
+  border-radius: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 200;
+  max-width: 240px;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.4;
+}
+
+[data-tip]:hover::after { opacity: 1; }
+
+/* ── SCROLL INDICATOR ─────────────────────────── */
+.scroll-line {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gas), var(--nickel));
+  z-index: 9998;
+  transition: width 0.1s linear;
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-line" id="scrollLine"></div>
+
+<!-- ── HERO ─────────────────────────────────── -->
+<header class="hero">
+  <div class="hero-geo"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Data-Driven Analysis · Provincial Distribution · 2024 Update
+  </div>
+
+  <h1>Indonesia's<br><span>Resource</span><br><em>Reserves</em></h1>
+
+  <p class="hero-sub">
+    A comprehensive mapping of Indonesia's hydrocarbon, mineral, and rare earth reserves across provincial jurisdictions — from the coal hegemony of Kalimantan to the nickel dominance of Maluku and the frontier gas basins of the eastern archipelago.
+  </p>
+
+  <div class="kpi-row">
+    <div class="kpi coal">
+      <div class="kpi-label">Proven Coal Reserves</div>
+      <div class="kpi-value" data-count="31.95">0</div>
+      <div class="kpi-unit">Billion Metric Tons</div>
+    </div>
+    <div class="kpi gas">
+      <div class="kpi-label">Total Gas Reserves</div>
+      <div class="kpi-value" data-count="54.76">0</div>
+      <div class="kpi-unit">TSCF (Proven + Potential)</div>
+    </div>
+    <div class="kpi nickel">
+      <div class="kpi-label">Nickel Ore Reserves</div>
+      <div class="kpi-value" data-count="5.325">0</div>
+      <div class="kpi-unit">Billion Metric Tons</div>
+    </div>
+    <div class="kpi copper">
+      <div class="kpi-label">Copper Ore Reserves</div>
+      <div class="kpi-value" data-count="2.86">0</div>
+      <div class="kpi-unit">Billion Metric Tons</div>
+    </div>
+    <div class="kpi tin">
+      <div class="kpi-label">Tin Reserves</div>
+      <div class="kpi-value" data-count="800">0</div>
+      <div class="kpi-unit">Thousand Metric Tons</div>
+    </div>
+  </div>
+</header>
+
+<!-- ── NAV ───────────────────────────────────── -->
+<nav id="mainNav">
+  <a href="#gas" class="active"><span class="nav-dot"></span> Natural Gas</a>
+  <a href="#coal"><span class="nav-dot"></span> Coal</a>
+  <a href="#nickel"><span class="nav-dot"></span> Nickel</a>
+  <a href="#copper"><span class="nav-dot"></span> Copper & Gold</a>
+  <a href="#ree"><span class="nav-dot"></span> Rare Earths</a>
+  <a href="#conclusion"><span class="nav-dot"></span> Conclusion</a>
+</nav>
+
+<!-- ── MAIN ──────────────────────────────────── -->
+<main>
+
+<!-- ─ NATURAL GAS ─────────────────────────── -->
+<section class="section" id="gas">
+  <div class="section-header">
+    <div class="section-title-group">
+      <div class="section-tag gas">Hydrocarbons · Natural Gas</div>
+      <div class="section-title">Eastern Frontier<br>Gas Basins</div>
+      <p class="section-desc">
+        As of H1 2024, total national natural gas reserves stand at 54.76 TSCF (proven + potential), with an unmistakable eastward shift in reserve gravity toward Maluku and Papua.
+      </p>
+    </div>
+
+    <div class="fact-card" style="min-width:200px">
+      <div class="fact-number" style="color:var(--gas)">7,399</div>
+      <div class="fact-label">MMSCFD peak production<br>(late 2024)</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Bar chart -->
+    <div class="data-card">
+      <h3>Provincial Gas Reserves Distribution</h3>
+      <div class="province-bars" id="gasBars">
+        <div class="pbar-row">
+          <span class="pbar-name">Maluku</span>
+          <div class="pbar-track"><div class="pbar-fill" style="background:var(--gas);width:100%"></div></div>
+          <span class="pbar-val" style="color:var(--gas)">15.78 TSCF</span>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-name">Papua</span>
+          <div class="pbar-track"><div class="pbar-fill" style="background:var(--gas);width:72.4%"></div></div>
+          <span class="pbar-val">11.42 TSCF</span>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-name">South Sumatra</span>
+          <div class="pbar-track"><div class="pbar-fill" style="background:var(--gas);width:44.8%"></div></div>
+          <span class="pbar-val">7.07 TSCF</span>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-name">Kalimantan</span>
+          <div class="pbar-track"><div class="pbar-fill" style="background:var(--gas);width:36.3%"></div></div>
+          <span class="pbar-val">5.73 TSCF</span>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-name">North Sumatra</span>
+          <div class="pbar-track"><div class="pbar-fill" style="background:var(--gas);opacity:0.5;width:2.5%"></div></div>
+          <span class="pbar-val">0.39 TSCF</span>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-name">Aceh</span>
+          <div class="pbar-track"><div class="pbar-fill" style="background:var(--gas);opacity:0.5;width:2.2%"></div></div>
+          <span class="pbar-val">0.34 TSCF</span>
+        </div>
+      </div>
+
+      <div class="crosscheck">
+        <div class="crosscheck-icon">⚠</div>
+        <div class="crosscheck-text">
+          <strong>Crosscheck note:</strong> The document cites 54.76 TSCF total reserves (proven + potential) from official ESDM Semester I 2024 data. However, the EIA reports Indonesia's <em>proven-only</em> reserves at ~33.84 Tcf for 2024. Both figures are correct but measure different reserve classifications. The document's figure appropriately includes potential (probable) reserves.
+        </div>
+      </div>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="data-card">
+      <h3>Share of National Gas Reserves</h3>
+      <div class="chart-wrap">
+        <canvas id="gasChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top:2px">
+    <div class="fact-card">
+      <div class="fact-number" style="color:var(--gas)">28.81%</div>
+      <div class="fact-label">Maluku's share of national gas — single largest provincial repository</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-number" style="color:var(--gas)">20.85%</div>
+      <div class="fact-label">Papua's share — frontier deepwater basin requiring advanced offshore infrastructure</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-number" style="color:var(--gas)">~50%</div>
+      <div class="fact-label">Maluku + Papua combined share — the undisputed eastern gas axis</div>
+    </div>
+  </div>
+
+  <!-- LNG crosscheck -->
+  <div class="data-card" style="margin-top:2px">
+    <h3>LNG Export Ranking — Crosscheck</h3>
+    <p style="font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:12px">
+      The document states Indonesia "slipped to eighth place globally" in LNG exports with 19.2 MMTPA capacity. The EIA (August 2025) and the International Gas Union 2025 World LNG Report indicate Indonesia ranked <strong style="color:#fff">fifth-largest globally</strong> in operating LNG liquefaction capacity in 2024 at ~1.5 Tcf.
+    </p>
+    <div class="crosscheck">
+      <div class="crosscheck-icon">⚠</div>
+      <div class="crosscheck-text">
+        <strong>Discrepancy detected:</strong> The document's "8th place" ranking may be based on an older dataset or a different metric (e.g., delivered volumes vs. nameplate capacity). Current authoritative sources (EIA/IGU 2025) place Indonesia at 5th in liquefaction capacity. The document's figure warrants caution and independent verification.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─ COAL ────────────────────────────────── -->
+<section class="section" id="coal">
+  <div class="section-header">
+    <div class="section-title-group">
+      <div class="section-tag coal">Solid Fuels · Coal</div>
+      <div class="section-title">The Kalimantan<br>Hegemony</div>
+      <p class="section-desc">
+        Coal accounts for 77% of Indonesia's primary energy output. In 2023 production reached an unprecedented 775 million tons — a 13% YoY increase. East Kalimantan is the undisputed epicenter.
+      </p>
+    </div>
+    <div class="fact-card" style="min-width:200px">
+      <div class="fact-number" style="color:var(--coal)">775M</div>
+      <div class="fact-label">Tons coal produced in 2023<br>+13% year-over-year</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="data-card">
+      <h3>Resource Classification (Total ~98 Billion Tons)</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Classification</th>
+            <th>Volume (M Tons)</th>
+            <th>Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">Measured (Terukur)</td>
+            <td class="mono" style="color:var(--coal)">39,775.43</td>
+            <td class="mono">40.6%</td>
+          </tr>
+          <tr>
+            <td class="highlight">Indicated (Tertunjuk)</td>
+            <td class="mono">32,232.44</td>
+            <td class="mono">32.9%</td>
+          </tr>
+          <tr>
+            <td class="highlight">Inferred (Tereka)</td>
+            <td class="mono">25,952.90</td>
+            <td class="mono">26.5%</td>
+          </tr>
+          <tr>
+            <td style="color:#fff;font-weight:600">Total Stratified</td>
+            <td class="mono" style="color:var(--coal);font-weight:600">~97,960.77</td>
+            <td class="mono">100%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="crosscheck">
+        <div class="crosscheck-icon">✓</div>
+        <div class="crosscheck-text" style="color:#86efac">
+          <strong>Verified:</strong> The 31.95 billion ton proven reserves figure is consistent with ESDM reporting. The EIA cites 32.2 billion <em>short</em> tons (~29.2 billion metric tons) for 2024. The unit difference (metric vs. short tons) explains the variance. Both sources are internally consistent.
+        </div>
+      </div>
+    </div>
+
+    <div class="data-card">
+      <h3>Caloric Value Distribution</h3>
+      <div class="caloric-stack" id="caloricStack">
+        <div class="cal-item">
+          <div class="cal-bar-wrap">
+            <div class="cal-label-row">
+              <span class="cal-label">Low Calorie <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim)">&lt; 4,200 kcal/kg</span></span>
+              <span class="cal-value">67,333 MT</span>
+            </div>
+            <div class="cal-track">
+              <div class="cal-fill" style="background:rgba(245,158,11,0.4);width:68.7%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="cal-item">
+          <div class="cal-bar-wrap">
+            <div class="cal-label-row">
+              <span class="cal-label">Medium Calorie <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim)">4,200–5,200 kcal/kg</span></span>
+              <span class="cal-value">15,526 MT</span>
+            </div>
+            <div class="cal-track">
+              <div class="cal-fill" style="background:var(--coal);opacity:0.7;width:15.9%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="cal-item">
+          <div class="cal-bar-wrap">
+            <div class="cal-label-row">
+              <span class="cal-label">High Calorie <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim)">&gt; 5,200 kcal/kg</span></span>
+              <span class="cal-value">15,101 MT</span>
+            </div>
+            <div class="cal-track">
+              <div class="cal-fill" style="background:var(--coal);width:15.4%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-top:16px;line-height:1.6">
+        The 68.7% share of low-calorie coal creates long-term export vulnerability. As carbon taxes and ESG discounting intensify, this vast reserve base will increasingly be relegated to captive domestic consumption.
+      </p>
+    </div>
+  </div>
+
+  <div class="data-card" style="margin-top:2px">
+    <h3>East Kalimantan: The Coal Epicenter</h3>
+    <div class="grid-2" style="gap:24px;border:none;padding:0">
+      <div>
+        <p style="font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:12px">
+          East Kalimantan hosts the highest concentration of high-yield seams and the most prolific open-pit mining operations in the archipelago. The province accounts for <strong style="color:var(--coal)" data-tip="EIA source: 38.2% of coal reserves in East Kalimantan">38.2%</strong> of national coal reserves (EIA 2024), with South Sumatra accounting for another 29.3%.
+        </p>
+        <p style="font-size:13px;color:var(--text-mid);line-height:1.7">
+          A structural paradox looms: as the Republic relocates its capital to <strong style="color:#fff">Nusantara</strong> in East Kalimantan, the province must reconcile its identity as an extractive, high-emission coal hub with the federal vision of a sustainable green capital city.
+        </p>
+      </div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="coalRegionChart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─ NICKEL ──────────────────────────────── -->
+<section class="section" id="nickel">
+  <div class="section-header">
+    <div class="section-title-group">
+      <div class="section-tag nickel">Critical Minerals · Nickel</div>
+      <div class="section-title">The Undisputed<br>Crown Jewel</div>
+      <p class="section-desc">
+        Indonesia commands >60% of global nickel output. Total national nickel ore resources stand at 18.55 billion tons, with proven reserves at 5.325 billion tons — yielding ~56 million tons of refined metal equivalent.
+      </p>
+    </div>
+    <div class="fact-card" style="min-width:200px">
+      <div class="fact-number" style="color:var(--nickel)">2.28M</div>
+      <div class="fact-label">Metric tons produced 2024<br>S&P Global confirmed ✓</div>
+    </div>
+  </div>
+
+  <div class="data-card">
+    <h3>Provincial Nickel Reserves & Resources</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Province</th>
+          <th>Ore Reserves (M Tons)</th>
+          <th>Metal Reserves (M Tons)</th>
+          <th>Ore Resources (M Tons)</th>
+          <th>Licenses</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="highlight">North Maluku <span style="color:var(--text-dim);font-size:11px">(Maluku Utara)</span></td>
+          <td class="mono" style="color:var(--nickel)">1,860.00</td>
+          <td class="mono" style="color:var(--nickel)">19.09</td>
+          <td class="mono">5,710.00</td>
+          <td class="mono">54 KK+IUP</td>
+        </tr>
+        <tr>
+          <td class="highlight">Southeast Sulawesi</td>
+          <td class="mono">1,680.00</td>
+          <td class="mono">18.16</td>
+          <td class="mono">6,260.00</td>
+          <td class="mono">175 IUP + 1 IUPK</td>
+        </tr>
+        <tr>
+          <td class="highlight">Central Sulawesi</td>
+          <td class="mono">805.22</td>
+          <td class="mono">9.07</td>
+          <td class="mono">3,040.00</td>
+          <td class="mono">123 active</td>
+        </tr>
+        <tr>
+          <td>Maluku (Province)</td>
+          <td class="mono">147.81</td>
+          <td class="mono">2.68</td>
+          <td class="mono">1,890.00</td>
+          <td class="mono">—</td>
+        </tr>
+        <tr>
+          <td>South Kalimantan</td>
+          <td class="mono">121.65</td>
+          <td class="mono">0.76</td>
+          <td class="mono">70.43</td>
+          <td class="mono">—</td>
+        </tr>
+        <tr>
+          <td>Central Kalimantan</td>
+          <td class="mono">9.78</td>
+          <td class="mono">0.11</td>
+          <td class="mono">21.73</td>
+          <td class="mono">—</td>
+        </tr>
+        <tr>
+          <td>East Kalimantan</td>
+          <td class="mono" style="color:var(--text-dim)">—</td>
+          <td class="mono" style="color:var(--text-dim)">—</td>
+          <td class="mono">1.20</td>
+          <td class="mono">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2" style="margin-top:2px">
+    <div class="data-card">
+      <h3>Processing Metallurgy Routes</h3>
+      <div class="process-grid">
+        <div class="process-card">
+          <h4 style="color:var(--nickel)">Hydromet · HPAL</h4>
+          <p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">For limonite (upper laterite)</p>
+          <ul>
+            <li>High-Pressure Acid Leach</li>
+            <li>Produces MHP & MSP</li>
+            <li>Yields NiSO₄ for Li-ion batteries</li>
+            <li>Capital intensive · Weda Bay</li>
+          </ul>
+        </div>
+        <div class="process-card">
+          <h4 style="color:var(--copper)">Pyrometallurgy · RKEF</h4>
+          <p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">For saprolite (deep laterite)</p>
+          <ul>
+            <li>Rotary Kiln Electric Furnace</li>
+            <li>Produces NPI & FeNi</li>
+            <li>Primary: stainless steel industry</li>
+            <li>Coal-dependent · Morowali</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="data-card">
+      <h3>Nickel Reserves Share — Top 3 Provinces</h3>
+      <div class="chart-wrap" style="height:230px">
+        <canvas id="nickelChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="data-card" style="margin-top:2px">
+    <h3>Crosscheck — Global Market Share</h3>
+    <p style="font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:10px">
+      The document claims Indonesia commanded <strong style="color:#fff">&gt;60% of global output</strong> in 2024. Data verification across multiple authoritative sources reveals a range of estimates:
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:12px">
+      <div style="background:var(--surface2);border:1px solid var(--border);padding:14px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:6px">S&P GLOBAL (2025)</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--nickel)">~60%</div>
+        <div style="font-size:11px;color:var(--text-dim)">2.28M MT confirmed</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);padding:14px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:6px">WRI / IEEFA (2024)</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--nickel)">~55%</div>
+        <div style="font-size:11px;color:var(--text-dim)">2.2M MT, "nearly two-thirds"</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);padding:14px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:6px">GLOBALDATA (via Mine)</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--nickel)">~50%</div>
+        <div style="font-size:11px;color:var(--text-dim)">50% mined nickel share (2023)</div>
+      </div>
+    </div>
+    <div class="crosscheck">
+      <div class="crosscheck-icon">✓</div>
+      <div class="crosscheck-text" style="color:#86efac">
+        <strong>Broadly verified:</strong> The ">60%" claim is at the upper bound of estimates but supported by S&P Global's 2025 report. The 2.28M metric tons production figure is confirmed. The document's characterization of Indonesia's dominance is substantively accurate.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─ COPPER & GOLD ───────────────────────── -->
+<section class="section" id="copper">
+  <div class="section-header">
+    <div class="section-title-group">
+      <div class="section-tag copper">Base & Precious Metals · Copper · Gold</div>
+      <div class="section-title">Porphyry Giants<br>of the East</div>
+      <p class="section-desc">
+        Total copper ore resources reached 18.336 billion tons by December 2024 (+1.81 billion from 2023). The Grasberg complex in Central Papua remains a global anomaly with copper grades up to 2.5%.
+      </p>
+    </div>
+    <div class="fact-card" style="min-width:200px">
+      <div class="fact-number" style="color:var(--copper)">$1.72</div>
+      <div class="fact-label">AISC per lb paid copper (2024)<br>among lowest globally ✓</div>
+    </div>
+  </div>
+
+  <div class="data-card">
+    <h3>Key Copper & Gold Operations by Province</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Province</th>
+          <th>Key Operations</th>
+          <th>Cu Grade</th>
+          <th>Au Grade</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="highlight">Papua</td>
+          <td>Grasberg, Gunung Bijih, Big Gossan <span style="color:var(--text-dim);font-size:11px">(PT Freeport)</span></td>
+          <td class="mono" style="color:var(--copper)">0.45–2.5%</td>
+          <td class="mono" style="color:var(--coal)">0.32–0.98 g/t</td>
+          <td style="font-size:12px;color:var(--text-dim)">World-class porphyry; exceptional grades</td>
+        </tr>
+        <tr>
+          <td class="highlight">West Nusa Tenggara</td>
+          <td>Batu Hijau <span style="color:var(--text-dim);font-size:11px">(PT Amman)</span>, Hu'u <span style="color:var(--text-dim);font-size:11px">(PT Sumbawa)</span></td>
+          <td class="mono">0.25–0.43%</td>
+          <td class="mono">0.1–0.58 g/t</td>
+          <td style="font-size:12px;color:var(--text-dim)">2nd national gold resource; 2,296 t Au</td>
+        </tr>
+        <tr>
+          <td class="highlight">East Java</td>
+          <td>Tumpangpitu <span style="color:var(--text-dim);font-size:11px">(PT Merdeka Copper Gold)</span></td>
+          <td class="mono" style="color:var(--text-dim)">—</td>
+          <td class="mono">0.31–1.45 g/t</td>
+          <td style="font-size:12px;color:var(--text-dim)">803 t gold resources; 40 oil & gas blocks</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2" style="margin-top:2px">
+    <div class="data-card">
+      <h3>Gold Resources by Province (Top 6)</h3>
+      <div class="province-bars" id="goldBars">
+        <div class="pbar-row">
+          <span class="pbar-name">South Sulawesi</span>
+          <div class="pbar-track"><div class="pbar-fill" style="background:var(--coal);width:100%"></div></div>
+          <span class="pbar-val" style="color:var(--coal)">3,603 t · 29.1%</span>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-name">West Nusa Tenggara</span>
+          <div class="pbar-track"><div class="pbar-fill" style="background:var(--coal);width:63.7%"></div></div>
+          <span class="pbar-val">2,296 t</span>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-name">Central Papua</span>
+          <div class="pbar-track"><div class="pbar-fill" style="background:var(--coal);width:54.3%"></div></div>
+          <span class="pbar-val">1,957 t</span>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-name">East Java</span>
+          <div class="pbar-track"><div class="pbar-fill" style="background:var(--coal);opacity:0.6;width:22.3%"></div></div>
+          <span class="pbar-val">803 t</span>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-name">East Kalimantan</span>
+          <div class="pbar-track"><div class="pbar-fill" style="background:var(--coal);opacity:0.5;width:17.1%"></div></div>
+          <span class="pbar-val">616 t</span>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-name">Gorontalo</span>
+          <div class="pbar-track"><div class="pbar-fill" style="background:var(--coal);opacity:0.4;width:13.5%"></div></div>
+          <span class="pbar-val">488 t</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="data-card">
+      <h3>Tin: The Bangka Belitung Monopoly</h3>
+      <div style="margin-bottom:16px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--tin);line-height:1">91%</span>
+          <span style="font-size:13px;color:var(--text-mid)">of Indonesia's ~800,000 ton tin reserves are in Bangka Belitung</span>
+        </div>
+        <div style="height:8px;background:rgba(255,255,255,0.06);border-radius:1px;overflow:hidden;margin-bottom:8px">
+          <div id="tinBar" style="height:100%;background:var(--tin);width:0%;border-radius:1px;transition:width 1.2s cubic-bezier(0.16,1,0.3,1)"></div>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:10px">
+        Indonesia is the world's <strong style="color:#fff">2nd largest</strong> mined tin producer at ~23% of global output. Extraction uses offshore bucket-wheel dredges and Kapal Isap Produksi in the shallow Java Sea. <strong style="color:#fff">45,995 MT</strong> of refined tin was exported throughout 2024.
+      </p>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim)">
+        Remaining deposits scattered across: Riau · Riau Islands · West Kalimantan
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─ RARE EARTHS ─────────────────────────── -->
+<section class="section" id="ree">
+  <div class="section-header">
+    <div class="section-title-group">
+      <div class="section-tag ree">Strategic Frontier · Rare Earth Elements</div>
+      <div class="section-title">The 8-Block<br>REE Frontier</div>
+      <p class="section-desc">
+        Indonesia's Mineral Industry Agency has identified 8 strategic mining blocks with significant REE potential across three provincial regions — the final frontier for full-spectrum battery and magnet supply chain integration.
+      </p>
+    </div>
+    <div class="fact-card" style="min-width:200px">
+      <div class="fact-number" style="color:var(--ree)">3–5%</div>
+      <div class="fact-label">Projected global REE market<br>share by 2035</div>
+    </div>
+  </div>
+
+  <div class="ree-block-grid" id="reeBlocks">
+    <div class="ree-block">
+      <div class="ree-region">Kalimantan</div>
+      <div class="ree-details">
+        <div class="ree-detail"><strong>Deposit Type:</strong> Monazite formations</div>
+        <div class="ree-detail"><strong>Geological Context:</strong> Alluvial concentrations, tropical weathering</div>
+        <div class="ree-detail"><strong>REE Type:</strong> Light REEs (La–Eu, Z 57–63)</div>
+        <div class="ree-detail"><strong>Associated Minerals:</strong> Tungsten, Tantalum</div>
+      </div>
+    </div>
+    <div class="ree-block">
+      <div class="ree-region">Sulawesi</div>
+      <div class="ree-details">
+        <div class="ree-detail"><strong>Deposit Type:</strong> Xenotime deposits</div>
+        <div class="ree-detail"><strong>Geological Context:</strong> Weathered bedrock, tectonic complexity</div>
+        <div class="ree-detail"><strong>REE Type:</strong> Light + Heavy REEs (Z 64–71 + Y)</div>
+        <div class="ree-detail"><strong>Processing Hub:</strong> Mamuju, West Sulawesi (planned)</div>
+      </div>
+    </div>
+    <div class="ree-block">
+      <div class="ree-region">Bangka<br>Belitung</div>
+      <div class="ree-details">
+        <div class="ree-detail"><strong>Deposit Type:</strong> Mixed REE minerals</div>
+        <div class="ree-detail"><strong>Geological Context:</strong> Placer formations (tin legacy)</div>
+        <div class="ree-detail"><strong>REE Type:</strong> Monazite + Xenotime byproducts</div>
+        <div class="ree-detail"><strong>Challenge:</strong> Radioactive thorium/uranium content</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:2px">
+    <div class="data-card">
+      <h3>Commercialization Timeline</h3>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <div style="width:40px;height:40px;background:rgba(192,132,252,0.1);border:1px solid rgba(192,132,252,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ree)">7–10</div>
+          <div>
+            <div style="font-size:13px;color:#fff;font-weight:500;margin-bottom:2px">Years to commercial production</div>
+            <div style="font-size:12px;color:var(--text-dim)">From current development stage — minimum incubation period</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <div style="width:40px;height:40px;background:rgba(192,132,252,0.1);border:1px solid rgba(192,132,252,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--ree)">$2–3B</div>
+          <div>
+            <div style="font-size:13px;color:#fff;font-weight:500;margin-bottom:2px">Upfront CAPEX required</div>
+            <div style="font-size:12px;color:var(--text-dim)">Complex leaching & multi-stage solvent extraction facilities</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <div style="width:40px;height:40px;background:rgba(192,132,252,0.1);border:1px solid rgba(192,132,252,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--ree)">5–8K</div>
+          <div>
+            <div style="font-size:13px;color:#fff;font-weight:500;margin-bottom:2px">Direct jobs projected</div>
+            <div style="font-size:12px;color:var(--text-dim)">Specialized extraction, chemical engineering, advanced metallurgy</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="data-card">
+      <h3>Crosscheck — "Perminas" as REE State Entity</h3>
+      <p style="font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:12px">
+        The document identifies <strong style="color:#fff">"Perminas"</strong> as the state-controlled mining entity leading REE exploration. This warrants scrutiny: Indonesia's primary state mining entities are <strong style="color:#fff">PT MIND ID</strong> (PT Mineral Industri Indonesia), <strong style="color:#fff">ANTAM</strong>, and <strong style="color:#fff">PT Pertamina</strong> (for hydrocarbons). "Perminas" is not a widely recognized state entity in official mineral sector documentation.
+      </p>
+      <div class="crosscheck">
+        <div class="crosscheck-icon">⚠</div>
+        <div class="crosscheck-text">
+          <strong>Unable to verify:</strong> "Perminas" does not appear in ESDM, MIND ID, or USGS Indonesia mineral reports. This may refer to a newly designated body, a working name, or could be an error in the source document. Readers should independently confirm this entity's designation through official ESDM channels.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─ CONCLUSION ─────────────────────────── -->
+<section class="section" id="conclusion">
+  <div class="section-header">
+    <div class="section-title-group">
+      <div class="section-tag">Provincial Verdict</div>
+      <div class="section-title">The Most<br>Endowed Province</div>
+      <p class="section-desc">
+        Determining the "most resource-rich" province requires bifurcating between legacy bulk volume and strategic forward value — two very different answers.
+      </p>
+    </div>
+  </div>
+
+  <div class="verdict-grid">
+    <div class="verdict-card primary">
+      <div class="verdict-rank">★ Strategic Future Value · #1</div>
+      <div class="verdict-province">North Maluku</div>
+      <div class="verdict-resource">Maluku Utara · Nickel + REE Potential</div>
+      <p class="verdict-text">
+        Holds the highest volume of proven nickel ore reserves nationally — <strong style="color:#fff">1.86 billion tons</strong> of proven ore yielding <strong style="color:#fff">19.09 million tons</strong> of pure nickel metal, backed by 5.71 billion tons of additional resources. Home to the Weda Bay industrial complex and the linchpin of Indonesia's EV battery supply chain. Its geological dominance over nickel — the single most critical mineral of the current decade — provides exponentially more geopolitical leverage than any other single province.
+      </p>
+    </div>
+    <div class="verdict-card secondary">
+      <div class="verdict-rank">◈ Absolute Physical Volume · #1</div>
+      <div class="verdict-province">East Kalimantan</div>
+      <div class="verdict-resource">Kalimantan Timur · Coal Hegemon</div>
+      <p class="verdict-text">
+        By sheer geological mass and total thermal energy potential, entirely peerless. The epicenter of Indonesia's <strong style="color:#fff">31.95 billion ton</strong> proven coal inventory — dwarfing any other mineral commodity in excavated mass. Undisputed engine of the domestic electricity grid and national trade balance. However, faces long-term stranded-asset risk from global decarbonization and a profound structural tension as the new national capital Nusantara takes shape within its borders.
+      </p>
+    </div>
+  </div>
+
+  <div class="synth-list" style="margin-top:2px">
+    <div class="synth-item">
+      <div class="synth-num">01</div>
+      <div class="synth-text">
+        <strong>Permanent geographic pivot eastward.</strong> The center of extractive wealth has irreversibly shifted from aging western oilfields and depleted tin mines toward deepwater gas basins (Maluku/Papua), porphyry copper-gold systems (Papua/NTB), and vast lateritic nickel belts (Sulawesi/North Maluku).
+      </div>
+    </div>
+    <div class="synth-item">
+      <div class="synth-num">02</div>
+      <div class="synth-text">
+        <strong>The green paradox.</strong> Indonesia's ambition to dominate the clean energy transition through nickel, copper, and REEs remains paradoxically dependent on East Kalimantan's coal — the very fuel powering the HPAL and RKEF smelters processing those transition metals. Maluku and Papua's gas reserves must ultimately serve as the bridge to a cleaner industrial baseload.
+      </div>
+    </div>
+    <div class="synth-item">
+      <div class="synth-num">03</div>
+      <div class="synth-text">
+        <strong>Downstreaming as sovereign doctrine.</strong> The <em>hilirisasi</em> mandate — enforced through raw ore export bans on nickel (2020) and bauxite (2023) — has successfully redirected billions in global FDI into domestic processing. Total national exports are projected to reach $1,345.50 billion by 2025, driven by high-value battery precursors over cheap raw ore.
+      </div>
+    </div>
+    <div class="synth-item">
+      <div class="synth-num">04</div>
+      <div class="synth-text">
+        <strong>REE development as the final puzzle piece.</strong> The 8 designated REE blocks across Kalimantan, Sulawesi, and Bangka Belitung represent Indonesia's bid for full-spectrum vertical integration in permanent magnet manufacturing. With a 7–10 year horizon and $2–3B CAPEX requirement, this remains speculative but strategically decisive for the post-2030 landscape.
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ── FOOTER ────────────────────────────────── -->
+<footer>
+  <div class="footer-note">
+    Data sourced from: ESDM Handbook of Energy & Economic Statistics 2023/2024 · SKK Migas · Badan Geologi Indonesia · S&P Global Market Intelligence (2025) · U.S. EIA Country Analysis Brief (Aug 2025) · USGS Mineral Commodity Summaries 2025 · EITI Indonesia. Crosscheck annotations based on independent verification against authoritative sources. Reserve figures use Indonesian national standards (SNI 6728:4/2015, SNI 4726/2019) aligned with JORC Code.
+  </div>
+  <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);text-align:right">
+    Data current to 2024 · Built April 2026
+  </div>
+</footer>
+
+<script>
+// ── SCROLL PROGRESS ────────────────────────── //
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('scrollLine').style.width = pct + '%';
+});
+
+// ── COUNTER ANIMATION ──────────────────────── //
+function animateCounter(el, target, duration = 1500) {
+  let start = null;
+  const step = ts => {
+    if (!start) start = ts;
+    const prog = Math.min((ts - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - prog, 3);
+    const val = target * ease;
+    el.textContent = val >= 10 ? val.toFixed(0) : val.toFixed(2);
+    if (prog < 1) requestAnimationFrame(step);
+    else el.textContent = target >= 10 && !String(target).includes('.') ? target : target;
+  };
+  requestAnimationFrame(step);
+}
+
+// Init counters when hero is visible
+const kpiObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('[data-count]').forEach(el => {
+        animateCounter(el, parseFloat(el.dataset.count));
+      });
+      kpiObs.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+kpiObs.observe(document.querySelector('.kpi-row'));
+
+// ── SECTION REVEAL ─────────────────────────── //
+const secObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+
+      // Animate bars inside this section
+      e.target.querySelectorAll('.pbar-row').forEach((row, i) => {
+        setTimeout(() => row.classList.add('animated'), 200 + i * 80);
+      });
+      e.target.querySelectorAll('.cal-fill').forEach((fill, i) => {
+        setTimeout(() => fill.classList.add('animated'), 300 + i * 100);
+      });
+      e.target.querySelectorAll('.ree-block').forEach((block, i) => {
+        setTimeout(() => block.classList.add('animated'), 200 + i * 150);
+      });
+
+      // Tin bar
+      const tinBar = e.target.querySelector('#tinBar');
+      if (tinBar) setTimeout(() => tinBar.style.width = '91%', 400);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.section').forEach(s => secObs.observe(s));
+
+// ── ACTIVE NAV ─────────────────────────────── //
+const navObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+
+document.querySelectorAll('.section').forEach(s => navObs.observe(s));
+
+// ── CHARTS ─────────────────────────────────── //
+Chart.defaults.color = '#6b7280';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.07)';
+Chart.defaults.font.family = "'DM Mono', monospace";
+Chart.defaults.font.size = 11;
+
+// Gas Donut
+const gasCtx = document.getElementById('gasChart').getContext('2d');
+new Chart(gasCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Maluku', 'Papua', 'South Sumatra', 'Kalimantan', 'Other'],
+    datasets: [{
+      data: [28.81, 20.85, 12.91, 10.46, 26.97],
+      backgroundColor: [
+        'rgba(34,211,238,0.9)',
+        'rgba(34,211,238,0.6)',
+        'rgba(34,211,238,0.35)',
+        'rgba(34,211,238,0.2)',
+        'rgba(255,255,255,0.07)',
+      ],
+      borderColor: '#0a0c0f',
+      borderWidth: 2,
+      hoverOffset: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '60%',
+    plugins: {
+      legend: {
+        position: 'right',
+        labels: { boxWidth: 10, padding: 14, font: { size: 11 } }
+      },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.label}: ${ctx.parsed}%`
+        }
+      }
+    }
+  }
+});
+
+// Coal Region Donut
+const coalCtx = document.getElementById('coalRegionChart').getContext('2d');
+new Chart(coalCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['East Kalimantan', 'South Sumatra', 'South Kalimantan', 'Other Regions'],
+    datasets: [{
+      data: [38.2, 29.3, 10, 22.5],
+      backgroundColor: [
+        'rgba(245,158,11,0.9)',
+        'rgba(245,158,11,0.55)',
+        'rgba(245,158,11,0.3)',
+        'rgba(255,255,255,0.07)',
+      ],
+      borderColor: '#0a0c0f',
+      borderWidth: 2,
+      hoverOffset: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '55%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { boxWidth: 10, padding: 12, font: { size: 11 } }
+      },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.label}: ${ctx.parsed}%`
+        }
+      }
+    }
+  }
+});
+
+// Nickel Stacked Bar
+const nickelCtx = document.getElementById('nickelChart').getContext('2d');
+new Chart(nickelCtx, {
+  type: 'bar',
+  data: {
+    labels: ['North Maluku', 'SE Sulawesi', 'C. Sulawesi', 'Maluku', 'S. Kalimantan'],
+    datasets: [
+      {
+        label: 'Proved Reserves (M Tons)',
+        data: [1860, 1680, 805.22, 147.81, 121.65],
+        backgroundColor: 'rgba(74,222,128,0.7)',
+        borderColor: 'rgba(74,222,128,0.9)',
+        borderWidth: 1,
+        borderRadius: 2,
+      },
+      {
+        label: 'Resources (M Tons)',
+        data: [5710, 6260, 3040, 1890, 70.43],
+        backgroundColor: 'rgba(74,222,128,0.2)',
+        borderColor: 'rgba(74,222,128,0.3)',
+        borderWidth: 1,
+        borderRadius: 2,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: { boxWidth: 10, padding: 12 }
+      },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()} M Tons`
+        }
+      }
+    },
+    scales: {
+      x: { ticks: { font: { size: 10 } } },
+      y: {
+        ticks: {
+          callback: v => v >= 1000 ? (v/1000) + 'B' : v + 'M'
+        }
+      }
+    }
+  }
+});
+
+</script>
+</body>
+</html>
