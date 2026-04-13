@@ -50,7 +50,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:14px 32px;display:fl
 .lang-btn.active{background:var(--gold);color:#070b0f;font-weight:700}
 
 /* ── HERO ─────────────────────────────────────── */
-.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:100px 24px 60px;overflow:hidden}
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:100px 24px 120px;overflow:hidden}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(240,180,41,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(240,180,41,.04) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 40%,transparent 100%)}
 .hero-glow{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(ellipse,rgba(240,140,20,.09) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
 .classify-badge{font-family:'Space Mono';font-size:10px;letter-spacing:.22em;color:var(--red);border:1px solid rgba(224,58,58,.5);padding:4px 16px;margin-bottom:36px;animation:pulse 3s ease-in-out infinite;position:relative;z-index:1}
@@ -61,7 +61,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:14px 32px;display:fl
 .hero-stats{display:flex;gap:52px;position:relative;z-index:1;flex-wrap:wrap;justify-content:center}
 .stat-pill .num{font-family:'Bebas Neue';font-size:44px;color:var(--gold);display:block;line-height:1}
 .stat-pill .lbl{font-family:'Space Mono';font-size:9px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
-.scroll-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-family:'Space Mono';font-size:9px;letter-spacing:.15em;animation:bob 2.2s ease-in-out infinite;z-index:1}
+.scroll-hint{position:absolute;bottom:52px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-family:'Space Mono';font-size:9px;letter-spacing:.15em;animation:bob 2.2s ease-in-out infinite;z-index:1}
 .scroll-hint::after{content:'▼';font-size:13px;color:var(--gold)}
 @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
 
@@ -937,6 +937,8 @@ function setLang(lang) {
   // re-render cards and chart labels with new language
   renderCards();
   buildChart();
+  // Chart is already in view when user toggles language, so animate immediately
+  animateChart();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1056,6 +1058,41 @@ function animateChart() {
 }
 
 // ═══════════════════════════════════════════════════════
+// METRIC TRANSLATION LOOKUPS (all metric labels/values are stored in ID)
+// ═══════════════════════════════════════════════════════
+const ML = { // label ID → EN
+  "Skor IKK":"SVI Score","Peringkat PDRB":"GRDP Rank","Kelayakan":"Viability",
+  "Kapasitas Fiskal":"Fiscal Cap.","Ekspor 2023":"Exports 2023","Titik Kendali":"Choke Point",
+  "Peran Strategis":"Strategic Role","Tipe Ekonomi":"Economy Type","Sektor Utama":"Key Sectors",
+  "Aset Utama":"Key Asset","Sektor Primer":"Primary Sector","Aset Udara":"Air Assets",
+  "Porsi PDB Nasional":"Natl. GDP Share","Skor IPM":"HDI Score","Populasi":"Population",
+  "Lokasi":"Location","Basis Budaya":"Cultural Base","Aset Pariwisata":"Tourism Asset",
+  "Kendali Strategis":"Strategic Ctrl.","Luas Daratan":"Land Area","Kepadatan Penduduk":"Pop. Density",
+  "Posisi Strategis":"Strategic Pos.","Basis Utama":"Primary Base","Driver Utama":"Primary Driver",
+  "Potensi Hidro":"Hydro Potential","Nilai Brand":"Brand Value","Jangkar Ekonomi":"Economic Anchor",
+  "Sumber Daya Utama":"Key Resource","Aset Unik":"Unique Asset","Peringkat IPM":"HDI Rank",
+  "Fokus Pertanian":"Agri. Focus","Kota Utama":"Capital City","Tingkat Kemiskinan":"Poverty Rate",
+  "Akses Laut":"Sea Access","IPM di Indonesia":"HDI in Indonesia","Dibentuk":"Province Founded",
+  "Ekspor Utama":"Key Exports","Status Cadangan":"Reserve Status","Basis Historis":"Historical Base",
+  "Dasar Otonomi":"Autonomy Base","Aset Energi":"Energy Asset","KEK Batam":"Batam FTZ",
+  "Aspal Buton":"Buton Asphalt","Peran":"Role","Historis":"Historical","2023":"2023"
+};
+const MV = { // value ID → EN
+  "Sangat Tinggi":"Very High","Tinggi":"High","Sedang":"Moderate",
+  "Rendah":"Low","Sangat Rendah":"Very Low","Rendah-Sedang":"Low–Mod.",
+  "Sedang-Tinggi":"Mod.–High","Seimbang":"Balanced","Terluas":"Largest",
+  "Terendah":"Lowest","Nol":"Zero","Terisolasi":"Isolated","Menipis":"Depleting",
+  "Gerbang Timur":"E. Gateway","Terbesar":"Largest","Tertinggi":"Highest",
+  "Perikanan":"Fisheries","Pariwisata":"Tourism","Pertanian":"Agriculture",
+  "Nikel":"Nickel","Batu Bara":"Coal","Jagung":"Corn",
+  "Lingkar Pasifik":"Pacific Rim","Interior":"Interior","Perkebunan":"Plantations",
+  "Balanced":"Balanced","Mandiri":"Self-Sufficient"
+};
+function translateMetric(val, map) {
+  return (LANG === 'en' && map[val]) ? map[val] : val;
+}
+
+// ═══════════════════════════════════════════════════════
 // MODAL
 // ═══════════════════════════════════════════════════════
 function openModal(p) {
@@ -1068,11 +1105,11 @@ function openModal(p) {
   const tlabel = tierLabel(p.tier);
   const color = TIER_COLORS[p.tier];
 
-  const metricsHTML = p.metrics.map(m => `
-    <div class="mm-cell">
-      <span class="v">${m.v}</span>
-      <span class="l">${m.l}</span>
-    </div>`).join('');
+  const metricsHTML = p.metrics.map(m => {
+    const lbl = translateMetric(m.l, ML);
+    const val = translateMetric(m.v, MV);
+    return `<div class="mm-cell"><span class="v">${val}</span><span class="l">${lbl}</span></div>`;
+  }).join('');
 
   document.getElementById('modalContent').innerHTML = `
     <span class="p-badge b${p.tier}" style="margin-bottom:12px;display:inline-block">${tlabel}</span>
