@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Federal Scenario — Indonesian Federalism vs NKRI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #090B10;
+    --surface: #111520;
+    --surface2: #161B27;
+    --gold: #C9943A;
+    --gold-light: #E8B96A;
+    --gold-dim: rgba(201,148,58,0.15);
+    --red: #B83025;
+    --red-dim: rgba(184,48,37,0.12);
+    --text: #EDE5D3;
+    --text-muted: #8A8070;
+    --text-dim: #5C5448;
+    --border: rgba(201,148,58,0.18);
+    --border-s: rgba(201,148,58,0.08);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+  h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 600; line-height: 1.2; }
+
+  /* BATIK TEXTURE */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.04;
+    background-image: repeating-linear-gradient(45deg, var(--gold) 0, var(--gold) 1px, transparent 0, transparent 50%),
+                      repeating-linear-gradient(-45deg, var(--gold) 0, var(--gold) 1px, transparent 0, transparent 50%);
+    background-size: 30px 30px;
+  }
+
+  /* NAVBAR */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 0 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+    background: rgba(9,11,16,0); backdrop-filter: blur(0px);
+    border-bottom: 1px solid transparent;
+    transition: all 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(9,11,16,0.92); backdrop-filter: blur(20px);
+    border-bottom-color: var(--border-s);
+  }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; color: var(--gold); letter-spacing: 0.08em; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; font-weight: 400; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold-light); }
+
+  /* HERO */
+  #hero {
+    position: relative; min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 6rem 2rem 4rem; overflow: hidden; z-index: 1;
+  }
+  .hero-glow {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 800px; height: 600px; z-index: -1;
+    background: radial-gradient(ellipse at center, rgba(201,148,58,0.06) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(1)} 50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)} }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+    border: 1px solid var(--border); padding: 0.4rem 1.2rem; border-radius: 100px;
+    margin-bottom: 2.5rem; animation: fadeUp 0.8s ease forwards; opacity: 0;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after { content:''; width:24px; height:1px; background:var(--gold); opacity:0.5; }
+  .hero-title {
+    font-size: clamp(3.5rem, 8vw, 7rem); font-weight: 700; line-height: 1.0;
+    color: var(--text); margin-bottom: 1rem;
+    animation: fadeUp 0.8s 0.2s ease forwards; opacity: 0;
+  }
+  .hero-title em { font-style: italic; color: var(--gold); }
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--text-muted); max-width: 640px; margin: 0 auto 3rem;
+    animation: fadeUp 0.8s 0.4s ease forwards; opacity: 0;
+  }
+  .hero-stats {
+    display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.6s ease forwards; opacity: 0; margin-bottom: 4rem;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 600; color: var(--gold); display: block; line-height: 1; }
+  .hero-stat-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-dim); margin-top: 0.3rem; }
+  .scroll-down { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--text-dim); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; animation: bounce 2s infinite; }
+  .scroll-down svg { width: 18px; height: 18px; opacity: 0.5; }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  /* SECTIONS */
+  section { position: relative; z-index: 1; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+  .section-header { text-align: center; margin-bottom: 4rem; }
+  .section-tag { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--gold); display: block; margin-bottom: 1rem; }
+  .section-title { font-size: clamp(2rem, 4vw, 3rem); color: var(--text); }
+  .section-title em { color: var(--gold); font-style: italic; }
+  .divider { width: 60px; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); margin: 1.5rem auto 0; }
+
+  /* INTRO */
+  #intro { padding: 7rem 0; }
+  .intro-grid { display: grid; grid-template-columns: 1fr 380px; gap: 4rem; align-items: start; }
+  .intro-text p { font-size: 1.05rem; color: var(--text-muted); line-height: 1.85; margin-bottom: 1.5rem; }
+  .intro-text p strong { color: var(--text); font-weight: 500; }
+  .intro-text blockquote {
+    border-left: 2px solid var(--gold); padding: 1rem 1.5rem; margin: 2rem 0;
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem;
+    color: var(--text); background: var(--gold-dim); border-radius: 0 8px 8px 0;
+  }
+  .key-facts { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.8rem; position: sticky; top: 80px; }
+  .key-facts h3 { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 1.5rem; }
+  .fact-item { padding: 0.9rem 0; border-bottom: 1px solid var(--border-s); display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .fact-item:last-child { border-bottom: none; }
+  .fact-label { font-size: 0.82rem; color: var(--text-muted); }
+  .fact-value { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--gold-light); text-align: right; }
+
+  /* HISTORY */
+  #history { padding: 6rem 0; background: linear-gradient(180deg, transparent, rgba(17,21,32,0.8), transparent); }
+  .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+  .timeline::before { content:''; position:absolute; left:24px; top:0; bottom:0; width:1px; background:linear-gradient(180deg,transparent,var(--border),transparent); }
+  .tl-item { display:flex; gap:2rem; margin-bottom:2.5rem; opacity:0; transform:translateX(-20px); transition:all 0.5s ease; }
+  .tl-item.visible { opacity:1; transform:none; }
+  .tl-dot { width:48px; height:48px; min-width:48px; border-radius:50%; background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:0.75rem; color:var(--gold); position:relative; z-index:1; }
+  .tl-content { padding-top:0.5rem; }
+  .tl-year { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--gold); margin-bottom:0.3rem; }
+  .tl-content h3 { font-size:1.2rem; margin-bottom:0.5rem; color:var(--text); }
+  .tl-content p { font-size:0.9rem; color:var(--text-muted); line-height:1.7; }
+
+  /* 1949 STATES TABLE */
+  #states1949 { padding: 6rem 0; }
+  .states-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+  .states-table th { text-align:left; padding:0.8rem 1rem; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--gold); border-bottom:1px solid var(--border); background:var(--surface); font-family:'Outfit',sans-serif; font-weight:500; }
+  .states-table td { padding:0.9rem 1rem; border-bottom:1px solid var(--border-s); color:var(--text-muted); vertical-align:top; }
+  .states-table tr:hover td { background:var(--gold-dim); color:var(--text); }
+  .state-name-cell strong { color:var(--text); font-weight:500; display:block; margin-bottom:2px; }
+
+  /* SIX STATES SECTION */
+  #sixstates { padding: 7rem 0; }
+  .states-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+  .state-card {
+    background:var(--surface); border:1px solid var(--border-s);
+    border-radius:16px; padding:1.8rem; cursor:pointer;
+    transition:all 0.3s ease; position:relative; overflow:hidden;
+  }
+  .state-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--gold),var(--red)); transform:scaleX(0); transform-origin:left; transition:transform 0.3s ease; }
+  .state-card:hover { border-color:var(--border); background:var(--surface2); transform:translateY(-4px); box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+  .state-card:hover::before { transform:scaleX(1); }
+  .card-rank { position:absolute; top:1.2rem; right:1.5rem; font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:700; color:var(--border); line-height:1; }
+  .card-icon { font-size:2rem; margin-bottom:1rem; }
+  .card-name { font-size:1.4rem; font-weight:600; color:var(--text); margin-bottom:0.3rem; }
+  .card-role { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--gold); margin-bottom:1.2rem; }
+  .card-stats { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+  .card-stat-item { }
+  .card-stat-num { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:600; color:var(--text); display:block; line-height:1.2; }
+  .card-stat-label { font-size:0.68rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; }
+  .fiscal-bar { height:4px; background:var(--surface2); border-radius:2px; margin-top:1.2rem; overflow:hidden; }
+  .fiscal-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--gold),var(--gold-light)); transition:width 0.8s ease; }
+  .fiscal-label { font-size:0.7rem; color:var(--text-dim); margin-top:0.4rem; }
+  .state-card.rank-1 .fiscal-fill { background:linear-gradient(90deg,#22c55e,#86efac); }
+  .state-card.rank-2 .fiscal-fill { background:linear-gradient(90deg,#3b82f6,#93c5fd); }
+  .state-card.rank-5 .fiscal-fill { background:linear-gradient(90deg,#f59e0b,#fcd34d); }
+  .state-card.rank-6 .fiscal-fill { background:linear-gradient(90deg,#ef4444,#fca5a5); }
+
+  /* CHARTS SECTION */
+  #rankings { padding: 7rem 0; background: linear-gradient(180deg, transparent, rgba(17,21,32,0.6), transparent); }
+  .charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-top:3rem; }
+  .chart-card { background:var(--surface); border:1px solid var(--border-s); border-radius:16px; padding:1.8rem; }
+  .chart-card h3 { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--gold); margin-bottom:1.5rem; }
+  .chart-wrap { position:relative; height:280px; }
+
+  /* FEDERAL VS NKRI */
+  #debate { padding: 7rem 0; }
+  .debate-tabs { display:flex; gap:0; border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:3rem; max-width:520px; margin-left:auto; margin-right:auto; }
+  .debate-tab { flex:1; padding:0.9rem 1.5rem; text-align:center; cursor:pointer; font-size:0.82rem; font-weight:500; color:var(--text-muted); transition:all 0.3s; background:transparent; border:none; font-family:'Outfit',sans-serif; }
+  .debate-tab.active { background:var(--gold); color:var(--bg); }
+  .debate-panel { display:none; }
+  .debate-panel.active { display:block; }
+  .argument-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+  .argument-card { background:var(--surface); border-radius:12px; padding:1.5rem; border-left:3px solid var(--gold); }
+  .argument-card.risk { border-left-color:var(--red); }
+  .argument-card h4 { font-size:1rem; color:var(--text); margin-bottom:0.6rem; }
+  .argument-card p { font-size:0.85rem; color:var(--text-muted); line-height:1.7; }
+  .risk-badge { display:inline-block; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.1em; background:var(--red-dim); color:#ff9991; border-radius:4px; padding:0.2rem 0.6rem; margin-bottom:0.7rem; }
+
+  /* STRATEGIC ASSESSMENT */
+  #assessment { padding: 7rem 0; }
+  .assessment-items { display:flex; flex-direction:column; gap:2.5rem; max-width:800px; margin:0 auto; }
+  .assessment-item { display:grid; grid-template-columns:80px 1fr; gap:2rem; opacity:0; transform:translateY(30px); transition:all 0.6s ease; }
+  .assessment-item.visible { opacity:1; transform:none; }
+  .assessment-num { font-family:'Cormorant Garamond',serif; font-size:4.5rem; font-weight:700; color:var(--border); line-height:1; text-align:right; }
+  .assessment-body h3 { font-size:1.6rem; color:var(--text); margin-bottom:0.8rem; padding-top:0.5rem; }
+  .assessment-body p { font-size:0.95rem; color:var(--text-muted); line-height:1.85; }
+  .assessment-body strong { color:var(--text); font-weight:500; }
+
+  /* VERDICT */
+  #verdict { padding: 7rem 0; }
+  .verdict-box {
+    background: linear-gradient(135deg, rgba(201,148,58,0.08), rgba(184,48,37,0.06));
+    border: 1px solid var(--border); border-radius: 24px; padding: 4rem;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .verdict-box::before {
+    content: 'NKRI'; position:absolute; right:-2rem; top:50%; transform:translateY(-50%);
+    font-family:'Cormorant Garamond',serif; font-size:12rem; font-weight:700;
+    color:rgba(201,148,58,0.04); line-height:1; pointer-events:none;
+  }
+  .verdict-icon { font-size:3rem; margin-bottom:1.5rem; display:block; }
+  .verdict-title { font-size:clamp(2rem,4vw,3.2rem); color:var(--text); margin-bottom:1.5rem; }
+  .verdict-title em { color:var(--gold); }
+  .verdict-text { font-size:1.05rem; color:var(--text-muted); max-width:680px; margin:0 auto 2.5rem; line-height:1.85; }
+  .verdict-tags { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+  .vtag { background:var(--gold-dim); border:1px solid var(--border); border-radius:100px; padding:0.4rem 1.2rem; font-size:0.78rem; color:var(--gold-light); }
+
+  /* FOOTER */
+  footer { border-top:1px solid var(--border-s); padding:3rem 2rem; text-align:center; }
+  footer p { font-size:0.78rem; color:var(--text-dim); line-height:1.8; }
+  footer a { color:var(--text-muted); text-decoration:none; }
+  footer a:hover { color:var(--gold); }
+
+  /* REVEAL ANIMATION */
+  .reveal { opacity:0; transform:translateY(20px); transition:all 0.7s ease; }
+  .reveal.visible { opacity:1; transform:none; }
+
+  @media(max-width:900px) {
+    .intro-grid { grid-template-columns:1fr; }
+    .key-facts { position:static; }
+    .states-grid { grid-template-columns:1fr 1fr; }
+    .charts-grid { grid-template-columns:1fr; }
+    .argument-grid { grid-template-columns:1fr; }
+    nav { padding:0 1.5rem; }
+    .nav-links { display:none; }
+    .verdict-box { padding:2.5rem 1.5rem; }
+    .assessment-item { grid-template-columns:1fr; }
+    .assessment-num { text-align:left; font-size:3rem; }
+  }
+  @media(max-width:600px) {
+    .states-grid { grid-template-columns:1fr; }
+    .hero-stats { gap:2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <span class="nav-logo">RIS · NKRI</span>
+  <ul class="nav-links">
+    <li><a href="#intro">Overview</a></li>
+    <li><a href="#history">History</a></li>
+    <li><a href="#sixstates">Six States</a></li>
+    <li><a href="#rankings">Rankings</a></li>
+    <li><a href="#debate">Debate</a></li>
+    <li><a href="#verdict">Verdict</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <span class="hero-eyebrow">Geopolitical Simulation · Mid-2020s</span>
+  <h1 class="hero-title">The <em>Federal</em><br>Scenario</h1>
+  <p class="hero-sub">A rigorous simulation of a modern Republik Indonesia Serikat — and why it would fail</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num">$1.37T</span>
+      <span class="hero-stat-label">National GDP (2024)</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">17,000+</span>
+      <span class="hero-stat-label">Islands</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">38</span>
+      <span class="hero-stat-label">Provinces</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">6</span>
+      <span class="hero-stat-label">Proposed States</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">275M</span>
+      <span class="hero-stat-label">Population</span>
+    </div>
+  </div>
+  <div class="scroll-down">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    Scroll
+  </div>
+</section>
+
+<!-- INTRO -->
+<section id="intro">
+  <div class="container">
+    <div class="intro-grid">
+      <div class="intro-text reveal">
+        <span class="section-tag">Introduction</span>
+        <h2 style="font-size:2.4rem;margin-bottom:1.8rem;line-height:1.2;">The Enduring Phantom of<br><em style="color:var(--gold)">Federalism</em> in the Archipelago</h2>
+        <p>Since the dawn of its modern political history, the Republic of Indonesia has continuously grappled with the profound spatial, demographic, and economic challenges of governing the world's largest archipelagic state. Comprising over 17,000 islands and characterized by immense ethno-linguistic, religious, and geographic diversity, the question of how to optimally distribute power between Jakarta and the vast peripheries remains the central defining theme in Indonesian political science.</p>
+        <p>While the nation operates strictly as a unitary state — the <strong>Negara Kesatuan Republik Indonesia (NKRI)</strong> — the concept of a federal system has historically surfaced during periods of profound political transition. The most notable realization was the short-lived <strong>Republik Indonesia Serikat (RIS)</strong>, which existed from December 1949 to August 1950.</p>
+        <blockquote>"Federalism is frequently analyzed as a potential theoretical remedy for deeply entrenched regional inequalities, the over-centralization of economic and political power, and the complex management of deeply divided societies."</blockquote>
+        <p>Simulating the resurrection of the RIS in the mid-2020s demands a thorough examination of historical precedents, modern demographic realities, contemporary regional economic capacities, detailed fiscal independence metrics, and the current geopolitical trajectory under President Prabowo Subianto.</p>
+      </div>
+      <div class="key-facts reveal">
+        <h3>Key Economic Metrics (2024)</h3>
+        <div class="fact-item">
+          <span class="fact-label">National GDP</span>
+          <span class="fact-value">$1.35–1.37T</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">GDP Per Capita</span>
+          <span class="fact-value">~$4,960</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">Java's GDP Share</span>
+          <span class="fact-value">57.70%</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">National HDI (avg)</span>
+          <span class="fact-value">75.02</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">Jakarta HDI</span>
+          <span class="fact-value">85.05</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">Papua Tengah HDI</span>
+          <span class="fact-value">60.25</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">Provinces (2024)</span>
+          <span class="fact-value">38</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">Nickel Share (Global)</span>
+          <span class="fact-value">54%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section id="history">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">Historical Context</span>
+      <h2 class="section-title">The Architecture &amp; Collapse<br>of the <em>1949 RIS</em></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot">1945</div>
+        <div class="tl-content">
+          <div class="tl-year">August 17, 1945</div>
+          <h3>Declaration of Independence</h3>
+          <p>Indonesia declares independence under Soekarno and Hatta. Dutch colonial forces, backed by Allied troops, attempt to violently reassert control, sparking the National Revolution.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">1946</div>
+        <div class="tl-content">
+          <div class="tl-year">1946–1948</div>
+          <h3>Dutch-Sponsored State Creation</h3>
+          <p>Facing fierce resistance, the Dutch systematically establish puppet constituent states — State of West Borneo, East Indonesia, Pasundan, Madura — designed along ethnic lines to divide and neutralize the independence movement.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">1949</div>
+        <div class="tl-content">
+          <div class="tl-year">December 27, 1949</div>
+          <h3>Birth of the RIS via Hague Agreement</h3>
+          <p>The Dutch-Indonesian Round Table Conference legally births the Republik Indonesia Serikat. The RIS comprised the original Republic of Indonesia alongside 15 Dutch-sponsored constituent states and territories.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">1950</div>
+        <div class="tl-content">
+          <div class="tl-year">April 3, 1950</div>
+          <h3>The Integral Motion (Mohammad Natsir)</h3>
+          <p>Islamic figure Mohammad Natsir introduces the "Integral Motion" in the RIS parliament — a brilliant constitutional pathway for constituent states to voluntarily dissolve and merge back into the original Republic. Recognized as strategic genius by all factions including PM Hatta.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--gold-dim);border-color:var(--gold);">✦</div>
+        <div class="tl-content">
+          <div class="tl-year">August 17, 1950</div>
+          <h3>Dissolution of the RIS — Rebirth of NKRI</h3>
+          <p>On the fifth anniversary of independence, President Soekarno reads the Charter of Formation and formally announces the dissolution of the RIS. The unitary NKRI is reborn after just 8 months of federation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 1949 STATES TABLE -->
+<section id="states1949" style="padding:5rem 0;">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">1949 Constituent States</span>
+      <h2 class="section-title">The Original <em>Dutch-Drawn</em> Architecture</h2>
+      <div class="divider"></div>
+    </div>
+    <div style="overflow-x:auto;" class="reveal">
+      <table class="states-table">
+        <thead>
+          <tr>
+            <th>Constituent State</th>
+            <th>Indonesian Name</th>
+            <th>Established</th>
+            <th>Capital / Core Region</th>
+            <th>Fate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>State of East Indonesia</strong></td><td>Negara Indonesia Timur</td><td>1946</td><td>Bali, Sulawesi, Maluku</td><td style="color:#ff9991;">First to fall</td></tr>
+          <tr><td><strong>State of East Sumatra</strong></td><td>Negara Sumatera Timur</td><td>Dec 25, 1947</td><td>East Sumatra</td><td style="color:#ff9991;">Dissolved 1950</td></tr>
+          <tr><td><strong>State of West Borneo</strong></td><td>Daerah Kalimantan Barat</td><td>May 12, 1947</td><td>Pontianak</td><td style="color:#ff9991;">Dissolved 1950</td></tr>
+          <tr><td><strong>State of East Borneo</strong></td><td>Daerah Kalimantan Timur</td><td>May 12, 1947</td><td>Samarinda</td><td style="color:#ff9991;">Dissolved 1950</td></tr>
+          <tr><td><strong>Great Dayak</strong></td><td>Dayak Besar</td><td>Jun 3, 1947</td><td>Banjarmasin</td><td style="color:#ff9991;">Dissolved 1950</td></tr>
+          <tr><td><strong>State of Pasundan</strong></td><td>Negara Pasundan</td><td>Feb 25, 1948</td><td>West Java</td><td style="color:#ff9991;">Dissolved 1950</td></tr>
+          <tr><td><strong>State of Madura</strong></td><td>Negara Madura</td><td>Feb 20, 1948</td><td>Pamekasan</td><td style="color:#ff9991;">Dissolved 1950</td></tr>
+          <tr><td><strong>State of East Java</strong></td><td>Negara Jawa Timur</td><td>Nov 27, 1948</td><td>East Java</td><td style="color:#ff9991;">Dissolved 1950</td></tr>
+          <tr><td><strong>State of South Sumatra</strong></td><td>Negara Sumatera Selatan</td><td>Sep 2, 1948</td><td>South Sumatra</td><td style="color:#ff9991;">Dissolved 1950</td></tr>
+          <tr><td><strong>State of Bandjar</strong></td><td>Daerah Banjar</td><td>Jan 14, 1948</td><td>South Kalimantan</td><td style="color:#ff9991;">Dissolved 1950</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.8rem;color:var(--text-dim);text-align:center;margin-top:1.5rem;font-style:italic;">The fundamental fatal flaw: these borders were explicitly designed along ethnic lines by colonial powers, not by organic regional self-determination.</p>
+  </div>
+</section>
+
+<!-- SIX STATES -->
+<section id="sixstates">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">Modern Architecture</span>
+      <h2 class="section-title">The Six <em>Macro-States</em></h2>
+      <div class="divider"></div>
+      <p style="color:var(--text-muted);max-width:600px;margin:1.5rem auto 0;font-size:0.95rem;">A modern RIS cannot use 1949's colonial borders. The six macro-states align with Bappenas economic corridors — providing each state critical mass in ports, industry, agriculture, and resources.</p>
+    </div>
+    <div class="states-grid">
+      <!-- JAVA -->
+      <div class="state-card rank-1 reveal" onclick="scrollToRank(1)">
+        <div class="card-rank">1</div>
+        <div class="card-icon">🏙️</div>
+        <div class="card-name">State of Java</div>
+        <div class="card-role">The Supreme Economic Engine</div>
+        <div class="card-stats">
+          <div class="card-stat-item">
+            <span class="card-stat-num">57.70%</span>
+            <span class="card-stat-label">GDP Share</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">5.30%</span>
+            <span class="card-stat-label">Growth Rate</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">85.05</span>
+            <span class="card-stat-label">Peak HDI (Jakarta)</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">69.56</span>
+            <span class="card-stat-label">Fiscal IKF (Jakarta)</span>
+          </div>
+        </div>
+        <div class="fiscal-bar"><div class="fiscal-fill" style="width:95%"></div></div>
+        <div class="fiscal-label">Fiscal Independence: Extremely High</div>
+      </div>
+
+      <!-- SUMATRA -->
+      <div class="state-card rank-2 reveal" onclick="scrollToRank(2)">
+        <div class="card-rank">2</div>
+        <div class="card-icon">🌴</div>
+        <div class="card-name">State of Sumatra</div>
+        <div class="card-role">The Agro-Industrial Anchor</div>
+        <div class="card-stats">
+          <div class="card-stat-item">
+            <span class="card-stat-num">22.22%</span>
+            <span class="card-stat-label">GDP Share</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">4.81%</span>
+            <span class="card-stat-label">Growth Rate</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">80.53</span>
+            <span class="card-stat-label">Peak HDI (Riau Is.)</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">Mandiri</span>
+            <span class="card-stat-label">Riau Islands Status</span>
+          </div>
+        </div>
+        <div class="fiscal-bar"><div class="fiscal-fill" style="width:65%"></div></div>
+        <div class="fiscal-label">Fiscal Independence: Moderate–High</div>
+      </div>
+
+      <!-- KALIMANTAN -->
+      <div class="state-card rank-3 reveal" onclick="scrollToRank(3)">
+        <div class="card-rank">3</div>
+        <div class="card-icon">⛏️</div>
+        <div class="card-name">State of Kalimantan</div>
+        <div class="card-role">The Resource &amp; Capital Hub</div>
+        <div class="card-stats">
+          <div class="card-stat-item">
+            <span class="card-stat-num">8.18%</span>
+            <span class="card-stat-label">GDP Share</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">5.22%</span>
+            <span class="card-stat-label">Growth Rate</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">78.79</span>
+            <span class="card-stat-label">Peak HDI (East Kal.)</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">46.92</span>
+            <span class="card-stat-label">East Kal. IKF (2024)</span>
+          </div>
+        </div>
+        <div class="fiscal-bar"><div class="fiscal-fill" style="width:50%;background:linear-gradient(90deg,#f59e0b,#fcd34d)"></div></div>
+        <div class="fiscal-label">Fiscal Independence: Highly Volatile</div>
+      </div>
+
+      <!-- SULAWESI -->
+      <div class="state-card rank-4 reveal" onclick="scrollToRank(4)">
+        <div class="card-rank">4</div>
+        <div class="card-icon">⚡</div>
+        <div class="card-name">State of Sulawesi</div>
+        <div class="card-role">The High-Growth Frontier</div>
+        <div class="card-stats">
+          <div class="card-stat-item">
+            <span class="card-stat-num">7.22%</span>
+            <span class="card-stat-label">GDP Share</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">6.23%</span>
+            <span class="card-stat-label">Growth Rate ★</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">75.68</span>
+            <span class="card-stat-label">Peak HDI (N. Sulawesi)</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">54%</span>
+            <span class="card-stat-label">Global Nickel Share</span>
+          </div>
+        </div>
+        <div class="fiscal-bar"><div class="fiscal-fill" style="width:30%;background:linear-gradient(90deg,#a78bfa,#c4b5fd)"></div></div>
+        <div class="fiscal-label">Fiscal Independence: Low–Moderate</div>
+      </div>
+
+      <!-- BALI-NTT -->
+      <div class="state-card rank-5 reveal" onclick="scrollToRank(5)">
+        <div class="card-rank">5</div>
+        <div class="card-icon">🌺</div>
+        <div class="card-name">State of Bali-Nusa Tenggara</div>
+        <div class="card-role">The Bifurcated Service Corridor</div>
+        <div class="card-stats">
+          <div class="card-stat-item">
+            <span class="card-stat-num">2.84%</span>
+            <span class="card-stat-label">GDP Share</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">6.84%</span>
+            <span class="card-stat-label">Growth Rate</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">87.80</span>
+            <span class="card-stat-label">Badung District IKF</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">&lt;70</span>
+            <span class="card-stat-label">NTT/NTB HDI</span>
+          </div>
+        </div>
+        <div class="fiscal-bar"><div class="fiscal-fill" style="width:40%"></div></div>
+        <div class="fiscal-label">Fiscal Independence: Highly Polarized</div>
+      </div>
+
+      <!-- MALUKU-PAPUA -->
+      <div class="state-card rank-6 reveal" onclick="scrollToRank(6)">
+        <div class="card-rank">6</div>
+        <div class="card-icon">🌿</div>
+        <div class="card-name">State of Maluku-Papua</div>
+        <div class="card-role">The Resource-Rich Paradox</div>
+        <div class="card-stats">
+          <div class="card-stat-item">
+            <span class="card-stat-num">2.70%</span>
+            <span class="card-stat-label">GDP Share</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">1.44–8.45%</span>
+            <span class="card-stat-label">Volatile Growth</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">60.25</span>
+            <span class="card-stat-label">Papua Tengah HDI ▼</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-num">0%</span>
+            <span class="card-stat-label">Local Tax Revenue</span>
+          </div>
+        </div>
+        <div class="fiscal-bar"><div class="fiscal-fill" style="width:5%"></div></div>
+        <div class="fiscal-label">Fiscal Independence: Critically Low (Belum Mandiri)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RANKINGS / CHARTS -->
+<section id="rankings">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">Data Visualization</span>
+      <h2 class="section-title">State Rankings by<br><em>Key Performance Metrics</em></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="charts-grid reveal">
+      <div class="chart-card">
+        <h3>GDP Contribution (% of National)</h3>
+        <div class="chart-wrap">
+          <canvas id="gdpChart" role="img" aria-label="Bar chart showing GDP contribution by each of the six proposed federal states. Java dominates at 57.7%.">Java 57.7%, Sumatra 22.2%, Kalimantan 8.2%, Sulawesi 7.2%, Bali-NTT 2.8%, Maluku-Papua 2.7%</canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Human Development Index (Peak HDI)</h3>
+        <div class="chart-wrap">
+          <canvas id="hdiChart" role="img" aria-label="Bar chart showing Human Development Index values per state. Java peaks at 85.05, Maluku-Papua is lowest at 60.25.">Java 85.05, Sumatra 80.53, Kalimantan 78.79, Sulawesi 75.68, Bali-NTT 78.63, Maluku-Papua 60.25</canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Economic Growth Rate (%)</h3>
+        <div class="chart-wrap">
+          <canvas id="growthChart" role="img" aria-label="Bar chart showing economic growth rates. Sulawesi leads at 6.23%. Maluku-Papua is most volatile.">Java 5.3%, Sumatra 4.81%, Kalimantan 5.22%, Sulawesi 6.23%, Bali-NTT 6.84%, Maluku-Papua variable</canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Fiscal Independence Index (IKF)</h3>
+        <div class="chart-wrap">
+          <canvas id="fiscalChart" role="img" aria-label="Horizontal bar chart showing fiscal independence. Java is far ahead, Maluku-Papua near zero.">Java 69.56, Sumatra 48, Kalimantan 46.92, Sulawesi 25, Bali-NTT 40, Maluku-Papua 5</canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEDERAL VS NKRI DEBATE -->
+<section id="debate">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">The Central Question</span>
+      <h2 class="section-title"><em>Federalism</em> vs NKRI<br>The Arguments</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="debate-tabs reveal">
+      <button class="debate-tab active" onclick="switchTab('federal')">Case for Federalism</button>
+      <button class="debate-tab" onclick="switchTab('nkri')">Risks of Federalization</button>
+      <button class="debate-tab" onclick="switchTab('otonomi')">Otonomi Daerah</button>
+    </div>
+    <div id="panel-federal" class="debate-panel active">
+      <div class="argument-grid">
+        <div class="argument-card reveal">
+          <h4>Protects Regional Plurality</h4>
+          <p>A constitutionally entrenched division of power is theorized to protect pluralism, safeguard regional cultural identities, and prevent the marginalization of peripheral interests by an over-powerful, Java-centric central government.</p>
+        </div>
+        <div class="argument-card reveal">
+          <h4>Sovereign Legislative Rights</h4>
+          <p>Regional governments would possess sovereign rights over local taxation, resource extraction royalties, education, and intrastate commerce — allowing policies tailored to highly specific local realities, resolving Jakarta's unilateral dictation to resource-rich peripheries.</p>
+        </div>
+        <div class="argument-card reveal">
+          <h4>Empowers Civil Society</h4>
+          <p>Advocates assert that federalism would aggressively empower local civil society, drastically increase the accountability of elected officials, and foster localized innovation ecosystems aligned with the Regional Competitiveness Index (IDSD).</p>
+        </div>
+        <div class="argument-card reveal">
+          <h4>Manages Divided Societies</h4>
+          <p>A federal system is theorized as the most effective mechanism for managing deeply divided societies across vast geographical expanses, as practiced in Germany, the United States, and Australia.</p>
+        </div>
+      </div>
+    </div>
+    <div id="panel-nkri" class="debate-panel">
+      <div class="argument-grid">
+        <div class="argument-card risk reveal">
+          <div class="risk-badge">Risk 1: Economic</div>
+          <h4>Dislocation &amp; Migration Crisis</h4>
+          <p>Stark structural disparities in resources, infrastructure, and human capital between regions would drive massive destabilizing internal migration. Citizens would flock from Maluku-Papua to Java and Bali, straining local infrastructure and potentially sparking violent nativist clashes.</p>
+        </div>
+        <div class="argument-card risk reveal">
+          <div class="risk-badge">Risk 2: Governance</div>
+          <h4>Decentralization of Oligarchy</h4>
+          <p>Federalism would not eliminate corruption — it would merely shift the locus of graft from Jakarta to provincial capitals. Regional governments are frequently subject to severe elite capture, where local oligarchs monopolize resource extraction licensing and cause environmental degradation.</p>
+        </div>
+        <div class="argument-card risk reveal">
+          <div class="risk-badge">Risk 3: Fiscal</div>
+          <h4>Catastrophic Fiscal Imbalance</h4>
+          <p>The vast majority of Indonesian provinces possess Low to Moderate fiscal capacity. Without the redistributive power of a unitary central government, resource-poor states would face immediate sovereign default — unable to pay civil servants or maintain basic healthcare.</p>
+        </div>
+        <div class="argument-card risk reveal">
+          <div class="risk-badge">Risk 4: Security</div>
+          <h4>Existential Stability Threat</h4>
+          <p>In a multi-ethnic, economically disparate archipelagic state, federalism could trigger devastating racial, religious, and regional animosity. Removing the stabilizing security apparatus of the central government could accelerate state failure in vulnerable regions like Papua.</p>
+        </div>
+      </div>
+    </div>
+    <div id="panel-otonomi" class="debate-panel">
+      <div style="max-width:720px;margin:0 auto;" class="reveal">
+        <div class="argument-card" style="border-left-color:var(--gold-light);padding:2rem;margin-bottom:1.5rem;">
+          <h4 style="font-size:1.3rem;margin-bottom:1rem;">The NKRI Compromise: Asymmetrical Decentralization</h4>
+          <p style="font-size:0.95rem;line-height:1.85;color:var(--text-muted);">To preempt the necessity of federalism following the fall of the New Order regime in 1998, Indonesia adopted radical "big-bang" decentralization — <strong style="color:var(--text)">Otonomi Daerah</strong>. This complex system functions practically as "quasi-federalism."</p>
+        </div>
+        <div class="argument-grid">
+          <div class="argument-card reveal">
+            <h4>District-Level Devolution</h4>
+            <p>Authority is delegated to kabupaten (district) and municipal (kota) governments rather than the provincial level — deliberately bypassing the creation of powerful regional blocs that could challenge Jakarta's supremacy.</p>
+          </div>
+          <div class="argument-card reveal">
+            <h4>Special Autonomy (Otsus)</h4>
+            <p>Historically conflict-prone regions like Aceh and Papua receive Special Autonomy financial packages — a constitutionally protected juridical status that addresses centrifugal pressures without risking full fragmentation.</p>
+          </div>
+          <div class="argument-card reveal">
+            <h4>DAU Redistribution</h4>
+            <p>The General Allocation Fund (DAU) and Revenue Sharing Fund (DBH) orchestrate massive necessary wealth transfers from industrial centers to the periphery — the bedrock of national survival and infrastructural convergence.</p>
+          </div>
+          <div class="argument-card reveal">
+            <h4>IKN Capital Strategy</h4>
+            <p>The relocation of the national capital to Nusantara (IKN) in East Kalimantan represents the unitary state's most ambitious deconcentration effort — redistributing political gravity without dismantling the constitutional framework.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STRATEGIC ASSESSMENT -->
+<section id="assessment">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">Strategic Assessment</span>
+      <h2 class="section-title">Why <em>NKRI</em> Outperforms<br>Federalism</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="assessment-items">
+      <div class="assessment-item">
+        <div class="assessment-num">01</div>
+        <div class="assessment-body">
+          <h3>The Fiscal Equalization Imperative</h3>
+          <p>The primary, unresolvable flaw of the federal scenario is the extreme horizontal inequality inherent in the Indonesian archipelago. Fiscal data unequivocally demonstrates that <strong>only Java, specific plantation corridors in Sumatra, and tourist enclaves like Bali</strong> possess the Local Own-Source Revenue (PAD) required to function as sovereign, fiscally solvent federal states. A transition to federalism would allow wealthy states to hoard tax revenues, triggering immediate fiscal insolvency and humanitarian crises in Maluku, Papua, and Nusa Tenggara. Jakarta alone generates a staggering Rp50.7 trillion in PAD, funding 69% of its expenditures independently — whereas all Papua provinces generate almost zero meaningful local tax revenue.</p>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-num">02</div>
+        <div class="assessment-body">
+          <h3>Strategic Control of Natural Resources</h3>
+          <p>A transition to federalism would inevitably result in states demanding sovereign control over natural resources — directly contradicting the foundational philosophy of the Indonesian state. <strong>Article 33 of the 1945 Constitution</strong> mandates that earth, water, and natural riches are controlled by the State for the prosperity of all people. The unitary state empowers the central government to implement aggressive national macro-economic strategies: the 2023 ban on bauxite exports and mandated domestic nickel processing are designed to move Indonesia up the global value chain. A sovereign Sulawesi or Kalimantan might oppose such export bans, paralyzing Indonesia's grand strategy toward advanced economy status by 2045 and its ongoing OECD accession process.</p>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-num">03</div>
+        <div class="assessment-body">
+          <h3>Stability and Democratic Integrity</h3>
+          <p>The political risks of federalism drastically outstrip theoretical benefits. <strong>Federalism does not cure systemic corruption — it merely relocates it.</strong> The rapid decentralization of 2001 clearly demonstrated that without strong central oversight, local administrative elites quickly capture licensing procedures, leading to widespread environmental mismanagement and monopolization of state assets by regional dynasties. The unitary system, enforced by centralized independent institutions like the Corruption Eradication Commission (KPK), remains the most viable check against devolution of the archipelago into corrupt regional fiefdoms.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VERDICT -->
+<section id="verdict">
+  <div class="container">
+    <div class="verdict-box reveal">
+      <span class="verdict-icon">⚖️</span>
+      <h2 class="verdict-title">The Unitary State is Not Merely<br>Political Dogma — It is an <em>Economic Necessity</em></h2>
+      <p class="verdict-text">The simulation of six macro-states provides a clear, data-driven answer: for Indonesia as a whole, the NKRI augmented by aggressive, transparent, and asymmetrical regional autonomy remains a vastly superior and more stable option than a de jure federal state. The staggering HDI disparity — ranging from 85.05 in Jakarta to 60.25 in Central Papua — alongside highly polarized fiscal capacities, dictates that Indonesia cannot survive as a cohesive entity without the powerful, centralized redistribution mechanisms of the NKRI.</p>
+      <div class="verdict-tags">
+        <span class="vtag">Fiscal Redistribution</span>
+        <span class="vtag">Article 33 Mandate</span>
+        <span class="vtag">Nickel Downstreaming</span>
+        <span class="vtag">Anti-Corruption Oversight</span>
+        <span class="vtag">OECD Accession 2045</span>
+        <span class="vtag">Otonomi Daerah</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p style="font-size:1.2rem;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--text-muted);margin-bottom:1.5rem;">Republik Indonesia Serikat (1949–1950) → Negara Kesatuan Republik Indonesia</p>
+    <p>Sources: BPS, Bappenas, BPK / NEXT Indonesia Center (IKF 2024–2025), IMF Article IV Consultation 2024, BRIN IDSD, Kadin Indonesia.<br>Analysis based on PMK 65/2024 Peta Kapasitas Fiskal Daerah and provincial IPM data.</p>
+  </div>
+</footer>
+
+<script>
+  // NAV SCROLL
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // SCROLL REVEAL
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal,.tl-item,.assessment-item').forEach(el => observer.observe(el));
+
+  // TABS
+  function switchTab(tab) {
+    document.querySelectorAll('.debate-tab').forEach((btn,i) => {
+      const tabs = ['federal','nkri','otonomi'];
+      btn.classList.toggle('active', tabs[i] === tab);
+    });
+    document.querySelectorAll('.debate-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-'+tab).classList.add('active');
+  }
+
+  function scrollToRank(n) {
+    document.getElementById('rankings').scrollIntoView({behavior:'smooth'});
+  }
+
+  // CHARTS — render after full load
+  window.addEventListener('load', renderCharts);
+  function renderCharts() {
+    const labels = ['Java','Sumatra','Kalimantan','Sulawesi','Bali-NTT','Maluku-Papua'];
+    const colors = ['#C9943A','#3b82f6','#8b5cf6','#10b981','#f59e0b','#ef4444'];
+    const darkBg = '#1A1F2E';
+
+    Chart.defaults.color = '#8A8070';
+    Chart.defaults.borderColor = 'rgba(201,148,58,0.08)';
+
+    // GDP CHART
+    new Chart(document.getElementById('gdpChart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'GDP %',
+          data: [57.70, 22.22, 8.18, 7.22, 2.84, 2.70],
+          backgroundColor: colors,
+          borderRadius: 6,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { grid: { color: 'rgba(201,148,58,0.06)' }, ticks: { callback: v => v+'%' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // HDI CHART
+    new Chart(document.getElementById('hdiChart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'HDI',
+          data: [85.05, 80.53, 78.79, 75.68, 78.63, 60.25],
+          backgroundColor: colors,
+          borderRadius: 6, borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { min: 55, grid: { color: 'rgba(201,148,58,0.06)' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // GROWTH CHART
+    new Chart(document.getElementById('growthChart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Growth %',
+          data: [5.30, 4.81, 5.22, 6.23, 6.84, 1.44],
+          backgroundColor: colors,
+          borderRadius: 6, borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { grid: { color: 'rgba(201,148,58,0.06)' }, ticks: { callback: v => v+'%' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // FISCAL CHART (horizontal bar)
+    new Chart(document.getElementById('fiscalChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Maluku-Papua','Bali-NTT','Sulawesi','Kalimantan','Sumatra','Java'],
+        datasets: [{
+          label: 'Fiscal IKF',
+          data: [5, 40, 25, 46.92, 48, 69.56],
+          backgroundColor: ['#ef4444','#f59e0b','#8b5cf6','#8b5cf6','#3b82f6','#C9943A'],
+          borderRadius: 4, borderSkipped: false,
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { max: 80, grid: { color: 'rgba(201,148,58,0.06)' } },
+          y: { grid: { display: false } }
+        }
+      }
+    });
+  }
+</script>
+</body>
+</html>
