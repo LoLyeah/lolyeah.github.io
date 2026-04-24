@@ -22,8 +22,8 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        display: ['"Inter Tight"', 'sans-serif'],
-                        text:['"Inter"', 'sans-serif'],
+                        display:['"Inter Tight"', 'sans-serif'],
+                        text: ['"Inter"', 'sans-serif'],
                     },
                     colors: {
                         apple: {
@@ -43,7 +43,7 @@
                         }
                     },
                     fontSize: {
-                        'hero-xl':['80px', { lineHeight: '1.05', letterSpacing: '-1.2px' }],
+                        'hero-xl': ['80px', { lineHeight: '1.05', letterSpacing: '-1.2px' }],
                         'hero-l':['56px', { lineHeight: '1.07', letterSpacing: '-0.28px' }],
                         'section':['48px', { lineHeight: '1.08', letterSpacing: '-0.144px' }],
                         'product':['40px', { lineHeight: '1.10' }],
@@ -63,29 +63,41 @@
         body {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            scroll-behavior: smooth;
         }
         
         /* Language Toggle Logic */
         html[lang="en"] .lang-id { display: none !important; }
         html[lang="id"] .lang-en { display: none !important; }
         
+        /* Tab Transitions */
         .tab-content {
             display: none;
             opacity: 0;
             transition: opacity 0.4s ease;
         }
-        
         .tab-content.active {
             display: block;
             opacity: 1;
-            animation: fadeIn 0.5s ease forwards;
+            animation: fadeInTab 0.5s ease forwards;
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Scroll Animations (Apple Style) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Utilities */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
@@ -93,25 +105,26 @@
             border: 1px solid #d2d2d7;
             border-radius: 18px;
         }
+
+        /* Cinematic Hero Background */
+        .hero-bg {
+            background-image: 
+                linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,1) 100%),
+                url('https://images.unsplash.com/photo-1559757175-5700dde675bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
     </style>
 </head>
 <body class="font-text text-apple-ink bg-apple-white">
 
     <!-- Global Navigation -->
-    <nav class="bg-[rgba(0,0,0,0.8)] backdrop-blur-md text-apple-white text-micro h-[44px] flex items-center justify-center fixed w-full top-0 z-50">
+    <nav class="bg-[rgba(0,0,0,0.8)] backdrop-blur-md text-apple-white text-micro h-[44px] flex items-center justify-center fixed w-full top-0 z-50 transition-all">
         <div class="max-w-7xl w-full px-4 flex justify-between items-center opacity-90">
             <span class="font-semibold text-[14px]">MedGuide</span>
             
             <div class="flex items-center space-x-6">
-                <div class="hidden sm:block space-x-6 mr-4">
-                    <a href="#" class="hover:text-apple-grayPale transition-colors">
-                        <span class="lang-en">Overview</span><span class="lang-id">Ringkasan</span>
-                    </a>
-                    <a href="#clinical" class="hover:text-apple-grayPale transition-colors">
-                        <span class="lang-en">Clinical Reference</span><span class="lang-id">Referensi Klinis</span>
-                    </a>
-                </div>
-                
                 <!-- Apple-style Language Segmented Control -->
                 <div class="bg-[rgba(255,255,255,0.15)] rounded-full p-[2px] flex items-center shadow-inner">
                     <button onclick="setLang('en')" id="btn-en" class="px-3 py-[2px] text-[11px] rounded-full bg-apple-white text-apple-ink font-semibold transition-all">EN</button>
@@ -122,9 +135,9 @@
     </nav>
 
     <!-- Showcase Hero Chapter -->
-    <header class="bg-apple-black pt-32 pb-24 text-center text-apple-white mt-[44px]">
-        <div class="max-w-4xl mx-auto px-4">
-            <h1 class="font-display text-hero-l sm:text-hero-xl font-semibold mb-4">Stroke.</h1>
+    <header class="hero-bg pt-40 pb-32 text-center text-apple-white mt-[44px] relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 relative z-10 reveal active">
+            <h1 class="font-display text-hero-l sm:text-hero-xl font-semibold mb-4 tracking-tighter">Stroke.</h1>
             <p class="font-display text-product text-apple-grayPale mb-8 tracking-tight">
                 <span class="lang-en">Understanding the brain attack.</span>
                 <span class="lang-id">Memahami serangan otak.</span>
@@ -137,7 +150,7 @@
     </header>
 
     <!-- Tab Navigation (Sticky Utility Bar) -->
-    <div class="sticky top-[44px] z-40 bg-[rgba(255,255,255,0.85)] backdrop-blur-lg border-b border-apple-borderSoft shadow-sm">
+    <div id="content-core" class="sticky top-[44px] z-40 bg-[rgba(255,255,255,0.85)] backdrop-blur-xl border-b border-apple-borderSoft shadow-sm">
         <div class="max-w-7xl mx-auto px-4 py-3">
             <ul class="flex space-x-2 overflow-x-auto no-scrollbar items-center pb-1" id="tabMenu">
                 <li><button onclick="switchTab('intro')" class="tab-btn px-4 py-2 rounded-full text-label font-medium bg-apple-ink text-apple-white transition-all whitespace-nowrap" data-target="intro">
@@ -150,7 +163,7 @@
                     <span class="lang-en">Etiology</span><span class="lang-id">Etiologi</span>
                 </button></li>
                 <li><button onclick="switchTab('symptoms')" class="tab-btn px-4 py-2 rounded-full text-label font-medium bg-apple-grayPale text-apple-ink hover:bg-apple-borderSoft transition-all whitespace-nowrap" data-target="symptoms">
-                    <span class="lang-en">Symptoms & Diagnostics</span><span class="lang-id">Gejala & Diagnosis</span>
+                    <span class="lang-en">Diagnostics</span><span class="lang-id">Diagnosis</span>
                 </button></li>
                 <li><button onclick="switchTab('treatment')" class="tab-btn px-4 py-2 rounded-full text-label font-medium bg-apple-grayPale text-apple-ink hover:bg-apple-borderSoft transition-all whitespace-nowrap" data-target="treatment">
                     <span class="lang-en">Treatment</span><span class="lang-id">Pengobatan</span>
@@ -167,11 +180,10 @@
         <!-- TAB 1: INTRODUCTION -->
         <section id="intro" class="tab-content active">
             <div class="bg-apple-grayPale py-24">
-                <div class="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div class="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 md:grid-cols-2 gap-16 items-center reveal">
                     <div>
                         <h2 class="font-display text-section mb-6">
-                            <span class="lang-en">What is a Stroke?</span>
-                            <span class="lang-id">Apa itu Stroke?</span>
+                            <span class="lang-en">What is a Stroke?</span><span class="lang-id">Apa itu Stroke?</span>
                         </h2>
                         <p class="text-body text-apple-graySecondary mb-6">
                             <span class="lang-en">A stroke occurs when the blood supply to part of your brain is interrupted or reduced, preventing brain tissue from getting oxygen and nutrients. Brain cells begin to die in minutes.</span>
@@ -182,30 +194,18 @@
                             <span class="lang-id">Ini adalah keadaan darurat medis, dan pengobatan segera sangat penting. Tindakan awal dapat mengurangi kerusakan otak dan komplikasi lainnya.</span>
                         </p>
                     </div>
-                    <div class="bg-apple-white card-border p-8 shadow-sm">
+                    <div class="bg-apple-white card-border p-8 shadow-sm hover:shadow-md transition-all">
                         <div class="relative h-[300px] w-full">
                             <canvas id="strokeTypesChart"></canvas>
                         </div>
                         <div class="mt-6 space-y-4">
                             <div class="border-t border-apple-borderSoft pt-4">
-                                <h3 class="font-display text-subhead mb-1">
-                                    <span class="lang-en">Ischemic Stroke (87%)</span>
-                                    <span class="lang-id">Stroke Iskemik (87%)</span>
-                                </h3>
-                                <p class="text-label text-apple-graySecondary">
-                                    <span class="lang-en">Caused by a blockage in an artery supplying blood to the brain, most often due to a blood clot.</span>
-                                    <span class="lang-id">Disebabkan oleh penyumbatan pada arteri yang memasok darah ke otak, paling sering karena gumpalan darah.</span>
-                                </p>
+                                <h3 class="font-display text-subhead mb-1"><span class="lang-en">Ischemic Stroke (87%)</span><span class="lang-id">Stroke Iskemik (87%)</span></h3>
+                                <p class="text-label text-apple-graySecondary"><span class="lang-en">Caused by a blockage in an artery supplying blood to the brain.</span><span class="lang-id">Disebabkan oleh penyumbatan pada arteri yang memasok darah ke otak.</span></p>
                             </div>
                             <div class="border-t border-apple-borderSoft pt-4">
-                                <h3 class="font-display text-subhead mb-1">
-                                    <span class="lang-en">Hemorrhagic Stroke (13%)</span>
-                                    <span class="lang-id">Stroke Hemoragik (13%)</span>
-                                </h3>
-                                <p class="text-label text-apple-graySecondary">
-                                    <span class="lang-en">Caused by a blood vessel that bursts or leaks, bleeding into or around the brain.</span>
-                                    <span class="lang-id">Disebabkan oleh pembuluh darah yang pecah atau bocor, menyebabkan pendarahan di dalam atau di sekitar otak.</span>
-                                </p>
+                                <h3 class="font-display text-subhead mb-1"><span class="lang-en">Hemorrhagic Stroke (13%)</span><span class="lang-id">Stroke Hemoragik (13%)</span></h3>
+                                <p class="text-label text-apple-graySecondary"><span class="lang-en">Caused by a blood vessel that bursts or leaks.</span><span class="lang-id">Disebabkan oleh pembuluh darah yang pecah atau bocor.</span></p>
                             </div>
                         </div>
                     </div>
@@ -213,42 +213,31 @@
             </div>
             
             <div class="bg-apple-white py-24 border-t border-apple-borderSoft">
-                <div class="max-w-5xl mx-auto px-4 text-center">
-                    <h2 class="font-display text-product mb-4">
-                        <span class="lang-en">The Impact</span>
-                        <span class="lang-id">Dampaknya</span>
-                    </h2>
-                    <p class="text-subhead text-apple-graySecondary max-w-2xl mx-auto mb-12">
-                        <span class="lang-en">Globally, stroke is the second leading cause of death and a major cause of disability. Recognizing the signs and preventing risk factors transforms outcomes.</span>
-                        <span class="lang-id">Secara global, stroke adalah penyebab kematian kedua dan penyebab utama kecacatan. Mengenali tanda-tanda dan mencegah faktor risiko dapat mengubah hasil pemulihan secara drastis.</span>
-                    </p>
+                <div class="max-w-5xl mx-auto px-4 text-center reveal">
+                    <h2 class="font-display text-product mb-4"><span class="lang-en">The Impact</span><span class="lang-id">Dampaknya</span></h2>
+                    <p class="text-subhead text-apple-graySecondary max-w-2xl mx-auto mb-12"><span class="lang-en">Recognizing the signs and preventing risk factors transforms outcomes.</span><span class="lang-id">Mengenali tanda-tanda dan mencegah faktor risiko mengubah hasil pemulihan.</span></p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-                        <div class="bg-apple-grayPale rounded-[18px] p-8">
-                            <span class="text-[40px] block mb-4 border-b border-apple-borderSoft pb-4">
-                                <span class="lang-en">1 in 4</span><span class="lang-id">1 dari 4</span>
-                            </span>
-                            <p class="text-label text-apple-graySecondary">
-                                <span class="lang-en">One in four adults over the age of 25 will have a stroke in their lifetime.</span>
-                                <span class="lang-id">Satu dari empat orang dewasa di atas usia 25 tahun akan mengalami stroke seumur hidupnya.</span>
-                            </p>
+                        <div class="bg-apple-grayPale rounded-[18px] p-8 hover:-translate-y-1 transition-transform">
+                            <span class="text-[40px] block mb-4 border-b border-apple-borderSoft pb-4"><span class="lang-en">1 in 4</span><span class="lang-id">1 dari 4</span></span>
+                            <p class="text-label text-apple-graySecondary"><span class="lang-en">Adults over 25 will have a stroke in their lifetime.</span><span class="lang-id">Orang dewasa di atas usia 25 akan mengalami stroke seumur hidupnya.</span></p>
                         </div>
-                        <div class="bg-apple-grayPale rounded-[18px] p-8">
-                            <span class="text-[40px] block mb-4 border-b border-apple-borderSoft pb-4">
-                                <span class="lang-en">1.9M</span><span class="lang-id">1,9 Jt</span>
-                            </span>
-                            <p class="text-label text-apple-graySecondary">
-                                <span class="lang-en">Number of neurons lost every minute during an untreated ischemic stroke.</span>
-                                <span class="lang-id">Jumlah neuron yang hilang setiap menit selama stroke iskemik yang tidak diobati.</span>
-                            </p>
+                        <div class="bg-apple-grayPale rounded-[18px] p-8 hover:-translate-y-1 transition-transform">
+                            <span class="text-[40px] block mb-4 border-b border-apple-borderSoft pb-4"><span class="lang-en">1.9M</span><span class="lang-id">1,9 Jt</span></span>
+                            <p class="text-label text-apple-graySecondary"><span class="lang-en">Neurons lost every minute during an untreated stroke.</span><span class="lang-id">Neuron yang hilang setiap menit selama stroke yang tidak diobati.</span></p>
                         </div>
-                        <div class="bg-apple-grayPale rounded-[18px] p-8">
+                        <div class="bg-apple-grayPale rounded-[18px] p-8 hover:-translate-y-1 transition-transform">
                             <span class="text-[40px] block mb-4 border-b border-apple-borderSoft pb-4">80%</span>
-                            <p class="text-label text-apple-graySecondary">
-                                <span class="lang-en">Up to 80% of strokes are preventable through lifestyle changes and medical management.</span>
-                                <span class="lang-id">Hingga 80% stroke dapat dicegah melalui perubahan gaya hidup dan manajemen medis.</span>
-                            </p>
+                            <p class="text-label text-apple-graySecondary"><span class="lang-en">Strokes are preventable through lifestyle & medicine.</span><span class="lang-id">Stroke dapat dicegah melalui gaya hidup & obat-obatan.</span></p>
                         </div>
+                    </div>
+                    
+                    <!-- NEXT BUTTON -->
+                    <div class="mt-20 flex justify-center">
+                        <button onclick="goToNext('patho')" class="bg-apple-blue text-apple-white px-8 py-4 rounded-full font-semibold hover:bg-apple-blueLink active:scale-95 transition-all shadow-md flex items-center gap-3">
+                            <span class="lang-en">Continue to Pathophysiology</span><span class="lang-id">Lanjut ke Patofisiologi</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -257,101 +246,62 @@
         <!-- TAB 2: PATHOPHYSIOLOGY -->
         <section id="patho" class="tab-content">
             <div class="bg-apple-black py-24 text-apple-white">
-                <div class="max-w-4xl mx-auto px-4 text-center">
-                    <h2 class="font-display text-section mb-6">
-                        <span class="lang-en">The Ischemic Cascade.</span>
-                        <span class="lang-id">Kaskade Iskemik.</span>
-                    </h2>
-                    <p class="text-subhead text-apple-graySecondary mb-12">
-                        <span class="lang-en">At the cellular level, an interruption of blood flow triggers a devastating sequence of events.</span>
-                        <span class="lang-id">Di tingkat sel, gangguan aliran darah memicu serangkaian kejadian yang menghancurkan.</span>
-                    </p>
+                <div class="max-w-4xl mx-auto px-4 text-center reveal">
+                    <h2 class="font-display text-section mb-6"><span class="lang-en">The Ischemic Cascade.</span><span class="lang-id">Kaskade Iskemik.</span></h2>
+                    <p class="text-subhead text-apple-graySecondary mb-12"><span class="lang-en">An interruption of blood flow triggers a devastating sequence.</span><span class="lang-id">Gangguan aliran darah memicu serangkaian kejadian yang menghancurkan.</span></p>
                 </div>
                 
-                <div class="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 reveal">
                     <div class="bg-apple-graphiteA rounded-[18px] p-8 border border-apple-graphiteB">
-                        <h3 class="font-display text-utility mb-4 text-apple-white">
-                            <span class="lang-en">1. Energy Failure</span><span class="lang-id">1. Kegagalan Energi</span>
-                        </h3>
-                        <p class="text-body text-apple-graySecondary">
-                            <span class="lang-en">Without oxygen and glucose, cellular ATP production ceases. The sodium-potassium pumps fail, leading to an influx of sodium and water, causing cytotoxic edema (cell swelling).</span>
-                            <span class="lang-id">Tanpa oksigen dan glukosa, produksi ATP seluler terhenti. Pompa natrium-kalium gagal bekerja, menyebabkan masuknya natrium dan air yang memicu edema sitotoksik (pembengkakan sel).</span>
-                        </p>
+                        <h3 class="font-display text-utility mb-4 text-apple-white"><span class="lang-en">1. Energy Failure</span><span class="lang-id">1. Kegagalan Energi</span></h3>
+                        <p class="text-body text-apple-graySecondary"><span class="lang-en">ATP production ceases. Sodium-potassium pumps fail, leading to cytotoxic edema.</span><span class="lang-id">Produksi ATP terhenti. Pompa ion gagal, menyebabkan edema sitotoksik.</span></p>
                     </div>
                     <div class="bg-apple-graphiteA rounded-[18px] p-8 border border-apple-graphiteB">
-                        <h3 class="font-display text-utility mb-4 text-apple-white">
-                            <span class="lang-en">2. Excitotoxicity</span><span class="lang-id">2. Eksitotoksisitas</span>
-                        </h3>
-                        <p class="text-body text-apple-graySecondary">
-                            <span class="lang-en">Depolarized neurons release excessive amounts of the neurotransmitter glutamate. This overactivates receptors (like NMDA), causing a massive influx of calcium into the cells.</span>
-                            <span class="lang-id">Neuron yang terdepolarisasi melepaskan sejumlah besar neurotransmiter glutamat. Ini mengaktifkan reseptor (seperti NMDA) secara berlebihan, menyebabkan masuknya kalsium secara masif ke dalam sel.</span>
-                        </p>
+                        <h3 class="font-display text-utility mb-4 text-apple-white"><span class="lang-en">2. Excitotoxicity</span><span class="lang-id">2. Eksitotoksisitas</span></h3>
+                        <p class="text-body text-apple-graySecondary"><span class="lang-en">Neurons release excessive glutamate, causing a massive influx of calcium.</span><span class="lang-id">Neuron melepaskan glutamat berlebih, menyebabkan masuknya kalsium secara masif.</span></p>
                     </div>
                     <div class="bg-apple-graphiteA rounded-[18px] p-8 border border-apple-graphiteB">
-                        <h3 class="font-display text-utility mb-4 text-apple-white">
-                            <span class="lang-en">3. Oxidative Stress</span><span class="lang-id">3. Stres Oksidatif</span>
-                        </h3>
-                        <p class="text-body text-apple-graySecondary">
-                            <span class="lang-en">Intracellular calcium activates enzymes (proteases, lipases) that break down cellular structures. Free radicals and reactive oxygen species (ROS) are generated, further damaging lipids and DNA.</span>
-                            <span class="lang-id">Kalsium intraseluler mengaktifkan enzim (protease, lipase) yang memecah struktur sel. Radikal bebas dan spesi oksigen reaktif (ROS) dihasilkan, merusak lipid dan DNA lebih lanjut.</span>
-                        </p>
+                        <h3 class="font-display text-utility mb-4 text-apple-white"><span class="lang-en">3. Oxidative Stress</span><span class="lang-id">3. Stres Oksidatif</span></h3>
+                        <p class="text-body text-apple-graySecondary"><span class="lang-en">Calcium activates enzymes that break down structures. Free radicals damage DNA.</span><span class="lang-id">Kalsium mengaktifkan enzim perusak. Radikal bebas merusak DNA.</span></p>
                     </div>
                     <div class="bg-apple-graphiteA rounded-[18px] p-8 border border-apple-graphiteB">
-                        <h3 class="font-display text-utility mb-4 text-apple-white">
-                            <span class="lang-en">4. Apoptosis</span><span class="lang-id">4. Apoptosis</span>
-                        </h3>
-                        <p class="text-body text-apple-graySecondary">
-                            <span class="lang-en">The mitochondrial membrane is compromised, releasing cytochrome c and triggering the apoptotic cascade, leading to programmed cell death in the surrounding tissue.</span>
-                            <span class="lang-id">Membran mitokondria rusak, melepaskan sitokrom c dan memicu kaskade apoptosis, yang menyebabkan kematian sel terprogram di jaringan sekitarnya.</span>
-                        </p>
+                        <h3 class="font-display text-utility mb-4 text-apple-white"><span class="lang-en">4. Apoptosis</span><span class="lang-id">4. Apoptosis</span></h3>
+                        <p class="text-body text-apple-graySecondary"><span class="lang-en">Mitochondrial damage triggers programmed cell death in surrounding tissue.</span><span class="lang-id">Kerusakan mitokondria memicu kematian sel terprogram di sekitarnya.</span></p>
                     </div>
                 </div>
             </div>
 
             <div class="bg-apple-white py-24">
-                <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center reveal">
                     <div>
-                        <h2 class="font-display text-product mb-6">
-                            <span class="lang-en">Core vs. Penumbra</span><span class="lang-id">Inti vs. Penumbra</span>
-                        </h2>
-                        <p class="text-body text-apple-graySecondary mb-6">
-                            <span class="lang-en">The central goal of acute stroke treatment is dictated by the concept of the penumbra.</span>
-                            <span class="lang-id">Tujuan utama pengobatan stroke akut sangat ditentukan oleh konsep penumbra.</span>
-                        </p>
+                        <h2 class="font-display text-product mb-6"><span class="lang-en">Core vs. Penumbra</span><span class="lang-id">Inti vs. Penumbra</span></h2>
                         <ul class="space-y-6">
                             <li class="border-l-2 border-apple-ink pl-4">
-                                <h4 class="font-semibold text-subhead mb-1">
-                                    <span class="lang-en">Infarct Core</span><span class="lang-id">Inti Infark</span>
-                                </h4>
-                                <p class="text-label text-apple-graySecondary">
-                                    <span class="lang-en">The area of severe ischemia (blood flow < 10-15 mL/100g/min). Energy failure is immediate, and cell death occurs rapidly. This tissue is unsalvageable.</span>
-                                    <span class="lang-id">Area dengan iskemia parah (aliran darah < 10-15 mL/100g/menit). Kegagalan energi terjadi seketika, dan kematian sel terjadi cepat. Jaringan ini tidak dapat diselamatkan.</span>
-                                </p>
+                                <h4 class="font-semibold text-subhead mb-1"><span class="lang-en">Infarct Core</span><span class="lang-id">Inti Infark</span></h4>
+                                <p class="text-label text-apple-graySecondary"><span class="lang-en">Area of severe ischemia. Cell death occurs rapidly. Unsalvageable.</span><span class="lang-id">Area dengan iskemia parah. Kematian sel terjadi cepat. Tidak dapat diselamatkan.</span></p>
                             </li>
                             <li class="border-l-2 border-apple-blue pl-4">
-                                <h4 class="font-semibold text-subhead mb-1 text-apple-blue">
-                                    <span class="lang-en">Ischemic Penumbra</span><span class="lang-id">Penumbra Iskemik</span>
-                                </h4>
-                                <p class="text-label text-apple-graySecondary">
-                                    <span class="lang-en">The rim of mild to moderately ischemic tissue. It remains viable for several hours via collateral arteries. <strong>This is the target of reperfusion therapies.</strong></span>
-                                    <span class="lang-id">Tepi jaringan yang mengalami iskemia ringan hingga sedang. Jaringan ini tetap hidup selama beberapa jam melalui arteri kolateral. <strong>Ini adalah target terapi reperfusi.</strong></span>
-                                </p>
+                                <h4 class="font-semibold text-subhead mb-1 text-apple-blue"><span class="lang-en">Ischemic Penumbra</span><span class="lang-id">Penumbra Iskemik</span></h4>
+                                <p class="text-label text-apple-graySecondary"><span class="lang-en">Rim of mild ischemic tissue viable via collateral arteries. <strong>Target of therapy.</strong></span><span class="lang-id">Jaringan iskemik ringan yang hidup via arteri kolateral. <strong>Target utama terapi.</strong></span></p>
                             </li>
                         </ul>
                     </div>
-                    <div class="bg-apple-grayPale p-12 rounded-[28px] flex items-center justify-center aspect-square">
+                    <div class="bg-apple-grayPale p-12 rounded-[28px] flex items-center justify-center aspect-square shadow-inner">
                         <div class="relative w-64 h-64 rounded-full bg-apple-blue flex items-center justify-center shadow-lg" style="opacity: 0.85;">
                             <div class="absolute inset-0 rounded-full border border-apple-blueHighLuma animate-ping opacity-20"></div>
-                            <span class="absolute top-8 text-apple-white font-medium text-label text-center">
-                                <span class="lang-en">Penumbra<br>(Salvageable)</span><span class="lang-id">Penumbra<br>(Bisa diselamatkan)</span>
-                            </span>
+                            <span class="absolute top-8 text-apple-white font-medium text-label text-center"><span class="lang-en">Penumbra<br>(Salvageable)</span><span class="lang-id">Penumbra<br>(Bisa diselamatkan)</span></span>
                             <div class="w-32 h-32 rounded-full bg-apple-black flex items-center justify-center z-10 shadow-inner">
-                                <span class="text-apple-white font-medium text-label text-center">
-                                    <span class="lang-en">Core<br>(Dead)</span><span class="lang-id">Inti<br>(Mati)</span>
-                                </span>
+                                <span class="text-apple-white font-medium text-label text-center"><span class="lang-en">Core<br>(Dead)</span><span class="lang-id">Inti<br>(Mati)</span></span>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="mt-20 flex justify-center reveal">
+                    <button onclick="goToNext('etiology')" class="bg-apple-ink text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-80 active:scale-95 transition-all shadow-md flex items-center gap-3">
+                        <span class="lang-en">Continue to Etiology</span><span class="lang-id">Lanjut ke Etiologi</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
                 </div>
             </div>
         </section>
@@ -359,75 +309,39 @@
         <!-- TAB 3: ETIOLOGY -->
         <section id="etiology" class="tab-content">
             <div class="bg-apple-grayPale py-24">
-                <div class="max-w-7xl mx-auto px-4">
-                    <h2 class="font-display text-section text-center mb-16">
-                        <span class="lang-en">Causes & Risk Factors.</span><span class="lang-id">Penyebab & Faktor Risiko.</span>
-                    </h2>
+                <div class="max-w-7xl mx-auto px-4 reveal">
+                    <h2 class="font-display text-section text-center mb-16"><span class="lang-en">Causes & Risk Factors.</span><span class="lang-id">Penyebab & Faktor Risiko.</span></h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                         <div class="bg-apple-white card-border p-8">
-                            <h3 class="font-display text-utility mb-4 text-apple-ink">
-                                <span class="lang-en">Ischemic Origins (TOAST Criteria)</span><span class="lang-id">Asal Iskemik (Kriteria TOAST)</span>
-                            </h3>
+                            <h3 class="font-display text-utility mb-4 text-apple-ink"><span class="lang-en">Ischemic Origins (TOAST)</span><span class="lang-id">Asal Iskemik (TOAST)</span></h3>
                             <ul class="space-y-4 text-body text-apple-graySecondary">
-                                <li><strong class="text-apple-ink">
-                                    <span class="lang-en">Large-artery atherosclerosis:</span><span class="lang-id">Aterosklerosis arteri besar:</span>
-                                </strong> 
-                                    <span class="lang-en">Plaque buildup in major vessels like the carotid or middle cerebral artery.</span>
-                                    <span class="lang-id">Penumpukan plak di pembuluh darah utama seperti arteri karotis atau serebri media.</span>
-                                </li>
-                                <li><strong class="text-apple-ink">
-                                    <span class="lang-en">Cardioembolism:</span><span class="lang-id">Kardioemboli:</span>
-                                </strong> 
-                                    <span class="lang-en">Clots originating from the heart, most commonly due to Atrial Fibrillation.</span>
-                                    <span class="lang-id">Gumpalan yang berasal dari jantung, paling sering akibat Fibrilasi Atrium (AFib).</span>
-                                </li>
-                                <li><strong class="text-apple-ink">
-                                    <span class="lang-en">Small-vessel occlusion (Lacunar):</span><span class="lang-id">Oklusi pembuluh kecil (Lakunar):</span>
-                                </strong> 
-                                    <span class="lang-en">Microatheroma in deep penetrating arteries, strongly linked to hypertension.</span>
-                                    <span class="lang-id">Mikroateroma pada arteri penetrasi dalam, sangat terkait dengan hipertensi.</span>
-                                </li>
-                                <li><strong class="text-apple-ink">
-                                    <span class="lang-en">Other determined etiology:</span><span class="lang-id">Etiologi lain yang diketahui:</span>
-                                </strong> 
-                                    <span class="lang-en">Rare causes like arterial dissection, vasculitis, or hypercoagulable states.</span>
-                                    <span class="lang-id">Penyebab langka seperti diseksi arteri, vaskulitis, atau kelainan hiperkoagulasi.</span>
-                                </li>
+                                <li><strong class="text-apple-ink"><span class="lang-en">Large-artery atherosclerosis</span><span class="lang-id">Aterosklerosis arteri besar</span></strong></li>
+                                <li><strong class="text-apple-ink"><span class="lang-en">Cardioembolism (e.g., AFib)</span><span class="lang-id">Kardioemboli (misal AFib)</span></strong></li>
+                                <li><strong class="text-apple-ink"><span class="lang-en">Small-vessel occlusion (Lacunar)</span><span class="lang-id">Oklusi pembuluh kecil (Lakunar)</span></strong></li>
                             </ul>
                         </div>
                         <div class="bg-apple-white card-border p-8">
-                            <h3 class="font-display text-utility mb-4 text-apple-ink">
-                                <span class="lang-en">Hemorrhagic Origins</span><span class="lang-id">Asal Hemoragik</span>
-                            </h3>
+                            <h3 class="font-display text-utility mb-4 text-apple-ink"><span class="lang-en">Hemorrhagic Origins</span><span class="lang-id">Asal Hemoragik</span></h3>
                             <ul class="space-y-4 text-body text-apple-graySecondary">
-                                <li><strong class="text-apple-ink">
-                                    <span class="lang-en">Intracerebral Hemorrhage (ICH):</span><span class="lang-id">Perdarahan Intraserebral (ICH):</span>
-                                </strong> 
-                                    <span class="lang-en">Often caused by hypertensive vasculopathy or cerebral amyloid angiopathy.</span>
-                                    <span class="lang-id">Sering disebabkan oleh vaskulopati hipertensi atau angiopati amiloid serebral.</span>
-                                </li>
-                                <li><strong class="text-apple-ink">
-                                    <span class="lang-en">Subarachnoid Hemorrhage (SAH):</span><span class="lang-id">Perdarahan Subaraknoid (SAH):</span>
-                                </strong> 
-                                    <span class="lang-en">Most frequently caused by the rupture of a saccular (berry) aneurysm.</span>
-                                    <span class="lang-id">Paling sering disebabkan oleh pecahnya aneurisma sakular (berry).</span>
-                                </li>
+                                <li><strong class="text-apple-ink"><span class="lang-en">Intracerebral Hemorrhage (ICH)</span><span class="lang-id">Perdarahan Intraserebral (ICH)</span></strong></li>
+                                <li><strong class="text-apple-ink"><span class="lang-en">Subarachnoid Hemorrhage (SAH)</span><span class="lang-id">Perdarahan Subaraknoid (SAH)</span></strong></li>
                             </ul>
                         </div>
                     </div>
 
                     <div class="bg-apple-white card-border p-8 md:p-12">
-                        <h3 class="font-display text-card mb-2">
-                            <span class="lang-en">Secondary Prevention Impact</span><span class="lang-id">Dampak Pencegahan Sekunder</span>
-                        </h3>
-                        <p class="text-body text-apple-graySecondary mb-8">
-                            <span class="lang-en">Estimated relative impact of interventions in preventing recurrent events.</span>
-                            <span class="lang-id">Perkiraan dampak relatif dari intervensi dalam mencegah peristiwa berulang.</span>
-                        </p>
-                        <div class="relative h-[400px] w-full">
+                        <h3 class="font-display text-card mb-2"><span class="lang-en">Secondary Prevention Impact</span><span class="lang-id">Dampak Pencegahan Sekunder</span></h3>
+                        <div class="relative h-[400px] w-full mt-8">
                             <canvas id="preventionChart"></canvas>
                         </div>
+                    </div>
+
+                    <div class="mt-20 flex justify-center">
+                        <button onclick="goToNext('symptoms')" class="bg-apple-blue text-apple-white px-8 py-4 rounded-full font-semibold hover:bg-apple-blueLink active:scale-95 transition-all shadow-md flex items-center gap-3">
+                            <span class="lang-en">Continue to Diagnostics</span><span class="lang-id">Lanjut ke Diagnosis</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -436,147 +350,99 @@
         <!-- TAB 4: SYMPTOMS & DIAGNOSTICS -->
         <section id="symptoms" class="tab-content">
             <div class="bg-apple-black py-24 text-apple-white">
-                <div class="max-w-7xl mx-auto px-4">
-                    <h2 class="font-display text-section text-center mb-6">
-                        <span class="lang-en">Recognition & Guidelines.</span><span class="lang-id">Pengenalan & Pedoman.</span>
-                    </h2>
-                    <p class="text-subhead text-apple-graySecondary text-center max-w-2xl mx-auto mb-16">
-                        <span class="lang-en">The AHA/ASA emphasizes rapid triage. Pre-hospital recognition dictates clinical pathways.</span>
-                        <span class="lang-id">AHA/ASA menekankan triase cepat. Pengenalan prapengobatan menentukan jalur klinis selanjutnya.</span>
-                    </p>
+                <div class="max-w-7xl mx-auto px-4 reveal">
+                    <h2 class="font-display text-section text-center mb-6"><span class="lang-en">Recognition Guidelines.</span><span class="lang-id">Pedoman Pengenalan.</span></h2>
                     
-                    <h3 class="font-display text-product text-center mb-10">B.E. F.A.S.T.</h3>
+                    <h3 class="font-display text-product text-center mb-10 text-apple-blue">B.E. F.A.S.T.</h3>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 text-center max-w-5xl mx-auto">
-                        <div class="bg-apple-graphiteA p-6 rounded-[18px]">
-                            <span class="text-[32px] font-bold text-apple-blue mb-2 block">B</span>
-                            <h4 class="font-semibold text-apple-white text-subhead mb-1">Balance</h4>
-                            <p class="text-micro text-apple-graySecondary">
-                                <span class="lang-en">Sudden loss of balance or coordination.</span><span class="lang-id">Kehilangan keseimbangan mendadak.</span>
-                            </p>
-                        </div>
-                        <div class="bg-apple-graphiteA p-6 rounded-[18px]">
-                            <span class="text-[32px] font-bold text-apple-blue mb-2 block">E</span>
-                            <h4 class="font-semibold text-apple-white text-subhead mb-1">Eyes</h4>
-                            <p class="text-micro text-apple-graySecondary">
-                                <span class="lang-en">Sudden trouble seeing out of one or both eyes.</span><span class="lang-id">Tiba-tiba kesulitan melihat.</span>
-                            </p>
-                        </div>
-                        <div class="bg-apple-graphiteA p-6 rounded-[18px]">
-                            <span class="text-[32px] font-bold text-apple-blue mb-2 block">F</span>
-                            <h4 class="font-semibold text-apple-white text-subhead mb-1">Face</h4>
-                            <p class="text-micro text-apple-graySecondary">
-                                <span class="lang-en">Facial droop or uneven smile.</span><span class="lang-id">Wajah turun sebelah.</span>
-                            </p>
-                        </div>
-                        <div class="bg-apple-graphiteA p-6 rounded-[18px]">
-                            <span class="text-[32px] font-bold text-apple-blue mb-2 block">A</span>
-                            <h4 class="font-semibold text-apple-white text-subhead mb-1">Arm</h4>
-                            <p class="text-micro text-apple-graySecondary">
-                                <span class="lang-en">Arm weakness or downward drift.</span><span class="lang-id">Lengan lemah / tak bisa diangkat.</span>
-                            </p>
-                        </div>
-                        <div class="bg-apple-graphiteA p-6 rounded-[18px]">
-                            <span class="text-[32px] font-bold text-apple-blue mb-2 block">S</span>
-                            <h4 class="font-semibold text-apple-white text-subhead mb-1">Speech</h4>
-                            <p class="text-micro text-apple-graySecondary">
-                                <span class="lang-en">Slurred speech or difficulty repeating phrases.</span><span class="lang-id">Bicara cadel atau sulit bicara.</span>
-                            </p>
-                        </div>
-                        <div class="bg-apple-graphiteA p-6 rounded-[18px] border border-apple-blue">
-                            <span class="text-[32px] font-bold text-apple-blue mb-2 block">T</span>
-                            <h4 class="font-semibold text-apple-white text-subhead mb-1">Time</h4>
-                            <p class="text-micro text-apple-graySecondary">
-                                <span class="lang-en">Call emergency services immediately.</span><span class="lang-id">Segera hubungi layanan darurat.</span>
-                            </p>
-                        </div>
+                        <div class="bg-apple-graphiteA p-6 rounded-[18px]"><span class="text-[32px] font-bold text-apple-white block">B</span><h4 class="font-semibold text-apple-grayPale text-subhead">Balance</h4></div>
+                        <div class="bg-apple-graphiteA p-6 rounded-[18px]"><span class="text-[32px] font-bold text-apple-white block">E</span><h4 class="font-semibold text-apple-grayPale text-subhead">Eyes</h4></div>
+                        <div class="bg-apple-graphiteA p-6 rounded-[18px]"><span class="text-[32px] font-bold text-apple-white block">F</span><h4 class="font-semibold text-apple-grayPale text-subhead">Face</h4></div>
+                        <div class="bg-apple-graphiteA p-6 rounded-[18px]"><span class="text-[32px] font-bold text-apple-white block">A</span><h4 class="font-semibold text-apple-grayPale text-subhead">Arm</h4></div>
+                        <div class="bg-apple-graphiteA p-6 rounded-[18px]"><span class="text-[32px] font-bold text-apple-white block">S</span><h4 class="font-semibold text-apple-grayPale text-subhead">Speech</h4></div>
+                        <div class="bg-apple-blue p-6 rounded-[18px] shadow-lg shadow-apple-blue/20"><span class="text-[32px] font-bold text-apple-white block">T</span><h4 class="font-semibold text-apple-white text-subhead">Time</h4></div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-apple-white py-24">
-                <div class="max-w-5xl mx-auto px-4">
-                    <h2 class="font-display text-product mb-8 text-center">
-                        <span class="lang-en">Diagnostic Pathway</span><span class="lang-id">Jalur Diagnosis</span>
-                    </h2>
-                    
+            <div class="bg-apple-white py-24 border-t border-apple-borderSoft">
+                <div class="max-w-5xl mx-auto px-4 reveal">
+                    <h2 class="font-display text-product mb-8 text-center"><span class="lang-en">Diagnostic Pathway</span><span class="lang-id">Jalur Diagnosis</span></h2>
                     <div class="space-y-4">
                         <div class="card-border p-6 flex flex-col md:flex-row items-center gap-6">
-                            <div class="w-16 h-16 rounded-full bg-apple-grayPale flex items-center justify-center shrink-0 font-bold text-utility text-apple-ink">1</div>
+                            <div class="w-16 h-16 rounded-full bg-apple-grayPale flex items-center justify-center shrink-0 font-bold text-utility">1</div>
                             <div>
-                                <h4 class="font-semibold text-subhead">
-                                    <span class="lang-en">Initial Assessment (NIHSS)</span><span class="lang-id">Penilaian Awal (NIHSS)</span>
-                                </h4>
-                                <p class="text-body text-apple-graySecondary">
-                                    <span class="lang-en">The National Institutes of Health Stroke Scale quantifies stroke severity (0-42). Used to determine eligibility for acute reperfusion therapies.</span>
-                                    <span class="lang-id">Skala Stroke NIH mengukur keparahan stroke (0-42). Digunakan untuk menentukan kelayakan terapi reperfusi akut.</span>
-                                </p>
+                                <h4 class="font-semibold text-subhead"><span class="lang-en">Assessment (NIHSS)</span><span class="lang-id">Penilaian Awal (NIHSS)</span></h4>
+                                <p class="text-body text-apple-graySecondary"><span class="lang-en">Quantifies severity to determine therapy eligibility.</span><span class="lang-id">Mengukur keparahan untuk terapi.</span></p>
                             </div>
                         </div>
                         <div class="card-border p-6 flex flex-col md:flex-row items-center gap-6">
-                            <div class="w-16 h-16 rounded-full bg-apple-grayPale flex items-center justify-center shrink-0 font-bold text-utility text-apple-ink">2</div>
+                            <div class="w-16 h-16 rounded-full bg-apple-grayPale flex items-center justify-center shrink-0 font-bold text-utility">2</div>
                             <div>
-                                <h4 class="font-semibold text-subhead">
-                                    <span class="lang-en">Non-Contrast Head CT</span><span class="lang-id">CT Scan Kepala Tanpa Kontras</span>
-                                </h4>
-                                <p class="text-body text-apple-graySecondary">
-                                    <span class="lang-en">The absolute first imaging modality. <strong>Primary purpose:</strong> rule out hemorrhage. Guidelines state imaging should be initiated within 20 minutes of hospital arrival.</span>
-                                    <span class="lang-id">Modalitas pencitraan mutlak pertama. <strong>Tujuan utama:</strong> menyingkirkan kemungkinan perdarahan. Pedoman menyatakan pencitraan harus dilakukan dalam 20 menit setelah tiba di RS.</span>
-                                </p>
+                                <h4 class="font-semibold text-subhead"><span class="lang-en">Non-Contrast Head CT</span><span class="lang-id">CT Scan Tanpa Kontras</span></h4>
+                                <p class="text-body text-apple-graySecondary"><span class="lang-en">Absolute first step. Rules out hemorrhage within 20 mins.</span><span class="lang-id">Langkah utama menyingkirkan perdarahan.</span></p>
                             </div>
                         </div>
                         <div class="card-border p-6 flex flex-col md:flex-row items-center gap-6">
-                            <div class="w-16 h-16 rounded-full bg-apple-grayPale flex items-center justify-center shrink-0 font-bold text-utility text-apple-ink">3</div>
+                            <div class="w-16 h-16 rounded-full bg-apple-grayPale flex items-center justify-center shrink-0 font-bold text-utility">3</div>
                             <div>
-                                <h4 class="font-semibold text-subhead">
-                                    <span class="lang-en">CT Angiography (CTA) & Perfusion (CTP)</span><span class="lang-id">Angiografi CT (CTA) & Perfusi (CTP)</span>
-                                </h4>
-                                <p class="text-body text-apple-graySecondary">
-                                    <span class="lang-en">CTA identifies Large Vessel Occlusions (LVOs) amenable to thrombectomy. CTP assesses the core-to-penumbra mismatch ratio, extending the treatment window up to 24 hours.</span>
-                                    <span class="lang-id">CTA mengidentifikasi Oklusi Pembuluh Besar (LVO) yang dapat ditangani dengan trombektomi. CTP menilai rasio inti-penumbra, memperpanjang jendela pengobatan hingga 24 jam.</span>
-                                </p>
+                                <h4 class="font-semibold text-subhead"><span class="lang-en">CT Angiography & Perfusion</span><span class="lang-id">Angiografi CT & Perfusi</span></h4>
+                                <p class="text-body text-apple-graySecondary"><span class="lang-en">Identifies Large Vessel Occlusions and core-penumbra mismatch.</span><span class="lang-id">Identifikasi Oklusi Pembuluh Besar.</span></p>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="mt-20 flex justify-center">
+                        <button onclick="goToNext('treatment')" class="bg-apple-ink text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-80 active:scale-95 transition-all shadow-md flex items-center gap-3">
+                            <span class="lang-en">Continue to Treatment</span><span class="lang-id">Lanjut ke Pengobatan</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 5: TREATMENT -->
+        <!-- TAB 5: TREATMENT (Expanded) -->
         <section id="treatment" class="tab-content">
+            <!-- Ischemic Chapter -->
             <div class="bg-apple-grayPale py-24">
-                <div class="max-w-7xl mx-auto px-4">
-                    <h2 class="font-display text-section text-center mb-6">
-                        <span class="lang-en">Acute Reperfusion Strategies.</span><span class="lang-id">Strategi Reperfusi Akut.</span>
-                    </h2>
-                    <p class="text-subhead text-apple-graySecondary text-center max-w-3xl mx-auto mb-16">
-                        <span class="lang-en">The standard of care relies on rapidly restoring blood flow to the ischemic penumbra.</span>
-                        <span class="lang-id">Standar perawatan bergantung pada pemulihan aliran darah secara cepat ke penumbra iskemik.</span>
-                    </p>
+                <div class="max-w-7xl mx-auto px-4 reveal">
+                    <h2 class="font-display text-section text-center mb-2"><span class="lang-en">Ischemic Treatment.</span><span class="lang-id">Pengobatan Iskemik.</span></h2>
+                    <p class="text-subhead text-apple-graySecondary text-center max-w-3xl mx-auto mb-12"><span class="lang-en">Restoring blood flow to the penumbra.</span><span class="lang-id">Memulihkan aliran darah ke penumbra.</span></p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div class="bg-apple-white card-border p-8 shadow-sm">
-                            <span class="inline-block bg-apple-grayPale text-apple-ink text-micro font-semibold px-3 py-1 rounded-full mb-4">
-                                <span class="lang-en">Window: < 4.5 hours</span><span class="lang-id">Jendela Waktu: < 4,5 jam</span>
-                            </span>
-                            <h3 class="font-display text-card mb-4">
-                                <span class="lang-en">Intravenous Thrombolysis</span><span class="lang-id">Trombolisis Intravena</span>
-                            </h3>
-                            <p class="text-body text-apple-graySecondary mb-6">
-                                <span class="lang-en">Administration of rt-PA (Alteplase) or Tenecteplase (TNK) dissolves the clot. TNK is increasingly preferred per recent guidelines due to its single-bolus administration and higher fibrin specificity.</span>
-                                <span class="lang-id">Pemberian rt-PA (Alteplase) atau Tenecteplase (TNK) melarutkan gumpalan darah. TNK semakin disukai sesuai pedoman terbaru karena pemberian bolus tunggal dan spesifisitas fibrin yang lebih tinggi.</span>
-                            </p>
+                            <span class="inline-block bg-[#0071e315] text-apple-blue text-micro font-semibold px-3 py-1 rounded-full mb-4"><span class="lang-en">Window: < 4.5 hours</span><span class="lang-id">Jendela: < 4,5 jam</span></span>
+                            <h3 class="font-display text-card mb-4"><span class="lang-en">IV Thrombolysis (Tenecteplase)</span><span class="lang-id">Trombolisis IV (Tenecteplase)</span></h3>
+                            <p class="text-body text-apple-graySecondary mb-6"><span class="lang-en">Administration of clot-busting drugs. TNK is increasingly preferred over tPA due to its single-bolus administration and higher fibrin specificity.</span><span class="lang-id">Pemberian obat penghancur gumpalan. TNK lebih disukai karena pemberian dosis tunggal dan efektivitas tinggi.</span></p>
                         </div>
-                        <div class="bg-apple-white card-border p-8 shadow-sm relative overflow-hidden">
-                            <span class="inline-block bg-[#0071e315] text-apple-blue text-micro font-semibold px-3 py-1 rounded-full mb-4">
-                                <span class="lang-en">Window: Up to 24 hours</span><span class="lang-id">Jendela Waktu: Hingga 24 jam</span>
-                            </span>
-                            <h3 class="font-display text-card mb-4">
-                                <span class="lang-en">Mechanical Thrombectomy</span><span class="lang-id">Trombektomi Mekanik</span>
-                            </h3>
-                            <p class="text-body text-apple-graySecondary mb-6">
-                                <span class="lang-en">Endovascular procedure using stent retrievers or aspiration catheters to physically remove Large Vessel Occlusions (LVO) in the anterior circulation. Guided by DAWN and DEFUSE-3 criteria.</span>
-                                <span class="lang-id">Prosedur endovaskular menggunakan stent retriever atau kateter aspirasi untuk menghilangkan Oklusi Pembuluh Besar (LVO) secara fisik di sirkulasi anterior. Dipandu oleh kriteria DAWN dan DEFUSE-3.</span>
-                            </p>
+                        <div class="bg-apple-white card-border p-8 shadow-sm">
+                            <span class="inline-block bg-[#0071e315] text-apple-blue text-micro font-semibold px-3 py-1 rounded-full mb-4"><span class="lang-en">Window: Up to 24 hours</span><span class="lang-id">Jendela: Hingga 24 jam</span></span>
+                            <h3 class="font-display text-card mb-4"><span class="lang-en">Mechanical Thrombectomy</span><span class="lang-id">Trombektomi Mekanik</span></h3>
+                            <p class="text-body text-apple-graySecondary mb-6"><span class="lang-en">Endovascular physical removal of Large Vessel Occlusions (LVO) using stent retrievers or aspiration catheters. Guided by DAWN/DEFUSE-3 criteria.</span><span class="lang-id">Prosedur endovaskular untuk menghilangkan Oklusi Pembuluh Besar (LVO) secara fisik dengan kateter aspirasi.</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hemorrhagic Chapter (NEW) -->
+            <div class="bg-apple-white py-24 border-t border-apple-borderSoft">
+                <div class="max-w-7xl mx-auto px-4 reveal">
+                    <h2 class="font-display text-section text-center mb-2"><span class="lang-en">Hemorrhagic Treatment.</span><span class="lang-id">Pengobatan Hemoragik.</span></h2>
+                    <p class="text-subhead text-apple-graySecondary text-center max-w-3xl mx-auto mb-12"><span class="lang-en">Controlling pressure and preventing re-bleeding.</span><span class="lang-id">Mengontrol tekanan dan mencegah perdarahan ulang.</span></p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="card-border p-8 hover:-translate-y-1 transition-transform">
+                            <h3 class="font-display text-utility mb-3"><span class="lang-en">Blood Pressure & ICP Control</span><span class="lang-id">Kontrol TD & TIK</span></h3>
+                            <p class="text-body text-apple-graySecondary"><span class="lang-en">Aggressive reduction of blood pressure (SBP < 140) and monitoring of Intracranial Pressure (ICP) using external ventricular drains (EVD) or osmotic diuretics (Mannitol).</span><span class="lang-id">Penurunan agresif tekanan darah (Sistolik < 140) dan pemantauan Tekanan Intrakranial (TIK) menggunakan diuretik osmotik (Manitol).</span></p>
+                        </div>
+                        <div class="card-border p-8 hover:-translate-y-1 transition-transform">
+                            <h3 class="font-display text-utility mb-3"><span class="lang-en">Endovascular Coiling</span><span class="lang-id">Coiling Endovaskular</span></h3>
+                            <p class="text-body text-apple-graySecondary"><span class="lang-en">Minimally invasive insertion of platinum coils into a ruptured aneurysm (SAH) to induce clotting and prevent further bleeding.</span><span class="lang-id">Penyisipan kumparan platinum minimal invasif ke dalam aneurisma yang pecah (SAH) untuk mencegah perdarahan lebih lanjut.</span></p>
+                        </div>
+                        <div class="card-border p-8 hover:-translate-y-1 transition-transform">
+                            <h3 class="font-display text-utility mb-3"><span class="lang-en">Surgical Clipping & Decompression</span><span class="lang-id">Clipping & Dekompresi</span></h3>
+                            <p class="text-body text-apple-graySecondary"><span class="lang-en">Open craniotomy to place a titanium clip at the neck of an aneurysm, or decompressive hemicraniectomy to relieve lethal brain swelling.</span><span class="lang-id">Kraniotomi terbuka untuk menempatkan klip titanium di aneurisma, atau hemikraniektomi untuk meredakan pembengkakan otak yang mematikan.</span></p>
                         </div>
                     </div>
                 </div>
@@ -584,139 +450,82 @@
 
             <!-- Novel Treatments Chapter -->
             <div class="bg-apple-black py-24 text-apple-white border-t border-apple-graphiteA">
-                <div class="max-w-6xl mx-auto px-4">
-                    <h2 class="font-display text-product mb-12">
-                        <span class="lang-en">Novel & Investigational Treatments</span><span class="lang-id">Pengobatan Baru & Eksperimental</span>
-                    </h2>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="max-w-7xl mx-auto px-4 reveal">
+                    <h2 class="font-display text-product mb-8"><span class="lang-en">Investigational</span><span class="lang-id">Pengobatan Eksperimental</span></h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="bg-apple-graphiteA p-8 rounded-[18px]">
-                            <h3 class="font-display text-subhead mb-2 text-apple-white">
-                                <span class="lang-en">Neuroprotection (Nerinetide)</span><span class="lang-id">Neuroproteksi (Nerinetide)</span>
-                            </h3>
-                            <p class="text-label text-apple-graySecondary">
-                                <span class="lang-en">Drugs designed to interrupt the ischemic cascade and protect cells from excitotoxicity before reperfusion is achieved. Targeted peptides like Nerinetide (NA-1) continue to be studied in specific subpopulations.</span>
-                                <span class="lang-id">Obat yang dirancang untuk memutus kaskade iskemik dan melindungi sel sebelum reperfusi tercapai. Peptida bertarget seperti Nerinetide (NA-1) terus dipelajari dalam subpopulasi tertentu.</span>
-                            </p>
+                            <h3 class="font-display text-subhead mb-2 text-apple-white">Neuroprotection (Nerinetide)</h3>
+                            <p class="text-label text-apple-graySecondary"><span class="lang-en">Peptides designed to interrupt the ischemic cascade and protect cells from excitotoxicity before reperfusion.</span><span class="lang-id">Peptida dirancang untuk melindungi sel dari eksitotoksisitas sebelum reperfusi.</span></p>
                         </div>
                         <div class="bg-apple-graphiteA p-8 rounded-[18px]">
-                            <h3 class="font-display text-subhead mb-2 text-apple-white">
-                                <span class="lang-en">Stem Cell Therapy</span><span class="lang-id">Terapi Sel Punca</span>
-                            </h3>
-                            <p class="text-label text-apple-graySecondary">
-                                <span class="lang-en">Mesenchymal stem cells (MSCs) are actively entering trials. They secrete paracrine factors that modulate inflammation, enhance angiogenesis, and promote endogenous neurogenesis in the chronic phase.</span>
-                                <span class="lang-id">Sel punca mesenkimal (MSC) aktif memasuki uji coba. Mereka mengeluarkan faktor parakrin yang memodulasi peradangan, meningkatkan angiogenesis, dan mempromosikan neurogenesis endogen pada fase kronis.</span>
-                            </p>
+                            <h3 class="font-display text-subhead mb-2 text-apple-white">Stem Cell Therapy (MSCs)</h3>
+                            <p class="text-label text-apple-graySecondary"><span class="lang-en">Mesenchymal stem cells that secrete paracrine factors to enhance angiogenesis and endogenous neurogenesis.</span><span class="lang-id">Sel punca yang mengeluarkan faktor parakrin untuk meningkatkan angiogenesis.</span></p>
                         </div>
-                        <div class="bg-apple-graphiteA p-8 rounded-[18px]">
-                            <h3 class="font-display text-subhead mb-2 text-apple-white">
-                                <span class="lang-en">Vagus Nerve Stimulation</span><span class="lang-id">Stimulasi Saraf Vagus</span>
-                            </h3>
-                            <p class="text-label text-apple-graySecondary">
-                                <span class="lang-en">Recently FDA-approved paired VNS. Stimulating the vagus nerve during rehabilitation exercises enhances neuroplasticity by releasing acetylcholine, significantly improving upper limb motor function.</span>
-                                <span class="lang-id">VNS yang baru disetujui FDA. Merangsang saraf vagus selama latihan rehabilitasi meningkatkan neuroplastisitas dengan melepaskan asetilkolin, memperbaiki fungsi motorik lengan secara signifikan.</span>
-                            </p>
-                        </div>
+                    </div>
+
+                    <div class="mt-20 flex justify-center">
+                        <button onclick="goToNext('rehab')" class="bg-apple-blue text-apple-white px-8 py-4 rounded-full font-semibold hover:bg-apple-blueLink active:scale-95 transition-all shadow-lg flex items-center gap-3">
+                            <span class="lang-en">Continue to Rehabilitation</span><span class="lang-id">Lanjut ke Rehabilitasi</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 6: REHABILITATION -->
+        <!-- TAB 6: REHABILITATION (Expanded) -->
         <section id="rehab" class="tab-content">
-            <div class="bg-apple-white py-24">
-                <div class="max-w-6xl mx-auto px-4 text-center">
-                    <h2 class="font-display text-section mb-6">
-                        <span class="lang-en">The Road to Recovery.</span><span class="lang-id">Jalan Menuju Pemulihan.</span>
-                    </h2>
-                    <p class="text-subhead text-apple-graySecondary max-w-2xl mx-auto mb-16">
-                        <span class="lang-en">Rehabilitation harnesses the brain's inherent neuroplasticity—the ability to rewire itself—to bypass damaged areas and relearn lost skills.</span>
-                        <span class="lang-id">Rehabilitasi memanfaatkan neuroplastisitas bawaan otak—kemampuan untuk mengatur ulang jaringannya—guna melewati area yang rusak dan mempelajari kembali keterampilan yang hilang.</span>
-                    </p>
+            <div class="bg-apple-grayPale py-24">
+                <div class="max-w-6xl mx-auto px-4 text-center reveal">
+                    <h2 class="font-display text-section mb-6"><span class="lang-en">The Road to Recovery.</span><span class="lang-id">Jalan Menuju Pemulihan.</span></h2>
+                    <p class="text-subhead text-apple-graySecondary max-w-2xl mx-auto mb-16"><span class="lang-en">Harnessing neuroplasticity to rewire the brain and restore independence.</span><span class="lang-id">Memanfaatkan neuroplastisitas untuk mengatur ulang otak dan memulihkan kemandirian.</span></p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                        <div class="card-border p-8 hover:shadow-md transition-shadow">
-                            <div class="w-12 h-12 rounded-full bg-apple-grayPale flex items-center justify-center mb-6">
-                                <svg class="w-6 h-6 text-apple-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                        <!-- Core Core -->
+                        <div class="bg-apple-white card-border p-8">
+                            <div class="w-12 h-12 rounded-full bg-apple-grayPale flex items-center justify-center mb-6 text-apple-ink">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                             </div>
-                            <h3 class="font-display text-utility mb-3">
-                                <span class="lang-en">Physical Therapy (PT)</span><span class="lang-id">Fisioterapi (PT)</span>
-                            </h3>
-                            <p class="text-body text-apple-graySecondary">
-                                <span class="lang-en">Focuses on gross motor skills, restoring mobility, gait training, and preventing contractures.</span>
-                                <span class="lang-id">Fokus pada keterampilan motorik kasar, memulihkan mobilitas, latihan berjalan, dan mencegah kontraktur sendi.</span>
-                            </p>
+                            <h3 class="font-display text-utility mb-3"><span class="lang-en">Physical & Occupational Therapy</span><span class="lang-id">Terapi Fisik & Okupasi</span></h3>
+                            <p class="text-body text-apple-graySecondary"><span class="lang-en">Restoring gross mobility, gait, and fine motor skills for daily activities (ADLs). Employs constraint-induced movement therapy (CIMT).</span><span class="lang-id">Memulihkan mobilitas kasar, cara berjalan, dan motorik halus untuk aktivitas sehari-hari.</span></p>
                         </div>
                         
-                        <div class="card-border p-8 hover:shadow-md transition-shadow">
-                            <div class="w-12 h-12 rounded-full bg-apple-grayPale flex items-center justify-center mb-6">
-                                <svg class="w-6 h-6 text-apple-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
+                        <!-- Speech -->
+                        <div class="bg-apple-white card-border p-8">
+                            <div class="w-12 h-12 rounded-full bg-apple-grayPale flex items-center justify-center mb-6 text-apple-ink">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                             </div>
-                            <h3 class="font-display text-utility mb-3">
-                                <span class="lang-en">Occupational Therapy (OT)</span><span class="lang-id">Terapi Okupasi (OT)</span>
-                            </h3>
-                            <p class="text-body text-apple-graySecondary">
-                                <span class="lang-en">Restores fine motor skills and independence in Activities of Daily Living (ADLs) such as dressing and eating.</span>
-                                <span class="lang-id">Memulihkan keterampilan motorik halus dan kemandirian dalam Aktivitas Kehidupan Sehari-hari (ADL) seperti berpakaian dan makan.</span>
-                            </p>
+                            <h3 class="font-display text-utility mb-3"><span class="lang-en">Speech & Neuropsychology</span><span class="lang-id">Terapi Wicara & Neuropsikologi</span></h3>
+                            <p class="text-body text-apple-graySecondary"><span class="lang-en">Treating aphasia, dysphagia, and cognitive deficits. Critical support for post-stroke depression and emotional lability.</span><span class="lang-id">Mengobati afasia, disfagia, dan defisit kognitif. Dukungan krusial untuk depresi pasca-stroke.</span></p>
                         </div>
-                        
-                        <div class="card-border p-8 hover:shadow-md transition-shadow">
-                            <div class="w-12 h-12 rounded-full bg-apple-grayPale flex items-center justify-center mb-6">
-                                <svg class="w-6 h-6 text-apple-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+
+                        <!-- Tech / Novel (NEW) -->
+                        <div class="bg-apple-white card-border p-8 md:col-span-2 flex flex-col md:flex-row gap-8 items-center">
+                            <div class="flex-1">
+                                <span class="text-apple-blue font-semibold text-micro uppercase tracking-wider mb-2 block"><span class="lang-en">Next-Gen Tech</span><span class="lang-id">Teknologi Terkini</span></span>
+                                <h3 class="font-display text-card mb-3"><span class="lang-en">Robotics, VR & Neuromodulation</span><span class="lang-id">Robotik, VR & Neuromodulasi</span></h3>
+                                <p class="text-body text-apple-graySecondary mb-4"><span class="lang-en">Modern rehabilitation relies heavily on high-repetition technology. Robotic exoskeletons aid in gait retraining, while Virtual Reality (VR) environments gamify upper-limb recovery. FDA-approved paired Vagus Nerve Stimulation (VNS) during therapy actively enhances neural plasticity.</span><span class="lang-id">Rehabilitasi modern mengandalkan teknologi repitisi tinggi. Eksoskeleton robotik membantu latihan berjalan, VR mempercepat pemulihan lengan. Stimulasi Saraf Vagus (VNS) yang dipasangkan selama terapi secara aktif meningkatkan plastisitas saraf.</span></p>
                             </div>
-                            <h3 class="font-display text-utility mb-3">
-                                <span class="lang-en">Speech-Language Pathology</span><span class="lang-id">Terapi Wicara & Bahasa</span>
-                            </h3>
-                            <p class="text-body text-apple-graySecondary">
-                                <span class="lang-en">Addresses aphasia (language), dysarthria (motor speech), and dysphagia (swallowing). Crucial for preventing pneumonia.</span>
-                                <span class="lang-id">Menangani afasia (bahasa), disartria (bicara motorik), dan disfagia (menelan). Sangat penting untuk mencegah pneumonia aspirasi.</span>
-                            </p>
                         </div>
+                    </div>
+                    
+                    <div class="mt-20 flex justify-center">
+                        <button onclick="goToNext('intro')" class="bg-apple-ink text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-80 active:scale-95 transition-all shadow-md flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                            <span class="lang-en">Back to Beginning</span><span class="lang-id">Kembali ke Awal</span>
+                        </button>
                     </div>
                 </div>
-            </div>
-            
-            <div class="bg-apple-grayPale py-24 border-t border-apple-borderSoft">
-                 <div class="max-w-4xl mx-auto px-4 text-center">
-                    <h2 class="font-display text-product mb-6">
-                        <span class="lang-en">Secondary Prevention Focus</span><span class="lang-id">Fokus Pencegahan Sekunder</span>
-                    </h2>
-                    <p class="text-body text-apple-graySecondary mb-8">
-                        <span class="lang-en">Post-stroke medical management is as critical as physical rehabilitation to prevent recurrence.</span>
-                        <span class="lang-id">Manajemen medis pasca-stroke sama pentingnya dengan rehabilitasi fisik untuk mencegah kekambuhan.</span>
-                    </p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <span class="px-6 py-3 bg-apple-white border border-apple-borderSoft rounded-full text-label font-medium text-apple-ink shadow-sm">
-                            <span class="lang-en">Antihypertensives (BP < 130/80)</span><span class="lang-id">Antihipertensi (TD < 130/80)</span>
-                        </span>
-                        <span class="px-6 py-3 bg-apple-white border border-apple-borderSoft rounded-full text-label font-medium text-apple-ink shadow-sm">
-                            <span class="lang-en">High-intensity Statins</span><span class="lang-id">Statin Intensitas Tinggi</span>
-                        </span>
-                        <span class="px-6 py-3 bg-apple-white border border-apple-borderSoft rounded-full text-label font-medium text-apple-ink shadow-sm">
-                            <span class="lang-en">Antiplatelets / Anticoagulants</span><span class="lang-id">Antiplatelet / Antikoagulan</span>
-                        </span>
-                        <span class="px-6 py-3 bg-apple-white border border-apple-borderSoft rounded-full text-label font-medium text-apple-ink shadow-sm">
-                            <span class="lang-en">Glycemic Control (HbA1c < 7%)</span><span class="lang-id">Kontrol Glikemik (HbA1c < 7%)</span>
-                        </span>
-                    </div>
-                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-apple-grayPale py-12 border-t border-apple-borderSoft text-center">
-        <div class="max-w-7xl mx-auto px-4">
-            <p class="text-micro text-apple-graySecondary mb-2">
-                <span class="lang-en">Clinical guidelines and trial data sourced from the AHA/ASA guidelines for the early management of patients with acute ischemic stroke.</span>
-                <span class="lang-id">Pedoman klinis dan data uji coba bersumber dari pedoman AHA/ASA untuk manajemen awal pasien stroke iskemik akut.</span>
-            </p>
-            <p class="text-micro text-apple-graySecondary mb-4">
-                <span class="lang-en">This guide is for informational and educational purposes only and does not substitute professional medical advice.</span>
-                <span class="lang-id">Panduan ini hanya untuk tujuan informasi dan pendidikan serta tidak menggantikan saran medis profesional.</span>
-            </p>
-            <div class="border-t border-apple-borderSoft pt-6">
+    <footer class="bg-apple-white py-12 border-t border-apple-borderSoft text-center">
+        <div class="max-w-7xl mx-auto px-4 reveal">
+            <p class="text-micro text-apple-graySecondary mb-2"><span class="lang-en">Clinical guidelines and trial data sourced from the AHA/ASA guidelines.</span><span class="lang-id">Pedoman klinis dan data bersumber dari pedoman AHA/ASA.</span></p>
+            <p class="text-micro text-apple-graySecondary mb-4"><span class="lang-en">Educational purposes only. Do not substitute professional medical advice.</span><span class="lang-id">Tujuan pendidikan saja. Bukan pengganti saran medis.</span></p>
+            <div class="border-t border-apple-borderSoft pt-6 mt-6">
                 <p class="text-micro text-apple-graySecondary">&copy; 2026 MedGuide by LoLyeah. All rights reserved.</p>
             </div>
         </div>
@@ -724,21 +533,16 @@
 
     <!-- Interactive Scripts -->
     <script>
-        // Language i18n Logic for Javascript Components
+        // Language Data
         const chartTranslations = {
             en: {
                 strokeTypes:['Ischemic Stroke', 'Hemorrhagic Stroke'],
-                prevention: [
-                    ['Blood Pressure', 'Control'],['Statin Therapy', '(Cholesterol)'],
-                    ['Antithrombotic', 'Therapy'],['Smoking', 'Cessation'],
-                    ['Healthy Diet', '(e.g., DASH)'], ['Regular Physical', 'Activity']
-                ],
+                prevention: [['Blood Pressure', 'Control'],['Statin Therapy', '(Cholesterol)'],['Antithrombotic', 'Therapy'],['Smoking', 'Cessation'],['Healthy Diet', '(e.g., DASH)'], ['Regular Physical', 'Activity']],
                 impactLabel: 'Impact Factor (%)'
             },
             id: {
-                strokeTypes: ['Stroke Iskemik', 'Stroke Hemoragik'],
-                prevention: [['Kontrol', 'Tekanan Darah'], ['Terapi Statin', '(Kolesterol)'],['Terapi', 'Antitrombotik'], ['Berhenti', 'Merokok'],['Diet Sehat', '(mis., DASH)'], ['Aktivitas Fisik', 'Rutin']
-                ],
+                strokeTypes:['Stroke Iskemik', 'Stroke Hemoragik'],
+                prevention: [['Kontrol', 'Tekanan Darah'],['Terapi Statin', '(Kolesterol)'],['Terapi', 'Antitrombotik'], ['Berhenti', 'Merokok'],['Diet Sehat', '(mis., DASH)'], ['Aktivitas Fisik', 'Rutin']],
                 impactLabel: 'Faktor Dampak (%)'
             }
         };
@@ -749,7 +553,6 @@
             currentLang = lang;
             document.documentElement.lang = lang;
             
-            // Toggle UI Buttons
             const btnEn = document.getElementById('btn-en');
             const btnId = document.getElementById('btn-id');
             
@@ -761,13 +564,10 @@
                 btnEn.className = "px-3 py-[2px] text-[11px] rounded-full text-apple-grayPale hover:text-apple-white transition-all font-medium";
             }
 
-            // Update Chart 1 Labels
             if(window.strokeChartInstance) {
                 window.strokeChartInstance.data.labels = chartTranslations[lang].strokeTypes;
                 window.strokeChartInstance.update();
             }
-
-            // Update Chart 2 Labels
             if(window.preventionChartInstance) {
                 window.preventionChartInstance.data.labels = chartTranslations[lang].prevention;
                 window.preventionChartInstance.data.datasets[0].label = chartTranslations[lang].impactLabel;
@@ -775,10 +575,10 @@
             }
         }
 
-        // Initialize Language to EN
+        // Initialize Language
         document.documentElement.lang = currentLang;
 
-        // Tab Switching Logic
+        // Tab System & "Next" Flow
         function switchTab(tabId) {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 if(btn.dataset.target === tabId) {
@@ -798,27 +598,49 @@
                 }
             });
             
-            const tabMenu = document.getElementById('tabMenu');
-            if(window.scrollY > tabMenu.getBoundingClientRect().top + window.scrollY) {
-                window.scrollTo({ top: tabMenu.getBoundingClientRect().top + window.scrollY - 60, behavior: 'smooth' });
-            }
+            // Re-trigger scroll animations for newly visible tab content
+            setTimeout(() => { observeElements(); }, 50);
         }
 
-        // Initialize Charts
+        function goToNext(tabId) {
+            switchTab(tabId);
+            // Scroll precisely to the Tab Navigation Bar (minus global header height)
+            const contentCore = document.getElementById('content-core');
+            const targetPosition = contentCore.getBoundingClientRect().top + window.scrollY - 44; // 44px is global nav height
+            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+        }
+
+        // Apple-style scroll reveal animation
+        function observeElements() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optional: Unobserve if you only want it to animate once
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            // Target elements specifically within the active tab to prevent off-screen rendering bugs
+            document.querySelectorAll('.tab-content.active .reveal, header .reveal').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Chart Init
         window.strokeChartInstance = null;
         window.preventionChartInstance = null;
 
         document.addEventListener('DOMContentLoaded', () => {
+            observeElements(); // Start observer
+
             const strokeTypesCtx = document.getElementById('strokeTypesChart').getContext('2d');
             window.strokeChartInstance = new Chart(strokeTypesCtx, {
                 type: 'doughnut',
                 data: {
                     labels: chartTranslations[currentLang].strokeTypes,
-                    datasets: [{
-                        data:[87, 13],
-                        backgroundColor:['#0071e3', '#1d1d1f'],
-                        borderWidth: 0, hoverOffset: 4
-                    }]
+                    datasets: [{ data:[87, 13], backgroundColor:['#0071e3', '#1d1d1f'], borderWidth: 0, hoverOffset: 4 }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false, cutout: '75%',
@@ -832,7 +654,6 @@
             window.renderPreventionChart = function() {
                 const preventionCtx = document.getElementById('preventionChart');
                 if(!preventionCtx) return;
-                
                 if(window.preventionChartInstance) { window.preventionChartInstance.destroy(); }
 
                 window.preventionChartInstance = new Chart(preventionCtx.getContext('2d'), {
