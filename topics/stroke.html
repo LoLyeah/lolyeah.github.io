@@ -107,7 +107,7 @@
         /* Cinematic Hero Background (Apple Aesthetic) */
         .hero-bg {
             background-color: #000000;
-            /* Using a highly premium, sleek dark abstract wave image from Unsplash + gradient fade to pure black */
+            /* Premium, sleek dark abstract image + gradient fade to pure black */
             background-image: 
                 linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 60%, #000000 100%),
                 url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=2564&q=80');
@@ -135,7 +135,7 @@
     </nav>
 
     <!-- Showcase Hero Chapter -->
-    <header class="hero-bg pt-48 pb-32 text-center text-apple-white mt-[44px] relative overflow-hidden">
+    <header id="hero-section" class="hero-bg pt-48 pb-32 text-center text-apple-white mt-[44px] relative overflow-hidden">
         <div class="max-w-4xl mx-auto px-4 relative z-10 reveal active">
             <h1 class="font-display text-hero-l sm:text-hero-xl font-semibold mb-4 tracking-tighter">Stroke.</h1>
             <p class="font-display text-product text-apple-grayPale mb-8 tracking-tight">
@@ -603,28 +603,26 @@
         }
 
         function goToNext(tabId) {
-            // 1. Switch the tab visually
+            // 1. Switch the tab visually first
             switchTab(tabId);
             
-            // 2. Use a delay to allow the browser to reflow the DOM
-            // Setting display:block changes the page height dramatically. 
-            // We must wait for the repaint before calculating getBoundingClientRect().
+            // 2. Use a tiny delay to allow the browser to reflow the DOM (calculate the new height)
             setTimeout(() => {
-                const contentCore = document.getElementById('content-core');
+                const heroSection = document.getElementById('hero-section');
+                const globalNavHeight = 44; 
                 
-                // The global sticky nav is 44px tall. We want the top of 'content-core' 
-                // to sit exactly under the global nav (at Y = 44px on the viewport).
-                const headerOffset = 44; 
+                // CRITICAL FIX: To prevent the "stuck" bug, we calculate the scroll target using 
+                // the hero section, which NEVER becomes sticky and never moves.
+                // The exact scroll position we want is the bottom of the hero section minus the global nav height.
                 
-                // Calculate precise absolute Y position of the element in the document
-                const elementPosition = contentCore.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                const heroBottomY = heroSection.getBoundingClientRect().bottom + window.pageYOffset;
+                const targetScrollPosition = heroBottomY - globalNavHeight;
         
                 window.scrollTo({
-                    top: offsetPosition,
+                    top: targetScrollPosition,
                     behavior: 'smooth'
                 });
-            }, 100); // 100ms guarantees layout calculation is complete
+            }, 50);
         }
 
         // Apple-style scroll reveal animation
