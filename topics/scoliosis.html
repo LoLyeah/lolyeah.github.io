@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Adult Scoliosis — Evidence-Based Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:#080e1a;--bg-card:#0e1829;--bg-raised:#121f33;--bg-hover:#172438;
+  --border:rgba(0,200,180,0.12);--border-bright:rgba(0,200,180,0.3);
+  --teal:#00c8b4;--teal-dim:rgba(0,200,180,0.12);--teal-glow:rgba(0,200,180,0.05);
+  --amber:#f0a500;--amber-dim:rgba(240,165,0,0.12);
+  --coral:#e05a5a;--lavender:#8b9dcc;
+  --text-primary:#e8edf5;--text-secondary:#8a98b5;--text-muted:#4e5e7a;
+  --serif:'Fraunces',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'DM Mono',monospace;
+  --sidebar-w:268px;--bottom-nav-h:64px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg-deep);color:var(--text-primary);font-family:var(--sans);font-size:15px;line-height:1.75;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;opacity:.4;}
+
+/* Language system */
+body.lang-id .en-only{display:none!important;}
+body.lang-en .id-only{display:none!important;}
+
+/* ── LAYOUT ── */
+#app{position:relative;z-index:1;display:flex;min-height:100vh;}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  position:fixed;top:0;left:0;bottom:0;
+  background:var(--bg-card);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow-y:auto;z-index:100;
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+#sidebar::-webkit-scrollbar{width:4px;}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:2px;}
+
+.sidebar-logo{padding:24px 22px 18px;border-bottom:1px solid var(--border);}
+.sidebar-logo .icon-spine{width:34px;height:34px;background:var(--teal-dim);border:1px solid var(--border-bright);border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:17px;}
+.sidebar-logo h2{font-family:var(--serif);font-size:14px;font-weight:500;color:var(--text-primary);line-height:1.35;}
+.sidebar-logo span{font-size:11px;font-weight:400;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;display:block;margin-top:2px;}
+
+/* Lang toggle in sidebar */
+.lang-toggle-wrap{padding:14px 22px;border-bottom:1px solid var(--border);}
+.lang-toggle{display:flex;background:var(--bg-raised);border:1px solid var(--border);border-radius:8px;overflow:hidden;width:100%;}
+.lang-btn{flex:1;padding:8px 0;text-align:center;font-size:12px;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:all .2s;color:var(--text-muted);border:none;background:transparent;}
+.lang-btn.active{background:var(--teal-dim);color:var(--teal);border:1px solid var(--border-bright);}
+
+.nav-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);padding:18px 22px 7px;}
+.nav-item{display:flex;align-items:flex-start;gap:9px;padding:8px 22px 8px 18px;cursor:pointer;border-left:3px solid transparent;transition:all .2s;text-decoration:none;}
+.nav-item:hover{background:var(--teal-glow);border-left-color:var(--border-bright);}
+.nav-item.active{background:var(--teal-dim);border-left-color:var(--teal);}
+.nav-item .nav-num{font-family:var(--mono);font-size:10px;color:var(--text-muted);margin-top:3px;flex-shrink:0;}
+.nav-item.active .nav-num{color:var(--teal);}
+.nav-item .nav-text{font-size:12.5px;font-weight:400;line-height:1.4;color:var(--text-secondary);}
+.nav-item.active .nav-text{color:var(--text-primary);font-weight:500;}
+
+/* ── MAIN ── */
+#main{margin-left:var(--sidebar-w);flex:1;min-width:0;}
+
+/* ── TOP BAR (mobile only) ── */
+#topbar{display:none;position:fixed;top:0;left:0;right:0;z-index:90;background:var(--bg-card);border-bottom:1px solid var(--border);height:54px;align-items:center;padding:0 16px;gap:12px;}
+#topbar h2{font-family:var(--serif);font-size:14px;font-weight:500;flex:1;}
+#burger{background:none;border:none;color:var(--teal);font-size:20px;cursor:pointer;padding:6px;line-height:1;}
+.topbar-lang{display:flex;gap:0;background:var(--bg-raised);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.topbar-lang .lang-btn{padding:5px 10px;font-size:11px;}
+
+/* ── HERO ── */
+#hero{padding:72px 56px 56px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+#hero::before{content:'';position:absolute;top:-100px;right:-60px;width:450px;height:450px;background:radial-gradient(ellipse,rgba(0,200,180,.07) 0%,transparent 70%);pointer-events:none;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--teal-dim);border:1px solid var(--border-bright);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);margin-bottom:20px;}
+.hero-badge::before{content:'●';font-size:7px;}
+#hero h1{font-family:var(--serif);font-size:clamp(24px,3vw,42px);font-weight:300;line-height:1.2;color:var(--text-primary);max-width:680px;margin-bottom:14px;}
+#hero h1 em{font-style:italic;color:var(--teal);}
+#hero p.lead{font-size:14.5px;color:var(--text-secondary);max-width:580px;line-height:1.75;margin-bottom:32px;}
+.hero-stats{display:flex;gap:28px;flex-wrap:wrap;}
+.hero-stat .val{font-family:var(--serif);font-size:28px;font-weight:500;color:var(--teal);line-height:1;}
+.hero-stat .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-top:4px;}
+
+/* ── SECTION ── */
+.section{padding:52px 56px;border-bottom:1px solid var(--border);opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;}
+.section.visible{opacity:1;transform:translateY(0);}
+.section-header{display:flex;align-items:baseline;gap:14px;margin-bottom:28px;}
+.section-num{font-family:var(--mono);font-size:11px;color:var(--teal);opacity:.7;flex-shrink:0;margin-top:4px;}
+.section h2{font-family:var(--serif);font-size:clamp(18px,2.2vw,26px);font-weight:400;line-height:1.3;color:var(--text-primary);}
+.section h2 span{color:var(--teal);}
+.section p{color:var(--text-secondary);max-width:780px;margin-bottom:14px;}
+.section p:last-child{margin-bottom:0;}
+.section p strong{color:var(--text-primary);font-weight:500;}
+.section h3{font-family:var(--serif);font-size:16px;font-weight:400;color:var(--text-primary);margin:24px 0 12px;}
+
+/* ── CALLOUT ── */
+.callout{background:var(--bg-raised);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:8px;padding:18px 22px;margin:20px 0;max-width:780px;}
+.callout.amber{border-left-color:var(--amber);}
+.callout.coral{border-left-color:var(--coral);}
+.callout-title{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);margin-bottom:7px;}
+.callout.amber .callout-title{color:var(--amber);}
+.callout.coral .callout-title{color:var(--coral);}
+.callout p{margin:0;font-size:13.5px;color:var(--text-secondary);}
+
+/* ── METRIC CARDS ── */
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px;margin:24px 0;}
+.metric-card{background:var(--bg-raised);border:1px solid var(--border);border-radius:10px;padding:18px;transition:border-color .2s,background .2s;}
+.metric-card:hover{border-color:var(--border-bright);background:var(--bg-hover);}
+.metric-card .mc-val{font-family:var(--serif);font-size:30px;font-weight:500;line-height:1;color:var(--teal);margin-bottom:5px;}
+.metric-card .mc-label{font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.metric-card .mc-desc{font-size:12.5px;color:var(--text-secondary);line-height:1.55;}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto;margin:24px 0;border-radius:10px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead tr{background:var(--bg-raised);border-bottom:1px solid var(--border-bright);}
+thead th{padding:13px 16px;text-align:left;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--teal);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border);transition:background .15s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--teal-glow);}
+tbody td{padding:13px 16px;color:var(--text-secondary);vertical-align:top;line-height:1.6;}
+tbody td:first-child{color:var(--text-primary);font-weight:500;border-right:1px solid var(--border);min-width:140px;}
+.badge-teal{display:inline-flex;align-items:center;background:var(--teal-dim);border:1px solid var(--border-bright);color:var(--teal);font-size:10.5px;font-weight:600;border-radius:4px;padding:2px 6px;font-family:var(--mono);}
+
+/* ── PROGRESS BARS ── */
+.progress-item{margin-bottom:13px;}
+.progress-label{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;}
+.progress-label span:first-child{color:var(--text-secondary);}
+.progress-label span:last-child{color:var(--teal);font-family:var(--mono);font-size:11.5px;}
+.progress-track{height:6px;background:var(--bg-raised);border-radius:3px;overflow:hidden;border:1px solid var(--border);}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),rgba(0,200,180,.45));border-radius:3px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1) .3s;}
+
+/* ── TWO COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0;}
+.feature-card{background:var(--bg-raised);border:1px solid var(--border);border-radius:10px;padding:20px;transition:border-color .2s,transform .2s;}
+.feature-card:hover{border-color:var(--border-bright);transform:translateY(-2px);}
+.feature-card .fc-icon{font-size:20px;margin-bottom:10px;}
+.feature-card h3{font-family:var(--serif);font-size:15px;font-weight:500;color:var(--text-primary);margin-bottom:7px;}
+.feature-card p{font-size:13px;color:var(--text-secondary);line-height:1.65;margin:0!important;}
+
+/* ── COMPARE GRID ── */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0;}
+.compare-col h3{font-family:var(--serif);font-size:14px;font-weight:500;padding:13px 16px;border-radius:8px 8px 0 0;border:1px solid var(--border);border-bottom:none;}
+.compare-col.open h3{background:rgba(139,157,204,.1);color:var(--lavender);}
+.compare-col.miss h3{background:var(--teal-dim);color:var(--teal);}
+.compare-col .compare-body{border:1px solid var(--border);border-radius:0 0 8px 8px;overflow:hidden;}
+.compare-row{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 16px;border-bottom:1px solid var(--border);font-size:12.5px;gap:10px;}
+.compare-row:last-child{border-bottom:none;}
+.compare-row .cr-label{color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;padding-top:1px;min-width:80px;}
+.compare-row .cr-val{color:var(--text-secondary);text-align:right;}
+
+/* ── TIMELINE ── */
+.timeline{position:relative;padding-left:26px;margin:20px 0;}
+.timeline::before{content:'';position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:var(--border);}
+.tl-item{position:relative;margin-bottom:26px;}
+.tl-item:last-child{margin-bottom:0;}
+.tl-dot{position:absolute;left:-21px;top:4px;width:12px;height:12px;background:var(--bg-card);border:2px solid var(--teal);border-radius:50%;z-index:1;}
+.tl-dot.amber{border-color:var(--amber);}
+.tl-title{font-size:13.5px;font-weight:500;color:var(--text-primary);margin-bottom:3px;}
+.tl-body{font-size:13px;color:var(--text-secondary);line-height:1.65;}
+
+/* ── REGIONAL CARDS ── */
+.region-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:20px 0;}
+.region-card{background:var(--bg-raised);border:1px solid var(--border);border-radius:10px;padding:18px;transition:border-color .2s;}
+.region-card:hover{border-color:var(--border-bright);}
+.region-card .rc-badge{display:inline-block;background:var(--teal-dim);border:1px solid var(--border-bright);color:var(--teal);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;border-radius:4px;padding:2px 7px;margin-bottom:9px;}
+.region-card .rc-badge.amber{background:var(--amber-dim);border-color:rgba(240,165,0,.3);color:var(--amber);}
+.region-card h4{font-family:var(--serif);font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:5px;}
+.region-card p{font-size:12px;color:var(--text-secondary);line-height:1.6;margin:0!important;}
+
+/* ── SIDEBAR OVERLAY (mobile) ── */
+#sidebar-overlay{display:none;position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);}
+#sidebar-overlay.open{display:block;}
+
+/* ── FOOTER ── */
+footer{padding:36px 56px;border-top:1px solid var(--border);font-size:12px;color:var(--text-muted);}
+footer a{color:var(--teal);text-decoration:none;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.hero-badge{animation:fadeUp .5s ease .1s both;}
+#hero h1{animation:fadeUp .5s ease .2s both;}
+#hero p.lead{animation:fadeUp .5s ease .3s both;}
+.hero-stats{animation:fadeUp .5s ease .4s both;}
+
+/* ══════════════════════════════
+   MOBILE RESPONSIVE
+══════════════════════════════ */
+@media(max-width:768px){
+  :root{--sidebar-w:280px;}
+  #sidebar{transform:translateX(-100%);}
+  #sidebar.open{transform:translateX(0);}
+  #topbar{display:flex;}
+  #main{margin-left:0;padding-top:54px;padding-bottom:0;}
+  #hero{padding:28px 18px 36px;}
+  .section{padding:32px 18px;}
+  .two-col,.compare-grid{grid-template-columns:1fr;}
+  .metric-grid{grid-template-columns:1fr 1fr;}
+  .hero-stats{gap:18px;}
+  .hero-stat .val{font-size:24px;}
+  footer{padding:28px 18px;}
+  .region-grid{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  .metric-grid{grid-template-columns:1fr;}
+  #hero h1{font-size:22px;}
+  .section h2{font-size:17px;}
+  thead th{font-size:9.5px;padding:10px 10px;}
+  tbody td{padding:10px 10px;font-size:12px;}
+  tbody td:first-child{min-width:100px;}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<!-- MOBILE TOPBAR -->
+<div id="topbar">
+  <button id="burger" aria-label="Menu">☰</button>
+  <h2 class="en-only">Adult Scoliosis Guide</h2>
+  <h2 class="id-only">Panduan Skoliosis Dewasa</h2>
+  <div class="topbar-lang">
+    <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+    <button class="lang-btn" onclick="setLang('id',this)">ID</button>
+  </div>
+</div>
+
+<div id="sidebar-overlay"></div>
+
+<div id="app">
+<!-- ── SIDEBAR ── -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <div class="icon-spine">🦴</div>
+    <h2 class="en-only">Adult Scoliosis<br>Evidence-Based Guide</h2>
+    <h2 class="id-only">Panduan Berbasis Bukti<br>Skoliosis Dewasa</h2>
+    <span class="en-only">Clinical Reference · 2025</span>
+    <span class="id-only">Referensi Klinis · 2025</span>
+  </div>
+
+  <div class="lang-toggle-wrap">
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="sb-en" onclick="setLang('en',this)">EN · English</button>
+      <button class="lang-btn" id="sb-id" onclick="setLang('id',this)">ID · Indonesia</button>
+    </div>
+  </div>
+
+  <div class="nav-label en-only">Contents</div>
+  <div class="nav-label id-only">Daftar Isi</div>
+
+  <a class="nav-item active" href="#s0" onclick="navClick(this)">
+    <span class="nav-num">00</span>
+    <span class="nav-text en-only">Overview & Pathophysiology</span>
+    <span class="nav-text id-only">Ikhtisar & Patofisiologi</span>
+  </a>
+  <a class="nav-item" href="#s1" onclick="navClick(this)">
+    <span class="nav-num">01</span>
+    <span class="nav-text en-only">AI-Powered Diagnostics</span>
+    <span class="nav-text id-only">Diagnostik Berbasis AI</span>
+  </a>
+  <a class="nav-item" href="#s2" onclick="navClick(this)">
+    <span class="nav-num">02</span>
+    <span class="nav-text en-only">Bone Health Optimization</span>
+    <span class="nav-text id-only">Optimasi Kesehatan Tulang</span>
+  </a>
+  <a class="nav-item" href="#s3" onclick="navClick(this)">
+    <span class="nav-num">03</span>
+    <span class="nav-text en-only">Physiotherapy (PSSE / Schroth)</span>
+    <span class="nav-text id-only">Fisioterapi (PSSE / Schroth)</span>
+  </a>
+  <a class="nav-item" href="#s4" onclick="navClick(this)">
+    <span class="nav-num">04</span>
+    <span class="nav-text en-only">Smart Orthotic Bracing</span>
+    <span class="nav-text id-only">Ortosis Cerdas</span>
+  </a>
+  <a class="nav-item" href="#s5" onclick="navClick(this)">
+    <span class="nav-num">05</span>
+    <span class="nav-text en-only">Interventional Pain Management</span>
+    <span class="nav-text id-only">Manajemen Nyeri Intervensi</span>
+  </a>
+  <a class="nav-item" href="#s6" onclick="navClick(this)">
+    <span class="nav-num">06</span>
+    <span class="nav-text en-only">Surgical Paradigms</span>
+    <span class="nav-text id-only">Paradigma Pembedahan</span>
+  </a>
+  <a class="nav-item" href="#s7" onclick="navClick(this)">
+    <span class="nav-num">07</span>
+    <span class="nav-text en-only">Perioperative Protocols</span>
+    <span class="nav-text id-only">Protokol Perioperatif</span>
+  </a>
+  <a class="nav-item" href="#s8" onclick="navClick(this)">
+    <span class="nav-num">08</span>
+    <span class="nav-text en-only">Robotic Navigation</span>
+    <span class="nav-text id-only">Navigasi Robotik</span>
+  </a>
+  <a class="nav-item" href="#s9" onclick="navClick(this)">
+    <span class="nav-num">09</span>
+    <span class="nav-text en-only">Vertebral Body Tethering</span>
+    <span class="nav-text id-only">Vertebral Body Tethering</span>
+  </a>
+  <a class="nav-item" href="#s10" onclick="navClick(this)">
+    <span class="nav-num">10</span>
+    <span class="nav-text en-only">Biologics & Regenerative Medicine</span>
+    <span class="nav-text id-only">Biologis & Kedokteran Regeneratif</span>
+  </a>
+  <a class="nav-item" href="#s11" onclick="navClick(this)">
+    <span class="nav-num">11</span>
+    <span class="nav-text en-only">Conclusion</span>
+    <span class="nav-text id-only">Kesimpulan</span>
+  </a>
+</nav>
+
+<!-- ── MAIN ── -->
+<main id="main">
+
+<!-- HERO -->
+<header id="hero">
+  <div class="hero-badge en-only">Evidence-Based Medicine</div>
+  <div class="hero-badge id-only">Kedokteran Berbasis Bukti</div>
+  <h1 class="en-only">Comprehensive Management of<br><em>Adult Scoliosis</em></h1>
+  <h1 class="id-only">Manajemen Komprehensif<br><em>Skoliosis Dewasa</em></h1>
+  <p class="lead en-only">Current protocols integrating AI diagnostics, physiotherapeutic rehabilitation, advanced orthotic bracing, interventional pain management, and minimally invasive surgical reconstruction.</p>
+  <p class="lead id-only">Protokol terkini yang mengintegrasikan diagnostik AI, rehabilitasi fisioterapi, ortosis canggih, manajemen nyeri intervensi, dan rekonstruksi bedah minimal invasif.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="val">30°</span><span class="label en-only">Risk Threshold</span><span class="label id-only">Ambang Risiko</span></div>
+    <div class="hero-stat"><span class="val">50°</span><span class="label en-only">Surgical Consideration</span><span class="label id-only">Pertimbangan Bedah</span></div>
+    <div class="hero-stat"><span class="val">98%</span><span class="label en-only">Robotic Screw Accuracy</span><span class="label id-only">Akurasi Sekrup Robotik</span></div>
+    <div class="hero-stat"><span class="val">86%</span><span class="label en-only">AI Predictive Accuracy</span><span class="label id-only">Akurasi Prediktif AI</span></div>
+  </div>
+</header>
+
+<!-- 00 PATHOPHYSIOLOGY -->
+<section class="section" id="s0">
+  <div class="section-header"><span class="section-num">00</span>
+    <h2 class="en-only">Pathophysiology & <span>Clinical Paradigm</span></h2>
+    <h2 class="id-only">Patofisiologi & <span>Paradigma Klinis</span></h2>
+  </div>
+  <p class="en-only">Adult scoliosis is a complex, <strong>three-dimensional structural deformity</strong> of the spine and trunk — combining coronal curvature, sagittal imbalance, and axial rotation. Two principal etiological pathways are recognized:</p>
+  <p class="id-only">Skoliosis dewasa adalah deformitas struktural <strong>tiga dimensi yang kompleks</strong> pada tulang belakang dan batang tubuh — menggabungkan kelengkungan koronal, ketidakseimbangan sagital, dan rotasi aksial. Dua jalur etiologi utama diakui:</p>
+
+  <div class="two-col" style="margin:20px 0">
+    <div class="feature-card">
+      <div class="fc-icon">📈</div>
+      <h3 class="en-only">Adult Idiopathic Scoliosis</h3>
+      <h3 class="id-only">Skoliosis Idiopatik Dewasa</h3>
+      <p class="en-only">Natural progression of a pre-existing adolescent curve into adulthood. Structural pattern inherited from skeletal immaturity, continuing to evolve under adult biomechanical loading.</p>
+      <p class="id-only">Progresi alami dari kurva remaja yang sudah ada sebelumnya ke masa dewasa. Pola struktural diwarisi dari ketidakmatangan skeletal dan terus berkembang di bawah beban biomekanik orang dewasa.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon">🔩</div>
+      <h3 class="en-only">Adult Degenerative (De Novo) Scoliosis</h3>
+      <h3 class="id-only">Skoliosis Degeneratif Dewasa (De Novo)</h3>
+      <p class="en-only">Arises primarily in the lumbar spine from asymmetrical disc degeneration, facet joint arthropathy, osteoporosis, and loss of ligamentous integrity. Most common after age 50.</p>
+      <p class="id-only">Muncul terutama di tulang belakang lumbar akibat degenerasi diskus asimetris, artropati sendi faset, osteoporosis, dan hilangnya integritas ligamen. Paling umum setelah usia 50 tahun.</p>
+    </div>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="mc-val">&gt;30°</div>
+      <div class="mc-label en-only">Cobb Threshold</div>
+      <div class="mc-label id-only">Ambang Sudut Cobb</div>
+      <div class="mc-desc en-only">Significantly elevated risk of progression throughout adulthood, with deterioration in health-related quality of life and mechanical back pain.</div>
+      <div class="mc-desc id-only">Risiko progresi yang meningkat signifikan sepanjang masa dewasa, disertai penurunan kualitas hidup dan nyeri punggung mekanik.</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-val">&gt;50°</div>
+      <div class="mc-label en-only">Near Certainty of Progression</div>
+      <div class="mc-label id-only">Hampir Pasti Progresi</div>
+      <div class="mc-desc en-only">Asymmetric biomechanical forces dictate near-certain continued progression, risking cardiopulmonary compromise in thoracic curves.</div>
+      <div class="mc-desc id-only">Gaya biomekanik asimetris menyebabkan progresi lanjutan yang hampir pasti, berisiko mengganggu kardiopulmonal pada kurva torakal.</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-val">Multi-D</div>
+      <div class="mc-label en-only">Modern Treatment Model</div>
+      <div class="mc-label id-only">Model Pengobatan Modern</div>
+      <div class="mc-desc en-only">AI diagnostics, intensive physiotherapy, custom orthotics, interventional pain management, and robotic-assisted surgery in a coordinated continuum.</div>
+      <div class="mc-desc id-only">Diagnostik AI, fisioterapi intensif, ortosis khusus, manajemen nyeri intervensi, dan bedah berbantuan robotik dalam sebuah kontinum terkoordinasi.</div>
+    </div>
+  </div>
+  <p class="en-only">The treatment paradigm has evolved from polarized observation vs. arthrodesis into a <strong>comprehensive continuum of care</strong> — prioritizing active stabilization, postural optimization, and pain syndrome management before surgical reconstruction.</p>
+  <p class="id-only">Paradigma pengobatan telah berkembang dari dikotomi observasi vs. artrodesis menjadi <strong>kontinum perawatan yang komprehensif</strong> — mengutamakan stabilisasi aktif, optimasi postural, dan manajemen sindrom nyeri sebelum rekonstruksi bedah.</p>
+</section>
+
+<!-- 01 AI DIAGNOSTICS -->
+<section class="section" id="s1">
+  <div class="section-header"><span class="section-num">01</span>
+    <h2 class="en-only">Diagnostic Evaluation & <span>Artificial Intelligence</span></h2>
+    <h2 class="id-only">Evaluasi Diagnostik & <span>Kecerdasan Buatan</span></h2>
+  </div>
+  <p class="en-only">Clinical evaluation begins with full-spine standing radiography and the <strong>Cobb angle</strong> — the primary metric for curve severity and progression monitoring. Traditional measurement of spinopelvic parameters has historically been subject to inter-rater variability.</p>
+  <p class="id-only">Evaluasi klinis dimulai dengan radiografi berdiri seluruh tulang belakang dan <strong>sudut Cobb</strong> — metrik utama untuk keparahan kurva dan pemantauan progresi. Pengukuran parameter spinopelvis secara tradisional rentan terhadap variabilitas antar-penilai.</p>
+
+  <div class="callout">
+    <div class="callout-title en-only">Diagnostic Cornerstone</div>
+    <div class="callout-title id-only">Landasan Diagnostik</div>
+    <p class="en-only">The angle of trunk rotation (ATR) measured by scoliometer demonstrates excellent intra- and inter-rater reliability, performed alongside full-spine standing radiography in all initial assessments.</p>
+    <p class="id-only">Sudut rotasi batang tubuh (ATR) yang diukur menggunakan skoliometer menunjukkan reliabilitas intra- dan inter-penilai yang sangat baik, dilakukan bersamaan dengan radiografi berdiri seluruh tulang belakang pada semua penilaian awal.</p>
+  </div>
+
+  <p class="en-only">Convolutional Neural Networks (CNNs) now automatically process biplanar radiographs, calculating Cobb angle and spinopelvic parameters within strict confidence intervals — eliminating human measurement error while reducing radiation exposure via low-dose image enhancement.</p>
+  <p class="id-only">Jaringan saraf konvolusional (CNN) kini secara otomatis memproses radiograf biplanar, menghitung sudut Cobb dan parameter spinopelvis dalam interval kepercayaan yang ketat — menghilangkan kesalahan pengukuran manusia sekaligus mengurangi paparan radiasi melalui peningkatan gambar dosis rendah.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="en-only">AI Application</th><th class="id-only">Aplikasi AI</th>
+          <th class="en-only">Approach</th><th class="id-only">Pendekatan</th>
+          <th class="en-only">Accuracy</th><th class="id-only">Akurasi</th>
+          <th class="en-only">Key Metric</th><th class="id-only">Metrik Utama</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="en-only">Operative vs. Non-operative Prediction</td>
+          <td class="id-only">Prediksi Operatif vs. Non-operatif</td>
+          <td class="en-only">ML Classification</td>
+          <td class="id-only">Klasifikasi ML</td>
+          <td><span class="badge-teal">86%</span></td>
+          <td class="en-only">Determines surgical necessity from multivariable patient clustering</td>
+          <td class="id-only">Menentukan kebutuhan bedah dari pengelompokan pasien multivariabel</td>
+        </tr>
+        <tr>
+          <td class="en-only">Mechanical Complication Forecasting</td>
+          <td class="id-only">Prakiraan Komplikasi Mekanik</td>
+          <td class="en-only">Ensemble Decision Trees</td>
+          <td class="id-only">Pohon Keputusan Ensemble</td>
+          <td><span class="badge-teal">86%</span> PJK/PJF · <span class="badge-teal">91%</span></td>
+          <td class="en-only">AUC 0.89 for PJK/PJF; AUC 0.94 for pseudarthrosis</td>
+          <td class="id-only">AUC 0,89 untuk PJK/PJF; AUC 0,94 untuk pseudoartrosis</td>
+        </tr>
+        <tr>
+          <td class="en-only">Hospital Length-of-Stay Prediction</td>
+          <td class="id-only">Prediksi Lama Rawat Inap</td>
+          <td class="en-only">ML Regression Models</td>
+          <td class="id-only">Model Regresi ML</td>
+          <td><span class="badge-teal">75.4%</span></td>
+          <td class="en-only">Uses C7 SVA + proposed fused levels as primary predictors</td>
+          <td class="id-only">Menggunakan C7 SVA + jumlah level fusi yang direncanakan sebagai prediktor utama</td>
+        </tr>
+        <tr>
+          <td class="en-only">Automated Spinopelvic Measurement</td>
+          <td class="id-only">Pengukuran Spinopelvis Otomatis</td>
+          <td class="en-only">CNN (Convolutional Neural Network)</td>
+          <td class="id-only">CNN (Jaringan Saraf Konvolusional)</td>
+          <td><span class="badge-teal">95% CI</span></td>
+          <td class="en-only">Auto-extracts kyphosis, lordosis, Cobb angle from biplanar X-rays</td>
+          <td class="id-only">Mengekstrak otomatis kifosis, lordosis, sudut Cobb dari radiograf biplanar</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="en-only">Institutions such as the <strong>Cleveland Clinic</strong> deploy AI trained on tens of thousands of surgical encounters to predict HRQoL outcomes, enabling data-driven patient expectation management before any intervention.</p>
+  <p class="id-only">Institusi seperti <strong>Cleveland Clinic</strong> menerapkan AI yang dilatih pada puluhan ribu kasus bedah untuk memprediksi hasil kualitas hidup terkait kesehatan (HRQoL), memungkinkan manajemen ekspektasi pasien berbasis data sebelum intervensi.</p>
+</section>
+
+<!-- 02 BONE HEALTH -->
+<section class="section" id="s2">
+  <div class="section-header"><span class="section-num">02</span>
+    <h2 class="en-only">Preoperative <span>Bone Health Optimization</span></h2>
+    <h2 class="id-only">Optimasi <span>Kesehatan Tulang Pra-operasi</span></h2>
+  </div>
+  <p class="en-only">Undiagnosed osteopenia or osteoporosis is a primary driver of catastrophic postoperative complications in adult spinal deformity surgery. Current CNS guidelines mandate bone health assessment for patients over 60, and strongly recommend it for patients in their 50s with clinical risk factors.</p>
+  <p class="id-only">Osteopenia atau osteoporosis yang tidak terdiagnosis adalah pemicu utama komplikasi pasca-operasi yang katastrofik pada bedah deformitas tulang belakang dewasa. Panduan CNS saat ini mewajibkan penilaian kesehatan tulang untuk pasien di atas 60 tahun, dan sangat merekomendasikannya untuk pasien usia 50-an dengan faktor risiko klinis.</p>
+
+  <div class="callout amber">
+    <div class="callout-title en-only">⚠ Critical Thresholds</div>
+    <div class="callout-title id-only">⚠ Ambang Batas Kritis</div>
+    <p class="en-only">DEXA T-score &lt; −2.5 · CT Hounsfield Units &lt; 97.9 HU (lumbar) · Serum 25-OH Vitamin D₃ &lt; 20 ng/mL — any of these indicates significantly elevated instrumentation-related adverse event risk.</p>
+    <p class="id-only">T-score DEXA &lt; −2,5 · Unit Hounsfield CT &lt; 97,9 HU (lumbar) · Kadar serum 25-OH Vitamin D₃ &lt; 20 ng/mL — salah satu dari kondisi ini mengindikasikan risiko kejadian buruk terkait instrumentasi yang meningkat secara signifikan.</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title en-only">Vitamin D₃ Repletion Protocol</div>
+    <div class="callout-title id-only">Protokol Replesi Vitamin D₃</div>
+    <p class="en-only"><strong>Loading phase:</strong> 50,000 IU weekly × 8 weeks · <strong>Maintenance:</strong> 1,500–2,000 IU daily. Supplementation above 1,900 IU/day significantly reduces pathological vertebral fragility risk in the elderly surgical population.</p>
+    <p class="id-only"><strong>Fase loading:</strong> 50.000 IU per minggu × 8 minggu · <strong>Pemeliharaan:</strong> 1.500–2.000 IU per hari. Suplementasi di atas 1.900 IU/hari secara signifikan mengurangi risiko fragilitas vertebra patologis pada populasi bedah lansia.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="en-only">Drug Class</th><th class="id-only">Kelas Obat</th>
+          <th class="en-only">Agents</th><th class="id-only">Agen</th>
+          <th class="en-only">Mechanism</th><th class="id-only">Mekanisme</th>
+          <th class="en-only">Role in Spine Surgery</th><th class="id-only">Peran dalam Bedah Tulang Belakang</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>PTH Analogs <span class="badge-teal en-only">First-Line</span><span class="badge-teal id-only">Lini Pertama</span></td>
+          <td>Teriparatide (Forteo)<br>Abaloparatide (Tymlos)</td>
+          <td class="en-only">Stimulates osteoblast activity → net anabolic bone formation</td>
+          <td class="id-only">Menstimulasi aktivitas osteoblas → pembentukan tulang anabolik neto</td>
+          <td class="en-only">Reduces PJF from 22.2% → 3.4% at one year in RCTs; increases pedicle screw insertional torque</td>
+          <td class="id-only">Mengurangi PJF dari 22,2% → 3,4% pada satu tahun dalam RCT; meningkatkan torsi insersi sekrup pedikel</td>
+        </tr>
+        <tr>
+          <td class="en-only">Sclerostin Inhibitors</td>
+          <td class="id-only">Inhibitor Sklerostin</td>
+          <td>Romosozumab (Evenity)</td>
+          <td class="en-only">Inhibits sclerostin → simultaneously increases bone formation AND decreases resorption</td>
+          <td class="id-only">Menghambat sklerostin → secara bersamaan meningkatkan pembentukan tulang DAN menurunkan resorpsi</td>
+          <td class="en-only">Rapid lumbar BMD improvement; used in sequential therapy before antiresorptives</td>
+          <td class="id-only">Peningkatan BMD lumbar cepat; digunakan dalam terapi sekuensial sebelum antiresorptif</td>
+        </tr>
+        <tr>
+          <td class="en-only">RANKL Inhibitors</td>
+          <td class="id-only">Inhibitor RANKL</td>
+          <td>Denosumab (Prolia)</td>
+          <td class="en-only">Binds RANKL, suppressing osteoclast maturation and halting bone resorption</td>
+          <td class="id-only">Mengikat RANKL, menekan maturasi osteoklas dan menghentikan resorpsi tulang</td>
+          <td class="en-only">Effective for preventing further bone loss; less effective than teriparatide for acute junctional failures</td>
+          <td class="id-only">Efektif mencegah kehilangan tulang lebih lanjut; kurang efektif dibanding teriparatid untuk kegagalan jungsional akut</td>
+        </tr>
+        <tr>
+          <td class="en-only">Bisphosphonates</td>
+          <td class="id-only">Bisfosfonat</td>
+          <td class="en-only">Alendronate, Zoledronic Acid</td>
+          <td class="id-only">Alendronat, Asam Zoledronat</td>
+          <td class="en-only">Binds hydroxyapatite crystals; induces osteoclast apoptosis to inhibit resorption</td>
+          <td class="id-only">Mengikat kristal hidroksiapatit; menginduksi apoptosis osteoklas untuk menghambat resorpsi</td>
+          <td class="en-only">Standard therapy to prevent BMD decline; purely antiresorptive — secondary choice to anabolics preoperatively</td>
+          <td class="id-only">Terapi standar mencegah penurunan BMD; murni antiresorptif — pilihan sekunder dibanding anabolik pra-operasi</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="en-only">Sequential therapy (romosozumab → denosumab) successfully improves BMD in over <strong>60% of treated patients</strong>, with an average T-score gain of 0.6 in retrospective analyses of multidisciplinary Bone Health Clinics.</p>
+  <p class="id-only">Terapi sekuensial (romosozumab → denosumab) berhasil meningkatkan BMD pada lebih dari <strong>60% pasien yang ditangani</strong>, dengan peningkatan T-score rata-rata sebesar 0,6 dalam analisis retrospektif Klinik Kesehatan Tulang multidisiplin.</p>
+</section>
+
+<!-- 03 PSSE / SCHROTH -->
+<section class="section" id="s3">
+  <div class="section-header"><span class="section-num">03</span>
+    <h2 class="en-only">Physiotherapeutic Scoliosis-Specific Exercises <span>(PSSE)</span></h2>
+    <h2 class="id-only">Latihan Fisioterapi Spesifik Skoliosis <span>(PSSE)</span></h2>
+  </div>
+  <p class="en-only">SOSORT explicitly recommends PSSE as the <strong>primary intervention</strong> for mild-to-moderate curves. Unlike generalized physical therapy, PSSE programs are meticulously tailored to the patient's three-dimensional curve pattern.</p>
+  <p class="id-only">SOSORT secara eksplisit merekomendasikan PSSE sebagai <strong>intervensi utama</strong> untuk kurva ringan hingga sedang. Berbeda dengan fisioterapi umum, program PSSE disesuaikan secara teliti dengan pola kurva tiga dimensi pasien.</p>
+
+  <div class="two-col">
+    <div class="feature-card">
+      <div class="fc-icon">🌀</div>
+      <h3 class="en-only">The Schroth Method</h3>
+      <h3 class="id-only">Metode Schroth</h3>
+      <p class="en-only">Developed in Germany in the 1920s, this remains the most rigorously validated PSSE protocol — operating on sensorimotor retraining, kinesthetic awareness, and active postural auto-correction using mirrors for exteroceptive feedback.</p>
+      <p class="id-only">Dikembangkan di Jerman pada tahun 1920-an, ini tetap menjadi protokol PSSE yang paling tervalidasi secara ketat — beroperasi pada pelatihan ulang sensorimotorik, kesadaran kinestetik, dan koreksi postural aktif menggunakan cermin untuk umpan balik eksteroseptif.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon">🫁</div>
+      <h3 class="en-only">Rotational Angular Breathing</h3>
+      <h3 class="id-only">Pernapasan Sudut Rotasional</h3>
+      <p class="en-only">Patients consciously direct inhaled air into concave, collapsed thoracic regions — mobilizing the rib cage and derotating the spine from the inside out. Combined with targeted isometric exercises for muscular rebalancing on both sides of the curve.</p>
+      <p class="id-only">Pasien secara sadar mengarahkan udara inhalan ke region torakal yang cekung dan kolaps — memobilisasi sangkar iga dan merotasi balik tulang belakang dari dalam ke luar. Dikombinasikan dengan latihan isometrik yang ditargetkan untuk penyeimbangan ulang muskular pada kedua sisi kurva.</p>
+    </div>
+  </div>
+
+  <h3 class="en-only">Meta-Analysis Outcomes — Schroth Method</h3>
+  <h3 class="id-only">Hasil Meta-Analisis — Metode Schroth</h3>
+  <div class="progress-item">
+    <div class="progress-label">
+      <span class="en-only">Cobb Angle Reduction (ES = −0.492, p &lt; 0.005)</span>
+      <span class="id-only">Reduksi Sudut Cobb (ES = −0,492, p &lt; 0,005)</span>
+      <span class="en-only">Moderate–Large Effect</span><span class="id-only">Efek Sedang–Besar</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" data-width="62"></div></div>
+  </div>
+  <div class="progress-item">
+    <div class="progress-label">
+      <span class="en-only">Angle of Trunk Rotation / ATR (ES = −0.471, p = 0.013)</span>
+      <span class="id-only">Sudut Rotasi Batang Tubuh / ATR (ES = −0,471, p = 0,013)</span>
+      <span class="en-only">Significant</span><span class="id-only">Signifikan</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" data-width="58"></div></div>
+  </div>
+  <div class="progress-item">
+    <div class="progress-label">
+      <span class="en-only">Quality of Life / SRS-22 (ES = +1.087, p &lt; 0.001)</span>
+      <span class="id-only">Kualitas Hidup / SRS-22 (ES = +1,087, p &lt; 0,001)</span>
+      <span class="en-only">Very Large Effect</span><span class="id-only">Efek Sangat Besar</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" data-width="90"></div></div>
+  </div>
+
+  <div class="callout" style="margin-top:20px;">
+    <div class="callout-title en-only">12-Month Cohort Study Highlight</div>
+    <div class="callout-title id-only">Sorotan Studi Kohort 12 Bulan</div>
+    <p class="en-only">Structured physical therapy reduced mean Cobb angle from <strong>18.59° → 14.85°</strong> (20.3% relative reduction), with the most significant gains in the first 6 months. Outpatient Schroth case studies have reported thoracic reductions of <strong>38° → 27.6°</strong>, with FVC improvement from 2.8 → 3.2 L.</p>
+    <p class="id-only">Fisioterapi terstruktur mengurangi sudut Cobb rata-rata dari <strong>18,59° → 14,85°</strong> (reduksi relatif 20,3%), dengan pencapaian paling signifikan dalam 6 bulan pertama. Studi kasus Schroth rawat jalan melaporkan reduksi torakal <strong>38° → 27,6°</strong>, dengan peningkatan KVP dari 2,8 → 3,2 L.</p>
+  </div>
+
+  <!-- REGIONAL IMPLEMENTATION -->
+  <h3 class="en-only" style="margin-top:28px;">Regional Implementation — Indonesia</h3>
+  <h3 class="id-only" style="margin-top:28px;">Implementasi Regional — Indonesia</h3>
+  <p class="en-only">Internationally certified conservative protocols are expanding rapidly across the Indonesian archipelago, with specialized clinics in both Java's major urban centers offering PSSE and custom orthotic programs:</p>
+  <p class="id-only">Protokol konservatif bersertifikat internasional berkembang pesat di seluruh kepulauan Indonesia, dengan klinik-klinik spesialis di pusat-pusat kota utama Jawa yang menawarkan program PSSE dan ortosis khusus:</p>
+
+  <div class="region-grid">
+    <div class="region-card">
+      <span class="rc-badge">Surabaya · Jawa Timur</span>
+      <h4>Postur Clinic</h4>
+      <p class="en-only">Integrates internationally certified Schroth Best Practice (SBP) methodology, guided by specialist physiatrists. Combines intensive physiotherapy with custom Capron insoles to address the full biomechanical chain from the ground up.</p>
+      <p class="id-only">Mengintegrasikan metodologi Schroth Best Practice (SBP) bersertifikat internasional, dibimbing oleh dokter spesialis KFR. Menggabungkan fisioterapi intensif dengan insol Capron khusus untuk menangani rantai biomekanik penuh dari dasar.</p>
+    </div>
+    <div class="region-card">
+      <span class="rc-badge">Jakarta Selatan & Barat</span>
+      <h4>Scoliosis Care</h4>
+      <p class="en-only">Two rehabilitation centers — Kebayoran Baru (South Jakarta) and CNI Creative Center Puri Indah (West Jakarta). Employs SEAS methodology, SpineCor flexible bracing, and computer-controlled spinal decompression traction, staffed by internationally certified physiatrists and physiotherapists.</p>
+      <p class="id-only">Dua pusat rehabilitasi — Kebayoran Baru (Jakarta Selatan) dan CNI Creative Center Puri Indah (Jakarta Barat). Menggunakan metodologi SEAS, brace fleksibel SpineCor, dan traksi dekompresi tulang belakang yang dikontrol komputer, dikelola oleh dokter KFR dan fisioterapis bersertifikat internasional.</p>
+    </div>
+    <div class="region-card">
+      <span class="rc-badge">Jakarta Barat & Tangerang</span>
+      <h4>Spine Clinic Family Holistic</h4>
+      <p class="en-only">Pioneer of 3D Scoliosis GBW Brace and Schroth Best Practice (SBP) PSSE in Indonesia. Locations at Lippo Mall Puri (West Jakarta) and Alam Sutera (Tangerang), managed by Sp.KFR and Sp.KO specialists alongside certified physiotherapists and orthotists. Also provides custom Capron insoles.</p>
+      <p class="id-only">Pionir Brace 3D Skoliosis GBW dan PSSE Schroth Best Practice (SBP) di Indonesia. Berlokasi di Lippo Mall Puri (Jakarta Barat) dan Alam Sutera (Tangerang), dikelola oleh dokter Sp.KFR dan Sp.KO bersama fisioterapis dan ortotis bersertifikat. Juga menyediakan insol Capron khusus.</p>
+    </div>
+    <div class="region-card">
+      <span class="rc-badge">Jakarta</span>
+      <h4>Klinik New Life</h4>
+      <p class="en-only">Scoliosis specialist clinic under Dr. Samuel Pranoto, integrating multiple internationally-derived methods (USA, UK, Australia, Germany) for accurate multi-method diagnosis and case-specific treatment. Handles idiopathic, congenital anomaly, de novo, and neuromuscular scoliosis. Accredited SpineCor fitting provider.</p>
+      <p class="id-only">Klinik spesialis skoliosis di bawah Dr. Samuel Pranoto, mengintegrasikan berbagai metode dari luar negeri (AS, UK, Australia, Jerman) untuk diagnosis multi-metode yang akurat dan pengobatan spesifik kasus. Menangani skoliosis idiopatik, anomali kongenital, de novo, dan neuromuskular. Penyedia pemasangan SpineCor terakreditasi.</p>
+    </div>
+    <div class="region-card">
+      <span class="rc-badge">Jakarta Utara & Barat</span>
+      <h4>Vlife Scoliosis Centre</h4>
+      <p class="en-only">Locations at PIK Avenue Mall (North Jakarta) and Pondok Indah Mall 1 (West Jakarta). Employs a holistic non-invasive approach combining Posture & Spine Evaluation System, spinal decompression, active core-strengthening exercise programs, and psychological counseling for patients of all ages.</p>
+      <p class="id-only">Berlokasi di PIK Avenue Mall (Jakarta Utara) dan Pondok Indah Mall 1 (Jakarta Barat). Menggunakan pendekatan holistik non-invasif yang menggabungkan Posture & Spine Evaluation System, dekompresi tulang belakang, program latihan penguatan inti aktif, dan konseling psikologis untuk pasien segala usia.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 BRACING -->
+<section class="section" id="s4">
+  <div class="section-header"><span class="section-num">04</span>
+    <h2 class="en-only">Next-Generation <span>Orthotic Management</span></h2>
+    <h2 class="id-only">Manajemen <span>Ortosis Generasi Berikutnya</span></h2>
+  </div>
+  <p class="en-only">Adult bracing objectives differ fundamentally from adolescent growth modulation: the goal is to <strong>stabilize the degenerating spine</strong>, prevent coronal or sagittal collapse, reduce neuroforaminal compression, and provide substantial mechanical pain relief.</p>
+  <p class="id-only">Tujuan bracing dewasa sangat berbeda dari modulasi pertumbuhan remaja: tujuannya adalah <strong>menstabilkan tulang belakang yang berdegenerasi</strong>, mencegah kolaps koronal atau sagital, mengurangi kompresi neuroforaminal, dan memberikan pereda nyeri mekanik yang substansial.</p>
+
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="mc-val">61.3</div>
+      <div class="mc-label en-only">Mean Patient Age (yrs)</div>
+      <div class="mc-label id-only">Usia Rata-rata Pasien (thn)</div>
+      <div class="mc-desc en-only">Landmark cohort studying rigid custom bracing in adult progressive scoliosis (mean Cobb 49.6°).</div>
+      <div class="mc-desc id-only">Kohort landmark yang mempelajari bracing kaku khusus pada skoliosis progresif dewasa (Cobb rata-rata 49,6°).</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-val">1.28°</div>
+      <div class="mc-label en-only">Pre-Brace Progression/yr</div>
+      <div class="mc-label id-only">Progresi Sebelum Brace/thn</div>
+      <div class="mc-desc en-only">Rate of curve advancement before intervention, representing substantial long-term deformity risk.</div>
+      <div class="mc-desc id-only">Laju kemajuan kurva sebelum intervensi, merepresentasikan risiko deformitas jangka panjang yang substansial.</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-val">0.21°</div>
+      <div class="mc-label en-only">Post-Brace Progression/yr</div>
+      <div class="mc-label id-only">Progresi Setelah Brace/thn</div>
+      <div class="mc-desc en-only">84% deceleration — the difference between preserved function and high-risk reconstructive surgery over decades.</div>
+      <div class="mc-desc id-only">Perlambatan 84% — perbedaan antara fungsi yang terjaga dan bedah rekonstruktif berisiko tinggi selama beberapa dekade.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="feature-card">
+      <div class="fc-icon">🖨️</div>
+      <h3 class="en-only">3D-Printed PETG Orthoses</h3>
+      <h3 class="id-only">Ortosis PETG Cetak 3D</h3>
+      <p class="en-only">CAD-FEM engineering creates orthoses with variable stiffness: <strong>145.88 N/mm</strong> on the concave side vs. <strong>35.96 N/mm</strong> on the convex side — generating targeted corrective force of 33.53 N versus 3.27 N on the opposing aspect without compromising respiratory mechanics.</p>
+      <p class="id-only">Rekayasa CAD-FEM menciptakan ortosis dengan kekakuan variabel: <strong>145,88 N/mm</strong> pada sisi cekung vs. <strong>35,96 N/mm</strong> pada sisi cembung — menghasilkan gaya korektif yang ditargetkan sebesar 33,53 N berbanding 3,27 N pada aspek berlawanan tanpa mengorbankan mekanik pernapasan.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon">📡</div>
+      <h3 class="en-only">Smart Sensor Integration</h3>
+      <h3 class="id-only">Integrasi Sensor Cerdas</h3>
+      <p class="en-only">Graphene-based dielectric sensor grids and textile capacitive pressure sensors embedded in the brace matrix enable real-time monitoring of corrective forces (up to ~150 N) and patient compliance tracking via mobile telemetry applications.</p>
+      <p class="id-only">Grid sensor dielektrik berbasis grafen dan sensor tekanan kapasitif tekstil yang tertanam dalam matriks brace memungkinkan pemantauan gaya korektif secara real-time (hingga ~150 N) dan pelacakan kepatuhan pasien melalui aplikasi telemetri seluler.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 PAIN MANAGEMENT -->
+<section class="section" id="s5">
+  <div class="section-header"><span class="section-num">05</span>
+    <h2 class="en-only">Interventional <span>Pain Management</span></h2>
+    <h2 class="id-only">Manajemen Nyeri <span>Intervensi</span></h2>
+  </div>
+  <p class="en-only">When conservative measures fail, interventional procedures bridge the gap to surgical reconstruction. Identifying the precise pain generator is essential for effective treatment.</p>
+  <p class="id-only">Ketika tindakan konservatif gagal, prosedur intervensi menjembatani kesenjangan menuju rekonstruksi bedah. Mengidentifikasi generator nyeri yang tepat sangat penting untuk pengobatan yang efektif.</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-title en-only">Epidural Steroid Injections (ESI)</div>
+      <div class="tl-title id-only">Injeksi Steroid Epidural (ISE)</div>
+      <div class="tl-body en-only">Indicated for <strong>radicular pain</strong> (sciatica, paresthesia, shooting electrical pain). Under fluoroscopic or CT guidance, corticosteroids + local anesthetic are delivered into the epidural space. <strong>90% success</strong> in acute presentations; drops to ~50% when pain has persisted over one year.</div>
+      <div class="tl-body id-only">Diindikasikan untuk <strong>nyeri radikuler</strong> (skiatika, parestesia, nyeri listrik menjalar). Di bawah panduan fluoroskopik atau CT, kortikosteroid + anestesi lokal dikirimkan ke ruang epidural. <strong>90% berhasil</strong> pada presentasi akut; turun menjadi ~50% ketika nyeri telah berlangsung lebih dari satu tahun.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot amber"></div>
+      <div class="tl-title en-only">Facet Joint Injections</div>
+      <div class="tl-title id-only">Injeksi Sendi Faset</div>
+      <div class="tl-body en-only">Indicated for <strong>axial, facetogenic pain</strong> exacerbated by spinal extension or prolonged standing. Used both therapeutically and diagnostically. Profound temporary relief following a diagnostic medial branch nerve block identifies ideal candidates for RFA.</div>
+      <div class="tl-body id-only">Diindikasikan untuk <strong>nyeri aksial, fasetogenik</strong> yang diperburuk oleh ekstensi tulang belakang atau berdiri lama. Digunakan secara terapeutik dan diagnostik. Pereda sementara yang mendalam setelah blok saraf cabang medial diagnostik mengidentifikasi kandidat ideal untuk RFA.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-title en-only">Radiofrequency Ablation (RFA)</div>
+      <div class="tl-title id-only">Ablasi Frekuensi Radio (RFA)</div>
+      <div class="tl-body en-only">Minimally invasive outpatient procedure. Fluoroscopically-guided thermal energy coagulates medial branch nerve tissue, disrupting nociceptive transmission to the CNS. <strong>70–80% of patients</strong> achieve significant relief lasting <strong>6–12 months</strong> (occasionally up to 2 years) before nerve regeneration — superior to intra-articular steroid injections.</div>
+      <div class="tl-body id-only">Prosedur rawat jalan minimal invasif. Energi termal yang dipandu fluoroskopi mengkoagulasi jaringan saraf cabang medial, mengganggu transmisi nosiseptif ke SSP. <strong>70–80% pasien</strong> mencapai pereda nyeri signifikan selama <strong>6–12 bulan</strong> (kadang hingga 2 tahun) sebelum regenerasi saraf — lebih unggul dibanding injeksi steroid intra-artikular.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 SURGERY -->
+<section class="section" id="s6">
+  <div class="section-header"><span class="section-num">06</span>
+    <h2 class="en-only">Surgical Paradigms: Open vs. <span>Minimally Invasive</span></h2>
+    <h2 class="id-only">Paradigma Bedah: Terbuka vs. <span>Minimal Invasif</span></h2>
+  </div>
+  <p class="en-only">Surgery is indicated when curves exceed <strong>50°</strong>, or when patients present with severe intractable pain, progressive neurological deficits, or profound spinopelvic imbalance limiting ambulation. Primary goals: neural decompression, global spinopelvic alignment restoration, and durable arthrodesis.</p>
+  <p class="id-only">Pembedahan diindikasikan ketika kurva melebihi <strong>50°</strong>, atau ketika pasien mengalami nyeri berat yang refrakter, defisit neurologis progresif, atau ketidakseimbangan spinopelvis yang membatasi ambulasi. Tujuan utama: dekompresi neural, restorasi keseimbangan spinopelvis global, dan artrodesis yang tahan lama.</p>
+
+  <div class="compare-grid">
+    <div class="compare-col open">
+      <h3 class="en-only">Traditional Open Posterior Fusion</h3>
+      <h3 class="id-only">Fusi Posterior Terbuka Tradisional</h3>
+      <div class="compare-body">
+        <div class="compare-row"><span class="cr-label en-only">Tissue</span><span class="cr-label id-only">Jaringan</span><span class="cr-val en-only">Extensive dissection, complete muscle detachment (5–6" incisions)</span><span class="cr-val id-only">Diseksi luas, pelepasan otot lengkap (insisi 12–15 cm)</span></div>
+        <div class="compare-row"><span class="cr-label en-only">Blood Loss</span><span class="cr-label id-only">Kehilangan Darah</span><span class="cr-val en-only">Avg. 3.6 L in severe cases; infection 2–4%</span><span class="cr-val id-only">Rata-rata 3,6 L pada kasus berat; infeksi 2–4%</span></div>
+        <div class="compare-row"><span class="cr-label en-only">Hospital Stay</span><span class="cr-label id-only">Rawat Inap</span><span class="cr-val en-only">3–7 days; often ICU monitoring</span><span class="cr-val id-only">3–7 hari; sering pemantauan ICU</span></div>
+        <div class="compare-row"><span class="cr-label en-only">Recovery</span><span class="cr-label id-only">Pemulihan</span><span class="cr-val en-only">6–8 wks light work; up to 12 months full fusion</span><span class="cr-val id-only">6–8 minggu kerja ringan; hingga 12 bulan fusi penuh</span></div>
+        <div class="compare-row"><span class="cr-label en-only">Complication</span><span class="cr-label id-only">Komplikasi</span><span class="cr-val en-only">45–60% in elderly comorbid populations</span><span class="cr-val id-only">45–60% pada populasi lansia dengan komorbiditas</span></div>
+      </div>
+    </div>
+    <div class="compare-col miss">
+      <h3 class="en-only">Minimally Invasive Surgery (MISS)</h3>
+      <h3 class="id-only">Bedah Minimal Invasif (MISS)</h3>
+      <div class="compare-body">
+        <div class="compare-row"><span class="cr-label en-only">Tissue</span><span class="cr-label id-only">Jaringan</span><span class="cr-val en-only">Tubular retractors, muscle-sparing dilation (&lt;1" per level)</span><span class="cr-val id-only">Retraktor tubular, dilatasi hemat otot (&lt;2,5 cm per level)</span></div>
+        <div class="compare-row"><span class="cr-label en-only">Blood Loss</span><span class="cr-label id-only">Kehilangan Darah</span><span class="cr-val en-only">Avg. ≤1.6 L; infection &lt;1%</span><span class="cr-val id-only">Rata-rata ≤1,6 L; infeksi &lt;1%</span></div>
+        <div class="compare-row"><span class="cr-label en-only">Hospital Stay</span><span class="cr-label id-only">Rawat Inap</span><span class="cr-val en-only">Same-day to 1–2 days</span><span class="cr-val id-only">Hari yang sama hingga 1–2 hari</span></div>
+        <div class="compare-row"><span class="cr-label en-only">Recovery</span><span class="cr-label id-only">Pemulihan</span><span class="cr-val en-only">2–3 wks sedentary work; accelerated mobilization</span><span class="cr-val id-only">2–3 minggu kerja sedentari; mobilisasi dipercepat</span></div>
+        <div class="compare-row"><span class="cr-label en-only">MISS Age ≥65</span><span class="cr-label id-only">MISS Usia ≥65</span><span class="cr-val en-only">MCID achieved: ODI 64.3% · VAS back 82.9%</span><span class="cr-val id-only">MCID tercapai: ODI 64,3% · VAS punggung 82,9%</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="en-only">Techniques such as LLIF, OLIF, and TLIF allow insertion of large hyperlordotic interbody cages (20–30°) from a lateral trajectory — achieving anterior column realignment (ACR) that indirectly decompresses neural foramina and restores disc height without violating the posterior tension band.</p>
+  <p class="id-only">Teknik seperti LLIF, OLIF, dan TLIF memungkinkan insersi sangkar interbody hiperlorodik besar (20–30°) dari jalur lateral — mencapai penyelarasan kolom anterior (ACR) yang secara tidak langsung mendekompresi foramen neural dan memulihkan tinggi diskus tanpa melanggar pita tegangan posterior.</p>
+</section>
+
+<!-- 07 PERIOPERATIVE -->
+<section class="section" id="s7">
+  <div class="section-header"><span class="section-num">07</span>
+    <h2 class="en-only">Perioperative Pain Management: <span>Opioid-Free Protocols</span></h2>
+    <h2 class="id-only">Manajemen Nyeri Perioperatif: <span>Protokol Bebas Opioid</span></h2>
+  </div>
+  <p class="en-only">The postoperative recovery paradigm is shifting toward <strong>multimodal, opioid-avoidant protocols</strong> to mitigate narcotic dependency, respiratory depression, and GI complications that frequently delay hospital discharge.</p>
+  <p class="id-only">Paradigma pemulihan pasca-operasi beralih menuju <strong>protokol multimodal, penghindaran opioid</strong> untuk mengurangi ketergantungan narkotik, depresi pernapasan, dan komplikasi GI yang sering menunda pemulangan.</p>
+
+  <div class="callout">
+    <div class="callout-title en-only">Standard Opioid-Free Regimen</div>
+    <div class="callout-title id-only">Rejimen Bebas Opioid Standar</div>
+    <p class="en-only"><strong>Intraoperative:</strong> Intrafascial injection of clonidine + epinephrine + ropivacaine + ketorolac (Toradol) during wound closure.<br>
+    <strong>Postoperative oral:</strong> Gabapentin 300 mg TID + weight-dosed IV ketorolac scheduled.</p>
+    <p class="id-only"><strong>Intraoperatif:</strong> Injeksi intrafasial klonidin + epinefrin + ropivakain + ketorolak (Toradol) saat penutupan luka.<br>
+    <strong>Oral pasca-operasi:</strong> Gabapentin 300 mg TID + ketorolak IV sesuai berat badan terjadwal.</p>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="mc-val">2.0</div>
+      <div class="mc-label en-only">Days — Median Hospital Stay (RRP)</div>
+      <div class="mc-label id-only">Hari — Median Rawat Inap (RRP)</div>
+      <div class="mc-desc en-only">Rapid Recovery Protocol reduced median LOS from 3–4 days down to 2.0–2.5 days in Phase 4 clinical trials without compromising safety.</div>
+      <div class="mc-desc id-only">Protokol Pemulihan Cepat mengurangi median rawat inap dari 3–4 hari menjadi 2,0–2,5 hari dalam uji klinis Fase 4 tanpa mengorbankan keselamatan.</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-val">Phase 4</div>
+      <div class="mc-label en-only">Evidence Level</div>
+      <div class="mc-label id-only">Tingkat Bukti</div>
+      <div class="mc-desc en-only">Opioid-free pain management trials for primary instrumented posterior spinal fusions demonstrate remarkable multimodal efficacy.</div>
+      <div class="mc-desc id-only">Uji manajemen nyeri bebas opioid untuk fusi tulang belakang posterior tersinstrumentasi primer menunjukkan efikasi multimodal yang luar biasa.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 ROBOTICS -->
+<section class="section" id="s8">
+  <div class="section-header"><span class="section-num">08</span>
+    <h2 class="en-only">Robotic-Assisted <span>Navigation Systems</span></h2>
+    <h2 class="id-only">Sistem Navigasi <span>Berbantuan Robotik</span></h2>
+  </div>
+  <p class="en-only">The complex, dysplastic anatomy of scoliotic vertebrae makes freehand pedicle screw placement technically demanding and risky. Modern spinal robotics merge preoperative 3D planning software with actively tracked robotic end-effectors to execute the surgical plan with <strong>sub-millimeter precision</strong>.</p>
+  <p class="id-only">Anatomi displatik yang kompleks pada vertebra skoliotik membuat penempatan sekrup pedikel freehand secara teknis menuntut dan berisiko. Robotik tulang belakang modern menggabungkan perangkat lunak perencanaan 3D pra-operasi dengan end-effector robotik yang dilacak aktif untuk melaksanakan rencana bedah dengan <strong>presisi sub-milimeter</strong>.</p>
+
+  <div class="two-col">
+    <div class="feature-card">
+      <div class="fc-icon">🤖</div>
+      <h3>Mazor X Stealth Edition (Medtronic)</h3>
+      <p class="en-only">Real-time optical tracking combined with a rigid robotic arm physically guides drill and screw placement along the pre-planned trajectory. Eliminates the need for continuous intraoperative fluoroscopy, significantly reducing radiation exposure for the entire surgical team.</p>
+      <p class="id-only">Pelacakan optik real-time dikombinasikan dengan lengan robotik kaku yang secara fisik memandu pengeboran dan penempatan sekrup sepanjang jalur yang direncanakan sebelumnya. Menghilangkan kebutuhan fluoroskopi intraoperatif terus-menerus, secara signifikan mengurangi paparan radiasi bagi seluruh tim bedah.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon">🎯</div>
+      <h3>ExcelsiusGPS (Globus Medical)</h3>
+      <p class="en-only">Incorporates active navigation tracking and force-sensing technology, maintaining precise robotic arm position regardless of patient movement, respiration, or anatomical complexity. Achieves 100% accuracy in complex S2 alar-iliac (S2AI) pelvic fixation in clinical evidence.</p>
+      <p class="id-only">Menggabungkan pelacakan navigasi aktif dan teknologi penginderaan gaya, mempertahankan posisi lengan robotik yang tepat terlepas dari gerakan pasien, pernapasan, atau kompleksitas anatomi. Mencapai akurasi 100% dalam fiksasi pelvis S2 alar-iliac (S2AI) yang kompleks dalam bukti klinis.</p>
+    </div>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="mc-val">&gt;98%</div>
+      <div class="mc-label en-only">Pedicle Screw Accuracy</div>
+      <div class="mc-label id-only">Akurasi Sekrup Pedikel</div>
+      <div class="mc-desc en-only">Clinically acceptable trajectory rates across systematic reviews of multiple robotic platforms.</div>
+      <div class="mc-desc id-only">Tingkat jalur yang dapat diterima secara klinis dalam tinjauan sistematis berbagai platform robotik.</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-val">100%</div>
+      <div class="mc-label en-only">S2AI Fixation Accuracy</div>
+      <div class="mc-label id-only">Akurasi Fiksasi S2AI</div>
+      <div class="mc-desc en-only">Complex pelvic fixation achieved with perfect accuracy, eliminating major neurovascular breaches.</div>
+      <div class="mc-desc id-only">Fiksasi pelvis kompleks dicapai dengan akurasi sempurna, menghilangkan pelanggaran neurovaskular mayor.</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-val">↓ XR</div>
+      <div class="mc-label en-only">Radiation Exposure</div>
+      <div class="mc-label id-only">Paparan Radiasi</div>
+      <div class="mc-desc en-only">Continuous fluoroscopy is no longer required, significantly reducing intraoperative radiation to patient and surgical team.</div>
+      <div class="mc-desc id-only">Fluoroskopi kontinu tidak lagi diperlukan, secara signifikan mengurangi radiasi intraoperatif pada pasien dan tim bedah.</div>
+    </div>
+  </div>
+
+  <!-- REGIONAL SURGICAL CENTERS -->
+  <h3 class="en-only" style="margin-top:28px;">Regional Centers — Indonesia</h3>
+  <h3 class="id-only" style="margin-top:28px;">Pusat Regional — Indonesia</h3>
+  <p class="en-only">The rapid global dissemination of robotic and advanced surgical technology is reaching Indonesian healthcare centers, raising the standard of complex spinal deformity care across the archipelago:</p>
+  <p class="id-only">Diseminasi global yang cepat dari teknologi bedah robotik dan canggih kini menjangkau pusat layanan kesehatan Indonesia, meningkatkan standar perawatan deformitas tulang belakang yang kompleks di seluruh kepulauan:</p>
+
+  <div class="region-grid">
+    <div class="region-card">
+      <span class="rc-badge amber">Surabaya · Jawa Timur</span>
+      <h4>Waron Hospital</h4>
+      <p class="en-only">First hospital in Indonesia to install the Edge MP1000 Multi-port Endoscopic Robotic Surgical System, signaling a significant shift in regional surgical capabilities. The system leverages master-slave control algorithms, 3D HD visualization with 10× magnification, and ultra-low latency tremor filtration for highly intricate minimally invasive procedures.</p>
+      <p class="id-only">Rumah sakit pertama di Indonesia yang memasang Sistem Bedah Robotik Endoskopik Multi-port Edge MP1000, menandai pergeseran signifikan dalam kemampuan bedah regional. Sistem ini memanfaatkan algoritma kontrol master-slave, visualisasi 3D HD dengan pembesaran 10×, dan filtrasi tremor latensi ultra-rendah untuk prosedur minimal invasif yang sangat rumit.</p>
+    </div>
+    <div class="region-card">
+      <span class="rc-badge amber">Medan · Sumatera Utara</span>
+      <h4>Murni Teguh Memorial Hospital</h4>
+      <p class="en-only">Subsequently integrated the Edge MP1000 platform, extending advanced robotic surgical capabilities across Sumatra and demonstrating the rapid regional adoption of minimally invasive robotic technology beyond Java's major centers.</p>
+      <p class="id-only">Kemudian mengintegrasikan platform Edge MP1000, memperluas kemampuan bedah robotik canggih ke seluruh Sumatera dan menunjukkan adopsi regional yang cepat dari teknologi robotik minimal invasif di luar pusat-pusat besar di Jawa.</p>
+    </div>
+    <div class="region-card">
+      <span class="rc-badge">Jakarta Selatan</span>
+      <h4>RS Pondok Indah — Jakarta Spine Clinic (JSC)</h4>
+      <p class="en-only">Recognized as one of the Best Specialized Hospitals in Asia Pacific in the Orthopedics category (Newsweek 2025). The JSC offers holistic spinal deformity management by subspecialized orthopedic surgeons, equipped with 3 Tesla MRI and dual-source Flash CT-Scan. Provides a full treatment spectrum from pharmacological and electrotherapy to endoscopic spine surgery and percutaneous laser disc decompression.</p>
+      <p class="id-only">Diakui sebagai salah satu Rumah Sakit Spesialis Terbaik di Asia Pasifik dalam kategori Ortopedi (Newsweek 2025). JSC menawarkan manajemen deformitas tulang belakang holistik oleh ahli bedah ortopedi subspesialis, dilengkapi MRI 3 Tesla dan Flash CT-Scan dual-source. Menyediakan spektrum pengobatan penuh mulai dari farmakologis dan elektroterapi hingga bedah tulang belakang endoskopik dan dekompresi diskus laser perkutan.</p>
+    </div>
+    <div class="region-card">
+      <span class="rc-badge">Jakarta Selatan</span>
+      <h4>RSUP Fatmawati — Spine Center</h4>
+      <p class="en-only">A longstanding multidisciplinary spine referral center since 1970. The Spine Center operates an integrated team of Sp.OT (orthopedic surgery), Sp.KFR (physical medicine), Sp.S (neurology), Sp.Rad (radiology), and Sp.An (anesthesiology) specialists, with a dedicated spine operating theater for both operative and non-operative spinal deformity management.</p>
+      <p class="id-only">Pusat rujukan tulang belakang multidisiplin yang telah lama berdiri sejak 1970. Spine Center mengoperasikan tim terpadu dokter Sp.OT (bedah ortopedi), Sp.KFR (kedokteran fisik dan rehabilitasi), Sp.S (neurologi), Sp.Rad (radiologi), dan Sp.An (anestesiologi), dengan kamar operasi tulang belakang khusus untuk manajemen deformitas tulang belakang operatif maupun non-operatif.</p>
+    </div>
+    <div class="region-card">
+      <span class="rc-badge">Jakarta Barat · Tangerang</span>
+      <h4>Mandaya Royal Hospital Puri</h4>
+      <p class="en-only">Home to Dr. Mohammad Fachry Lubis, Sp.OT-(K) — an orthopedic spine subspecialist trained at the University of Indonesia with extensive domestic and international fellowship experience. Handles pinched nerve conditions, scoliosis, and complex spinal disorders, serving as a key referral point for Jabodetabek patients requiring advanced spinal surgical consultation.</p>
+      <p class="id-only">Tempat praktik Dr. Mohammad Fachry Lubis, Sp.OT-(K) — subspesialis tulang belakang ortopedi yang terlatih di Universitas Indonesia dengan pengalaman fellowship dalam dan luar negeri yang luas. Menangani kondisi saraf terjepit, skoliosis, dan gangguan tulang belakang yang kompleks, berfungsi sebagai titik rujukan utama bagi pasien Jabodetabek yang memerlukan konsultasi bedah tulang belakang tingkat lanjut.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 09 VBT -->
+<section class="section" id="s9">
+  <div class="section-header"><span class="section-num">09</span>
+    <h2 class="en-only">Motion-Preserving Interventions: <span>VBT & Internal Bracing</span></h2>
+    <h2 class="id-only">Intervensi Preservasi Gerak: <span>VBT & Internal Bracing</span></h2>
+  </div>
+  <p class="en-only">Growing recognition of long-term arthrodesis consequences (adjacent segment disease, permanent mobility loss) has spurred development of <strong>fusionless, motion-preserving alternatives</strong>.</p>
+  <p class="id-only">Semakin besarnya pengakuan akan konsekuensi artrodesis jangka panjang (penyakit segmen adjacen, kehilangan mobilitas permanen) telah mendorong pengembangan <strong>alternatif bebas fusi yang mempreservasi gerak</strong>.</p>
+
+  <div class="feature-card" style="max-width:780px;margin-bottom:20px;">
+    <div class="fc-icon">🔗</div>
+    <h3 class="en-only">Vertebral Body Tethering (VBT)</h3>
+    <h3 class="id-only">Vertebral Body Tethering (VBT)</h3>
+    <p class="en-only">FDA-approved under a Humanitarian Device Exemption for skeletally immature patients (Sanders score 2–5) with curves of 35–65°. Thoracoscopic titanium screws on the convex vertebral bodies, connected by a flexible polyethylene tension cord. Harnesses the <strong>Hueter-Volkmann principle</strong> — decelerating convex-side growth while allowing concave-side catch-up, preserving intrinsic spinal flexibility.</p>
+    <p class="id-only">Disetujui FDA di bawah Humanitarian Device Exemption untuk pasien dengan skeletal imatur (skor Sanders 2–5) dengan kurva 35–65°. Sekrup titanium torakoskopik pada badan vertebra sisi cembung, dihubungkan dengan kabel tegangan polietilen fleksibel. Memanfaatkan <strong>prinsip Hueter-Volkmann</strong> — memperlambat pertumbuhan sisi cembung sambil memungkinkan sisi cekung mengejar, mempreservasi fleksibilitas tulang belakang intrinsik.</p>
+  </div>
+
+  <div class="callout amber">
+    <div class="callout-title en-only">Off-Label in Mature Adults — Experimental</div>
+    <div class="callout-title id-only">Off-Label pada Dewasa Matur — Eksperimental</div>
+    <p class="en-only">Specialized centers are controversially pioneering VBT in skeletally mature patients. Correction relies on immediate intraoperative mechanical force rather than growth modulation. Patients face significant risk of <strong>tether rupture</strong> from perpetual mechanical stress over adult life, though multi-year follow-up case reports show maintained coronal correction without adjacent disc degeneration.</p>
+    <p class="id-only">Pusat-pusat spesialis secara kontroversial memelopori VBT pada pasien matur secara skeletal. Koreksi bergantung pada gaya mekanik intraoperatif segera daripada modulasi pertumbuhan. Pasien menghadapi risiko signifikan <strong>ruptur tali</strong> akibat tekanan mekanik yang terus-menerus sepanjang kehidupan dewasa, meskipun laporan kasus tindak lanjut multi-tahun menunjukkan pemeliharaan koreksi koronal tanpa degenerasi diskus adjacen.</p>
+  </div>
+
+  <div class="feature-card" style="max-width:780px;">
+    <div class="fc-icon">⚙️</div>
+    <h3 class="en-only">ApiFix Internal Bracing System</h3>
+    <h3 class="id-only">Sistem Internal Bracing ApiFix</h3>
+    <p class="en-only">Inserted via a minimally invasive posterior approach, the ApiFix device acts as an <strong>internal ratchet</strong> — attaching to the concave side using minimal hardware (typically 3 screws) and gradually elongating to correct the curve while preserving flexibility. Represents the broader industry trend toward dynamic, motion-preserving technologies challenging the century-old paradigm of rigid spinal fusion.</p>
+    <p class="id-only">Disisipkan melalui pendekatan posterior minimal invasif, perangkat ApiFix berfungsi sebagai <strong>ratchet internal</strong> — menempel pada sisi cekung menggunakan perangkat keras minimal (biasanya 3 sekrup) dan secara bertahap memanjang untuk mengoreksi kurva sambil mempreservasi fleksibilitas. Merepresentasikan tren industri yang lebih luas menuju teknologi dinamis yang mempreservasi gerak, menantang paradigma fusi tulang belakang kaku yang berusia seabad.</p>
+  </div>
+</section>
+
+<!-- 10 BIOLOGICS -->
+<section class="section" id="s10">
+  <div class="section-header"><span class="section-num">10</span>
+    <h2 class="en-only">Biologics & <span>Regenerative Medicine</span></h2>
+    <h2 class="id-only">Biologis & <span>Kedokteran Regeneratif</span></h2>
+  </div>
+  <p class="en-only">Mesenchymal Stem Cell (MSC) therapy hypothesizes that introducing multipotent cells into the damaged disc space can stimulate nucleus pulposus regeneration — addressing the degenerating discs that drive adult de novo scoliosis.</p>
+  <p class="id-only">Terapi Sel Punca Mesenkimal (MSC) menghipotesiskan bahwa memperkenalkan sel multipoten ke dalam ruang diskus yang rusak dapat menstimulasi regenerasi nukleus pulposus — mengatasi diskus yang berdegenerasi yang mendorong skoliosis de novo dewasa.</p>
+
+  <div class="callout coral">
+    <div class="callout-title en-only">⚠ Current Clinical Reality</div>
+    <div class="callout-title id-only">⚠ Realitas Klinis Saat Ini</div>
+    <p class="en-only">Phase I and II trial systematic reviews confirm: MSC injections do <strong>not</strong> reliably rebuild structural disc height or reverse severe structural collapse on MRI. FDA approval for structural intervertebral repair has not been granted. MSC therapy is not a biomechanical cure for adult scoliosis.</p>
+    <p class="id-only">Tinjauan sistematis uji Fase I dan II mengkonfirmasi: injeksi MSC <strong>tidak</strong> secara andal membangun kembali tinggi diskus struktural atau membalikkan kolaps struktural berat pada MRI. Persetujuan FDA untuk perbaikan intervertebral struktural belum diberikan. Terapi MSC bukanlah penyembuhan biomekanik untuk skoliosis dewasa.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="feature-card">
+      <div class="fc-icon">🧫</div>
+      <h3 class="en-only">The Hostile Disc Microenvironment</h3>
+      <h3 class="id-only">Mikrolingkungan Diskus yang Tidak Bersahabat</h3>
+      <p class="en-only">The degenerated disc is avascular, hypoxic, and highly acidic — severely limiting injected stem cell survival and engraftment. This biological barrier is the primary translational challenge for MSC-based disc repair.</p>
+      <p class="id-only">Diskus yang berdegenerasi bersifat avaskular, hipoksik, dan sangat asam — secara parah membatasi kelangsungan hidup dan engraftment sel punca yang disuntikkan. Hambatan biologis ini adalah tantangan translasional utama untuk perbaikan diskus berbasis MSC.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon">📡</div>
+      <h3 class="en-only">Paracrine Signaling — The Mechanism of Benefit</h3>
+      <h3 class="id-only">Sinyal Parakrin — Mekanisme Manfaat</h3>
+      <p class="en-only">Clinical benefit derives not from cellular replacement, but from MSC secretion of anti-inflammatory cytokines (IL-10, TGF-β), trophic growth factors (IGF-1), suppression of catabolic enzymes (MMP/ADAMTS), and inhibition of nociceptive nerve ingrowth that causes discogenic pain.</p>
+      <p class="id-only">Manfaat klinis tidak berasal dari penggantian seluler, melainkan dari sekresi MSC berupa sitokin anti-inflamasi (IL-10, TGF-β), faktor pertumbuhan trofik (IGF-1), supresi enzim katabolik (MMP/ADAMTS), dan penghambatan pertumbuhan ke dalam saraf nosiseptif yang menyebabkan nyeri diskogenik.</p>
+    </div>
+  </div>
+  <p class="en-only">While not a structural cure, regenerative medicine represents a promising biological tool for managing <strong>localized discogenic inflammation and chronic pain</strong>, potentially delaying the need for surgical intervention in select patients.</p>
+  <p class="id-only">Meskipun bukan penyembuhan struktural, kedokteran regeneratif merepresentasikan alat biologis yang menjanjikan untuk mengelola <strong>peradangan diskogenik lokal dan nyeri kronis</strong>, berpotensi menunda kebutuhan intervensi bedah pada pasien tertentu.</p>
+</section>
+
+<!-- 11 CONCLUSION -->
+<section class="section" id="s11">
+  <div class="section-header"><span class="section-num">11</span>
+    <h2 class="en-only">Conclusion: <span>The Modern Treatment Continuum</span></h2>
+    <h2 class="id-only">Kesimpulan: <span>Kontinum Pengobatan Modern</span></h2>
+  </div>
+  <p class="en-only">Adult scoliosis management has evolved into a highly sophisticated, multi-tiered clinical science demanding deeply personalized care across a coordinated continuum:</p>
+  <p class="id-only">Manajemen skoliosis dewasa telah berkembang menjadi ilmu klinis yang sangat canggih dan berlapis, menuntut perawatan yang sangat personal di seluruh kontinum yang terkoordinasi:</p>
+
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-dot"></div>
+      <div class="tl-title en-only">AI-Powered Diagnostics & Prediction</div>
+      <div class="tl-title id-only">Diagnostik & Prediksi Berbasis AI</div>
+      <div class="tl-body en-only">Machine learning models forecast surgical necessity, mechanical complications, and HRQoL outcomes with up to 91% accuracy — enabling data-driven patient counseling.</div>
+      <div class="tl-body id-only">Model machine learning memprakirakan kebutuhan bedah, komplikasi mekanik, dan hasil HRQoL dengan akurasi hingga 91% — memungkinkan konseling pasien berbasis data.</div>
+    </div>
+    <div class="tl-item"><div class="tl-dot amber"></div>
+      <div class="tl-title en-only">Preoperative Bone Health Optimization</div>
+      <div class="tl-title id-only">Optimasi Kesehatan Tulang Pra-operasi</div>
+      <div class="tl-body en-only">Rigorous BMD assessment and targeted pharmacotherapy (PTH analogs, sclerostin inhibitors) establish the safe biological foundation for instrumentation — the most overlooked determinant of surgical success.</div>
+      <div class="tl-body id-only">Penilaian BMD yang ketat dan farmakoterapi tertarget (analog PTH, inhibitor sklerostin) membangun fondasi biologis yang aman untuk instrumentasi — faktor penentu keberhasilan bedah yang paling sering diabaikan.</div>
+    </div>
+    <div class="tl-item"><div class="tl-dot"></div>
+      <div class="tl-title en-only">Intensive Physiotherapy (PSSE / Schroth)</div>
+      <div class="tl-title id-only">Fisioterapi Intensif (PSSE / Schroth)</div>
+      <div class="tl-body en-only">Three-dimensional, curve-specific exercise protocols with very large QoL effect sizes (ES = 1.087) have completely redefined conservative management — active halting of structural progression, not passive observation.</div>
+      <div class="tl-body id-only">Protokol latihan tiga dimensi spesifik kurva dengan ukuran efek kualitas hidup yang sangat besar (ES = 1,087) telah sepenuhnya mendefinisikan ulang manajemen konservatif — penghentian aktif progresi struktural, bukan observasi pasif.</div>
+    </div>
+    <div class="tl-item"><div class="tl-dot amber"></div>
+      <div class="tl-title en-only">Custom Dynamic Orthoses</div>
+      <div class="tl-title id-only">Ortosis Dinamis Khusus</div>
+      <div class="tl-body en-only">3D-printed CAD-FEM braces with embedded smart sensors reduce curve progression from 1.28°/yr to 0.21°/yr — representing decades of preserved function over invasive reconstruction.</div>
+      <div class="tl-body id-only">Brace CAD-FEM cetak 3D dengan sensor cerdas tertanam mengurangi progresi kurva dari 1,28°/thn menjadi 0,21°/thn — merepresentasikan dekade fungsi yang terjaga dibandingkan rekonstruksi invasif.</div>
+    </div>
+    <div class="tl-item"><div class="tl-dot"></div>
+      <div class="tl-title en-only">Minimally Invasive Surgery + Robotic Navigation</div>
+      <div class="tl-title id-only">Bedah Minimal Invasif + Navigasi Robotik</div>
+      <div class="tl-body en-only">MISS techniques with opioid-free recovery protocols and robotic precision (&gt;98% screw accuracy) have dramatically reduced surgical morbidity — extending life-altering correction to older, more complex patients across Indonesia and beyond.</div>
+      <div class="tl-body id-only">Teknik MISS dengan protokol pemulihan bebas opioid dan presisi robotik (&gt;98% akurasi sekrup) telah secara dramatis mengurangi morbiditas bedah — memperluas koreksi yang mengubah kehidupan ke pasien yang lebih tua dan lebih kompleks di seluruh Indonesia dan sekitarnya.</div>
+    </div>
+    <div class="tl-item"><div class="tl-dot amber"></div>
+      <div class="tl-title en-only">Emerging Technologies</div>
+      <div class="tl-title id-only">Teknologi yang Berkembang</div>
+      <div class="tl-body en-only">VBT, internal ratcheting systems, and regenerative biological therapies continue to mature — challenging the century-old paradigm of rigid spinal fusion and expanding motion-preserving options.</div>
+      <div class="tl-body id-only">VBT, sistem ratcheting internal, dan terapi biologis regeneratif terus berkembang — menantang paradigma fusi tulang belakang kaku berusia seabad dan memperluas pilihan yang mempreservasi gerak.</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:24px;">
+    <div class="callout-title en-only">The Goal Remains Constant</div>
+    <div class="callout-title id-only">Tujuan Tetap Konstan</div>
+    <p class="en-only">Across all treatment modalities, the unifying objective is preserving neurological function, restoring global spinal harmony, and profoundly improving the patient's health-related quality of life.</p>
+    <p class="id-only">Di semua modalitas pengobatan, tujuan pemersatu adalah mempreservasi fungsi neurologis, memulihkan harmoni tulang belakang global, dan secara mendalam meningkatkan kualitas hidup terkait kesehatan pasien.</p>
+  </div>
+</section>
+
+<footer>
+  <p class="en-only"><strong>Adult Scoliosis Evidence-Based Clinical Reference</strong> · Sources: Scoliosis Research Society (SRS), SOSORT Guidelines, Congress of Neurological Surgeons (CNS), PMC systematic reviews, and peer-reviewed trials.</p>
+  <p class="id-only"><strong>Referensi Klinis Berbasis Bukti Skoliosis Dewasa</strong> · Sumber: Scoliosis Research Society (SRS), Panduan SOSORT, Congress of Neurological Surgeons (CNS), tinjauan sistematis PMC, dan uji coba peer-review.</p>
+  <p style="margin-top:8px;color:var(--text-muted);" class="en-only">For educational and clinical information purposes only. Always consult primary literature and appropriate specialists for individual patient care decisions.</p>
+  <p style="margin-top:8px;color:var(--text-muted);" class="id-only">Hanya untuk tujuan informasi pendidikan dan klinis. Selalu konsultasikan literatur primer dan spesialis yang sesuai untuk keputusan perawatan pasien individual.</p>
+</footer>
+
+</main>
+</div>
+
+<script>
+// ── LANG TOGGLE ──
+function setLang(lang, btn) {
+  document.body.classList.remove('lang-en','lang-id');
+  document.body.classList.add('lang-' + lang);
+  // Sync all lang buttons
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    const isMatch = (lang === 'en' && (b.textContent.trim() === 'EN' || b.textContent.includes('English')))
+                 || (lang === 'id' && (b.textContent.trim() === 'ID' || b.textContent.includes('Indonesia')));
+    b.classList.toggle('active', isMatch);
+  });
+}
+
+// ── MOBILE SIDEBAR ──
+const burger = document.getElementById('burger');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebar-overlay');
+burger.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+});
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+});
+
+// ── NAV CLICK ──
+function navClick(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  if (window.innerWidth <= 768) {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+}
+
+// ── SCROLL SPY ──
+const sections = document.querySelectorAll('.section');
+const navItems = document.querySelectorAll('.nav-item');
+const scrollObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navItems.forEach(n => n.classList.toggle('active', n.getAttribute('href') === '#' + id));
+    }
+  });
+}, { rootMargin: '-35% 0px -35% 0px' });
+sections.forEach(s => scrollObserver.observe(s));
+
+// ── SECTION FADE-IN ──
+const fadeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { rootMargin: '0px 0px -60px 0px' });
+sections.forEach(s => fadeObserver.observe(s));
+
+// ── PROGRESS BARS ──
+const barObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const fill = entry.target.querySelector('.progress-fill');
+      if (fill) fill.style.width = fill.getAttribute('data-width') + '%';
+    }
+  });
+}, { rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.progress-item').forEach(p => barObserver.observe(p));
+</script>
+</body>
+</html>
