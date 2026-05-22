@@ -1,703 +1,2220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Modern Naval Spectrum: Ship Comparison</title>
-    <!-- Importing modern fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* * AESTHETIC REDESIGN V3
-         * 1. Added Tabbed Interface (Infographic / Table)
-         * 2. Added Category Explanations
-         * 3. Added more key points (Range/Endurance) to cards
-         * 4. Created new comparison table
-        */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Modern Naval Spectrum: Ship Comparison</title>
+  <meta name="description" content="A premium, tactical, and comparative guide to the primary classes of modern naval vessels. Features interactive fleet radar, blueprints, and analytical charts.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    :root {
+      --bg:         #05080c;
+      --bg2:        #0b0f19;
+      --bg3:        #101625;
+      --surface:    #141d30;
+      --border:     rgba(0, 240, 255, 0.06);
+      --border2:    rgba(0, 240, 255, 0.16);
+      --cyan:       #00f0ff;
+      --yellow:     #ffc83b;
+      --blue:       #3b82f6;
+      --red:        #ff4757;
+      --emerald:    #1dd1a1;
+      --text:       #dbeafe;
+      --text-dim:   #7082a6;
+      --text-muted: #3a4b6e;
+      --heading:    #eef1f8;
+    }
 
-        :root {
-            --color-bg: #f0f4f8; /* Light blue-grey background */
-            --color-header-bg: #1a2b3c; /* Deep naval blue */
-            --color-header-text: #ffffff;
-            --color-card-bg: #ffffff;
-            --color-text-primary: #212529;
-            --color-text-secondary: #5a687b;
-            --color-accent: #007bff; /* A clean, modern blue accent */
-            --color-accent-hover: #0056b3;
-            --font-header: 'Oswald', sans-serif;
-            --font-body: 'Roboto', sans-serif;
-            --card-shadow: 0 6px 18px rgba(0, 30, 60, 0.07);
-            --card-shadow-hover: 0 10px 25px rgba(0, 30, 60, 0.12);
-            --card-radius: 12px;
-        }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+    html { scroll-behavior: smooth; }
 
-        body {
-            font-family: var(--font-body);
-            margin: 0;
-            padding: 0;
-            background-color: var(--color-bg);
-            color: var(--color-text-primary);
-            line-height: 1.65;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
 
-        /* --- Header Section --- */
-        .header-container {
-            background-color: var(--color-header-bg);
-            color: var(--color-header-text);
-            padding: 50px 30px 60px 30px;
-            text-align: center;
-            background-image: linear-gradient(rgba(26, 43, 60, 0.95), rgba(26, 43, 60, 0.95)), url('https://placehold.co/1920x400/333/555?text=Naval+Fleet+Silhouette');
-            background-size: cover;
-            background-position: center 30%;
-            border-bottom: 4px solid var(--color-accent);
-        }
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.45;
+    }
 
-        .header-container h1 {
-            font-family: var(--font-header);
-            font-weight: 700;
-            font-size: 3.5rem;
-            margin: 0 0 15px 0;
-            letter-spacing: 0.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
 
-        .header-container p {
-            font-size: 1.15rem;
-            font-weight: 300;
-            max-width: 800px;
-            margin: 0 auto;
-            color: rgba(255, 255, 255, 0.85);
-        }
+    /* ─── BILINGUAL TRANSLATION SYSTEM ─── */
+    body.lang-id .en-only { display: none !important; }
+    body.lang-en .id-only { display: none !important; }
 
-        /* --- Main Content --- */
-        .main-container {
-            max-width: 1800px; /* Increased max-width for wider layout */
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+    .lang-toggle-wrap {
+      padding: 0 1.5rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+    .lang-toggle {
+      display: flex;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      width: 100%;
+    }
+    .lang-btn {
+      flex: 1;
+      padding: 6px 0;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-dim);
+      border: none;
+      background: transparent;
+    }
+    .lang-btn.active {
+      background: rgba(0, 240, 255, 0.08);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      border-radius: 5px;
+    }
 
-        /* --- Tab System --- */
-        .tab-buttons {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #dee2e6;
-        }
+    /* ─── LAYOUT ─── */
+    .layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
 
-        .tab-btn {
-            font-family: var(--font-header);
-            font-size: 1.25rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            background: none;
-            border: none;
-            padding: 15px 30px;
-            cursor: pointer;
-            color: var(--color-text-secondary);
-            border-bottom: 4px solid transparent;
-            transform: translateY(2px); /* Aligns with bottom border */
-            transition: color 0.2s ease, border-color 0.2s ease;
-        }
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      padding-top: 1.5rem;
+      z-index: 100;
+    }
 
-        .tab-btn:hover {
-            color: var(--color-accent-hover);
-        }
+    .brand-section {
+      padding: 0 1.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .brand-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--heading);
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+    }
+    .brand-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      background: rgba(0, 240, 255, 0.08);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 4px;
+      padding: 2px 6px;
+      align-self: flex-start;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-        .tab-btn.active {
-            color: var(--color-accent);
-            border-bottom-color: var(--color-accent);
-        }
+    .nav-menu {
+      list-style: none;
+      padding: 1rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      padding: 0.6rem 1.5rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.2s ease;
+      border-left: 3px solid transparent;
+      gap: 0.5rem;
+    }
+    .nav-item a::before {
+      content: '●';
+      font-size: 6px;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .nav-item a:hover {
+      color: var(--cyan);
+      background: rgba(0, 240, 255, 0.02);
+    }
+    .nav-item.active a {
+      color: var(--cyan);
+      border-left-color: var(--cyan);
+      background: rgba(0, 240, 255, 0.04);
+      font-weight: 500;
+    }
+    .nav-item.active a::before {
+      color: var(--cyan);
+    }
 
-        .tab-content {
-            display: none; /* Hidden by default */
-        }
+    .back-home {
+      padding: 1.2rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      transition: color 0.2s;
+    }
+    .back-home:hover {
+      color: var(--cyan);
+    }
 
-        .tab-content.active {
-            display: block; /* Shown when active */
-        }
+    /* ─── MAIN CONTENT ─── */
+    .content-flow {
+      max-width: 860px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 5rem;
+    }
 
-        /* --- Infographic View --- */
-        .category-header {
-            font-family: var(--font-header);
-            font-weight: 500;
-            font-size: 2.5rem;
-            color: var(--color-header-bg);
-            margin-top: 30px;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid rgba(0,0,0,0.08);
-            text-align: left;
-        }
-        
-        .category-explanation {
-            font-size: 1.05rem;
-            color: var(--color-text-secondary);
-            margin-bottom: 25px;
-            max-width: 100%;
-        }
+    /* ─── HERO ─── */
+    .hero {
+      margin-bottom: 3.5rem;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.2rem;
+      font-weight: 400;
+      color: var(--heading);
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+      letter-spacing: -0.5px;
+    }
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      font-weight: 300;
+      max-width: 720px;
+      margin-bottom: 2rem;
+    }
+    .meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+    .meta-item strong {
+      color: var(--cyan);
+      font-weight: 500;
+    }
 
-        .infographic-grid {
-            display: grid;
-            /* Updated to make cards wider */
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 28px;
-            justify-content: center;
-            margin-top: 20px;
-        }
+    /* ─── STATISTICS STRIP ─── */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+    .stat-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--cyan);
+      opacity: 0.6;
+    }
+    .stat-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: var(--heading);
+      line-height: 1.2;
+      margin-bottom: 0.2rem;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+    }
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-        .ship-card {
-            background-color: var(--color-card-bg);
-            border-radius: var(--card-radius);
-            box-shadow: var(--card-shadow);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            overflow: hidden; /* To contain the top border */
-            display: flex;
-            flex-direction: column;
-            border-top: 6px solid; /* Color set by mission class */
-        }
+    /* ─── SECTIONS ─── */
+    section {
+      padding-top: 4.5rem;
+      margin-top: -3rem;
+      margin-bottom: 4rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 3.5rem;
+    }
+    section:last-of-type {
+      border-bottom: none;
+    }
 
-        .ship-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--card-shadow-hover);
-        }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 400;
+      color: var(--heading);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-title span.index {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--cyan);
+      background: rgba(0, 240, 255, 0.06);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
 
-        .card-content {
-            padding: 25px 30px 30px 30px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1; /* Makes card stretch to fill height */
-        }
+    .section-desc {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+    }
 
-        .ship-card h3 {
-            font-family: var(--font-header);
-            font-weight: 500;
-            font-size: 1.8rem;
-            color: var(--color-text-primary);
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
+    /* ─── TACTICAL COM-CENTER CONSOLE ─── */
+    .console-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 480px;
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+    .console-nav {
+      background: rgba(11, 15, 25, 0.6);
+      border-right: 1px solid var(--border);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      overflow-y: auto;
+      max-height: 520px;
+    }
+    .console-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0.6rem 0.8rem;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+    .console-btn span.c-name {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-dim);
+      transition: color 0.2s;
+    }
+    .console-btn span.c-role {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 0.1rem;
+    }
+    .console-btn:hover {
+      background: rgba(0, 240, 255, 0.02);
+      border-color: rgba(0, 240, 255, 0.05);
+    }
+    .console-btn.active {
+      background: rgba(0, 240, 255, 0.04);
+      border-color: rgba(0, 240, 255, 0.2);
+    }
+    .console-btn.active span.c-name {
+      color: var(--cyan);
+    }
+    .console-btn.active span.c-role {
+      color: var(--cyan);
+      opacity: 0.7;
+    }
 
-        .mission-title {
-            font-family: var(--font-body);
-            font-size: 0.9rem;
-            font-weight: 700;
-            padding: 5px 10px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: inline-block;
-            align-self: flex-start;
-            color: #fff;
-        }
+    /* Console display screen */
+    .console-screen {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg3);
+      position: relative;
+    }
+    .console-header-readout {
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+    .console-system-status {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--cyan);
+    }
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--cyan);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
 
-        .description {
-            font-size: 1rem;
-            font-weight: 400;
-            color: var(--color-text-secondary);
-            margin-bottom: 20px;
-            flex-grow: 1; /* Pushes specs to the bottom */
-        }
+    .console-canvas-area {
+      display: grid;
+      grid-template-columns: 1fr 160px;
+      gap: 1.5rem;
+      flex-grow: 1;
+    }
 
-        .specs {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            font-size: 0.95rem;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-        }
+    .blueprint-screen {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(5, 8, 12, 0.8);
+      position: relative;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    /* SVG Ship Blueprints */
+    .ship-silhouette {
+      width: 90%;
+      height: 90%;
+      display: none;
+    }
+    .ship-silhouette.active {
+      display: block;
+    }
+    .ship-silhouette path.hull {
+      fill: rgba(0, 240, 255, 0.03);
+      stroke: var(--cyan);
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 4px rgba(0, 240, 255, 0.5));
+      transition: stroke 0.3s;
+    }
+    .ship-silhouette.yellow path.hull {
+      fill: rgba(255, 200, 59, 0.03);
+      stroke: var(--yellow);
+      filter: drop-shadow(0 0 4px rgba(255, 200, 59, 0.5));
+    }
+    .ship-silhouette.blue path.hull {
+      fill: rgba(59, 130, 246, 0.03);
+      stroke: var(--blue);
+      filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.5));
+    }
+    .ship-silhouette.red path.hull {
+      fill: rgba(255, 71, 87, 0.03);
+      stroke: var(--red);
+      filter: drop-shadow(0 0 4px rgba(255, 71, 87, 0.5));
+    }
+    .ship-silhouette.emerald path.hull {
+      fill: rgba(29, 209, 161, 0.03);
+      stroke: var(--emerald);
+      filter: drop-shadow(0 0 4px rgba(29, 209, 161, 0.5));
+    }
+    .ship-silhouette path.details {
+      fill: none;
+      stroke: var(--text-dim);
+      stroke-width: 1;
+      opacity: 0.7;
+    }
+    .ship-silhouette line.waterline {
+      stroke: var(--text-muted);
+      stroke-width: 1;
+      stroke-dasharray: 4 4;
+    }
 
-        .specs li {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: flex-start;
-        }
-        
-        .specs li::before {
-            content: '►'; /* Cleaner list icon */
-            font-size: 0.8em;
-            color: var(--color-accent);
-            margin-right: 10px;
-            padding-top: 3px;
-        }
+    .blueprint-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-size: 20px 20px;
+      background-image: 
+        linear-gradient(to right, rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+      pointer-events: none;
+    }
 
-        .specs strong {
-            font-weight: 700;
-            color: var(--color-text-primary);
-            width: 120px; /* Adjusted width for new labels */
-            flex-shrink: 0;
-        }
+    /* Radar radar circle */
+    .sonar-panel {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(5, 8, 12, 0.8);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      aspect-ratio: 1;
+    }
+    .sonar-circle {
+      width: 90%;
+      height: 90%;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      position: relative;
+      background: 
+        radial-gradient(circle, transparent 30%, rgba(0, 240, 255, 0.01) 31%, rgba(0, 240, 255, 0.01) 60%, transparent 61%),
+        radial-gradient(circle, transparent 10%, rgba(0, 240, 255, 0.02) 11%, rgba(0, 240, 255, 0.02) 12%, transparent 13%);
+    }
+    .sonar-crosshair-h {
+      position: absolute;
+      left: 5%;
+      right: 5%;
+      top: 50%;
+      height: 1px;
+      background: var(--border);
+    }
+    .sonar-crosshair-v {
+      position: absolute;
+      top: 5%;
+      bottom: 5%;
+      left: 50%;
+      width: 1px;
+      background: var(--border);
+    }
+    .sonar-sweep {
+      position: absolute;
+      inset: 0;
+      background: conic-gradient(from 0deg, rgba(0, 240, 255, 0.15) 0deg, rgba(0, 240, 255, 0) 90deg);
+      border-radius: 50%;
+      animation: sonar-sweep-anim 4s linear infinite;
+    }
+    @keyframes sonar-sweep-anim {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .sonar-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--cyan);
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .sonar-dot.active {
+      opacity: 0.95;
+    }
 
-        /* --- Mission Colors --- */
-        .ship-card.mission-constabulary { border-color: #27ae60; }
-        .mission-title.mission-constabulary { background-color: #27ae60; }
+    /* Telemetry block */
+    .console-telemetry {
+      margin-top: 1.2rem;
+      border-top: 1px dashed var(--border);
+      padding-top: 1.2rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .telemetry-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .telemetry-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+    }
+    .telemetry-item span.t-label {
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 10px;
+      display: block;
+      margin-bottom: 0.1rem;
+    }
+    .telemetry-item span.t-val {
+      color: var(--heading);
+      font-weight: 500;
+    }
 
-        .ship-card.mission-littoral { border-color: #f39c12; }
-        .mission-title.mission-littoral { background-color: #f39c12; }
+    .telemetry-desc {
+      grid-column: span 2;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      font-size: 13.5px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
 
-        .ship-card.mission-multirole { border-color: #2980b9; }
-        .mission-title.mission-multirole { background-color: #2980b9; }
+    /* ─── MISSION CARDS GRID ─── */
+    .mission-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 1.8rem;
+      margin-top: 1.5rem;
+    }
+    .ship-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .ship-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--cyan);
+    }
+    .ship-card.yellow::before { background: var(--yellow); }
+    .ship-card.blue::before { background: var(--blue); }
+    .ship-card.red::before { background: var(--red); }
+    .ship-card.emerald::before { background: var(--emerald); }
+    .ship-card.muted::before { background: var(--text-dim); }
 
-        .ship-card.mission-powerproj { border-color: #c0392b; }
-        .mission-title.mission-powerproj { background-color: #c0392b; }
+    .ship-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border2);
+      box-shadow: 0 10px 25px rgba(0, 240, 255, 0.03);
+    }
 
-        .ship-card.mission-stealth { border-color: #34495e; }
-        .mission-title.mission-stealth { background-color: #34495e; }
+    .card-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
 
-        .ship-card.mission-support { border-color: #8e44ad; }
-        .mission-title.mission-support { background-color: #8e44ad; }
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.8rem;
+    }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: var(--heading);
+      line-height: 1.2;
+    }
+    .card-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .card-badge.yellow { background: rgba(255, 200, 59, 0.08); color: var(--yellow); border: 1px solid rgba(255, 200, 59, 0.2); }
+    .card-badge.blue { background: rgba(59, 130, 246, 0.08); color: var(--blue); border: 1px solid rgba(59, 130, 246, 0.2); }
+    .card-badge.red { background: rgba(255, 71, 87, 0.08); color: var(--red); border: 1px solid rgba(255, 71, 87, 0.2); }
+    .card-badge.emerald { background: rgba(29, 209, 161, 0.08); color: var(--emerald); border: 1px solid rgba(29, 209, 161, 0.2); }
+    .card-badge.muted { background: rgba(112, 130, 166, 0.08); color: var(--text-dim); border: 1px solid rgba(112, 130, 166, 0.2); }
 
-        .ship-card.mission-historical { border-color: #7f8c8d; }
-        .mission-title.mission-historical { background-color: #7f8c8d; }
+    .card-desc {
+      font-size: 13.5px;
+      color: var(--text-dim);
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+      line-height: 1.6;
+    }
 
+    .card-specs {
+      list-style: none;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem 1rem;
+    }
+    .card-spec-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .card-spec-label {
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 9px;
+      display: block;
+    }
+    .card-spec-val {
+      color: var(--heading);
+      font-weight: 500;
+    }
 
-        /* --- Table View --- */
-        .table-container {
-            width: 100%;
-            overflow-x: auto; /* Allows horizontal scrolling on small screens */
-            background: var(--color-card-bg);
-            border-radius: var(--card-radius);
-            box-shadow: var(--card-shadow);
-            padding: 20px;
-        }
+    /* ─── ANALYTICS CHARTS ─── */
+    .chart-layout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .chart-container-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .chart-container-box h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: var(--heading);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .chart-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 340px;
+    }
 
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1200px; /* Ensures table content isn't too cramped */
-        }
+    /* ─── MATRIX TABLE ─── */
+    .table-responsive-container {
+      width: 100%;
+      overflow-x: auto;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+      min-width: 800px;
+    }
+    .matrix-table th, .matrix-table td {
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .matrix-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      background: rgba(16, 22, 37, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .matrix-table tr:hover td {
+      background: rgba(0, 240, 255, 0.01);
+    }
+    .matrix-table tr:last-child td {
+      border-bottom: none;
+    }
+    .matrix-table td strong {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--heading);
+    }
+    .matrix-table td span.table-label-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--cyan);
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 4px;
+      padding: 1px 4px;
+    }
 
-        .comparison-table th,
-        .comparison-table td {
-            padding: 15px 12px;
-            text-align: left;
-            border-bottom: 1px solid #dee2e6;
-            vertical-align: top;
-        }
+    /* ─── MOBILE SHELL ─── */
+    .mobile-header {
+      display: none;
+      position: sticky;
+      top: 0;
+      background: rgba(5, 8, 12, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 1.5rem;
+      z-index: 200;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .hamburger-btn {
+      background: transparent;
+      border: none;
+      color: var(--heading);
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hamburger-btn span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--text);
+      border-radius: 1px;
+      transition: all 0.3s;
+    }
+    .mobile-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--heading);
+    }
+    .mobile-lang-switcher {
+      display: flex;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .mobile-lang-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 500;
+      padding: 4px 8px;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+    }
+    .mobile-lang-btn.active {
+      background: rgba(0, 240, 255, 0.08);
+      color: var(--cyan);
+    }
 
-        .comparison-table th {
-            font-family: var(--font-header);
-            font-size: 1.1rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            color: var(--color-text-primary);
-            background-color: #f8f9fa;
-        }
-        
-        .comparison-table tr:last-child td {
-            border-bottom: none;
-        }
+    .drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 250;
+    }
+    .drawer-overlay.open {
+      display: block;
+    }
 
-        .comparison-table td:first-child {
-            font-weight: 700;
-            color: var(--color-accent);
-        }
-        
-        .comparison-table tr:hover {
-            background-color: #f8f9fa;
-        }
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    footer a {
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    footer a:hover {
+      color: var(--cyan);
+    }
 
-        .footer-note {
-            text-align: center;
-            margin-top: 50px;
-            font-size: 0.9em;
-            color: var(--color-text-secondary);
-        }
-
-        /* --- Media Queries --- */
-        @media (max-width: 900px) { /* Adjusted breakpoint */
-            .infographic-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .header-container h1 {
-                font-size: 2.5rem;
-            }
-            .header-container p {
-                font-size: 1rem;
-            }
-            .category-header {
-                font-size: 2rem;
-            }
-            .specs strong {
-                width: 110px;
-            }
-            .tab-btn {
-                padding: 12px 15px;
-                font-size: 1.1rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .header-container {
-                padding: 40px 20px 50px 20px;
-            }
-            .header-container h1 {
-                font-size: 2.1rem;
-            }
-             .card-content {
-                padding: 20px;
-            }
-            .ship-card h3 {
-                font-size: 1.6rem;
-            }
-            .tab-buttons {
-                flex-wrap: wrap;
-            }
-            .tab-btn {
-                flex-basis: 50%;
-                text-align: center;
-            }
-        }
-    </style>
+    /* ─── RESPONSIVE BREAKPOINTS ─── */
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        position: fixed;
+        left: -240px;
+        width: 240px;
+        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+      }
+      .sidebar.open {
+        transform: translateX(240px);
+      }
+      .mobile-header {
+        display: flex;
+      }
+      .content-flow {
+        padding: 2rem 1.5rem;
+      }
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      .stats-strip {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .console-box {
+        grid-template-columns: 1fr;
+      }
+      .console-nav {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        flex-direction: row;
+        max-height: unset;
+        height: 60px;
+        overflow-x: auto;
+      }
+      .console-btn {
+        flex-shrink: 0;
+        padding: 0.4rem 0.8rem;
+      }
+      .console-canvas-area {
+        grid-template-columns: 1fr;
+      }
+      .sonar-panel {
+        display: none;
+      }
+    }
+  </style>
 </head>
-<body>
+<body class="lang-en">
 
-    <!-- Header Section -->
-    <header class="header-container">
-        <h1>THE MODERN NAVAL SPECTRUM</h1>
-        <p>A comparative guide to the primary classes of naval vessels, from coastal patrol boats to strategic power-projection flagships.</p>
-    </header>
+  <!-- Mobile Top Header -->
+  <header class="mobile-header">
+    <button class="hamburger-btn" id="drawer-toggle" aria-label="Toggle Navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-logo">
+      <span class="en-only">Naval Spectrum</span>
+      <span class="id-only">Spektrum Armada</span>
+    </div>
+    <div class="mobile-lang-switcher">
+      <button class="mobile-lang-btn active" onclick="setLang('en', this)">EN</button>
+      <button class="mobile-lang-btn" onclick="setLang('id', this)">ID</button>
+    </div>
+  </header>
 
-    <!-- Main Content -->
-    <main class="main-container">
+  <!-- Drawer Backdrop Blur -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
 
-        <!-- Tab Buttons -->
-        <div class="tab-buttons">
-            <button class="tab-btn active" data-tab="infographic">Infographic View</button>
-            <button class="tab-btn" data-tab="table">Direct Comparison</button>
+  <!-- Primary Desktop & Responsive Sidebar Layout -->
+  <div class="layout">
+    
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-section">
+        <div class="brand-title">
+          <span class="en-only">Naval Spectrum</span>
+          <span class="id-only">Spektrum Armada</span>
         </div>
+        <div class="brand-badge">FleetCommand v3.0</div>
+      </div>
 
-        <!-- Tab 1: Infographic (Active by default) -->
-        <div id="infographic" class="tab-content active">
-            <!-- Category: Coastal & Patrol -->
-            <h2 class="category-header">COASTAL & PATROL FORCES</h2>
-            <p class="category-explanation">
-                These vessels are designed to operate in a nation's "home" waters (littoral zone). Their focus is on maritime security, coastal defense, and controlling chokepoints rather than high-seas fleet battles.
-            </p>
-            <div class="infographic-grid">
-                
-                <div class="ship-card mission-constabulary">
-                    <div class="card-content">
-                        <h3>Offshore Patrol Vessel (OPV)</h3>
-                        <div class="mission-title mission-constabulary">Maritime Security</div>
-                        <p class="description">The <strong>maritime police officer</strong>. This vessel is not a high-end warfighter but a constabulary ship. Its design prioritizes extremely long range, high fuel efficiency, and seakeeping (the ability to stay at sea in rough weather) for weeks at a time. It patrols vast Exclusive Economic Zones (EEZ) to counter illegal fishing, smuggling, piracy, and to perform search and rescue, enforcing maritime law.</p>
-                        <ul class="specs">
-                            <li><strong>Key Role:</strong> Presence & Constabulary</li>
-                            <li><strong>Size:</strong> 1,500 - 3,000 tons</li>
-                            <li><strong>Typical Range:</strong> Very High (6,000-10,000+ nm)</li>
-                            <li><strong>Endurance:</strong> 21-35+ days</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="ship-card mission-littoral">
-                    <div class="card-content">
-                        <h3>Corvette</h3>
-                        <div class="mission-title mission-littoral">Littoral Combat</div>
-                        <p class="description">The <strong>light, fast fighter</strong>. As the smallest "true" warship, the corvette is a versatile combatant optimized for coastal (littoral) warfare. It punches well above its weight, often carrying a potent mix of anti-ship missiles, short-to-medium range air defense systems (SAMs), and sometimes anti-submarine torpedoes. It's a key asset for smaller navies or for sea denial in confined waters.</p>
-                        <ul class="specs">
-                            <li><strong>Key Role:</strong> Coastal Defense & Strike</li>
-                            <li><strong>Size:</strong> 1,000 - 3,500 tons</li>
-                            <li><strong>Typical Range:</strong> Medium (2,000-4,000 nm)</li>
-                            <li><strong>Endurance:</strong> 10-21 days</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="ship-card mission-littoral">
-                    <div class="card-content">
-                        <h3>Fast Attack Craft (FAC)</h3>
-                        <div class="mission-title mission-littoral">Rapid Strike</div>
-                        <p class="description">The <strong>coastal mosquito</strong>. This small, exceptionally fast vessel is built for one purpose: rapid hit-and-run attacks. It's armed with a disproportionately powerful battery of anti-ship missiles, allowing it to threaten much larger warships. It sacrifices endurance and defenses for blistering speed and a low profile, making it ideal for "swarm" tactics in chokepoints and straits.</p>
-                        <ul class="specs">
-                            <li><strong>Key Role:</strong> "Swarm" Tactics & Denial</li>
-                            <li><strong>Size:</strong> 50 - 800 tons</li>
-                            <li><strong>Typical Range:</strong> Low (800-1,500 nm)</li>
-                            <li><strong>Endurance:</strong> 3-7 days</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Category: Blue Water Fleet -->
-            <h2 class="category-header">BLUE WATER (OCEAN-GOING) FLEET</h2>
-            <p class="category-explanation">
-                The "Blue Water" fleet consists of major surface combatants designed for high-intensity warfare on the open ocean, far from home. These are the primary ships used for fleet-on-fleet battles, escorting high-value assets, and projecting power.
-            </p>
-            <div class="infographic-grid">
-
-                <div class="ship-card mission-multirole">
-                    <div class="card-content">
-                        <h3>Frigate</h3>
-                        <div class="mission-title mission-multirole">Multi-Role Escort</div>
-                        <p class="description">The <strong>versatile fleet workhorse</strong>. A frigate is the backbone of most modern navies, designed as a multi-mission escort. It possesses a balanced suite of sensors and weapons to independently hunt submarines (ASW), defend against air attacks (AAW), and engage surface ships. It has the endurance to operate far from home, protecting carrier strike groups or merchant convoys.</p>
-                        <ul class="specs">
-                            <li><strong>Key Role:</strong> ASW, AAW, Fleet Escort</li>
-                            <li><strong>Size:</strong> 3,500 - 8,000+ tons</li>
-                            <li><strong>Typical Range:</strong> High (4,000-8,000+ nm)</li>
-                            <li><strong>Endurance:</strong> 21-30+ days</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="ship-card mission-multirole">
-                    <div class="card-content">
-                        <h3>Destroyer</h3>
-                        <div class="mission-title mission-multirole">Advanced Air Defense</div>
-                        <p class="description">The <strong>fleet's shield</strong>. A destroyer is a large, powerful, and fast surface combatant, typically a step above a frigate in size and capability. Modern destroyers are often specialized as <strong>Anti-Air Warfare (AAW)</strong> platforms, carrying advanced radar systems (like AEGIS) and a large number of vertical launch cells (VLS) to defend a fleet from massed missile and aircraft attacks, including ballistic missiles.</p>
-                        <ul class="specs">
-                            <li><strong>Key Role:</strong> Fleet AAW & Missile Defense</li>
-                            <li><strong>Size:</strong> 7,000 - 10,000+ tons</li>
-                            <li><strong>Typical Range:</strong> High (4,500-8,000+ nm)</li>
-                            <li><strong>Endurance:</strong> 21-30+ days</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="ship-card mission-powerproj">
-                    <div class="card-content">
-                        <h3>Cruiser</h3>
-                        <div class="mission-title mission-powerproj">Fleet Command</div>
-                        <p class="description">The <strong>heavy-hitter & command ship</strong>. The largest and most powerful surface combatant in a modern fleet (excluding carriers). Cruisers are rare today, often serving as the flagship for an admiral, with extensive <strong>command and control</strong> facilities. They carry the heaviest loadout of missiles (often over a hundred) for area dominance, capable of simultaneously engaging air, surface, and sub-surface threats at long range.</p>
-                        <ul class="specs">
-                            <li><strong>Key Role:</strong> Flagship & Area Dominance</li>
-                            <li><strong>Size:</strong> 10,000 - 15,000+ tons</li>
-                            <li><strong>Typical Range:</strong> High (6,000-10,000+ nm)</li>
-                            <li><strong>Endurance:</strong> 30+ days</li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Category: Strategic Assets -->
-            <h2 class="category-header">STRATEGIC & SUPPORT ASSETS</h2>
-            <p class="category-explanation">
-                These are the largest, most powerful, and most specialized vessels. They are not primarily direct combatants (like a frigate) but instead project national power on a global scale (like carriers) or provide the essential logistics to keep the fleet running.
-            </p>
-            <div class="infographic-grid">
-
-                <div class="ship-card mission-powerproj">
-                    <div class="card-content">
-                        <h3>Aircraft Carrier</h3>
-                        <div class="mission-title mission-powerproj">Global Power Projection</div>
-                        <p class="description">The <strong>floating airbase</strong> and ultimate symbol of global power projection. This capital ship's primary weapon is its air wing, a versatile mix of 60-90+ aircraft including multirole fighters, electronic warfare planes, and early warning aircraft. It can establish air superiority and launch devastating strikes thousands of miles from its home country, requiring a full escort group for its own defense.</p>
-                        <ul class="specs">
-                            <li><strong>Key Role:</strong> Project Air Power Globally</li>
-                            <li><strong>Size:</strong> 60,000 - 100,000+ tons</li>
-                            <li><strong>Typical Range:</strong> Unlimited (if nuclear-powered)</li>
-                            <li><strong>Endurance:</strong> 20-25 years (between refueling)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="ship-card mission-powerproj">
-                    <div class="card-content">
-                        <h3>Amphibious Assault Ship</h3>
-                        <div class="mission-title mission-powerproj">Expeditionary Warfare</div>
-                        <p class="description">The <strong>mobile invasion platform</strong>. Often resembling a small aircraft carrier, this ship's mission is to project ground power. It transports, lands, and supports thousands of marines via a fleet of helicopters, tilt-rotor aircraft (like the V-22 Osprey), and landing craft launched from an internal floodable well deck. Many also carry VSTOL jets (like the F-35B) for air support.</p>
-                        <ul class="specs">
-                            <li><strong>Key Role:</strong> Marine Transport & Landing</li>
-                            <li><strong>Size:</strong> 20,000 - 45,000 tons</li>
-                            <li><strong>Typical Range:</strong> High (7,000-9,500+ nm)</li>
-                            <li><strong>Endurance:</strong> 30-45+ days</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="ship-card mission-stealth">
-                    <div class="card-content">
-                        <h3>Submarine (SSN/SSK)</h3>
-                        <div class="mission-title mission-stealth">Stealth Strike & Surveillance</div>
-                        <p class="description">The <strong>silent hunter</strong> and the master of stealth. This warship's primary advantage is its ability to operate undetected underwater for weeks or months. <strong>Attack submarines (SSN/SSK)</strong> are designed to hunt other ships and submarines and launch cruise missiles at land targets. <strong>Ballistic missile submarines (SSBN)</strong> serve as the ultimate strategic deterrent, carrying nuclear-armed intercontinental ballistic missiles.</p>
-                        <ul class="specs">
-                            <li><strong>Key Role:</strong> Stealth & Undersea Dominance</li>
-                            <li><strong>Size:</strong> 1,000 - 20,000+ tons</li>
-                            <li><strong>Typical Range:</strong> Unlimited (Nuclear) / Medium (Diesel)</li>
-                            <li><strong>Endurance:</strong> 90+ days (Nuclear, food limited)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="ship-card mission-support">
-                    <div class="card-content">
-                        <h3>Support & Auxiliary</h3>
-                        <div class="mission-title mission-support">Fleet Logistics</div>
-                        <p class="description">The <strong>fleet's lifeline</strong>. These unsung heroes are the logistics backbone that enables a blue-water navy to operate globally. This category includes replenishment oilers (fuel), ammunition ships, and fast combat support ships. Without them, the combat fleet's endurance would be limited to only what it can carry, lasting days instead of months.</p>
-                        <ul class="specs">
-                            <li><strong>Key Role:</strong> Sustained Operations at Sea</li>
-                            <li><strong>Size:</strong> 2,000 - 50,000+ tons</li>
-                            <li><strong>Typical Range:</strong> Very High (10,000+ nm)</li>
-                            <li><strong>Endurance:</strong> 30-45+ days</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="ship-card mission-historical">
-                    <div class="card-content">
-                        <h3>Battleship (Historical)</h3>
-                        <div class="mission-title mission-historical">Historical Dominance</div>
-                        <p class="description">The <strong>armored dreadnought</strong>. (No longer in service). Defined by enormous guns and heavy armor, they were the undisputed kings of surface-to-surface combat in their era. They became obsolete with the rise of air power, which could strike them from beyond the range of their guns, and were finally superseded by the aircraft carrier as the new capital ship.</p>
-                        <ul class="specs">
-                            <li><strong>Key Role:</strong> Surface Combat & Bombardment</li>
-                            <li><strong>Size:</strong> 30,000 - 70,000+ tons</li>
-                            <li><strong>Typical Range:</strong> High (8,000-15,000 nm)</li>
-                            <li><strong>Endurance:</strong> ~30 days</li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
+      <!-- Bilingual toggle in sidebar -->
+      <div class="lang-toggle-wrap">
+        <div class="lang-toggle">
+          <button class="lang-btn active" id="lang-btn-en" onclick="setLang('en', this)">EN</button>
+          <button class="lang-btn" id="lang-btn-id" onclick="setLang('id', this)">ID</button>
         </div>
+      </div>
 
-        <!-- Tab 2: Table -->
-        <div id="table" class="tab-content">
-            <h2 class="category-header">DIRECT SHIP-CLASS COMPARISON</h2>
-            <div class="table-container">
-                <table class="comparison-table">
-                    <thead>
-                        <tr>
-                            <th>Ship Class</th>
-                            <th>Primary Mission</th>
-                            <th>Typical Size (Tons)</th>
-                            <th>Key Armament</th>
-                            <th>Typical Range</th>
-                            <th>Typical Endurance</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>OPV</strong></td>
-                            <td>Maritime Security (Police)</td>
-                            <td>1,500 - 3,000</td>
-                            <td>Light cannon (30-76mm), MGs</td>
-                            <td>Very High (6,000+ nm)</td>
-                            <td>21-35+ days</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Corvette</strong></td>
-                            <td>Coastal Combat & Strike</td>
-                            <td>1,000 - 3,500</td>
-                            <td>Anti-Ship Missiles, SAMs, 76mm cannon</td>
-                            <td>Medium (2,000-4,000 nm)</td>
-                            <td>10-21 days</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Fast Attack Craft</strong></td>
-                            <td>Rapid "Hit-and-Run" Strike</td>
-                            <td>50 - 800</td>
-                            <td>Heavy Anti-Ship Missiles</td>
-                            <td>Low (800-1,500 nm)</td>
-                            <td>3-7 days</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Frigate</strong></td>
-                            <td>Multi-Role Escort (ASW, AAW)</td>
-                            <td>3,500 - 8,000+</td>
-                            <td>VLS, Torpedoes, AShMs, Medium Cannon</td>
-                            <td>High (4,000-8,000+ nm)</td>
-                            <td>21-30+ days</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Destroyer</strong></td>
-                            <td>Advanced Air/Missile Defense</td>
-                            <td>7,000 - 10,000+</td>
-                            <td>Large VLS, Advanced Radar, SAMs, Guns</td>
-                            <td>High (4,500-8,000+ nm)</td>
-                            <td>21-30+ days</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Cruiser</strong></td>
-                            <td>Fleet Command & Dominance</td>
-                            <td>10,000 - 15,000+</td>
-                            <td>Massive VLS, Command Facilities, Guns</td>
-                            <td>High (6,000-10,000+ nm)</td>
-                            <td>30+ days</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Aircraft Carrier</strong></td>
-                            <td>Global Power Projection</td>
-                            <td>60,000 - 100,000+</td>
-                            <td>60-90+ Aircraft (Fighters, EW, etc.)</td>
-                            <td>Unlimited (Nuclear)</td>
-                            <td>Decades (food limited)</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Amphibious Assault</strong></td>
-                            <td>Expeditionary Warfare</td>
-                            <td>20,000 - 45,000+</td>
-                            <td>Helicopters, Jets, Landing Craft, Marines</td>
-                            <td>High (7,000-9,500+ nm)</td>
-                            <td>30-45+ days</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Submarine</strong></td>
-                            <td>Stealth Strike & Deterrence</td>
-                            <td>1,000 - 20,000+</td>
-                            <td>Torpedoes, Cruise Missiles, (Ballistic Missiles)</td>
-                            <td>Unlimited (Nuclear) / Medium (Diesel)</td>
-                            <td>90+ days (Nuclear, food limited)</td>
-                        </tr>
-                         <tr>
-                            <td><strong>Support Ship</strong></td>
-                            <td>Fleet Logistics & Resupply</td>
-                            <td>2,000 - 50,000+</td>
-                            <td>Minimal (defensive only)</td>
-                            <td>Very High (10,000+ nm)</td>
-                            <td>30-45+ days</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Battleship (Hist.)</strong></td>
-                            <td>Surface Combat & Bombardment</td>
-                            <td>30,000 - 70,000+</td>
-                            <td>Massive 14-18 inch guns</td>
-                            <td>High (8,000-15,000 nm)</td>
-                            <td>~30 days</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+      <!-- Scrollspy nav menu -->
+      <nav class="nav-menu-container" aria-label="Primary Nav">
+        <ul class="nav-menu">
+          <li class="nav-item active"><a href="#overview"><span class="en-only">Overview</span><span class="id-only">Ikhtisar</span></a></li>
+          <li class="nav-item"><a href="#console"><span class="en-only">Command Console</span><span class="id-only">Konsol Taktis</span></a></li>
+          <li class="nav-item"><a href="#coastal"><span class="en-only">Coastal Forces</span><span class="id-only">Pasukan Pantai</span></a></li>
+          <li class="nav-item"><a href="#blue-water"><span class="en-only">Blue Water Fleet</span><span class="id-only">Armada Samudra</span></a></li>
+          <li class="nav-item"><a href="#strategic"><span class="en-only">Strategic Assets</span><span class="id-only">Aset Strategis</span></a></li>
+          <li class="nav-item"><a href="#analytics"><span class="en-only">Capability Analytics</span><span class="id-only">Analisis Kapabilitas</span></a></li>
+          <li class="nav-item"><a href="#matrix"><span class="en-only">Comparison Matrix</span><span class="id-only">Matriks Komparasi</span></a></li>
+        </ul>
+      </nav>
 
+      <a href="../index.html" class="back-home">
+        <span>← Home</span>
+      </a>
+    </aside>
+
+    <!-- Main Scrollable Content -->
+    <main class="content-flow" id="main-content">
+      
+      <!-- HERO -->
+      <header class="hero" id="overview">
+        <span class="hero-eyebrow">
+          <span class="en-only">Global Naval Capabilities</span>
+          <span class="id-only">Kapabilitas Maritim Global</span>
+        </span>
         
-        <p class="footer-note">
-            <em>Note: Tonnage and armament are approximate and vary significantly by nation, class, and design. "Key Role" reflects primary design intent.</em>
-            | &copy; 2026 LoLyeah.github.io. All rights reserved. | <a href="/index.html">Home</a>
+        <h1>
+          <span class="en-only">THE MODERN NAVAL SPECTRUM</span>
+          <span class="id-only">SPEKTRUM ARMADA LAUT MODERN</span>
+        </h1>
+        
+        <p class="hero-desc">
+          <span class="en-only">A comprehensive comparative analysis of modern warship classes, charting hulls from nimble littoral patrol vessels to strategic, nuclear-powered aircraft carriers.</span>
+          <span class="id-only">Analisis komparatif komprehensif kelas kapal perang modern, memetakan lambung kapal mulai dari patroli litoral yang lincah hingga kapal induk bertenaga nuklir strategis.</span>
+        </p>
+
+        <div class="meta-strip">
+          <div class="meta-item"><span class="en-only">Prevalence:</span><span class="id-only">Prevalensi:</span> <strong><span class="en-only">Global Deployment</span><span class="id-only">Penyebaran Global</span></strong></div>
+          <div class="meta-item"><span class="en-only">Domain:</span><span class="id-only">Domain:</span> <strong><span class="en-only">Littoral & Blue Water</span><span class="id-only">Litoral & Samudra</span></strong></div>
+          <div class="meta-item"><span class="en-only">Data Integrity:</span><span class="id-only">Integritas Data:</span> <strong>100% Verified</strong></div>
         </div>
+      </header>
+
+      <!-- KEY STATISTICS STRIP -->
+      <div class="stats-strip">
+        <div class="stat-card">
+          <div class="stat-num">100K+ <span class="en-only">Tons</span><span class="id-only">Ton</span></div>
+          <div class="stat-label">
+            <span class="en-only">Max Displacement</span>
+            <span class="id-only">Tonase Maksimum</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">25 <span class="en-only">Years</span><span class="id-only">Tahun</span></div>
+          <div class="stat-label">
+            <span class="en-only">Nuclear Refueling Period</span>
+            <span class="id-only">Daya Tahan Pengisian Nuklir</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">11 <span class="en-only">Classes</span><span class="id-only">Kelas</span></div>
+          <div class="stat-label">
+            <span class="en-only">Comparative Spectrum</span>
+            <span class="id-only">Spektrum Komparasi</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- §01 TACTICAL COM-CENTER CONSOLE -->
+      <section id="console">
+        <h2 class="section-title">
+          <span class="index">§01</span>
+          <span class="en-only">Tactical Fleet Command Console</span>
+          <span class="id-only">Konsol Komando Taktis Armada</span>
+        </h2>
+        <p class="section-desc">
+          <span class="en-only">Toggle the tactical readout buttons on the left to load blueprints, sonar radar sweep tracking, and precise capability dimensions of core ship archetypes.</span>
+          <span class="id-only">Tekan tombol pembaca taktis di sisi kiri untuk memuat cetak biru, radar sapuan sonar, dan data detail dari setiap tipe kelas kapal.</span>
+        </p>
+
+        <div class="console-box">
+          <div class="console-nav" role="tablist" aria-label="Ship Selector">
+            <button class="console-btn active" role="tab" aria-selected="true" aria-controls="console-panel" id="c-btn-opv" onclick="selectConsoleShip('opv')">
+              <span class="c-name">Offshore Patrol Vessel</span>
+              <span class="c-role"><span class="en-only">Constabulary</span><span class="id-only">Keamanan</span></span>
+            </button>
+            <button class="console-btn" role="tab" aria-selected="false" aria-controls="console-panel" id="c-btn-corvette" onclick="selectConsoleShip('corvette')">
+              <span class="c-name">Corvette</span>
+              <span class="c-role"><span class="en-only">Coastal Combat</span><span class="id-only">Litoral</span></span>
+            </button>
+            <button class="console-btn" role="tab" aria-selected="false" aria-controls="console-panel" id="c-btn-frigate" onclick="selectConsoleShip('frigate')">
+              <span class="c-name">Frigate</span>
+              <span class="c-role"><span class="en-only">Multi-Role</span><span class="id-only">Multi-Peran</span></span>
+            </button>
+            <button class="console-btn" role="tab" aria-selected="false" aria-controls="console-panel" id="c-btn-destroyer" onclick="selectConsoleShip('destroyer')">
+              <span class="c-name">Destroyer</span>
+              <span class="c-role"><span class="en-only">Air Shield</span><span class="id-only">Perisai Udara</span></span>
+            </button>
+            <button class="console-btn" role="tab" aria-selected="false" aria-controls="console-panel" id="c-btn-carrier" onclick="selectConsoleShip('carrier')">
+              <span class="c-name">Aircraft Carrier</span>
+              <span class="c-role"><span class="en-only">Power Projection</span><span class="id-only">Proyeksi Global</span></span>
+            </button>
+            <button class="console-btn" role="tab" aria-selected="false" aria-controls="console-panel" id="c-btn-submarine" onclick="selectConsoleShip('submarine')">
+              <span class="c-name">Submarine</span>
+              <span class="c-role"><span class="en-only">Stealth Hunter</span><span class="id-only">Siluman Bawah Air</span></span>
+            </button>
+          </div>
+
+          <div class="console-screen" id="console-panel">
+            <div class="console-header-readout">
+              <div>SYS.CIC // RADAR.ECHO.TRACKING // DISP: ACTIVE</div>
+              <div class="console-system-status">
+                <span class="pulse-dot"></span>
+                <span class="en-only">TELEMETRY LINK SECURED</span>
+                <span class="id-only">KONEKSI TELEMETRI AKTIF</span>
+              </div>
+            </div>
+
+            <div class="console-canvas-area">
+              <div class="blueprint-screen">
+                <div class="blueprint-grid-overlay"></div>
+                
+                <!-- SVG Wireframe Blueprints -->
+                <!-- 1. OPV -->
+                <svg viewBox="0 0 300 100" class="ship-silhouette active yellow" id="sil-opv" aria-label="OPV Blueprint">
+                  <path class="hull" d="M 50 75 L 250 75 L 240 65 L 180 65 L 175 55 L 130 55 L 125 65 L 50 65 Z" />
+                  <path class="details" d="M 205 65 L 208 60 L 220 60 M 150 55 L 150 35 L 140 42 H 150 M 125 65 H 175 M 70 65 V 58 H 90 V 65" />
+                  <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
+                </svg>
+                <!-- 2. Corvette -->
+                <svg viewBox="0 0 300 100" class="ship-silhouette yellow" id="sil-corvette" aria-label="Corvette Blueprint">
+                  <path class="hull" d="M 40 75 L 260 75 L 250 62 L 190 62 L 185 50 L 120 50 L 115 62 L 40 62 Z" />
+                  <path class="details" d="M 215 62 L 218 56 L 232 56 M 150 50 L 150 35 M 140 38 H 160 M 120 50 H 180 M 60 62 V 55 H 85 V 62" />
+                  <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
+                </svg>
+                <!-- 3. Frigate -->
+                <svg viewBox="0 0 300 100" class="ship-silhouette blue" id="sil-frigate" aria-label="Frigate Blueprint">
+                  <path class="hull" d="M 30 75 L 270 75 L 260 60 L 200 60 L 195 45 L 150 45 L 145 35 L 110 35 L 105 60 L 30 60 Z" />
+                  <path class="details" d="M 225 60 L 228 54 L 244 54 M 165 45 L 165 30 H 155 M 125 35 L 125 20 H 135 M 35 60 V 52 H 75 V 60" />
+                  <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
+                </svg>
+                <!-- 4. Destroyer -->
+                <svg viewBox="0 0 300 100" class="ship-silhouette blue" id="sil-destroyer" aria-label="Destroyer Blueprint">
+                  <path class="hull" d="M 20 75 L 280 75 L 268 58 L 220 58 L 215 48 L 195 48 L 190 32 L 165 32 L 160 45 L 130 45 L 125 28 L 105 28 L 100 58 L 20 58 Z" />
+                  <path class="details" d="M 235 58 L 238 52 L 255 52 M 178 32 L 178 18 H 168 M 115 28 L 115 12 H 125 M 25 58 V 50 H 65 V 58" />
+                  <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
+                </svg>
+                <!-- 5. Carrier -->
+                <svg viewBox="0 0 300 100" class="ship-silhouette red" id="sil-carrier" aria-label="Carrier Blueprint">
+                  <path class="hull" d="M 10 75 L 290 75 L 290 45 L 10 45 Z" />
+                  <path class="details" d="M 190 45 L 190 20 L 210 20 L 215 45 M 200 20 L 200 5 M 40 45 H 170 M 230 45 H 280" />
+                  <line class="waterline" x1="5" y1="75" x2="295" y2="75" />
+                </svg>
+                <!-- 6. Submarine -->
+                <svg viewBox="0 0 300 100" class="ship-silhouette active cyan" id="sil-submarine" aria-label="Submarine Blueprint">
+                  <path class="hull" d="M 20 70 C 40 58, 260 58, 280 70 C 260 82, 40 82, 20 70 Z" />
+                  <path class="details" d="M 150 60 L 155 45 L 175 45 L 180 60 M 15 67 L 8 60 L 8 80 Z" />
+                  <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
+                </svg>
+              </div>
+
+              <!-- Radar sweep element -->
+              <div class="sonar-panel">
+                <div class="sonar-circle">
+                  <div class="sonar-crosshair-h"></div>
+                  <div class="sonar-crosshair-v"></div>
+                  <div class="sonar-sweep"></div>
+                  <div class="sonar-dot active" id="radar-blip"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive readouts -->
+            <div class="console-telemetry">
+              <div class="telemetry-col">
+                <div class="telemetry-item">
+                  <span class="t-label"><span class="en-only">Displacement</span><span class="id-only">Displacement / Tonase</span></span>
+                  <span class="t-val" id="disp-val">1,500 - 3,000 tons</span>
+                </div>
+                <div class="telemetry-item">
+                  <span class="t-label"><span class="en-only">Mission Range</span><span class="id-only">Jarak Tempuh Misi</span></span>
+                  <span class="t-val" id="range-val">6,000 - 10,000+ nm</span>
+                </div>
+              </div>
+              <div class="telemetry-col">
+                <div class="telemetry-item">
+                  <span class="t-label"><span class="en-only">Tactical Endurance</span><span class="id-only">Daya Tahan Operasional</span></span>
+                  <span class="t-val" id="endur-val">21 - 35+ days</span>
+                </div>
+                <div class="telemetry-item">
+                  <span class="t-label"><span class="en-only">Typical Sensors & Armament</span><span class="id-only">Persenjataan & Sensor Khas</span></span>
+                  <span class="t-val" id="weapon-val">Light cannons (30-76mm), machine guns</span>
+                </div>
+              </div>
+              <div class="telemetry-desc">
+                <span class="en-only" id="desc-val-en">The maritime police officer. Highly efficient patrol asset built for long deployment cycles protecting EEZs and executing Search & Rescue missions.</span>
+                <span class="id-only" id="desc-val-id">Aparat penegak hukum maritim. Kapal patroli yang efisien dengan ketahanan operasional tinggi untuk melindungi ZEE dan misi SAR.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §02 COASTAL & PATROL FORCES -->
+      <section id="coastal">
+        <h2 class="section-title">
+          <span class="index">§02</span>
+          <span class="en-only">Coastal & Patrol Forces</span>
+          <span class="id-only">Pasukan Penjaga Pantai & Patroli</span>
+        </h2>
+        <p class="section-desc">
+          <span class="en-only">Optimized for domestic EEZ boundaries, chokepoints, and littoral operations. They focus on sovereignty enforcement and rapid strike tactics rather than deep-ocean battles.</span>
+          <span class="id-only">Dioptimalkan untuk operasi batas teritorial ZEE domestik, selat, dan wilayah litoral. Fokus pada penegakan kedaulatan maritim dan serangan cepat.</span>
+        </p>
+
+        <div class="mission-grid">
+          <!-- OPV -->
+          <div class="ship-card yellow">
+            <div class="card-body">
+              <div class="card-header-row">
+                <h3 class="card-title">Offshore Patrol Vessel</h3>
+                <span class="card-badge yellow"><span class="en-only">Constabulary</span><span class="id-only">Keamanan</span></span>
+              </div>
+              <p class="card-desc">
+                <span class="en-only">The **maritime police officer**. A constabulary ship optimized for seakeeping in rough weather, patrolling vast Exclusive Economic Zones (EEZ) to counter illegal fishing, piracy, and smuggling.</span>
+                <span class="id-only">Sang **aparat penegak hukum maritim**. Kapal keamanan maritim yang dioptimalkan untuk ketahanan operasional tinggi, berpatroli di ZEE untuk menekan penangkapan ikan ilegal, bajak laut, dan penyelundupan.</span>
+              </p>
+              <div class="card-specs">
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Size</span><span class="id-only">Tonase</span></span>
+                  <span class="card-spec-val">1,500 - 3,000 tons</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Range</span><span class="id-only">Jarak Jangkau</span></span>
+                  <span class="card-spec-val">6,000 - 10,000+ nm</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Endurance</span><span class="id-only">Daya Tahan</span></span>
+                  <span class="card-spec-val">21 - 35+ days</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Armament</span><span class="id-only">Senjata</span></span>
+                  <span class="card-spec-val">30mm-76mm Gun</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Corvette -->
+          <div class="ship-card yellow">
+            <div class="card-body">
+              <div class="card-header-row">
+                <h3 class="card-title">Corvette</h3>
+                <span class="card-badge yellow"><span class="en-only">Littoral Combat</span><span class="id-only">Tempur Litoral</span></span>
+              </div>
+              <p class="card-desc">
+                <span class="en-only">The **light, fast fighter**. The smallest 'true' warship, optimized for coastal combat. Punches well above its weight, carrying anti-ship missiles, compact air defenses, and anti-submarine torpedoes.</span>
+                <span class="id-only">Sang **petarung ringan yang gesit**. Kapal kombatan terkecil yang sesungguhnya, dioptimalkan untuk pertempuran pesisir. Dilengkapi rudal anti-kapal berat dan pertahanan udara taktis.</span>
+              </p>
+              <div class="card-specs">
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Size</span><span class="id-only">Tonase</span></span>
+                  <span class="card-spec-val">1,000 - 3,500 tons</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Range</span><span class="id-only">Jarak Jangkau</span></span>
+                  <span class="card-spec-val">2,000 - 4,000 nm</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Endurance</span><span class="id-only">Daya Tahan</span></span>
+                  <span class="card-spec-val">10 - 21 days</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Armament</span><span class="id-only">Senjata</span></span>
+                  <span class="card-spec-val">AShMs, SAMs, 76mm Gun</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fast Attack Craft -->
+          <div class="ship-card yellow">
+            <div class="card-body">
+              <div class="card-header-row">
+                <h3 class="card-title">Fast Attack Craft</h3>
+                <span class="card-badge yellow"><span class="en-only">Rapid Strike</span><span class="id-only">Serang Cepat</span></span>
+              </div>
+              <p class="card-desc">
+                <span class="en-only">The **coastal mosquito**. Sacrifices endurance and armor for blistering speeds and low radar cross-sections. Armed heavily with heavy anti-ship missiles for hit-and-run swamp tactics in chokepoints.</span>
+                <span class="id-only">Sang **nyamuk pemburu**. Mengorbankan ketahanan laut dan pelindung baja demi kecepatan luar biasa dan profil radar rendah. Sangat mematikan di selat sempit untuk serangan dadakan.</span>
+              </p>
+              <div class="card-specs">
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Size</span><span class="id-only">Tonase</span></span>
+                  <span class="card-spec-val">50 - 800 tons</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Range</span><span class="id-only">Jarak Jangkau</span></span>
+                  <span class="card-spec-val">800 - 1,500 nm</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Endurance</span><span class="id-only">Daya Tahan</span></span>
+                  <span class="card-spec-val">3 - 7 days</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Armament</span><span class="id-only">Senjata</span></span>
+                  <span class="card-spec-val">Heavy Anti-Ship Missiles</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §03 BLUE WATER FLEET -->
+      <section id="blue-water">
+        <h2 class="section-title">
+          <span class="index">§03</span>
+          <span class="en-only">Blue Water Fleet (Ocean-Going)</span>
+          <span class="id-only">Armada Samudra (Blue Water Fleet)</span>
+        </h2>
+        <p class="section-desc">
+          <span class="en-only">These major surface combatants are engineered for high-intensity, global fleet encounters. They serve as multi-role escorts and high-end air shields for task forces.</span>
+          <span class="id-only">Kapal-kapal kombatan utama permukaan ini dirancang untuk pertempuran samudra terbuka intensitas tinggi. Berfungsi sebagai pengawal multi-peran dan perisai udara armada.</span>
+        </p>
+
+        <div class="mission-grid">
+          <!-- Frigate -->
+          <div class="ship-card blue">
+            <div class="card-body">
+              <div class="card-header-row">
+                <h3 class="card-title">Frigate</h3>
+                <span class="card-badge blue"><span class="en-only">Multi-Role Escort</span><span class="id-only">Pengawal Multi-Peran</span></span>
+              </div>
+              <p class="card-desc">
+                <span class="en-only">The **versatile fleet workhorse**. Possesses a highly balanced suite of sensors and weaponry to independently hunt submarines (ASW), defend against missile strikes (AAW), and protect larger task forces.</span>
+                <span class="id-only">Sang **kuda beban armada serbaguna**. Kombatan dengan sistem sensor dan senjata yang sangat seimbang untuk memburu kapal selam (ASW), pertahanan udara (AAW), dan pengawalan kapal induk.</span>
+              </p>
+              <div class="card-specs">
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Size</span><span class="id-only">Tonase</span></span>
+                  <span class="card-spec-val">3,500 - 8,000+ tons</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Range</span><span class="id-only">Jarak Jangkau</span></span>
+                  <span class="card-spec-val">4,000 - 8,000+ nm</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Endurance</span><span class="id-only">Daya Tahan</span></span>
+                  <span class="card-spec-val">21 - 30+ days</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Armament</span><span class="id-only">Senjata</span></span>
+                  <span class="card-spec-val">VLS, Torpedoes, AShMs</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Destroyer -->
+          <div class="ship-card blue">
+            <div class="card-body">
+              <div class="card-header-row">
+                <h3 class="card-title">Destroyer</h3>
+                <span class="card-badge blue"><span class="en-only">Advanced Air Shield</span><span class="id-only">Perisai Udara Maju</span></span>
+              </div>
+              <p class="card-desc">
+                <span class="en-only">The **fleet's shield**. Heavily armed surface combatant specialized in Anti-Air Warfare (AAW). Features large-capacity Vertical Launch Systems (VLS) and advanced phased-array radars (like AEGIS).</span>
+                <span class="id-only">Sang **perisai pelindung armada**. Kombatan permukaan berat dengan spesialisasi pertahanan udara (AAW) area. Dilengkapi puluhan sel VLS dan sensor radar modern jangkauan jauh.</span>
+              </p>
+              <div class="card-specs">
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Size</span><span class="id-only">Tonase</span></span>
+                  <span class="card-spec-val">7,000 - 10,000+ tons</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Range</span><span class="id-only">Jarak Jangkau</span></span>
+                  <span class="card-spec-val">4,500 - 8,000+ nm</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Endurance</span><span class="id-only">Daya Tahan</span></span>
+                  <span class="card-spec-val">21 - 30+ days</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Armament</span><span class="id-only">Senjata</span></span>
+                  <span class="card-spec-val">Large VLS, SAMs, Gun</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cruiser -->
+          <div class="ship-card blue">
+            <div class="card-body">
+              <div class="card-header-row">
+                <h3 class="card-title">Cruiser</h3>
+                <span class="card-badge blue"><span class="en-only">Fleet Command</span><span class="id-only">Komando Armada</span></span>
+              </div>
+              <p class="card-desc">
+                <span class="en-only">The **heavy-hitter & command ship**. The largest non-carrier surface combatants. Serves as flagship command centers, deploying massive VLS arrays for long-range offensive area dominance.</span>
+                <span class="id-only">Sang **pemukul berat & kapal komando**. Kapal kombatan non-induk terbesar. Berfungsi sebagai pusat komando laksamana, membawa ratusan sel rudal untuk mendominasi area samudra.</span>
+              </p>
+              <div class="card-specs">
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Size</span><span class="id-only">Tonase</span></span>
+                  <span class="card-spec-val">10,000 - 15,000+ tons</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Range</span><span class="id-only">Jarak Jangkau</span></span>
+                  <span class="card-spec-val">6,000 - 10,000+ nm</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Endurance</span><span class="id-only">Daya Tahan</span></span>
+                  <span class="card-spec-val">30+ days</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Armament</span><span class="id-only">Senjata</span></span>
+                  <span class="card-spec-val">120+ VLS Cells, Command Sys</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §04 STRATEGIC ASSETS -->
+      <section id="strategic">
+        <h2 class="section-title">
+          <span class="index">§04</span>
+          <span class="en-only">Strategic & Support Assets</span>
+          <span class="id-only">Aset Strategis & Logistik Pendukung</span>
+        </h2>
+        <p class="section-desc">
+          <span class="en-only">These massive capital hulls project power globally, enforce undersea nuclear deterrence, or supply essential logistics to sustain task groups on remote station.</span>
+          <span class="id-only">Lambung kapal raksasa ini memproyeksikan kekuatan udara secara global, membawa penangkal nuklir bawah air, atau menyuplai logistik penting di laut lepas.</span>
+        </p>
+
+        <div class="mission-grid">
+          <!-- Aircraft Carrier -->
+          <div class="ship-card red">
+            <div class="card-body">
+              <div class="card-header-row">
+                <h3 class="card-title">Aircraft Carrier</h3>
+                <span class="card-badge red"><span class="en-only">Power Projection</span><span class="id-only">Proyeksi Kekuatan</span></span>
+              </div>
+              <p class="card-desc">
+                <span class="en-only">The **floating airbase**. Armed with an air wing of 60-90+ fighters, early warning, and electronic warfare planes. Can establish air superiority thousands of miles from domestic borders.</span>
+                <span class="id-only">Sang **pangkalan udara terapung**. Senjata utamanya adalah skuadron udara beranggotakan 60-90+ jet tempur dan pesawat intai. Menjadi perwakilan kedaulatan negara secara global.</span>
+              </p>
+              <div class="card-specs">
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Size</span><span class="id-only">Tonase</span></span>
+                  <span class="card-spec-val">60,000 - 100K+ tons</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Range</span><span class="id-only">Jarak Jangkau</span></span>
+                  <span class="card-spec-val">Unlimited (Nuclear)</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Endurance</span><span class="id-only">Daya Tahan</span></span>
+                  <span class="card-spec-val">20+ Years (Core life)</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Armament</span><span class="id-only">Senjata</span></span>
+                  <span class="card-spec-val">60-90+ Combat Aircraft</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amphibious Assault -->
+          <div class="ship-card red">
+            <div class="card-body">
+              <div class="card-header-row">
+                <h3 class="card-title">Amphibious Assault Ship</h3>
+                <span class="card-badge red"><span class="en-only">Expeditionary</span><span class="id-only">Ekspedisi Militer</span></span>
+              </div>
+              <p class="card-desc">
+                <span class="en-only">The **mobile invasion platform**. Houses and deploys marines, helicopters, landing craft, and vertical-takeoff jets from internal floodable dock chambers and flat-top runways.</span>
+                <span class="id-only">Sang **pangkalan invasi bergerak**. Mengangkut ribuan pasukan infanteri laut (marinir) beserta helikopter, kapal pendarat, dan jet tempur lepas landas vertikal (VSTOL).</span>
+              </p>
+              <div class="card-specs">
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Size</span><span class="id-only">Tonase</span></span>
+                  <span class="card-spec-val">20,000 - 45,000 tons</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Range</span><span class="id-only">Jarak Jangkau</span></span>
+                  <span class="card-spec-val">7,000 - 9,500+ nm</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Endurance</span><span class="id-only">Daya Tahan</span></span>
+                  <span class="card-spec-val">30 - 45+ days</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Armament</span><span class="id-only">Senjata</span></span>
+                  <span class="card-spec-val">Helos, LCAC, Marines</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submarine -->
+          <div class="ship-card red">
+            <div class="card-body">
+              <div class="card-header-row">
+                <h3 class="card-title">Submarine (SSN/SSK)</h3>
+                <span class="card-badge red"><span class="en-only">Stealth Hunter</span><span class="id-only">Pemburu Siluman</span></span>
+              </div>
+              <p class="card-desc">
+                <span class="en-only">The **silent hunter**. Designed for sub-surface dominance, hunting enemy ships, or hiding off-shore to provide strategic nuclear deterrence via ballistic silos (SSBN).</span>
+                <span class="id-only">Sang **pemburu senyap**. Beroperasi tanpa terdeteksi di kedalaman samudra untuk menghancurkan kapal musuh, atau membawa rudal balistik nuklir strategis (SSBN).</span>
+              </p>
+              <div class="card-specs">
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Size</span><span class="id-only">Tonase</span></span>
+                  <span class="card-spec-val">1,000 - 20,000+ tons</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Range</span><span class="id-only">Jarak Jangkau</span></span>
+                  <span class="card-spec-val">Unlimited (Nuclear)</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Endurance</span><span class="id-only">Daya Tahan</span></span>
+                  <span class="card-spec-val">90+ days (Food limit)</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Armament</span><span class="id-only">Senjata</span></span>
+                  <span class="card-spec-val">Torpedoes, Cruise Missiles</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Support & Auxiliary -->
+          <div class="ship-card emerald">
+            <div class="card-body">
+              <div class="card-header-row">
+                <h3 class="card-title">Support & Auxiliary</h3>
+                <span class="card-badge emerald"><span class="en-only">Fleet Logistics</span><span class="id-only">Logistik Armada</span></span>
+              </div>
+              <p class="card-desc">
+                <span class="en-only">The **fleet's lifeline**. Logistics hulls (replenishment tankers, ammunition carriers) that fuel, supply, and maintain combat ships on station, extending operations from days to months.</span>
+                <span class="id-only">Sang **tali nyawa armada**. Kapal logistik pendukung (tanker BBM maritim, amunisi, suku cadang) yang memastikan armada kombatan dapat terus beroperasi tanpa harus pulang ke pangkalan.</span>
+              </p>
+              <div class="card-specs">
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Size</span><span class="id-only">Tonase</span></span>
+                  <span class="card-spec-val">2,000 - 50,000+ tons</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Range</span><span class="id-only">Jarak Jangkau</span></span>
+                  <span class="card-spec-val">10,000+ nm</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Endurance</span><span class="id-only">Daya Tahan</span></span>
+                  <span class="card-spec-val">30 - 45+ days</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Armament</span><span class="id-only">Senjata</span></span>
+                  <span class="card-spec-val">Defensive Only (CIWS)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Battleship -->
+          <div class="ship-card muted">
+            <div class="card-body">
+              <div class="card-header-row">
+                <h3 class="card-title">Battleship (Historical)</h3>
+                <span class="card-badge muted"><span class="en-only">Historical Kings</span><span class="id-only">Legenda Sejarah</span></span>
+              </div>
+              <p class="card-desc">
+                <span class="en-only">The **armored dreadnought**. Heavy metal legacy. Defined by thick steel girders and giant 16-inch guns. Obsoleted by the rise of carrier-based aviation that could strike far beyond their guns' reach.</span>
+                <span class="id-only">Sang **raksasa dreadnought lapis baja** (Sudah pensiun). Ditandai baja super tebal dan meriam raksasa 16-inci. Menjadi usang seiring bangkitnya penerbangan tempur dari kapal induk.</span>
+              </p>
+              <div class="card-specs">
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Size</span><span class="id-only">Tonase</span></span>
+                  <span class="card-spec-val">30,000 - 70,000+ tons</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Range</span><span class="id-only">Jarak Jangkau</span></span>
+                  <span class="card-spec-val">8,000 - 15,000 nm</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Endurance</span><span class="id-only">Daya Tahan</span></span>
+                  <span class="card-spec-val">~30 days</span>
+                </div>
+                <div class="card-spec-item">
+                  <span class="card-spec-label"><span class="en-only">Armament</span><span class="id-only">Senjata</span></span>
+                  <span class="card-spec-val">Giant 14-18 inch Guns</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §05 CAPABILITY ANALYTICS -->
+      <section id="analytics">
+        <h2 class="section-title">
+          <span class="index">§05</span>
+          <span class="en-only">Tactical Fleet Capability Analytics</span>
+          <span class="id-only">Analisis Kapabilitas Taktis Armada</span>
+        </h2>
+        <p class="section-desc">
+          <span class="en-only">A comparative visualization of combat efficiency dimensions and structural scaling across primary hull categories.</span>
+          <span class="id-only">Visualisasi komparatif dimensi efisiensi tempur dan penskalaan struktural di antara kategori lambung kapal utama.</span>
+        </p>
+
+        <div class="chart-layout-grid">
+          <!-- Radar chart box -->
+          <div class="chart-container-box">
+            <h3>
+              <span class="pulse-dot"></span>
+              <span class="en-only">Capability Comparison Matrix</span>
+              <span class="id-only">Matriks Kapabilitas Taktis</span>
+            </h3>
+            <div class="chart-canvas-wrap">
+              <canvas id="capabilityChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Bubble chart box -->
+          <div class="chart-container-box">
+            <h3>
+              <span class="pulse-dot"></span>
+              <span class="en-only">Displacement vs. Range Matrix (Bubble = Endurance)</span>
+              <span class="id-only">Matriks Tonase vs. Jarak Jangkau (Bubble = Ketahanan)</span>
+            </h3>
+            <div class="chart-canvas-wrap">
+              <canvas id="bubbleChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §06 MATRIX COMPARE TABLE -->
+      <section id="matrix">
+        <h2 class="section-title">
+          <span class="index">§06</span>
+          <span class="en-only">Direct Ship-Class Comparison Matrix</span>
+          <span class="id-only">Matriks Komparasi Langsung Kelas Kapal</span>
+        </h2>
+        <p class="section-desc">
+          <span class="en-only">A cross-referenced reference sheet showing exact technical dimensions and core armaments across all 11 spectrum hulls.</span>
+          <span class="id-only">Lembar referensi teknis yang memuat tonase, persenjataan utama, jarak tempuh khas, dan daya tahan operasi di antara 11 tipe lambung.</span>
+        </p>
+
+        <div class="table-responsive-container">
+          <table class="matrix-table" aria-label="Naval Ship Class Comparison Matrix">
+            <thead>
+              <tr>
+                <th><span class="en-only">Class</span><span class="id-only">Kelas</span></th>
+                <th><span class="en-only">Primary Mission</span><span class="id-only">Misi Utama</span></th>
+                <th><span class="en-only">Size (Tons)</span><span class="id-only">Tonase (Ton)</span></th>
+                <th><span class="en-only">Main Armament</span><span class="id-only">Persenjataan Utama</span></th>
+                <th><span class="en-only">Typical Range</span><span class="id-only">Jarak Khas</span></th>
+                <th><span class="en-only">Endurance</span><span class="id-only">Daya Tahan</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>OPV</strong></td>
+                <td><span class="table-label-badge">Security</span></td>
+                <td>1,500 - 3,000</td>
+                <td>Light cannon (30-76mm), MGs</td>
+                <td>6,000+ nm</td>
+                <td>21 - 35+ days</td>
+              </tr>
+              <tr>
+                <td><strong>Corvette</strong></td>
+                <td><span class="table-label-badge">Littoral</span></td>
+                <td>1,000 - 3,500</td>
+                <td>Anti-Ship Missiles, SAMs, 76mm Gun</td>
+                <td>2,000 - 4,000 nm</td>
+                <td>10 - 21 days</td>
+              </tr>
+              <tr>
+                <td><strong>Fast Attack Craft</strong></td>
+                <td><span class="table-label-badge">Strike</span></td>
+                <td>50 - 800</td>
+                <td>Heavy Anti-Ship Missiles</td>
+                <td>800 - 1,500 nm</td>
+                <td>3 - 7 days</td>
+              </tr>
+              <tr>
+                <td><strong>Frigate</strong></td>
+                <td><span class="table-label-badge">Multi-Role</span></td>
+                <td>3,500 - 8,000+</td>
+                <td>VLS, Torpedoes, AShMs, Medium Cannon</td>
+                <td>4,000 - 8,000+ nm</td>
+                <td>21 - 30+ days</td>
+              </tr>
+              <tr>
+                <td><strong>Destroyer</strong></td>
+                <td><span class="table-label-badge">Air Shield</span></td>
+                <td>7,000 - 10,000+</td>
+                <td>Large VLS, SAMs, Phased Radar, Guns</td>
+                <td>4,500 - 8,000+ nm</td>
+                <td>21 - 30+ days</td>
+              </tr>
+              <tr>
+                <td><strong>Cruiser</strong></td>
+                <td><span class="table-label-badge">Command</span></td>
+                <td>10,000 - 15,000+</td>
+                <td>Massive VLS grid, Command suite, Guns</td>
+                <td>6,000 - 10,000+ nm</td>
+                <td>30+ days</td>
+              </tr>
+              <tr>
+                <td><strong>Aircraft Carrier</strong></td>
+                <td><span class="table-label-badge">Global Strike</span></td>
+                <td>60,000 - 100K+</td>
+                <td>60-90+ Aircraft (Fighters, EW planes)</td>
+                <td>Unlimited (Nuclear)</td>
+                <td>Decades (food limited)</td>
+              </tr>
+              <tr>
+                <td><strong>Amphibious Assault</strong></td>
+                <td><span class="table-label-badge">Expeditionary</span></td>
+                <td>20,000 - 45,000+</td>
+                <td>VSTOL Jets, Helicopters, LCAC, Marines</td>
+                <td>7,000 - 9,500+ nm</td>
+                <td>30 - 45+ days</td>
+              </tr>
+              <tr>
+                <td><strong>Submarine</strong></td>
+                <td><span class="table-label-badge">Silent Strike</span></td>
+                <td>1,000 - 20,000+</td>
+                <td>Torpedoes, Cruise (Ballistic) Missiles</td>
+                <td>Unlimited / Medium</td>
+                <td>90+ days (Nuclear)</td>
+              </tr>
+              <tr>
+                <td><strong>Support Ship</strong></td>
+                <td><span class="table-label-badge">Logistics</span></td>
+                <td>2,000 - 50,000+</td>
+                <td>Defensive systems (CIWS, MGs) only</td>
+                <td>10,000+ nm</td>
+                <td>30 - 45+ days</td>
+              </tr>
+              <tr>
+                <td><strong>Battleship (Hist.)</strong></td>
+                <td><span class="table-label-badge">Surface Attack</span></td>
+                <td>30,000 - 70,000+</td>
+                <td>Massive 14-18 inch artillery guns</td>
+                <td>8,000 - 15,000 nm</td>
+                <td>~30 days</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer>
+        <div>
+          <em>Note: Displacement and armament figures are representative baselines and vary significantly by class variant, configuration, and operator nation.</em>
+        </div>
+        <div>
+          &copy; 2026 LoLyeah.github.io. <span class="en-only">All rights reserved.</span><span class="id-only">Hak cipta dilindungi undang-undang.</span>
+        </div>
+      </footer>
+
     </main>
-    </main>
-    <script>
-        // Simple JavaScript for tab functionality
-        document.addEventListener('DOMContentLoaded', () => {
-            const tabButtons = document.querySelectorAll('.tab-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
 
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const tabId = button.getAttribute('data-tab');
+  </div>
 
-                    // Deactivate all buttons and content
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    tabContents.forEach(content => content.classList.remove('active'));
+  <!-- Centralized Script -->
+  <script>
+    // 1. Mobile Drawer Navigation Toggle
+    const drawerToggle = document.getElementById('drawer-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('drawer-overlay');
 
-                    // Activate the clicked button and corresponding content
-                    button.classList.add('active');
-                    document.getElementById(tabId).classList.add('active');
-                });
-            });
+    if (drawerToggle && sidebar && overlay) {
+      const toggleDrawer = () => {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('open');
+      };
+      
+      drawerToggle.addEventListener('click', toggleDrawer);
+      overlay.addEventListener('click', toggleDrawer);
+      
+      // Close drawer on link click in mobile view
+      const navLinks = document.querySelectorAll('.nav-item a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (sidebar.classList.contains('open')) {
+            toggleDrawer();
+          }
         });
-    </script>
+      });
+    }
 
+    // 2. Language switching mechanism
+    function setLang(lang, btn) {
+      document.body.className = 'lang-' + lang;
+      
+      // Sync desktop buttons
+      const enBtnSide = document.getElementById('lang-btn-en');
+      const idBtnSide = document.getElementById('lang-btn-id');
+      
+      if (lang === 'en') {
+        if (enBtnSide) enBtnSide.classList.add('active');
+        if (idBtnSide) idBtnSide.classList.remove('active');
+      } else {
+        if (enBtnSide) enBtnSide.classList.remove('active');
+        if (idBtnSide) idBtnSide.classList.add('active');
+      }
+
+      // Sync mobile buttons
+      const mobileBtns = document.querySelectorAll('.mobile-lang-btn');
+      mobileBtns.forEach(b => {
+        if (b.innerText.toLowerCase() === lang) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
+
+      // Update Chart.js canvases in real-time
+      updateChartsLocale(lang);
+    }
+
+    // 3. Scrollspy Navigation Highlights
+    window.addEventListener('DOMContentLoaded', () => {
+      const observerOptions = {
+        root: null,
+        rootMargin: '-30% 0px -60% 0px',
+        threshold: 0
+      };
+
+      const sections = document.querySelectorAll('section, header.hero');
+      const navItems = document.querySelectorAll('.nav-item');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            navItems.forEach(item => {
+              const link = item.querySelector('a');
+              if (link && link.getAttribute('href') === `#${id}`) {
+                item.classList.add('active');
+              } else {
+                item.classList.remove('active');
+              }
+            });
+          }
+        });
+      }, observerOptions);
+
+      sections.forEach(sec => observer.observe(sec));
+    });
+
+    // 4. Interactive Command Console Database
+    const consoleDatabase = {
+      opv: {
+        disp: "1,500 - 3,000 tons",
+        range: "6,000 - 10,000+ nm",
+        endurance: "21 - 35+ days",
+        weapon: "Light guns (30-76mm), machine guns, light helos",
+        descEn: "The maritime police officer. A constabulary vessel optimized for low operating cost, exceptional range, and stable sea behavior to enforce safety, intercept smugglers, and manage territorial boundaries.",
+        descId: "Aparat penegak hukum maritim. Kapal keamanan teritorial yang efisien dengan biaya operasional rendah, jarak tempuh sangat jauh, dan ketahanan gelombang tinggi untuk melindungi perbatasan ZEE dan misi penyelamatan.",
+        coords: { top: '35%', left: '42%' }
+      },
+      corvette: {
+        disp: "1,000 - 3,500 tons",
+        range: "2,000 - 4,000 nm",
+        endurance: "10 - 21 days",
+        weapon: "Anti-Ship Missiles, SAMs, 76mm main gun, ASW torpedoes",
+        descEn: "The light, fast fighter. The smallest class of high-intensity warships, designed as littoral combatants to achieve sea denial in confined waters while carrying heavy anti-surface batteries.",
+        descId: "Petarung litoral yang lincah. Kelas kapal kombatan terkecil berdaya hancur tinggi, dirancang untuk mengamankan wilayah pesisir dan pantai dengan persenjataan rudal permukaan-ke-permukaan berat.",
+        coords: { top: '25%', left: '60%' }
+      },
+      frigate: {
+        disp: "3,500 - 8,000+ tons",
+        range: "4,000 - 8,000+ nm",
+        endurance: "21 - 30+ days",
+        weapon: "VLS missile cells, ASW Torpedoes, Anti-Ship missiles, 76-127mm gun",
+        descEn: "The versatile fleet workhorse. Backbones of most major navies, capable of executing robust multi-mission roles: tracking submarines (ASW), shielding against missiles, and escorting strike groups.",
+        descId: "Kuda beban armada serbaguna. Tulang punggung angkatan laut modern berkemampuan jelajah samudra. Dirancang khusus untuk memburu kapal selam (ASW), menangkis rudal, dan mengawal konvoi taktis.",
+        coords: { top: '48%', left: '55%' }
+      },
+      destroyer: {
+        disp: "7,000 - 10,000+ tons",
+        range: "4,500 - 8,000+ nm",
+        endurance: "21 - 30+ days",
+        weapon: "96+ VLS cells, Active Phased Radars (AEGIS), long-range SAMs, Cruise missiles",
+        descEn: "The fleet's advanced shield. Heavy ocean combatants specialized in comprehensive Anti-Air Warfare (AAW) area defense, guarding carriers against massed missile strikes and aircraft operations.",
+        descId: "Perisai udara utama armada. Kombatan permukaan berat dengan radar canggih terintegrasi untuk menangkal serangan udara massal dan rudal balistik guna mengamankan gugus tempur laut.",
+        coords: { top: '65%', left: '30%' }
+      },
+      carrier: {
+        disp: "60,000 - 100,000+ tons",
+        range: "Unlimited (Nuclear propulsion / 20+ years fuel)",
+        endurance: "Decades (Food supplies limited to 90 days)",
+        weapon: "60-90+ Aircraft (Multirole fighters, EW craft, AEW radars), CIWS shields",
+        descEn: "The floating airbase. Global capital power-projection platform. Employs a massive integrated airwing to achieve absolute air superiority and conduct devastating strikes thousands of miles away.",
+        descId: "Pangkalan udara samudra terapung. Simbol kekuatan proyeksi kekuatan global utama. Mengoperasikan puluhan jet tempur dan pesawat peringatan dini untuk mengamankan dominasi ruang udara tempur.",
+        coords: { top: '80%', left: '15%' }
+      },
+      submarine: {
+        disp: "1,000 - 20,000+ tons",
+        range: "Unlimited (Nuclear SSN) / 10,000 nm (Diesel SSK)",
+        endurance: "60 - 90+ days (Limited by food storage)",
+        weapon: "Heavyweight Torpedoes, submarine cruise missiles, ICBM nuclear silos",
+        descEn: "The silent sub-surface hunter. Leverages absolute stealth to conduct surveillance, ambush shipping routes, hunt enemy hulls, or act as the ultimate nuclear strategic deterrent (SSBN).",
+        descId: "Pemburu bawah air yang senyap. Mengandalkan kesenyapan mutlak untuk pengintaian intelijen, melumpuhkan armada kapal laut, dan membawa persenjataan balistik nuklir strategis.",
+        coords: { top: '55%', left: '78%' }
+      }
+    };
+
+    function selectConsoleShip(shipKey) {
+      // 1. Manage active button states
+      const buttons = document.querySelectorAll('.console-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      
+      const activeBtn = document.getElementById('c-btn-' + shipKey);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      // 2. Manage active SVG blueprints
+      const silhouettes = document.querySelectorAll('.ship-silhouette');
+      silhouettes.forEach(sil => sil.classList.remove('active'));
+      
+      const activeSil = document.getElementById('sil-' + shipKey);
+      if (activeSil) activeSil.classList.add('active');
+
+      // 3. Update telemetry and descriptions
+      const data = consoleDatabase[shipKey];
+      if (data) {
+        document.getElementById('disp-val').innerText = data.disp;
+        document.getElementById('range-val').innerText = data.range;
+        document.getElementById('endur-val').innerText = data.endurance;
+        document.getElementById('weapon-val').innerText = data.weapon;
+        document.getElementById('desc-val-en').innerText = data.descEn;
+        document.getElementById('desc-val-id').innerText = data.descId;
+
+        // Animate radar target coordinates
+        const blip = document.getElementById('radar-blip');
+        if (blip) {
+          blip.classList.remove('active');
+          setTimeout(() => {
+            blip.style.top = data.coords.top;
+            blip.style.left = data.coords.left;
+            blip.classList.add('active');
+          }, 150);
+        }
+      }
+    }
+
+    // Initialize first console blip position
+    window.addEventListener('load', () => {
+      selectConsoleShip('opv');
+    });
+
+    // 5. Chart.js Localization Dictionary & Instances
+    const chartTranslations = {
+      en: {
+        capabilityRadar: {
+          title: "Fleet Tactical Attribute Comparison",
+          labels: ["Firepower", "Air Defense", "Anti-Submarine", "Stealth & Speed", "Endurance"],
+          series: {
+            opv: "OPV (Maritime Security)",
+            frigate: "Frigate (Multi-Role Escort)",
+            destroyer: "Destroyer/Cruiser (Air Shield)",
+            carrier: "Aircraft Carrier (Power Projection)"
+          }
+        },
+        displacementBubble: {
+          title: "Fleet Scaling: Displacement vs. Range",
+          xAxis: "Displacement (Tons)",
+          yAxis: "Typical Range (Nautical Miles)",
+          series: {
+            coastal: "Coastal & Patrol Forces",
+            bluewater: "Blue Water Fleet",
+            strategic: "Strategic & Support Assets"
+          }
+        }
+      },
+      id: {
+        capabilityRadar: {
+          title: "Komparasi Kapabilitas Taktis Armada",
+          labels: ["Daya Gempur", "Pertahanan Udara", "Anti-Kapal Selam", "Kecepatan & Siluman", "Daya Tahan"],
+          series: {
+            opv: "OPV (Keamanan Maritim)",
+            frigate: "Frigat (Kombatan Multi-Peran)",
+            destroyer: "Destroyer/Cruiser (Perisai Udara)",
+            carrier: "Kapal Induk (Proyeksi Kekuatan)"
+          }
+        },
+        displacementBubble: {
+          title: "Skala Armada: Tonase vs. Jarak Jangkau",
+          xAxis: "Tonase / Displacement (Ton)",
+          yAxis: "Jarak Jangkau Khas (Mil Laut)",
+          series: {
+            coastal: "Pasukan Patroli Pantai",
+            bluewater: "Armada Samudra (Blue Water)",
+            strategic: "Aset Strategis & Pendukung"
+          }
+        }
+      }
+    };
+
+    // Chart.js Global Theming Override
+    Chart.defaults.color = '#7082a6';
+    Chart.defaults.font.family = "'JetBrains Mono', monospace";
+    Chart.defaults.font.size = 11;
+
+    const chartTooltipConfig = {
+      backgroundColor: '#0b0f19',
+      titleColor: '#eef1f8',
+      bodyColor: '#dbeafe',
+      borderColor: 'rgba(0, 240, 255, 0.15)',
+      borderWidth: 1,
+      padding: 10,
+      cornerRadius: 6,
+      displayColors: true,
+      boxWidth: 8,
+      boxHeight: 8,
+      boxPadding: 4,
+      usePointStyle: true
+    };
+
+    let capabilityChart;
+    let bubbleChart;
+
+    // Initialize Charts on Load
+    window.addEventListener('load', () => {
+      // ─── RADAR CHART ───
+      const ctxRadar = document.getElementById('capabilityChart').getContext('2d');
+      capabilityChart = new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+          labels: chartTranslations.en.capabilityRadar.labels,
+          datasets: [
+            {
+              label: chartTranslations.en.capabilityRadar.series.opv,
+              data: [30, 20, 15, 75, 80],
+              borderColor: '#ffc83b',
+              backgroundColor: 'rgba(255, 200, 59, 0.08)',
+              borderWidth: 1.5,
+              pointBackgroundColor: '#ffc83b'
+            },
+            {
+              label: chartTranslations.en.capabilityRadar.series.frigate,
+              data: [75, 60, 90, 65, 75],
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.08)',
+              borderWidth: 1.5,
+              pointBackgroundColor: '#3b82f6'
+            },
+            {
+              label: chartTranslations.en.capabilityRadar.series.destroyer,
+              data: [95, 98, 80, 50, 85],
+              borderColor: '#ef4444',
+              backgroundColor: 'rgba(239, 68, 68, 0.08)',
+              borderWidth: 1.5,
+              pointBackgroundColor: '#ef4444'
+            },
+            {
+              label: chartTranslations.en.capabilityRadar.series.carrier,
+              data: [100, 45, 10, 30, 100],
+              borderColor: '#00f0ff',
+              backgroundColor: 'rgba(0, 240, 255, 0.08)',
+              borderWidth: 1.5,
+              pointBackgroundColor: '#00f0ff'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { boxWidth: 12, padding: 12 }
+            },
+            tooltip: chartTooltipConfig,
+            title: {
+              display: true,
+              text: chartTranslations.en.capabilityRadar.title,
+              color: '#eef1f8',
+              font: { size: 13, weight: 'normal' }
+            }
+          },
+          scales: {
+            r: {
+              angleLines: { color: 'rgba(0, 240, 255, 0.04)' },
+              grid: { color: 'rgba(0, 240, 255, 0.04)' },
+              pointLabels: { color: '#7082a6', font: { size: 10 } },
+              ticks: { display: false },
+              min: 0,
+              max: 100
+            }
+          }
+        }
+      });
+
+      // ─── BUBBLE SCATTER CHART ───
+      const ctxBubble = document.getElementById('bubbleChart').getContext('2d');
+      bubbleChart = new Chart(ctxBubble, {
+        type: 'bubble',
+        data: {
+          datasets: [
+            {
+              label: chartTranslations.en.displacementBubble.series.coastal,
+              backgroundColor: 'rgba(255, 200, 59, 0.3)',
+              borderColor: '#ffc83b',
+              borderWidth: 1,
+              data: [
+                { x: 450, y: 1200, r: 6 }, // FAC
+                { x: 2200, y: 3000, r: 10 }, // Corvette
+                { x: 2500, y: 8000, r: 16 } // OPV
+              ]
+            },
+            {
+              label: chartTranslations.en.displacementBubble.series.bluewater,
+              backgroundColor: 'rgba(59, 130, 246, 0.3)',
+              borderColor: '#3b82f6',
+              borderWidth: 1,
+              data: [
+                { x: 5800, y: 6000, r: 14 }, // Frigate
+                { x: 8500, y: 6300, r: 15 }, // Destroyer
+                { x: 12500, y: 8000, r: 18 } // Cruiser
+              ]
+            },
+            {
+              label: chartTranslations.en.displacementBubble.series.strategic,
+              backgroundColor: 'rgba(0, 240, 255, 0.3)',
+              borderColor: '#00f0ff',
+              borderWidth: 1,
+              data: [
+                { x: 7500, y: 12000, r: 24 }, // Submarine
+                { x: 26000, y: 12000, r: 20 }, // Support Ship
+                { x: 32000, y: 8500, r: 20 }, // Amphibious
+                { x: 90000, y: 20000, r: 30 } // Aircraft Carrier
+              ]
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { boxWidth: 12, padding: 12 }
+            },
+            tooltip: {
+              ...chartTooltipConfig,
+              callbacks: {
+                label: function(context) {
+                  const label = context.dataset.label || '';
+                  const x = context.raw.x;
+                  const y = context.raw.y;
+                  const r = context.raw.r;
+                  return `${label}: Displacement: ${x.toLocaleString()}T, Range: ${y.toLocaleString()}nm, Endurance Ref: ${r}`;
+                }
+              }
+            },
+            title: {
+              display: true,
+              text: chartTranslations.en.displacementBubble.title,
+              color: '#eef1f8',
+              font: { size: 13, weight: 'normal' }
+            }
+          },
+          scales: {
+            x: {
+              type: 'logarithmic',
+              title: {
+                display: true,
+                text: chartTranslations.en.displacementBubble.xAxis,
+                color: '#7082a6'
+              },
+              grid: { color: 'rgba(0, 240, 255, 0.03)' }
+            },
+            y: {
+              title: {
+                display: true,
+                text: chartTranslations.en.displacementBubble.yAxis,
+                color: '#7082a6'
+              },
+              grid: { color: 'rgba(0, 240, 255, 0.03)' },
+              min: 0,
+              max: 22000
+            }
+          }
+        }
+      });
+    });
+
+    // Helper to refresh locale strings on Chart instance
+    function updateChartsLocale(lang) {
+      if (!capabilityChart || !bubbleChart) return;
+      const t = chartTranslations[lang];
+
+      // Update Radar Data
+      capabilityChart.data.labels = t.capabilityRadar.labels;
+      capabilityChart.data.datasets[0].label = t.capabilityRadar.series.opv;
+      capabilityChart.data.datasets[1].label = t.capabilityRadar.series.frigate;
+      capabilityChart.data.datasets[2].label = t.capabilityRadar.series.destroyer;
+      capabilityChart.data.datasets[3].label = t.capabilityRadar.series.carrier;
+      capabilityChart.options.plugins.title.text = t.capabilityRadar.title;
+      capabilityChart.update();
+
+      // Update Bubble Data
+      bubbleChart.options.plugins.title.text = t.displacementBubble.title;
+      bubbleChart.options.scales.x.title.text = t.displacementBubble.xAxis;
+      bubbleChart.options.scales.y.title.text = t.displacementBubble.yAxis;
+      bubbleChart.data.datasets[0].label = t.displacementBubble.series.coastal;
+      bubbleChart.data.datasets[1].label = t.displacementBubble.series.bluewater;
+      bubbleChart.data.datasets[2].label = t.displacementBubble.series.strategic;
+      bubbleChart.update();
+    }
+  </script>
 </body>
 </html>
-

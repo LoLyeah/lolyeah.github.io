@@ -1,728 +1,1785 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprehensive Guide to Diabetes</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
-        }
-        .tab-button {
-            transition: all 0.3s ease;
-        }
-        .tab-button.active {
-            color: #ffffff;
-            background-color: #3b82f6; /* blue-500 */
-            border-color: #3b82f6;
-            font-weight: 600;
-        }
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .language-button.active {
-            background-color: #1d4ed8; /* blue-700 */
-            color: white;
-        }
-        /* Table styles */
-        .diabetes-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-        .diabetes-table th, .diabetes-table td {
-            border: 1px solid #e2e8f0;
-            padding: 0.75rem;
-            text-align: left;
-            font-size: 0.875rem;
-        }
-        .diabetes-table th {
-            background-color: #f8fafc;
-            font-weight: 600;
-        }
-        .diabetes-table tbody tr:nth-child(odd) {
-            background-color: #ffffff;
-        }
-        .diabetes-table tbody tr:nth-child(even) {
-            background-color: #f8fafc;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprehensive Guide to Diabetes — LoLyeah</title>
+<meta name="description" content="An evidence-based, premium clinical and lifestyle guide to understanding, managing, and preventing Diabetes Mellitus. Available in English and Indonesian.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #06080b;
+  --bg2:       #0b0e14;
+  --bg3:       #0f121d;
+  --surface:   #131724;
+  --border:    rgba(77,208,200,0.10);
+  --border2:   rgba(77,208,200,0.18);
+  --teal:      #4dd0c8; /* Insulin, Primary */
+  --amber:     #f0a050; /* Glucose, Warning */
+  --rose:      #e8637a; /* Danger, Complications */
+  --sage:      #7ec88b; /* Prevention */
+  --text:      #d8dde8;
+  --text-dim:  #7a8496;
+  --text-muted:#4a5268;
+  --heading:   #eef1f8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ─── NOISE OVERLAY ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ─── LANGUAGE SYSTEM ─── */
+body.lang-id .en-only { display: none !important; }
+body.lang-en .id-only { display: none !important; }
+
+/* Lang toggle in sidebar */
+.lang-toggle-wrap {
+  padding: 0 1.5rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+.lang-toggle {
+  display: flex;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  width: 100%;
+}
+.lang-btn {
+  flex: 1;
+  padding: 6px 0;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-dim);
+  border: none;
+  background: transparent;
+}
+.lang-btn.active {
+  background: rgba(77,208,200,0.08);
+  color: var(--teal);
+  border: 1px solid rgba(77,208,200,0.25);
+  border-radius: 5px;
+}
+
+/* ─── LAYOUT ─── */
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── SIDEBAR NAV ─── */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  padding: 2.5rem 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+.sidebar::-webkit-scrollbar { display: none; }
+
+.sidebar-logo {
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+.sidebar-logo .logo-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--teal);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+.sidebar-logo h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: var(--heading);
+  line-height: 1.2;
+}
+
+.nav-section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0 1.5rem;
+  margin: 1rem 0 0.4rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.42rem 1.5rem;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: all 0.2s;
+  position: relative;
+  line-height: 1.4;
+  font-weight: 400;
+}
+.nav-link::before {
+  content: '';
+  width: 3px;
+  height: 0;
+  background: var(--teal);
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: height 0.2s;
+  border-radius: 0 2px 2px 0;
+}
+.nav-link:hover { color: var(--heading); }
+.nav-link.active {
+  color: var(--teal);
+  background: rgba(77,208,200,0.04);
+}
+.nav-link.active::before { height: 70%; }
+
+.nav-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.nav-link.active .nav-dot { background: var(--teal); }
+
+/* ─── MOBILE STICKY HEADER ─── */
+.mobile-header {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: rgba(11, 14, 20, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1rem;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 999;
+}
+.mobile-menu-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+.mobile-menu-btn:hover {
+  color: var(--teal);
+}
+.mobile-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--heading);
+  letter-spacing: -0.01em;
+}
+.mobile-header .lang-toggle {
+  width: 80px;
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.sidebar-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ─── MAIN CONTENT ─── */
+.main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 4rem 3.5rem 6rem;
+}
+
+/* ─── HERO ─── */
+.hero {
+  padding: 2rem 0 4rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4rem;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--teal);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  background: rgba(77,208,200,0.06);
+  border: 1px solid rgba(77,208,200,0.15);
+  padding: 0.4rem 0.8rem;
+  border-radius: 2px;
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 600;
+  color: var(--heading);
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+.hero h1 em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--teal);
+}
+.hero-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  color: var(--text-dim);
+  font-style: italic;
+  font-weight: 300;
+  margin-bottom: 2.5rem;
+  max-width: 650px;
+  line-height: 1.5;
+}
+.hero-meta {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.hero-meta-item {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+.hero-meta-item span { color: var(--text-dim); }
+
+/* ─── STAT CARDS ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 0 0 4rem;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.stat-card {
+  background: var(--bg2);
+  padding: 1.6rem 1.4rem;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.stat-card:hover::after { opacity: 1; }
+.stat-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--heading);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.03em;
+}
+.stat-value .stat-suffix { color: var(--teal); font-size: 1.6rem; }
+.stat-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+/* ─── SECTION STYLES ─── */
+.section {
+  margin-bottom: 5rem;
+  scroll-margin-top: 5rem;
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--heading);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--heading);
+  margin: 2.2rem 0 0.8rem;
+  letter-spacing: -0.01em;
+}
+h3::before {
+  content: '—  ';
+  color: var(--teal);
+  font-weight: 300;
+}
+h3.warning-heading::before {
+  color: var(--rose);
+}
+h3.prevention-heading::before {
+  color: var(--sage);
+}
+
+p { margin-bottom: 1.2rem; font-size: 15px; }
+p:last-child { margin-bottom: 0; }
+
+strong {
+  color: var(--heading);
+  font-weight: 500;
+}
+
+/* ─── CALLOUT BOXES ─── */
+.callout {
+  border-left: 2px solid var(--teal);
+  background: rgba(77,208,200,0.04);
+  padding: 1.2rem 1.4rem;
+  margin: 1.8rem 0;
+  border-radius: 0 4px 4px 0;
+}
+.callout.amber {
+  border-color: var(--amber);
+  background: rgba(240,160,80,0.04);
+}
+.callout.rose {
+  border-color: var(--rose);
+  background: rgba(232,99,122,0.04);
+}
+.callout.sage {
+  border-color: var(--sage);
+  background: rgba(126,200,139,0.04);
+}
+.callout-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--teal);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.callout.amber .callout-label { color: var(--amber); }
+.callout.rose .callout-label { color: var(--rose); }
+.callout.sage .callout-label { color: var(--sage); }
+.callout p { font-size: 14px; margin: 0; line-height: 1.6; }
+
+/* ─── DATA PILLS ─── */
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+}
+.pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  padding: 0.3rem 0.7rem;
+  border-radius: 2px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.pill.teal { background: rgba(77,208,200,0.1); color: var(--teal); border: 1px solid rgba(77,208,200,0.2); }
+.pill.amber { background: rgba(240,160,80,0.1); color: var(--amber); border: 1px solid rgba(240,160,80,0.2); }
+.pill.rose { background: rgba(232,99,122,0.1); color: var(--rose); border: 1px solid rgba(232,99,122,0.2); }
+.pill.sage { background: rgba(126,200,139,0.1); color: var(--sage); border: 1px solid rgba(126,200,139,0.2); }
+
+/* ─── TYPE CONTRAST GRID ─── */
+.type-contrast {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+.type-col {
+  background: var(--bg2);
+  padding: 1.5rem;
+}
+.type-col.center {
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  min-width: 120px;
+}
+.type-col-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.type-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 13.5px;
+  color: var(--text-dim);
+  margin-bottom: 0.6rem;
+  line-height: 1.5;
+}
+.type-item:last-child { margin-bottom: 0; }
+.type-item::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.type-col:first-child .type-item::before { background: var(--teal); }
+.type-col:last-child .type-item::before { background: var(--amber); }
+.contrast-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.contrast-vs {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--rose);
+  line-height: 1;
+  text-align: center;
+}
+
+/* ─── SYMPTOMS GRID ─── */
+.symptoms-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.symptom-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 1.2rem;
+  border-radius: 4px;
+}
+.symptom-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--teal);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+.symptom-desc {
+  font-size: 13.5px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ─── PHARMA COMPARISON TABLE ─── */
+.pharma-table {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+.pharma-header {
+  display: grid;
+  grid-template-columns: 1.4fr 1.6fr 1.2fr 2.8fr;
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border2);
+}
+.pharma-th {
+  background: var(--surface);
+  padding: 0.8rem 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.pharma-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1.6fr 1.2fr 2.8fr;
+  gap: 1px;
+  background: var(--border);
+}
+.pharma-row:last-child { border-bottom: none; }
+.pharma-td {
+  background: var(--bg2);
+  padding: 1rem;
+  font-size: 13px;
+  vertical-align: top;
+  line-height: 1.6;
+}
+.pharma-class {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+.pharma-agents {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--teal);
+  margin-top: 0.3rem;
+  line-height: 1.6;
+}
+
+/* ─── COMPLICATIONS GRID ─── */
+.conflict-diagram {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+.conflict-side {
+  background: var(--bg2);
+  padding: 1.5rem;
+}
+.conflict-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.conflict-side.left .conflict-label { color: var(--teal); }
+.conflict-side.right .conflict-label { color: var(--rose); }
+.conflict-trait {
+  font-size: 13.5px;
+  color: var(--text-dim);
+  margin-bottom: 0.8rem;
+  padding-left: 0.8rem;
+  border-left: 2px solid;
+  line-height: 1.45;
+}
+.conflict-trait:last-child { margin-bottom: 0; }
+.conflict-side.left .conflict-trait { border-color: rgba(77,208,200,0.3); }
+.conflict-side.right .conflict-trait { border-color: rgba(232,99,122,0.3); }
+
+/* ─── MYTH VS FACT INTERACTIVE TABLE ─── */
+.diag-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+.diag-table-header {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 3fr;
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border2);
+}
+.diag-th {
+  background: var(--surface);
+  padding: 0.8rem 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.diag-row {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 3fr;
+  gap: 1px;
+  background: var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.diag-row:hover .diag-td { background: rgba(77,208,200,0.03); }
+.diag-row.expanded .diag-td { background: rgba(77,208,200,0.03); }
+.diag-td {
+  background: var(--bg2);
+  padding: 1rem;
+  transition: background 0.15s;
+  vertical-align: top;
+}
+.diag-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--amber);
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+.diag-desc { font-size: 13.5px; color: var(--text-dim); line-height: 1.6; }
+.diag-tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+}
+.tag-myth { background: rgba(240,160,80,0.1); color: var(--amber); }
+
+.expand-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.6rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.expand-btn svg {
+  transition: transform 0.2s;
+}
+.diag-row.expanded .expand-btn svg { transform: rotate(180deg); }
+.diag-row.expanded .expand-btn { color: var(--teal); }
+.diag-extra {
+  display: none;
+  grid-column: 1 / -1;
+  background: var(--bg3);
+  border-top: 1px solid var(--border);
+  padding: 1.2rem;
+  font-size: 13.5px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+.diag-row.expanded .diag-extra { display: block; }
+
+/* ─── PRINCIPLES LIST ─── */
+.principles {
+  counter-reset: principle;
+  margin: 1.5rem 0;
+}
+.principle {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+  align-items: start;
+}
+.principle-num {
+  counter-increment: principle;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  line-height: 1;
+}
+.principle-content h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--heading);
+  margin-bottom: 0.25rem;
+}
+.principle-content p { font-size: 13px; color: var(--text-dim); margin: 0; }
+
+/* ─── FOOTER ─── */
+footer {
+  grid-column: 2;
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 3.5rem;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.footer-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+}
+.footer-note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.footer-disclaimer {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.footer-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero, .stats-grid, .section { animation: fadeUp 0.6s ease both; }
+.section:nth-child(2)  { animation-delay: 0.05s; }
+.section:nth-child(3)  { animation-delay: 0.10s; }
+.section:nth-child(4)  { animation-delay: 0.15s; }
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-delay: 0s !important;
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    padding-top: 56px;
+  }
+  .mobile-header { display: flex; }
+  .sidebar-overlay { display: block; }
+  
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    height: 100vh;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+    background: var(--bg);
+    border-right: 1px solid var(--border);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .main { padding: 2.5rem 1.5rem 4rem; }
+  footer { grid-column: 1; padding: 2rem 1.5rem; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .symptoms-grid { grid-template-columns: 1fr; }
+  .type-contrast { grid-template-columns: 1fr; }
+  .type-col.center { padding: 1.5rem 1rem; }
+  .diag-table-header, .diag-row { grid-template-columns: 1fr 1fr; }
+  .diag-row .diag-td:last-child { grid-column: 1 / -1; }
+  .conflict-diagram { grid-template-columns: 1fr; }
+  .pharma-header, .pharma-row { grid-template-columns: 1fr; }
+}
+</style>
 </head>
-<body class="antialiased text-slate-800">
+<body class="lang-en">
 
-    <div class="container mx-auto p-4 md:p-8">
-        
-        <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Comprehensive Guide to Diabetes</h1>
-            <p class="text-slate-600 mt-2 text-lg">Your complete resource for understanding and managing diabetes, based on the latest evidence.</p>
-        </header>
+<!-- Mobile Sticky Header -->
+<header class="mobile-header">
+  <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Toggle Navigation">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+  <span class="mobile-title en-only">Diabetes Guide</span>
+  <span class="mobile-title id-only">Panduan Diabetes</span>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en', this)">EN</button>
+    <button class="lang-btn" onclick="setLang('id', this)">ID</button>
+  </div>
+</header>
 
-        <!-- Language Switcher -->
-        <div class="flex justify-center mb-8 bg-slate-200 rounded-full p-1 max-w-xs mx-auto">
-            <button class="language-button w-1/2 py-2 px-4 rounded-full text-sm font-semibold active" onclick="switchLanguage('EN')">English</button>
-            <button class="language-button w-1/2 py-2 px-4 rounded-full text-sm font-semibold" onclick="switchLanguage('ID')">Indonesia</button>
-        </div>
+<!-- Mobile Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-        <!-- English Content -->
-        <main id="EN" class="language-content active">
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                <div class="p-4 sm:p-6 border-b border-slate-200">
-                    <!-- Tab Buttons -->
-                    <div class="flex flex-wrap gap-2 justify-center">
-                        <button class="tab-button active py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'EN-Definition')">Definition</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'EN-Types')">Types</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'EN-Symptoms')">Symptoms</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'EN-Treatment')">Treatment</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'EN-Complications')">Complications</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'EN-MythFact')">Myth vs. Fact</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'EN-Prevention')">Prevention</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'EN-References')">References</button>
-                    </div>
-                </div>
+<div class="layout">
 
-                <!-- Tab Content Panels -->
-                <div class="p-6 md:p-8">
-                    <div id="EN-Definition" class="tab-content active">
-                        <!-- ... existing content ... -->
-                        <h2 class="text-2xl font-bold mb-4 text-blue-600">What is Diabetes?</h2>
-                        <p class="mb-4">Diabetes Mellitus, commonly known as diabetes, is a chronic metabolic disorder characterized by elevated levels of blood glucose (or blood sugar). This condition arises either because the pancreas does not produce enough insulin, or because the body cannot effectively use the insulin it produces.</p>
-                        <p class="mb-4">Insulin is a crucial hormone that regulates blood sugar, allowing glucose from the food we eat to pass from the bloodstream into the body's cells to produce energy. When insulin function is impaired, glucose stays in the blood, leading to hyperglycemia.</p>
-                        <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-800 rounded-r-lg">
-                            <h3 class="font-semibold">Key Diagnostic Criteria (ADA Guidelines)</h3>
-                            <ul class="list-disc list-inside mt-2 space-y-1 text-sm">
-                                <li><strong>A1C Level:</strong> 6.5% or higher.</li>
-                                <li><strong>Fasting Plasma Glucose (FPG):</strong> 126 mg/dL (7.0 mmol/L) or higher. (Fasting is no caloric intake for at least 8 hours).</li>
-                                <li><strong>2-hour Plasma Glucose:</strong> 200 mg/dL (11.1 mmol/L) or higher during an Oral Glucose Tolerance Test (OGTT).</li>
-                                <li><strong>Random Plasma Glucose:</strong> 200 mg/dL (11.1 mmol/L) or higher in a patient with classic symptoms of hyperglycemia.</li>
-                            </ul>
-                        </div>
-                    </div>
+<!-- ─── SIDEBAR ─── -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-tag en-only">Medical Guide</span>
+    <span class="logo-tag id-only">Panduan Medis</span>
+    <h2 class="en-only">Diabetes<br>Reference</h2>
+    <h2 class="id-only">Referensi<br>Diabetes</h2>
+    <a href="/index.html" class="en-only" style="font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--teal); text-decoration:none; margin-top:0.8rem; display:inline-flex; align-items:center; gap:0.4rem; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+      ← Back to Home
+    </a>
+    <a href="/index.html" class="id-only" style="font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--teal); text-decoration:none; margin-top:0.8rem; display:inline-flex; align-items:center; gap:0.4rem; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+      ← Kembali ke Beranda
+    </a>
+  </div>
 
-                    <div id="EN-Types" class="tab-content">
-                        <h2 class="text-2xl font-bold mb-4 text-blue-600">Types of Diabetes</h2>
-                        <div class="space-y-6">
-                            <!-- ... existing Type 1, Type 2, GDM content ... -->
-                            <div>
-                                <h3 class="text-xl font-semibold mb-2">Type 1 Diabetes</h3>
-                                <p>Previously known as juvenile diabetes, this is an autoimmune condition where the body's immune system mistakenly attacks and destroys the insulin-producing beta cells in the pancreas. As a result, the body produces very little or no insulin. It often develops in childhood or adolescence but can occur at any age. People with Type 1 diabetes require lifelong daily insulin injections or an insulin pump to survive.</p>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-semibold mb-2">Type 2 Diabetes</h3>
-                                <p>This is the most common type, accounting for about 90-95% of all diabetes cases. It begins with insulin resistance, a condition where the body's cells do not respond properly to insulin. As the need for insulin rises, the pancreas gradually loses its ability to produce enough. It is strongly linked to genetics, obesity, physical inactivity, and older age. Management involves lifestyle changes, oral medications, and sometimes insulin.</p>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-semibold mb-2">Gestational Diabetes Mellitus (GDM)</h3>
-                                <p>This type is high blood sugar that develops during pregnancy in a woman who did not previously have diabetes. It is caused by hormones from the placenta that block the action of insulin. GDM usually resolves after delivery, but it increases the mother's and child's risk of developing Type 2 diabetes later in life.</p>
-                            </div>
-                             <div class="p-4 bg-slate-50 rounded-lg">
-                                <h3 class="text-lg font-semibold mb-2">Other Specific Types</h3>
-                                <p class="mb-2 text-sm text-slate-600">These are less common forms caused by specific conditions:</p>
-                                <ul class="list-disc list-inside space-y-1 text-sm text-slate-700">
-                                    <li><strong>Monogenic Diabetes:</strong> Caused by a single gene mutation. Includes Neonatal Diabetes (diagnosed in the first 6 months of life) and Maturity-Onset Diabetes of the Young (MODY), which often runs strongly in families.</li>
-                                    <li><strong>Diseases of the Exocrine Pancreas:</strong> Conditions like cystic fibrosis, pancreatitis, or pancreatic cancer can damage beta cells and impair insulin production.</li>
-                                    <li><strong>Drug- or Chemical-Induced Diabetes:</strong> Certain medications, such as glucocorticoids (e.g., prednisone) and some antipsychotics, can lead to high blood sugar.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+  <div class="lang-toggle-wrap">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en', this)">EN</button>
+      <button class="lang-btn" onclick="setLang('id', this)">ID</button>
+    </div>
+  </div>
 
-                    <div id="EN-Symptoms" class="tab-content">
-                        <!-- ... existing content ... -->
-                        <h2 class="text-2xl font-bold mb-4 text-blue-600">Common Symptoms</h2>
-                        <p class="mb-4">Symptoms can develop rapidly (in Type 1) or gradually (in Type 2), and sometimes Type 2 diabetes has no symptoms at all. Key signs of high blood sugar (hyperglycemia) include:</p>
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">Frequent Urination (Polyuria)</h3>
-                                <p class="text-sm text-blue-700">Excess glucose in the blood is filtered out through the kidneys, pulling water with it.</p>
-                            </div>
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">Increased Thirst (Polydipsia)</h3>
-                                <p class="text-sm text-blue-700">The frequent urination leads to dehydration, causing you to feel thirsty.</p>
-                            </div>
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">Increased Hunger (Polyphagia)</h3>
-                                <p class="text-sm text-blue-700">Since cells aren't getting glucose for energy, your body thinks it's starving and craves more food.</p>
-                            </div>
-                             <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">Unexplained Weight Loss</h3>
-                                <p class="text-sm text-blue-700">Your body starts breaking down muscle and fat for energy because it can't use glucose.</p>
-                            </div>
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">Fatigue</h3>
-                                <p class="text-sm text-blue-700">Cells are deprived of sugar, leaving you feeling tired and lethargic.</p>
-                            </div>
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">Blurred Vision</h3>
-                                <p class="text-sm text-blue-700">High blood sugar can cause the lens of the eye to swell.</p>
-                            </div>
-                        </div>
-                         <div class="mt-6 p-4 bg-red-50 border-l-4 border-red-400 text-red-800 rounded-r-lg">
-                            <h3 class="font-semibold">Warning! Seek immediate medical help for symptoms of Diabetic Ketoacidosis (DKA), more common in Type 1, such as nausea, vomiting, stomach pain, and fruity-smelling breath.</h3>
-                        </div>
-                    </div>
+  <span class="nav-section-label en-only">Overview</span>
+  <span class="nav-section-label id-only">Ikhtisar</span>
+  <a class="nav-link active" href="#intro">
+    <span class="nav-dot"></span>
+    <span class="en-only">Introduction</span>
+    <span class="id-only">Pengantar</span>
+  </a>
+  <a class="nav-link" href="#definition">
+    <span class="nav-dot"></span>
+    <span class="en-only">01. Definition</span>
+    <span class="id-only">01. Definisi</span>
+  </a>
+  <a class="nav-link" href="#types">
+    <span class="nav-dot"></span>
+    <span class="en-only">02. Types of Diabetes</span>
+    <span class="id-only">02. Tipe-Tipe</span>
+  </a>
 
-                    <div id="EN-Treatment" class="tab-content">
-                         <h2 class="text-2xl font-bold mb-4 text-blue-600">Treatment Approaches</h2>
-                         <p class="mb-6">The goal of diabetes management is to keep blood glucose levels as close to normal as possible to prevent complications. This requires a multi-faceted approach.</p>
-                         
-                         <div class="space-y-8">
-                             <div>
-                                 <h3 class="text-xl font-semibold mb-3 border-b-2 border-blue-200 pb-2">1. Lifestyle Modification (Non-Medical)</h3>
-                                 <!-- ... existing content ... -->
-                                 <div class="space-y-4 pl-4">
-                                     <p><strong>Healthy Eating:</strong> There is no single "diabetes diet." Focus on a balanced intake of fruits, vegetables, whole grains, lean proteins, and healthy fats. Portion control and carbohydrate counting are key skills. The "Diabetes Plate Method" is a simple visual guide: fill half your plate with non-starchy vegetables, one quarter with lean protein, and one quarter with carbohydrate foods.</p>
-                                     <p><strong>Physical Activity:</strong> Aim for at least 150 minutes of moderate-intensity aerobic exercise (like brisk walking, cycling) per week, plus 2-3 sessions of resistance training (weight lifting, resistance bands). Exercise helps the body use insulin more effectively.</p>
-                                     <p><strong>Weight Management:</strong> For overweight or obese individuals with Type 2 diabetes, losing even 5-10% of body weight can significantly improve blood sugar control.</p>
-                                     <p><strong>Blood Sugar Monitoring:</strong> Regularly checking blood glucose levels (SMBG) or using a Continuous Glucose Monitor (CGM) provides crucial feedback to guide treatment decisions.</p>
-                                 </div>
-                             </div>
-                             
-                             <div>
-                                 <h3 class="text-xl font-semibold mb-3 border-b-2 border-blue-200 pb-2">2. Medical Treatment</h3>
-                                 <!-- ... existing content ... -->
-                                 <div class="space-y-4 pl-4">
-                                     <p><strong>Oral Medications (Mainly for Type 2):</strong>
-                                        <ul class="list-disc list-inside text-sm mt-2 space-y-1 text-slate-700">
-                                            <li><strong>Metformin:</strong> Usually the first-line medication. It reduces glucose production by the liver and improves insulin sensitivity.</li>
-                                            <li><strong>SGLT2 inhibitors (e.g., empagliflozin):</strong> Help the kidneys remove excess sugar through urine. Offer significant cardiovascular and kidney benefits.</li>
-                                            <li><strong>GLP-1 Receptor Agonists (oral or injectable, e.g., semaglutide):</strong> Mimic a hormone that stimulates insulin release, suppresses glucagon, slows digestion, and promotes weight loss. Also have strong cardiovascular benefits.</li>
-                                            <li><strong>DPP-4 inhibitors (e.g., sitagliptin):</strong> Help the body continue to make insulin.</li>
-                                        </ul>
-                                     </p>
-                                     <p><strong>Injectable Medications:</strong>
-                                         <ul class="list-disc list-inside text-sm mt-2 space-y-1 text-slate-700">
-                                            <li><strong>Insulin:</strong> Essential for all people with Type 1 and many with Type 2 diabetes. There are various types: rapid-acting, short-acting, intermediate-acting, and long-acting, often used in combination to mimic the body's natural insulin patterns.</li>
-                                            <li><strong>GLP-1 Receptor Agonists:</strong> As mentioned above, many are injectable and are a cornerstone of modern T2DM therapy.</li>
-                                        </ul>
-                                     </p>
-                                 </div>
-                             </div>
+  <span class="nav-section-label en-only">Clinical Aspect</span>
+  <span class="nav-section-label id-only">Aspek Klinis</span>
+  <a class="nav-link" href="#symptoms">
+    <span class="nav-dot"></span>
+    <span class="en-only">03. Symptoms</span>
+    <span class="id-only">03. Gejala</span>
+  </a>
+  <a class="nav-link" href="#treatment">
+    <span class="nav-dot"></span>
+    <span class="en-only">04. Treatment Approaches</span>
+    <span class="id-only">04. Pengobatan</span>
+  </a>
+  <a class="nav-link" href="#complications">
+    <span class="nav-dot"></span>
+    <span class="en-only">05. Complications</span>
+    <span class="id-only">05. Komplikasi</span>
+  </a>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3 border-b-2 border-blue-200 pb-2">Comparison of Common Diabetes Medications (Type 2)</h3>
-                                <div class="overflow-x-auto">
-                                    <table class="diabetes-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Class</th>
-                                                <th>How it Works</th>
-                                                <th>Examples</th>
-                                                <th>Key Points</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><strong>Biguanides</strong></td>
-                                                <td>Reduces glucose production from the liver; improves insulin sensitivity.</td>
-                                                <td>Metformin</td>
-                                                <td>First-line therapy; low risk of hypoglycemia; may cause GI side effects.</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>SGLT2 Inhibitors</strong></td>
-                                                <td>Blocks glucose reabsorption in the kidneys, increasing glucose excretion in urine.</td>
-                                                <td>Empagliflozin, Dapagliflozin</td>
-                                                <td>Proven heart and kidney protective benefits; may increase risk of UTIs.</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>GLP-1 Receptor Agonists</strong></td>
-                                                <td>Mimics incretin hormone; enhances insulin secretion, slows digestion, suppresses appetite.</td>
-                                                <td>Semaglutide, Liraglutide</td>
-                                                <td>Strong A1c reduction and weight loss benefits; proven heart benefits; injectable or oral.</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>DPP-4 Inhibitors</strong></td>
-                                                <td>Prolongs the action of incretin hormones, which increases insulin release.</td>
-                                                <td>Sitagliptin, Linagliptin</td>
-                                                <td>Well-tolerated; weight neutral; lower risk of hypoglycemia.</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Sulfonylureas</strong></td>
-                                                <td>Stimulates the pancreas to release more insulin.</td>
-                                                <td>Glimepiride, Glipizide</td>
-                                                <td>Effective at lowering blood sugar; higher risk of hypoglycemia and weight gain.</td>
-                                            </tr>
-                                             <tr>
-                                                <td><strong>Insulin</strong></td>
-                                                <td>Replaces or supplements the body's own insulin to manage blood glucose.</td>
-                                                <td>Basal (long-acting), Bolus (rapid-acting)</td>
-                                                <td>Most potent glucose-lowering agent; required for T1DM; used in advanced T2DM. Risk of hypoglycemia.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                         </div>
-                    </div>
+  <span class="nav-section-label en-only">Self-Management</span>
+  <span class="nav-section-label id-only">Swa-Kelola</span>
+  <a class="nav-link" href="#myth-fact">
+    <span class="nav-dot"></span>
+    <span class="en-only">06. Myth vs. Fact</span>
+    <span class="id-only">06. Mitos vs. Fakta</span>
+  </a>
+  <a class="nav-link" href="#prevention">
+    <span class="nav-dot"></span>
+    <span class="en-only">07. Prevention</span>
+    <span class="id-only">07. Pencegahan</span>
+  </a>
+  <a class="nav-link" href="#references">
+    <span class="nav-dot"></span>
+    <span class="en-only">08. References</span>
+    <span class="id-only">08. Referensi</span>
+  </a>
+</nav>
 
-                    <div id="EN-Complications" class="tab-content">
-                       <!-- ... existing content ... -->
-                       <h2 class="text-2xl font-bold mb-4 text-blue-600">Potential Complications</h2>
-                        <p class="mb-6">Sustained high blood sugar can damage blood vessels and nerves throughout the body, leading to serious long-term complications.</p>
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <h3 class="text-lg font-semibold mb-2">Microvascular (Small Blood Vessels)</h3>
-                                <ul class="list-disc list-inside space-y-2 text-slate-700">
-                                    <li><strong>Retinopathy:</strong> Damage to the blood vessels in the retina, potentially leading to blindness. It's the leading cause of new blindness in working-age adults.</li>
-                                    <li><strong>Nephropathy:</strong> Damage to the kidneys, which can lead to kidney failure and the need for dialysis or transplant.</li>
-                                    <li><strong>Neuropathy:</strong> Nerve damage. This most often affects the feet and hands (peripheral neuropathy), causing pain, tingling, or loss of feeling. It can also affect digestion and other body functions.</li>
-                                </ul>
-                            </div>
-                             <div>
-                                <h3 class="text-lg font-semibold mb-2">Macrovascular (Large Blood Vessels)</h3>
-                                <ul class="list-disc list-inside space-y-2 text-slate-700">
-                                    <li><strong>Cardiovascular Disease:</strong> Diabetes significantly increases the risk of heart attack, stroke, and high blood pressure.</li>
-                                    <li><strong>Peripheral Artery Disease (PAD):</strong> Narrowing of the arteries, reducing blood flow to the limbs, especially the legs.</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded-r-lg">
-                            <h3 class="font-semibold">Diabetic Foot</h3>
-                            <p>A combination of neuropathy (loss of feeling) and poor blood flow (PAD) can lead to foot ulcers that heal slowly and can become infected. This is a leading cause of non-traumatic lower-limb amputations.</p>
-                        </div>
-                    </div>
+<!-- ─── MAIN CONTENT ─── -->
+<main class="main">
 
-                    <div id="EN-MythFact" class="tab-content">
-                       <!-- ... existing content ... -->
-                       <h2 class="text-2xl font-bold mb-4 text-blue-600">Myth vs. Fact</h2>
-                        <div class="space-y-6">
-                            <div class="p-4 border rounded-lg">
-                                <p class="font-semibold">❌ MYTH: Eating too much sugar causes diabetes.</p>
-                                <p class="mt-2 text-slate-700">✅ <span class="font-bold">FACT:</span> While a diet high in sugar and calories can lead to obesity, which is a major risk factor for Type 2 diabetes, sugar itself is not the direct cause. Type 1 is an autoimmune disease, and Type 2 is a complex condition caused by genetics and lifestyle factors.</p>
-                            </div>
-                            <div class="p-4 border rounded-lg">
-                                <p class="font-semibold">❌ MYTH: People with diabetes can't eat any sugar or sweets.</p>
-                                <p class="mt-2 text-slate-700">✅ <span class="font-bold">FACT:</span> People with diabetes can eat sweets as part of a balanced meal plan. The key is moderation and accounting for the carbohydrates in the overall daily intake to manage blood sugar levels.</p>
-                            </div>
-                             <div class="p-4 border rounded-lg">
-                                <p class="font-semibold">❌ MYTH: Type 2 diabetes is a mild form of diabetes.</p>
-                                <p class="mt-2 text-slate-700">✅ <span class="font-bold">FACT:</span> There is no "mild" diabetes. Both Type 1 and Type 2 are serious conditions that can lead to severe complications if not managed properly. All forms of diabetes require careful management.</p>
-                            </div>
-                            <div class="p-4 border rounded-lg">
-                                <p class="font-semibold">❌ MYTH: If you have diabetes, you'll definitely need insulin.</p>
-                                <p class="mt-2 text-slate-700">✅ <span class="font-bold">FACT:</span> All people with Type 1 diabetes need insulin. However, many people with Type 2 diabetes can manage their condition for years with lifestyle changes and oral medications. Diabetes is a progressive disease, and the need for insulin may arise later on for some.</p>
-                            </div>
-                        </div>
-                    </div>
+  <!-- HERO -->
+  <header class="hero" id="intro">
+    <div class="hero-eyebrow">
+      <span class="en-only">✦ Medical Reference</span>
+      <span class="id-only">✦ Referensi Medis</span>
+    </div>
+    <h1 class="en-only">Comprehensive Guide to <em>Diabetes Mellitus</em></h1>
+    <h1 class="id-only">Panduan Komprehensif <em>Diabetes Melitus</em></h1>
+    <p class="hero-subtitle en-only">Your complete evidence-based resource for understanding, managing, and preventing diabetes in modern clinical frameworks.</p>
+    <p class="hero-subtitle id-only">Sumber daya lengkap berbasis bukti untuk memahami, mengelola, dan mencegah diabetes dalam kerangka klinis modern.</p>
+    
+    <div class="hero-meta">
+      <div class="hero-meta-item en-only">WRITTEN BY: <span>LoLyeah Editorial Team</span></div>
+      <div class="hero-meta-item id-only">DITULIS OLEH: <span>Tim Editorial LoLyeah</span></div>
+      <div class="hero-meta-item en-only">STANDARDS: <span>ADA (2024) &amp; PERKENI (2021) Guidelines</span></div>
+      <div class="hero-meta-item id-only">STANDAR: <span>Panduan ADA (2024) &amp; PERKENI (2021)</span></div>
+    </div>
+  </header>
 
-                    <div id="EN-Prevention" class="tab-content">
-                        <!-- ... existing content ... -->
-                        <h2 class="text-2xl font-bold mb-4 text-blue-600">Prevention</h2>
-                        <p class="mb-4">While Type 1 diabetes cannot be prevented, you can take significant steps to prevent or delay the onset of Type 2 diabetes, especially if you are at high risk (prediabetes, family history, etc.).</p>
-                        <p class="mb-6">Landmark studies like the Diabetes Prevention Program (DPP) have shown that lifestyle changes are highly effective. Key strategies include:</p>
-                        <ul class="space-y-4">
-                            <li class="flex items-start">
-                                <span class="text-blue-500 font-bold text-xl mr-4">1.</span>
-                                <div>
-                                    <h3 class="font-semibold">Achieve and Maintain a Healthy Weight</h3>
-                                    <p class="text-slate-700">Losing just 5-7% of your starting body weight can make a huge difference. For a 200-pound person, that's a loss of only 10-14 pounds.</p>
-                                </div>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 font-bold text-xl mr-4">2.</span>
-                                <div>
-                                    <h3 class="font-semibold">Engage in Regular Physical Activity</h3>
-                                    <p class="text-slate-700">Aim for at least 30 minutes of moderate activity, such as brisk walking, on most days of the week.</p>
-                                </div>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 font-bold text-xl mr-4">3.</span>
-                                <div>
-                                    <h3 class="font-semibold">Make Healthy Food Choices</h3>
-                                    <p class="text-slate-700">Focus on a diet rich in whole grains, fruits, and vegetables. Limit your intake of processed foods, sugary drinks, and unhealthy fats.</p>
-                                </div>
-                            </li>
-                        </ul>
-                         <div class="mt-8 p-4 bg-green-50 border-l-4 border-green-500 text-green-800 rounded-r-lg">
-                            <h3 class="font-semibold">Know Your Risk</h3>
-                            <p>Talk to your doctor about getting screened for prediabetes, especially if you have risk factors like being overweight, being 45 or older, or having a family history of diabetes.</p>
-                        </div>
-                    </div>
+  <!-- STATS GRID -->
+  <section class="stats-grid" id="stats">
+    <div class="stat-card">
+      <div class="stat-value"><span class="counter" data-target="422">0</span><span class="stat-suffix">M</span></div>
+      <div class="stat-label en-only">People living with diabetes globally, representing a massive public health challenge (WHO).</div>
+      <div class="stat-label id-only">Orang hidup dengan diabetes secara global, tantangan kesehatan masyarakat yang masif (WHO).</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value"><span class="counter" data-target="19.5">0</span><span class="stat-suffix">M</span></div>
+      <div class="stat-label en-only">Diabetes cases in Indonesia as of recent surveys, ranking the nation 5th globally in prevalence.</div>
+      <div class="stat-label id-only">Kasus diabetes di Indonesia berdasarkan survei terbaru, menempatkan negara ini di peringkat 5 dunia.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value"><span class="counter" data-target="6.5">0</span><span class="stat-suffix">%</span></div>
+      <div class="stat-label en-only">Glycated hemoglobin (HbA1c) diagnostic threshold for confirming a diagnosis of diabetes.</div>
+      <div class="stat-label id-only">Ambang batas diagnostik hemoglobin terglikasi (HbA1c) untuk mengonfirmasi diagnosis diabetes.</div>
+    </div>
+  </section>
 
-                    <div id="EN-References" class="tab-content">
-                       <!-- ... existing content ... -->
-                       <h2 class="text-2xl font-bold mb-4 text-blue-600">References</h2>
-                        <ul class="list-disc list-inside space-y-4 text-slate-700 text-sm md:text-base">
-                            <li>American Diabetes Association. (2024). Standards of Care in Diabetes—2024. <em>Diabetes Care, 47</em>(Supplement 1).</li>
-                            <li>Perkumpulan Endokrinologi Indonesia (PERKENI). (2021). <em>Pedoman Pengelolaan dan Pencegahan Diabetes Melitus Tipe 2 Dewasa di Indonesia</em>.</li>
-                            <li>World Health Organization (WHO). (2023, April 5). <em>Diabetes</em>.</li>
-                            <li>National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK). (n.d.). <em>What is Diabetes?</em>.</li>
-                            <li>The Diabetes Prevention Program (DPP) Research Group. (2002). The Diabetes Prevention Program (DPP): description of lifestyle intervention. <em>Diabetes Care, 25</em>(12), 2165-71.</li>
-                            <li>Davies, M. J., Aroda, V. R., Collins, B. S., et al. (2022). Management of Hyperglycemia in Type 2 Diabetes, 2022. A Consensus Report by the American Diabetes Association (ADA) and the European Association for the Study of Diabetes (EASD). <em>Diabetes Care, 45</em>(11), 2753-2786.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </main>
-        
-        <!-- Indonesian Content -->
-        <main id="ID" class="language-content">
-             <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                <div class="p-4 sm:p-6 border-b border-slate-200">
-                    <!-- Tab Buttons -->
-                    <div class="flex flex-wrap gap-2 justify-center">
-                        <button class="tab-button active py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'ID-Definition')">Definisi</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'ID-Types')">Tipe</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'ID-Symptoms')">Gejala</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'ID-Treatment')">Pengobatan</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'ID-Complications')">Komplikasi</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'ID-MythFact')">Mitos vs. Fakta</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'ID-Prevention')">Pencegahan</button>
-                        <button class="tab-button py-2 px-4 border border-slate-300 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100" onclick="openTab(event, 'ID-References')">Referensi</button>
-                    </div>
-                </div>
-
-                <!-- Tab Content Panels -->
-                <div class="p-6 md:p-8">
-                    <div id="ID-Definition" class="tab-content active">
-                        <!-- ... existing content ... -->
-                         <h2 class="text-2xl font-bold mb-4 text-blue-600">Apa itu Diabetes?</h2>
-                        <p class="mb-4">Diabetes Melitus, yang biasa dikenal sebagai diabetes atau kencing manis, adalah kelainan metabolik kronis yang ditandai dengan kadar glukosa darah (atau gula darah) yang tinggi. Kondisi ini timbul karena pankreas tidak memproduksi cukup insulin, atau karena tubuh tidak dapat menggunakan insulin yang diproduksi secara efektif.</p>
-                        <p class="mb-4">Insulin adalah hormon krusial yang mengatur gula darah, memungkinkan glukosa dari makanan yang kita konsumsi masuk dari aliran darah ke sel-sel tubuh untuk menghasilkan energi. Ketika fungsi insulin terganggu, glukosa tetap berada di dalam darah, menyebabkan hiperglikemia.</p>
-                        <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-800 rounded-r-lg">
-                            <h3 class="font-semibold">Kriteria Diagnostik Utama (Panduan PERKENI)</h3>
-                            <ul class="list-disc list-inside mt-2 space-y-1 text-sm">
-                                <li><strong>Kadar HbA1c:</strong> 6,5% atau lebih tinggi.</li>
-                                <li><strong>Glukosa Plasma Puasa (GDP):</strong> 126 mg/dL atau lebih tinggi. (Puasa adalah tidak ada asupan kalori selama minimal 8 jam).</li>
-                                <li><strong>Glukosa Plasma 2 jam setelah TTGO:</strong> 200 mg/dL atau lebih tinggi selama Tes Toleransi Glukosa Oral (TTGO).</li>
-                                <li><strong>Glukosa Plasma Sewaktu:</strong> 200 mg/dL atau lebih tinggi pada pasien dengan gejala klasik hiperglikemia.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div id="ID-Types" class="tab-content">
-                        <h2 class="text-2xl font-bold mb-4 text-blue-600">Tipe-Tipe Diabetes</h2>
-                        <div class="space-y-6">
-                            <!-- ... existing content ... -->
-                            <div>
-                                <h3 class="text-xl font-semibold mb-2">Diabetes Tipe 1</h3>
-                                <p>Sebelumnya dikenal sebagai diabetes anak-anak, ini adalah kondisi autoimun di mana sistem kekebalan tubuh secara keliru menyerang dan menghancurkan sel beta penghasil insulin di pankreas. Akibatnya, tubuh memproduksi sangat sedikit atau tidak ada insulin sama sekali. Ini sering berkembang pada masa kanak-kanak atau remaja tetapi dapat terjadi pada usia berapa pun. Penderita Diabetes Tipe 1 memerlukan suntikan insulin harian seumur hidup atau pompa insulin untuk bertahan hidup.</p>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-semibold mb-2">Diabetes Tipe 2</h3>
-                                <p>Ini adalah tipe yang paling umum, mencakup sekitar 90-95% dari semua kasus diabetes. Ini dimulai dengan resistensi insulin, suatu kondisi di mana sel-sel tubuh tidak merespons insulin dengan baik. Seiring meningkatnya kebutuhan insulin, pankreas secara bertahap kehilangan kemampuannya untuk memproduksi insulin yang cukup. Ini sangat terkait dengan genetika, obesitas, kurangnya aktivitas fisik, dan usia tua. Penatalaksanaannya meliputi perubahan gaya hidup, obat oral, dan terkadang insulin.</p>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-semibold mb-2">Diabetes Melitus Gestasional (DMG)</h3>
-                                <p>Tipe ini adalah gula darah tinggi yang berkembang selama kehamilan pada seorang wanita yang sebelumnya tidak menderita diabetes. Ini disebabkan oleh hormon dari plasenta yang menghalangi kerja insulin. DMG biasanya sembuh setelah melahirkan, tetapi meningkatkan risiko ibu dan anak untuk mengembangkan Diabetes Tipe 2 di kemudian hari.</p>
-                            </div>
-                            <div class="p-4 bg-slate-50 rounded-lg">
-                                <h3 class="text-lg font-semibold mb-2">Tipe Spesifik Lainnya</h3>
-                                <p class="mb-2 text-sm text-slate-600">Ini adalah bentuk yang kurang umum yang disebabkan oleh kondisi spesifik:</p>
-                                 <ul class="list-disc list-inside space-y-1 text-sm text-slate-700">
-                                    <li><strong>Diabetes Monogenik:</strong> Disebabkan oleh mutasi gen tunggal. Termasuk Diabetes Neonatal (didiagnosis dalam 6 bulan pertama kehidupan) dan Maturity-Onset Diabetes of the Young (MODY), yang seringkali diturunkan dalam keluarga.</li>
-                                    <li><strong>Penyakit Pankreas Eksokrin:</strong> Kondisi seperti fibrosis kistik, pankreatitis, atau kanker pankreas dapat merusak sel beta dan mengganggu produksi insulin.</li>
-                                    <li><strong>Diabetes akibat Obat atau Kimia:</strong> Obat-obatan tertentu, seperti glukokortikoid (misalnya, prednison) dan beberapa antipsikotik, dapat menyebabkan gula darah tinggi.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="ID-Symptoms" class="tab-content">
-                        <!-- ... existing content ... -->
-                        <h2 class="text-2xl font-bold mb-4 text-blue-600">Gejala Umum</h2>
-                        <p class="mb-4">Gejala dapat berkembang dengan cepat (pada Tipe 1) atau bertahap (pada Tipe 2), dan kadang-kadang Diabetes Tipe 2 tidak menunjukkan gejala sama sekali. Tanda-tanda utama gula darah tinggi (hiperglikemia) meliputi:</p>
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">Sering Buang Air Kecil (Poliuria)</h3>
-                                <p class="text-sm text-blue-700">Glukosa berlebih dalam darah disaring melalui ginjal, menarik air bersamanya.</p>
-                            </div>
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">Rasa Haus Berlebih (Polidipsia)</h3>
-                                <p class="text-sm text-blue-700">Sering buang air kecil menyebabkan dehidrasi, membuat Anda merasa haus.</p>
-                            </div>
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">Rasa Lapar Berlebih (Polifagia)</h3>
-                                <p class="text-sm text-blue-700">Karena sel tidak mendapatkan glukosa untuk energi, tubuh Anda mengira sedang kelaparan dan menginginkan lebih banyak makanan.</p>
-                            </div>
-                             <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">Penurunan Berat Badan Tanpa Sebab</h3>
-                                <p class="text-sm text-blue-700">Tubuh mulai memecah otot dan lemak untuk energi karena tidak bisa menggunakan glukosa.</p>
-                            </div>
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">Kelelahan</h3>
-                                <p class="text-sm text-blue-700">Sel-sel kekurangan gula, membuat Anda merasa lelah dan lesu.</p>
-                            </div>
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">Penglihatan Kabur</h3>
-                                <p class="text-sm text-blue-700">Gula darah tinggi dapat menyebabkan lensa mata membengkak.</p>
-                            </div>
-                        </div>
-                         <div class="mt-6 p-4 bg-red-50 border-l-4 border-red-400 text-red-800 rounded-r-lg">
-                            <h3 class="font-semibold">Peringatan! Segera cari bantuan medis jika ada gejala Ketoasidosis Diabetik (KAD), lebih umum pada Tipe 1, seperti mual, muntah, sakit perut, dan napas berbau buah.</h3>
-                        </div>
-                    </div>
-
-                    <div id="ID-Treatment" class="tab-content">
-                         <h2 class="text-2xl font-bold mb-4 text-blue-600">Pendekatan Pengobatan</h2>
-                         <p class="mb-6">Tujuan penatalaksanaan diabetes adalah menjaga kadar glukosa darah sedekat mungkin dengan normal untuk mencegah komplikasi. Hal ini memerlukan pendekatan multi-aspek.</p>
-                         
-                         <div class="space-y-8">
-                             <div>
-                                 <h3 class="text-xl font-semibold mb-3 border-b-2 border-blue-200 pb-2">1. Modifikasi Gaya Hidup (Non-Medis)</h3>
-                                 <!-- ... existing content ... -->
-                                 <div class="space-y-4 pl-4">
-                                     <p><strong>Makan Sehat:</strong> Tidak ada satu pun "diet diabetes." Fokus pada asupan seimbang buah-buahan, sayuran, biji-bijian, protein tanpa lemak, dan lemak sehat. Kontrol porsi dan penghitungan karbohidrat adalah keterampilan utama. "Metode Piring Diabetes" adalah panduan visual sederhana: isi setengah piring Anda dengan sayuran non-tepung, seperempat dengan protein tanpa lemak, dan seperempat dengan makanan karbohidrat.</p>
-                                     <p><strong>Aktivitas Fisik:</strong> Targetkan setidaknya 150 menit latihan aerobik intensitas sedang (seperti jalan cepat, bersepeda) per minggu, ditambah 2-3 sesi latihan ketahanan (angkat beban, resistance band). Olahraga membantu tubuh menggunakan insulin lebih efektif.</p>
-                                     <p><strong>Manajemen Berat Badan:</strong> Bagi individu dengan kelebihan berat badan atau obesitas dengan Diabetes Tipe 2, kehilangan bahkan 5-10% dari berat badan dapat secara signifikan meningkatkan kontrol gula darah.</p>
-                                     <p><strong>Pemantauan Gula Darah:</strong> Memeriksa kadar glukosa darah secara teratur (PGDM) atau menggunakan Monitor Glukosa Berkelanjutan (CGM) memberikan umpan balik penting untuk memandu keputusan pengobatan.</p>
-                                 </div>
-                             </div>
-                             
-                             <div>
-                                 <h3 class="text-xl font-semibold mb-3 border-b-2 border-blue-200 pb-2">2. Pengobatan Medis</h3>
-                                 <!-- ... existing content ... -->
-                                 <div class="space-y-4 pl-4">
-                                     <p><strong>Obat Oral (Terutama untuk Tipe 2):</strong>
-                                        <ul class="list-disc list-inside text-sm mt-2 space-y-1 text-slate-700">
-                                            <li><strong>Metformin:</strong> Biasanya obat lini pertama. Ini mengurangi produksi glukosa oleh hati dan meningkatkan sensitivitas insulin.</li>
-                                            <li><strong>Penghambat SGLT2 (misalnya, empagliflozin):</strong> Membantu ginjal membuang kelebihan gula melalui urin. Menawarkan manfaat kardiovaskular dan ginjal yang signifikan.</li>
-                                            <li><strong>Agonis Reseptor GLP-1 (oral atau suntik, mis., semaglutide):</strong> Meniru hormon yang merangsang pelepasan insulin, menekan glukagon, memperlambat pencernaan, dan mendorong penurunan berat badan. Juga memiliki manfaat kardiovaskular yang kuat.</li>
-                                            <li><strong>Penghambat DPP-4 (misalnya, sitagliptin):</strong> Membantu tubuh terus membuat insulin.</li>
-                                        </ul>
-                                     </p>
-                                     <p><strong>Obat Suntik:</strong>
-                                         <ul class="list-disc list-inside text-sm mt-2 space-y-1 text-slate-700">
-                                            <li><strong>Insulin:</strong> Penting untuk semua penderita Diabetes Tipe 1 dan banyak penderita Tipe 2. Ada berbagai jenis: kerja cepat, kerja pendek, kerja menengah, dan kerja panjang, sering digunakan dalam kombinasi untuk meniru pola insulin alami tubuh.</li>
-                                            <li><strong>Agonis Reseptor GLP-1:</strong> Seperti disebutkan di atas, banyak yang berupa suntikan dan merupakan landasan terapi DM Tipe 2 modern.</li>
-                                        </ul>
-                                     </p>
-                                 </div>
-                             </div>
-                             <div>
-                                <h3 class="text-xl font-semibold mb-3 border-b-2 border-blue-200 pb-2">Perbandingan Obat Diabetes Umum (Tipe 2)</h3>
-                                <div class="overflow-x-auto">
-                                    <table class="diabetes-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Kelas</th>
-                                                <th>Cara Kerja</th>
-                                                <th>Contoh</th>
-                                                <th>Poin Penting</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><strong>Biguanid</strong></td>
-                                                <td>Mengurangi produksi glukosa dari hati; meningkatkan sensitivitas insulin.</td>
-                                                <td>Metformin</td>
-                                                <td>Terapi lini pertama; risiko hipoglikemia rendah; dapat menyebabkan efek samping GI.</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Penghambat SGLT2</strong></td>
-                                                <td>Menghambat reabsorpsi glukosa di ginjal, meningkatkan ekskresi glukosa dalam urin.</td>
-                                                <td>Empagliflozin, Dapagliflozin</td>
-                                                <td>Manfaat perlindungan jantung dan ginjal yang terbukti; dapat meningkatkan risiko ISK.</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Agonis Reseptor GLP-1</strong></td>
-                                                <td>Meniru hormon inkretin; meningkatkan sekresi insulin, memperlambat pencernaan, menekan nafsu makan.</td>
-                                                <td>Semaglutide, Liraglutide</td>
-                                                <td>Penurunan A1c yang kuat dan manfaat penurunan berat badan; manfaat jantung terbukti; suntik atau oral.</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Penghambat DPP-4</strong></td>
-                                                <td>Memperpanjang kerja hormon inkretin, yang meningkatkan pelepasan insulin.</td>
-                                                <td>Sitagliptin, Linagliptin</td>
-                                                <td>Ditoleransi dengan baik; berat badan netral; risiko hipoglikemia lebih rendah.</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Sulfonilurea</strong></td>
-                                                <td>Merangsang pankreas untuk melepaskan lebih banyak insulin.</td>
-                                                <td>Glimepiride, Gliclazide</td>
-                                                <td>Efektif menurunkan gula darah; risiko hipoglikemia dan kenaikan berat badan lebih tinggi.</td>
-                                            </tr>
-                                             <tr>
-                                                <td><strong>Insulin</strong></td>
-                                                <td>Menggantikan atau melengkapi insulin tubuh sendiri untuk mengelola glukosa darah.</td>
-                                                <td>Basal (kerja panjang), Bolus (kerja cepat)</td>
-                                                <td>Agen penurun glukosa paling poten; diperlukan untuk DMT1; digunakan pada DMT2 lanjut. Risiko hipoglikemia.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                         </div>
-                    </div>
-
-                    <div id="ID-Complications" class="tab-content">
-                       <!-- ... existing content ... -->
-                       <h2 class="text-2xl font-bold mb-4 text-blue-600">Potensi Komplikasi</h2>
-                        <p class="mb-6">Gula darah tinggi yang berkelanjutan dapat merusak pembuluh darah dan saraf di seluruh tubuh, menyebabkan komplikasi jangka panjang yang serius.</p>
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <h3 class="text-lg font-semibold mb-2">Mikrovaskular (Pembuluh Darah Kecil)</h3>
-                                <ul class="list-disc list-inside space-y-2 text-slate-700">
-                                    <li><strong>Retinopati:</strong> Kerusakan pembuluh darah di retina, berpotensi menyebabkan kebutaan. Ini adalah penyebab utama kebutaan baru pada orang dewasa usia kerja.</li>
-                                    <li><strong>Nefropati:</strong> Kerusakan pada ginjal, yang dapat menyebabkan gagal ginjal dan kebutuhan untuk dialisis atau transplantasi.</li>
-                                    <li><strong>Neuropati:</strong> Kerusakan saraf. Ini paling sering mempengaruhi kaki dan tangan (neuropati perifer), menyebabkan nyeri, kesemutan, atau kehilangan rasa. Ini juga dapat mempengaruhi pencernaan dan fungsi tubuh lainnya.</li>
-                                </ul>
-                            </div>
-                             <div>
-                                <h3 class="text-lg font-semibold mb-2">Makrovaskular (Pembuluh Darah Besar)</h3>
-                                <ul class="list-disc list-inside space-y-2 text-slate-700">
-                                    <li><strong>Penyakit Kardiovaskular:</strong> Diabetes secara signifikan meningkatkan risiko serangan jantung, stroke, dan tekanan darah tinggi.</li>
-                                    <li><strong>Penyakit Arteri Perifer (PAD):</strong> Penyempitan arteri, mengurangi aliran darah ke anggota tubuh, terutama kaki.</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded-r-lg">
-                            <h3 class="font-semibold">Kaki Diabetik</h3>
-                            <p>Kombinasi neuropati (kehilangan rasa) dan aliran darah yang buruk (PAD) dapat menyebabkan borok kaki yang lambat sembuh dan dapat terinfeksi. Ini adalah penyebab utama amputasi tungkai bawah non-traumatik.</p>
-                        </div>
-                    </div>
-                    
-                    <div id="ID-MythFact" class="tab-content">
-                        <!-- ... existing content ... -->
-                        <h2 class="text-2xl font-bold mb-4 text-blue-600">Mitos vs. Fakta</h2>
-                        <div class="space-y-6">
-                            <div class="p-4 border rounded-lg">
-                                <p class="font-semibold">❌ MITOS: Makan terlalu banyak gula menyebabkan diabetes.</p>
-                                <p class="mt-2 text-slate-700">✅ <span class="font-bold">FAKTA:</span> Meskipun diet tinggi gula dan kalori dapat menyebabkan obesitas, yang merupakan faktor risiko utama untuk Diabetes Tipe 2, gula itu sendiri bukanlah penyebab langsung. Tipe 1 adalah penyakit autoimun, dan Tipe 2 adalah kondisi kompleks yang disebabkan oleh faktor genetika dan gaya hidup.</p>
-                            </div>
-                            <div class="p-4 border rounded-lg">
-                                <p class="font-semibold">❌ MITOS: Penderita diabetes tidak boleh makan gula atau makanan manis sama sekali.</p>
-                                <p class="mt-2 text-slate-700">✅ <span class="font-bold">FAKTA:</span> Penderita diabetes boleh makan makanan manis sebagai bagian dari rencana makan yang seimbang. Kuncinya adalah moderasi dan memperhitungkan karbohidrat dalam asupan harian keseluruhan untuk mengelola kadar gula darah.</p>
-                            </div>
-                             <div class="p-4 border rounded-lg">
-                                <p class="font-semibold">❌ MITOS: Diabetes Tipe 2 adalah bentuk diabetes yang ringan.</p>
-                                <p class="mt-2 text-slate-700">✅ <span class="font-bold">FAKTA:</span> Tidak ada diabetes yang "ringan". Baik Tipe 1 maupun Tipe 2 adalah kondisi serius yang dapat menyebabkan komplikasi parah jika tidak dikelola dengan baik. Semua bentuk diabetes memerlukan penanganan yang cermat.</p>
-                            </div>
-                            <div class="p-4 border rounded-lg">
-                                <p class="font-semibold">❌ MITOS: Jika Anda menderita diabetes, Anda pasti akan membutuhkan insulin.</p>
-                                <p class="mt-2 text-slate-700">✅ <span class="font-bold">FAKTA:</span> Semua penderita Diabetes Tipe 1 membutuhkan insulin. Namun, banyak penderita Diabetes Tipe 2 dapat mengelola kondisi mereka selama bertahun-tahun dengan perubahan gaya hidup dan obat oral. Diabetes adalah penyakit progresif, dan kebutuhan akan insulin mungkin muncul di kemudian hari bagi sebagian orang.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="ID-Prevention" class="tab-content">
-                        <!-- ... existing content ... -->
-                        <h2 class="text-2xl font-bold mb-4 text-blue-600">Pencegahan</h2>
-                        <p class="mb-4">Meskipun Diabetes Tipe 1 tidak dapat dicegah, Anda dapat mengambil langkah-langkah signifikan untuk mencegah atau menunda timbulnya Diabetes Tipe 2, terutama jika Anda berisiko tinggi (pradiabetes, riwayat keluarga, dll.).</p>
-                        <p class="mb-6">Studi penting seperti Program Pencegahan Diabetes (DPP) telah menunjukkan bahwa perubahan gaya hidup sangat efektif. Strategi utamanya meliputi:</p>
-                        <ul class="space-y-4">
-                            <li class="flex items-start">
-                                <span class="text-blue-500 font-bold text-xl mr-4">1.</span>
-                                <div>
-                                    <h3 class="font-semibold">Mencapai dan Mempertahankan Berat Badan Sehat</h3>
-                                    <p class="text-slate-700">Menurunkan hanya 5-7% dari berat badan awal Anda dapat membuat perbedaan besar. Untuk orang seberat 90 kg, itu hanya penurunan 4.5-6.3 kg.</p>
-                                </div>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 font-bold text-xl mr-4">2.</span>
-                                <div>
-                                    <h3 class="font-semibold">Melakukan Aktivitas Fisik Teratur</h3>
-                                    <p class="text-slate-700">Targetkan setidaknya 30 menit aktivitas sedang, seperti jalan cepat, hampir setiap hari dalam seminggu.</p>
-                                </div>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 font-bold text-xl mr-4">3.</span>
-                                <div>
-                                    <h3 class="font-semibold">Membuat Pilihan Makanan Sehat</h3>
-                                    <p class="text-slate-700">Fokus pada diet yang kaya akan biji-bijian utuh, buah-buahan, dan sayuran. Batasi asupan makanan olahan, minuman manis, dan lemak tidak sehat.</p>
-                                </div>
-                            </li>
-                        </ul>
-                         <div class="mt-8 p-4 bg-green-50 border-l-4 border-green-500 text-green-800 rounded-r-lg">
-                            <h3 class="font-semibold">Ketahui Risiko Anda</h3>
-                            <p>Bicaralah dengan dokter Anda tentang pemeriksaan pradiabetes, terutama jika Anda memiliki faktor risiko seperti kelebihan berat badan, berusia 45 tahun atau lebih, atau memiliki riwayat diabetes dalam keluarga.</p>
-                        </div>
-                    </div>
-
-                     <div id="ID-References" class="tab-content">
-                        <!-- ... existing content ... -->
-                        <h2 class="text-2xl font-bold mb-4 text-blue-600">Referensi</h2>
-                        <ul class="list-disc list-inside space-y-4 text-slate-700 text-sm md:text-base">
-                            <li>American Diabetes Association. (2024). Standards of Care in Diabetes—2024. <em>Diabetes Care, 47</em>(Supplement 1).</li>
-                            <li>Perkumpulan Endokrinologi Indonesia (PERKENI). (2021). <em>Pedoman Pengelolaan dan Pencegahan Diabetes Melitus Tipe 2 Dewasa di Indonesia</em>.</li>
-                            <li>World Health Organization (WHO). (2023, 5 April). <em>Diabetes</em>.</li>
-                            <li>National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK). (tanpa tanggal). <em>What is Diabetes? (Apa itu Diabetes?)</em>.</li>
-                            <li>The Diabetes Prevention Program (DPP) Research Group. (2002). The Diabetes Prevention Program (DPP): description of lifestyle intervention. <em>Diabetes Care, 25</em>(12), 2165-71.</li>
-                            <li>Davies, M. J., Aroda, V. R., Collins, B. S., dkk. (2022). Management of Hyperglycemia in Type 2 Diabetes, 2022. A Consensus Report by the American Diabetes Association (ADA) and the European Association for the Study of Diabetes (EASD). <em>Diabetes Care, 45</em>(11), 2753-2786.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </main>
+  <!-- SECTION 01: DEFINITION -->
+  <section class="section" id="definition">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title en-only">What is Diabetes?</h2>
+      <h2 class="section-title id-only">Apa itu Diabetes?</h2>
     </div>
 
-    <footer class="text-center mt-8 py-6 border-t border-slate-200 text-xs text-slate-500 max-w-4xl mx-auto px-4">
-        <p class="font-semibold mb-2">DISCLAIMER</p>
-        <p class="mb-2">This information is for educational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
-        <p>Informasi ini hanya untuk tujuan pendidikan dan bukan pengganti nasihat medis profesional, diagnosis, atau pengobatan. Selalu minta nasihat dari dokter Anda atau penyedia layanan kesehatan lain yang memenuhi syarat jika ada pertanyaan yang Anda miliki mengenai kondisi medis.</p>
-        <p class="mt-4">&copy; 2025 LoLyeah.github.io. All rights reserved. | <a href="/index.html" class="text-blue-600 hover:underline">Home</a></p>
-    </footer>
+    <p class="en-only">Diabetes Mellitus, commonly known as diabetes, is a chronic metabolic disorder characterized by elevated levels of blood glucose (or blood sugar). This condition arises either because the pancreas does not produce enough insulin, or because the body cannot effectively use the insulin it produces.</p>
+    <p class="id-only">Diabetes Melitus, yang biasa dikenal sebagai diabetes atau kencing manis, adalah kelainan metabolik kronis yang ditandai dengan kadar glukosa darah (atau gula darah) yang tinggi. Kondisi ini timbul karena pankreas tidak memproduksi cukup insulin, atau karena tubuh tidak dapat menggunakan insulin yang diproduksi secara efektif.</p>
 
-    <script>
-        function openTab(evt, tabName) {
-            // Find the parent main container (either #EN or #ID)
-            let parentContainer = evt.currentTarget.closest('.language-content');
+    <p class="en-only">Insulin is a crucial hormone that regulates blood sugar, allowing glucose from the food we eat to pass from the bloodstream into the body's cells to produce energy. When insulin function is impaired, glucose stays in the blood, leading to hyperglycemia.</p>
+    <p class="id-only">Insulin adalah hormon krusial yang mengatur gula darah, memungkinkan glukosa dari makanan yang kita konsumsi masuk dari aliran darah ke sel-sel tubuh untuk menghasilkan energi. Ketika fungsi insulin terganggu, glukosa tetap berada di dalam darah, menyebabkan hiperglikemia.</p>
 
-            // Get all elements with class="tab-content" inside the parent and hide them
-            let tabcontent = parentContainer.getElementsByClassName("tab-content");
-            for (let i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-                tabcontent[i].classList.remove("active");
-            }
+    <div class="callout gold">
+      <div class="callout-label en-only">Key Diagnostic Criteria (ADA Guidelines)</div>
+      <div class="callout-label id-only">Kriteria Diagnostik Utama (Panduan PERKENI)</div>
+      
+      <div class="principles">
+        <div class="principle">
+          <div class="principle-num">01</div>
+          <div class="principle-content">
+            <h4 class="en-only">HbA1c Threshold</h4>
+            <h4 class="id-only">Ambang Batas HbA1c</h4>
+            <p class="en-only"><strong>A1C Level:</strong> 6.5% or higher.</p>
+            <p class="id-only"><strong>Kadar HbA1c:</strong> 6,5% atau lebih tinggi.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="principle-num">02</div>
+          <div class="principle-content">
+            <h4 class="en-only">Fasting Plasma Glucose (FPG)</h4>
+            <h4 class="id-only">Glukosa Plasma Puasa (GDP)</h4>
+            <p class="en-only"><strong>FPG:</strong> 126 mg/dL (7.0 mmol/L) or higher. (Fasting represents no caloric intake for at least 8 hours).</p>
+            <p class="id-only"><strong>GDP:</strong> 126 mg/dL atau lebih tinggi. (Puasa adalah tidak ada asupan kalori selama minimal 8 jam).</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="principle-num">03</div>
+          <div class="principle-content">
+            <h4 class="en-only">2-hour Oral Glucose Tolerance Test (OGTT)</h4>
+            <h4 class="id-only">Glukosa Plasma 2 Jam setelah TTGO</h4>
+            <p class="en-only"><strong>2-hour Glucose:</strong> 200 mg/dL (11.1 mmol/L) or higher during a standardized OGTT.</p>
+            <p class="id-only"><strong>Glukosa Plasma 2 jam setelah TTGO:</strong> 200 mg/dL atau lebih tinggi selama Tes Toleransi Glukosa Oral (TTGO).</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="principle-num">04</div>
+          <div class="principle-content">
+            <h4 class="en-only">Random Plasma Glucose</h4>
+            <h4 class="id-only">Glukosa Plasma Sewaktu</h4>
+            <p class="en-only"><strong>Random Glucose:</strong> 200 mg/dL (11.1 mmol/L) or higher in a symptomatic patient showing classic hyperglycemia features.</p>
+            <p class="id-only"><strong>Glukosa Plasma Sewaktu:</strong> 200 mg/dL atau lebih tinggi pada pasien dengan gejala klasik hiperglikemia.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            // Get all elements with class="tab-button" inside the parent and remove the class "active"
-            let tablinks = parentContainer.getElementsByClassName("tab-button");
-            for (let i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
-            }
+  <!-- SECTION 02: TYPES -->
+  <section class="section" id="types">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title en-only">Types of Diabetes</h2>
+      <h2 class="section-title id-only">Tipe-Tipe Diabetes</h2>
+    </div>
 
-            // Show the current tab, and add an "active" class to the button that opened the tab
-            document.getElementById(tabName).style.display = "block";
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
+    <p class="en-only">Diabetes Mellitus is categorized into distinct classes based on its underlying pathophysiological mechanism and etiology. Understanding these classes is vital to choosing the appropriate therapeutic approach.</p>
+    <p class="id-only">Diabetes Melitus dikategorikan ke dalam kelas-kelas yang berbeda berdasarkan mekanisme patofisiologis dasar dan etiologinya. Memahami kelas-kelas ini sangat penting untuk memilih pendekatan terapeutik yang tepat.</p>
+
+    <!-- Type 1 vs Type 2 Comparison Grid -->
+    <div class="type-contrast">
+      <div class="type-col">
+        <div class="type-col-label en-only">Etiology Class A</div>
+        <div class="type-col-label id-only">Kelas Etiologi A</div>
+        <h3 style="margin: 0 0 1rem; font-size: 1.5rem;" class="en-only">Type 1 Diabetes</h3>
+        <h3 style="margin: 0 0 1rem; font-size: 1.5rem;" class="id-only">Diabetes Tipe 1</h3>
+        
+        <div class="type-item"><span class="en-only">Autoimmune beta-cell destruction in the pancreas</span><span class="id-only">Penghancuran autoimun sel beta di pankreas</span></div>
+        <div class="type-item"><span class="en-only">Absolute insulin deficiency (little or no production)</span><span class="id-only">Defisiensi insulin absolut (produksi sedikit/tidak ada)</span></div>
+        <div class="type-item"><span class="en-only">Typically develops in youth or adolescence</span><span class="id-only">Biasanya berkembang pada usia muda atau remaja</span></div>
+        <div class="type-item"><span class="en-only">Mandates lifelong exogenous insulin therapy to survive</span><span class="id-only">Mewajibkan terapi insulin eksogen seumur hidup</span></div>
+        <div class="type-item"><span class="en-only">Abrupt clinical onset with symptomatic severity</span><span class="id-only">Onset klinis mendadak dengan gejala yang parah</span></div>
+      </div>
+      
+      <div class="type-col center">
+        <div class="contrast-label en-only">Pathology</div>
+        <div class="contrast-label id-only">Patologi</div>
+        <div class="contrast-vs">VS</div>
+        <div class="contrast-sub en-only">Etiological Divergence</div>
+        <div class="contrast-sub id-only">Perbedaan Etiologis</div>
+      </div>
+      
+      <div class="type-col">
+        <div class="type-col-label en-only">Etiology Class B</div>
+        <div class="type-col-label id-only">Kelas Etiologi B</div>
+        <h3 style="margin: 0 0 1rem; font-size: 1.5rem;" class="en-only">Type 2 Diabetes</h3>
+        <h3 style="margin: 0 0 1rem; font-size: 1.5rem;" class="id-only">Diabetes Tipe 2</h3>
+        
+        <div class="type-item"><span class="en-only">Primary insulin resistance with progressive secretory decline</span><span class="id-only">Resistensi insulin primer dengan penurunan sekresi progresif</span></div>
+        <div class="type-item"><span class="en-only">Accounts for 90-95% of global diabetes cases</span><span class="id-only">Mencakup 90-95% dari kasus diabetes global</span></div>
+        <div class="type-item"><span class="en-only">Strongly correlated with genetics, obesity &amp; inactivity</span><span class="id-only">Terkait erat dengan genetika, obesitas &amp; kurang aktivitas</span></div>
+        <div class="type-item"><span class="en-only">Managed via oral drugs, lifestyle, and/or insulin</span><span class="id-only">Dikelola via obat oral, gaya hidup, dan/atau insulin</span></div>
+        <div class="type-item"><span class="en-only">Gradual progressive onset, frequently undiagnosed for years</span><span class="id-only">Onset bertahap lambat, sering tidak terdiagnosis bertahun-tahun</span></div>
+      </div>
+    </div>
+
+    <h3 class="en-only">Gestational Diabetes Mellitus (GDM)</h3>
+    <h3 class="id-only">Diabetes Melitus Gestasional (DMG)</h3>
+    <p class="en-only">This type represents high blood sugar that develops during pregnancy in individuals who did not previously have diabetes. It is induced by placental hormones that block the action of insulin, creating resistance. GDM typically resolves post-delivery, but significantly increases the lifetime risk of developing Type 2 diabetes for both mother and offspring.</p>
+    <p class="id-only">Tipe ini adalah gula darah tinggi yang berkembang selama kehamilan pada seorang wanita yang sebelumnya tidak menderita diabetes. Ini disebabkan oleh hormon dari plasenta yang menghalangi kerja insulin, menciptakan resistensi. DMG biasanya sembuh setelah melahirkan, tetapi secara signifikan meningkatkan risiko ibu dan anak untuk mengembangkan Diabetes Tipe 2 di kemudian hari.</p>
+
+    <div class="callout purple">
+      <div class="callout-label en-only">Other Specific Types</div>
+      <div class="callout-label id-only">Tipe Spesifik Lainnya</div>
+      <p class="en-only" style="margin-bottom: 0.6rem;">These are less common forms caused by specific conditions:</p>
+      <p class="id-only" style="margin-bottom: 0.6rem;">Ini adalah bentuk yang kurang umum yang disebabkan oleh kondisi spesifik:</p>
+      
+      <ul style="list-style-type: none;" class="principles">
+        <li style="margin-bottom:0.5rem; font-size:13.5px;">
+          <strong>Monogenic Diabetes:</strong> <span class="en-only">Caused by a single gene mutation. Includes Neonatal Diabetes (diagnosed in the first 6 months of life) and Maturity-Onset Diabetes of the Young (MODY), which has a strong hereditary pattern.</span>
+          <span class="id-only">Disebabkan oleh mutasi gen tunggal. Termasuk Diabetes Neonatal (didiagnosis dalam 6 bulan pertama kehidupan) dan Maturity-Onset Diabetes of the Young (MODY), yang diturunkan kuat dalam keluarga.</span>
+        </li>
+        <li style="margin-bottom:0.5rem; font-size:13.5px;">
+          <strong>Diseases of the Exocrine Pancreas:</strong> <span class="en-only">Conditions like cystic fibrosis, pancreatitis, or pancreatic cancer that physically damage beta cells, disrupting hormone synthesis.</span>
+          <span class="id-only">Kondisi seperti fibrosis kistik, pankreatitis, atau kanker pankreas yang merusak sel beta secara fisik, mengganggu sintesis hormon.</span>
+        </li>
+        <li style="font-size:13.5px;">
+          <strong>Drug- or Chemical-Induced Diabetes:</strong> <span class="en-only">Hyperglycemia triggered by specific therapeutic agents, notably high-dose glucocorticoids (e.g., prednisone) or certain atypical antipsychotics.</span>
+          <span class="id-only">Hiperglikemia yang dipicu oleh agen terapeutik tertentu, terutama glukokortikoid dosis tinggi (misalnya, prednison) atau beberapa antipsikotik atipikal.</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 03: SYMPTOMS -->
+  <section class="section" id="symptoms">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title en-only">Common Symptoms</h2>
+      <h2 class="section-title id-only">Gejala Umum</h2>
+    </div>
+
+    <p class="en-only">Symptoms can develop rapidly (over weeks or days in Type 1) or progressively slow (over years in Type 2, which is frequently asymptomatic). The clinical signs of high blood sugar (hyperglycemia) include:</p>
+    <p class="id-only">Gejala dapat berkembang dengan cepat (dalam hitungan minggu atau hari pada Tipe 1) atau berkembang sangat lambat (selama bertahun-tahun pada Tipe 2, yang sering kali asimtomatik). Tanda-tanda klinis dari kadar gula darah tinggi (hiperglikemia) meliputi:</p>
+
+    <!-- Symptoms Grid -->
+    <div class="symptoms-grid">
+      <div class="symptom-card">
+        <div class="symptom-name en-only">Polyuria (Frequent Urination)</div>
+        <div class="symptom-name id-only">Poliuria (Sering Buang Air Kecil)</div>
+        <p class="symptom-desc en-only">Excess blood glucose exceeds renal thresholds, drawing fluid through osmotic pull into urine output.</p>
+        <p class="symptom-desc id-only">Glukosa darah berlebih melebihi ambang batas ginjal, menarik cairan melalui tarikan osmotik ke dalam keluaran urin.</p>
+      </div>
+      <div class="symptom-card">
+        <div class="symptom-name en-only">Polydipsia (Increased Thirst)</div>
+        <div class="symptom-name id-only">Polidipsia (Rasa Haus Berlebih)</div>
+        <p class="symptom-desc en-only">Persistent dehydration caused by severe polyuria stimulates central thirst mechanisms.</p>
+        <p class="symptom-desc id-only">Dehidrasi terus-menerus yang disebabkan oleh poliuria parah merangsang mekanisme haus pusat.</p>
+      </div>
+      <div class="symptom-card">
+        <div class="symptom-name en-only">Polyphagia (Increased Hunger)</div>
+        <div class="symptom-name id-only">Polifagia (Rasa Lapar Berlebih)</div>
+        <p class="symptom-desc en-only">As glucose cannot enter cells due to deficient insulin action, intracellular starvation triggers constant hunger.</p>
+        <p class="symptom-desc id-only">Karena glukosa tidak dapat masuk ke sel akibat kurangnya kerja insulin, kelaparan intraseluler memicu rasa lapar terus-menerus.</p>
+      </div>
+      <div class="symptom-card">
+        <div class="symptom-name en-only">Unexplained Weight Loss</div>
+        <div class="symptom-name id-only">Penurunan Berat Badan Tanpa Sebab</div>
+        <p class="symptom-desc en-only">To secure energy, the body enters catabolism, actively breaking down skeletal muscle and adipose tissue.</p>
+        <p class="symptom-desc id-only">Untuk mengamankan energi, tubuh memasuki katabolisme, secara aktif memecah otot rangka dan jaringan adiposa.</p>
+      </div>
+      <div class="symptom-card">
+        <div class="symptom-name en-only">Fatigue &amp; Lethargy</div>
+        <div class="symptom-name id-only">Kelelahan &amp; Kelesuan</div>
+        <p class="symptom-desc en-only">Systemic cellular starvation leads to impaired ATP production, causing profound physical exhaustion.</p>
+        <p class="symptom-desc id-only">Kelaparan seluler sistemik menyebabkan gangguan produksi ATP, memicu kelelahan fisik mendalam.</p>
+      </div>
+      <div class="symptom-card">
+        <div class="symptom-name en-only">Blurred Vision</div>
+        <div class="symptom-name id-only">Penglihatan Kabur</div>
+        <p class="symptom-desc en-only">Severe hyperglycemia prompts osmotic shifts of water, physically swelling the ocular lens.</p>
+        <p class="symptom-desc id-only">Hiperglikemia berat mendorong pergeseran osmotik air, membengkakkan lensa mata secara fisik.</p>
+      </div>
+    </div>
+
+    <div class="callout rose">
+      <div class="callout-label en-only">Critical Warning (DKA Risk)</div>
+      <div class="callout-label id-only">Peringatan Kritis (Risiko KAD)</div>
+      <p class="en-only"><strong>Warning!</strong> Seek immediate emergency medical care for signs of <strong>Diabetic Ketoacidosis (DKA)</strong> — more frequent in Type 1 — including nausea, vomiting, severe abdominal pain, rapid breathing, confusion, and fruit-scented breath.</p>
+      <p class="id-only"><strong>Peringatan!</strong> Segera cari bantuan medis darurat jika ada gejala <strong>Ketoasidosis Diabetik (KAD)</strong> — lebih umum pada Tipe 1 — seperti mual, muntah, nyeri perut hebat, napas cepat, kebingungan, dan aroma napas seperti buah.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 04: TREATMENT -->
+  <section class="section" id="treatment">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title en-only">Treatment Approaches</h2>
+      <h2 class="section-title id-only">Pendekatan Pengobatan</h2>
+    </div>
+
+    <p class="en-only">Effective clinical management targets strict glycemic control to avoid long-term microvascular and macrovascular complications, requiring a comprehensive multimodal framework.</p>
+    <p class="id-only">Manajemen klinis yang efektif menargetkan kontrol glikemik yang ketat untuk menghindari komplikasi mikrovaskular dan makrovaskular jangka panjang, membutuhkan kerangka kerja multimodal yang komprehensif.</p>
+
+    <h3 class="en-only">1. Lifestyle Modification (Non-Pharmacological)</h3>
+    <h3 class="id-only">1. Modifikasi Gaya Hidup (Non-Farmakologis)</h3>
+    
+    <div class="principles">
+      <div class="principle">
+        <div class="principle-num">01</div>
+        <div class="principle-content">
+          <h4 class="en-only">Nutritional Management</h4>
+          <h4 class="id-only">Manajemen Nutrisi</h4>
+          <p class="en-only">A balanced intake focused on whole grains, lean proteins, vegetables, and healthy fats. Utilizes carbohydrate counting and the Diabetes Plate Method (half non-starchy vegetables, one quarter protein, one quarter healthy carbohydrates).</p>
+          <p class="id-only">Asupan seimbang berfokus pada biji-bijian utuh, protein tanpa lemak, sayuran, dan lemak sehat. Menggunakan penghitungan karbohidrat dan Metode Piring Diabetes (setengah sayuran non-tepung, seperempat protein, seperempat karbohidrat sehat).</p>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">02</div>
+        <div class="principle-content">
+          <h4 class="en-only">Physical Exercise</h4>
+          <h4 class="id-only">Olahraga Fisik</h4>
+          <p class="en-only">Aim for a minimum of 150 minutes of weekly moderate aerobic physical activity (e.g., brisk walking, cycling), paired with 2-3 structured resistance sessions to enhance systemic insulin sensitivity.</p>
+          <p class="id-only">Targetkan minimal 150 menit aktivitas fisik aerobik sedang setiap minggu (misalnya, jalan cepat, bersepeda), dipadukan dengan 2-3 sesi latihan kekuatan terstruktur untuk meningkatkan sensitivitas insulin sistemik.</p>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">03</div>
+        <div class="principle-content">
+          <h4 class="en-only">Weight Optimization</h4>
+          <h4 class="id-only">Optimalisasi Berat Badan</h4>
+          <p class="en-only">For overweight or obese individuals with Type 2 diabetes, a modest reduction of 5-10% of total body weight yields clinically profound improvements in glycemic indexes.</p>
+          <p class="id-only">Bagi penderita Diabetes Tipe 2 yang kelebihan berat badan atau obesitas, penurunan berat badan moderat 5-10% dari total berat badan menghasilkan perbaikan indeks glikemik yang mendalam secara klinis.</p>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">04</div>
+        <div class="principle-content">
+          <h4 class="en-only">Blood Sugar Monitoring</h4>
+          <h4 class="id-only">Pemantauan Gula Darah</h4>
+          <p class="en-only">Regular self-monitoring of blood glucose (SMBG) or continuous glucose monitoring (CGM) provides real-time clinical feedback to modify doses, lifestyle choices, and track trends.</p>
+          <p class="id-only">Pemantauan Mandiri Gula Darah (PGDM) secara teratur atau Monitor Gula Darah Berkelanjutan (CGM) menyediakan umpan balik klinis real-time untuk memodifikasi dosis, gaya hidup, dan melacak tren.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="en-only">2. Pharmacological Treatment</h3>
+    <h3 class="id-only">2. Pengobatan Medis (Farmakologis)</h3>
+    <p class="en-only" style="margin-bottom:1rem;">Modern pharmacological regimens range from oral sensitizers to injectable peptides, adjusted according to the diagnostic class and patient phenotype.</p>
+    <p class="id-only" style="margin-bottom:1rem;">Rejimen farmakologis modern berkisar dari pensensitisasi oral hingga peptida suntik, yang disesuaikan berdasarkan kelas diagnosis dan fenotipe pasien.</p>
+
+    <!-- Pharma Table -->
+    <div class="pharma-table">
+      <div class="pharma-header">
+        <div class="pharma-th en-only">Class</div>
+        <div class="pharma-th id-only">Kelas</div>
+        <div class="pharma-th en-only">Mechanism of Action</div>
+        <div class="pharma-th id-only">Cara Kerja</div>
+        <div class="pharma-th en-only">Examples</div>
+        <div class="pharma-th id-only">Contoh</div>
+        <div class="pharma-th en-only">Key Clinical Notes</div>
+        <div class="pharma-th id-only">Poin Klinis Kunci</div>
+      </div>
+      
+      <!-- Biguanides -->
+      <div class="pharma-row">
+        <div class="pharma-td">
+          <span class="pharma-class en-only">Biguanides</span>
+          <span class="pharma-class id-only">Biguanid</span>
+          <div class="pharma-agents">Metformin</div>
+        </div>
+        <div class="pharma-td">
+          <span class="en-only">Reduces hepatic glucose output and improves peripheral insulin sensitivity.</span>
+          <span class="id-only">Mengurangi produksi glukosa hati dan meningkatkan sensitivitas insulin perifer.</span>
+        </div>
+        <div class="pharma-td">Metformin</div>
+        <div class="pharma-td">
+          <span class="en-only">Universal first-line agent; minimal risk of hypoglycemia; may trigger temporary GI distress.</span>
+          <span class="id-only">Terapi lini pertama universal; risiko hipoglikemia minimal; dapat memicu gangguan pencernaan sementara.</span>
+        </div>
+      </div>
+      
+      <!-- SGLT2 -->
+      <div class="pharma-row">
+        <div class="pharma-td">
+          <span class="pharma-class en-only">SGLT2 Inhibitors</span>
+          <span class="pharma-class id-only">Penghambat SGLT2</span>
+          <div class="pharma-agents">Empagliflozin, Dapagliflozin</div>
+        </div>
+        <div class="pharma-td">
+          <span class="en-only">Blocks glucose reabsorption in the renal proximal tubules, promoting glucosuria.</span>
+          <span class="id-only">Menghambat reabsorpsi glukosa di tubulus proksimal ginjal, meningkatkan ekskresi glukosa dalam urin.</span>
+        </div>
+        <div class="pharma-td">Empagliflozin, Dapagliflozin</div>
+        <div class="pharma-td">
+          <span class="en-only">Strong cardiorenal protection; assists weight loss; may raise risk of genitourinary infections (UTIs).</span>
+          <span class="id-only">Perlindungan jantung &amp; ginjal kuat; membantu penurunan berat badan; meningkatkan risiko infeksi saluran kemih (ISK).</span>
+        </div>
+      </div>
+      
+      <!-- GLP-1 -->
+      <div class="pharma-row">
+        <div class="pharma-td">
+          <span class="pharma-class en-only">GLP-1 Receptor Agonists</span>
+          <span class="pharma-class id-only">Agonis Reseptor GLP-1</span>
+          <div class="pharma-agents">Semaglutide, Liraglutide</div>
+        </div>
+        <div class="pharma-td">
+          <span class="en-only">Mimics incretins to stimulate glucose-dependent insulin, delay gastric emptying, and suppress glucagon.</span>
+          <span class="id-only">Meniru inkretin untuk merangsang insulin dependen glukosa, memperlambat pengosongan lambung, &amp; menekan glukagon.</span>
+        </div>
+        <div class="pharma-td">Semaglutide, Liraglutide</div>
+        <div class="pharma-td">
+          <span class="en-only">High efficacy for weight loss and cardiovascular risk reduction; injectable (weekly/daily) or oral.</span>
+          <span class="id-only">Efikasi tinggi untuk penurunan berat badan dan pengurangan risiko kardiovaskular; suntikan atau oral.</span>
+        </div>
+      </div>
+      
+      <!-- DPP-4 -->
+      <div class="pharma-row">
+        <div class="pharma-td">
+          <span class="pharma-class en-only">DPP-4 Inhibitors</span>
+          <span class="pharma-class id-only">Penghambat DPP-4</span>
+          <div class="pharma-agents">Sitagliptin, Linagliptin</div>
+        </div>
+        <div class="pharma-td">
+          <span class="en-only">Prevents breakdown of endogenous GLP-1 hormones, extending their physiological action.</span>
+          <span class="id-only">Mencegah kerusakan hormon GLP-1 endogen, memperpanjang efek fisiologisnya.</span>
+        </div>
+        <div class="pharma-td">Sitagliptin, Linagliptin</div>
+        <div class="pharma-td">
+          <span class="en-only">Highly tolerated; weight-neutral; negligible inherent risk of hypoglycemia.</span>
+          <span class="id-only">Sangat ditoleransi; berat badan netral; risiko hipoglikemia sangat rendah.</span>
+        </div>
+      </div>
+
+      <!-- Sulfonylureas -->
+      <div class="pharma-row">
+        <div class="pharma-td">
+          <span class="pharma-class en-only">Sulfonylureas</span>
+          <span class="pharma-class id-only">Sulfonilurea</span>
+          <div class="pharma-agents">Glimepiride, Glipizide</div>
+        </div>
+        <div class="pharma-td">
+          <span class="en-only">Directly stimulates pancreatic beta cells to increase basal and postprandial insulin release.</span>
+          <span class="id-only">Merangsang sel beta pankreas secara langsung untuk meningkatkan sekresi insulin.</span>
+        </div>
+        <div class="pharma-td">Glimepiride, Glipizide / Gliclazide</div>
+        <div class="pharma-td">
+          <span class="en-only">Effective, low-cost option; carries a moderate-to-high risk of hypoglycemia and weight gain.</span>
+          <span class="id-only">Pilihan efektif berbiaya rendah; memiliki risiko sedang-tinggi hipoglikemia &amp; kenaikan berat badan.</span>
+        </div>
+      </div>
+
+      <!-- Insulin -->
+      <div class="pharma-row">
+        <div class="pharma-td">
+          <span class="pharma-class en-only">Insulin Therapy</span>
+          <span class="pharma-class id-only">Terapi Insulin</span>
+          <div class="pharma-agents">Basal &amp; Bolus Insulin</div>
+        </div>
+        <div class="pharma-td">
+          <span class="en-only">Directly replaces or supplements the deficient hormone to transport glucose into cells.</span>
+          <span class="id-only">Menggantikan langsung hormon yang kurang untuk mengangkut glukosa ke dalam sel.</span>
+        </div>
+        <div class="pharma-td">Basal (Long-acting), Bolus (Rapid-acting)</div>
+        <div class="pharma-td">
+          <span class="en-only">Most potent glucose-lowering agent; mandatory for Type 1 and advanced Type 2; requires close dosing to prevent hypoglycemia.</span>
+          <span class="id-only">Agen penurun glukosa terkuat; wajib untuk Tipe 1 &amp; Tipe 2 lanjut; perlu pemantauan ketat guna menghindari hipoglikemia.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 05: COMPLICATIONS -->
+  <section class="section" id="complications">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title en-only">Potential Complications</h2>
+      <h2 class="section-title id-only">Potensi Komplikasi</h2>
+    </div>
+
+    <p class="en-only">Chronic, uncontrolled hyperglycemia systematically damages blood vessels and neural networks over time, leading to severe microvascular and macrovascular pathology.</p>
+    <p class="id-only">Hiperglikemia kronis yang tidak terkontrol secara sistemik merusak pembuluh darah dan jaringan saraf dari waktu ke waktu, menyebabkan patologi mikrovaskular dan makrovaskular yang parah.</p>
+
+    <!-- Complications Grid -->
+    <div class="conflict-diagram">
+      <div class="conflict-side left">
+        <div class="conflict-label en-only">Microvascular (Small Blood Vessels)</div>
+        <div class="conflict-label id-only">Mikrovaskular (Pembuluh Darah Kecil)</div>
+        
+        <div class="conflict-trait">
+          <span class="en-only"><strong>Retinopathy:</strong> Damage to microvessels in the retina, potentially causing vascular leakage, scar tissue, and irreversible blindness. The leading cause of blindness in working-age populations.</span>
+          <span class="id-only"><strong>Retinopati:</strong> Kerusakan pembuluh darah mikro di retina, menyebabkan kebocoran vaskular, jaringan parut, &amp; kebutaan permanen. Penyebab utama kebutaan usia produktif.</span>
+        </div>
+        <div class="conflict-trait">
+          <span class="en-only"><strong>Nephropathy:</strong> Progressive glomerular damage to kidney filtration structures, culminating in chronic kidney disease (CKD) and end-stage renal disease (ESRD) requiring dialysis.</span>
+          <span class="id-only"><strong>Nefropati:</strong> Kerusakan glomerular progresif pada struktur penyaringan ginjal, berujung pada gagal ginjal kronis (CKD) yang memerlukan dialisis.</span>
+        </div>
+        <div class="conflict-trait">
+          <span class="en-only"><strong>Neuropathy:</strong> Peripheral nerve damage leading to paresthesia, burning pain, or loss of sensory perception, particularly in distal limbs. Can also affect digestive tract motility and autonomic reflexes.</span>
+          <span class="id-only"><strong>Neuropati:</strong> Kerusakan saraf perifer yang memicu parestesia, nyeri terbakar, atau hilangnya persepsi sensorik, terutama pada kaki. Juga dapat mengganggu motilitas organ dalam.</span>
+        </div>
+      </div>
+      
+      <div class="conflict-side right">
+        <div class="conflict-label en-only">Macrovascular (Large Blood Vessels)</div>
+        <div class="conflict-label id-only">Makrovaskular (Pembuluh Darah Besar)</div>
+        
+        <div class="conflict-trait">
+          <span class="en-only"><strong>Cardiovascular Disease:</strong> Accelerated atherogenesis dramatically elevates the baseline clinical risk of myocardial infarction (heart attack), stroke, and systemic arterial hypertension.</span>
+          <span class="id-only"><strong>Penyakit Kardiovaskular:</strong> Aterogenesis yang dipercepat meningkatkan risiko klinis infark miokard (serangan jantung), stroke, dan hipertensi arteri sistemik secara drastis.</span>
+        </div>
+        <div class="conflict-trait">
+          <span class="en-only"><strong>Peripheral Artery Disease (PAD):</strong> Severe narrowing of major peripheral arteries, restricting arterial perfusion to limbs, most notably in the lower legs and feet.</span>
+          <span class="id-only"><strong>Penyakit Arteri Perifer (PAD):</strong> Penyempitan parah pada arteri perifer utama, menghambat aliran darah ke anggota tubuh, terutama kaki bagian bawah.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout rose">
+      <div class="callout-label en-only">Clinical Focus: Diabetic Foot Syndrome</div>
+      <div class="callout-label id-only">Fokus Klinis: Sindrom Kaki Diabetik</div>
+      <p class="en-only">The hazardous combination of severe sensory peripheral neuropathy (lack of pain perception) and compromised microcirculation (PAD) leads to high susceptibility to silent foot ulcers. Due to delayed healing and immune impairment, these wounds frequently develop deep infections, leading to osteomyelitis, gangrene, and making diabetes the leading cause of non-traumatic lower-limb amputations globally.</p>
+      <p class="id-only">Kombinasi berbahaya dari neuropati perifer sensorik berat (hilangnya sensasi nyeri) dan sirkulasi darah yang buruk (PAD) menyebabkan kerentanan tinggi terhadap borok kaki tanpa disadari. Karena penyembuhan luka yang lambat, luka ini sering mengalami infeksi dalam, menyebabkan osteomielitis, gangren, dan menempatkan diabetes sebagai penyebab utama amputasi kaki non-traumatis secara global.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 06: MYTH VS FACT -->
+  <section class="section" id="myth-fact">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title en-only">Myth vs. Fact</h2>
+      <h2 class="section-title id-only">Mitos vs. Fakta</h2>
+    </div>
+
+    <p class="en-only" style="margin-bottom:1rem;">Misconceptions surrounding diabetes are widespread. Explore the clinical reality behind common myths using the interactive, evidence-based table below:</p>
+    <p class="id-only" style="margin-bottom:1rem;">Kesalahpahaman seputar diabetes sangat luas. Temukan kenyataan klinis di balik mitos umum menggunakan tabel interaktif berbasis bukti di bawah ini:</p>
+
+    <!-- Myth Fact Interactive Table -->
+    <div class="diag-table-wrap">
+      <div class="diag-table-header">
+        <div class="diag-th en-only">Myth / Misconception</div>
+        <div class="diag-th id-only">Mitos / Kesalahpahaman</div>
+        <div class="diag-th en-only">Class</div>
+        <div class="diag-th id-only">Kelas</div>
+        <div class="diag-th en-only">Clinical Summary</div>
+        <div class="diag-th id-only">Ringkasan Klinis</div>
+      </div>
+      
+      <!-- Row 1 -->
+      <div class="diag-row" onclick="toggleRow(this)">
+        <div class="diag-td">
+          <span class="diag-name en-only">Sugar Intoxication Myth</span>
+          <span class="diag-name id-only">Mitos Keracunan Gula</span>
+          <div class="diag-desc en-only">❌ Eating too much sugar causes diabetes.</div>
+          <div class="diag-desc id-only">❌ Makan terlalu banyak gula menyebabkan diabetes.</div>
+        </div>
+        <div class="diag-td">
+          <span class="diag-tag tag-myth en-only">Myth</span>
+          <span class="diag-tag tag-myth id-only">Mitos</span>
+        </div>
+        <div class="diag-td">
+          <span class="diag-desc en-only">Does high sugar intake directly trigger the disease?</span>
+          <span class="diag-desc id-only">Apakah asupan gula tinggi memicu penyakit secara langsung?</span>
+          <div class="expand-btn">
+            <span class="en-only">Reveal Fact</span><span class="id-only">Buka Fakta</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+        </div>
+        <div class="diag-extra">
+          <p class="en-only"><strong>✅ FACT:</strong> While a high-calorie, high-sugar diet contributes to weight gain and obesity — which is a major, documented risk factor for insulin resistance and Type 2 diabetes — eating sugar itself does not directly trigger the onset. Type 1 is an autoimmune destruction of beta cells, and Type 2 is a multifactorial genetic and lifestyle condition.</p>
+          <p class="id-only"><strong>✅ FAKTA:</strong> Meskipun pola makan tinggi kalori &amp; tinggi gula berkontribusi pada kenaikan berat badan &amp; obesitas — faktor risiko utama bagi resistensi insulin &amp; Diabetes Tipe 2 — konsumsi gula itu sendiri tidak secara langsung memicu timbulnya penyakit. Tipe 1 merupakan destruksi autoimun, sementara Tipe 2 adalah interaksi multifaktorial genetik &amp; gaya hidup.</p>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="diag-row" onclick="toggleRow(this)">
+        <div class="diag-td">
+          <span class="diag-name en-only">Dessert Prohibition</span>
+          <span class="diag-name id-only">Larangan Makanan Manis</span>
+          <div class="diag-desc en-only">❌ Penderita diabetes tidak boleh makan manis sama sekali.</div>
+          <div class="diag-desc id-only">❌ Penderita diabetes dilarang makan manis sama sekali.</div>
+        </div>
+        <div class="diag-td">
+          <span class="diag-tag tag-myth en-only">Myth</span>
+          <span class="diag-tag tag-myth id-only">Mitos</span>
+        </div>
+        <div class="diag-td">
+          <span class="diag-desc en-only">Must patients eliminate all sweets permanently?</span>
+          <span class="diag-desc id-only">Apakah pasien harus mengeliminasi rasa manis selamanya?</span>
+          <div class="expand-btn">
+            <span class="en-only">Reveal Fact</span><span class="id-only">Buka Fakta</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+        </div>
+        <div class="diag-extra">
+          <p class="en-only"><strong>✅ FACT:</strong> Sweets can be included as part of a structured, balanced meal plan. The clinical focus is on total carbohydrate management, portion control, glycemic index, and tracking daily intake to properly offset glucose rises through medication or insulin adjustments.</p>
+          <p class="id-only"><strong>✅ FAKTA:</strong> Makanan manis tetap dapat dikonsumsi dalam porsi terbatas sebagai bagian dari rencana makan terstruktur. Fokus klinis terletak pada pengelolaan karbohidrat total, indeks glikemik, kontrol porsi, dan menyeimbangkan asupan tersebut dengan aktivitas fisik serta obat.</p>
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="diag-row" onclick="toggleRow(this)">
+        <div class="diag-td">
+          <span class="diag-name en-only">T2DM Mildness Myth</span>
+          <span class="diag-name id-only">Mitos Ringannya Tipe 2</span>
+          <div class="diag-desc en-only">❌ Type 2 diabetes is a mild form of the disease.</div>
+          <div class="diag-desc id-only">❌ Diabetes Tipe 2 adalah bentuk yang ringan.</div>
+        </div>
+        <div class="diag-td">
+          <span class="diag-tag tag-myth en-only">Myth</span>
+          <span class="diag-tag tag-myth id-only">Mitos</span>
+        </div>
+        <div class="diag-td">
+          <span class="diag-desc en-only">Is Type 2 diabetes less critical than Type 1?</span>
+          <span class="diag-desc id-only">Apakah Diabetes Tipe 2 kurang kritis dibanding Tipe 1?</span>
+          <div class="expand-btn">
+            <span class="en-only">Reveal Fact</span><span class="id-only">Buka Fakta</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+        </div>
+        <div class="diag-extra">
+          <p class="en-only"><strong>✅ FACT:</strong> There is no medically "mild" form of diabetes. Without effective metabolic control, Type 2 diabetes carries the exact same risks of organ damage, major cardiovascular events, kidney failure, visual impairment, and foot amputation. It requires rigorous, long-term therapeutic engagement.</p>
+          <p class="id-only"><strong>✅ FAKTA:</strong> Tidak ada istilah diabetes "ringan" dalam dunia medis. Tanpa kontrol metabolik yang memadai, Diabetes Tipe 2 memiliki risiko komplikasi organ, penyakit jantung, gagal ginjal, kebutaan, &amp; amputasi kaki yang sama persis. Semua tipe diabetes membutuhkan penanganan serius.</p>
+        </div>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="diag-row" onclick="toggleRow(this)">
+        <div class="diag-td">
+          <span class="diag-name en-only">Inevitability of Insulin</span>
+          <span class="diag-name id-only">Keniscayaan Suntik Insulin</span>
+          <div class="diag-desc en-only">❌ If you have diabetes, you will eventually need insulin.</div>
+          <div class="diag-desc id-only">❌ Penderita diabetes pasti butuh suntik insulin.</div>
+        </div>
+        <div class="diag-td">
+          <span class="diag-tag tag-myth en-only">Myth</span>
+          <span class="diag-tag tag-myth id-only">Mitos</span>
+        </div>
+        <div class="diag-td">
+          <span class="diag-desc en-only">Does every diabetic patient face guaranteed insulin therapy?</span>
+          <span class="diag-desc id-only">Apakah terapi insulin menjadi kepastian bagi seluruh pasien?</span>
+          <div class="expand-btn">
+            <span class="en-only">Reveal Fact</span><span class="id-only">Buka Fakta</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+        </div>
+        <div class="diag-extra">
+          <p class="en-only"><strong>✅ FACT:</strong> While all Type 1 patients depend on exogenous insulin to survive, many Type 2 patients can successfully manage their glycemic index for decades using structured lifestyle changes and various oral non-insulin therapies (such as Metformin or SGLT2i). Due to beta cell exhaustion, some Type 2 patients may require insulin in advanced stages, but it is not universally inevitable.</p>
+          <p class="id-only"><strong>✅ FAKTA:</strong> Meskipun seluruh penderita Tipe 1 mutlak membutuhkan insulin, banyak penderita Tipe 2 dapat mengendalikan gula darah mereka selama berdekade-dekade melalui perubahan gaya hidup &amp; obat oral non-insulin. Kebutuhan insulin pada Tipe 2 dapat muncul di stadium lanjut akibat kelelahan sel beta, tetapi bukan keharusan mutlak sejak awal.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 07: PREVENTION -->
+  <section class="section" id="prevention">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title en-only">Prevention</h2>
+      <h2 class="section-title id-only">Pencegahan</h2>
+    </div>
+
+    <p class="en-only">While Type 1 diabetes cannot currently be prevented, large clinical trials (notably the landmark Diabetes Prevention Program, or DPP) show that structured lifestyle modifications are incredibly effective in preventing or delaying the onset of Type 2 diabetes in high-risk individuals (such as those with prediabetes or family history).</p>
+    <p class="id-only">Meskipun Diabetes Tipe 1 saat ini belum dapat dicegah, uji klinis besar (terutama Program Pencegahan Diabetes, atau DPP) menunjukkan bahwa modifikasi gaya hidup terstruktur sangat efektif dalam mencegah atau menunda timbulnya Diabetes Tipe 2 pada individu berisiko tinggi (seperti penderita pradiabetes atau riwayat keluarga).</p>
+
+    <!-- Prevention Principles List -->
+    <div class="principles">
+      <div class="principle">
+        <div class="principle-num">01</div>
+        <div class="principle-content">
+          <h4 class="en-only">Achieve and Maintain a Healthy Weight</h4>
+          <h4 class="id-only">Mencapai dan Mempertahankan Berat Badan Sehat</h4>
+          <p class="en-only">Losing a modest 5-7% of initial body weight significantly decreases risk factors. For a 200-pound (90 kg) individual, this represents a target reduction of only 10-14 pounds (4.5-6.3 kg).</p>
+          <p class="id-only">Menurunkan 5-7% dari berat badan awal secara signifikan mengurangi faktor risiko. Untuk individu seberat 90 kg, ini mewakili target penurunan hanya 4.5-6.3 kg.</p>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">02</div>
+        <div class="principle-content">
+          <h4 class="en-only">Engage in Regular Physical Activity</h4>
+          <h4 class="id-only">Melakukan Aktivitas Fisik Teratur</h4>
+          <p class="en-only">Aim for at least 30 minutes of moderate-intensity physical activity (e.g., brisk walking) at least 5 days a week, enhancing systemic glycemic utilization.</p>
+          <p class="id-only">Targetkan setidaknya 30 menit aktivitas fisik intensitas sedang (seperti jalan cepat) minimal 5 hari seminggu, meningkatkan pemanfaatan glikemik sistemik.</p>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">03</div>
+        <div class="principle-content">
+          <h4 class="en-only">Make Healthy Food Choices</h4>
+          <h4 class="id-only">Membuat Pilihan Makanan Sehat</h4>
+          <p class="en-only">Incorporate a high density of whole grains, dietary fibers, fresh vegetables, and fruits. Limit high intake of processed items, refined carbs, sugary drinks, and saturated fats.</p>
+          <p class="id-only">Masukkan densitas tinggi biji-bijian utuh, serat makanan, sayuran segar, &amp; buah-buahan. Batasi asupan produk olahan, karbohidrat olahan, minuman manis, &amp; lemak jenuh.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout sage">
+      <div class="callout-label en-only">Prediabetes screening and risk awareness</div>
+      <div class="callout-label id-only">Pemeriksaan pradiabetes dan kesadaran risiko</div>
+      <p class="en-only"><strong>Know Your Risk!</strong> Proactively discuss clinical prediabetes screening with your healthcare provider if you exhibit risk factors, such as being overweight, being aged 45 or older, having a first-degree family relative with diabetes, or showing signs of metabolic syndrome.</p>
+      <p class="id-only"><strong>Ketahui Risiko Anda!</strong> Diskusikan skrining pradiabetes secara proaktif dengan dokter Anda jika Anda memiliki faktor risiko, seperti kelebihan berat badan, berusia 45 tahun atau lebih, memiliki keluarga dekat dengan riwayat diabetes, atau menunjukkan gejala sindrom metabolik.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 08: REFERENCES -->
+  <section class="section" id="references">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2 class="section-title en-only">References</h2>
+      <h2 class="section-title id-only">Referensi</h2>
+    </div>
+
+    <ul class="principles" style="list-style: none;">
+      <li class="principle">
+        <div class="principle-num">01</div>
+        <div class="principle-content">
+          <h4 class="en-only">American Diabetes Association (ADA) Guidelines</h4>
+          <h4 class="id-only">Panduan American Diabetes Association (ADA)</h4>
+          <p style="font-size: 13px;">American Diabetes Association. (2024). Standards of Care in Diabetes—2024. <em>Diabetes Care, 47</em>(Supplement 1).</p>
+        </div>
+      </li>
+      <li class="principle">
+        <div class="principle-num">02</div>
+        <div class="principle-content">
+          <h4 class="en-only">PERKENI National Guidelines</h4>
+          <h4 class="id-only">Panduan Nasional PERKENI</h4>
+          <p style="font-size: 13px;">Perkumpulan Endokrinologi Indonesia (PERKENI). (2021). <em>Pedoman Pengelolaan dan Pencegahan Diabetes Melitus Tipe 2 Dewasa di Indonesia</em>.</p>
+        </div>
+      </li>
+      <li class="principle">
+        <div class="principle-num">03</div>
+        <div class="principle-content">
+          <h4 class="en-only">World Health Organization (WHO) Factsheet</h4>
+          <h4 class="id-only">Lembar Fakta World Health Organization (WHO)</h4>
+          <p style="font-size: 13px;">World Health Organization (WHO). (2023, April 5). <em>Diabetes</em> / World Health Organization (WHO). (2023, 5 April). <em>Diabetes</em>.</p>
+        </div>
+      </li>
+      <li class="principle">
+        <div class="principle-num">04</div>
+        <div class="principle-content">
+          <h4 class="en-only">NIDDK Patient Reference</h4>
+          <h4 class="id-only">Referensi Pasien NIDDK</h4>
+          <p style="font-size: 13px;">National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK). (n.d.). <em>What is Diabetes?</em> / National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK). (tanpa tanggal). <em>What is Diabetes? (Apa itu Diabetes?)</em>.</p>
+        </div>
+      </li>
+      <li class="principle">
+        <div class="principle-num">05</div>
+        <div class="principle-content">
+          <h4 class="en-only">Diabetes Prevention Program (DPP) Clinical Trial</h4>
+          <h4 class="id-only">Uji Klinis Program Pencegahan Diabetes (DPP)</h4>
+          <p style="font-size: 13px;">The Diabetes Prevention Program (DPP) Research Group. (2002). The Diabetes Prevention Program (DPP): description of lifestyle intervention. <em>Diabetes Care, 25</em>(12), 2165-71.</p>
+        </div>
+      </li>
+      <li class="principle">
+        <div class="principle-num">06</div>
+        <div class="principle-content">
+          <h4 class="en-only">ADA/EASD Consensus Report</h4>
+          <h4 class="id-only">Laporan Konsensus ADA/EASD</h4>
+          <p style="font-size: 13px;">Davies, M. J., Aroda, V. R., Collins, B. S., et al. (2022). Management of Hyperglycemia in Type 2 Diabetes, 2022. A Consensus Report by the American Diabetes Association (ADA) and the European Association for the Study of Diabetes (EASD). <em>Diabetes Care, 45</em>(11), 2753-2786.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+</div><!-- /.layout -->
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-wrap">
+    <span class="footer-note en-only">Diabetes Clinical Reference — Compiled in accordance with modern evidence-based guidelines from ADA, EASD, and PERKENI.</span>
+    <span class="footer-note id-only">Referensi Klinis Diabetes — Disusun sesuai dengan panduan berbasis bukti modern dari ADA, EASD, dan PERKENI.</span>
+    
+    <div class="footer-disclaimer">
+      <p class="en-only"><strong>DISCLAIMER:</strong> This information is compiled strictly for educational, scientific reference, and awareness purposes. It does not constitute, nor should it substitute, professional clinical diagnosis, advice, or therapy. Always seek the advice of a qualified physician with any inquiries related to metabolic states or medical conditions.</p>
+      <p class="id-only"><strong>DISCLAIMER:</strong> Informasi ini disusun semata-mata untuk tujuan pendidikan, referensi ilmiah, dan peningkatan kesadaran. Ini tidak memuat, dan bukan pengganti, diagnosis klinis profesional, konsultasi medis, atau terapi. Selalu mintalah saran dari dokter yang berkualifikasi terkait kondisi metabolik atau gangguan kesehatan.</p>
+    </div>
+
+    <div class="footer-links">
+      <span class="en-only" style="color:var(--text-muted)">&copy; 2026 LoLyeah.github.io. All rights reserved.</span>
+      <span class="id-only" style="color:var(--text-muted)">&copy; 2026 LoLyeah.github.io. Hak Cipta Dilindungi.</span>
+      
+      <a href="/index.html" class="en-only" style="color:var(--teal); text-decoration:none; border-bottom:1px solid rgba(77,208,200,0.2); transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+        ← Back to Home
+      </a>
+      <a href="/index.html" class="id-only" style="color:var(--teal); text-decoration:none; border-bottom:1px solid rgba(77,208,200,0.2); transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+        ← Kembali ke Beranda
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ─── LANG TOGGLE ───
+function setLang(lang, btn) {
+  document.body.classList.remove('lang-en', 'lang-id');
+  document.body.classList.add('lang-' + lang);
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    const isMatch = (lang === 'en' && b.textContent.trim() === 'EN')
+                 || (lang === 'id' && b.textContent.trim() === 'ID');
+    b.classList.toggle('active', isMatch);
+  });
+}
+
+// ─── SCROLLSPY ───
+const sections = document.querySelectorAll('.section, .hero');
+const navLinks = document.querySelectorAll('.nav-link');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => { if (s.id) observer.observe(s); });
+
+// ─── COUNTER ANIMATION ───
+const counters = document.querySelectorAll('.counter');
+const counterObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = +el.dataset.target;
+      let current = 0;
+      const step = target / 50;
+      const isDecimal = el.dataset.target.includes('.');
+      const interval = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = isDecimal ? current.toFixed(1) : Math.floor(current);
+        if (current >= target) {
+          el.textContent = target;
+          clearInterval(interval);
         }
+      }, 25);
+      counterObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => counterObs.observe(c));
 
-        function switchLanguage(lang) {
-            let languageContent = document.getElementsByClassName("language-content");
-            for (let i = 0; i < languageContent.length; i++) {
-                languageContent[i].style.display = "none";
-                languageContent[i].classList.remove("active");
-            }
+// ─── TABLE EXPAND ───
+function toggleRow(row) {
+  row.classList.toggle('expanded');
+}
 
-            let langButtons = document.getElementsByClassName("language-button");
-            for (let i = 0; i < langButtons.length; i++) {
-                langButtons[i].classList.remove("active");
-            }
-            
-            document.getElementById(lang).style.display = "block";
-            document.getElementById(lang).classList.add("active");
+// ─── MOBILE DRAWER NAV ───
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
 
-            // Add active class to the correct button
-            if (lang === 'EN') {
-                document.querySelector('.language-button[onclick="switchLanguage(\'EN\')"]').classList.add('active');
-            } else {
-                 document.querySelector('.language-button[onclick="switchLanguage(\'ID\')"]').classList.add('active');
-            }
-        }
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+}
 
-        // Set default tab on load for each language section
-        document.addEventListener('DOMContentLoaded', (event) => {
-            // Default for English
-            document.querySelector('#EN .tab-button').click();
-            // Default for Indonesian
-             document.querySelector('#ID .tab-button').click();
-             // Initially hide Indonesian
-             document.getElementById('ID').style.display = 'none';
-
-        });
-    </script>
+// Auto close mobile drawer on clicking sidebar navigation links
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      closeSidebar();
+    }
+  });
+});
+</script>
 </body>
 </html>
-

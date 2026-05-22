@@ -1,702 +1,1938 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gastrointestinal Health: Gastritis, GERD, & Ulcers</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
-        body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; }
-        
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 700px;
-            height: 350px;
-            max-height: 400px;
-            margin: 0 auto;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gastrointestinal Health: Gastritis, GERD, &amp; Ulcers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --bg:        #070a0f;
+  --bg2:       #0c1017;
+  --bg3:       #10141f;
+  --surface:   #141a29;
+  --emerald:   #52e0a5;
+  --amber:     #ff9f43;
+  --rose:      #ff5252;
+  --blue:      #54a0ff;
+  --purple:    #a855f7;
+  --border:    rgba(82, 224, 165, 0.08);
+  --border2:   rgba(82, 224, 165, 0.18);
+  --text:      #d8dde8;
+  --text-dim:  #7a8496;
+  --text-muted:#4a5268;
+  --heading:   #eef1f8;
+}
 
-        .tab-active {
-            border-bottom: 2px solid #0EA5E9;
-            color: #0EA5E9;
-            font-weight: 600;
-        }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .tab-inactive {
-            color: #6B7280;
-        }
+html { scroll-behavior: smooth; }
 
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
 
-        /* Abstract Anatomy CSS Shapes */
-        .esophagus {
-            width: 40px;
-            height: 120px;
-            background-color: #FECACA;
-            margin: 0 auto;
-            border-radius: 10px;
-            position: relative;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .stomach {
-            width: 140px;
-            height: 100px;
-            background-color: #FECACA;
-            margin: -10px auto 0;
-            border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%;
-            position: relative;
-            transform: rotate(-10deg);
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .les-valve {
-            width: 50px;
-            height: 15px;
-            background-color: #EF4444;
-            position: absolute;
-            bottom: -5px;
-            left: -5px;
-            border-radius: 10px;
-            opacity: 0.6;
-        }
-        .lining {
-            position: absolute;
-            bottom: 10px;
-            left: 20px;
-            width: 80%;
-            height: 5px;
-            background-color: #991B1B;
-            border-radius: 5px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .active-part {
-            background-color: #EF4444 !important;
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8; 
-        }
-    </style>
-    <!-- Chosen Palette: "Medical Calm" - Slate (Backgrounds), Sky/Blue (Primary Actions), Red/Rose (Pathology Highlights), Emerald (Treatment/Relief). Chosen for trust, clarity, and thematic relevance to inflammation vs healing. -->
-    
-    <!-- Application Structure Plan:
-        1. Header/Nav: Simple anchor navigation.
-        2. Dashboard Hero (Interactive Overview): Three cards defining the conditions. Clicking one updates a central "Concept Viewer" and sets the context for the rest of the page.
-        3. Symptom Radar (Comparative Analysis): A Radar chart allows users to visually overlap symptoms. This was chosen because these 3 conditions share many symptoms (overlap), and a radar chart effectively distinguishes the nuances (e.g., GERD is mostly heartburn, Gastritis is mostly nausea).
-        4. Anatomy Lab (Pathophysiology): An abstract CSS-based interactive diagram. Users hover/click parts (Esophagus, LES, Stomach Lining) to see what goes wrong in each condition. NO SVG used, relying on CSS geometry.
-        5. Treatment Matrix (Decision Support): A tabbed section comparing treatments. 
-        6. Drug Efficacy Plot (Data Viz): A scatter plot comparing Onset of Action vs. Duration of Effect for common drugs. This helps users understand the "Why" behind prescriptions.
-        7. Risk Factor Analyzer: Dynamic bar charts showing the weight of different causes (H. Pylori vs Lifestyle).
-    -->
+/* ─── NOISE OVERLAY ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+}
 
-    <!-- Visualization & Content Choices:
-        1. Condition Selection: Cards -> Updates Global State -> Justification: Sets the mental model for the user.
-        2. Symptom Overlap: Chart.js Radar -> Interaction: Toggle datasets -> Justification: Venn diagrams are hard to make dynamic; Radar captures multi-variable overlap perfectly.
-        3. Drug Comparison: Chart.js Scatter Plot -> Interaction: Tooltip details -> Justification: Visualizes the trade-off between "fast acting" (Antacids) and "long lasting" (PPIs).
-        4. Comparison Table: HTML Grid -> Interaction: Filter by Condition -> Justification: Textual density is needed for specific dosage/side-effect info.
-        5. Anatomy: CSS Shapes -> Interaction: Hover effects -> Justification: Visualizes location of pathology without heavy image assets.
-    -->
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+/* ─── LANGUAGE SYSTEM ─── */
+body.lang-id .en-only { display: none !important; }
+body.lang-en .id-only { display: none !important; }
+
+/* Lang toggle in sidebar */
+.lang-toggle-wrap {
+  padding: 0 1.5rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+.lang-toggle {
+  display: flex;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  width: 100%;
+}
+.lang-btn {
+  flex: 1;
+  padding: 6px 0;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-dim);
+  border: none;
+  background: transparent;
+}
+.lang-btn.active {
+  background: rgba(82,224,165,0.08);
+  color: var(--emerald);
+  border: 1px solid rgba(82,224,165,0.25);
+  border-radius: 5px;
+}
+
+/* ─── LAYOUT ─── */
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── SIDEBAR NAV ─── */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  padding: 2.5rem 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sidebar::-webkit-scrollbar { display: none; }
+
+.sidebar-logo {
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+.sidebar-logo .logo-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--emerald);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+.sidebar-logo h2 {
+  font-family: 'Cormorant Garant', serif;
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: var(--heading);
+  line-height: 1.25;
+}
+
+.nav-section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 1rem 1.5rem 0.4rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1.5rem;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: all 0.2s;
+  position: relative;
+  line-height: 1.4;
+  font-weight: 400;
+}
+.nav-link::before {
+  content: '';
+  width: 3px;
+  height: 0;
+  background: var(--emerald);
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: height 0.2s;
+  border-radius: 0 2px 2px 0;
+}
+.nav-link:hover { color: var(--heading); }
+.nav-link.active {
+  color: var(--emerald);
+  background: rgba(82,224,165,0.04);
+}
+.nav-link.active::before { 
+  height: 70%; 
+  background: var(--emerald);
+}
+
+.nav-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.nav-link.active .nav-dot { background: var(--emerald); }
+
+/* ─── STICKY MOBILE HEADER ─── */
+.mobile-header {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  background: rgba(7, 10, 15, 0.75);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.8rem 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+.mobile-logo .logo-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--emerald);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.hamburger-btn {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 5, 8, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ─── MAIN CONTENT ─── */
+.main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 4rem 3.5rem 6rem;
+  width: 100%;
+}
+
+/* ─── HERO ─── */
+.hero {
+  padding: 2rem 0 3.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 3.5rem;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--emerald);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  background: rgba(82,224,165,0.06);
+  border: 1px solid rgba(82,224,165,0.15);
+  padding: 0.4rem 0.8rem;
+  border-radius: 2px;
+}
+.hero h1 {
+  font-family: 'Cormorant Garant', serif;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 600;
+  color: var(--heading);
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+.hero h1 em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--emerald);
+}
+.hero-subtitle {
+  font-family: 'Cormorant Garant', serif;
+  font-size: 1.25rem;
+  color: var(--text-dim);
+  font-style: italic;
+  font-weight: 300;
+  margin-bottom: 2.5rem;
+  max-width: 650px;
+}
+.hero-meta {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.hero-meta-item {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+.hero-meta-item span { color: var(--text-dim); }
+
+/* ─── STATS GRID ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 0 0 3.5rem;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.stat-card {
+  background: var(--bg2);
+  padding: 1.5rem 1.2rem;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--emerald), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.stat-card:hover::after { opacity: 1; }
+.stat-value {
+  font-family: 'Cormorant Garant', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--heading);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.03em;
+}
+.stat-value .stat-suffix { color: var(--emerald); font-size: 1.5rem; }
+.stat-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+/* ─── SECTION STYLES ─── */
+.section {
+  margin-bottom: 4.5rem;
+  scroll-margin-top: 4rem;
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+.section-title {
+  font-family: 'Cormorant Garant', serif;
+  font-size: 1.85rem;
+  font-weight: 600;
+  color: var(--heading);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-family: 'Cormorant Garant', serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--heading);
+  margin: 1.5rem 0 0.8rem;
+  letter-spacing: -0.01em;
+}
+h3::before {
+  content: '—  ';
+  color: var(--emerald);
+  font-weight: 300;
+}
+
+p { margin-bottom: 1.2rem; font-size: 14.5px; }
+p:last-child { margin-bottom: 0; }
+
+strong {
+  color: var(--heading);
+  font-weight: 500;
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.8rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px -2px rgba(82, 224, 165, 0.02);
+  position: relative;
+}
+.card:hover {
+  border-color: var(--border2);
+  box-shadow: 0 4px 25px -2px rgba(82, 224, 165, 0.08);
+  transform: translateY(-2px);
+}
+
+.grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.border-emerald-glow {
+  border-color: rgba(82, 224, 165, 0.12);
+}
+.border-emerald-glow:hover {
+  border-color: rgba(82, 224, 165, 0.3);
+  box-shadow: 0 4px 25px -2px rgba(82, 224, 165, 0.1);
+}
+.border-amber-glow {
+  border-color: rgba(255, 159, 67, 0.12);
+}
+.border-amber-glow:hover {
+  border-color: rgba(255, 159, 67, 0.3);
+  box-shadow: 0 4px 25px -2px rgba(255, 159, 67, 0.1);
+}
+.border-rose-glow {
+  border-color: rgba(255, 82, 82, 0.12);
+}
+.border-rose-glow:hover {
+  border-color: rgba(255, 82, 82, 0.3);
+  box-shadow: 0 4px 25px -2px rgba(255, 82, 82, 0.1);
+}
+
+/* ─── ANATOMY CONSOLE ─── */
+.anatomy-console {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+.console-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.18em;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  text-align: center;
+}
+.visualizer-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 240px;
+  position: relative;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+/* Esophagus glowing tube */
+.esophagus-tube {
+  width: 34px;
+  height: 100px;
+  background: linear-gradient(90deg, rgba(84, 160, 255, 0.08) 0%, rgba(84, 160, 255, 0.2) 50%, rgba(84, 160, 255, 0.08) 100%);
+  border: 1.5px solid rgba(84, 160, 255, 0.18);
+  border-radius: 12px 12px 0 0;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+}
+.esophagus-tube.active-part {
+  background: linear-gradient(90deg, rgba(255, 159, 67, 0.2) 0%, rgba(255, 159, 67, 0.5) 50%, rgba(255, 159, 67, 0.2) 100%) !important;
+  border-color: var(--amber) !important;
+  box-shadow: 0 0 20px rgba(255, 159, 67, 0.25);
+}
+
+/* LES Sphincter Ring */
+.les-valve-ring {
+  width: 42px;
+  height: 12px;
+  background: rgba(255, 159, 67, 0.15);
+  border: 2px solid rgba(255, 159, 67, 0.35);
+  border-radius: 50%;
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 20;
+}
+.les-valve-ring.active-part {
+  background: var(--amber) !important;
+  border-color: #fff !important;
+  box-shadow: 0 0 20px rgba(255, 159, 67, 0.85);
+  transform: translateX(-50%) scale(1.1);
+}
+
+/* Stomach organic pouch */
+.stomach-pouch {
+  width: 150px;
+  height: 100px;
+  background: linear-gradient(135deg, rgba(255, 82, 82, 0.05) 0%, rgba(255, 82, 82, 0.12) 100%);
+  border: 1.5px solid rgba(255, 82, 82, 0.18);
+  border-radius: 40px 40px 70px 50px / 50px 50px 50px 40px;
+  margin-top: -6px;
+  position: relative;
+  transform: rotate(-8deg);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 5;
+}
+.stomach-pouch.active-part {
+  background: linear-gradient(135deg, rgba(255, 82, 82, 0.15) 0%, rgba(255, 82, 82, 0.3) 100%) !important;
+  border-color: var(--rose) !important;
+  box-shadow: 0 0 25px rgba(255, 82, 82, 0.2);
+  transform: rotate(-8deg) scale(1.02);
+}
+
+/* Lining interior strip */
+.lining-strip {
+  position: absolute;
+  bottom: 12px;
+  left: 25px;
+  width: 95px;
+  height: 5px;
+  background: var(--rose);
+  border-radius: 3px;
+  opacity: 0;
+  box-shadow: 0 0 12px var(--rose);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lining-strip.active-part {
+  opacity: 1 !important;
+  transform: scaleY(1.3);
+}
+
+/* Tags in visualizer */
+.anatomy-tag {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  color: var(--text-dim);
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 0.1rem 0.3rem;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.tag-left {
+  right: 44px;
+  top: 30%;
+}
+.tag-right {
+  left: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.tag-bottom {
+  right: -32px;
+  bottom: 25px;
+}
+.lining-tag {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px;
+  color: var(--rose);
+  background: rgba(255, 82, 82, 0.1);
+  border: 1px solid rgba(255, 82, 82, 0.2);
+  padding: 0px 3px;
+  border-radius: 1px;
+}
+
+/* Console Status Bar */
+.console-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  text-align: center;
+  width: 100%;
+  padding: 0.4rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.05em;
+  background: rgba(82, 224, 165, 0.06);
+  color: var(--emerald);
+}
+
+/* ─── CHART CONTAINERS ─── */
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  min-height: 250px;
+  margin: 1rem 0;
+}
+
+/* ─── PHARMA MECHANISMS ─── */
+.pharma-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.pharma-item {
+  border-left: 2.5px solid var(--border);
+  padding-left: 1.2rem;
+  transition: border-color 0.3s;
+}
+.pharma-item:hover {
+  border-color: var(--blue);
+}
+.pharma-item.teal:hover { border-color: var(--emerald); }
+.pharma-item.blue:hover { border-color: var(--blue); }
+.pharma-item.purple:hover { border-color: var(--purple); }
+
+.pharma-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+.pharma-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.pharma-dot.teal { background: var(--emerald); }
+.pharma-dot.blue { background: var(--blue); }
+.pharma-dot.purple { background: var(--purple); }
+
+.pharma-name {
+  font-family: 'Cormorant Garant', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+/* ─── TABBED PROTOCOLS ─── */
+.flex-tabs {
+  display: flex;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.tab-btn {
+  flex: 1;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-dim);
+  border: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+.tab-btn.tab-active {
+  background: rgba(82, 224, 165, 0.08);
+  color: var(--emerald);
+  border-bottom-color: var(--emerald);
+}
+.tab-btn#tab-alarm.tab-active {
+  background: rgba(255, 82, 82, 0.08);
+  color: var(--rose);
+  border-bottom-color: var(--rose);
+}
+.tab-btn:hover {
+  color: var(--heading);
+  background: rgba(255,255,255,0.015);
+}
+
+.protocol-box {
+  border-radius: 6px;
+  padding: 1.4rem;
+}
+.protocol-box.green {
+  background: rgba(82, 224, 165, 0.04);
+  border: 1px solid rgba(82, 224, 165, 0.12);
+  color: #c9f5e1;
+}
+.protocol-box.blue {
+  background: rgba(84, 160, 255, 0.04);
+  border: 1px solid rgba(84, 160, 255, 0.12);
+  color: #d1e5ff;
+}
+.protocol-box.green h4 { color: var(--emerald); }
+.protocol-box.blue h4 { color: var(--blue); }
+
+.list-styled {
+  list-style: none;
+  margin-top: 0.5rem;
+}
+.list-styled li {
+  position: relative;
+  padding-left: 1rem;
+  margin-bottom: 0.4rem;
+  font-size: 13.5px;
+}
+.list-styled li::before {
+  content: '▪';
+  position: absolute;
+  left: 0;
+  color: var(--emerald);
+  font-size: 10px;
+}
+.protocol-box.blue .list-styled li::before {
+  color: var(--blue);
+}
+
+/* Alarm grid */
+.alarm-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+.alarm-card {
+  border: 1px solid rgba(255, 82, 82, 0.15);
+  background: rgba(255, 82, 82, 0.03);
+  padding: 1.2rem 0.5rem;
+  border-radius: 4px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.alarm-card:hover {
+  background: rgba(255, 82, 82, 0.08);
+  border-color: var(--rose);
+}
+.alarm-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+.alarm-label {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--heading);
+  line-height: 1.35;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 0 1rem;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+.footer-disclaimer {
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed rgba(82, 224, 165, 0.05);
+}
+.footer-copyright {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+}
+.footer-link {
+  color: var(--emerald);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.footer-link:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+/* ─── ENTRANCE ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero, .stats-grid, .section { 
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; 
+}
+.hero { animation-delay: 0.05s; }
+.stats-grid { animation-delay: 0.12s; }
+.section:nth-child(3) { animation-delay: 0.18s; }
+.section:nth-child(4) { animation-delay: 0.24s; }
+
+/* ─── RESPONSIVE MEDIA QUERIES ─── */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
+    z-index: 100;
+    transform: translateX(-100%);
+    background: var(--bg2);
+    box-shadow: 10px 0 30px rgba(0,0,0,0.6);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .main { padding: 2.5rem 1.5rem 4rem; }
+  .stats-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .grid-3col { grid-template-columns: 1fr; }
+  .grid-2col { grid-template-columns: 1fr; }
+  .profile-split { grid-template-columns: 1fr; }
+  .therapy-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+  .alarm-grid { grid-template-columns: 1fr 1fr; }
+  .footer-copyright { flex-direction: column; align-items: flex-start; }
+}
+</style>
 </head>
-<body class="text-gray-800">
+<body class="lang-en">
 
-    <!-- Navigation -->
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center gap-2">
-                        <div class="w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold text-xl">+</div>
-                        <span class="font-bold text-xl text-slate-800 tracking-tight">GastroGuide</span>
-                    </div>
-                </div>
-                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                    <a href="#overview" class="border-transparent text-gray-500 hover:border-sky-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Overview</a>
-                    <a href="#symptoms" class="border-transparent text-gray-500 hover:border-sky-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Symptoms</a>
-                    <a href="#treatments" class="border-transparent text-gray-500 hover:border-sky-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Treatments</a>
-                    <a href="#drugs" class="border-transparent text-gray-500 hover:border-sky-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Drug Comparison</a>
-                </div>
-            </div>
+<div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+
+<!-- sticky mobile top header -->
+<header class="mobile-header">
+  <button class="hamburger-btn" onclick="toggleSidebar()" aria-label="Toggle Navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+  <div class="mobile-logo">
+    <span class="logo-tag en-only">GI Health Guide</span>
+    <span class="logo-tag id-only">Panduan Saluran Cerna</span>
+  </div>
+  <div class="lang-toggle-mobile" style="width: 76px;">
+    <div class="lang-toggle" style="margin-bottom:0;">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('id',this)">ID</button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ─── SIDEBAR ─── -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-tag en-only">Clinical Guide</span>
+      <span class="logo-tag id-only">Panduan Klinis</span>
+      <h2 class="en-only">Upper GI<br>Health</h2>
+      <h2 class="id-only">Kesehatan<br>Gastro Atas</h2>
+      <a href="../index.html" class="en-only" style="font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--emerald); text-decoration:none; margin-top:0.8rem; display:inline-flex; align-items:center; gap:0.4rem; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+        ← Back to Home
+      </a>
+      <a href="../index.html" class="id-only" style="font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--emerald); text-decoration:none; margin-top:0.8rem; display:inline-flex; align-items:center; gap:0.4rem; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+        ← Kembali ke Beranda
+      </a>
+    </div>
+
+    <div class="lang-toggle-wrap">
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+        <button class="lang-btn" onclick="setLang('id',this)">ID</button>
+      </div>
+    </div>
+
+    <span class="nav-section-label en-only">Overview</span>
+    <span class="nav-section-label id-only">Ikhtisar</span>
+    <a class="nav-link active" href="#overview" onclick="closeSidebar()">
+      <span class="nav-dot"></span>
+      <span class="en-only">Diagnostics</span>
+      <span class="id-only">Diagnostik</span>
+    </a>
+
+    <span class="nav-section-label en-only">Symptomatology</span>
+    <span class="nav-section-label id-only">Simtomatologi</span>
+    <a class="nav-link" href="#symptoms" onclick="closeSidebar()">
+      <span class="nav-dot"></span>
+      <span class="en-only">Symptom Overlap</span>
+      <span class="id-only">Tumpang Tindih</span>
+    </a>
+
+    <span class="nav-section-label en-only">Pharmacology</span>
+    <span class="nav-section-label id-only">Farmakologi</span>
+    <a class="nav-link" href="#drugs" onclick="closeSidebar()">
+      <span class="nav-dot"></span>
+      <span class="en-only">Drug Bubble Map</span>
+      <span class="id-only">Peta Gelembung Obat</span>
+    </a>
+
+    <span class="nav-section-label en-only">Protocols</span>
+    <span class="nav-section-label id-only">Protokol</span>
+    <a class="nav-link" href="#treatments" onclick="closeSidebar()">
+      <span class="nav-dot"></span>
+      <span class="en-only">Treatment Plans</span>
+      <span class="id-only">Rencana Perawatan</span>
+    </a>
+  </nav>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="main">
+    
+    <!-- Hero Header -->
+    <header class="hero">
+      <div class="hero-eyebrow">
+        <span class="en-only">✦ Gastroenterology Clinical Guide ✦</span>
+        <span class="id-only">✦ Panduan Klinis Gastroenterologi ✦</span>
+      </div>
+      <h1 class="en-only">Understanding Upper <br><em>GI Disorders</em></h1>
+      <h1 class="id-only">Memahami Gangguan <br><em>Saluran Cerna Atas</em></h1>
+      <p class="hero-subtitle en-only">
+        A comprehensive interactive guide to distinguishing and treating Gastritis, GERD, and Peptic Ulcers.
+      </p>
+      <p class="hero-subtitle id-only">
+        Panduan interaktif komprehensif untuk membedakan dan mengobati Gastritis, GERD, dan Tukak Lambung.
+      </p>
+      
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="en-only">SCOPE:</span>
+          <span class="id-only">CAKUPAN:</span>
+          <span>Gastritis, GERD, &amp; Peptic Ulcers</span>
         </div>
-    </nav>
-
-    <!-- Hero / Definition Section -->
-    <section id="overview" class="py-12 bg-slate-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h1 class="text-4xl font-extrabold text-slate-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-                    Understanding Upper GI Disorders
-                </h1>
-                <p class="mt-5 max-w-xl mx-auto text-xl text-gray-500">
-                    A comprehensive interactive guide to distinguishing and treating Gastritis, GERD, and Peptic Ulcers.
-                </p>
-            </div>
-
-            <!-- Context Intro -->
-            <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 mb-8">
-                <h3 class="text-lg font-semibold text-slate-800 mb-2">How to use this Dashboard</h3>
-                <p class="text-slate-600">
-                    This interactive report breaks down three common, often confused stomach conditions. 
-                    Click the cards below to focus the analysis. Use the "Compare" visualizations to understand symptom overlap and the "Drug Guide" to weigh treatment options.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
-                <!-- Card 1: GERD -->
-                <div onclick="app.selectCondition('gerd')" class="card-hover bg-white overflow-hidden shadow rounded-lg cursor-pointer border-t-4 border-orange-400 group">
-                    <div class="px-4 py-5 sm:p-6">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">GERD</h3>
-                            <span class="text-2xl">🔥</span>
-                        </div>
-                        <p class="mt-2 text-sm text-gray-500">Gastroesophageal Reflux Disease</p>
-                        <p class="mt-3 text-gray-600 text-sm">Chronic acid reflux where stomach acid flows back into the esophagus due to a weak sphincter.</p>
-                        <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                            <span class="text-xs font-semibold text-orange-600 bg-orange-50 px-2 py-1 rounded">Key: Heartburn</span>
-                            <span class="text-sky-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2: Gastritis -->
-                <div onclick="app.selectCondition('gastritis')" class="card-hover bg-white overflow-hidden shadow rounded-lg cursor-pointer border-t-4 border-red-500 group">
-                    <div class="px-4 py-5 sm:p-6">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">Gastritis</h3>
-                            <span class="text-2xl">💢</span>
-                        </div>
-                        <p class="mt-2 text-sm text-gray-500">Inflammation of Stomach Lining</p>
-                        <p class="mt-3 text-gray-600 text-sm">Inflammation, irritation, or erosion of the protective lining of the stomach (the mucosa).</p>
-                        <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                            <span class="text-xs font-semibold text-red-600 bg-red-50 px-2 py-1 rounded">Key: Nausea/Burn</span>
-                            <span class="text-sky-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3: Ulcer -->
-                <div onclick="app.selectCondition('ulcer')" class="card-hover bg-white overflow-hidden shadow rounded-lg cursor-pointer border-t-4 border-purple-500 group">
-                    <div class="px-4 py-5 sm:p-6">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">Peptic Ulcer</h3>
-                            <span class="text-2xl">🕳️</span>
-                        </div>
-                        <p class="mt-2 text-sm text-gray-500">Open Sores</p>
-                        <p class="mt-3 text-gray-600 text-sm">Open sores that develop on the inside lining of the stomach and the upper portion of the small intestine.</p>
-                        <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                            <span class="text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-1 rounded">Key: Gnawing Pain</span>
-                            <span class="text-sky-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="hero-meta-item">
+          <span class="en-only">CLINICAL SOURCE:</span>
+          <span class="id-only">SUMBER KLINIS:</span>
+          <span>ACG / WGO Guidelines</span>
         </div>
-    </section>
+      </div>
+    </header>
 
-    <!-- Anatomy & Pathophysiology (Interactive CSS Shapes) -->
-    <section class="py-10 bg-white border-y border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <!-- Key Statistics Strip -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value"><span class="counter" data-target="70">0</span><span class="stat-suffix">M+</span></div>
+        <div class="stat-label">
+          <span class="en-only">Affected Globally (Prevalence)</span>
+          <span class="id-only">Terdampak Secara Global (Prevalensi)</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><span class="counter" data-target="90">0</span><span class="stat-suffix">%+</span></div>
+        <div class="stat-label">
+          <span class="en-only">Acid Suppression (with PPIs)</span>
+          <span class="id-only">Reduksi Asam Lambung (dengan PPI)</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">3</div>
+        <div class="stat-label">
+          <span class="en-only">Primary Disorders Compared</span>
+          <span class="id-only">Gangguan Utama Dibandingkan</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- How to use box -->
+    <div class="card border-emerald-glow" style="margin-bottom: 3.5rem;">
+      <h3 style="margin-top: 0; margin-bottom: 0.6rem;">
+        <span class="en-only">How to use this Clinical Dashboard</span>
+        <span class="id-only">Cara Menggunakan Dasbor Klinis Ini</span>
+      </h3>
+      <p class="en-only" style="font-size:13.5px; color: var(--text-dim); margin-bottom:0;">
+        This interactive report breaks down three common, often confused stomach conditions. Click the cards below to focus the analysis. Use the "Compare" visualizations to understand symptom overlap and the "Drug Guide" to weigh treatment options.
+      </p>
+      <p class="id-only" style="font-size:13.5px; color: var(--text-dim); margin-bottom:0;">
+        Laporan interaktif ini merinci tiga kondisi lambung yang umum dan sering kali membingungkan. Klik kartu di bawah untuk memfokuskan analisis. Gunakan visualisasi "Bandingkan" untuk memahami tumpang tindih gejala dan "Panduan Obat" untuk mempertimbangkan opsi pengobatan.
+      </p>
+    </div>
+
+    <!-- Section 1: Diagnostics -->
+    <section class="section" id="overview">
+      <div class="section-header">
+        <span class="section-num">01 /</span>
+        <h2 class="section-title">
+          <span class="en-only">Clinical Overview</span>
+          <span class="id-only">Ikhtisar Klinis</span>
+        </h2>
+      </div>
+
+      <div class="grid-3col" style="margin-bottom: 2.5rem;">
+        <!-- Card 1: GERD -->
+        <div onclick="app.selectCondition('gerd')" class="card border-amber-glow" style="cursor: pointer;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <h3 style="margin:0; font-family:'JetBrains Mono', monospace; font-size:16px; color: var(--heading);">GERD</h3>
+            <span style="font-size: 1.4rem;">🔥</span>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom:0.6rem;">Gastroesophageal Reflux Disease</p>
+          <p class="en-only" style="font-size: 12.5px; color: var(--text-dim);">Chronic acid reflux where stomach acid flows back into the esophagus due to a weak sphincter.</p>
+          <p class="id-only" style="font-size: 12.5px; color: var(--text-dim);">Reflux asam kronis di mana asam lambung mengalir kembali ke esofagus karena katup sfingter yang lemah.</p>
+          <div style="margin-top: 1rem; padding-top: 0.6rem; border-top: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+            <span class="en-only" style="font-family:'JetBrains Mono', monospace; font-size:9.5px; color: var(--amber); background: rgba(255,159,67,0.08); padding:0.1rem 0.4rem; border-radius:2px;">Key: Heartburn</span>
+            <span class="id-only" style="font-family:'JetBrains Mono', monospace; font-size:9.5px; color: var(--amber); background: rgba(255,159,67,0.08); padding:0.1rem 0.4rem; border-radius:2px;">Kunci: Heartburn</span>
+            <span style="color:var(--emerald); font-weight:bold;">&rarr;</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Gastritis -->
+        <div onclick="app.selectCondition('gastritis')" class="card border-rose-glow" style="cursor: pointer;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <h3 style="margin:0; font-family:'JetBrains Mono', monospace; font-size:16px; color: var(--heading);">Gastritis</h3>
+            <span style="font-size: 1.4rem;">💢</span>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom:0.6rem;">Inflammation of Stomach Lining</p>
+          <p class="en-only" style="font-size: 12.5px; color: var(--text-dim);">Inflammation, irritation, or erosion of the protective lining of the stomach mucosal layer.</p>
+          <p class="id-only" style="font-size: 12.5px; color: var(--text-dim);">Peradangan, iritasi, atau erosi pada lapisan perlindungan mukosa dinding lambung.</p>
+          <div style="margin-top: 1rem; padding-top: 0.6rem; border-top: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+            <span class="en-only" style="font-family:'JetBrains Mono', monospace; font-size:9.5px; color: var(--rose); background: rgba(255,82,82,0.08); padding:0.1rem 0.4rem; border-radius:2px;">Key: Nausea &amp; Burn</span>
+            <span class="id-only" style="font-family:'JetBrains Mono', monospace; font-size:9.5px; color: var(--rose); background: rgba(255,82,82,0.08); padding:0.1rem 0.4rem; border-radius:2px;">Kunci: Mual &amp; Perih</span>
+            <span style="color:var(--emerald); font-weight:bold;">&rarr;</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Ulcer -->
+        <div onclick="app.selectCondition('ulcer')" class="card border-rose-glow" style="cursor: pointer;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <h3 style="margin:0; font-family:'JetBrains Mono', monospace; font-size:16px; color: var(--heading);">Peptic Ulcer</h3>
+            <span style="font-size: 1.4rem;">🕳️</span>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom:0.6rem;">Mucosal Open Sores</p>
+          <p class="en-only" style="font-size: 12.5px; color: var(--text-dim);">Deep open sores that develop on the inside lining of the stomach and upper duodenum.</p>
+          <p class="id-only" style="font-size: 12.5px; color: var(--text-dim);">Luka terbuka dalam yang berkembang di lapisan dalam lambung dan duodenum atas.</p>
+          <div style="margin-top: 1rem; padding-top: 0.6rem; border-top: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+            <span class="en-only" style="font-family:'JetBrains Mono', monospace; font-size:9.5px; color: var(--rose); background: rgba(255,82,82,0.08); padding:0.1rem 0.4rem; border-radius:2px;">Key: Gnawing Pain</span>
+            <span class="id-only" style="font-family:'JetBrains Mono', monospace; font-size:9.5px; color: var(--rose); background: rgba(255,82,82,0.08); padding:0.1rem 0.4rem; border-radius:2px;">Kunci: Nyeri Tajam</span>
+            <span style="color:var(--emerald); font-weight:bold;">&rarr;</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2col">
+        <!-- Anatomy Diagram -->
+        <div class="card border-emerald-glow" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <div class="anatomy-console">
+            <div class="console-title en-only">ANATOMY PATHOLOGY CONSOLE</div>
+            <div class="console-title id-only">KONSOL PATOLOGI ANATOMI</div>
+            
+            <div class="visualizer-stage">
+              <!-- Esophagus glowing tube -->
+              <div id="anat-esophagus" class="esophagus-tube" onmouseenter="app.highlightAnatomy('esophagus')" onclick="app.highlightAnatomy('esophagus')">
+                <span class="anatomy-tag tag-left en-only">Esophagus</span>
+                <span class="anatomy-tag tag-left id-only">Esofagus</span>
                 
-                <!-- Left: Text Control -->
-                <div>
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Pathophysiology: Where it happens</h2>
-                    <p class="text-gray-600 mb-6">
-                        Understanding the location of the problem is key to diagnosis. Hover over the diagram or click the buttons below to visualize the physiological breakdown.
-                    </p>
-                    <div id="pathology-desc" class="bg-sky-50 p-5 rounded-lg border-l-4 border-sky-500 transition-all duration-300 min-h-[150px]">
-                        <h4 class="font-bold text-sky-800 text-lg mb-2">Select a condition above or hover anatomy</h4>
-                        <p class="text-sky-900">The stomach is a complex organ protected by a mucous lining. Balance between acid secretion and this protective layer is crucial.</p>
-                    </div>
-                    
-                    <div class="mt-6 flex flex-wrap gap-2">
-                        <button onclick="app.highlightAnatomy('esophagus')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm text-gray-700 font-medium">Esophagus</button>
-                        <button onclick="app.highlightAnatomy('les')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm text-gray-700 font-medium">LES Valve</button>
-                        <button onclick="app.highlightAnatomy('stomach')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm text-gray-700 font-medium">Stomach Lining</button>
-                    </div>
+                <!-- LES Valve Sphincter Ring inside esophagus -->
+                <div id="anat-les" class="les-valve-ring" onmouseenter="app.highlightAnatomy('les')" onclick="app.highlightAnatomy('les')">
+                  <span class="anatomy-tag tag-right en-only">LES Valve</span>
+                  <span class="anatomy-tag tag-right id-only">Katup LES</span>
                 </div>
-
-                <!-- Right: Abstract Visualizer -->
-                <div class="relative bg-white p-8 rounded-xl shadow-inner bg-slate-50 flex items-center justify-center border border-dashed border-gray-300">
-                    <div class="relative w-64 h-64">
-                        <!-- Labels -->
-                        <div class="absolute top-0 right-0 text-xs text-gray-400 font-mono">ANATOMY MAP</div>
-                        
-                        <!-- Esophagus -->
-                        <div id="anat-esophagus" class="esophagus group" onmouseenter="app.highlightAnatomy('esophagus')">
-                            <div class="hidden group-hover:block absolute -left-24 top-10 bg-black text-white text-xs p-1 rounded w-20 text-center">Esophagus</div>
-                            <!-- Valve -->
-                            <div id="anat-les" class="les-valve" onmouseenter="app.highlightAnatomy('les')"></div>
-                        </div>
-                        
-                        <!-- Stomach -->
-                        <div id="anat-stomach" class="stomach group" onmouseenter="app.highlightAnatomy('stomach')">
-                             <div class="hidden group-hover:block absolute -right-24 top-10 bg-black text-white text-xs p-1 rounded w-20 text-center">Stomach</div>
-                             <!-- Ulcer/Gastritis Highlight -->
-                             <div id="anat-lining" class="lining"></div>
-                        </div>
-
-                        <!-- Status Indicator -->
-                        <div id="anat-status" class="absolute bottom-0 w-full text-center font-bold text-slate-300 uppercase tracking-widest text-sm">
-                            Normal State
-                        </div>
-                    </div>
+              </div>
+              
+              <!-- Stomach organic curved pouch -->
+              <div id="anat-stomach" class="stomach-pouch" onmouseenter="app.highlightAnatomy('stomach')" onclick="app.highlightAnatomy('stomach')">
+                <span class="anatomy-tag tag-bottom en-only">Stomach</span>
+                <span class="anatomy-tag tag-bottom id-only">Lambung</span>
+                
+                <!-- Stomach lining internal glowing strip -->
+                <div id="anat-lining" class="lining-strip">
+                  <span class="lining-tag en-only">Mucosa</span>
+                  <span class="lining-tag id-only">Mukosa</span>
                 </div>
+              </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Symptom Radar Section -->
-    <section id="symptoms" class="py-12 bg-slate-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">Symptom Comparative Analysis</h2>
-            <div class="mb-6">
-                <p class="text-gray-600 max-w-3xl">
-                    These three conditions share many symptoms, which leads to frequent misdiagnosis. 
-                    The chart below visualizes the <strong>relative intensity and frequency</strong> of symptoms for each condition.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Chart -->
-                <div class="lg:col-span-2 bg-white p-4 rounded-lg shadow sm:p-8">
-                    <div class="chart-container">
-                        <canvas id="symptomRadar"></canvas>
-                    </div>
-                </div>
-
-                <!-- Controls & Insights -->
-                <div class="flex flex-col justify-center space-y-4">
-                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-indigo-500">
-                        <h4 class="font-bold text-gray-800">Distinguishing Factor</h4>
-                        <div id="symptom-insight" class="text-sm text-gray-600 mt-2">
-                            Select a view to see unique identifiers.
-                        </div>
-                    </div>
-
-                    <div class="space-y-2">
-                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-orange-50">
-                            <input type="checkbox" checked onchange="app.toggleDataset(0)" class="form-checkbox h-5 w-5 text-orange-500 rounded border-gray-300 focus:ring-orange-500">
-                            <span class="text-gray-700 font-medium">GERD (Heartburn Focus)</span>
-                        </label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-red-50">
-                            <input type="checkbox" checked onchange="app.toggleDataset(1)" class="form-checkbox h-5 w-5 text-red-500 rounded border-gray-300 focus:ring-red-500">
-                            <span class="text-gray-700 font-medium">Gastritis (Nausea Focus)</span>
-                        </label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-purple-50">
-                            <input type="checkbox" checked onchange="app.toggleDataset(2)" class="form-checkbox h-5 w-5 text-purple-500 rounded border-gray-300 focus:ring-purple-500">
-                            <span class="text-gray-700 font-medium">Ulcer (Pain Focus)</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Treatments & Drugs Comparison -->
-    <section id="drugs" class="py-12 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">Pharmacological Comparison</h2>
             
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <!-- Drug Scatter Plot -->
-                <div>
-                    <div class="mb-4">
-                        <h3 class="text-xl font-semibold text-gray-800">Onset vs. Duration</h3>
-                        <p class="text-sm text-gray-500">Comparing how fast drugs work vs how long they last. <br>Size of bubble = Relative Potency.</p>
-                    </div>
-                    <div class="chart-container bg-slate-50 rounded-lg border border-slate-100 p-2">
-                        <canvas id="drugScatter"></canvas>
-                    </div>
-                </div>
-
-                <!-- Logic Explainer -->
-                <div class="flex flex-col justify-center">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Mechanism of Action</h3>
-                    
-                    <div class="space-y-4">
-                        <div class="group cursor-pointer">
-                            <div class="flex items-center mb-1">
-                                <div class="w-3 h-3 rounded-full bg-teal-400 mr-2"></div>
-                                <h4 class="font-bold text-gray-700 group-hover:text-teal-600 transition">Antacids (e.g., Tums, Maalox)</h4>
-                            </div>
-                            <p class="text-sm text-gray-600 pl-5 border-l-2 border-gray-200 group-hover:border-teal-400">
-                                <strong>Mechanism:</strong> Chemically neutralizes existing stomach acid. <br>
-                                <strong>Best for:</strong> Immediate, short-term symptom relief.
-                            </p>
-                        </div>
-
-                        <div class="group cursor-pointer">
-                            <div class="flex items-center mb-1">
-                                <div class="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-                                <h4 class="font-bold text-gray-700 group-hover:text-blue-600 transition">H2 Blockers (e.g., Famotidine)</h4>
-                            </div>
-                            <p class="text-sm text-gray-600 pl-5 border-l-2 border-gray-200 group-hover:border-blue-500">
-                                <strong>Mechanism:</strong> Blocks histamine receptors on parietal cells, reducing acid production by ~70%. <br>
-                                <strong>Best for:</strong> Maintenance, mild GERD, taken before meals.
-                            </p>
-                        </div>
-
-                        <div class="group cursor-pointer">
-                            <div class="flex items-center mb-1">
-                                <div class="w-3 h-3 rounded-full bg-indigo-600 mr-2"></div>
-                                <h4 class="font-bold text-gray-700 group-hover:text-indigo-600 transition">PPIs (e.g., Omeprazole)</h4>
-                            </div>
-                            <p class="text-sm text-gray-600 pl-5 border-l-2 border-gray-200 group-hover:border-indigo-600">
-                                <strong>Mechanism:</strong> Irreversibly blocks the proton pump (acid secretion engine), reducing acid by >90%. <br>
-                                <strong>Best for:</strong> Severe GERD, Ulcer healing, Gastritis. Slow onset, long duration.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Console Status Bar -->
+            <div id="anat-status" class="console-status">NORMAL HEALTHY STATE // KONDISI SEHAT NORMAL</div>
+          </div>
         </div>
+
+        <!-- Pathology Text Info -->
+        <div class="card border-emerald-glow" style="display: flex; flex-direction: column; justify-content: center;">
+          <h3 style="margin-top: 0; margin-bottom: 0.8rem;">
+            <span class="en-only">Pathophysiology: Where it happens</span>
+            <span class="id-only">Patofisiologi: Di Mana Hal Itu Terjadi</span>
+          </h3>
+          <p class="en-only" style="color: var(--text-dim); margin-bottom:1.5rem;">
+            Understanding the location of the problem is key to diagnosis. Hover over the diagram or click the buttons below to visualize the physiological breakdown.
+          </p>
+          <p class="id-only" style="color: var(--text-dim); margin-bottom:1.5rem;">
+            Memahami lokasi masalah adalah kunci diagnosis. Arahkan kursor ke diagram atau klik tombol di bawah untuk memvisualisasikan gangguan fisiologis.
+          </p>
+
+          <div id="pathology-desc" class="protocol-box green" style="border-left: 4px solid var(--emerald); min-height: 140px; margin-bottom: 1.5rem; transition: all 0.3s;">
+            <h4 class="font-bold text-lg mb-2" style="font-family:'Cormorant Garant', serif;">
+              <span class="en-only">Select a condition above or hover anatomy</span>
+              <span class="id-only">Pilih kondisi di atas atau sorot anatomi</span>
+            </h4>
+            <p class="en-only" style="font-size: 13.5px;">The stomach is a complex organ protected by a mucous lining. Balance between acid secretion and this protective layer is crucial.</p>
+            <p class="id-only" style="font-size: 13.5px;">Lambung adalah organ kompleks yang dilindungi oleh lapisan lendir. Keseimbangan antara sekresi asam dan lapisan pelindung ini sangat krusial.</p>
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+            <button onclick="app.highlightAnatomy('esophagus')" class="lang-btn active" style="padding:4px 10px; border-radius:4px; font-size:10px;">
+              <span class="en-only">Esophagus</span><span class="id-only">Esofagus</span>
+            </button>
+            <button onclick="app.highlightAnatomy('les')" class="lang-btn active" style="padding:4px 10px; border-radius:4px; font-size:10px;">
+              <span class="en-only">LES Valve</span><span class="id-only">Katup LES</span>
+            </button>
+            <button onclick="app.highlightAnatomy('stomach')" class="lang-btn active" style="padding:4px 10px; border-radius:4px; font-size:10px;">
+              <span class="en-only">Stomach Lining</span><span class="id-only">Dinding Lambung</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- Treatment Plan Tabs -->
-    <section id="treatments" class="py-12 bg-slate-50 border-t border-gray-200">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">Integrated Treatment Protocols</h2>
+    <!-- Section 2: Symptoms Radar -->
+    <section class="section" id="symptoms">
+      <div class="section-header">
+        <span class="section-num">02 /</span>
+        <h2 class="section-title">
+          <span class="en-only">Symptom Overlap</span>
+          <span class="id-only">Tumpang Tindih Gejala</span>
+        </h2>
+      </div>
+
+      <p class="en-only" style="margin-bottom: 2rem; max-width: 780px;">
+        These three conditions share many symptoms, which leads to frequent clinical misdiagnosis. The chart below visualizes the <strong>relative intensity and frequency</strong> of symptoms for each condition.
+      </p>
+      <p class="id-only" style="margin-bottom: 2rem; max-width: 780px;">
+        Ketiga kondisi ini memiliki banyak gejala yang sama, yang sering kali menyebabkan kesalahan diagnosis klinis. Grafik di bawah memvisualisasikan <strong>intensitas dan frekuensi relatif</strong> gejala untuk setiap kondisi.
+      </p>
+
+      <div class="grid-2col" style="align-items: center;">
+        <div class="card border-emerald-glow">
+          <div class="chart-container">
+            <canvas id="symptomRadar"></canvas>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:1.2rem;">
+          <div class="card border-emerald-glow" style="border-left:4px solid var(--purple);">
+            <h4 style="font-family:'Cormorant Garant', serif; font-size:1.15rem; font-weight:600; color:var(--heading); margin-bottom:0.4rem;">
+              <span class="en-only">Distinguishing Factor</span>
+              <span class="id-only">Faktor Pembeda Khas</span>
+            </h4>
+            <div id="symptom-insight" style="font-size:13.5px; color: var(--text-dim); line-height:1.6;">
+              <span class="en-only">Select a condition card above to see unique physiological identifiers.</span>
+              <span class="id-only">Pilih kartu kondisi di atas untuk melihat faktor pembeda fisiologis yang unik.</span>
+            </div>
+          </div>
+
+          <!-- Dataset check toggles -->
+          <div class="card border-emerald-glow" style="padding:1.2rem; display:flex; flex-direction:column; gap:0.6rem;">
+            <label style="display:flex; align-items:center; gap:0.8rem; cursor:pointer; font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--amber);">
+              <input type="checkbox" checked onchange="app.toggleDataset(0)" style="accent-color:var(--amber); width:14px; height:14px;">
+              <span class="en-only">GERD (Heartburn Focus)</span>
+              <span class="id-only">GERD (Fokus Dada Terbakar)</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:0.8rem; cursor:pointer; font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--rose);">
+              <input type="checkbox" checked onchange="app.toggleDataset(1)" style="accent-color:var(--rose); width:14px; height:14px;">
+              <span class="en-only">Gastritis (Nausea Focus)</span>
+              <span class="id-only">Gastritis (Fokus Mual/Perih)</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:0.8rem; cursor:pointer; font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--purple);">
+              <input type="checkbox" checked onchange="app.toggleDataset(2)" style="accent-color:var(--purple); width:14px; height:14px;">
+              <span class="en-only">Peptic Ulcer (Pain Focus)</span>
+              <span class="id-only">Tukak Lambung (Fokus Nyeri)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Pharmacology bubble -->
+    <section class="section" id="drugs">
+      <div class="section-header">
+        <span class="section-num">03 /</span>
+        <h2 class="section-title">
+          <span class="en-only">Pharmacological Profile</span>
+          <span class="id-only">Profil Farmakologis</span>
+        </h2>
+      </div>
+
+      <div class="grid-2col" style="align-items: center;">
+        <div class="card border-emerald-glow">
+          <h3 style="margin-top: 0; font-size: 1.15rem; margin-bottom:0.25rem;">
+            <span class="en-only">Onset of Action vs. Duration</span>
+            <span class="id-only">Onset Kerja vs. Durasi Efek</span>
+          </h3>
+          <p class="en-only" style="font-size: 11px; color: var(--text-dim); margin-bottom: 1.5rem;">
+            Comparing how fast drugs work vs how long they last. Bubble size = Relative Potency.
+          </p>
+          <p class="id-only" style="font-size: 11px; color: var(--text-dim); margin-bottom: 1.5rem;">
+            Perbandingan kecepatan kerja obat vs lama efek bertahan. Ukuran gelembung = Potensi Relatif.
+          </p>
+          
+          <div class="chart-container" style="background:var(--bg3); border-radius:6px; border:1px solid var(--border); padding:0.8rem;">
+            <canvas id="drugScatter"></canvas>
+          </div>
+        </div>
+
+        <div class="card border-emerald-glow" style="padding: 2rem;">
+          <h3 style="margin-top: 0; margin-bottom: 1.2rem;">
+            <span class="en-only">Mechanism of Action</span>
+            <span class="id-only">Mekanisme Kerja Obat</span>
+          </h3>
+          
+          <div class="pharma-list">
+            <!-- Class 1 -->
+            <div class="pharma-item teal">
+              <div class="pharma-name-wrap">
+                <div class="pharma-dot teal"></div>
+                <div class="pharma-name">Antacids (e.g., Tums, Maalox)</div>
+              </div>
+              <p class="en-only" style="font-size: 12.5px; color: var(--text-dim); margin-top:0.3rem;">
+                <strong>Mechanism:</strong> Chemically neutralizes existing gastric acid immediately.<br>
+                <strong>Best for:</strong> Immediate, short-term symptom relief.
+              </p>
+              <p class="id-only" style="font-size: 12.5px; color: var(--text-dim); margin-top:0.3rem;">
+                <strong>Mekanisme:</strong> Menetralkan asam lambung yang ada secara kimiawi dengan cepat.<br>
+                <strong>Terbaik untuk:</strong> Pereda gejala instan jangka pendek.
+              </p>
+            </div>
+
+            <!-- Class 2 -->
+            <div class="pharma-item blue">
+              <div class="pharma-name-wrap">
+                <div class="pharma-dot blue"></div>
+                <div class="pharma-name">H2 Blockers (e.g., Famotidine)</div>
+              </div>
+              <p class="en-only" style="font-size: 12.5px; color: var(--text-dim); margin-top:0.3rem;">
+                <strong>Mechanism:</strong> Blocks histamine receptors on parietal cells, reducing acid production by ~70%.<br>
+                <strong>Best for:</strong> Maintenance, mild GERD, taken before meals.
+              </p>
+              <p class="id-only" style="font-size: 12.5px; color: var(--text-dim); margin-top:0.3rem;">
+                <strong>Mekanisme:</strong> Memblokir reseptor histamin pada sel parietal, mengurangi produksi asam sebesar ~70%.<br>
+                <strong>Terbaik untuk:</strong> Pemeliharaan, GERD ringan, diminum sebelum makan.
+              </p>
+            </div>
+
+            <!-- Class 3 -->
+            <div class="pharma-item purple">
+              <div class="pharma-name-wrap">
+                <div class="pharma-dot purple"></div>
+                <div class="pharma-name">PPIs (e.g., Omeprazole)</div>
+              </div>
+              <p class="en-only" style="font-size: 12.5px; color: var(--text-dim); margin-top:0.3rem;">
+                <strong>Mechanism:</strong> Irreversibly blocks the H+/K+ ATPase pump (acid secretion engine), reducing acid by &gt;90%.<br>
+                <strong>Best for:</strong> Severe GERD, Peptic Ulcer healing, Gastritis. Slow onset, long duration.
+              </p>
+              <p class="id-only" style="font-size: 12.5px; color: var(--text-dim); margin-top:0.3rem;">
+                <strong>Mekanisme:</strong> Memblokir pompa H+/K+ ATPase secara ireversibel (mesin sekresi asam), memangkas asam hingga &gt;90%.<br>
+                <strong>Terbaik untuk:</strong> GERD parah, penyembuhan Tukak, Gastritis. Onset lambat, durasi panjang.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Protocols Tabs -->
+    <section class="section" id="treatments">
+      <div class="section-header">
+        <span class="section-num">04 /</span>
+        <h2 class="section-title">
+          <span class="en-only">Treatment Protocols</span>
+          <span class="id-only">Protokol Perawatan</span>
+        </h2>
+      </div>
+
+      <div class="card border-emerald-glow" style="padding: 2.2rem;">
+        <div class="flex-tabs">
+          <button onclick="app.switchTab('lifestyle')" id="tab-lifestyle" class="tab-btn tab-active">
+            <span class="en-only">LIFESTYLE CHANGES</span>
+            <span class="id-only">GAYA HIDUP</span>
+          </button>
+          <button onclick="app.switchTab('medical')" id="tab-medical" class="tab-btn tab-inactive">
+            <span class="en-only">MEDICAL INTERVENTION</span>
+            <span class="id-only">INTERVENSI MEDIS</span>
+          </button>
+          <button onclick="app.switchTab('alarm')" id="tab-alarm" class="tab-btn tab-inactive" style="border-right:none;">
+            <span class="en-only">WARNING SIGNS</span>
+            <span class="id-only">TANDA BAHAYA</span>
+          </button>
+        </div>
+
+        <div style="min-height: 200px;">
+          <!-- Tab Content: Lifestyle -->
+          <div id="content-lifestyle" class="block">
+            <h3 style="margin-top:0; margin-bottom:1rem;">
+              <span class="en-only">First Line of Defense</span>
+              <span class="id-only">Garis Pertahanan Pertama</span>
+            </h3>
             
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                <div class="flex border-b border-gray-200">
-                    <button onclick="app.switchTab('lifestyle')" id="tab-lifestyle" class="flex-1 py-4 text-center font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition-colors tab-active">Lifestyle Changes</button>
-                    <button onclick="app.switchTab('medical')" id="tab-medical" class="flex-1 py-4 text-center font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition-colors">Medical Intervention</button>
-                    <button onclick="app.switchTab('alarm')" id="tab-alarm" class="flex-1 py-4 text-center font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition-colors bg-red-50 text-red-600">Warning Signs</button>
-                </div>
+            <div class="grid-2col">
+              <div class="protocol-box green">
+                <h4 class="font-bold text-sm mb-2" style="font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;">
+                  <span class="en-only">Dietary Triggers</span>
+                  <span class="id-only">Pemicu Makanan</span>
+                </h4>
+                <ul class="list-styled">
+                  <li class="en-only">Avoid caffeine &amp; alcohol (relaxes the lower esophageal sphincter LES).</li>
+                  <li class="id-only">Hindari kafein &amp; alkohol (merilekskan katup sfingter LES bawah).</li>
+                  
+                  <li class="en-only">Limit highly spicy or acidic foods (irritates open ulcers directly).</li>
+                  <li class="id-only">Batasi makanan pedas atau asam (mengiritasi tukak secara langsung).</li>
+                  
+                  <li class="en-only">Reduce high-fat food intake (delays stomach emptying rate).</li>
+                  <li class="id-only">Kurangi konsumsi lemak tinggi (menunda laju pengosongan lambung).</li>
+                </ul>
+              </div>
 
-                <div class="p-8 min-h-[300px]">
-                    <!-- Tab: Lifestyle -->
-                    <div id="content-lifestyle" class="block">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">First Line of Defense</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-green-50 p-4 rounded-lg">
-                                <h4 class="font-bold text-green-800 mb-2">Dietary Triggers</h4>
-                                <ul class="list-disc list-inside text-sm text-green-900 space-y-1">
-                                    <li>Avoid caffeine & alcohol (relaxes LES).</li>
-                                    <li>Limit spicy/acidic foods (irritates ulcers).</li>
-                                    <li>Reduce fatty foods (delays stomach emptying).</li>
-                                </ul>
-                            </div>
-                            <div class="bg-sky-50 p-4 rounded-lg">
-                                <h4 class="font-bold text-sky-800 mb-2">Habit Modification</h4>
-                                <ul class="list-disc list-inside text-sm text-sky-900 space-y-1">
-                                    <li><strong>Elevate head</strong> while sleeping (GERD).</li>
-                                    <li>Stop smoking (Increases acid, lowers healing).</li>
-                                    <li>Wait 3 hours after eating before lying down.</li>
-                                    <li>Weight loss (Reduces abdominal pressure).</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tab: Medical -->
-                    <div id="content-medical" class="hidden">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">Clinical Management</h3>
-                        <div class="space-y-4">
-                            <div class="flex justify-between items-center border-b pb-2">
-                                <span class="font-medium text-gray-700">H. Pylori Eradication (Ulcers/Gastritis)</span>
-                                <span class="text-sm bg-indigo-100 text-indigo-800 py-1 px-3 rounded-full">Triple Therapy (2 Antibiotics + PPI)</span>
-                            </div>
-                            <div class="flex justify-between items-center border-b pb-2">
-                                <span class="font-medium text-gray-700">Acid Suppression (GERD)</span>
-                                <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full">PPIs for 8 weeks</span>
-                            </div>
-                            <div class="flex justify-between items-center border-b pb-2">
-                                <span class="font-medium text-gray-700">Mucosal Protection</span>
-                                <span class="text-sm bg-gray-100 text-gray-800 py-1 px-3 rounded-full">Sucralfate / Bismuth</span>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-4 italic">Note: Always consult a physician. Long term PPI use requires monitoring for nutrient absorption (B12, Magnesium).</p>
-                        </div>
-                    </div>
-
-                    <!-- Tab: Warning Signs -->
-                    <div id="content-alarm" class="hidden">
-                        <h3 class="text-xl font-bold text-red-700 mb-4">⚠️ Red Flag Symptoms (Seek Help)</h3>
-                        <p class="mb-4 text-gray-700">If you experience any of these, it may indicate complications like perforation, bleeding, or cancer.</p>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="border border-red-200 p-3 rounded text-center hover:bg-red-50">
-                                <div class="text-2xl">🩸</div>
-                                <div class="text-sm font-bold text-gray-800">Vomiting Blood</div>
-                            </div>
-                            <div class="border border-red-200 p-3 rounded text-center hover:bg-red-50">
-                                <div class="text-2xl">⚫</div>
-                                <div class="text-sm font-bold text-gray-800">Black/Tarry Stool</div>
-                            </div>
-                            <div class="border border-red-200 p-3 rounded text-center hover:bg-red-50">
-                                <div class="text-2xl">📉</div>
-                                <div class="text-sm font-bold text-gray-800">Unexplained Weight Loss</div>
-                            </div>
-                            <div class="border border-red-200 p-3 rounded text-center hover:bg-red-50">
-                                <div class="text-2xl">🦴</div>
-                                <div class="text-sm font-bold text-gray-800">Trouble Swallowing</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              <div class="protocol-box blue">
+                <h4 class="font-bold text-sm mb-2" style="font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;">
+                  <span class="en-only">Habit Modification</span>
+                  <span class="id-only">Modifikasi Kebiasaan</span>
+                </h4>
+                <ul class="list-styled">
+                  <li class="en-only"><strong>Elevate bed head</strong> while sleeping (neutralizes gravity-based GERD reflux).</li>
+                  <li class="id-only"><strong>Tinggikan kepala kasur</strong> saat tidur (menghambat reflux asam akibat gravitasi).</li>
+                  
+                  <li class="en-only">Cessation of smoking (prevents stomach acid spikes, enhances mucosal healing).</li>
+                  <li class="id-only">Berhenti merokok (mencegah lonjakan asam lambung, mempercepat penyembuhan).</li>
+                  
+                  <li class="en-only">Wait at least 3 hours post-meals before lying down or going to bed.</li>
+                  <li class="id-only">Tunggu minimal 3 jam setelah makan sebelum berbaring atau tidur.</li>
+                  
+                  <li class="en-only">Healthy weight reduction (mitigates intra-abdominal pressure).</li>
+                  <li class="id-only">Penurunan berat badan sehat (mereduksi tekanan intra-abdomen).</li>
+                </ul>
+              </div>
             </div>
-        </div>
-    </section>
+          </div>
 
-    <footer class="bg-slate-800 text-white py-8">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-slate-400 text-sm">
-                <strong>Disclaimer:</strong> This application is for educational purposes only and does not constitute medical advice. <br>
-                Always consult a healthcare professional for diagnosis and treatment.
+          <!-- Tab Content: Medical -->
+          <div id="content-medical" class="hidden">
+            <h3 style="margin-top:0; margin-bottom:1.2rem;">
+              <span class="en-only">Clinical Management</span>
+              <span class="id-only">Manajemen Perawatan Klinis</span>
+            </h3>
+            
+            <div style="display:flex; flex-direction:column; gap:1rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:0.8rem; gap:1rem;">
+                <span style="font-size:14px; font-weight:500; color:var(--heading);">
+                  <span class="en-only">H. Pylori Eradication (Ulcers/Gastritis)</span>
+                  <span class="id-only">Eradikasi H. Pylori (Tukak/Gastritis)</span>
+                </span>
+                <span style="font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--emerald); background:rgba(82,224,165,0.08); border:1px solid rgba(82,224,165,0.18); padding:0.2rem 0.5rem; border-radius:2px; text-align:right;">
+                  <span class="en-only">Triple Therapy (2 Antibiotics + PPI)</span>
+                  <span class="id-only">Terapi Tiga (2 Antibiotik + PPI)</span>
+                </span>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:0.8rem; gap:1rem;">
+                <span style="font-size:14px; font-weight:500; color:var(--heading);">
+                  <span class="en-only">Acid Suppression (GERD/Gastritis)</span>
+                  <span class="id-only">Supresi Asam Lambung (GERD/Gastritis)</span>
+                </span>
+                <span style="font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--blue); background:rgba(84,160,255,0.08); border:1px solid rgba(84,160,255,0.18); padding:0.2rem 0.5rem; border-radius:2px; text-align:right;">
+                  <span class="en-only">PPI Course for 4 to 8 Weeks</span>
+                  <span class="id-only">Siklus PPI selama 4 s/d 8 Minggu</span>
+                </span>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:0.8rem; gap:1rem;">
+                <span style="font-size:14px; font-weight:500; color:var(--heading);">
+                  <span class="en-only">Cytoprotective Mucosal Barriers</span>
+                  <span class="id-only">Pelindung Sitoprotektif Mukosa</span>
+                </span>
+                <span style="font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--text-dim); background:var(--bg3); border:1px solid var(--border); padding:0.2rem 0.5rem; border-radius:2px; text-align:right;">
+                  <span>Sucralfate // Bismuth Subsalicylate</span>
+                </span>
+              </div>
+
+              <p style="font-size:11px; color:var(--text-muted); font-style:italic; margin-top:1.2rem;">
+                <span class="en-only">Note: Always consult a licensed physician. Long-term PPI usage requires periodic screening for nutrient absorption risks (Vitamin B12, Magnesium, Bone Density).</span>
+                <span class="id-only">Catatan: Selalu konsultasikan dengan dokter berlisensi. Penggunaan PPI jangka panjang memerlukan skrining berkala terhadap risiko gangguan penyerapan nutrisi (Vitamin B12, Magnesium, Kepadatan Tulang).</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Tab Content: Warning Signs -->
+          <div id="content-alarm" class="hidden">
+            <h3 style="margin-top:0; margin-bottom:0.5rem; color:var(--rose);">
+              <span class="en-only">⚠️ Red Flag Alarm Symptoms (Seek Immediate Help)</span>
+              <span class="id-only">⚠️ Gejala Bahaya Red Flag (Cari Bantuan Segera)</span>
+            </h3>
+            <p class="en-only" style="font-size:13.5px; color: var(--text-dim); margin-bottom:1.5rem;">
+              If you experience any of these symptoms, it may indicate severe diagnostic complications like internal bleeding, peptic perforation, obstruction, or malignancy.
             </p>
-            <p class="mt-4">&copy; 2026 LoLyeah.github.io. All rights reserved. | <a href="/index.html" class="text-blue-600 hover:underline">Home</a></p>
+            <p class="id-only" style="font-size:13.5px; color: var(--text-dim); margin-bottom:1.5rem;">
+              Jika Anda mengalami salah satu dari gejala-gejala ini, hal itu dapat mengindikasikan komplikasi diagnostik yang parah seperti pendarahan internal, kebocoran tukak, penyumbatan, atau keganasan.
+            </p>
+
+            <div class="alarm-grid">
+              <div class="alarm-card">
+                <div class="alarm-icon">🩸</div>
+                <div class="alarm-label">
+                  <span class="en-only">Vomiting Blood</span>
+                  <span class="id-only">Muntah Darah</span>
+                </div>
+              </div>
+              <div class="alarm-card">
+                <div class="alarm-icon">⚫</div>
+                <div class="alarm-label">
+                  <span class="en-only">Black/Tarry Stool</span>
+                  <span class="id-only">Feses Hitam/Pekat</span>
+                </div>
+              </div>
+              <div class="alarm-card">
+                <div class="alarm-icon">📉</div>
+                <div class="alarm-label">
+                  <span class="en-only">Unexplained Weight Loss</span>
+                  <span class="id-only">Berat Badan Turun Cepat</span>
+                </div>
+              </div>
+              <div class="alarm-card">
+                <div class="alarm-icon">🦴</div>
+                <div class="alarm-label">
+                  <span class="en-only">Dysphagia (Difficulty Swallowing)</span>
+                  <span class="id-only">Disfagia (Sulit Menelan)</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-disclaimer">
+        <p class="en-only">
+          <strong>Disclaimer:</strong> This application is for educational purposes only and does not constitute medical advice. Always consult a healthcare professional for diagnosis and treatment.
+        </p>
+        <p class="id-only">
+          <strong>Disclaimer:</strong> Aplikasi ini hanya untuk tujuan pendidikan dan bukan merupakan nasihat medis. Selalu konsultasikan dengan profesional kesehatan untuk diagnosis dan perawatan.
+        </p>
+      </div>
+      <div class="footer-copyright">
+        <span>&copy; 2026 LoLyeah.github.io. All rights reserved.</span>
+        <span>
+          <a href="../index.html" class="footer-link">Home</a> | 
+          <a href="../topics/audhd-clinical-analysis.html" class="footer-link">AuDHD</a> | 
+          <a href="../topics/bottle-up.html" class="footer-link">Emotion Suppression</a>
+        </span>
+      </div>
     </footer>
 
-    <script>
-        // --- DATA STORE ---
-        const appData = {
-            conditions: {
-                gerd: {
-                    name: "GERD",
-                    color: "orange",
-                    desc: "A mechanical failure of the Lower Esophageal Sphincter (LES). Acid splashes up.",
-                    pathology: {
-                        part: "les",
-                        text: "The valve (LES) becomes weak or relaxes inappropriately, allowing acid to escape."
-                    },
-                    insight: "GERD is primarily characterized by retrosternal burning (Heartburn) and regurgitation."
-                },
-                gastritis: {
-                    name: "Gastritis",
-                    color: "red",
-                    desc: "Inflammation of the stomach lining. Can be acute or chronic.",
-                    pathology: {
-                        part: "stomach",
-                        text: "The mucous barrier is damaged by H. pylori, NSAIDs, or alcohol, causing inflammation."
-                    },
-                    insight: "Gastritis often presents with nausea, vomiting, and a feeling of fullness."
-                },
-                ulcer: {
-                    name: "Peptic Ulcer",
-                    color: "purple",
-                    desc: "A breach in the mucosal lining >5mm. Deeper than gastritis.",
-                    pathology: {
-                        part: "stomach",
-                        text: "Acid eats through the lining creating an open sore, often due to H. pylori infection."
-                    },
-                    insight: "Ulcers typically cause gnawing abdominal pain that changes with eating."
+  </main>
+</div>
+
+<script>
+// ─── DATA STORE ───
+const appData = {
+    conditions: {
+        gerd: {
+            name: "GERD",
+            color: "amber",
+            desc: {
+                en: "A mechanical failure of the Lower Esophageal Sphincter (LES). Acid splashes up.",
+                id: "Kegagalan mekanis pada Katup Sfingter Esophageal Bawah (LES). Asam lambung naik ke atas."
+            },
+            pathology: {
+                part: "les",
+                text: {
+                    en: "The valve (LES) becomes weak or relaxes inappropriately, allowing acid to escape.",
+                    id: "Katup LES melemah atau merileks secara tidak tepat, membiarkan asam keluar ke kerongkongan."
                 }
             },
-            symptoms: {
-                labels: ['Heartburn', 'Nausea/Vomiting', 'Abdominal Pain', 'Bloating', 'Regurgitation', 'Loss of Appetite'],
-                datasets: [
-                    {
-                        label: 'GERD',
-                        data: [95, 20, 30, 40, 90, 10],
-                        borderColor: 'rgba(249, 115, 22, 1)',
-                        backgroundColor: 'rgba(249, 115, 22, 0.2)',
-                    },
-                    {
-                        label: 'Gastritis',
-                        data: [30, 85, 60, 80, 20, 70],
-                        borderColor: 'rgba(239, 68, 68, 1)',
-                        backgroundColor: 'rgba(239, 68, 68, 0.2)',
-                    },
-                    {
-                        label: 'Ulcer',
-                        data: [40, 60, 95, 50, 20, 50],
-                        borderColor: 'rgba(168, 85, 247, 1)',
-                        backgroundColor: 'rgba(168, 85, 247, 0.2)',
-                    }
-                ]
-            },
-            drugs: [
-                { x: 5, y: 1, r: 8, label: 'Antacids (Tums)', type: 'Antacid', color: '#2dd4bf' },
-                { x: 30, y: 4, r: 12, label: 'Rantidine (Zantac)', type: 'H2 Blocker', color: '#3b82f6' },
-                { x: 45, y: 10, r: 12, label: 'Famotidine (Pepcid)', type: 'H2 Blocker', color: '#3b82f6' },
-                { x: 60, y: 24, r: 20, label: 'Omeprazole (Prilosec)', type: 'PPI', color: '#4f46e5' },
-                { x: 75, y: 24, r: 20, label: 'Esomeprazole (Nexium)', type: 'PPI', color: '#4f46e5' },
-                { x: 120, y: 24, r: 18, label: 'Lansoprazole (Prevacid)', type: 'PPI', color: '#4f46e5' }
-            ]
-        };
-
-        // --- APP CONTROLLER ---
-        const app = {
-            charts: {},
-            
-            init: function() {
-                this.initRadarChart();
-                this.initScatterChart();
-                // Default highight
-                this.highlightAnatomy('default');
-            },
-
-            selectCondition: function(key) {
-                const data = appData.conditions[key];
-                
-                // Update Pathology Text
-                const pathologyBox = document.getElementById('pathology-desc');
-                pathologyBox.innerHTML = `
-                    <h4 class="font-bold text-${data.color}-800 text-lg mb-2">${data.name} Selected</h4>
-                    <p class="text-${data.color}-900">${data.desc}</p>
-                    <p class="mt-2 text-sm text-${data.color}-700 border-t border-${data.color}-200 pt-2"><strong>Pathology:</strong> ${data.pathology.text}</p>
-                `;
-                pathologyBox.className = `bg-${data.color}-50 p-5 rounded-lg border-l-4 border-${data.color}-500 transition-all duration-300 min-h-[150px]`;
-
-                // Trigger Anatomy Visual
-                this.highlightAnatomy(data.pathology.part);
-
-                // Update Insight
-                document.getElementById('symptom-insight').innerText = data.insight;
-                
-                // Scroll to pathology
-                document.getElementById('pathology-desc').scrollIntoView({behavior: 'smooth', block: 'center'});
-            },
-
-            highlightAnatomy: function(part) {
-                // Reset styling
-                document.getElementById('anat-esophagus').classList.remove('active-part');
-                document.getElementById('anat-stomach').classList.remove('active-part');
-                document.getElementById('anat-les').classList.remove('active-part');
-                document.getElementById('anat-lining').style.opacity = '0';
-                
-                const statusEl = document.getElementById('anat-status');
-
-                if (part === 'esophagus') {
-                    document.getElementById('anat-esophagus').classList.add('active-part');
-                    statusEl.innerText = "Focus: Esophageal Tube";
-                    statusEl.className = "absolute bottom-0 w-full text-center font-bold text-red-400 uppercase tracking-widest text-sm";
-                } else if (part === 'les') {
-                    document.getElementById('anat-les').classList.add('active-part');
-                    statusEl.innerText = "Focus: Sphincter Valve";
-                    statusEl.className = "absolute bottom-0 w-full text-center font-bold text-orange-500 uppercase tracking-widest text-sm";
-                } else if (part === 'stomach') {
-                    document.getElementById('anat-stomach').classList.add('active-part');
-                    document.getElementById('anat-lining').style.opacity = '1';
-                    statusEl.innerText = "Focus: Mucosal Lining";
-                    statusEl.className = "absolute bottom-0 w-full text-center font-bold text-red-600 uppercase tracking-widest text-sm";
-                } else {
-                    statusEl.innerText = "Normal State";
-                    statusEl.className = "absolute bottom-0 w-full text-center font-bold text-slate-300 uppercase tracking-widest text-sm";
-                }
-            },
-
-            toggleDataset: function(index) {
-                const ci = this.charts.radar;
-                const meta = ci.getDatasetMeta(index);
-                meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
-                ci.update();
-            },
-
-            switchTab: function(tabName) {
-                // Hide all content
-                ['lifestyle', 'medical', 'alarm'].forEach(t => {
-                    document.getElementById(`content-${t}`).classList.add('hidden');
-                    document.getElementById(`tab-${t}`).classList.remove('tab-active', 'border-bottom-2', 'border-sky-500', 'text-sky-600');
-                    document.getElementById(`tab-${t}`).classList.add('text-gray-500');
-                });
-
-                // Show selected
-                document.getElementById(`content-${tabName}`).classList.remove('hidden');
-                document.getElementById(`tab-${tabName}`).classList.add('tab-active');
-                document.getElementById(`tab-${tabName}`).classList.remove('text-gray-500');
-            },
-
-            initRadarChart: function() {
-                const ctx = document.getElementById('symptomRadar').getContext('2d');
-                this.charts.radar = new Chart(ctx, {
-                    type: 'radar',
-                    data: appData.symptoms,
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        elements: {
-                            line: { borderWidth: 3 }
-                        },
-                        scales: {
-                            r: {
-                                angleLines: { display: true },
-                                suggestedMin: 0,
-                                suggestedMax: 100,
-                                ticks: { display: false } // Hide numbers for cleaner look
-                            }
-                        },
-                        plugins: {
-                            legend: { position: 'bottom' }
-                        }
-                    }
-                });
-            },
-
-            initScatterChart: function() {
-                const ctx = document.getElementById('drugScatter').getContext('2d');
-                this.charts.scatter = new Chart(ctx, {
-                    type: 'bubble',
-                    data: {
-                        datasets: [{
-                            label: 'Drugs',
-                            data: appData.drugs,
-                            backgroundColor: (context) => context.raw ? context.raw.color : '#ccc',
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const raw = context.raw;
-                                        return `${raw.label}: Onset ${raw.x}m, Duration ${raw.y}hr`;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                title: { display: true, text: 'Onset Speed (Minutes - Lower is Faster)' },
-                                min: 0,
-                                max: 130
-                            },
-                            y: {
-                                title: { display: true, text: 'Duration of Effect (Hours)' },
-                                min: 0,
-                                max: 26
-                            }
-                        }
-                    }
-                });
+            insight: {
+                en: "GERD is primarily characterized by retrosternal burning (Heartburn) and acid regurgitation.",
+                id: "GERD terutama ditandai oleh sensasi dada terbakar (Heartburn) dan regurgitasi asam."
             }
-        };
+        },
+        gastritis: {
+            name: "Gastritis",
+            color: "rose",
+            desc: {
+                en: "Inflammation of the stomach mucosal lining. Can be acute or chronic.",
+                id: "Peradangan pada dinding mukosa lambung. Dapat bersifat akut maupun kronis."
+            },
+            pathology: {
+                part: "stomach",
+                text: {
+                    en: "The protective mucosal barrier is damaged by H. pylori, NSAIDs, or alcohol, causing acute inflammation.",
+                    id: "Lapisan pelindung mukosa dirusak oleh infeksi H. pylori, obat anti-inflamasi (NSAID), atau alkohol, memicu peradangan."
+                }
+            },
+            insight: {
+                en: "Gastritis often presents with nausea, vomiting, indigestion, and a burning upper abdominal fullness.",
+                id: "Gastritis sering kali muncul dengan gejala mual, muntah, gangguan pencernaan, dan rasa penuh terbakar di perut atas."
+            }
+        },
+        ulcer: {
+            name: "Peptic Ulcer",
+            color: "rose",
+            desc: {
+                en: "A deep breach in the mucosal lining (>5mm). Significantly deeper and more severe than gastritis.",
+                id: "Luka robekan yang dalam pada lapisan dinding mukosa (>5mm). Jauh lebih dalam dan parah dibandingkan gastritis."
+            },
+            pathology: {
+                part: "lining",
+                text: {
+                    en: "Acid eats through the mucosal lining creating an open sore, often due to H. pylori or heavy NSAID usage.",
+                    id: "Asam lambung mengikis lapisan mukosa menciptakan luka terbuka, sering kali akibat infeksi H. pylori atau penggunaan NSAID kronis."
+                }
+            },
+            insight: {
+                en: "Peptic ulcers typically cause a gnawing, empty stomach pain that changes temporarily after eating.",
+                id: "Tukak lambung secara khas menimbulkan rasa nyeri menggerogoti saat lambung kosong yang mereda sementara setelah makan."
+            }
+        }
+    },
+    symptoms: {
+        labels: ['Heartburn', 'Nausea/Vomiting', 'Abdominal Pain', 'Bloating', 'Regurgitation', 'Loss of Appetite'],
+        datasets: [
+            {
+                label: 'GERD',
+                data: [95, 20, 30, 40, 90, 10],
+                borderColor: '#ff9f43',
+                backgroundColor: 'rgba(255, 159, 67, 0.12)',
+                borderWidth: 2,
+                pointBackgroundColor: '#ff9f43'
+            },
+            {
+                label: 'Gastritis',
+                data: [30, 85, 60, 80, 20, 70],
+                borderColor: '#ff5252',
+                backgroundColor: 'rgba(255, 82, 82, 0.12)',
+                borderWidth: 2,
+                pointBackgroundColor: '#ff5252'
+            },
+            {
+                label: 'Ulcer',
+                data: [40, 60, 95, 50, 20, 50],
+                borderColor: '#a855f7',
+                backgroundColor: 'rgba(168, 85, 247, 0.12)',
+                borderWidth: 2,
+                pointBackgroundColor: '#a855f7'
+            }
+        ]
+    },
+    drugs: [
+        { x: 5, y: 1, r: 8, label: 'Antacids (Tums)', type: 'Antacid', color: '#52e0a5' },
+        { x: 30, y: 4, r: 12, label: 'Ranitidine (Zantac)', type: 'H2 Blocker', color: '#54a0ff' },
+        { x: 45, y: 10, r: 12, label: 'Famotidine (Pepcid)', type: 'H2 Blocker', color: '#54a0ff' },
+        { x: 60, y: 24, r: 20, label: 'Omeprazole (Prilosec)', type: 'PPI', color: '#a855f7' },
+        { x: 75, y: 24, r: 20, label: 'Esomeprazole (Nexium)', type: 'PPI', color: '#a855f7' },
+        { x: 120, y: 24, r: 18, label: 'Lansoprazole (Prevacid)', type: 'PPI', color: '#a855f7' }
+    ]
+};
 
-        // Initialize on load
-        window.addEventListener('DOMContentLoaded', () => {
-            app.init();
+const chartLabels = {
+  radar: {
+    en: ['Heartburn', 'Nausea/Vomiting', 'Abdominal Pain', 'Bloating', 'Regurgitation', 'Loss of Appetite'],
+    id: ['Rasa Terbakar', 'Mual/Muntah', 'Nyeri Perut', 'Kembung', 'Regurgitasi', 'Nafsu Makan Turun']
+  }
+};
+
+// ─── APP CONTROLLER ───
+const app = {
+    charts: {},
+    
+    init: function() {
+        this.initRadarChart();
+        this.initScatterChart();
+        this.highlightAnatomy('default');
+    },
+
+    selectCondition: function(key) {
+        const data = appData.conditions[key];
+        const lang = document.body.classList.contains('lang-id') ? 'id' : 'en';
+        
+        // Update Pathology Text Box
+        const pathologyBox = document.getElementById('pathology-desc');
+        pathologyBox.innerHTML = `
+            <h4 class="font-bold text-lg mb-2" style="color:var(--${data.color}); font-family:'Cormorant Garant', serif;">
+              ${data.name} ${lang === 'en' ? 'Selected' : 'Terpilih'}
+            </h4>
+            <p style="font-size:13.5px; color:var(--text);">${data.desc[lang]}</p>
+            <p class="mt-2 text-sm pt-2" style="border-top:1px solid var(--border); color:var(--text-dim);">
+              <strong>Pathology // Patologi:</strong> ${data.pathology.text[lang]}
+            </p>
+        `;
+        
+        // Dynamic border color styling
+        pathologyBox.style.borderColor = `var(--${data.color})`;
+        pathologyBox.style.background = `rgba(${data.color === 'amber' ? '255,159,67' : '255,82,82'}, 0.04)`;
+
+        // Highlight anatomy
+        this.highlightAnatomy(data.pathology.part);
+
+        // Update Insight
+        const insightBox = document.getElementById('symptom-insight');
+        insightBox.innerHTML = `<strong>${lang === 'en' ? 'Distinguishing Sign' : 'Tanda Khas'}:</strong> ${data.insight[lang]}`;
+        
+        // Scroll to description
+        document.getElementById('pathology-desc').scrollIntoView({behavior: 'smooth', block: 'nearest'});
+    },
+
+    highlightAnatomy: function(part) {
+        // Reset active state classes
+        document.getElementById('anat-esophagus').classList.remove('active-part');
+        document.getElementById('anat-stomach').classList.remove('active-part');
+        document.getElementById('anat-les').classList.remove('active-part');
+        document.getElementById('anat-lining').classList.remove('active-part');
+        
+        const statusEl = document.getElementById('anat-status');
+        const lang = document.body.classList.contains('lang-id') ? 'id' : 'en';
+
+        if (part === 'esophagus') {
+            document.getElementById('anat-esophagus').classList.add('active-part');
+            statusEl.innerText = lang === 'en' ? "FOCUS: ESOPHAGEAL TUBE" : "FOKUS: SALURAN ESOFAGUS";
+            statusEl.style.color = "var(--blue)";
+            statusEl.style.background = "rgba(84, 160, 255, 0.08)";
+        } else if (part === 'les') {
+            document.getElementById('anat-les').classList.add('active-part');
+            document.getElementById('anat-esophagus').classList.add('active-part');
+            statusEl.innerText = lang === 'en' ? "FOCUS: SPHINCTER VALVE (LES)" : "FOKUS: KATUP SFINGTER (LES)";
+            statusEl.style.color = "var(--amber)";
+            statusEl.style.background = "rgba(255, 159, 67, 0.08)";
+        } else if (part === 'stomach') {
+            document.getElementById('anat-stomach').classList.add('active-part');
+            statusEl.innerText = lang === 'en' ? "FOCUS: MUCOSAL WALL" : "FOKUS: DINDING MUKOSA";
+            statusEl.style.color = "var(--rose)";
+            statusEl.style.background = "rgba(255, 82, 82, 0.08)";
+        } else if (part === 'lining') {
+            document.getElementById('anat-stomach').classList.add('active-part');
+            document.getElementById('anat-lining').classList.add('active-part');
+            statusEl.innerText = lang === 'en' ? "FOCUS: ERODED MUCOSA / ULCER" : "FOKUS: MUKOSA EROSI / TUKAK";
+            statusEl.style.color = "var(--rose)";
+            statusEl.style.background = "rgba(255, 82, 82, 0.08)";
+        } else {
+            statusEl.innerText = lang === 'en' ? "NORMAL HEALTHY STATE" : "KONDISI SEHAT NORMAL";
+            statusEl.style.color = "var(--emerald)";
+            statusEl.style.background = "rgba(82, 224, 165, 0.06)";
+        }
+    },
+
+    toggleDataset: function(index) {
+        const ci = this.charts.radar;
+        const meta = ci.getDatasetMeta(index);
+        meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+        ci.update();
+    },
+
+    switchTab: function(tabName) {
+        // Toggle tab highlights
+        ['lifestyle', 'medical', 'alarm'].forEach(t => {
+            document.getElementById(`content-${t}`).classList.add('hidden');
+            document.getElementById(`tab-${t}`).classList.remove('tab-active');
+            document.getElementById(`tab-${t}`).classList.add('tab-inactive');
         });
 
-    </script>
+        // Show active content
+        document.getElementById(`content-${tabName}`).classList.remove('hidden');
+        document.getElementById(`tab-${tabName}`).classList.add('tab-active');
+        document.getElementById(`tab-${tabName}`).classList.remove('tab-inactive');
+    },
+
+    initRadarChart: function() {
+        const ctx = document.getElementById('symptomRadar').getContext('2d');
+        this.charts.radar = new Chart(ctx, {
+            type: 'radar',
+            data: appData.symptoms,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(82, 224, 165, 0.04)' },
+                        grid: { color: 'rgba(82, 224, 165, 0.04)' },
+                        pointLabels: {
+                            color: '#7a8496',
+                            font: { family: 'JetBrains Mono', size: 10 }
+                        },
+                        ticks: { display: false, min: 0, max: 100 }
+                    }
+                },
+                plugins: {
+                    tooltip: commonTooltipConfig.plugins.tooltip,
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#7a8496',
+                            font: { family: 'JetBrains Mono', size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+    },
+
+    initScatterChart: function() {
+        const ctx = document.getElementById('drugScatter').getContext('2d');
+        this.charts.scatter = new Chart(ctx, {
+            type: 'bubble',
+            data: {
+                datasets: [{
+                    label: 'Drugs',
+                    data: appData.drugs,
+                    backgroundColor: (context) => context.raw ? context.raw.color : '#ccc',
+                    borderColor: '#0c1017',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(11, 14, 20, 0.95)',
+                        titleColor: '#eef1f8',
+                        titleFont: { family: 'JetBrains Mono', size: 12, weight: 'bold' },
+                        bodyColor: '#d8dde8',
+                        bodyFont: { family: 'JetBrains Mono', size: 11 },
+                        padding: 10,
+                        borderColor: 'rgba(82, 224, 165, 0.15)',
+                        borderWidth: 1,
+                        cornerRadius: 4,
+                        callbacks: {
+                            label: function(context) {
+                                const raw = context.raw;
+                                const lang = document.body.classList.contains('lang-id') ? 'id' : 'en';
+                                const onsetStr = lang === 'en' ? 'Onset' : 'Reaksi';
+                                const durStr = lang === 'en' ? 'Duration' : 'Durasi';
+                                return `${raw.label}: ${onsetStr} ${raw.x}m, ${durStr} ${raw.y}hr`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(82, 224, 165, 0.04)' },
+                        title: { 
+                            display: true, 
+                            text: 'Onset Speed (Minutes - Lower is Faster)',
+                            color: '#7a8496',
+                            font: { family: 'JetBrains Mono', size: 10 }
+                        },
+                        ticks: {
+                            color: '#7a8496',
+                            font: { family: 'JetBrains Mono', size: 9 }
+                        },
+                        min: 0,
+                        max: 130
+                    },
+                    y: {
+                        grid: { color: 'rgba(82, 224, 165, 0.04)' },
+                        title: { 
+                            display: true, 
+                            text: 'Duration of Effect (Hours)',
+                            color: '#7a8496',
+                            font: { family: 'JetBrains Mono', size: 10 }
+                        },
+                        ticks: {
+                            color: '#7a8496',
+                            font: { family: 'JetBrains Mono', size: 9 }
+                        },
+                        min: 0,
+                        max: 26
+                    }
+                }
+            }
+        });
+    }
+};
+
+// ─── LANGUAGE TOGGLE ───
+function setLang(lang, btn) {
+  document.body.className = 'lang-' + lang;
+  
+  // Sync the language toggles in desktop and mobile
+  document.querySelectorAll('.lang-toggle .lang-btn').forEach(b => {
+    const isMatch = (lang === 'en' && b.textContent.trim() === 'EN')
+                 || (lang === 'id' && b.textContent.trim() === 'ID');
+    b.classList.toggle('active', isMatch);
+  });
+
+  // Update Radar Chart Labels
+  if (window.symptomChartInstance) {
+    window.symptomChartInstance.data.labels = chartLabels.radar[lang].map(wrapChartLabel);
+    window.symptomChartInstance.update();
+  }
+  
+  // Update Scatter Axes Titles
+  if (window.scatterChartInstance) {
+    window.scatterChartInstance.options.scales.x.title.text = lang === 'en' 
+      ? 'Onset Speed (Minutes - Lower is Faster)' 
+      : 'Kecepatan Reaksi (Menit - Lebih Rendah Lebih Cepat)';
+    window.scatterChartInstance.options.scales.y.title.text = lang === 'en'
+      ? 'Duration of Effect (Hours)'
+      : 'Durasi Efek Obat (Jam)';
+    window.scatterChartInstance.update();
+  }
+
+  // Refresh active anatomy status text
+  const activeCondition = document.querySelector('.active-part');
+  if (activeCondition) {
+     const currentId = activeCondition.id;
+     let part = 'default';
+     if (currentId.includes('les')) part = 'les';
+     else if (currentId.includes('lining')) part = 'lining';
+     else if (currentId.includes('stomach')) part = 'stomach';
+     else if (currentId.includes('esophagus')) part = 'esophagus';
+     app.highlightAnatomy(part);
+  } else {
+     app.highlightAnatomy('default');
+  }
+}
+
+// ─── MOBILE DRAWER TOGGLE ───
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('backdrop');
+  sidebar.classList.toggle('open');
+  backdrop.classList.toggle('open');
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('backdrop');
+  sidebar.classList.remove('open');
+  backdrop.classList.remove('open');
+}
+
+// ─── SCROLLSPY ───
+const sections = document.querySelectorAll('.section');
+const navLinks = document.querySelectorAll('.nav-link');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -75% 0px' });
+
+sections.forEach(s => { if (s.id) observer.observe(s); });
+
+// ─── COUNTER ANIMATION ───
+const counters = document.querySelectorAll('.counter');
+const counterObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = +el.dataset.target;
+      let current = 0;
+      const step = target / 40;
+      const interval = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = Math.floor(current);
+        if (current >= target) {
+          el.textContent = target;
+          clearInterval(interval);
+        }
+      }, 20);
+      counterObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => counterObs.observe(c));
+
+// ─── CHART.JS UTILITIES ───
+function wrapChartLabel(label) {
+  if (label.length <= 14) return label;
+  let words = label.split(' ');
+  let lines = [];
+  let currentLine = '';
+  for (let word of words) {
+    if ((currentLine + word).length > 14) {
+      if (currentLine) lines.push(currentLine.trim());
+      currentLine = word + ' ';
+    } else {
+      currentLine += word + ' ';
+    }
+  }
+  if (currentLine) lines.push(currentLine.trim());
+  return lines;
+}
+
+const commonTooltipConfig = {
+  plugins: {
+    tooltip: {
+      backgroundColor: 'rgba(11, 14, 20, 0.95)',
+      titleColor: '#eef1f8',
+      titleFont: { family: 'JetBrains Mono', size: 12, weight: 'bold' },
+      bodyColor: '#d8dde8',
+      bodyFont: { family: 'JetBrains Mono', size: 11 },
+      padding: 10,
+      borderColor: 'rgba(82, 224, 165, 0.15)',
+      borderWidth: 1,
+      cornerRadius: 4,
+      displayColors: true,
+      boxWidth: 8,
+      boxHeight: 8,
+      boxPadding: 4
+    }
+  }
+};
+
+// Initialize App
+window.addEventListener('DOMContentLoaded', () => {
+    app.init();
+    
+    // Bind chart instances globally to window
+    window.symptomChartInstance = app.charts.radar;
+    window.scatterChartInstance = app.charts.scatter;
+});
+</script>
 </body>
 </html>
