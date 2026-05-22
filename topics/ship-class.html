@@ -2553,6 +2553,14 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          layout: {
+            padding: {
+              top: 25,
+              bottom: 10,
+              left: 15,
+              right: 40
+            }
+          },
           plugins: {
             legend: {
               position: 'bottom',
@@ -2570,10 +2578,23 @@
                   const y = rawData.y !== undefined ? rawData.y : 0;
                   const endurance = isId ? (rawData.enduranceId || '') : (rawData.enduranceEn || '');
                   
-                  const labelEn = `${shipName} (${categoryLabel}): Disp: ${x.toLocaleString()} Tons, Range: ${y.toLocaleString()} nm, Endurance: ${endurance}`;
-                  const labelId = `${shipName} (${categoryLabel}): Tonase: ${x.toLocaleString()} Ton, Jarak: ${y.toLocaleString()} nm, Daya Tahan: ${endurance}`;
-                  
-                  return isId ? labelId : labelEn;
+                  if (isId) {
+                    return [
+                      `${shipName}`,
+                      `• Kategori: ${categoryLabel}`,
+                      `• Tonase: ${x.toLocaleString()} Ton`,
+                      `• Jarak Jangkau: ${y.toLocaleString()} nm`,
+                      `• Daya Tahan: ${endurance}`
+                    ];
+                  } else {
+                    return [
+                      `${shipName}`,
+                      `• Category: ${categoryLabel}`,
+                      `• Disp: ${x.toLocaleString()} Tons`,
+                      `• Range: ${y.toLocaleString()} NM`,
+                      `• Endurance: ${endurance}`
+                    ];
+                  }
                 }
               }
             },
@@ -2592,7 +2613,9 @@
                 text: chartTranslations.en.displacementBubble.xAxis,
                 color: '#7082a6'
               },
-              grid: { color: 'rgba(0, 240, 255, 0.03)' }
+              grid: { color: 'rgba(0, 240, 255, 0.03)' },
+              min: 100,
+              max: 150000
             },
             y: {
               title: {
@@ -2602,7 +2625,7 @@
               },
               grid: { color: 'rgba(0, 240, 255, 0.03)' },
               min: 0,
-              max: 22000
+              max: 25000
             }
           }
         }
