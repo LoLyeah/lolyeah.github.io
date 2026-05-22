@@ -53,6 +53,44 @@ body::before {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
+/* ─── LANGUAGE SYSTEM ─── */
+body.lang-id .en-only { display: none !important; }
+body.lang-en .id-only { display: none !important; }
+
+/* Lang toggle in sidebar */
+.lang-toggle-wrap {
+  padding: 0 1.5rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+.lang-toggle {
+  display: flex;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  width: 100%;
+}
+.lang-btn {
+  flex: 1;
+  padding: 6px 0;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-dim);
+  border: none;
+  background: transparent;
+}
+.lang-btn.active {
+  background: rgba(110,207,255,0.08);
+  color: var(--cyan);
+  border: 1px solid rgba(110,207,255,0.25);
+  border-radius: 5px;
+}
+
 /* ─── LAYOUT ─── */
 .layout {
   display: grid;
@@ -77,9 +115,9 @@ body::before {
 .sidebar::-webkit-scrollbar { display: none; }
 
 .sidebar-logo {
-  padding: 0 1.5rem 2rem;
+  padding: 0 1.5rem 1.5rem;
   border-bottom: 1px solid var(--border);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 .sidebar-logo .logo-tag {
   font-family: 'JetBrains Mono', monospace;
@@ -791,48 +829,127 @@ footer {
 }
 </style>
 </head>
-<body>
+<body class="lang-en">
 
 <div class="layout">
 
 <!-- ─── SIDEBAR ─── -->
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <span class="logo-tag">Clinical Analysis</span>
-    <h2>AuDHD<br>Reference</h2>
-    <a href="/index.html" style="font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--cyan); text-decoration:none; margin-top:0.8rem; display:inline-flex; align-items:center; gap:0.4rem; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+    <span class="logo-tag en-only">Clinical Analysis</span>
+    <span class="logo-tag id-only">Analisis Klinis</span>
+    <h2 class="en-only">AuDHD<br>Reference</h2>
+    <h2 class="id-only">Referensi<br>AuDHD</h2>
+    <a href="/index.html" class="en-only" style="font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--cyan); text-decoration:none; margin-top:0.8rem; display:inline-flex; align-items:center; gap:0.4rem; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
       ← Back to Home
+    </a>
+    <a href="/index.html" class="id-only" style="font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--cyan); text-decoration:none; margin-top:0.8rem; display:inline-flex; align-items:center; gap:0.4rem; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+      ← Kembali ke Beranda
     </a>
   </div>
 
-  <span class="nav-section-label">Overview</span>
-  <a class="nav-link active" href="#intro"><span class="nav-dot"></span>Introduction</a>
-  <a class="nav-link" href="#prevalence"><span class="nav-dot"></span>Prevalence</a>
+  <div class="lang-toggle-wrap">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN · English</button>
+      <button class="lang-btn" onclick="setLang('id',this)">ID · Indonesia</button>
+    </div>
+  </div>
 
-  <span class="nav-section-label">Etiology</span>
-  <a class="nav-link" href="#genetics"><span class="nav-dot"></span>Genetics</a>
-  <a class="nav-link" href="#neurobiology"><span class="nav-dot"></span>Neurobiology &amp; DMN</a>
+  <span class="nav-section-label en-only">Overview</span>
+  <span class="nav-section-label id-only">Ikhtisar</span>
+  <a class="nav-link active" href="#intro">
+    <span class="nav-dot"></span>
+    <span class="en-only">Introduction</span>
+    <span class="id-only">Pengantar</span>
+  </a>
+  <a class="nav-link" href="#prevalence">
+    <span class="nav-dot"></span>
+    <span class="en-only">Prevalence</span>
+    <span class="id-only">Prevalensi</span>
+  </a>
 
-  <span class="nav-section-label">Phenomenology</span>
-  <a class="nav-link" href="#phenomenology"><span class="nav-dot"></span>Cognitive Tug-of-War</a>
-  <a class="nav-link" href="#sensory"><span class="nav-dot"></span>Sensory Processing</a>
-  <a class="nav-link" href="#rsd"><span class="nav-dot"></span>RSD</a>
+  <span class="nav-section-label en-only">Etiology</span>
+  <span class="nav-section-label id-only">Etiologi</span>
+  <a class="nav-link" href="#genetics">
+    <span class="nav-dot"></span>
+    <span class="en-only">Genetics</span>
+    <span class="id-only">Genetika</span>
+  </a>
+  <a class="nav-link" href="#neurobiology">
+    <span class="nav-dot"></span>
+    <span class="en-only">Neurobiology &amp; DMN</span>
+    <span class="id-only">Neurobiologi &amp; DMN</span>
+  </a>
 
-  <span class="nav-section-label">Psychosocial</span>
-  <a class="nav-link" href="#empathy"><span class="nav-dot"></span>Double Empathy Problem</a>
-  <a class="nav-link" href="#masking"><span class="nav-dot"></span>Masking &amp; Burnout</a>
+  <span class="nav-section-label en-only">Phenomenology</span>
+  <span class="nav-section-label id-only">Fenomenologi</span>
+  <a class="nav-link" href="#phenomenology">
+    <span class="nav-dot"></span>
+    <span class="en-only">Cognitive Tug-of-War</span>
+    <span class="id-only">Tarik-Ulur Kognitif</span>
+  </a>
+  <a class="nav-link" href="#sensory">
+    <span class="nav-dot"></span>
+    <span class="en-only">Sensory Processing</span>
+    <span class="id-only">Pemrosesan Sensorik</span>
+  </a>
+  <a class="nav-link" href="#rsd">
+    <span class="nav-dot"></span>
+    <span class="en-only">RSD</span>
+    <span class="id-only">RSD</span>
+  </a>
 
-  <span class="nav-section-label">Diagnosis</span>
-  <a class="nav-link" href="#diagnostic"><span class="nav-dot"></span>Assessment Principles</a>
-  <a class="nav-link" href="#instruments"><span class="nav-dot"></span>Instruments</a>
+  <span class="nav-section-label en-only">Psychosocial</span>
+  <span class="nav-section-label id-only">Psikososial</span>
+  <a class="nav-link" href="#empathy">
+    <span class="nav-dot"></span>
+    <span class="en-only">Double Empathy Problem</span>
+    <span class="id-only">Masalah Empati Ganda</span>
+  </a>
+  <a class="nav-link" href="#masking">
+    <span class="nav-dot"></span>
+    <span class="en-only">Masking &amp; Burnout</span>
+    <span class="id-only">Masking &amp; Burnout</span>
+  </a>
 
-  <span class="nav-section-label">Treatment</span>
-  <a class="nav-link" href="#pharmacology"><span class="nav-dot"></span>Pharmacology</a>
-  <a class="nav-link" href="#therapy"><span class="nav-dot"></span>Psychotherapy</a>
-  <a class="nav-link" href="#ot"><span class="nav-dot"></span>Occupational Therapy</a>
+  <span class="nav-section-label en-only">Diagnosis</span>
+  <span class="nav-section-label id-only">Diagnosis</span>
+  <a class="nav-link" href="#diagnostic">
+    <span class="nav-dot"></span>
+    <span class="en-only">Assessment Principles</span>
+    <span class="id-only">Prinsip Penilaian</span>
+  </a>
+  <a class="nav-link" href="#instruments">
+    <span class="nav-dot"></span>
+    <span class="en-only">Instruments</span>
+    <span class="id-only">Instrumen</span>
+  </a>
 
-  <span class="nav-section-label">Summary</span>
-  <a class="nav-link" href="#conclusion"><span class="nav-dot"></span>Conclusion</a>
+  <span class="nav-section-label en-only">Treatment</span>
+  <span class="nav-section-label id-only">Pengobatan</span>
+  <a class="nav-link" href="#pharmacology">
+    <span class="nav-dot"></span>
+    <span class="en-only">Pharmacology</span>
+    <span class="id-only">Farmakologi</span>
+  </a>
+  <a class="nav-link" href="#therapy">
+    <span class="nav-dot"></span>
+    <span class="en-only">Psychotherapy</span>
+    <span class="id-only">Psikoterapi</span>
+  </a>
+  <a class="nav-link" href="#ot">
+    <span class="nav-dot"></span>
+    <span class="en-only">Occupational Therapy</span>
+    <span class="id-only">Terapi Okupasi</span>
+  </a>
+
+  <span class="nav-section-label en-only">Summary</span>
+  <span class="nav-section-label id-only">Ringkasan</span>
+  <a class="nav-link" href="#conclusion">
+    <span class="nav-dot"></span>
+    <span class="en-only">Conclusion</span>
+    <span class="id-only">Kesimpulan</span>
+  </a>
 </nav>
 
 <!-- ─── MAIN ─── -->
@@ -842,14 +959,20 @@ footer {
   <div class="hero" id="intro">
     <div class="hero-eyebrow">
       <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg>
-      Comprehensive Clinical &amp; Neurobiological Analysis
+      <span class="en-only">Comprehensive Clinical &amp; Neurobiological Analysis</span>
+      <span class="id-only">Analisis Klinis &amp; Neurobiologis Komprehensif</span>
     </div>
-    <h1>The Convergence of<br><em>ASD &amp; ADHD</em></h1>
-    <p class="hero-subtitle">Understanding the complex intersection of Autism Spectrum Disorder and Attention-Deficit/Hyperactivity Disorder — the AuDHD phenotype.</p>
+    <h1 class="en-only">The Convergence of<br><em>ASD &amp; ADHD</em></h1>
+    <h1 class="id-only">Konvergensi dari<br><em>ASD &amp; ADHD</em></h1>
+    <p class="hero-subtitle en-only">Understanding the complex intersection of Autism Spectrum Disorder and Attention-Deficit/Hyperactivity Disorder — the AuDHD phenotype.</p>
+    <p class="hero-subtitle id-only">Memahami persimpangan kompleks antara Gangguan Spektrum Autisme (ASD) dan Gangguan Pemusatan Perhatian/Hiperaktivitas (ADHD) — fenotipe AuDHD.</p>
     <div class="hero-meta">
-      <div class="hero-meta-item">DSM-5 <span>2013 Dual Diagnosis Permitted</span></div>
-      <div class="hero-meta-item">Research Domain <span>Genomics · Neuroimaging · Clinical</span></div>
-      <div class="hero-meta-item">Evidence Level <span>NICE / SIGN Guidelines</span></div>
+      <div class="hero-meta-item en-only">DSM-5 <span>2013 Dual Diagnosis Permitted</span></div>
+      <div class="hero-meta-item id-only">DSM-5 <span>Diagnosis Ganda Diizinkan (2013)</span></div>
+      <div class="hero-meta-item en-only">Research Domain <span>Genomics · Neuroimaging · Clinical</span></div>
+      <div class="hero-meta-item id-only">Domain Penelitian <span>Genomika · Neuroimaging · Klinis</span></div>
+      <div class="hero-meta-item en-only">Evidence Level <span>NICE / SIGN Guidelines</span></div>
+      <div class="hero-meta-item id-only">Tingkat Bukti <span>Panduan NICE / SIGN</span></div>
     </div>
   </div>
 
@@ -857,15 +980,22 @@ footer {
   <div class="stats-grid" id="prevalence">
     <div class="stat-card">
       <div class="stat-value"><span class="counter" data-target="50">0</span><span class="stat-suffix">%</span></div>
-      <div class="stat-label">of children with ADHD meet ASD diagnostic criteria (up to 83% in some community samples)</div>
+      <div class="stat-label en-only">of children with ADHD meet ASD diagnostic criteria (up to 83% in some community samples)</div>
+      <div class="stat-label id-only">dari anak-anak dengan ADHD memenuhi kriteria diagnostik ASD (hingga 83% pada beberapa sampel komunitas)</div>
     </div>
     <div class="stat-card">
       <div class="stat-value"><span class="counter" data-target="80">0</span><span class="stat-suffix">%</span></div>
-      <div class="stat-label">of children with ASD exhibit clinically significant ADHD characteristics</div>
+      <div class="stat-label">
+        <span class="en-only">of children with ASD exhibit clinically significant ADHD characteristics</span>
+        <span class="id-only">dari anak-anak dengan ASD menunjukkan karakteristik ADHD yang signifikan secara klinis</span>
+      </div>
     </div>
     <div class="stat-card">
       <div class="stat-value"><span class="counter" data-target="72">0</span><span class="stat-suffix">%</span></div>
-      <div class="stat-label">shared genetic overlap by ages 18–33, up from 27% at age 2</div>
+      <div class="stat-label">
+        <span class="en-only">shared genetic overlap by ages 18–33, up from 27% at age 2</span>
+        <span class="id-only">tumpang tindih genetik bersama pada usia 18–33 tahun, meningkat dari 27% pada usia 2 tahun</span>
+      </div>
     </div>
   </div>
 
@@ -873,66 +1003,92 @@ footer {
   <section class="section" id="genetics">
     <div class="section-header">
       <span class="section-num">01</span>
-      <h2 class="section-title">Etiological Foundations</h2>
+      <h2 class="section-title en-only">Etiological Foundations</h2>
+      <h2 class="section-title id-only">Fondasi Etiologi</h2>
     </div>
 
-    <p>The exceptionally high frequency of co-occurrence between ADHD and ASD cannot be attributed to overlapping behavioral diagnostic criteria alone. The prevailing scientific consensus, supported by extensive genomic sequencing, posits that both conditions share a deep, complex genetic etiology and common underlying neurobiological mechanisms.</p>
+    <p class="en-only">The exceptionally high frequency of co-occurrence between ADHD and ASD cannot be attributed to overlapping behavioral diagnostic criteria alone. The prevailing scientific consensus, supported by extensive genomic sequencing, posits that both conditions share a deep, complex genetic etiology and common underlying neurobiological mechanisms.</p>
+    <p class="id-only">Frekuensi ko-kejadian yang sangat tinggi antara ADHD dan ASD tidak dapat diatribusikan pada kriteria diagnostik perilaku yang tumpang tindih saja. Konsensus ilmiah yang berlaku saat ini, didukung oleh sekuensing genomik yang ekstensif, menyatakan bahwa kedua kondisi tersebut berbagi etiologi genetik yang dalam dan kompleks serta mekanisme neurobiologis dasar yang sama.</p>
 
     <div class="pill-row">
-      <span class="pill cyan">ADHD Heritability ~76%</span>
-      <span class="pill purple">ASD Heritability &gt;90%</span>
-      <span class="pill gold">Genetic Correlation r = 0.36</span>
+      <span class="pill cyan en-only">ADHD Heritability ~76%</span>
+      <span class="pill cyan id-only">Hereditabilitas ADHD ~76%</span>
+      <span class="pill purple en-only">ASD Heritability &gt;90%</span>
+      <span class="pill purple id-only">Hereditabilitas ASD &gt;90%</span>
+      <span class="pill gold en-only">Genetic Correlation r = 0.36</span>
+      <span class="pill gold id-only">Korelasi Genetik r = 0.36</span>
     </div>
 
-    <p>Both conditions demonstrate exceptionally high heritability. Twin and familial aggregation studies consistently reveal that ADHD and ASD originate from partly similar, shared familial and genetic factors — individuals diagnosed with ADHD, as well as their siblings, exhibit a statistically higher presence of ASD symptoms compared to neurotypical controls.</p>
+    <p class="en-only">Both conditions demonstrate exceptionally high heritability. Twin and familial aggregation studies consistently reveal that ADHD and ASD originate from partly similar, shared familial and genetic factors — individuals diagnosed with ADHD, as well as their siblings, exhibit a statistically higher presence of ASD symptoms compared to neurotypical controls.</p>
+    <p class="id-only">Kedua kondisi menunjukkan hereditabilitas yang sangat tinggi. Studi kembar dan agregasi familial secara konsisten mengungkapkan bahwa ADHD dan ASD berasal dari faktor familial dan genetik yang sebagian serupa dan terbagi — individu yang didiagnosis dengan ADHD, serta saudara kandung mereka, menunjukkan keberadaan gejala ASD yang secara statistik lebih tinggi dibandingkan dengan kontrol neurotipikal.</p>
 
-    <h3>Temporal Genetic Overlap</h3>
-    <p>Twin studies demonstrate that shared genetic influence is not static, but increases across the human lifespan — suggesting overlapping CNS maturation mechanisms.</p>
+    <h3 class="en-only">Temporal Genetic Overlap</h3>
+    <h3 class="id-only">Tumpang Tindih Genetik Temporal</h3>
+    <p class="en-only">Twin studies demonstrate that shared genetic influence is not static, but increases across the human lifespan — suggesting overlapping CNS maturation mechanisms.</p>
+    <p class="id-only">Studi kembar menunjukkan bahwa pengaruh genetik bersama tidak bersifat statis, melainkan meningkat sepanjang rentang hidup manusia — menunjukkan mekanisme pematangan sistem saraf pusat (SSP) yang tumpang tindih.</p>
 
     <div class="overlap-timeline" id="overlapTimeline">
       <div class="overlap-row">
-        <span class="overlap-age">Age 2</span>
+        <span class="overlap-age en-only">Age 2</span>
+        <span class="overlap-age id-only">Usia 2</span>
         <div class="overlap-bar-wrap"><div class="overlap-bar-fill" data-width="27"></div></div>
         <span class="overlap-pct-label">27%</span>
       </div>
       <div class="overlap-row">
-        <span class="overlap-age">Age 8</span>
+        <span class="overlap-age en-only">Age 8</span>
+        <span class="overlap-age id-only">Usia 8</span>
         <div class="overlap-bar-wrap"><div class="overlap-bar-fill" data-width="50"></div></div>
         <span class="overlap-pct-label">50%</span>
       </div>
       <div class="overlap-row">
-        <span class="overlap-age">Ages 18–33</span>
+        <span class="overlap-age en-only">Ages 18–33</span>
+        <span class="overlap-age id-only">Usia 18–33</span>
         <div class="overlap-bar-wrap"><div class="overlap-bar-fill" data-width="72"></div></div>
         <span class="overlap-pct-label">72%</span>
       </div>
     </div>
 
-    <h3>Pleiotropic Genes</h3>
+    <h3 class="en-only">Pleiotropic Genes</h3>
+    <h3 class="id-only">Gen Pleiotropik</h3>
     <div class="gene-overlap">
       <div class="gene-col">
-        <div class="gene-col-label">ASD Pathway</div>
-        <div class="gene-item">Excitatory synapse organization</div>
-        <div class="gene-item">Social communication circuits</div>
-        <div class="gene-item">Restrictive behavioral patterns</div>
-        <div class="gene-item">CNV risk variants</div>
+        <div class="gene-col-label en-only">ASD Pathway</div>
+        <div class="gene-col-label id-only">Jalur ASD</div>
+        <div class="gene-item en-only">Excitatory synapse organization</div>
+        <div class="gene-item id-only">Organisasi sinapsis eksitatorik</div>
+        <div class="gene-item en-only">Social communication circuits</div>
+        <div class="gene-item id-only">Sirkuit komunikasi sosial</div>
+        <div class="gene-item en-only">Restrictive behavioral patterns</div>
+        <div class="gene-item id-only">Pola perilaku restriktif</div>
+        <div class="gene-item en-only">CNV risk variants</div>
+        <div class="gene-item id-only">Varian risiko CNV</div>
       </div>
       <div class="gene-col center">
-        <div class="overlap-label">Shared</div>
+        <div class="overlap-label en-only">Shared</div>
+        <div class="overlap-label id-only">Bersama</div>
         <div class="overlap-pct">SHANK2<br><span style="font-size:1.2rem;color:var(--text-dim)">DRD2</span></div>
-        <div class="overlap-sub">Pleiotropic genes</div>
+        <div class="overlap-sub en-only">Pleiotropic genes</div>
+        <div class="overlap-sub id-only">Gen pleiotropik</div>
       </div>
       <div class="gene-col">
-        <div class="gene-col-label">ADHD Pathway</div>
-        <div class="gene-item">Dopamine receptor D2 function</div>
-        <div class="gene-item">Reward processing circuits</div>
-        <div class="gene-item">Inattention &amp; impulsivity</div>
-        <div class="gene-item">Protein-truncating mutations</div>
+        <div class="gene-col-label en-only">ADHD Pathway</div>
+        <div class="gene-col-label id-only">Jalur ADHD</div>
+        <div class="gene-item en-only">Dopamine receptor D2 function</div>
+        <div class="gene-item id-only">Fungsi reseptor dopamin D2</div>
+        <div class="gene-item en-only">Reward processing circuits</div>
+        <div class="gene-item id-only">Sirkuit pemrosesan reward</div>
+        <div class="gene-item en-only">Inattention &amp; impulsivity</div>
+        <div class="gene-item id-only">Inatensi &amp; impulsivitas</div>
+        <div class="gene-item en-only">Protein-truncating mutations</div>
+        <div class="gene-item id-only">Mutasi pemotongan protein</div>
       </div>
     </div>
 
     <div class="callout">
-      <div class="callout-label">Key Finding</div>
-      <p>The SHANK2 gene governs excitatory synapse structure; DRD2 dictates dopamine receptor D2 functionality critical for attention and reward. Single nucleotide polymorphisms (SNPs) and CNVs acting across both conditions confirm deeply intersecting molecular pathways.</p>
+      <div class="callout-label en-only">Key Finding</div>
+      <div class="callout-label id-only">Temuan Kunci</div>
+      <p class="en-only">The SHANK2 gene governs excitatory synapse structure; DRD2 dictates dopamine receptor D2 functionality critical for attention and reward. Single nucleotide polymorphisms (SNPs) and CNVs acting across both conditions confirm deeply intersecting molecular pathways.</p>
+      <p class="id-only">Gen SHANK2 mengatur struktur sinapsis eksitatorik; DRD2 mendikte fungsionalitas reseptor dopamin D2 yang penting untuk perhatian dan penghargaan (reward). Single nucleotide polymorphisms (SNPs) dan CNVs yang bekerja pada kedua kondisi mengonfirmasi jalur molekuler yang saling bersilangan secara mendalam.</p>
     </div>
   </section>
 
@@ -940,34 +1096,50 @@ footer {
   <section class="section" id="neurobiology">
     <div class="section-header">
       <span class="section-num">02</span>
-      <h2 class="section-title">Default Mode Network</h2>
+      <h2 class="section-title en-only">Default Mode Network</h2>
+      <h2 class="section-title id-only">Default Mode Network</h2>
     </div>
 
-    <p>Researchers have extensively utilized resting-state fMRI (rfMRI) to analyze intrinsic brain networks, with primary focus on the <strong>Default Mode Network (DMN)</strong> — deeply implicated in self-referential thought, social cognition, and executive functioning.</p>
+    <p class="en-only">Researchers have extensively utilized resting-state fMRI (rfMRI) to analyze intrinsic brain networks, with primary focus on the <strong>Default Mode Network (DMN)</strong> — deeply implicated in self-referential thought, social cognition, and executive functioning.</p>
+    <p class="id-only">Para peneliti telah memanfaatkan resting-state fMRI (rfMRI) secara ekstensif untuk menganalisis jaringan otak intrinsik, dengan fokus utama pada <strong>Default Mode Network (DMN)</strong> — yang terlibat mendalam dalam pemikiran referensi diri, kognisi sosial, dan fungsi eksekutif.</p>
 
     <div class="conflict-diagram">
       <div class="conflict-side left">
-        <div class="conflict-label">ASD — DMN Pattern</div>
-        <div class="conflict-trait">Mixed hyperconnectivity &amp; hypoconnectivity</div>
-        <div class="conflict-trait">Correlates with restricted/repetitive behaviors</div>
-        <div class="conflict-trait">Disengagement in social processing</div>
-        <div class="conflict-trait">Highly variable clinical presentation</div>
+        <div class="conflict-label en-only">ASD — DMN Pattern</div>
+        <div class="conflict-label id-only">ASD — Pola DMN</div>
+        <div class="conflict-trait en-only">Mixed hyperconnectivity &amp; hypoconnectivity</div>
+        <div class="conflict-trait id-only">Hiperkonektivitas &amp; hipokonektivitas campuran</div>
+        <div class="conflict-trait en-only">Correlates with restricted/repetitive behaviors</div>
+        <div class="conflict-trait id-only">Berkorelasi dengan perilaku restriktif/repetitif</div>
+        <div class="conflict-trait en-only">Disengagement in social processing</div>
+        <div class="conflict-trait id-only">Disorientasi/pelepasan dalam pemrosesan sosial</div>
+        <div class="conflict-trait en-only">Highly variable clinical presentation</div>
+        <div class="conflict-trait id-only">Presentasi klinis yang sangat bervariasi</div>
       </div>
       <div class="conflict-side right">
-        <div class="conflict-label">ADHD — DMN Pattern</div>
-        <div class="conflict-trait">Increased connectivity in prefrontal regions</div>
-        <div class="conflict-trait">Elevated right IFG &amp; bilateral mPFC connectivity</div>
-        <div class="conflict-trait">Delayed DMN–TPN segregation</div>
-        <div class="conflict-trait">Supports "developmental delay hypothesis"</div>
+        <div class="conflict-label en-only">ADHD — DMN Pattern</div>
+        <div class="conflict-label id-only">ADHD — Pola DMN</div>
+        <div class="conflict-trait en-only">Increased connectivity in prefrontal regions</div>
+        <div class="conflict-trait id-only">Peningkatan konektivitas di wilayah prefrontal</div>
+        <div class="conflict-trait en-only">Elevated right IFG &amp; bilateral mPFC connectivity</div>
+        <div class="conflict-trait id-only">Peningkatan konektivitas IFG kanan &amp; mPFC bilateral</div>
+        <div class="conflict-trait en-only">Delayed DMN–TPN segregation</div>
+        <div class="conflict-trait id-only">Keterlambatan segregasi DMN–TPN</div>
+        <div class="conflict-trait en-only">Supports "developmental delay hypothesis"</div>
+        <div class="conflict-trait id-only">Mendukung "hipotesis keterlambatan perkembangan"</div>
       </div>
     </div>
 
-    <h3>Shared Neurobiological Dysfunction</h3>
-    <p>Using datasets ABIDE-I and ADHD-200 with the Dosenbach-160 atlas, researchers identified shared structural aberrations in connectivity between the <strong>vlPFC, mPFC, anterior cingulate cortex (ACC), and inferior temporal lobe</strong>.</p>
+    <h3 class="en-only">Shared Neurobiological Dysfunction</h3>
+    <h3 class="id-only">Disfungsi Neurobiologis Bersama</h3>
+    <p class="en-only">Using datasets ABIDE-I and ADHD-200 with the Dosenbach-160 atlas, researchers identified shared structural aberrations in connectivity between the <strong>vlPFC, mPFC, anterior cingulate cortex (ACC), and inferior temporal lobe</strong>.</p>
+    <p class="id-only">Menggunakan kumpulan data ABIDE-I dan ADHD-200 dengan atlas Dosenbach-160, para peneliti mengidentifikasi aberasi struktural bersama dalam konektivitas antara <strong>vlPFC, mPFC, anterior cingulate cortex (ACC), dan lobus temporal inferior</strong>.</p>
 
     <div class="callout purple">
-      <div class="callout-label">RDoC Alignment</div>
-      <p>The ADHD-Combined (ADHD-C) subtype and ASD groups present strikingly similar average DMN functional connectivity patterns. These findings support the NIMH Research Domain Criteria (RDoC) approach — mental disorders exist on a biological continuum, not as strictly separated clinical entities.</p>
+      <div class="callout-label en-only">RDoC Alignment</div>
+      <div class="callout-label id-only">Penyelarasan RDoC</div>
+      <p class="en-only">The ADHD-Combined (ADHD-C) subtype and ASD groups present strikingly similar average DMN functional connectivity patterns. These findings support the NIMH Research Domain Criteria (RDoC) approach — mental disorders exist on a biological continuum, not as strictly separated clinical entities.</p>
+      <p class="id-only">Subtipe ADHD-Combined (ADHD-C) dan kelompok ASD menunjukkan pola konektivitas fungsional rata-rata DMN yang sangat mirip. Temuan ini mendukung pendekatan NIMH Research Domain Criteria (RDoC) — bahwa gangguan mental berada pada kontinum biologis, bukan sebagai entitas klinis yang terpisah secara kaku.</p>
     </div>
   </section>
 
@@ -975,34 +1147,51 @@ footer {
   <section class="section" id="phenomenology">
     <div class="section-header">
       <span class="section-num">03</span>
-      <h2 class="section-title">Clinical Phenomenology</h2>
+      <h2 class="section-title en-only">Clinical Phenomenology</h2>
+      <h2 class="section-title id-only">Fenomenologi Klinis</h2>
     </div>
 
-    <p>The clinical presentation of comorbid ASD and ADHD is not merely the additive sum of two discrete diagnostic profiles. It manifests as a highly complex, interactive, and often <em>contradictory</em> cognitive, sensory, and behavioral landscape.</p>
+    <p class="en-only">The clinical presentation of comorbid ASD and ADHD is not merely the additive sum of two discrete diagnostic profiles. It manifests as a highly complex, interactive, and often <em>contradictory</em> cognitive, sensory, and behavioral landscape.</p>
+    <p class="id-only">Presentasi klinis dari komorbiditas ASD dan ADHD bukan sekadar penjumlahan aditif dari dua profil diagnostik yang terpisah. Kondisi ini bermanifestasi sebagai lanskap kognitif, sensorik, dan perilaku yang sangat kompleks, interaktif, dan sering kali <em>saling bertentangan</em>.</p>
 
-    <h3>The Cognitive Tug-of-War</h3>
+    <h3 class="en-only">The Cognitive Tug-of-War</h3>
+    <h3 class="id-only">Tarik-Ulur Kognitif</h3>
     <div class="conflict-diagram">
       <div class="conflict-side left">
-        <div class="conflict-label">ASD Drives</div>
-        <div class="conflict-trait">Cognitive rigidity &amp; structure</div>
-        <div class="conflict-trait">Routine &amp; predictability</div>
-        <div class="conflict-trait">Exhaustive analytical processing</div>
-        <div class="conflict-trait">Caution toward environmental change</div>
-        <div class="conflict-trait">Overthinking &amp; rumination</div>
+        <div class="conflict-label en-only">ASD Drives</div>
+        <div class="conflict-label id-only">Dorongan ASD</div>
+        <div class="conflict-trait en-only">Cognitive rigidity &amp; structure</div>
+        <div class="conflict-trait id-only">Kekakuan kognitif &amp; kebutuhan struktur</div>
+        <div class="conflict-trait en-only">Routine &amp; predictability</div>
+        <div class="conflict-trait id-only">Rutinitas &amp; prediktabilitas</div>
+        <div class="conflict-trait en-only">Exhaustive analytical processing</div>
+        <div class="conflict-trait id-only">Pemrosesan analitis yang mendalam</div>
+        <div class="conflict-trait en-only">Caution toward environmental change</div>
+        <div class="conflict-trait id-only">Kewaspadaan terhadap perubahan lingkungan</div>
+        <div class="conflict-trait en-only">Overthinking &amp; rumination</div>
+        <div class="conflict-trait id-only">Overthinking &amp; ruminasi</div>
       </div>
       <div class="conflict-side right">
-        <div class="conflict-label">ADHD Drives</div>
-        <div class="conflict-trait">Unstable, flexible cognition</div>
-        <div class="conflict-trait">Novelty &amp; spontaneity seeking</div>
-        <div class="conflict-trait">Impulsive decision-making</div>
-        <div class="conflict-trait">Appetite for high stimulation</div>
-        <div class="conflict-trait">Rapid onset emotional reactions</div>
+        <div class="conflict-label en-only">ADHD Drives</div>
+        <div class="conflict-label id-only">Dorongan ADHD</div>
+        <div class="conflict-trait en-only">Unstable, flexible cognition</div>
+        <div class="conflict-trait id-only">Kognisi yang tidak stabil &amp; fleksibel</div>
+        <div class="conflict-trait en-only">Novelty &amp; spontaneity seeking</div>
+        <div class="conflict-trait id-only">Pencarian hal baru &amp; spontanitas</div>
+        <div class="conflict-trait en-only">Impulsive decision-making</div>
+        <div class="conflict-trait id-only">Pengambilan keputusan yang impulsif</div>
+        <div class="conflict-trait en-only">Appetite for high stimulation</div>
+        <div class="conflict-trait id-only">Keinginan akan stimulasi tinggi</div>
+        <div class="conflict-trait en-only">Rapid onset emotional reactions</div>
+        <div class="conflict-trait id-only">Reaksi emosional yang onsetnya cepat</div>
       </div>
     </div>
 
     <div class="callout gold">
-      <div class="callout-label">Clinical Implication</div>
-      <p>An individual may meticulously construct a detailed daily schedule to satisfy their autistic need for order, only to impulsively abandon the entire framework days later because their ADHD-driven brain finds the routine under-stimulating. This oscillation leads to chronic frustration, intense guilt, and severe executive dysfunction.</p>
+      <div class="callout-label en-only">Clinical Implication</div>
+      <div class="callout-label id-only">Implikasi Klinis</div>
+      <p class="en-only">An individual may meticulously construct a detailed daily schedule to satisfy their autistic need for order, only to impulsively abandon the entire framework days later because their ADHD-driven brain finds the routine under-stimulating. This oscillation leads to chronic frustration, intense guilt, and severe executive dysfunction.</p>
+      <p class="id-only">Seorang individu mungkin dengan cermat menyusun jadwal harian yang terperinci untuk memenuhi kebutuhan autistik mereka akan keteraturan, hanya untuk kemudian mengabaikan seluruh kerangka tersebut secara impulsif beberapa hari kemudian karena otak mereka yang digerakkan oleh ADHD menganggap rutinitas tersebut kurang menstimulasi. Osilasi ini memicu frustrasi kronis, rasa bersalah yang intens, dan disfungsi eksekutif yang parah.</p>
     </div>
   </section>
 
@@ -1010,35 +1199,54 @@ footer {
   <section class="section" id="sensory">
     <div class="section-header">
       <span class="section-num">04</span>
-      <h2 class="section-title">Attentional &amp; Sensory Profile</h2>
+      <h2 class="section-title en-only">Attentional &amp; Sensory Profile</h2>
+      <h2 class="section-title id-only">Profil Perhatian &amp; Sensorik</h2>
     </div>
 
     <div class="conflict-diagram">
       <div class="conflict-side left">
-        <div class="conflict-label">ASD Attention</div>
-        <div class="conflict-trait">Difficulty shifting established focus (monotropism)</div>
-        <div class="conflict-trait">Stronger sustained attention on special interests</div>
-        <div class="conflict-trait">Context blindness — detail-focused processing</div>
-        <div class="conflict-trait">Struggles with unpredictable social stimuli</div>
+        <div class="conflict-label en-only">ASD Attention</div>
+        <div class="conflict-label id-only">Perhatian ASD</div>
+        <div class="conflict-trait en-only">Difficulty shifting established focus (monotropism)</div>
+        <div class="conflict-trait id-only">Kesulitan mengalihkan fokus yang sudah mapan (monotropisme)</div>
+        <div class="conflict-trait en-only">Stronger sustained attention on special interests</div>
+        <div class="conflict-trait id-only">Perhatian berkelanjutan yang lebih kuat pada minat khusus</div>
+        <div class="conflict-trait en-only">Context blindness — detail-focused processing</div>
+        <div class="conflict-trait id-only">Kebutaan konteks — pemrosesan yang berfokus pada detail</div>
+        <div class="conflict-trait en-only">Struggles with unpredictable social stimuli</div>
+        <div class="conflict-trait id-only">Kesulitan dengan stimuli sosial yang tidak terduga</div>
       </div>
       <div class="conflict-side right">
-        <div class="conflict-label">ADHD Attention</div>
-        <div class="conflict-trait">Short attention span &amp; high distractibility</div>
-        <div class="conflict-trait">Inability to regulate focus on demand</div>
-        <div class="conflict-trait">"Busy brain" — constantly seeking stimulation</div>
-        <div class="conflict-trait">Paradoxical hyperfocus episodes</div>
+        <div class="conflict-label en-only">ADHD Attention</div>
+        <div class="conflict-label id-only">Perhatian ADHD</div>
+        <div class="conflict-trait en-only">Short attention span &amp; high distractibility</div>
+        <div class="conflict-trait id-only">Rentang perhatian pendek &amp; mudah teralih</div>
+        <div class="conflict-trait en-only">Inability to regulate focus on demand</div>
+        <div class="conflict-trait id-only">Ketidakmampuan untuk mengatur fokus sesuai kebutuhan</div>
+        <div class="conflict-trait en-only">"Busy brain" — constantly seeking stimulation</div>
+        <div class="conflict-trait id-only">"Pikiran sibuk" — terus-menerus mencari stimulasi</div>
+        <div class="conflict-trait en-only">Paradoxical hyperfocus episodes</div>
+        <div class="conflict-trait id-only">Episode hiperfokus yang paradoks</div>
       </div>
     </div>
 
-    <h3>Sensory Self-Care Toolkit</h3>
-    <p>Clinical experts recommend a personalized sensory self-care kit to provide immediate nervous system regulation:</p>
+    <h3 class="en-only">Sensory Self-Care Toolkit</h3>
+    <h3 class="id-only">Sensory Self-Care Toolkit</h3>
+    <p class="en-only">Clinical experts recommend a personalized sensory self-care kit to provide immediate nervous system regulation:</p>
+    <p class="id-only">Para pakar klinis merekomendasikan sensory self-care kit yang disesuaikan secara personal untuk memberikan regulasi sistem saraf secara langsung:</p>
     <div class="pill-row">
-      <span class="pill cyan">Noise-canceling headphones</span>
-      <span class="pill cyan">Weighted blankets</span>
-      <span class="pill cyan">Tinted sunglasses</span>
-      <span class="pill purple">Chewelry / tactile fidgets</span>
-      <span class="pill purple">Compressive clothing</span>
-      <span class="pill gold">Quiet decompression space</span>
+      <span class="pill cyan en-only">Noise-canceling headphones</span>
+      <span class="pill cyan id-only">Headphone peredam bising</span>
+      <span class="pill cyan en-only">Weighted blankets</span>
+      <span class="pill cyan id-only">Selimut pemberat</span>
+      <span class="pill cyan en-only">Tinted sunglasses</span>
+      <span class="pill cyan id-only">Kacamata hitam / berwarna</span>
+      <span class="pill purple en-only">Chewelry / tactile fidgets</span>
+      <span class="pill purple id-only">Chewelry / fidget taktil</span>
+      <span class="pill purple en-only">Compressive clothing</span>
+      <span class="pill purple id-only">Pakaian kompresif</span>
+      <span class="pill gold en-only">Quiet decompression space</span>
+      <span class="pill gold id-only">Ruang dekompresi yang tenang</span>
     </div>
   </section>
 
@@ -1046,22 +1254,31 @@ footer {
   <section class="section" id="rsd">
     <div class="section-header">
       <span class="section-num">05</span>
-      <h2 class="section-title">Rejection Sensitive Dysphoria</h2>
+      <h2 class="section-title en-only">Rejection Sensitive Dysphoria</h2>
+      <h2 class="section-title id-only">Rejection Sensitive Dysphoria (RSD)</h2>
     </div>
 
-    <p><strong>Rejection Sensitive Dysphoria (RSD)</strong> is characterized by extreme emotional pain triggered by actual or perceived rejection, criticism, or social disapproval. In the AuDHD profile, RSD can mimic rapid-cycling mood disorders due to the sudden explosive onset of intense sadness or rage.</p>
+    <p class="en-only"><strong>Rejection Sensitive Dysphoria (RSD)</strong> is characterized by extreme emotional pain triggered by actual or perceived rejection, criticism, or social disapproval. In the AuDHD profile, RSD can mimic rapid-cycling mood disorders due to the sudden explosive onset of intense sadness or rage.</p>
+    <p class="id-only"><strong>Rejection Sensitive Dysphoria (RSD)</strong> ditandai dengan rasa sakit emosional yang ekstrem yang dipicu oleh penolakan, kritik, atau ketidaksetujuan sosial yang nyata maupun yang dirasakan. Dalam profil AuDHD, RSD dapat menyerupai gangguan suasana hati dengan siklus cepat (rapid-cycling) karena onset mendadak yang eksplosif dari kesedihan atau kemarahan yang intens.</p>
 
     <div class="callout purple">
-      <div class="callout-label">Neurological Basis</div>
-      <p>Fundamental differences in the neural pathways responsible for regulating rejection-related emotions cause the subjective experience of failure to feel akin to intense physical trauma — not emotional hypersensitivity as a character flaw.</p>
+      <div class="callout-label en-only">Neurological Basis</div>
+      <div class="callout-label id-only">Dasar Neurologis</div>
+      <p class="en-only">Fundamental differences in the neural pathways responsible for regulating rejection-related emotions cause the subjective experience of failure to feel akin to intense physical trauma — not emotional hypersensitivity as a character flaw.</p>
+      <p class="id-only">Perbedaan mendasar pada jalur saraf yang bertanggung jawab untuk mengatur emosi terkait penolakan menyebabkan pengalaman subjektif dari kegagalan terasa serupa dengan trauma fisik yang intens — bukan hipersensitivitas emosional sebagai kelemahan karakter.</p>
     </div>
 
-    <h3>Survival Response Patterns</h3>
+    <h3 class="en-only">Survival Response Patterns</h3>
+    <h3 class="id-only">Pola Respons Bertahan Hidup (Survival Response)</h3>
     <div class="pill-row">
-      <span class="pill cyan">Fight — aggression / outbursts</span>
-      <span class="pill purple">Flight — environmental escape</span>
-      <span class="pill gold">Freeze — immobility / selective mutism</span>
-      <span class="pill cyan">Fawn — extreme people-pleasing</span>
+      <span class="pill cyan en-only">Fight — aggression / outbursts</span>
+      <span class="pill cyan id-only">Fight — agresi / luapan emosi</span>
+      <span class="pill purple en-only">Flight — environmental escape</span>
+      <span class="pill purple id-only">Flight — melarikan diri dari lingkungan</span>
+      <span class="pill gold en-only">Freeze — immobility / selective mutism</span>
+      <span class="pill gold id-only">Freeze — ketidakberdayaan / mutisme selektif</span>
+      <span class="pill cyan en-only">Fawn — extreme people-pleasing</span>
+      <span class="pill cyan id-only">Fawn — perilaku menyenangkan orang lain secara ekstrem (people-pleasing)</span>
     </div>
   </section>
 
@@ -1069,37 +1286,48 @@ footer {
   <section class="section" id="empathy">
     <div class="section-header">
       <span class="section-num">06</span>
-      <h2 class="section-title">The Double Empathy Problem</h2>
+      <h2 class="section-title en-only">The Double Empathy Problem</h2>
+      <h2 class="section-title id-only">Masalah Empati Ganda (Double Empathy Problem)</h2>
     </div>
 
-    <p>Introduced by autistic academic <strong>Dr. Damian Milton</strong>, the Double Empathy Problem fundamentally challenges the deficit-based "lack of Theory of Mind" model of autism. Communication breakdowns between autistic and allistic individuals result from a <em>reciprocal</em> failure of mutual understanding — not a unilateral autistic deficit.</p>
+    <p class="en-only">Introduced by autistic academic <strong>Dr. Damian Milton</strong>, the Double Empathy Problem fundamentally challenges the deficit-based "lack of Theory of Mind" model of autism. Communication breakdowns between autistic and allistic individuals result from a <em>reciprocal</em> failure of mutual understanding — not a unilateral autistic deficit.</p>
+    <p class="id-only">Diperkenalkan oleh akademisi autistik <strong>Dr. Damian Milton</strong>, Masalah Empati Ganda (Double Empathy Problem) secara mendasar menantang model autisme berbasis defisit "kurangnya Theory of Mind". Kegagalan komunikasi antara individu autistik dan alistik (non-autistik) disebabkan oleh kegagalan pemahaman bersama yang bersifat <em>timbal balik (resiprokal)</em> — bukan defisit sepihak dari individu autistik.</p>
 
     <div class="callout">
-      <div class="callout-label">Crompton et al. Finding</div>
-      <p>Information transferred with high fidelity within purely neurotypical groups and within purely autistic groups. In mixed groups, information transfer degraded significantly — proving autistic communication is highly effective when interactants share the same neurotype.</p>
+      <div class="callout-label en-only">Crompton et al. Finding</div>
+      <div class="callout-label id-only">Temuan Crompton et al.</div>
+      <p class="en-only">Information transferred with high fidelity within purely neurotypical groups and within purely autistic groups. In mixed groups, information transfer degraded significantly — proving autistic communication is highly effective when interactants share the same neurotype.</p>
+      <p class="id-only">Informasi ditransfer dengan ketepatan tinggi dalam kelompok yang murni neurotipikal dan dalam kelompok yang murni autistik. Dalam kelompok campuran, transfer informasi menurun secara signifikan — membuktikan bahwa komunikasi autistik sangat efektif ketika para pelaku interaksi berbagi neurotipe yang sama.</p>
     </div>
 
-    <h3>Key Research Evidence</h3>
+    <h3 class="en-only">Key Research Evidence</h3>
+    <h3 class="id-only">Bukti Penelitian Kunci</h3>
     <div class="principles">
       <div class="principle">
         <div class="principle-num">01</div>
         <div class="principle-content">
-          <h4>Animation Study</h4>
-          <p>Neurotypical adults successfully determined mental states of neurotypical animations but failed significantly when interpreting autistic animations.</p>
+          <h4 class="en-only">Animation Study</h4>
+          <h4 class="id-only">Studi Animasi</h4>
+          <p class="en-only">Neurotypical adults successfully determined mental states of neurotypical animations but failed significantly when interpreting autistic animations.</p>
+          <p class="id-only">Orang dewasa neurotipikal berhasil menentukan kondisi mental dari animasi neurotipikal tetapi gagal secara signifikan saat menginterpretasikan animasi autistik.</p>
         </div>
       </div>
       <div class="principle">
         <div class="principle-num">02</div>
         <div class="principle-content">
-          <h4>Sheppard et al.</h4>
-          <p>Neurotypicals misread autistic expression in real-life video interactions, despite autistic individuals being objectively just as emotionally expressive.</p>
+          <h4 class="en-only">Sheppard et al.</h4>
+          <h4 class="id-only">Sheppard et al.</h4>
+          <p class="en-only">Neurotypicals misread autistic expression in real-life video interactions, despite autistic individuals being objectively just as emotionally expressive.</p>
+          <p class="id-only">Kelompok neurotipikal salah membaca ekspresi autistik dalam interaksi video kehidupan nyata, meskipun individu autistik secara objektif sama ekspresifnya secara emosional.</p>
         </div>
       </div>
       <div class="principle">
         <div class="principle-num">03</div>
         <div class="principle-content">
-          <h4>Homophily Research</h4>
-          <p>Autistic college students actively prefer building friendships with other autistic or neurodivergent peers — directly contradicting the stereotype of lacking interest in connection.</p>
+          <h4 class="en-only">Homophily Research</h4>
+          <h4 class="id-only">Penelitian Homofili</h4>
+          <p class="en-only">Autistic college students actively prefer building friendships with other autistic or neurodivergent peers — directly contradicting the stereotype of lacking interest in connection.</p>
+          <p class="id-only">Mahasiswa autistik secara aktif lebih memilih untuk menjalin persahabatan dengan sesama rekan autistik atau neurodivergen lainnya — secara langsung menyangkal stereotip bahwa mereka kurang tertarik pada hubungan sosial.</p>
         </div>
       </div>
     </div>
@@ -1109,14 +1337,18 @@ footer {
   <section class="section" id="masking">
     <div class="section-header">
       <span class="section-num">07</span>
-      <h2 class="section-title">Masking &amp; Neurodivergent Burnout</h2>
+      <h2 class="section-title en-only">Masking &amp; Neurodivergent Burnout</h2>
+      <h2 class="section-title id-only">Masking &amp; Neurodivergent Burnout</h2>
     </div>
 
-    <p><strong>Masking (camouflaging)</strong> refers to the conscious or subconscious suppression of authentic neurodivergent traits and the artificial performance of neurotypical behaviors. It encompasses: suppressing the need to stim, forcing painful eye contact, rehearsing conversations in advance, hiding sensory distress.</p>
+    <p class="en-only"><strong>Masking (camouflaging)</strong> refers to the conscious or subconscious suppression of authentic neurodivergent traits and the artificial performance of neurotypical behaviors. It encompasses: suppressing the need to stim, forcing painful eye contact, rehearsing conversations in advance, hiding sensory distress.</p>
+    <p class="id-only"><strong>Masking (penyamaran/kamuflase)</strong> merujuk pada penekanan secara sadar atau tidak sadar dari sifat neurodivergen yang autentik dan penampilan buatan dari perilaku neurotipikal. Ini meliputi: menekan kebutuhan untuk melakukan stimming, memaksakan kontak mata yang menyakitkan, melatih percakapan terlebih dahulu, dan menyembunyikan distres sensorik.</p>
 
     <div class="callout gold">
-      <div class="callout-label">Neurodivergent Burnout</div>
-      <p>Distinctly different from occupational burnout or depression, AuDHD burnout involves profound physical and cognitive exhaustion, heightened sensory fragility, and severe skill regression — including loss of basic executive functions previously managed with ease. Recovery requires radical unmasking, reduced sensory load, and energy pacing systems (Spoon Theory, Traffic Light Pacing).</p>
+      <div class="callout-label en-only">Neurodivergent Burnout</div>
+      <div class="callout-label id-only">Neurodivergent Burnout</div>
+      <p class="en-only">Distinctly different from occupational burnout or depression, AuDHD burnout involves profound physical and cognitive exhaustion, heightened sensory fragility, and severe skill regression — including loss of basic executive functions previously managed with ease. Recovery requires radical unmasking, reduced sensory load, and energy pacing systems (Spoon Theory, Traffic Light Pacing).</p>
+      <p class="id-only">Berbeda secara nyata dari kelelahan kerja (occupational burnout) atau depresi, burnout AuDHD melibatkan kelelahan fisik dan kognitif yang mendalam, peningkatan kerentanan sensorik, dan regresi keterampilan yang parah — termasuk hilangnya fungsi eksekutif dasar yang sebelumnya dikelola dengan mudah. Pemulihan membutuhkan unmasking (pelepasan topeng) secara radikal, pengurangan beban sensorik, dan sistem pengaturan ritme energi (Teori Sendok/Spoon Theory, Pengaturan Ritme Lampu Lalu Lintas/Traffic Light Pacing).</p>
     </div>
   </section>
 
@@ -1124,46 +1356,59 @@ footer {
   <section class="section" id="diagnostic">
     <div class="section-header">
       <span class="section-num">08</span>
-      <h2 class="section-title">Diagnostic Assessment</h2>
+      <h2 class="section-title en-only">Diagnostic Assessment</h2>
+      <h2 class="section-title id-only">Penilaian Diagnostik</h2>
     </div>
 
-    <p>Prominent international health authorities — <strong>NICE</strong> (England) and <strong>SIGN</strong> (Scotland) — mandate rigorous, highly structured, multi-disciplinary approaches. Diagnosis must never be based solely on a single screening questionnaire.</p>
+    <p class="en-only">Prominent international health authorities — <strong>NICE</strong> (England) and <strong>SIGN</strong> (Scotland) — mandate rigorous, highly structured, multi-disciplinary approaches. Diagnosis must never be based solely on a single screening questionnaire.</p>
+    <p class="id-only">Otoritas kesehatan internasional terkemuka — <strong>NICE</strong> (Inggris) dan <strong>SIGN</strong> (Skotlandia) — mengamanatkan pendekatan multi-disiplin yang ketat dan sangat terstruktur. Diagnosis tidak boleh didasarkan hanya pada satu kuesioner skrining saja.</p>
 
-    <h3>Guiding Principles</h3>
+    <h3 class="en-only">Guiding Principles</h3>
+    <h3 class="id-only">Prinsip Panduan</h3>
     <div class="principles">
       <div class="principle">
         <div class="principle-num">1</div>
         <div class="principle-content">
-          <h4>Multidisciplinary Team</h4>
-          <p>Psychiatrists, clinical psychologists, pediatricians, speech &amp; language therapists, and occupational therapists — organized as local autism teams per NICE guidance.</p>
+          <h4 class="en-only">Multidisciplinary Team</h4>
+          <h4 class="id-only">Tim Multidisiplin</h4>
+          <p class="en-only">Psychiatrists, clinical psychologists, pediatricians, speech &amp; language therapists, and occupational therapists — organized as local autism teams per NICE guidance.</p>
+          <p class="id-only">Psikiater, psikolog klinis, dokter spesialis anak, terapis wicara &amp; bahasa, dan terapis okupasi — yang diorganisasi sebagai tim autisme lokal sesuai panduan NICE.</p>
         </div>
       </div>
       <div class="principle">
         <div class="principle-num">2</div>
         <div class="principle-content">
-          <h4>Comprehensive Developmental History</h4>
-          <p>ADHD: symptoms present and causing impairment prior to age 12. ASD: social-communication differences present in early development, even if masked until demands exceeded coping capacity.</p>
+          <h4 class="en-only">Comprehensive Developmental History</h4>
+          <h4 class="id-only">Riwayat Perkembangan yang Komprehensif</h4>
+          <p class="en-only">ADHD: symptoms present and causing impairment prior to age 12. ASD: social-communication differences present in early development, even if masked until demands exceeded coping capacity.</p>
+          <p class="id-only">ADHD: gejala muncul dan menyebabkan hambatan sebelum usia 12 tahun. ASD: perbedaan komunikasi sosial muncul dalam perkembangan awal, bahkan jika disamarkan (masked) hingga tuntutan melampaui kapasitas koping.</p>
         </div>
       </div>
       <div class="principle">
         <div class="principle-num">3</div>
         <div class="principle-content">
-          <h4>Cross-Contextual Evidence</h4>
-          <p>Symptoms must cause clinically significant impairment across multiple life settings — home, school, workplace, and interpersonal relationships — requiring collateral information.</p>
+          <h4 class="en-only">Cross-Contextual Evidence</h4>
+          <h4 class="id-only">Bukti Lintas Konteks</h4>
+          <p class="en-only">Symptoms must cause clinically significant impairment across multiple life settings — home, school, workplace, and interpersonal relationships — requiring collateral information.</p>
+          <p class="id-only">Gejala harus menyebabkan gangguan yang signifikan secara klinis di berbagai ranah kehidupan — rumah, sekolah, tempat kerja, dan hubungan interpersonal — yang membutuhkan informasi kolateral (pendamping).</p>
         </div>
       </div>
       <div class="principle">
         <div class="principle-num">4</div>
         <div class="principle-content">
-          <h4>Differential Diagnosis</h4>
-          <p>Rigorously rule out or identify PTSD, Complex PTSD, personality disorders, major mood disorders, anxiety disorders, and specific learning disabilities — all of which frequently co-occur with or mimic AuDHD traits.</p>
+          <h4 class="en-only">Differential Diagnosis</h4>
+          <h4 class="id-only">Diagnosis Banding</h4>
+          <p class="en-only">Rigorously rule out or identify PTSD, Complex PTSD, personality disorders, major mood disorders, anxiety disorders, and specific learning disabilities — all of which frequently co-occur with or mimic AuDHD traits.</p>
+          <p class="id-only">Secara ketat menyingkirkan atau mengidentifikasi PTSD, Complex PTSD, gangguan kepribadian, gangguan suasana hati utama, gangguan kecemasan, dan kesulitan belajar spesifik — yang semuanya sering kali terjadi bersamaan dengan atau meniru sifat AuDHD.</p>
         </div>
       </div>
       <div class="principle">
         <div class="principle-num">5</div>
         <div class="principle-content">
-          <h4>Post-Diagnostic Support</h4>
-          <p>NICE guideline NG87 mandates a structured discussion covering positive impacts, stigma, educational and employment rights, and critical safety issues such as the UK legal requirement to declare ADHD diagnosis to the DVLA if driving safety is affected.</p>
+          <h4 class="en-only">Post-Diagnostic Support</h4>
+          <h4 class="id-only">Dukungan Pasca-Diagnostik</h4>
+          <p class="en-only">NICE guideline NG87 mandates a structured discussion covering positive impacts, stigma, educational and employment rights, and critical safety issues such as the UK legal requirement to declare ADHD diagnosis to the DVLA if driving safety is affected.</p>
+          <p class="id-only">Panduan NICE NG87 mengamanatkan diskusi terstruktur yang mencakup dampak positif, stigma, hak-hak pendidikan dan pekerjaan, serta isu keselamatan penting seperti persyaratan hukum di Inggris untuk menyatakan diagnosis ADHD ke DVLA jika keselamatan berkendara terpengaruh.</p>
         </div>
       </div>
     </div>
@@ -1173,99 +1418,173 @@ footer {
   <section class="section" id="instruments">
     <div class="section-header">
       <span class="section-num">09</span>
-      <h2 class="section-title">Diagnostic Instruments</h2>
+      <h2 class="section-title en-only">Diagnostic Instruments</h2>
+      <h2 class="section-title id-only">Instrumen Diagnostik</h2>
     </div>
-    <p>Click any row to expand clinical details. <span class="correction">✦ corrected</span> indicates a factual correction from the source document.</p>
+    <p class="en-only">Click any row to expand clinical details. <span class="correction">✦ corrected</span> indicates a factual correction from the source document.</p>
+    <p class="id-only">Klik baris mana saja untuk memperluas detail klinis. <span class="correction">✦ dikoreksi</span> menunjukkan koreksi faktual dari dokumen sumber.</p>
 
     <div class="diag-table-wrap">
       <div class="diag-table-header">
-        <div class="diag-th">Instrument</div>
-        <div class="diag-th">Target</div>
-        <div class="diag-th">Description</div>
+        <div class="diag-th">
+          <span class="en-only">Instrument</span>
+          <span class="id-only">Instrumen</span>
+        </div>
+        <div class="diag-th">
+          <span class="en-only">Target</span>
+          <span class="id-only">Target</span>
+        </div>
+        <div class="diag-th">
+          <span class="en-only">Description</span>
+          <span class="id-only">Deskripsi</span>
+        </div>
       </div>
 
       <!-- DIVA-5 -->
       <div class="diag-row" onclick="toggleRow(this)">
         <div class="diag-td">
           <div class="diag-name">DIVA-5</div>
-          <div class="diag-full">Diagnostic Interview for ADHD in Adults</div>
-          <div class="expand-btn">Details <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="diag-full en-only">Diagnostic Interview for ADHD in Adults</div>
+          <div class="diag-full id-only">Diagnostic Interview for ADHD in Adults (Wawancara Diagnostik untuk ADHD pada Dewasa)</div>
+          <div class="expand-btn">
+            <span class="en-only">Details</span>
+            <span class="id-only">Detail</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
         </div>
         <div class="diag-td"><span class="diag-tag tag-adhd">ADHD</span></div>
-        <div class="diag-td"><div class="diag-desc">Structured clinical interview mapping directly to all 18 DSM-5 ADHD criteria. Evaluates inattention and hyperactivity/impulsivity in both childhood and adulthood.</div></div>
-        <div class="diag-extra">A positive adult diagnosis requires evidence of at least <strong>6 childhood symptoms</strong> (prior to age 12) and at least <strong>5 current adult symptoms</strong>, alongside proof of impairment in at least two life domains. Positive adult diagnosis aligns with DSM-5 adult threshold (≥5 symptoms for age 17+).</div>
+        <div class="diag-td">
+          <div class="diag-desc en-only">Structured clinical interview mapping directly to all 18 DSM-5 ADHD criteria. Evaluates inattention and hyperactivity/impulsivity in both childhood and adulthood.</div>
+          <div class="diag-desc id-only">Wawancara klinis terstruktur yang memetakan langsung ke seluruh 18 kriteria ADHD DSM-5. Mengevaluasi inatensi dan hiperaktivitas/impulsivitas pada masa kanak-kanak dan dewasa.</div>
+        </div>
+        <div class="diag-extra en-only">A positive adult diagnosis requires evidence of at least <strong>6 childhood symptoms</strong> (prior to age 12) and at least <strong>5 current adult symptoms</strong>, alongside proof of impairment in at least two life domains. Positive adult diagnosis aligns with DSM-5 adult threshold (≥5 symptoms for age 17+).</div>
+        <div class="diag-extra id-only">Diagnosis dewasa positif memerlukan bukti minimal <strong>6 gejala masa kanak-kanak</strong> (sebelum usia 12 tahun) dan minimal <strong>5 gejala dewasa saat ini</strong>, di samping bukti gangguan di setidaknya dua domain kehidupan. Diagnosis dewasa positif selaras dengan ambang batas dewasa DSM-5 (≥5 gejala untuk usia 17 tahun ke atas).</div>
       </div>
 
       <!-- ADOS-2 -->
       <div class="diag-row" onclick="toggleRow(this)">
         <div class="diag-td">
           <div class="diag-name">ADOS-2</div>
-          <div class="diag-full">Autism Diagnostic Observation Schedule, 2nd Ed.</div>
-          <div class="expand-btn">Details <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="diag-full en-only">Autism Diagnostic Observation Schedule, 2nd Ed.</div>
+          <div class="diag-full id-only">Autism Diagnostic Observation Schedule, Edisi ke-2</div>
+          <div class="expand-btn">
+            <span class="en-only">Details</span>
+            <span class="id-only">Detail</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
         </div>
         <div class="diag-td"><span class="diag-tag tag-asd">ASD</span></div>
-        <div class="diag-td"><div class="diag-desc">The gold-standard observational assessment for ASD. Five modules (T, 1–4) tailored to language ability — from the Toddler module to verbally fluent adults (Module 4).</div></div>
-        <div class="diag-extra">Evaluates social communication, interaction, and repetitive behaviors through structured activities including Construction Tasks, Make-Believe Play, and emotional reporting. Clinicians must integrate developmental history and weight masking measures (e.g., CAT-Q) alongside ADOS-2 findings, as highly proficient maskers may suppress deficits within a 40–60 minute observation window.</div>
+        <div class="diag-td">
+          <div class="diag-desc en-only">The gold-standard observational assessment for ASD. Five modules (T, 1–4) tailored to language ability — from the Toddler module to verbally fluent adults (Module 4).</div>
+          <div class="diag-desc id-only">Penilaian observasional standar emas untuk ASD. Terdiri dari lima modul (T, 1-4) yang disesuaikan dengan kemampuan bahasa — dari modul Balita (Toddler) hingga dewasa yang fasih secara verbal (Modul 4).</div>
+        </div>
+        <div class="diag-extra en-only">Evaluates social communication, interaction, and repetitive behaviors through structured activities including Construction Tasks, Make-Believe Play, and emotional reporting. Clinicians must integrate developmental history and weight masking measures (e.g., CAT-Q) alongside ADOS-2 findings, as highly proficient maskers may suppress deficits within a 40–60 minute observation window.</div>
+        <div class="diag-extra id-only">Mengevaluasi komunikasi sosial, interaksi, dan perilaku berulang melalui aktivitas terstruktur termasuk Tugas Konstruksi, Bermain Pura-pura (Make-Believe Play), dan laporan emosional. Praktisi klinis harus mengintegrasikan riwayat perkembangan dan mempertimbangkan ukuran masking (misalnya, CAT-Q) bersama temuan ADOS-2, karena individu dengan kemampuan masking tinggi mungkin menekan defisit mereka dalam jendela observasi 40-60 menit.</div>
       </div>
 
       <!-- AQ -->
       <div class="diag-row" onclick="toggleRow(this)">
         <div class="diag-td">
           <div class="diag-name">AQ-50</div>
-          <div class="diag-full">Autism Spectrum Quotient</div>
-          <div class="expand-btn">Details <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="diag-full en-only">Autism Spectrum Quotient</div>
+          <div class="diag-full id-only">Autism Spectrum Quotient</div>
+          <div class="expand-btn">
+            <span class="en-only">Details</span>
+            <span class="id-only">Detail</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
         </div>
         <div class="diag-td"><span class="diag-tag tag-asd">ASD Screen</span></div>
-        <div class="diag-td"><div class="diag-desc">50-item self-report questionnaire assessing autistic traits across five clusters: social skills, attention switching, attention to detail, communication, and imagination.</div></div>
-        <div class="diag-extra">A score of <strong>32 or above</strong> indicates clinically significant traits warranting full evaluation <span class="correction">✦ corrected</span> — per Baron-Cohen et al. (2001), the validated clinical threshold is 32, not 29 as sometimes cited. The AQ-10 screening version uses a threshold of 6. Suitable for adults and adolescents over 16.</div>
+        <div class="diag-td">
+          <div class="diag-desc en-only">50-item self-report questionnaire assessing autistic traits across five clusters: social skills, attention switching, attention to detail, communication, and imagination.</div>
+          <div class="diag-desc id-only">Kuesioner laporan mandiri berisi 50 item untuk menilai sifat-sifat autistik di lima kluster: keterampilan sosial, pengalihan perhatian, perhatian terhadap detail, komunikasi, dan imajinasi.</div>
+        </div>
+        <div class="diag-extra en-only">A score of <strong>32 or above</strong> indicates clinically significant traits warranting full evaluation <span class="correction">✦ corrected</span> — per Baron-Cohen et al. (2001), the validated clinical threshold is 32, not 29 as sometimes cited. The AQ-10 screening version uses a threshold of 6. Suitable for adults and adolescents over 16.</div>
+        <div class="diag-extra id-only">Skor <strong>32 atau lebih tinggi</strong> menunjukkan sifat yang signifikan secara klinis yang memerlukan evaluasi penuh <span class="correction">✦ dikoreksi</span> — menurut Baron-Cohen et al. (2001), ambang batas klinis yang divalidasi adalah 32, bukan 29 seperti yang terkadang dikutip. Versi skrining AQ-10 menggunakan ambang batas 6. Cocok untuk dewasa dan remaja di atas 16 tahun.</div>
       </div>
 
       <!-- RAADS-R -->
       <div class="diag-row" onclick="toggleRow(this)">
         <div class="diag-td">
           <div class="diag-name">RAADS-R</div>
-          <div class="diag-full">Ritvo Autism Asperger Diagnostic Scale-Revised</div>
-          <div class="expand-btn">Details <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="diag-full en-only">Ritvo Autism Asperger Diagnostic Scale-Revised</div>
+          <div class="diag-full id-only">Ritvo Autism Asperger Diagnostic Scale-Revised</div>
+          <div class="expand-btn">
+            <span class="en-only">Details</span>
+            <span class="id-only">Detail</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
         </div>
         <div class="diag-td"><span class="diag-tag tag-asd">ASD Screen</span></div>
-        <div class="diag-td"><div class="diag-desc">80-item self-report tool designed specifically to identify ASD in adults — highly useful for individuals whose symptoms were missed in childhood.</div></div>
-        <div class="diag-extra">Evaluates four symptom areas: Social Relatedness Problems, Circumscribed Interests, Language, and Sensory Motor functions. Particularly valuable for late-diagnosed adults and those with high masking profiles. A total score of ≥65 is the commonly referenced clinical threshold.</div>
+        <div class="diag-td">
+          <div class="diag-desc en-only">80-item self-report tool designed specifically to identify ASD in adults — highly useful for individuals whose symptoms were missed in childhood.</div>
+          <div class="diag-desc id-only">Alat laporan mandiri berisi 80 item yang dirancang khusus untuk mengidentifikasi ASD pada orang dewasa — sangat berguna bagi individu yang gejalanya terlewatkan pada masa kanak-kanak.</div>
+        </div>
+        <div class="diag-extra en-only">Evaluates four symptom areas: Social Relatedness Problems, Circumscribed Interests, Language, and Sensory Motor functions. Particularly valuable for late-diagnosed adults and those with high masking profiles. A total score of ≥65 is the commonly referenced clinical threshold.</div>
+        <div class="diag-extra id-only">Mengevaluasi empat area gejala: Masalah Keterkaitan Sosial (Social Relatedness Problems), Minat Terbatas (Circumscribed Interests), Bahasa, dan Fungsi Sensorik-Motorik. Sangat berharga untuk orang dewasa yang didiagnosis terlambat dan mereka dengan profil masking tinggi. Skor total ≥65 adalah ambang batas klinis yang umum dirujuk.</div>
       </div>
 
       <!-- CAT-Q -->
       <div class="diag-row" onclick="toggleRow(this)">
         <div class="diag-td">
           <div class="diag-name">CAT-Q</div>
-          <div class="diag-full">Camouflaging Autistic Traits Questionnaire</div>
-          <div class="expand-btn">Details <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="diag-full en-only">Camouflaging Autistic Traits Questionnaire</div>
+          <div class="diag-full id-only">Camouflaging Autistic Traits Questionnaire</div>
+          <div class="expand-btn">
+            <span class="en-only">Details</span>
+            <span class="id-only">Detail</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
         </div>
         <div class="diag-td"><span class="diag-tag tag-audhd">AuDHD</span></div>
-        <div class="diag-td"><div class="diag-desc">25-item self-report measuring social camouflaging across three subscales: Compensation, Masking, and Assimilation.</div></div>
-        <div class="diag-extra">Indispensable for interpreting artificially low scores on standard autism scales — high maskers may suppress visible autistic traits during clinical observation. The CAT-Q is a crucial component of any assessment for suspected late-diagnosed adults, particularly women and people of colour who are statistically more likely to camouflage.</div>
+        <div class="diag-td">
+          <div class="diag-desc en-only">25-item self-report measuring social camouflaging across three subscales: Compensation, Masking, and Assimilation.</div>
+          <div class="diag-desc id-only">Laporan mandiri berisi 25 item yang mengukur kamuflase sosial di tiga subskala: Kompensasi, Masking, dan Asimilasi.</div>
+        </div>
+        <div class="diag-extra en-only">Indispensable for interpreting artificially low scores on standard autism scales — high maskers may suppress visible autistic traits during clinical observation. The CAT-Q is a crucial component of any assessment for suspected late-diagnosed adults, particularly women and people of colour who are statistically more likely to camouflage.</div>
+        <div class="diag-extra id-only">Sangat diperlukan untuk menafsirkan skor rendah yang dibuat-buat pada skala autisme standar — individu dengan masking tinggi dapat menekan sifat autistik yang terlihat selama observasi klinis. CAT-Q adalah komponen krusial dari penilaian apa pun untuk orang dewasa yang dicurigai terlambat didiagnosis, terutama wanita dan orang kulit berwarna yang secara statistik lebih cenderung melakukan kamuflase.</div>
       </div>
 
       <!-- VADPRS -->
       <div class="diag-row" onclick="toggleRow(this)">
         <div class="diag-td">
           <div class="diag-name">VADPRS</div>
-          <div class="diag-full">Vanderbilt ADHD Diagnostic Parent Rating Scale</div>
-          <div class="expand-btn">Details <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="diag-full en-only">Vanderbilt ADHD Diagnostic Parent Rating Scale</div>
+          <div class="diag-full id-only">Vanderbilt ADHD Diagnostic Parent Rating Scale</div>
+          <div class="expand-btn">
+            <span class="en-only">Details</span>
+            <span class="id-only">Detail</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
         </div>
         <div class="diag-td"><span class="diag-tag tag-adhd">ADHD</span></div>
-        <div class="diag-td"><div class="diag-desc">55-question parent-rated tool for children aged 6–12. Evaluates all 18 DSM-5 ADHD criteria alongside frequent childhood comorbidities.</div></div>
-        <div class="diag-extra">Comorbidity screening covers Oppositional Defiant Disorder, Conduct Disorder, anxiety, and depression. A complementary Teacher Rating Scale (VADTRS) should be used in parallel to satisfy cross-contextual evidence requirements. Particularly important given diagnostic overshadowing risks in children presenting with AuDHD.</div>
+        <div class="diag-td">
+          <div class="diag-desc en-only">55-question parent-rated tool for children aged 6–12. Evaluates all 18 DSM-5 ADHD criteria alongside frequent childhood comorbidities.</div>
+          <div class="diag-desc id-only">Alat penilaian orang tua berisi 55 pertanyaan untuk anak-anak berusia 6-12 tahun. Mengevaluasi seluruh 18 kriteria ADHD DSM-5 bersama komorbiditas masa kanak-kanak yang sering terjadi.</div>
+        </div>
+        <div class="diag-extra en-only">Comorbidity screening covers Oppositional Defiant Disorder, Conduct Disorder, anxiety, and depression. A complementary Teacher Rating Scale (VADTRS) should be used in parallel to satisfy cross-contextual evidence requirements. Particularly important given diagnostic overshadowing risks in children presenting with AuDHD.</div>
+        <div class="diag-extra id-only">Skrining komorbiditas mencakup Gangguan Penentang Oposisi (Oppositional Defiant Disorder), Gangguan Perilaku (Conduct Disorder), kecemasan, dan depresi. Skala Penilaian Guru (VADTRS) pelengkap harus digunakan secara paralel untuk memenuhi persyaratan bukti lintas konteks. Sangat penting mengingat risiko overshadowing diagnostik (penutupan gejala oleh kondisi lain) pada anak-anak yang menunjukkan gejala AuDHD.</div>
       </div>
 
       <!-- MAIA-2 -->
       <div class="diag-row" onclick="toggleRow(this)">
         <div class="diag-td">
           <div class="diag-name">MAIA-2</div>
-          <div class="diag-full">Multidimensional Assessment of Interoceptive Awareness</div>
-          <div class="expand-btn">Details <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="diag-full en-only">Multidimensional Assessment of Interoceptive Awareness</div>
+          <div class="diag-full id-only">Multidimensional Assessment of Interoceptive Awareness</div>
+          <div class="expand-btn">
+            <span class="en-only">Details</span>
+            <span class="id-only">Detail</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
         </div>
         <div class="diag-td"><span class="diag-tag tag-sensory">Sensory</span></div>
-        <div class="diag-td"><div class="diag-desc">8-subscale self-report assessing interoception (bodily awareness). Subscales include Noticing, Not-Worrying, Emotional Awareness, Body Listening, and Trusting Body Sensations.</div></div>
-        <div class="diag-extra">Impaired interoception is heavily linked to emotional dysregulation in both ADHD and ASD. Low interoceptive awareness can undermine self-regulatory strategies and mask the recognition of early warning signs preceding meltdowns or shutdowns — making the MAIA-2 a valuable supplement in comprehensive AuDHD assessment.</div>
+        <div class="diag-td">
+          <div class="diag-desc en-only">8-subscale self-report assessing interoception (bodily awareness). Subscales include Noticing, Not-Worrying, Emotional Awareness, Body Listening, and Trusting Body Sensations.</div>
+          <div class="diag-desc id-only">Laporan mandiri 8-subskala untuk menilai interosepsi (kesadaran tubuh). Subskala meliputi Memperhatikan (Noticing), Tidak Khawatir (Not-Worrying), Kesadaran Emosional (Emotional Awareness), Mendengarkan Tubuh (Body Listening), dan Memercayai Sensasi Tubuh (Trusting Body Sensations).</div>
+        </div>
+        <div class="diag-extra en-only">Impaired interoception is heavily linked to emotional dysregulation in both ADHD and ASD. Low interoceptive awareness can undermine self-regulatory strategies and mask the recognition of early warning signs preceding meltdowns or shutdowns — making the MAIA-2 a valuable supplement in comprehensive AuDHD assessment.</div>
+        <div class="diag-extra id-only">Gangguan interosepsi sangat dikaitkan dengan disregulasi emosional baik pada ADHD maupun ASD. Kesadaran interoseptif yang rendah dapat melemahkan strategi regulasi diri dan menyembunyikan pengenalan tanda-tanda peringatan dini sebelum terjadinya meltdown atau shutdown — menjadikan MAIA-2 sebagai pelengkap berharga dalam penilaian AuDHD yang komprehensif.</div>
       </div>
     </div>
   </section>
@@ -1274,61 +1593,121 @@ footer {
   <section class="section" id="pharmacology">
     <div class="section-header">
       <span class="section-num">10</span>
-      <h2 class="section-title">Pharmacological Interventions</h2>
+      <h2 class="section-title en-only">Pharmacological Interventions</h2>
+      <h2 class="section-title id-only">Intervensi Farmakologis</h2>
     </div>
 
-    <p>There is currently no pharmacological agent that reliably targets the core social communication or restrictive behavioral deficits of autism. The presence of ASD significantly alters the neurological efficacy and tolerability profiles of standard ADHD medications.</p>
+    <p class="en-only">There is currently no pharmacological agent that reliably targets the core social communication or restrictive behavioral deficits of autism. The presence of ASD significantly alters the neurological efficacy and tolerability profiles of standard ADHD medications.</p>
+    <p class="id-only">Saat ini tidak ada agen farmakologis yang secara andal menargetkan defisit komunikasi sosial inti atau perilaku restriktif dari autisme. Kehadiran ASD secara signifikan mengubah efikasi neurologis dan profil tolerabilitas dari obat-obatan ADHD standar.</p>
 
-    <h3>Stimulant Medications</h3>
-    <p>Psychostimulants (methylphenidate, dextroamphetamine) remain first-line for isolated ADHD with <strong>50–80% response rates</strong>. In comorbid ASD populations, the clinical landscape shifts dramatically:</p>
+    <h3 class="en-only">Stimulant Medications</h3>
+    <h3 class="id-only">Obat Stimulan</h3>
+    <p class="en-only">Psychostimulants (methylphenidate, dextroamphetamine) remain first-line for isolated ADHD with <strong>50–80% response rates</strong>. In comorbid ASD populations, the clinical landscape shifts dramatically:</p>
+    <p class="id-only">Psikostimulan (metilfenidat, dekstroamfetamin) tetap menjadi lini pertama untuk ADHD terisolasi dengan <strong>tingkat respons 50-80%</strong>. Pada populasi komorbid ASD, lanskap klinis bergeser secara dramatis:</p>
 
     <div class="callout purple">
-      <div class="callout-label">Adverse Profile in ASD</div>
-      <p>Common stimulant side effects — decreased appetite, weight loss, sleep disorders — are frequently more severe. Additional risks in ASD include heightened anxiety, social withdrawal, tic exacerbation, worsened rigidity, and intense emotional dysregulation. Methylphenidate dropout rates in ASD-comorbid trials: <strong>~18%</strong> due to unbearable adverse effects. Dextroamphetamine shows potentially greater efficacy in the comorbid population.</p>
+      <div class="callout-label en-only">Adverse Profile in ASD</div>
+      <div class="callout-label id-only">Profil Efek Samping pada ASD</div>
+      <p class="en-only">Common stimulant side effects — decreased appetite, weight loss, sleep disorders — are frequently more severe. Additional risks in ASD include heightened anxiety, social withdrawal, tic exacerbation, worsened rigidity, and intense emotional dysregulation. Methylphenidate dropout rates in ASD-comorbid trials: <strong>~18%</strong> due to unbearable adverse effects. Dextroamphetamine shows potentially greater efficacy in the comorbid population.</p>
+      <p class="id-only">Efek samping stimulan yang umum — penurunan nafsu makan, penurunan berat badan, gangguan tidur — sering kali lebih parah. Risiko tambahan pada ASD meliputi peningkatan kecemasan, penarikan diri dari lingkungan sosial, eksaserbasi tik (tic), kekakuan yang memburuk, dan disregulasi emosional yang intens. Tingkat penghentian (dropout) metilfenidat dalam uji coba komorbid ASD: <strong>~18%</strong> karena efek samping yang tidak tertahankan. Dekstroamfetamin menunjukkan efikasi yang berpotensi lebih besar pada populasi komorbid.</p>
     </div>
 
-    <h3>Non-Stimulant &amp; Off-Label Agents</h3>
+    <h3 class="en-only">Non-Stimulant &amp; Off-Label Agents</h3>
+    <h3 class="id-only">Agen Non-Stimulan &amp; Off-Label</h3>
     <div class="pharma-table">
       <div class="pharma-header">
-        <div class="pharma-th">Class</div>
-        <div class="pharma-th">Agents</div>
-        <div class="pharma-th">Application in Comorbid ASD/ADHD</div>
+        <div class="pharma-th">
+          <span class="en-only">Class</span>
+          <span class="id-only">Golongan</span>
+        </div>
+        <div class="pharma-th">
+          <span class="en-only">Agents</span>
+          <span class="id-only">Agen</span>
+        </div>
+        <div class="pharma-th">
+          <span class="en-only">Application in Comorbid ASD/ADHD</span>
+          <span class="id-only">Aplikasi pada Komorbid ASD/ADHD</span>
+        </div>
       </div>
 
       <div class="pharma-row">
-        <div class="pharma-td"><div class="pharma-class">Alpha-2 Adrenergic Agonists</div></div>
+        <div class="pharma-td">
+          <div class="pharma-class en-only">Alpha-2 Adrenergic Agonists</div>
+          <div class="pharma-class id-only">Agonis Adrenergik Alfa-2</div>
+        </div>
         <div class="pharma-td"><div class="pharma-agents">Guanfacine<br>Clonidine</div></div>
-        <div class="pharma-td">Highly recommended when stimulants fail or cause unbearable adverse effects. Guanfacine significantly improves impulsivity and hyperactivity in ASD. Often preferred for preschool-aged children with AuDHD.</div>
+        <div class="pharma-td">
+          <span class="en-only">Highly recommended when stimulants fail or cause unbearable adverse effects. Guanfacine significantly improves impulsivity and hyperactivity in ASD. Often preferred for preschool-aged children with AuDHD.</span>
+          <span class="id-only">Sangat direkomendasikan ketika stimulan gagal atau menyebabkan efek samping yang tidak tertahankan. Guanfacine secara signifikan memperbaiki impulsivitas dan hiperaktivitas pada ASD. Sering kali lebih disukai untuk anak usia prasekolah dengan AuDHD.</span>
+        </div>
       </div>
 
       <div class="pharma-row">
-        <div class="pharma-td"><div class="pharma-class">Norepinephrine Reuptake Inhibitors</div></div>
+        <div class="pharma-td">
+          <div class="pharma-class en-only">Norepinephrine Reuptake Inhibitors</div>
+          <div class="pharma-class id-only">Penghambat Reuptake Norepinefrin (NRI)</div>
+        </div>
         <div class="pharma-td"><div class="pharma-agents">Atomoxetine</div></div>
-        <div class="pharma-td">Lower ADHD symptom efficacy in ASD vs. neurotypical peers, but generally well-tolerated — a viable, safer alternative to stimulants with comparable side-effect profiles.</div>
+        <div class="pharma-td">
+          <span class="en-only">Lower ADHD symptom efficacy in ASD vs. neurotypical peers, but generally well-tolerated — a viable, safer alternative to stimulants with comparable side-effect profiles.</span>
+          <span class="id-only">Efikasi gejala ADHD lebih rendah pada ASD dibandingkan rekan neurotipikal, tetapi umumnya ditoleransi dengan baik — alternatif yang layak dan lebih aman daripada stimulan dengan profil efek samping yang sebanding.</span>
+        </div>
       </div>
 
       <div class="pharma-row">
-        <div class="pharma-td"><div class="pharma-class">MAOIs <span style="font-size:11px;color:var(--text-muted)">(Off-label)</span></div></div>
-        <div class="pharma-td"><div class="pharma-agents">Tranylcypromine</div><div class="pharma-note">Requires strict dietary restrictions</div></div>
-        <div class="pharma-td">Historically effective off-label treatment for Rejection Sensitive Dysphoria (RSD). Can dramatically alleviate intense emotional volatility and core attentional/impulsivity components of ADHD.</div>
+        <div class="pharma-td">
+          <div class="pharma-class en-only">MAOIs <span style="font-size:11px;color:var(--text-muted)">(Off-label)</span></div>
+          <div class="pharma-class id-only">MAOI <span style="font-size:11px;color:var(--text-muted)">(Off-label)</span></div>
+        </div>
+        <div class="pharma-td">
+          <div class="pharma-agents">Tranylcypromine</div>
+          <div class="pharma-note">
+            <span class="en-only">Requires strict dietary restrictions</span>
+            <span class="id-only">Memerlukan batasan diet yang ketat</span>
+          </div>
+        </div>
+        <div class="pharma-td">
+          <span class="en-only">Historically effective off-label treatment for Rejection Sensitive Dysphoria (RSD). Can dramatically alleviate intense emotional volatility and core attentional/impulsivity components of ADHD.</span>
+          <span class="id-only">Pengobatan off-label yang terbukti efektif secara historis untuk Rejection Sensitive Dysphoria (RSD). Dapat meredakan ketidakstabilan emosi yang intens secara dramatis serta komponen inti perhatian/impulsivitas dari ADHD.</span>
+        </div>
       </div>
 
       <div class="pharma-row">
-        <div class="pharma-td"><div class="pharma-class">Atypical Antipsychotics</div></div>
+        <div class="pharma-td">
+          <div class="pharma-class en-only">Atypical Antipsychotics</div>
+          <div class="pharma-class id-only">Antipsikotik Atipikal</div>
+        </div>
         <div class="pharma-td"><div class="pharma-agents">Risperidone<br>Aripiprazole<br>Loxapine</div></div>
-        <div class="pharma-td">Risperidone and Aripiprazole are the only <strong>FDA-approved</strong> agents for severe irritability/aggression in ASD. Loxapine (5–10 mg/day) shows promise as an effective, weight-sparing alternative in PET studies.</div>
+        <div class="pharma-td">
+          <span class="en-only">Risperidone and Aripiprazole are the only <strong>FDA-approved</strong> agents for severe irritability/aggression in ASD. Loxapine (5–10 mg/day) shows promise as an effective, weight-sparing alternative in PET studies.</span>
+          <span class="id-only">Risperidone dan Aripiprazole adalah satu-satunya agen yang <strong>disetujui FDA</strong> untuk iritabilitas/agresi parah pada ASD. Loxapine (5-10 mg/hari) menunjukkan potensi sebagai alternatif yang efektif dan hemat berat badan dalam studi PET.</span>
+        </div>
       </div>
 
       <div class="pharma-row">
-        <div class="pharma-td"><div class="pharma-class">Tricyclic Antidepressants <span style="font-size:11px;color:var(--text-muted)">(Off-label)</span></div></div>
-        <div class="pharma-td"><div class="pharma-agents">Amitriptyline</div><div class="pharma-note">~1 mg/kg/day — use cautiously</div></div>
-        <div class="pharma-td">Demonstrates promising neurotrophic properties. Efficacy for managing comorbid sleep disturbances, severe anxiety, impulsivity, repetitive behaviors, and enuresis.</div>
+        <div class="pharma-td">
+          <div class="pharma-class en-only">Tricyclic Antidepressants <span style="font-size:11px;color:var(--text-muted)">(Off-label)</span></div>
+          <div class="pharma-class id-only">Antidepresan Trisiklik <span style="font-size:11px;color:var(--text-muted)">(Off-label)</span></div>
+        </div>
+        <div class="pharma-td">
+          <div class="pharma-agents">Amitriptyline</div>
+          <div class="pharma-note">
+            <span class="en-only">~1 mg/kg/day — use cautiously</span>
+            <span class="id-only">~1 mg/kg/hari — gunakan dengan hati-hati</span>
+          </div>
+        </div>
+        <div class="pharma-td">
+          <span class="en-only">Demonstrates promising neurotrophic properties. Efficacy for managing comorbid sleep disturbances, severe anxiety, impulsivity, repetitive behaviors, and enuresis.</span>
+          <span class="id-only">Menunjukkan sifat neurotropik yang menjanjikan. Efikasi untuk mengelola gangguan tidur komorbid, kecemasan parah, impulsivitas, perilaku berulang, dan enuresis (mengompol).</span>
+        </div>
       </div>
     </div>
 
     <div class="callout">
-      <div class="callout-label">Polypharmacy Strategy</div>
-      <p>Combination therapy (stimulant + alpha-2 agonist, e.g. methylphenidate + guanfacine or clonidine) is increasingly recognized as highly effective — targeting severe ADHD symptoms during the day while the around-the-clock alpha-agonist counteracts anxiogenic stimulant side effects. Pre-treatment medical review including cardiovascular assessment is mandatory per NICE guidelines.</p>
+      <div class="callout-label en-only">Polypharmacy Strategy</div>
+      <div class="callout-label id-only">Strategi Polifarmasi</div>
+      <p class="en-only">Combination therapy (stimulant + alpha-2 agonist, e.g. methylphenidate + guanfacine or clonidine) is increasingly recognized as highly effective — targeting severe ADHD symptoms during the day while the around-the-clock alpha-agonist counteracts anxiogenic stimulant side effects. Pre-treatment medical review including cardiovascular assessment is mandatory per NICE guidelines.</p>
+      <p class="id-only">Terapi kombinasi (stimulan + agonis alfa-2, misalnya metilfenidat + guanfacine atau clonidine) semakin diakui sangat efektif — menargetkan gejala ADHD yang parah di siang hari sementara agonis alfa yang bekerja sepanjang waktu menetralkan efek samping stimulan yang memicu kecemasan (anxiogenic). Pemeriksaan medis pra-perawatan termasuk penilaian kardiovaskular adalah wajib menurut panduan NICE.</p>
     </div>
   </section>
 
@@ -1336,38 +1715,64 @@ footer {
   <section class="section" id="therapy">
     <div class="section-header">
       <span class="section-num">11</span>
-      <h2 class="section-title">Psychological Interventions</h2>
+      <h2 class="section-title en-only">Psychological Interventions</h2>
+      <h2 class="section-title id-only">Intervensi Psikologis</h2>
     </div>
 
-    <p>Pharmacotherapy must be embedded within a comprehensive, highly individualized, multimodal care plan incorporating advanced psychological and behavioral interventions — heavily adapted to accommodate the specific neurocognitive realities of the AuDHD profile.</p>
+    <p class="en-only">Pharmacotherapy must be embedded within a comprehensive, highly individualized, multimodal care plan incorporating advanced psychological and behavioral interventions — heavily adapted to accommodate the specific neurocognitive realities of the AuDHD profile.</p>
+    <p class="id-only">Farmakoterapi harus diintegrasikan dalam rencana perawatan multimodal yang komprehensif, sangat personal, dan menggabungkan intervensi psikologis serta perilaku tingkat lanjut — yang diadaptasi secara intensif untuk mengakomodasi realitas neurokognitif spesifik dari profil AuDHD.</p>
 
     <div class="therapy-grid">
-      <div class="therapy-card">
+      <div class="therapy-card en-only">
         <div class="therapy-card-label">Cognitive</div>
         <div class="therapy-accent"></div>
         <div class="therapy-card-name">Adapted CBT</div>
         <p>Standard CBT modified with visual supports, concrete frameworks, and structured predictable routines. Addresses ASD anxiety and rigid thinking via "what-if" scenarios; targets ADHD executive dysfunction via Pomodoro Technique, S.T.O.P. method, Decision Matrices, and Zones of Regulation.</p>
       </div>
+      <div class="therapy-card id-only">
+        <div class="therapy-card-label">Kognitif</div>
+        <div class="therapy-accent"></div>
+        <div class="therapy-card-name">CBT Teradaptasi</div>
+        <p>CBT standar yang dimodifikasi dengan dukungan visual, kerangka kerja konkret, dan rutinitas terstruktur yang dapat diprediksi. Menangani kecemasan dan pola pikir kaku ASD melalui skenario "bagaimana-jika"; menargetkan disfungsi eksekutif ADHD via Teknik Pomodoro, metode S.T.O.P., Matriks Keputusan, dan Zona Regulasi (Zones of Regulation).</p>
+      </div>
 
-      <div class="therapy-card">
+      <div class="therapy-card en-only">
         <div class="therapy-card-label">Emotional Regulation</div>
         <div class="therapy-accent"></div>
         <div class="therapy-card-name">Dialectical Behavior Therapy</div>
         <p>DBT's four core modules — mindfulness, distress tolerance, emotion regulation, interpersonal effectiveness — stabilize intense neurophysiological states. Distress tolerance is especially vital for surviving RSD triggers without destructive impulsivity.</p>
       </div>
+      <div class="therapy-card id-only">
+        <div class="therapy-card-label">Regulasi Emosi</div>
+        <div class="therapy-accent"></div>
+        <div class="therapy-card-name">Terapi Perilaku Dialektis (DBT)</div>
+        <p>Empat modul inti DBT — kesadaran penuh (mindfulness), toleransi distres, regulasi emosi, efektivitas interpersonal — menstabilkan kondisi neurofisiologis yang intens. Toleransi distres sangat penting untuk bertahan menghadapi pemicu RSD tanpa impulsivitas yang merusak.</p>
+      </div>
 
-      <div class="therapy-card">
+      <div class="therapy-card en-only">
         <div class="therapy-card-label">Acceptance</div>
         <div class="therapy-accent"></div>
         <div class="therapy-card-name">Acceptance &amp; Commitment Therapy</div>
         <p>ACT shifts the therapeutic goal from "fixing" neurodivergent traits to radical self-acceptance. Cognitive defusion techniques help individuals distance from internalized shame; values clarification aligns daily actions with genuine personal meaning.</p>
       </div>
+      <div class="therapy-card id-only">
+        <div class="therapy-card-label">Penerimaan</div>
+        <div class="therapy-accent"></div>
+        <div class="therapy-card-name">Terapi Penerimaan &amp; Komitmen (ACT)</div>
+        <p>ACT menggeser tujuan terapeutik dari "memperbaiki" sifat neurodivergen ke penerimaan diri yang radikal. Teknik defusi kognitif membantu individu menjaga jarak dari rasa malu yang terinternalisasi; klarifikasi nilai-nilai menyelaraskan tindakan harian dengan makna pribadi yang tulus.</p>
+      </div>
 
-      <div class="therapy-card">
+      <div class="therapy-card en-only">
         <div class="therapy-card-label">Environmental</div>
         <div class="therapy-accent"></div>
         <div class="therapy-card-name">Occupational Therapy</div>
         <p>OT conducts thorough sensory audits of home, school, and workplace environments. Implements legally protected reasonable adjustments (dimmed lighting, quiet spaces, fidget tools, movement breaks). Establishes pacing systems to prevent the cyclical boom-and-bust pattern of unmanaged AuDHD.</p>
+      </div>
+      <div class="therapy-card id-only">
+        <div class="therapy-card-label">Lingkungan</div>
+        <div class="therapy-accent"></div>
+        <div class="therapy-card-name">Terapi Okupasi</div>
+        <p>OT melakukan audit sensorik yang menyeluruh terhadap lingkungan rumah, sekolah, dan tempat kerja. Menerapkan penyesuaian yang layak (reasonable adjustments) yang dilindungi undang-undang (pencahayaan redup, ruang tenang, alat fidget, jeda gerakan). Menetapkan sistem pengaturan ritme untuk mencegah pola siklus pasang-surut (boom-and-bust) dari AuDHD yang tidak terkelola.</p>
       </div>
     </div>
   </section>
@@ -1376,64 +1781,85 @@ footer {
   <section class="section" id="ot">
     <div class="section-header">
       <span class="section-num">12</span>
-      <h2 class="section-title">Occupational Therapy &amp; Environmental Modification</h2>
+      <h2 class="section-title en-only">Occupational Therapy &amp; Environmental Modification</h2>
+      <h2 class="section-title id-only">Terapi Okupasi &amp; Modifikasi Lingkungan</h2>
     </div>
 
-    <p>Rehabilitation for AuDHD extends far beyond the confines of the therapy room and directly into the physical environment. Occupational therapy (OT) is a vital discipline for managing the <strong>profound sensory conflicts and executive functioning deficits</strong> inherent in the condition. Occupational therapists collaborate with patients to conduct thorough sensory audits of their homes, schools, and workplaces. This process identifies specific environmental triggers for autistic sensory overload and highlights safe opportunities for ADHD sensory seeking.</p>
+    <p class="en-only">Rehabilitation for AuDHD extends far beyond the confines of the therapy room and directly into the physical environment. Occupational therapy (OT) is a vital discipline for managing the <strong>profound sensory conflicts and executive functioning deficits</strong> inherent in the condition. Occupational therapists collaborate with patients to conduct thorough sensory audits of their homes, schools, and workplaces. This process identifies specific environmental triggers for autistic sensory overload and highlights safe opportunities for ADHD sensory seeking.</p>
+    <p class="id-only">Rehabilitasi untuk AuDHD meluas jauh melampaui batas ruang terapi dan langsung menyasar ke lingkungan fisik. Terapi okupasi (OT) adalah disiplin ilmu vital untuk mengelola <strong>konflik sensorik yang mendalam dan defisit fungsi eksekutif</strong> yang melekat pada kondisi ini. Terapis okupasi berkolaborasi dengan pasien untuk melakukan audit sensorik menyeluruh di rumah, sekolah, dan tempat kerja mereka. Proses ini mengidentifikasi pemicu lingkungan spesifik untuk kelebihan beban (overload) sensorik autistik dan menyoroti peluang aman bagi pencarian sensorik (sensory seeking) ADHD.</p>
 
     <div class="pill-row">
-      <span class="pill cyan">Sensory Audits</span>
-      <span class="pill purple">Environmental Modification</span>
-      <span class="pill gold">Pacing Systems</span>
+      <span class="pill cyan en-only">Sensory Audits</span>
+      <span class="pill cyan id-only">Audit Sensorik</span>
+      <span class="pill purple en-only">Environmental Modification</span>
+      <span class="pill purple id-only">Modifikasi Lingkungan</span>
+      <span class="pill gold en-only">Pacing Systems</span>
+      <span class="pill gold id-only">Sistem Pengaturan Ritme (Pacing)</span>
     </div>
 
-    <h3>Reasonable Adjustments</h3>
-    <p>Environmental modifications are legally protected <strong>"reasonable adjustments"</strong> in educational and occupational settings and are heavily endorsed by NICE clinical guidelines. To minimize the negative impact of the physical environment, modifications may include:</p>
+    <h3 class="en-only">Reasonable Adjustments</h3>
+    <h3 class="id-only">Penyesuaian yang Layak (Reasonable Adjustments)</h3>
+    <p class="en-only">Environmental modifications are legally protected <strong>"reasonable adjustments"</strong> in educational and occupational settings and are heavily endorsed by NICE clinical guidelines. To minimize the negative impact of the physical environment, modifications may include:</p>
+    <p class="id-only">Modifikasi lingkungan adalah <strong>"penyesuaian yang layak" (reasonable adjustments)</strong> yang dilindungi secara hukum dalam lingkungan pendidikan dan pekerjaan, serta sangat didukung oleh panduan klinis NICE. Untuk meminimalkan dampak negatif lingkungan fisik, modifikasi dapat meliputi:</p>
 
     <div class="principles">
       <div class="principle">
         <div class="principle-num">01</div>
         <div class="principle-content">
-          <h4>Noise-Canceling Headphones</h4>
-          <p>Provision of noise-canceling or noise-dampening headphones to mitigate auditory sensory overload in open-plan offices, classrooms, and public environments.</p>
+          <h4 class="en-only">Noise-Canceling Headphones</h4>
+          <h4 class="id-only">Headphone Peredam Bising</h4>
+          <p class="en-only">Provision of noise-canceling or noise-dampening headphones to mitigate auditory sensory overload in open-plan offices, classrooms, and public environments.</p>
+          <p class="id-only">Penyediaan headphone peredam atau peredam kebisingan untuk meminimalkan kelebihan beban sensorik pendengaran di kantor dengan konsep terbuka (open-plan), ruang kelas, dan lingkungan publik.</p>
         </div>
       </div>
       <div class="principle">
         <div class="principle-num">02</div>
         <div class="principle-content">
-          <h4>Altered or Dimmed Lighting</h4>
-          <p>Modification of harsh fluorescent or overhead lighting to reduce visual sensory triggers — using warm-toned, adjustable, or indirect lighting where possible.</p>
+          <h4 class="en-only">Altered or Dimmed Lighting</h4>
+          <h4 class="id-only">Pencahayaan yang Diubah atau Diredupkan</h4>
+          <p class="en-only">Modification of harsh fluorescent or overhead lighting to reduce visual sensory triggers — using warm-toned, adjustable, or indirect lighting where possible.</p>
+          <p class="id-only">Modifikasi pencahayaan fluoresen atau lampu atas yang silau untuk mengurangi pemicu sensorik visual — menggunakan pencahayaan bernada hangat, dapat disesuaikan, atau tidak langsung jika memungkinkan.</p>
         </div>
       </div>
       <div class="principle">
         <div class="principle-num">03</div>
         <div class="principle-content">
-          <h4>Personal Space Requirements</h4>
-          <p>Modifications to seating arrangements and spatial boundaries, respecting the individual's need for reduced proximity and physical contact.</p>
+          <h4 class="en-only">Personal Space Requirements</h4>
+          <h4 class="id-only">Kebutuhan Ruang Personal</h4>
+          <p class="en-only">Modifications to seating arrangements and spatial boundaries, respecting the individual's need for reduced proximity and physical contact.</p>
+          <p class="id-only">Modifikasi pengaturan tempat duduk dan batas spasial, menghormati kebutuhan individu akan pengurangan kedekatan dan kontak fisik.</p>
         </div>
       </div>
       <div class="principle">
         <div class="principle-num">04</div>
         <div class="principle-content">
-          <h4>Quiet Decompression Spaces</h4>
-          <p>Access to designated quiet rooms or low-stimulation areas for sensory recovery during periods of overload or approaching shutdown.</p>
+          <h4 class="en-only">Quiet Decompression Spaces</h4>
+          <h4 class="id-only">Ruang Dekompresi yang Tenang</h4>
+          <p class="en-only">Access to designated quiet rooms or low-stimulation areas for sensory recovery during periods of overload or approaching shutdown.</p>
+          <p class="id-only">Akses ke ruang tenang yang ditentukan atau area dengan stimulasi rendah untuk pemulihan sensorik selama periode kelebihan beban atau saat mendekati fase shutdown.</p>
         </div>
       </div>
       <div class="principle">
         <div class="principle-num">05</div>
         <div class="principle-content">
-          <h4>Fidget Tools &amp; Movement Breaks</h4>
-          <p>Explicit allowance of fidget tools and scheduled movement breaks during tasks — channeling ADHD sensory-seeking needs without disrupting the work or learning environment.</p>
+          <h4 class="en-only">Fidget Tools &amp; Movement Breaks</h4>
+          <h4 class="id-only">Alat Fidget &amp; Jeda Bergerak</h4>
+          <p class="en-only">Explicit allowance of fidget tools and scheduled movement breaks during tasks — channeling ADHD sensory-seeking needs without disrupting the work or learning environment.</p>
+          <p class="id-only">Izin eksplisit untuk penggunaan alat fidget dan jeda bergerak yang terjadwal selama menjalankan tugas — menyalurkan kebutuhan pencarian sensorik (sensory-seeking) ADHD tanpa mengganggu lingkungan kerja atau belajar.</p>
         </div>
       </div>
     </div>
 
-    <h3>Pacing Systems &amp; Burnout Prevention</h3>
-    <p>Furthermore, occupational therapists are instrumental in assisting individuals in establishing <strong>formal pacing systems</strong>. These systems are vital, life-saving tools for individuals recovering from severe neurodivergent burnout. By teaching the individual to meticulously budget their finite cognitive, social, and sensory energy reserves, pacing systems prevent the devastating, cyclical <strong>"boom-and-bust"</strong> patterns that traditionally characterize the unmanaged AuDHD experience.</p>
+    <h3 class="en-only">Pacing Systems &amp; Burnout Prevention</h3>
+    <h3 class="id-only">Sistem Pengaturan Ritme (Pacing) &amp; Pencegahan Burnout</h3>
+    <p class="en-only">Furthermore, occupational therapists are instrumental in assisting individuals in establishing <strong>formal pacing systems</strong>. These systems are vital, life-saving tools for individuals recovering from severe neurodivergent burnout. By teaching the individual to meticulously budget their finite cognitive, social, and sensory energy reserves, pacing systems prevent the devastating, cyclical <strong>"boom-and-bust"</strong> patterns that traditionally characterize the unmanaged AuDHD experience.</p>
+    <p class="id-only">Selain itu, terapis okupasi berperan penting dalam membantu individu membangun <strong>sistem pengaturan ritme formal (formal pacing systems)</strong>. Sistem ini merupakan alat vital penyelamat jiwa bagi individu yang pulih dari neurodivergent burnout yang parah. Dengan mengajarkan individu untuk menganggarkan cadangan energi kognitif, sosial, dan sensorik mereka yang terbatas secara cermat, sistem pengaturan ritme mencegah pola siklus <strong>"pasang-surut" (boom-and-bust)</strong> yang merusak yang secara tradisional mencirikan pengalaman AuDHD yang tidak terkelola.</p>
 
     <div class="callout gold">
-      <div class="callout-label">Clinical Significance</div>
-      <p>Pacing systems directly address the core paradox of AuDHD energy management: ADHD drives hyperfocused bursts of unsustainable output, while ASD demands rigid routine and predictability. Without structured pacing, individuals cycle between periods of intense overproduction and prolonged, debilitating burnout — a pattern that compounds over time and significantly erodes long-term functional capacity.</p>
+      <div class="callout-label en-only">Clinical Significance</div>
+      <div class="callout-label id-only">Signifikansi Klinis</div>
+      <p class="en-only">Pacing systems directly address the core paradox of AuDHD energy management: ADHD drives hyperfocused bursts of unsustainable output, while ASD demands rigid routine and predictability. Without structured pacing, individuals cycle between periods of intense overproduction and prolonged, debilitating burnout — a pattern that compounds over time and significantly erodes long-term functional capacity.</p>
+      <p class="id-only">Sistem pengaturan ritme secara langsung mengatasi paradoks inti dari manajemen energi AuDHD: ADHD mendorong luapan hiperfokus dari hasil kerja yang tidak berkelanjutan, sementara ASD menuntut rutinitas dan prediktabilitas yang kaku. Tanpa pengaturan ritme yang terstruktur, individu berputar di antara periode overproduksi yang intens dan burnout yang melemahkan serta berkepanjangan — sebuah pola yang menumpuk seiring waktu dan secara signifikan mengikis kapasitas fungsional jangka panjang.</p>
     </div>
   </section>
 
@@ -1441,13 +1867,19 @@ footer {
   <section class="section" id="conclusion">
     <div class="section-header">
       <span class="section-num">13</span>
-      <h2 class="section-title">Conclusion</h2>
+      <h2 class="section-title en-only">Conclusion</h2>
+      <h2 class="section-title id-only">Kesimpulan</h2>
     </div>
 
-    <div class="conclusion-block">
+    <div class="conclusion-block en-only">
       <p>The intersection of Autism Spectrum Disorder and Attention-Deficit/Hyperactivity Disorder entirely defies the archaic, exclusionary diagnostic models of the past. Robust genomic research identifying pleiotropic genes, neuroimaging revealing shared DMN disruptions, and the undeniable epidemiological reality of high co-occurrence confirm that AuDHD is a deeply intertwined, highly valid neurodevelopmental presentation.</p>
       <p style="margin-top:1rem;">Effective medical management demands rigorous multidisciplinary assessments utilizing validated tools like the DIVA-5 and ADOS-2, coupled with a deep understanding of masking phenotypes measured by instruments like the CAT-Q. Pharmacologically, clinicians must expertly navigate altered stimulant efficacy and tolerability in the autistic brain — judiciously utilizing alpha-2 agonists and specialized off-label treatments.</p>
       <p style="margin-top:1rem;">Ultimately, optimal long-term outcomes rely on embedding this medical management within <strong>neurodiversity-affirming psychological frameworks</strong> — adapted CBT, DBT, and ACT — and implementing robust, legally protected environmental modifications. Moving decisively beyond a pathologizing model toward holistic, individualized, empathetic care empowers individuals with AuDHD to navigate their unique neurocognitive landscapes.</p>
+    </div>
+    <div class="conclusion-block id-only">
+      <p>Persimpangan antara Gangguan Spektrum Autisme (ASD) dan Attention-Deficit/Hyperactivity Disorder (ADHD) sepenuhnya menentang model diagnostik masa lalu yang kuno dan bersifat eksklusif satu sama lain. Penelitian genomik kuat yang mengidentifikasi gen pleiotropik, pencitraan saraf (neuroimaging) yang mengungkapkan gangguan DMN bersama, dan kenyataan epidemiologis yang tidak terbantahkan dari ko-terjadinya (co-occurrence) yang tinggi mengonfirmasi bahwa AuDHD is a presentasi perkembangan saraf yang sangat terjalin erat dan sangat valid.</p>
+      <p style="margin-top:1rem;">Manajemen medis yang efektif menuntut penilaian multidisiplin yang ketat menggunakan alat bantu yang divalidasi seperti DIVA-5 dan ADOS-2, ditambah dengan pemahaman mendalam tentang fenotipe masking yang diukur dengan instrumen seperti CAT-Q. Secara farmakologis, dokter klinis harus menavigasi efikasi dan tolerabilitas stimulan yang berubah secara ahli di dalam otak autistik — dengan bijaksana menggunakan agonis alfa-2 dan pengobatan off-label khusus.</p>
+      <p style="margin-top:1rem;">Pada akhirnya, hasil jangka panjang yang optimal bergantung pada pengintegrasian manajemen medis ini ke dalam <strong>kerangka kerja psikologis yang meneguhkan keberagaman saraf (neurodiversity-affirming)</strong> — CBT teradaptasi, DBT, dan ACT — serta menerapkan modifikasi lingkungan yang kuat dan dilindungi hukum. Melangkah dengan tegas melampaui model patologis menuju perawatan yang holistik, individual, dan berempati memberdayakan individu dengan AuDHD untuk menavigasi lanskap neurokognitif unik mereka.</p>
     </div>
   </section>
 
@@ -1456,16 +1888,34 @@ footer {
 </div><!-- /.layout -->
 
 <footer>
-  <span class="footer-note">AuDHD Clinical Analysis — Based on DSM-5, NICE NG87, SIGN guidelines, and peer-reviewed genomic &amp; neuroimaging research.</span>
-  <span class="footer-note" style="margin-left:2rem;">
+  <span class="footer-note en-only">AuDHD Clinical Analysis — Based on DSM-5, NICE NG87, SIGN guidelines, and peer-reviewed genomic &amp; neuroimaging research.</span>
+  <span class="footer-note id-only">Analisis Klinis AuDHD — Berdasarkan panduan DSM-5, NICE NG87, SIGN, serta penelitian genomik &amp; pencitraan saraf (neuroimaging) yang ditinjau sejawat.</span>
+  <span class="footer-note en-only" style="margin-left:2rem;">
     <a href="/index.html" style="color:var(--cyan); text-decoration:none; border-bottom:1px solid rgba(110,207,255,0.2); transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
       ← Back to Home
     </a>
   </span>
-  <span class="footer-note" style="margin-left:auto;color:rgba(110,207,255,0.4)">✦ AQ threshold corrected: 32 per Baron-Cohen et al. (2001)</span>
+  <span class="footer-note id-only" style="margin-left:2rem;">
+    <a href="/index.html" style="color:var(--cyan); text-decoration:none; border-bottom:1px solid rgba(110,207,255,0.2); transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+      ← Kembali ke Beranda
+    </a>
+  </span>
+  <span class="footer-note en-only" style="margin-left:auto;color:rgba(110,207,255,0.4)">✦ AQ threshold corrected: 32 per Baron-Cohen et al. (2001)</span>
+  <span class="footer-note id-only" style="margin-left:auto;color:rgba(110,207,255,0.4)">✦ Ambang batas AQ dikoreksi: 32 menurut Baron-Cohen et al. (2001)</span>
 </footer>
 
 <script>
+// ─── LANG TOGGLE ───
+function setLang(lang, btn) {
+  document.body.classList.remove('lang-en', 'lang-id');
+  document.body.classList.add('lang-' + lang);
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    const isMatch = (lang === 'en' && b.textContent.includes('English'))
+                 || (lang === 'id' && b.textContent.includes('Indonesia'));
+    b.classList.toggle('active', isMatch);
+  });
+}
+
 // ─── SCROLLSPY ───
 const sections = document.querySelectorAll('.section, .hero, .stats-grid');
 const navLinks = document.querySelectorAll('.nav-link');
