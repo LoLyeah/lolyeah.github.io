@@ -1,532 +1,1393 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>US-Indonesia Reciprocal Trade Agreement Analysis</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #334155; }
-        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); transition: transform 0.2s ease-in-out; }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
-        .btn-primary { background-color: #0f172a; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.2s; }
-        .btn-primary:hover { background-color: #334155; }
-        .btn-secondary { background-color: #e2e8f0; color: #1e293b; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.2s; }
-        .btn-secondary:hover { background-color: #cbd5e1; }
-        .active-tab { border-bottom: 2px solid #0f172a; color: #0f172a; font-weight: 600; }
-        .chart-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto; height: 350px; max-height: 400px; }
-        .metric-value { font-size: 1.5rem; font-weight: 700; color: #0f172a; }
-        .metric-label { font-size: 0.875rem; color: #64748b; }
-        /* Custom Scrollbar for side panels if needed */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    </style>
-    <!-- Chosen Palette: Warm Professional - Slate (#0f172a) as primary, with warm grays (#f8f9fa) and subtle accent blues. -->
-    <!-- Application Structure Plan: 
-         1. Hero Section: High-level purpose (Reciprocity/Supply Chains).
-         2. "The Deal at a Glance": Key pillars (Tariffs, Non-Tariff, Digital, Investment).
-         3. Interactive Impact Simulator: "How does this affect me?" (User Persona: Farmer, Consumer, Tech Startup).
-         4. Agricultural Commitments Deep Dive: Charting the specific import volume targets from Annex IV.
-         5. Digital & Investment Framework: Explaining the modernization rules.
-         6. Analytical Conclusion: Answering "Is it good?" with a balanced Pros/Cons list based on the user's exploration.
-         Rationale: Users care most about personal impact and the "winner/loser" dynamic. The simulator puts them in the shoes of stakeholders. The charts visualize the hard numbers which are otherwise buried in text.
-    -->
-    <!-- Visualization & Content Choices:
-         - Agricultural Quotas -> Bar Chart (Chart.js) -> Compare volumes visually to show scale of commitments.
-         - Impact Analysis -> Interactive Tabs/Persona Selector -> text-based dynamic content to explain qualitative effects.
-         - Agreement Pillars -> Grid of Cards -> To organize complex legal sections into digestible topics.
-         - NO SVG/Mermaid used. All visuals are HTML/CSS or Chart.js Canvas.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>US-Indonesia Reciprocal Trade Agreement Analysis</title>
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg:         #05080c;
+      --bg2:        #0a0f15;
+      --bg3:        #101721;
+      --border:     rgba(74, 158, 255, 0.12);
+      --border-glow:rgba(74, 158, 255, 0.28);
+      --blue:       #4a9eff;
+      --cyan:       #00f5ff;
+      --red:        #e03a3a;
+      --green:      #3abf7c;
+      --orange:     #ff9f1c;
+      --gold:       #f0b429;
+      --muted:      #64748b;
+      --text:       #d4dae0;
+      --text2:      #94a3b8;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: .018;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* horizontal scanline animation */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.28), transparent);
+      animation: scan 8s linear infinite;
+      pointer-events: none;
+      z-index: 998;
+    }
+    @keyframes scan { to { top: 200%; } }
+
+    h1, h2, h3, h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: .08em;
+      font-weight: 400;
+    }
+    .mono {
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* ── NAV ─────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(5, 8, 12, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      font-family: 'Bebas Neue';
+      font-size: 22px;
+      color: var(--blue);
+      letter-spacing: .08em;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-brand span {
+      color: var(--cyan);
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .nav-links button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Space Mono';
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text2);
+      transition: color .2s, text-shadow .2s;
+    }
+    .nav-links button:hover {
+      color: var(--cyan);
+      text-shadow: 0 0 8px rgba(0, 245, 255, 0.5);
+    }
+
+    /* Mobile Navigation */
+    .mobile-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 24px;
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 199;
+    }
+    .mobile-menu button {
+      background: none;
+      border: none;
+      text-align: left;
+      color: var(--text);
+      font-family: 'Space Mono';
+      font-size: 12px;
+      text-transform: uppercase;
+      padding: 8px 0;
+      width: 100%;
+    }
+
+    /* ── HERO ─────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 140px 24px 80px;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(74, 158, 255, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(74, 158, 255, .035) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%);
+    }
+    .hero-glow {
+      position: absolute;
+      width: 650px;
+      height: 650px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(0, 245, 255, .06) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .classify-badge {
+      font-family: 'Space Mono';
+      font-size: 9px;
+      letter-spacing: .22em;
+      color: var(--red);
+      border: 1px solid rgba(224, 58, 58, 0.4);
+      background: rgba(224, 58, 58, 0.04);
+      padding: 4px 16px;
+      margin-bottom: 28px;
+      animation: pulse 3s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: .55 } }
+    .hero h1 {
+      font-size: clamp(38px, 6.5vw, 84px);
+      line-height: .95;
+      color: var(--text);
+      text-shadow: 0 0 60px rgba(74, 158, 255, 0.25);
+      position: relative;
+      z-index: 1;
+      margin-bottom: 18px;
+    }
+    .hero h1 span {
+      color: var(--cyan);
+      text-shadow: 0 0 40px rgba(0, 245, 255, 0.4);
+    }
+    .hero-sub {
+      font-family: 'Space Mono';
+      font-size: 10px;
+      letter-spacing: .18em;
+      color: var(--muted);
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 22px;
+    }
+    .hero-desc {
+      max-width: 680px;
+      font-size: 17px;
+      color: var(--text2);
+      position: relative;
+      z-index: 1;
+      margin-bottom: 38px;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .status-pill {
+      font-family: 'Space Mono';
+      font-size: 10px;
+      letter-spacing: .1em;
+      padding: 8px 18px;
+      border-radius: 4px;
+      border: 1px solid;
+    }
+    .status-signed {
+      background: rgba(58, 191, 124, 0.05);
+      border-color: rgba(58, 191, 124, 0.25);
+      color: var(--green);
+    }
+    .status-focus {
+      background: rgba(74, 158, 255, 0.05);
+      border-color: rgba(74, 158, 255, 0.25);
+      color: var(--blue);
+    }
+
+    /* ── LAYOUT ─────────────────────────────────────── */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    section {
+      padding: 90px 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .bg-darker {
+      background: var(--bg2);
+    }
+    .section-label {
+      font-family: 'Space Mono';
+      font-size: 10px;
+      letter-spacing: .25em;
+      color: var(--blue);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-label::before {
+      content: '';
+      width: 22px;
+      height: 1px;
+      background: var(--blue);
+    }
+    .section-title {
+      font-size: clamp(28px, 4.5vw, 44px);
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .section-intro {
+      max-width: 740px;
+      color: var(--text2);
+      font-size: 16px;
+      margin-bottom: 40px;
+    }
+
+    /* ── PILLARS ────────────────────────────────────── */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .pillar-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+    .pillar-card:hover {
+      border-color: var(--border-glow);
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(74, 158, 255, 0.08);
+    }
+    .pillar-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+    }
+    .pillar-card.border-blue::before { background: var(--blue); }
+    .pillar-card.border-cyan::before { background: var(--cyan); }
+    .pillar-card.border-indigo::before { background: #6366f1; }
+    .pillar-card.border-rose::before { background: #f43f5e; }
+
+    .pillar-icon {
+      font-size: 26px;
+      margin-bottom: 16px;
+    }
+    .pillar-card h3 {
+      font-size: 18px;
+      color: var(--text);
+      margin-bottom: 10px;
+      letter-spacing: .05em;
+    }
+    .pillar-card p {
+      font-size: 13.5px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    /* ── SIMULATOR ──────────────────────────────────── */
+    .simulator-layout {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 32px;
+      align-items: start;
+    }
+    .persona-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .persona-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: left;
+      backdrop-filter: blur(12px);
+    }
+    .persona-card:hover, .persona-card.active {
+      border-color: var(--cyan);
+      background: rgba(0, 245, 255, 0.03);
+      box-shadow: 0 0 15px rgba(0, 245, 255, 0.05);
+    }
+    .persona-card.active {
+      border-color: var(--cyan);
+      background: rgba(0, 245, 255, 0.05);
+    }
+    .p-icon {
+      font-size: 28px;
+      transition: transform 0.25s ease;
+    }
+    .persona-card:hover .p-icon {
+      transform: scale(1.1);
+    }
+    .p-text h4 {
+      font-size: 16px;
+      color: var(--text);
+      letter-spacing: .05em;
+    }
+    .p-text p {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .persona-display {
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .glass-panel {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      backdrop-filter: blur(12px);
+    }
+    .disp-hdr {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .disp-icon {
+      font-size: 36px;
+      padding: 10px;
+      background: rgba(74, 158, 255, 0.05);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .disp-hdr h3 {
+      font-size: 22px;
+      color: var(--cyan);
+      letter-spacing: .06em;
+    }
+    .disp-body {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.75;
+      margin-bottom: 22px;
+    }
+    .disp-list {
+      background: rgba(0,0,0,0.18);
+      border-radius: 6px;
+      padding: 18px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(255,255,255,0.02);
+    }
+    .disp-list ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .disp-list li {
+      font-size: 13.5px;
+      color: var(--text2);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .disp-list li::before {
+      content: '→';
+      color: var(--cyan);
+      font-weight: bold;
+    }
+    .disp-quote {
+      border-left: 3px solid var(--cyan);
+      padding-left: 14px;
+      font-style: italic;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+
+    /* ── AGRI-QUOTAS ────────────────────────────────── */
+    .flex-title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .flex-title-bar .section-intro {
+      margin-bottom: 0;
+    }
+    .scale-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg3);
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      backdrop-filter: blur(12px);
+    }
+    .scale-toggle {
+      display: flex;
+      gap: 4px;
+      background: rgba(0,0,0,0.2);
+      padding: 2px;
+      border-radius: 3px;
+    }
+    .scale-toggle button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Space Mono';
+      font-size: 9px;
+      letter-spacing: .05em;
+      padding: 4px 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: all .2s;
+    }
+    .scale-toggle button.active {
+      background: var(--blue);
+      color: #03070b;
+      font-weight: 700;
+    }
+
+    .chart-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 28px;
+    }
+    .chart-wrapper {
+      height: 480px;
+      display: flex;
+      flex-direction: column;
+    }
+    .chart-container-box {
+      position: relative;
+      flex-grow: 1;
+      width: 100%;
+    }
+    .agri-context {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .context-card {
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .context-card:hover {
+      border-color: var(--border-glow);
+      transform: translateX(3px);
+      box-shadow: 0 0 15px rgba(74, 158, 255, 0.05);
+    }
+    .card-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .card-hdr h4 {
+      font-size: 15px;
+      color: var(--text);
+      letter-spacing: .05em;
+    }
+    .badge {
+      font-family: 'Space Mono';
+      font-size: 8px;
+      letter-spacing: .05em;
+      padding: 2px 8px;
+      border-radius: 2px;
+      text-transform: uppercase;
+    }
+    .badge-gold { background: rgba(240, 180, 41, 0.06); border: 1px solid rgba(240, 180, 41, 0.3); color: var(--gold); }
+    .badge-blue { background: rgba(74, 158, 255, 0.06); border: 1px solid rgba(74, 158, 255, 0.3); color: var(--blue); }
+    .badge-cyan { background: rgba(0, 245, 255, 0.06); border: 1px solid rgba(0, 245, 255, 0.3); color: var(--cyan); }
+
+    .context-card p {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ── VERDICT ────────────────────────────────────── */
+    .verdict-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-bottom: 40px;
+    }
+    .verdict-card {
+      position: relative;
+    }
+    .verdict-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+    }
+    .verdict-card.border-green::before { background: var(--green); }
+    .verdict-card.border-orange::before { background: var(--orange); }
+
+    .card-title-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .v-icon {
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .text-green { color: var(--green); }
+    .text-orange { color: var(--orange); }
+    .verdict-card h3 {
+      font-size: 20px;
+      color: var(--text);
+      letter-spacing: .05em;
+    }
+    .verdict-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .verdict-list li {
+      font-size: 13.5px;
+    }
+    .verdict-list li strong {
+      display: block;
+      font-size: 12px;
+      color: var(--cyan);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .verdict-list li p {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    .analyst-block {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+      border-left: 3px solid var(--blue);
+    }
+    .analyst-block p {
+      font-size: 17px;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.7;
+      margin-top: 10px;
+    }
+
+    /* ── FOOTER ─────────────────────────────────────── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 46px 24px;
+      text-align: center;
+    }
+    footer p {
+      font-family: 'Space Mono';
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .08em;
+    }
+    footer .disclaimer {
+      max-width: 700px;
+      margin: 14px auto 0;
+      font-size: 9px;
+      color: rgba(146, 167, 190, 0.4);
+      line-height: 1.6;
+    }
+    footer .disclaimer strong {
+      color: rgba(224, 58, 58, 0.55);
+    }
+    footer a {
+      color: var(--cyan);
+      text-decoration: none;
+      transition: border .2s;
+      border-bottom: 1px solid transparent;
+    }
+    footer a:hover {
+      border-bottom-color: var(--cyan);
+    }
+    footer .back-link {
+      display: inline-block;
+      margin-top: 16px;
+      font-family: 'Space Mono';
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      border-bottom: 1px solid transparent;
+      transition: all .2s;
+    }
+    footer .back-link:hover {
+      border-bottom-color: var(--cyan);
+    }
+
+    /* ── SCROLL EFFECTS & INTERACTIVITY ───────────────── */
+    .cursor {
+      display: inline-block;
+      width: 6px;
+      height: 14px;
+      background: var(--cyan);
+      margin-left: 4px;
+      animation: blink 0.8s step-end infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-stagger > * {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-stagger.active > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-stagger.active > *:nth-child(1) { transition-delay: 50ms; }
+    .reveal-stagger.active > *:nth-child(2) { transition-delay: 150ms; }
+    .reveal-stagger.active > *:nth-child(3) { transition-delay: 250ms; }
+    .reveal-stagger.active > *:nth-child(4) { transition-delay: 350ms; }
+
+    /* ── UTILITY CLASSES ───────────────────────────── */
+    .text-cyan { color: var(--cyan); }
+    .text-sm { font-size: 13.5px; }
+    .text-xxs { font-size: 10px; }
+    .text-muted { color: var(--muted); }
+    .text-slate { color: var(--text2); }
+    .text-center { text-align: center; }
+    .italic { font-style: italic; }
+    .mb-4 { margin-bottom: 16px; }
+    .mt-4 { margin-top: 16px; }
+
+    /* ── RESPONSIVENESS ────────────────────────────── */
+    @media (max-width: 992px) {
+      .simulator-layout {
+        grid-template-columns: 1fr;
+      }
+      .chart-layout {
+        grid-template-columns: 1fr;
+      }
+      .chart-wrapper {
+        height: 400px;
+      }
+      .verdict-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .mobile-btn {
+        display: block;
+      }
+      nav {
+        padding: 14px 20px;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body>
 
-    <!-- Navigation -->
-    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <span class="text-xl font-bold text-slate-900 tracking-tight">US-Indonesia <span class="text-blue-700">ART</span> Explorer</span>
-                </div>
-                <div class="hidden md:flex space-x-8 items-center">
-                    <button onclick="scrollToSection('overview')" class="text-gray-600 hover:text-slate-900 px-3 py-2 text-sm font-medium">Overview</button>
-                    <button onclick="scrollToSection('impact-sim')" class="text-gray-600 hover:text-slate-900 px-3 py-2 text-sm font-medium">Impact Simulator</button>
-                    <button onclick="scrollToSection('agri-data')" class="text-gray-600 hover:text-slate-900 px-3 py-2 text-sm font-medium">Agri-Quotas</button>
-                    <button onclick="scrollToSection('analysis')" class="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-md text-sm font-medium transition-colors">Verdict</button>
-                </div>
-                <!-- Mobile Menu Button (Functional Logic in Script) -->
-                <div class="flex items-center md:hidden">
-                    <button id="mobile-menu-btn" class="text-gray-500 hover:text-gray-700 focus:outline-none">
-                        <span class="text-2xl">☰</span>
-                    </button>
-                </div>
-            </div>
+  <!-- NAVIGATION -->
+  <nav>
+    <a href="/index.html" class="nav-brand">US-IDN<span>ART</span></a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><button onclick="scrollToSection('overview')">Overview</button></li>
+        <li><button onclick="scrollToSection('pillars')">Pillars</button></li>
+        <li><button onclick="scrollToSection('impact-sim')">Impact Simulator</button></li>
+        <li><button onclick="scrollToSection('agri-data')">Agri-Quotas</button></li>
+        <li><button onclick="scrollToSection('analysis')">Verdict</button></li>
+      </ul>
+      <button id="mobile-menu-btn" class="mobile-btn">☰</button>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div id="mobile-menu" class="mobile-menu">
+    <button onclick="scrollToSection('overview')">Overview</button>
+    <button onclick="scrollToSection('pillars')">Pillars</button>
+    <button onclick="scrollToSection('impact-sim')">Impact Simulator</button>
+    <button onclick="scrollToSection('agri-data')">Agri-Quotas</button>
+    <button onclick="scrollToSection('analysis')">Verdict</button>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero" id="overview">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="classify-badge">TACTICAL TRADE INTELLIGENCE — FOR DIRECTIVE DECISION MAKING</div>
+    <h1>US-INDONESIA RECIPROCAL TRADE</h1>
+    <p class="hero-sub">ANALYSIS & STRATEGIC EXPLORER · AGREEMENT PIPELINE 2026</p>
+    <p class="hero-desc">An interactive framework dissecting the new bilateral Reciprocal Trade Agreement (ART). Strengthening supply chains, resolving tariff frictions, and structuring investment safeguards.</p>
+    <div class="hero-buttons">
+      <div class="status-pill status-signed">Status: Signed Agreement</div>
+      <div class="status-pill status-focus">Focus: Tariffs, Digital, Ag, Investment</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- PILLARS -->
+    <section id="pillars" class="reveal">
+      <div class="container">
+        <div class="section-label">01 — Core Pillars</div>
+        <h2 class="section-title">The Foundation</h2>
+        <p class="section-intro">Key mechanisms by which the US-Indonesia Agreement on Reciprocal Trade restructures economic dependencies.</p>
+        <div class="grid-4 reveal-stagger">
+          <div class="pillar-card border-blue">
+            <div class="pillar-icon">⚓</div>
+            <h3>Market Access</h3>
+            <p>Tariff containment and targeted agricultural quotas secure food supplies and manufacturing imports.</p>
+          </div>
+          <div class="pillar-card border-cyan">
+            <div class="pillar-icon">💻</div>
+            <h3>Digital Trade</h3>
+            <p>Prohibits duties on digital products, secures cross-border data pathways, and rejects local storage mandates.</p>
+          </div>
+          <div class="pillar-card border-indigo">
+            <div class="pillar-icon">🛡️</div>
+            <h3>Investment Safeguards</h3>
+            <p>Guarantees national treatment status and legally enforces strict protections against unsanctioned expropriation.</p>
+          </div>
+          <div class="pillar-card border-rose">
+            <div class="pillar-icon">⚖️</div>
+            <h3>Governance</h3>
+            <p>Science-backed sanitary measures paired with strict transparency guidelines curb local administrative bottlenecks.</p>
+          </div>
         </div>
-        <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 p-4">
-            <button onclick="scrollToSection('overview')" class="block w-full text-left py-2 text-gray-600">Overview</button>
-            <button onclick="scrollToSection('impact-sim')" class="block w-full text-left py-2 text-gray-600">Impact Simulator</button>
-            <button onclick="scrollToSection('agri-data')" class="block w-full text-left py-2 text-gray-600">Agri-Quotas</button>
-            <button onclick="scrollToSection('analysis')" class="block w-full text-left py-2 font-bold text-blue-700">Verdict</button>
-        </div>
-    </nav>
+      </div>
+    </section>
 
-    <!-- Hero Section -->
-    <header class="bg-white shadow-sm" id="overview">
-        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl font-extrabold text-slate-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-                Analysis: US-Indonesia Agreement on <br><span class="text-blue-700">Reciprocal Trade</span>
-            </h1>
-            <p class="mt-5 max-w-2xl mx-auto text-xl text-gray-500">
-                A breakdown of the new economic framework designed to strengthen supply chains, remove barriers, and modernize trade relations between the two nations.
-            </p>
-            <div class="mt-8 flex justify-center gap-4">
-                <div class="px-6 py-3 bg-blue-50 text-blue-800 rounded-full text-sm font-semibold">Status: Signed Agreement</div>
-                <div class="px-6 py-3 bg-green-50 text-green-800 rounded-full text-sm font-semibold">Focus: Tariffs, Digital, Ag, Investment</div>
+    <!-- IMPACT SIMULATOR -->
+    <section id="impact-sim" class="reveal bg-darker">
+      <div class="container">
+        <div class="section-label">02 — Simulator</div>
+        <h2 class="section-title">Stakeholder Impact Explorer</h2>
+        <p class="section-intro">Select an administrative profile to execute the database simulator and model localized impact vectors.</p>
+        
+        <div class="simulator-layout">
+          <!-- Left Persona Card Selector -->
+          <div class="persona-sidebar reveal-stagger">
+            <button onclick="updatePersona('consumer')" id="btn-consumer" class="persona-card active">
+              <span class="p-icon">🛒</span>
+              <div class="p-text">
+                <h4>Indonesian Consumer</h4>
+                <p>Goods & digital consumption</p>
+              </div>
+            </button>
+            <button onclick="updatePersona('farmer')" id="btn-farmer" class="persona-card">
+              <span class="p-icon">🌾</span>
+              <div class="p-text">
+                <h4>Tempe/Tofu Producer</h4>
+                <p>Raw agricultural inputs</p>
+              </div>
+            </button>
+            <button onclick="updatePersona('startup')" id="btn-startup" class="persona-card">
+              <span class="p-icon">🚀</span>
+              <div class="p-text">
+                <h4>Tech Entrepreneur</h4>
+                <p>Digital platform & infrastructure</p>
+              </div>
+            </button>
+            <button onclick="updatePersona('investor')" id="btn-investor" class="persona-card">
+              <span class="p-icon">🏭</span>
+              <div class="p-text">
+                <h4>Foreign Investor</h4>
+                <p>FDI & industrial scaling</p>
+              </div>
+            </button>
+          </div>
+          
+          <!-- Right Content Panel Display -->
+          <div class="persona-display glass-panel">
+            <div id="persona-content">
+              <!-- Content dynamically rendered via Database Decoding terminal typewriter -->
             </div>
+          </div>
         </div>
-    </header>
+      </div>
+    </section>
 
-    <main class="flex-grow">
-        <!-- Pillars Grid -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-900">Core Pillars of the Agreement</h2>
-                <p class="mt-2 text-lg text-gray-600">How the ART changes the economic landscape.</p>
+    <!-- AGRI-QUOTAS -->
+    <section id="agri-data" class="reveal">
+      <div class="container">
+        <div class="section-label">03 — Data Deep Dive</div>
+        <div class="flex-title-bar">
+          <div>
+            <h2 class="section-title">Strategic Food Security & Imports</h2>
+            <p class="section-intro">Annual minimum import commitments designed to stabilize primary food supplies for domestic production systems.</p>
+          </div>
+          <div class="scale-toggle-wrap">
+            <span class="mono text-xxs text-muted">SCALE: </span>
+            <div class="scale-toggle">
+              <button onclick="toggleChartScale('linear')" id="scale-linear" class="active">Linear</button>
+              <button onclick="toggleChartScale('logarithmic')" id="scale-log">Logarithmic</button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Pillar 1 -->
-                <div class="card p-6 border-t-4 border-blue-500">
-                    <div class="text-blue-600 text-3xl mb-4">⚓</div>
-                    <h3 class="text-lg font-bold text-slate-900 mb-2">Market Access</h3>
-                    <p class="text-gray-600 text-sm">Reduction of tariffs and specific import quotas for agricultural goods to ensure food security inputs.</p>
-                </div>
-                <!-- Pillar 2 -->
-                <div class="card p-6 border-t-4 border-teal-500">
-                    <div class="text-teal-600 text-3xl mb-4">💻</div>
-                    <h3 class="text-lg font-bold text-slate-900 mb-2">Digital Trade</h3>
-                    <p class="text-gray-600 text-sm">Prohibits customs duties on digital products. Ensures free cross-border data flow and prevents data localization mandates.</p>
-                </div>
-                <!-- Pillar 3 -->
-                <div class="card p-6 border-t-4 border-indigo-500">
-                    <div class="text-indigo-600 text-3xl mb-4">🛡️</div>
-                    <h3 class="text-lg font-bold text-slate-900 mb-2">Investment</h3>
-                    <p class="text-gray-600 text-sm">Guarantees "National Treatment" for investors and protects against expropriation without compensation.</p>
-                </div>
-                <!-- Pillar 4 -->
-                <div class="card p-6 border-t-4 border-rose-500">
-                    <div class="text-rose-600 text-3xl mb-4">⚖️</div>
-                    <h3 class="text-lg font-bold text-slate-900 mb-2">Good Governance</h3>
-                    <p class="text-gray-600 text-sm">Measures against corruption, transparency in licensing, and science-based sanitary (SPS) regulations.</p>
-                </div>
-            </div>
+          </div>
         </div>
-
-        <!-- Impact Simulator Section -->
-        <div id="impact-sim" class="bg-slate-900 text-white py-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="mb-10">
-                    <h2 class="text-3xl font-bold">Impact Simulator: "How does this affect me?"</h2>
-                    <p class="mt-2 text-slate-400">Select a profile to see how specific clauses in the agreement impact daily life and business in Indonesia.</p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <!-- Selector -->
-                    <div class="lg:col-span-4 space-y-3">
-                        <button onclick="updatePersona('consumer')" id="btn-consumer" class="persona-btn w-full text-left p-4 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all flex items-center gap-3 active-persona">
-                            <span class="text-2xl">🛒</span>
-                            <div>
-                                <h4 class="font-bold">Indonesian Consumer</h4>
-                                <p class="text-xs text-slate-400">Buying goods & digital services</p>
-                            </div>
-                        </button>
-                        <button onclick="updatePersona('farmer')" id="btn-farmer" class="persona-btn w-full text-left p-4 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all flex items-center gap-3">
-                            <span class="text-2xl">🌾</span>
-                            <div>
-                                <h4 class="font-bold">Tempe/Tofu Producer</h4>
-                                <p class="text-xs text-slate-400">Relying on raw ingredients</p>
-                            </div>
-                        </button>
-                        <button onclick="updatePersona('startup')" id="btn-startup" class="persona-btn w-full text-left p-4 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all flex items-center gap-3">
-                            <span class="text-2xl">🚀</span>
-                            <div>
-                                <h4 class="font-bold">Tech Entrepreneur</h4>
-                                <p class="text-xs text-slate-400">Running a digital platform</p>
-                            </div>
-                        </button>
-                        <button onclick="updatePersona('investor')" id="btn-investor" class="persona-btn w-full text-left p-4 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all flex items-center gap-3">
-                            <span class="text-2xl">🏭</span>
-                            <div>
-                                <h4 class="font-bold">Foreign Investor</h4>
-                                <p class="text-xs text-slate-400">Looking to build factories</p>
-                            </div>
-                        </button>
-                    </div>
-
-                    <!-- Result Panel -->
-                    <div class="lg:col-span-8 bg-white text-slate-900 rounded-xl p-8 shadow-xl">
-                        <div id="persona-content" class="h-full flex flex-col justify-center">
-                            <!-- Dynamic Content Loaded Here -->
-                        </div>
-                    </div>
-                </div>
+        
+        <div class="chart-layout">
+          <div class="chart-wrapper glass-panel">
+            <h3 class="mono text-cyan text-sm mb-4">Minimum Import Commitment Volumes (Metric Tons)</h3>
+            <div class="chart-container-box">
+              <canvas id="agriChart"></canvas>
             </div>
-        </div>
-
-        <!-- Agricultural Data Section -->
-        <div id="agri-data" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between">
-                <div>
-                    <h2 class="text-3xl font-bold text-slate-900">Strategic Food Security & Imports</h2>
-                    <p class="mt-2 text-gray-600 max-w-2xl">
-                        Indonesia has committed to specific annual import minimums for key commodities (Annex IV). 
-                        These volumes are designed to stabilize supply for local industries (e.g., soybeans for Tempe, wheat for flour/noodles).
-                    </p>
-                </div>
-                <!-- Toggle Scale -->
-                <div class="mt-4 md:mt-0 bg-gray-100 p-1 rounded-lg inline-flex">
-                    <button onclick="toggleChartScale('linear')" id="scale-linear" class="px-3 py-1 text-xs font-medium rounded-md bg-white shadow-sm text-slate-900 border border-gray-200">Linear Scale</button>
-                    <!-- Fixed: Changed 'log' to 'logarithmic' to resolve Chart.js error -->
-                    <button onclick="toggleChartScale('logarithmic')" id="scale-log" class="px-3 py-1 text-xs font-medium rounded-md text-gray-500 hover:text-slate-900">Log Scale</button>
-                </div>
+            <p class="mono text-center text-muted text-xxs mt-4">*Source: Agreement Annex IV (Schedules for Wheat, Soybeans, etc.)</p>
+          </div>
+          
+          <div class="agri-context reveal-stagger">
+            <div class="context-card glass-panel" onclick="pulseChartBar(5)">
+              <div class="card-hdr">
+                <h4>Soybeans (2.5M MT)</h4>
+                <span class="badge badge-gold">Max Volume</span>
+              </div>
+              <p>Crucial input for Tempe/Tofu. Domestic agricultural systems supply under 10% of total consumption demands.</p>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Chart -->
-                <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h3 class="font-bold text-gray-800 mb-4">Minimum Annual Import Volumes (Metric Tons)</h3>
-                    <div class="chart-container">
-                        <canvas id="agriChart"></canvas>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-2 text-center">*Source: Agreement Annex IV (Schedules for Wheat, Soybeans, etc.)</p>
-                </div>
-
-                <!-- Context Panel -->
-                <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
-                    <h3 class="font-bold text-blue-900 mb-4">Commodity Context</h3>
-                    <div class="space-y-4">
-                        <div class="p-3 bg-white rounded-lg shadow-sm">
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-semibold text-sm">Soybeans (2.5M MT)</h4>
-                                <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded">Highest Volume</span>
-                            </div>
-                            <p class="text-xs text-gray-600 mt-1">Critical for national food security. Indonesia is the world's largest consumer of soybeans for human food (Tempe/Tofu) but produces little locally.</p>
-                        </div>
-                        <div class="p-3 bg-white rounded-lg shadow-sm">
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-semibold text-sm">Wheat (1.3M MT)</h4>
-                                <span class="bg-orange-100 text-orange-800 text-xs px-2 py-0.5 rounded">Industrial Input</span>
-                            </div>
-                            <p class="text-xs text-gray-600 mt-1">Indonesia does not grow wheat. 100% of demand for instant noodles (Indomie) and bread comes from imports. This secures supply.</p>
-                        </div>
-                        <div class="p-3 bg-white rounded-lg shadow-sm">
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-semibold text-sm">Ethanol & Grapes</h4>
-                                <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">Niche/Energy</span>
-                            </div>
-                            <p class="text-xs text-gray-600 mt-1">Smaller volumes (1,000 - 5,000 MT). Focus on clean energy inputs and consumer variety.</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="context-card glass-panel" onclick="pulseChartBar(4)">
+              <div class="card-hdr">
+                <h4>Wheat (1.3M MT)</h4>
+                <span class="badge badge-blue">Key Input</span>
+              </div>
+              <p>Secures raw wheat supplies for local noodle production lines, flour mills, and baking industries.</p>
             </div>
-        </div>
-
-        <!-- Analysis/Verdict Section -->
-        <div id="analysis" class="bg-gray-100 py-16">
-            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl font-bold text-slate-900">The Verdict: Is this good for Indonesia?</h2>
-                    <p class="mt-2 text-gray-600">Based on the text of the agreement, here is a balanced assessment of the strategic implications.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Pros -->
-                    <div class="card p-8 border-l-4 border-green-500">
-                        <div class="flex items-center gap-3 mb-4">
-                            <span class="text-2xl text-green-600">👍</span>
-                            <h3 class="text-xl font-bold text-gray-900">Strategic Wins</h3>
-                        </div>
-                        <ul class="space-y-3">
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-500 mt-1">✓</span>
-                                <p class="text-sm text-gray-700"><strong>Price Stability for Food:</strong> Securing 2.5M tons of soybeans and 1.3M tons of wheat helps stabilize prices for Tempe and Noodle producers, preventing shortages.</p>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-500 mt-1">✓</span>
-                                <p class="text-sm text-gray-700"><strong>Digital Modernization:</strong> Removing duties on digital products lowers costs for Indonesian startups using US cloud services and software.</p>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-500 mt-1">✓</span>
-                                <p class="text-sm text-gray-700"><strong>Investment Certainty:</strong> "National Treatment" clauses signal to global investors that Indonesia is a safe, legally consistent place to build factories.</p>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Cons/Risks -->
-                    <div class="card p-8 border-l-4 border-amber-500">
-                        <div class="flex items-center gap-3 mb-4">
-                            <span class="text-2xl text-amber-600">⚠️</span>
-                            <h3 class="text-xl font-bold text-gray-900">Challenges & Risks</h3>
-                        </div>
-                        <ul class="space-y-3">
-                            <li class="flex items-start gap-2">
-                                <span class="text-amber-500 mt-1">!</span>
-                                <p class="text-sm text-gray-700"><strong>Import Dependency:</strong> While securing supply is good, formalizing large quotas (e.g. Rice) cements reliance on imports rather than domestic self-sufficiency for those specific items.</p>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-amber-500 mt-1">!</span>
-                                <p class="text-sm text-gray-700"><strong>Revenue Loss:</strong> Prohibiting customs duties on digital transmissions removes a potential tax revenue stream as the digital economy grows.</p>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-amber-500 mt-1">!</span>
-                                <p class="text-sm text-gray-700"><strong>Regulatory Constraints:</strong> Strict rules on "Data Localization" (banning requirements to store data locally) limits the government's ability to force tech giants to build local data centers.</p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="mt-12 text-center">
-                    <div class="inline-block bg-white p-6 rounded-xl shadow-md border border-gray-200">
-                        <h4 class="font-bold text-slate-900 mb-2">Analyst Summary</h4>
-                        <p class="text-gray-600 italic">"The agreement is predominantly <strong>positive for Indonesia's industrial and consumer stability</strong>. By locking in supply for commodities Indonesia cannot efficiently grow (Wheat, Soy) and lowering barriers for technology, it supports the manufacturing and digital economy. The trade-off is limited policy space for protectionism in these specific sectors."</p>
-                    </div>
-                </div>
+            <div class="context-card glass-panel" onclick="pulseChartBar(3)">
+              <div class="card-hdr">
+                <h4>Soybean Meal (200K MT)</h4>
+                <span class="badge badge-cyan">Livestock Feed</span>
+              </div>
+              <p>Supports poultry and livestock sectors by guaranteeing steady import components for animal feeds.</p>
             </div>
+          </div>
         </div>
+      </div>
+    </section>
 
-    </main>
-
-    <footer class="bg-slate-900 text-slate-400 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p>&copy; 2026 Interactive Analysis based on "02.19.26 US-IDN ART Full Agreement".</p>
-            <p class="text-sm mt-2">This is an educational visualization tool. Not legal advice.</p>
+    <!-- VERDICT -->
+    <section id="analysis" class="reveal bg-darker">
+      <div class="container">
+        <div class="section-label">04 — Verdict</div>
+        <h2 class="section-title">The Bilateral Assessment</h2>
+        <p class="section-intro">A balanced forensic breakdown of the agreement's structural impacts and long-term economic trade-offs.</p>
+        
+        <div class="verdict-grid">
+          <div class="verdict-card border-green glass-panel">
+            <div class="card-title-bar">
+              <span class="v-icon text-green">✓</span>
+              <h3>Strategic Advantages (Wins)</h3>
+            </div>
+            <ul class="verdict-list mono">
+              <li>
+                <strong>Price Stabilization</strong>
+                <p>Securing soybean and wheat volumes dampens food supply shocks, protecting consumers and local business margins.</p>
+              </li>
+              <li>
+                <strong>Digital Integration</strong>
+                <p>Duty-free data pipelines accelerate technology scaling and cloud infrastructure usage for startups.</p>
+              </li>
+              <li>
+                <strong>FDI Expansion</strong>
+                <p>Legally enforced reciprocal safeguards signal policy consistency, lowering capital risk for foreign investors.</p>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="verdict-card border-orange glass-panel">
+            <div class="card-title-bar">
+              <span class="v-icon text-orange">!</span>
+              <h3>Systemic Risks (Trade-offs)</h3>
+            </div>
+            <ul class="verdict-list mono">
+              <li>
+                <strong>Sovereign Dependence</strong>
+                <p>Relying heavily on formalized import quotas locks in dependency pathways, hindering self-sufficiency initiatives.</p>
+              </li>
+              <li>
+                <strong>Fiscal Losses</strong>
+                <p>Curbing custom duties on digital transmissions limits tax generation capabilities as digital trade volume expands.</p>
+              </li>
+              <li>
+                <strong>Policy Limitations</strong>
+                <p>Data localization bans lock out local storage mandates, reducing administrative leverage over global tech conglomerates.</p>
+              </li>
+            </ul>
+          </div>
         </div>
-    </footer>
+        
+        <div class="analyst-block glass-panel reveal">
+          <h4 class="mono text-cyan text-sm">Forensic Summary Citation</h4>
+          <p class="italic text-slate">"The agreement is predominantly positive for Indonesia's industrial and consumer stability. By locking in supply for commodities Indonesia cannot efficiently grow (Wheat, Soy) and lowering barriers for technology, it supports the manufacturing and digital economy. The trade-off is limited policy space for protectionism in these specific sectors."</p>
+        </div>
+      </div>
+    </section>
+  </main>
 
-    <!-- JavaScript Logic -->
-    <script>
-        // State Management
-        const appState = {
-            currentPersona: 'consumer',
-            chartScale: 'linear',
-            chartInstance: null
-        };
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Interactive Analysis based on "02.19.26 US-IDN ART Full Agreement".</p>
+      <p class="disclaimer"><strong>DISCLAIMER & FORECAST SUMMARY.</strong> This information is for educational purposes only and is not a substitute for professional legal or policy counsel. Always consult qualified legal authorities before making directive decisions. | <a href="/index.html" class="back-link">Home</a></p>
+      <a href="../index.html" class="back-link">&larr; Return to Central Directory</a>
+    </div>
+  </footer>
 
-        // Data Storage (Source: Annex IV of Agreement Snippet)
-        // Values in Metric Tons
-        const agriData = [
-            { label: 'Ethanol', value: 1000, description: 'Clean energy & industrial use.' },
-            { label: 'Rice', value: 1000, description: 'Specific quality varieties.' },
-            { label: 'Fresh Grapes', value: 5000, description: 'Consumer fruit market.' },
-            { label: 'Soybean Meal', value: 200000, description: 'Animal feed.' },
-            { label: 'Wheat', value: 1300000, description: 'Noodles, bread, baking.' },
-            { label: 'Soybeans', value: 2500000, description: 'Tempe & Tofu production.' }
-        ];
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // State Management
+    const appState = {
+      currentPersona: 'consumer',
+      chartScale: 'linear',
+      chartInstance: null
+    };
 
-        // Persona Content Data
-        const personaContent = {
-            'consumer': {
-                icon: '🛒',
-                title: 'Impact on Consumers',
-                mainText: 'You will likely see <strong>stable prices</strong> for daily staples like Tempe and instant noodles, as the agreement ensures a steady flow of raw ingredients (Soy & Wheat).',
-                bulletPoints: [
-                    'Cheaper access to digital services (Netflix, Software) due to duty-free digital trade.',
-                    'More variety of imported fruits (Grapes) in supermarkets.',
-                    'Better protection of your data privacy via cross-border data flow rules.'
-                ],
-                quote: "The focus on supply chains means less 'out of stock' moments for imported goods."
-            },
-            'farmer': {
-                icon: '🌾',
-                title: 'Impact on Producers (Tempe/Tofu)',
-                mainText: 'For a Tempe producer, this is <strong>good news</strong>. Indonesia cannot grow enough soybeans to meet demand. This agreement guarantees access to 2.5 million tons of US soybeans annually.',
-                bulletPoints: [
-                    'Reliable supply of main ingredients prevents production stops.',
-                    'Standardized sanitary rules (SPS) mean imported beans will be safer and higher quality.',
-                    'Competition: Local soybean farmers face stiff competition, but demand is so high that imports are necessary.'
-                ],
-                quote: "Stability is profit. Knowing the soy will arrive allows for better business planning."
-            },
-            'startup': {
-                icon: '🚀',
-                title: 'Impact on Tech Startups',
-                mainText: 'This agreement is a <strong>major accelerator</strong> for the digital economy. It prohibits customs duties on digital transmissions.',
-                bulletPoints: [
-                    'Access to US cloud services (AWS, Google Cloud) without extra import tariffs.',
-                    'No forced "data localization" means you can use the best global servers without being forced to build expensive local infrastructure.',
-                    'Stronger IP protection helps you secure patents for your own innovations.'
-                ],
-                quote: "Lower barriers to entry for software and cloud tools helps Indonesian unicorns grow."
-            },
-            'investor': {
-                icon: '🏭',
-                title: 'Impact on Investors',
-                mainText: 'The "Investment" chapter provides the <strong>legal certainty</strong> needed to commit millions of dollars to factories in Indonesia.',
-                bulletPoints: [
-                    'National Treatment: You will be treated the same as a local Indonesian company.',
-                    'Protection against expropriation: Your assets are legally safe from arbitrary government seizure.',
-                    'Free transfer of funds: You can easily move profits back to headquarters.'
-                ],
-                quote: "Risk reduction is the number one factor for Foreign Direct Investment (FDI)."
-            }
-        };
+    // Data Storage (Source: Annex IV of Agreement)
+    const agriData = [
+      { label: 'Ethanol', value: 1000, description: 'Clean energy & industrial use.' },
+      { label: 'Rice', value: 1000, description: 'Specific quality varieties.' },
+      { label: 'Fresh Grapes', value: 5000, description: 'Consumer fruit market.' },
+      { label: 'Soybean Meal', value: 200000, description: 'Animal feed supply chains.' },
+      { label: 'Wheat', value: 1300000, description: 'Noodles, bread, industrial baking.' },
+      { label: 'Soybeans', value: 2500000, description: 'Tempe & Tofu production security.' }
+    ];
 
-        // Function: Update Persona Section
-        function updatePersona(personaKey) {
-            appState.currentPersona = personaKey;
-            
-            // Update UI Buttons
-            document.querySelectorAll('.persona-btn').forEach(btn => {
-                btn.classList.remove('active-persona', 'bg-slate-700', 'border-blue-500');
-                btn.classList.add('bg-slate-800', 'border-slate-700');
-            });
-            const activeBtn = document.getElementById(`btn-${personaKey}`);
-            activeBtn.classList.remove('bg-slate-800', 'border-slate-700');
-            activeBtn.classList.add('active-persona', 'bg-slate-700', 'border-blue-500');
+    // Persona Content Data
+    const personaContent = {
+      'consumer': {
+        icon: '🛒',
+        title: 'Impact on Consumers',
+        mainText: 'You will likely see stable prices for daily staples like Tempe and instant noodles, as the agreement ensures a steady flow of raw ingredients.',
+        bulletPoints: [
+          'Cheaper access to digital services (Netflix, Software) due to duty-free digital trade.',
+          'More variety of imported fruits (Grapes) in supermarkets.',
+          'Better protection of your data privacy via cross-border data flow rules.'
+        ],
+        quote: "The focus on supply chains means less 'out of stock' moments for imported goods."
+      },
+      'farmer': {
+        icon: '🌾',
+        title: 'Impact on Producers (Tempe/Tofu)',
+        mainText: 'For a Tempe producer, this is good news. Indonesia cannot grow enough soybeans to meet demand. This agreement guarantees access to 2.5 million tons of US soybeans annually.',
+        bulletPoints: [
+          'Reliable supply of main ingredients prevents production stops.',
+          'Standardized sanitary rules (SPS) mean imported beans will be safer and higher quality.',
+          'Competition: Local soybean farmers face stiff competition, but demand is so high that imports are necessary.'
+        ],
+        quote: "Stability is profit. Knowing the soy will arrive allows for better business planning."
+      },
+      'startup': {
+        icon: '🚀',
+        title: 'Impact on Tech Startups',
+        mainText: 'This agreement is a major accelerator for the digital economy. It prohibits customs duties on digital transmissions.',
+        bulletPoints: [
+          'Access to US cloud services (AWS, Google Cloud) without extra import tariffs.',
+          'No forced "data localization" means you can use the best global servers without being forced to build expensive local infrastructure.',
+          'Stronger IP protection helps you secure patents for your own innovations.'
+        ],
+        quote: "Lower barriers to entry for software and cloud tools helps Indonesian unicorns grow."
+      },
+      'investor': {
+        icon: '🏭',
+        title: 'Impact on Investors',
+        mainText: 'The "Investment" chapter provides the legal certainty needed to commit millions of dollars to factories in Indonesia.',
+        bulletPoints: [
+          'National Treatment: You will be treated the same as a local Indonesian company.',
+          'Protection against expropriation: Your assets are legally safe from arbitrary government seizure.',
+          'Free transfer of funds: You can easily move profits back to headquarters.'
+        ],
+        quote: "Risk reduction is the number one factor for Foreign Direct Investment (FDI)."
+      }
+    };
 
-            // Render Content with Fade Effect
-            const contentPanel = document.getElementById('persona-content');
-            contentPanel.style.opacity = '0';
-            
-            setTimeout(() => {
-                const data = personaContent[personaKey];
-                contentPanel.innerHTML = `
-                    <div class="flex items-center gap-4 mb-6 border-b border-gray-100 pb-4">
-                        <span class="text-4xl p-3 bg-blue-50 rounded-full">${data.icon}</span>
-                        <h3 class="text-2xl font-bold text-slate-800">${data.title}</h3>
-                    </div>
-                    <p class="text-lg text-gray-700 mb-6 leading-relaxed">${data.mainText}</p>
-                    <div class="bg-slate-50 p-5 rounded-lg mb-6">
-                        <ul class="space-y-3">
-                            ${data.bulletPoints.map(point => `<li class="flex items-start gap-2"><span class="text-blue-500 font-bold">→</span> <span class="text-sm text-slate-600">${point}</span></li>`).join('')}
-                        </ul>
-                    </div>
-                    <blockquote class="border-l-4 border-blue-500 pl-4 italic text-slate-500">"${data.quote}"</blockquote>
-                `;
-                contentPanel.style.opacity = '1';
-            }, 200);
+    // ═══════════════════════════════════════════════════════
+    // SIMULATOR TERMINAL TYPEWRITER UTILITIES
+    // ═══════════════════════════════════════════════════════
+    let activeTimeouts = [];
+
+    function clearTypewriters() {
+      activeTimeouts.forEach(t => clearTimeout(t));
+      activeTimeouts = [];
+      document.querySelectorAll('.cursor').forEach(el => el.remove());
+    }
+
+    function typeText(element, text, speed = 8, callback) {
+      element.innerHTML = '';
+      const cursorSpan = document.createElement('span');
+      cursorSpan.className = 'cursor';
+      element.appendChild(cursorSpan);
+      
+      let charIndex = 0;
+      
+      function type() {
+        if (charIndex < text.length) {
+          const char = text[charIndex++];
+          cursorSpan.insertAdjacentText('beforebegin', char);
+          const t = setTimeout(type, speed);
+          activeTimeouts.push(t);
+        } else {
+          cursorSpan.remove();
+          if (callback) callback();
         }
+      }
+      
+      type();
+    }
 
-        // Function: Initialize Chart
-        function initChart() {
-            const ctx = document.getElementById('agriChart').getContext('2d');
-            
-            // Prepare Data
-            const labels = agriData.map(d => d.label);
-            const dataValues = agriData.map(d => d.value);
+    function updatePersona(personaKey) {
+      appState.currentPersona = personaKey;
+      
+      // Update UI active buttons in sidebar
+      document.querySelectorAll('.persona-card').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.getElementById(`btn-${personaKey}`).classList.add('active');
 
-            appState.chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Annual Import Commitment (Metric Tons)',
-                        data: dataValues,
-                        backgroundColor: [
-                            '#94a3b8', // Ethanol
-                            '#cbd5e1', // Rice
-                            '#64748b', // Grapes
-                            '#475569', // Meal
-                            '#334155', // Wheat
-                            '#0f172a'  // Soybeans
-                        ],
-                        borderRadius: 6,
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            type: 'linear', // Default
-                            grid: { color: '#f1f5f9' },
-                            ticks: {
-                                callback: function(value) {
-                                    if(value >= 1000000) return (value/1000000) + 'M';
-                                    if(value >= 1000) return (value/1000) + 'k';
-                                    return value;
-                                }
-                            }
-                        }
-                        // Removed x scale grid display: false, to keep it simple and default behavior.
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) { label += ': '; }
-                                    if (context.parsed.y !== null) {
-                                        label += new Intl.NumberFormat('en-US').format(context.parsed.y) + ' MT';
-                                    }
-                                    return label;
-                                },
-                                afterLabel: function(context) {
-                                    return agriData[context.dataIndex].description;
-                                }
-                            }
-                        }
-                    }
+      clearTypewriters();
+
+      const contentPanel = document.getElementById('persona-content');
+      const data = personaContent[personaKey];
+
+      // Re-render empty elements instantly to prepare typing container
+      contentPanel.innerHTML = `
+        <div class="disp-hdr">
+          <span class="disp-icon">${data.icon}</span>
+          <h3 id="sim-title">${data.title}</h3>
+        </div>
+        <div class="disp-body" id="sim-main-text"></div>
+        <div class="disp-list" id="sim-list-box" style="opacity:0; transform:translateY(10px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);">
+          <ul id="sim-list"></ul>
+        </div>
+        <blockquote class="disp-quote" id="sim-quote" style="opacity:0; transform:translateY(10px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);"></blockquote>
+      `;
+
+      const mainTextEl = document.getElementById('sim-main-text');
+      const listBox = document.getElementById('sim-list-box');
+      const listEl = document.getElementById('sim-list');
+      const quoteEl = document.getElementById('sim-quote');
+
+      // Sequentially type main text, then fade-in bullet items and quotes
+      typeText(mainTextEl, data.mainText, 10, () => {
+        listEl.innerHTML = '';
+        data.bulletPoints.forEach(point => {
+          const li = document.createElement('li');
+          li.innerHTML = point;
+          listEl.appendChild(li);
+        });
+
+        quoteEl.innerText = `"${data.quote}"`;
+
+        // Trigger smooth staggered reveals
+        setTimeout(() => {
+          listBox.style.opacity = '1';
+          listBox.style.transform = 'translateY(0)';
+          
+          setTimeout(() => {
+            quoteEl.style.opacity = '1';
+            quoteEl.style.transform = 'translateY(0)';
+          }, 150);
+        }, 50);
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // CHART MANAGEMENT
+    // ═══════════════════════════════════════════════════════
+    function initChart() {
+      const canvas = document.getElementById('agriChart');
+      const ctx = canvas.getContext('2d');
+      
+      // Create tactical gradient
+      const grad = ctx.createLinearGradient(0, 0, 0, 380);
+      grad.addColorStop(0, 'rgba(0, 245, 255, 0.85)');
+      grad.addColorStop(1, 'rgba(74, 158, 255, 0.05)');
+
+      const labels = agriData.map(d => d.label);
+      const dataValues = agriData.map(d => d.value);
+
+      appState.chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Commitment (Metric Tons)',
+            data: dataValues,
+            backgroundColor: grad,
+            borderColor: '#00f5ff',
+            borderWidth: 1.5,
+            borderRadius: 4,
+            barThickness: 28
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              type: 'linear',
+              grid: { 
+                color: 'rgba(74, 158, 255, 0.05)',
+                borderDash: [4, 4],
+                drawBorder: false
+              },
+              ticks: {
+                color: '#92a7be',
+                font: { family: 'Space Mono', size: 9 },
+                callback: function(value) {
+                  if(value >= 1000000) return (value/1000000) + 'M';
+                  if(value >= 1000) return (value/1000) + 'k';
+                  return value;
                 }
-            });
-        }
-
-        // Function: Toggle Chart Scale
-        function toggleChartScale(type) {
-            if (!appState.chartInstance) return;
-            
-            appState.chartScale = type;
-            appState.chartInstance.options.scales.y.type = type;
-            
-            // Style buttons
-            const linearBtn = document.getElementById('scale-linear');
-            const logBtn = document.getElementById('scale-log');
-            
-            if (type === 'linear') {
-                linearBtn.className = "px-3 py-1 text-xs font-medium rounded-md bg-white shadow-sm text-slate-900 border border-gray-200";
-                logBtn.className = "px-3 py-1 text-xs font-medium rounded-md text-gray-500 hover:text-slate-900";
-            } else {
-                logBtn.className = "px-3 py-1 text-xs font-medium rounded-md bg-white shadow-sm text-slate-900 border border-gray-200";
-                linearBtn.className = "px-3 py-1 text-xs font-medium rounded-md text-gray-500 hover:text-slate-900";
+              }
+            },
+            x: {
+              grid: { display: false },
+              ticks: {
+                color: '#d8e2ed',
+                font: { family: 'Space Mono', size: 9 }
+              }
             }
-
-            appState.chartInstance.update();
-        }
-
-        // Navigation Helper
-        function scrollToSection(id) {
-            const element = document.getElementById(id);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-                // Close mobile menu if open
-                document.getElementById('mobile-menu').classList.add('hidden');
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(12, 20, 32, 0.92)',
+              borderColor: 'rgba(0, 245, 255, 0.25)',
+              borderWidth: 1,
+              titleColor: '#00f5ff',
+              titleFont: { family: 'Space Mono', size: 11, weight: '700' },
+              bodyColor: '#d8e2ed',
+              bodyFont: { family: 'Space Mono', size: 10 },
+              padding: 12,
+              cornerRadius: 4,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return 'Commitment: ' + new Intl.NumberFormat('en-US').format(context.parsed.y) + ' MT';
+                },
+                afterLabel: function(context) {
+                  return agriData[context.dataIndex].description;
+                }
+              }
             }
+          }
         }
+      });
+    }
 
-        // Mobile Menu Toggle
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+    function toggleChartScale(type) {
+      if (!appState.chartInstance) return;
+      
+      appState.chartScale = type;
+      appState.chartInstance.options.scales.y.type = type;
+      
+      // Style toggle buttons
+      const linearBtn = document.getElementById('scale-linear');
+      const logBtn = document.getElementById('scale-log');
+      
+      if (type === 'linear') {
+        linearBtn.classList.add('active');
+        logBtn.classList.remove('active');
+      } else {
+        logBtn.classList.add('active');
+        linearBtn.classList.remove('active');
+      }
+
+      appState.chartInstance.update();
+    }
+
+    // Interactive bar highlight click trigger
+    function pulseChartBar(index) {
+      if (!appState.chartInstance) return;
+      
+      const colors = agriData.map((_, idx) => {
+        return idx === index ? 'rgba(0, 245, 255, 0.95)' : 'rgba(74, 158, 255, 0.15)';
+      });
+      
+      appState.chartInstance.data.datasets[0].backgroundColor = colors;
+      appState.chartInstance.data.datasets[0].borderWidth = agriData.map((_, idx) => {
+        return idx === index ? 3.5 : 1;
+      });
+      appState.chartInstance.data.datasets[0].borderColor = agriData.map((_, idx) => {
+        return idx === index ? '#00f5ff' : 'rgba(74, 158, 255, 0.2)';
+      });
+      
+      appState.chartInstance.update();
+      
+      setTimeout(() => {
+        const ctx = document.getElementById('agriChart').getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 380);
+        grad.addColorStop(0, 'rgba(0, 245, 255, 0.85)');
+        grad.addColorStop(1, 'rgba(74, 158, 255, 0.05)');
+        
+        appState.chartInstance.data.datasets[0].backgroundColor = grad;
+        appState.chartInstance.data.datasets[0].borderWidth = 1.5;
+        appState.chartInstance.data.datasets[0].borderColor = '#00f5ff';
+        appState.chartInstance.update();
+      }, 800);
+    }
+
+    // ── NAVIGATION UTILITIES ──────────────────────────────
+    function scrollToSection(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        const offset = 80;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
         });
+        
+        // Hide mobile menu if displayed
+        document.getElementById('mobile-menu').style.display = 'none';
+      }
+    }
 
-        // Initialize on Load
-        window.addEventListener('DOMContentLoaded', () => {
-            updatePersona('consumer'); // Default persona
-            initChart(); // Render chart
+    // Mobile Menu Button Toggle
+    document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+      const menu = document.getElementById('mobile-menu');
+      if (menu.style.display === 'flex') {
+        menu.style.display = 'none';
+      } else {
+        menu.style.display = 'flex';
+      }
+    });
+
+    // ── WINDOW LISTENERS ──────────────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+      initChart();
+      updatePersona('consumer');
+
+      // VIEWPORT ENTRY SCROLL REVEALS
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observer.unobserve(entry.target);
+          }
         });
+      }, {
+        threshold: 0.12
+      });
 
-    </script>
-    <footer class="text-center mt-8 py-6 border-t border-slate-200 text-xs text-slate-500 max-w-4xl mx-auto px-4">
-        <p class="font-semibold mb-2">DISCLAIMER</p>
-        <p class="mb-2">This information is for educational purposes only and is not a substitute for professional advice, diagnosis, or treatment. Always seek advice from qualified professionals with any questions you may have about policy or practice.</p>
-        <p class="mt-4">&copy; 2026 LoLyeah.github.io. All rights reserved. | <a href="/index.html" class="text-blue-600 hover:underline">Home</a></p>
-    </footer>
+      document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => {
+        revealObserver.observe(el);
+      });
+    });
+  </script>
 </body>
 </html>
