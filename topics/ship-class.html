@@ -444,7 +444,7 @@
 
     .console-canvas-area {
       display: grid;
-      grid-template-columns: 1fr 160px;
+      grid-template-columns: 1fr 180px;
       gap: 1.5rem;
       flex-grow: 1;
     }
@@ -498,6 +498,11 @@
       stroke: var(--emerald);
       filter: drop-shadow(0 0 4px rgba(29, 209, 161, 0.5));
     }
+    .ship-silhouette.muted path.hull {
+      fill: rgba(112, 130, 166, 0.03);
+      stroke: var(--text-dim);
+      filter: drop-shadow(0 0 4px rgba(112, 130, 166, 0.5));
+    }
     .ship-silhouette path.details {
       fill: none;
       stroke: var(--text-dim);
@@ -520,7 +525,7 @@
       pointer-events: none;
     }
 
-    /* Radar radar circle */
+    /* Radar circle */
     .sonar-panel {
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -533,8 +538,8 @@
       aspect-ratio: 1;
     }
     .sonar-circle {
-      width: 90%;
-      height: 90%;
+      width: 92%;
+      height: 92%;
       border: 1px solid var(--border);
       border-radius: 50%;
       position: relative;
@@ -558,29 +563,153 @@
       width: 1px;
       background: var(--border);
     }
+    .sonar-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px dashed rgba(0, 240, 255, 0.12);
+      border-radius: 50%;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sonar-ring.zone-core { width: 30%; height: 30%; border-color: rgba(0, 240, 255, 0.15); }
+    .sonar-ring.zone-screen { width: 60%; height: 60%; border-style: dotted; border-color: rgba(59, 130, 246, 0.15); }
+    .sonar-ring.zone-patrol { width: 90%; height: 90%; border-color: rgba(255, 200, 59, 0.12); }
+    .sonar-ring.zone-littoral { width: 110%; height: 110%; border-style: double; border-width: 3px; border-color: rgba(255, 71, 87, 0.08); }
+
+    .sonar-ring-label {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translate(-50%, -50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: var(--text-dim);
+      opacity: 0.45;
+      background: #05080c;
+      padding: 0 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
     .sonar-sweep {
       position: absolute;
       inset: 0;
-      background: conic-gradient(from 0deg, rgba(0, 240, 255, 0.15) 0deg, rgba(0, 240, 255, 0) 90deg);
+      background: conic-gradient(from 0deg, rgba(0, 240, 255, 0.12) 0deg, rgba(0, 240, 255, 0) 90deg);
       border-radius: 50%;
       animation: sonar-sweep-anim 4s linear infinite;
+      pointer-events: none;
     }
     @keyframes sonar-sweep-anim {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
-    .sonar-dot {
+    
+    /* Sonar blips */
+    .sonar-blip-node {
       position: absolute;
-      width: 6px;
-      height: 6px;
-      background: var(--cyan);
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      box-shadow: 0 0 10px var(--cyan);
-      opacity: 0;
-      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      z-index: 10;
     }
-    .sonar-dot.active {
-      opacity: 0.95;
+    .sonar-blip-label {
+      position: absolute;
+      left: 10px;
+      top: -4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: var(--text-dim);
+      white-space: nowrap;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      opacity: 0.65;
+      display: inline-flex;
+      align-items: center;
+      background: rgba(5, 8, 12, 0.75);
+      padding: 1px 4px;
+      border-radius: 3px;
+      border: 1px solid rgba(0, 240, 255, 0.05);
+    }
+    .blip-fullname {
+      max-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      transition: max-width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
+      opacity: 0;
+      display: inline-block;
+    }
+    .sonar-blip-node:hover .sonar-blip-label,
+    .sonar-blip-node.active .sonar-blip-label {
+      opacity: 1;
+      border-color: rgba(0, 240, 255, 0.2);
+    }
+    .sonar-blip-node:hover .blip-fullname,
+    .sonar-blip-node.active .blip-fullname {
+      max-width: 180px;
+      opacity: 1;
+      margin-left: 4px;
+    }
+    
+    .coastal-blip { background: rgba(255, 200, 59, 0.4); box-shadow: 0 0 4px rgba(255, 200, 59, 0.3); }
+    .bluewater-blip { background: rgba(59, 130, 246, 0.4); box-shadow: 0 0 4px rgba(59, 130, 246, 0.3); }
+    .strategic-blip { background: rgba(0, 240, 255, 0.4); box-shadow: 0 0 4px rgba(0, 240, 255, 0.3); }
+    .battleship-blip { background: rgba(112, 130, 166, 0.3); box-shadow: 0 0 4px rgba(112, 130, 166, 0.2); }
+
+    .sonar-blip-node:hover {
+      transform: translate(-50%, -50%) scale(1.3);
+      filter: brightness(1.2);
+    }
+    .sonar-blip-node:hover .sonar-blip-label {
+      color: var(--heading);
+      opacity: 1;
+    }
+
+    .sonar-blip-node.active {
+      transform: translate(-50%, -50%) scale(1.2);
+      z-index: 15;
+    }
+    .sonar-blip-node.active .sonar-blip-label {
+      color: var(--cyan);
+      font-weight: 500;
+      opacity: 1;
+    }
+    
+    .sonar-blip-node.active::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border: 1px solid var(--cyan);
+      border-radius: 2px;
+      animation: target-spin 4s linear infinite;
+    }
+    
+    .coastal-blip.active { background: var(--yellow) !important; box-shadow: 0 0 8px var(--yellow) !important; }
+    .coastal-blip.active::before { border-color: var(--yellow); }
+    .coastal-blip.active .sonar-blip-label { color: var(--yellow); }
+    
+    .bluewater-blip.active { background: var(--blue) !important; box-shadow: 0 0 8px var(--blue) !important; }
+    .bluewater-blip.active::before { border-color: var(--blue); }
+    .bluewater-blip.active .sonar-blip-label { color: var(--blue); }
+
+    .strategic-blip.active { background: var(--cyan) !important; box-shadow: 0 0 8px var(--cyan) !important; }
+    .strategic-blip.active::before { border-color: var(--cyan); }
+    .strategic-blip.active .sonar-blip-label { color: var(--cyan); }
+
+    .battleship-blip.active { background: var(--text-dim) !important; box-shadow: 0 0 8px var(--text-dim) !important; }
+    .battleship-blip.active::before { border-color: var(--text-dim); }
+    .battleship-blip.active .sonar-blip-label { color: var(--text-dim); }
+
+    @keyframes target-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     /* Telemetry block */
@@ -1072,12 +1201,16 @@
           <span class="id-only">Konsol Komando Taktis Armada</span>
         </h2>
         <p class="section-desc">
-          <span class="en-only">Toggle the tactical readout buttons on the left to load blueprints, sonar radar sweep tracking, and precise capability dimensions of core ship archetypes.</span>
-          <span class="id-only">Tekan tombol pembaca taktis di sisi kiri untuk memuat cetak biru, radar sapuan sonar, dan data detail dari setiap tipe kelas kapal.</span>
+          <span class="en-only">Toggle the tactical readout buttons on the left or click directly on the active radar echoes to load detailed wireframe blueprints and sensor tracking metrics.</span>
+          <span class="id-only">Tekan tombol pembaca taktis di sisi kiri atau klik langsung pada titik koordinat radar untuk memuat cetak biru wireframe dan metrik sensor detail.</span>
         </p>
 
         <div class="console-box">
           <div class="console-nav" role="tablist" aria-label="Ship Selector">
+            <button class="console-btn" role="tab" aria-selected="false" aria-controls="console-panel" id="c-btn-fac" onclick="selectConsoleShip('fac')">
+              <span class="c-name">Fast Attack Craft</span>
+              <span class="c-role"><span class="en-only">Rapid Strike</span><span class="id-only">Serang Cepat</span></span>
+            </button>
             <button class="console-btn active" role="tab" aria-selected="true" aria-controls="console-panel" id="c-btn-opv" onclick="selectConsoleShip('opv')">
               <span class="c-name">Offshore Patrol Vessel</span>
               <span class="c-role"><span class="en-only">Constabulary</span><span class="id-only">Keamanan</span></span>
@@ -1094,23 +1227,39 @@
               <span class="c-name">Destroyer</span>
               <span class="c-role"><span class="en-only">Air Shield</span><span class="id-only">Perisai Udara</span></span>
             </button>
+            <button class="console-btn" role="tab" aria-selected="false" aria-controls="console-panel" id="c-btn-cruiser" onclick="selectConsoleShip('cruiser')">
+              <span class="c-name">Cruiser</span>
+              <span class="c-role"><span class="en-only">Fleet Command</span><span class="id-only">Komando Armada</span></span>
+            </button>
             <button class="console-btn" role="tab" aria-selected="false" aria-controls="console-panel" id="c-btn-carrier" onclick="selectConsoleShip('carrier')">
               <span class="c-name">Aircraft Carrier</span>
               <span class="c-role"><span class="en-only">Power Projection</span><span class="id-only">Proyeksi Global</span></span>
             </button>
+            <button class="console-btn" role="tab" aria-selected="false" aria-controls="console-panel" id="c-btn-amphibious" onclick="selectConsoleShip('amphibious')">
+              <span class="c-name">Amphibious Assault</span>
+              <span class="c-role"><span class="en-only">Expeditionary</span><span class="id-only">Serbu Amfibi</span></span>
+            </button>
             <button class="console-btn" role="tab" aria-selected="false" aria-controls="console-panel" id="c-btn-submarine" onclick="selectConsoleShip('submarine')">
               <span class="c-name">Submarine</span>
-              <span class="c-role"><span class="en-only">Stealth Hunter</span><span class="id-only">Siluman Bawah Air</span></span>
+              <span class="c-role"><span class="en-only">Stealth Hunter</span><span class="id-only">Siluman Air</span></span>
+            </button>
+            <button class="console-btn" role="tab" aria-selected="false" aria-controls="console-panel" id="c-btn-support" onclick="selectConsoleShip('support')">
+              <span class="c-name">Support & Aux</span>
+              <span class="c-role"><span class="en-only">Fleet Logistics</span><span class="id-only">Logistik</span></span>
+            </button>
+            <button class="console-btn" role="tab" aria-selected="false" aria-controls="console-panel" id="c-btn-battleship" onclick="selectConsoleShip('battleship')">
+              <span class="c-name">Battleship (Hist.)</span>
+              <span class="c-role"><span class="en-only">Historical Dread</span><span class="id-only">Sejarah</span></span>
             </button>
           </div>
 
           <div class="console-screen" id="console-panel">
             <div class="console-header-readout">
-              <div>SYS.CIC // RADAR.ECHO.TRACKING // DISP: ACTIVE</div>
+              <div>SYS.CIC // TACTICAL.ECHO.ARRAY // MULTI-SCAN: ON</div>
               <div class="console-system-status">
                 <span class="pulse-dot"></span>
-                <span class="en-only">TELEMETRY LINK SECURED</span>
-                <span class="id-only">KONEKSI TELEMETRI AKTIF</span>
+                <span class="en-only">CONRAD RADAR SYNCED</span>
+                <span class="id-only">RADAR CONRAD TERAKTIVASI</span>
               </div>
             </div>
 
@@ -1119,51 +1268,216 @@
                 <div class="blueprint-grid-overlay"></div>
                 
                 <!-- SVG Wireframe Blueprints -->
-                <!-- 1. OPV -->
+                <!-- 1. FAC -->
+                <svg viewBox="0 0 300 100" class="ship-silhouette yellow" id="sil-fac" aria-label="FAC Blueprint">
+                  <path class="hull" d="M 80 75 L 230 75 L 220 66 L 170 66 L 165 58 L 120 58 L 115 66 L 80 66 Z" />
+                  <path class="details" d="M 190 66 L 193 61 L 205 61 M 135 58 L 135 40 L 128 48 M 80 66 H 125" />
+                  <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
+                </svg>
+                <!-- 2. OPV -->
                 <svg viewBox="0 0 300 100" class="ship-silhouette active yellow" id="sil-opv" aria-label="OPV Blueprint">
                   <path class="hull" d="M 50 75 L 250 75 L 240 65 L 180 65 L 175 55 L 130 55 L 125 65 L 50 65 Z" />
                   <path class="details" d="M 205 65 L 208 60 L 220 60 M 150 55 L 150 35 L 140 42 H 150 M 125 65 H 175 M 70 65 V 58 H 90 V 65" />
                   <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
                 </svg>
-                <!-- 2. Corvette -->
+                <!-- 3. Corvette -->
                 <svg viewBox="0 0 300 100" class="ship-silhouette yellow" id="sil-corvette" aria-label="Corvette Blueprint">
                   <path class="hull" d="M 40 75 L 260 75 L 250 62 L 190 62 L 185 50 L 120 50 L 115 62 L 40 62 Z" />
                   <path class="details" d="M 215 62 L 218 56 L 232 56 M 150 50 L 150 35 M 140 38 H 160 M 120 50 H 180 M 60 62 V 55 H 85 V 62" />
                   <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
                 </svg>
-                <!-- 3. Frigate -->
+                <!-- 4. Frigate -->
                 <svg viewBox="0 0 300 100" class="ship-silhouette blue" id="sil-frigate" aria-label="Frigate Blueprint">
                   <path class="hull" d="M 30 75 L 270 75 L 260 60 L 200 60 L 195 45 L 150 45 L 145 35 L 110 35 L 105 60 L 30 60 Z" />
                   <path class="details" d="M 225 60 L 228 54 L 244 54 M 165 45 L 165 30 H 155 M 125 35 L 125 20 H 135 M 35 60 V 52 H 75 V 60" />
                   <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
                 </svg>
-                <!-- 4. Destroyer -->
+                <!-- 5. Destroyer -->
                 <svg viewBox="0 0 300 100" class="ship-silhouette blue" id="sil-destroyer" aria-label="Destroyer Blueprint">
                   <path class="hull" d="M 20 75 L 280 75 L 268 58 L 220 58 L 215 48 L 195 48 L 190 32 L 165 32 L 160 45 L 130 45 L 125 28 L 105 28 L 100 58 L 20 58 Z" />
                   <path class="details" d="M 235 58 L 238 52 L 255 52 M 178 32 L 178 18 H 168 M 115 28 L 115 12 H 125 M 25 58 V 50 H 65 V 58" />
                   <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
                 </svg>
-                <!-- 5. Carrier -->
+                <!-- 6. Cruiser -->
+                <svg viewBox="0 0 300 100" class="ship-silhouette blue" id="sil-cruiser" aria-label="Cruiser Blueprint">
+                  <path class="hull" d="M 15 75 L 285 75 L 273 56 L 230 56 L 225 44 L 205 44 L 200 24 L 170 24 L 165 42 L 140 42 L 135 24 L 105 24 L 100 56 L 15 56 Z" />
+                  <path class="details" d="M 235 56 L 238 50 L 258 50 M 185 24 L 185 8 H 175 M 120 24 L 120 8 M 25 56 V 46 H 65 V 56" />
+                  <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
+                </svg>
+                <!-- 7. Carrier -->
                 <svg viewBox="0 0 300 100" class="ship-silhouette red" id="sil-carrier" aria-label="Carrier Blueprint">
                   <path class="hull" d="M 10 75 L 290 75 L 290 45 L 10 45 Z" />
                   <path class="details" d="M 190 45 L 190 20 L 210 20 L 215 45 M 200 20 L 200 5 M 40 45 H 170 M 230 45 H 280" />
                   <line class="waterline" x1="5" y1="75" x2="295" y2="75" />
                 </svg>
-                <!-- 6. Submarine -->
+                <!-- 8. Amphibious Assault -->
+                <svg viewBox="0 0 300 100" class="ship-silhouette red" id="sil-amphibious" aria-label="Amphibious Blueprint">
+                  <path class="hull" d="M 15 75 L 285 75 L 285 48 L 15 48 Z" />
+                  <path class="details" d="M 140 48 L 140 28 L 180 28 L 180 48 Z" />
+                  <line class="waterline" x1="5" y1="75" x2="295" y2="75" />
+                </svg>
+                <!-- 9. Submarine -->
                 <svg viewBox="0 0 300 100" class="ship-silhouette active cyan" id="sil-submarine" aria-label="Submarine Blueprint">
                   <path class="hull" d="M 20 70 C 40 58, 260 58, 280 70 C 260 82, 40 82, 20 70 Z" />
                   <path class="details" d="M 150 60 L 155 45 L 175 45 L 180 60 M 15 67 L 8 60 L 8 80 Z" />
                   <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
                 </svg>
+                <!-- 10. Support Ship -->
+                <svg viewBox="0 0 300 100" class="ship-silhouette emerald" id="sil-support" aria-label="Support Ship Blueprint">
+                  <path class="hull" d="M 20 75 L 280 75 L 270 58 L 230 58 L 225 65 L 90 65 L 85 58 L 20 58 Z" />
+                  <path class="details" d="M 150 65 L 160 45 L 185 40 M 105 65 L 115 45 L 140 40" />
+                  <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
+                </svg>
+                <!-- 11. Battleship -->
+                <svg viewBox="0 0 300 100" class="ship-silhouette muted" id="sil-battleship" aria-label="Battleship Blueprint">
+                  <path class="hull" d="M 15 75 L 285 75 L 272 58 L 240 58 L 230 45 L 210 45 L 200 20 L 180 20 L 175 45 L 135 45 L 15 58 Z" />
+                  <path class="details" d="M 245 58 H 255 V 53 H 245 Z M 255 55 H 270 M 225 58 H 235 V 50 H 225 Z M 235 52 H 255 M 60 58 H 70 V 53 H 60 Z M 60 55 H 45" />
+                  <line class="waterline" x1="10" y1="75" x2="290" y2="75" />
+                </svg>
               </div>
 
-              <!-- Radar sweep element -->
+              <!-- Radar plotting screen -->
               <div class="sonar-panel">
                 <div class="sonar-circle">
                   <div class="sonar-crosshair-h"></div>
                   <div class="sonar-crosshair-v"></div>
+                  
+                  <!-- Concentric CSG Screen Range Circles -->
+                  <div class="sonar-ring zone-core">
+                    <span class="sonar-ring-label">
+                      <span class="en-only">Strategic Core (Carrier Zone)</span>
+                      <span class="id-only">Inti Strategis (Zona Induk)</span>
+                    </span>
+                  </div>
+                  <div class="sonar-ring zone-screen">
+                    <span class="sonar-ring-label">
+                      <span class="en-only">Inner Screen (Blue Water Escorts)</span>
+                      <span class="id-only">Perisai Pengawal (Armada Samudra)</span>
+                    </span>
+                  </div>
+                  <div class="sonar-ring zone-patrol">
+                    <span class="sonar-ring-label">
+                      <span class="en-only">Outer Patrol (EEZ / Submarines)</span>
+                      <span class="id-only">Patroli Luar (ZEE / Kapal Selam)</span>
+                    </span>
+                  </div>
+                  <div class="sonar-ring zone-littoral">
+                    <span class="sonar-ring-label">
+                      <span class="en-only">Littoral Zone (Coastal Strike)</span>
+                      <span class="id-only">Zona Litoral (Serang Pantai)</span>
+                    </span>
+                  </div>
+                  
                   <div class="sonar-sweep"></div>
-                  <div class="sonar-dot active" id="radar-blip"></div>
+                  
+                  <!-- Concurrently Plotted Ship Blips representing range mapping -->
+                  <!-- Coastal & Patrol Zone (Yellow) -->
+                  <div class="sonar-blip-node coastal-blip" id="blip-fac" data-ship="fac" style="top: 25%; left: 75%;" role="button" aria-label="FAC Sonar Blip">
+                    <span class="sonar-blip-label">
+                      <span class="blip-abbr">FAC</span>
+                      <span class="blip-fullname">
+                        <span class="en-only"> - Fast Attack Craft</span>
+                        <span class="id-only"> - Kapal Serang Cepat</span>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="sonar-blip-node coastal-blip active" id="blip-opv" data-ship="opv" style="top: 32%; left: 62%;" role="button" aria-label="OPV Sonar Blip">
+                    <span class="sonar-blip-label">
+                      <span class="blip-abbr">OPV</span>
+                      <span class="blip-fullname">
+                        <span class="en-only"> - Offshore Patrol Vessel</span>
+                        <span class="id-only"> - Patroli Lepas Pantai</span>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="sonar-blip-node coastal-blip" id="blip-corvette" data-ship="corvette" style="top: 38%; left: 68%;" role="button" aria-label="Corvette Sonar Blip">
+                    <span class="sonar-blip-label">
+                      <span class="blip-abbr">CORV</span>
+                      <span class="blip-fullname">
+                        <span class="en-only"> - Corvette</span>
+                        <span class="id-only"> - Korvet</span>
+                      </span>
+                    </span>
+                  </div>
+                  
+                  <!-- Blue Water Zone (Blue) -->
+                  <div class="sonar-blip-node bluewater-blip" id="blip-frigate" data-ship="frigate" style="top: 45%; left: 58%;" role="button" aria-label="Frigate Sonar Blip">
+                    <span class="sonar-blip-label">
+                      <span class="blip-abbr">FFG</span>
+                      <span class="blip-fullname">
+                        <span class="en-only"> - Frigate</span>
+                        <span class="id-only"> - Frigat</span>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="sonar-blip-node bluewater-blip" id="blip-destroyer" data-ship="destroyer" style="top: 55%; left: 42%;" role="button" aria-label="Destroyer Sonar Blip">
+                    <span class="sonar-blip-label">
+                      <span class="blip-abbr">DDG</span>
+                      <span class="blip-fullname">
+                        <span class="en-only"> - Destroyer</span>
+                        <span class="id-only"> - Perusak</span>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="sonar-blip-node bluewater-blip" id="blip-cruiser" data-ship="cruiser" style="top: 50%; left: 33%;" role="button" aria-label="Cruiser Sonar Blip">
+                    <span class="sonar-blip-label">
+                      <span class="blip-abbr">CG</span>
+                      <span class="blip-fullname">
+                        <span class="en-only"> - Cruiser</span>
+                        <span class="id-only"> - Penjelajah</span>
+                      </span>
+                    </span>
+                  </div>
+                  
+                  <!-- Strategic & Aux Zone (Red/Cyan) -->
+                  <div class="sonar-blip-node strategic-blip" id="blip-carrier" data-ship="carrier" style="top: 50%; left: 50%;" role="button" aria-label="Carrier Sonar Blip">
+                    <span class="sonar-blip-label">
+                      <span class="blip-abbr">CVN</span>
+                      <span class="blip-fullname">
+                        <span class="en-only"> - Aircraft Carrier</span>
+                        <span class="id-only"> - Kapal Induk</span>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="sonar-blip-node strategic-blip" id="blip-amphibious" data-ship="amphibious" style="top: 58%; left: 52%;" role="button" aria-label="Amphibious Sonar Blip">
+                    <span class="sonar-blip-label">
+                      <span class="blip-abbr">LHD</span>
+                      <span class="blip-fullname">
+                        <span class="en-only"> - Amphibious Assault</span>
+                        <span class="id-only"> - Serbu Amfibi</span>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="sonar-blip-node strategic-blip" id="blip-submarine" data-ship="submarine" style="top: 70%; left: 72%;" role="button" aria-label="Submarine Sonar Blip">
+                    <span class="sonar-blip-label">
+                      <span class="blip-abbr">SSN</span>
+                      <span class="blip-fullname">
+                        <span class="en-only"> - Submarine</span>
+                        <span class="id-only"> - Kapal Selam</span>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="sonar-blip-node strategic-blip" id="blip-support" data-ship="support" style="top: 45%; left: 46%;" role="button" aria-label="Support Sonar Blip">
+                    <span class="sonar-blip-label">
+                      <span class="blip-abbr">AUX</span>
+                      <span class="blip-fullname">
+                        <span class="en-only"> - Support & Aux</span>
+                        <span class="id-only"> - Pendukung & Bantu</span>
+                      </span>
+                    </span>
+                  </div>
+                  
+                  <!-- Historical Muted Ghost Zone -->
+                  <div class="sonar-blip-node battleship-blip" id="blip-battleship" data-ship="battleship" style="top: 20%; left: 22%;" role="button" aria-label="Battleship Sonar Blip">
+                    <span class="sonar-blip-label">
+                      <span class="blip-abbr">BB</span>
+                      <span class="blip-fullname">
+                        <span class="en-only"> - Battleship (Hist.)</span>
+                        <span class="id-only"> - Kapal Tempur (BB)</span>
+                      </span>
+                    </span>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -1604,8 +1918,8 @@
           <span class="id-only">Analisis Kapabilitas Taktis Armada</span>
         </h2>
         <p class="section-desc">
-          <span class="en-only">A comparative visualization of combat efficiency dimensions and structural scaling across primary hull categories.</span>
-          <span class="id-only">Visualisasi komparatif dimensi efisiensi tempur dan penskalaan struktural di antara kategori lambung kapal utama.</span>
+          <span class="en-only">A comparative visualization of combat efficiency dimensions and structural scaling across primary hull categories. Hover over data bubbles to display specific ship classes.</span>
+          <span class="id-only">Visualisasi komparatif dimensi efisiensi tempur dan penskalaan struktural di antara kategori lambung kapal utama. Arahkan kursor ke gelembung data untuk melihat tipe kapal spesifik.</span>
         </p>
 
         <div class="chart-layout-grid">
@@ -1856,14 +2170,21 @@
 
     // 4. Interactive Command Console Database
     const consoleDatabase = {
+      fac: {
+        disp: "50 - 800 tons",
+        range: "800 - 1,500 nm",
+        endurance: "3 - 7 days",
+        weapon: "Heavy Anti-Ship Missiles, light defense systems",
+        descEn: "The coastal mosquito. Exceptional speed and minimal cross-section, optimized for rapid hit-and-run strikes and swarm sea denial close to harbors and channels.",
+        descId: "Nyamuk pantai pemburu. Kecepatan luar biasa dengan siluet radar kecil, dioptimalkan untuk serangan kilat tabrak-lari (hit-and-run) dan taktik kawanan di selat sempit."
+      },
       opv: {
         disp: "1,500 - 3,000 tons",
         range: "6,000 - 10,000+ nm",
         endurance: "21 - 35+ days",
         weapon: "Light guns (30-76mm), machine guns, light helos",
         descEn: "The maritime police officer. A constabulary vessel optimized for low operating cost, exceptional range, and stable sea behavior to enforce safety, intercept smugglers, and manage territorial boundaries.",
-        descId: "Aparat penegak hukum maritim. Kapal keamanan teritorial yang efisien dengan biaya operasional rendah, jarak tempuh sangat jauh, dan ketahanan gelombang tinggi untuk melindungi perbatasan ZEE dan misi penyelamatan.",
-        coords: { top: '35%', left: '42%' }
+        descId: "Aparat penegak hukum maritim. Kapal keamanan teritorial yang efisien dengan biaya operasional rendah, jarak tempuh sangat jauh, dan ketahanan gelombang tinggi untuk melindungi perbatasan ZEE dan misi penyelamatan."
       },
       corvette: {
         disp: "1,000 - 3,500 tons",
@@ -1871,8 +2192,7 @@
         endurance: "10 - 21 days",
         weapon: "Anti-Ship Missiles, SAMs, 76mm main gun, ASW torpedoes",
         descEn: "The light, fast fighter. The smallest class of high-intensity warships, designed as littoral combatants to achieve sea denial in confined waters while carrying heavy anti-surface batteries.",
-        descId: "Petarung litoral yang lincah. Kelas kapal kombatan terkecil berdaya hancur tinggi, dirancang untuk mengamankan wilayah pesisir dan pantai dengan persenjataan rudal permukaan-ke-permukaan berat.",
-        coords: { top: '25%', left: '60%' }
+        descId: "Petarung litoral yang lincah. Kelas kapal kombatan terkecil berdaya hancur tinggi, dirancang untuk mengamankan wilayah pesisir dan pantai dengan persenjataan rudal permukaan-ke-permukaan berat."
       },
       frigate: {
         disp: "3,500 - 8,000+ tons",
@@ -1880,8 +2200,7 @@
         endurance: "21 - 30+ days",
         weapon: "VLS missile cells, ASW Torpedoes, Anti-Ship missiles, 76-127mm gun",
         descEn: "The versatile fleet workhorse. Backbones of most major navies, capable of executing robust multi-mission roles: tracking submarines (ASW), shielding against missiles, and escorting strike groups.",
-        descId: "Kuda beban armada serbaguna. Tulang punggung angkatan laut modern berkemampuan jelajah samudra. Dirancang khusus untuk memburu kapal selam (ASW), menangkis rudal, dan mengawal konvoi taktis.",
-        coords: { top: '48%', left: '55%' }
+        descId: "Kuda beban armada serbaguna. Tulang punggung angkatan laut modern berkemampuan jelajah samudra. Dirancang khusus untuk memburu kapal selam (ASW), menangkis rudal, dan mengawal konvoi taktis."
       },
       destroyer: {
         disp: "7,000 - 10,000+ tons",
@@ -1889,8 +2208,15 @@
         endurance: "21 - 30+ days",
         weapon: "96+ VLS cells, Active Phased Radars (AEGIS), long-range SAMs, Cruise missiles",
         descEn: "The fleet's advanced shield. Heavy ocean combatants specialized in comprehensive Anti-Air Warfare (AAW) area defense, guarding carriers against massed missile strikes and aircraft operations.",
-        descId: "Perisai udara utama armada. Kombatan permukaan berat dengan radar canggih terintegrasi untuk menangkal serangan udara massal dan rudal balistik guna mengamankan gugus tempur laut.",
-        coords: { top: '65%', left: '30%' }
+        descId: "Perisai udara utama armada. Kombatan permukaan berat dengan radar canggih terintegrasi untuk menangkal serangan udara massal dan rudal balistik guna mengamankan gugus tempur laut."
+      },
+      cruiser: {
+        disp: "10,000 - 15,000+ tons",
+        range: "6,000 - 10,000+ nm",
+        endurance: "30+ days",
+        weapon: "122+ VLS cells, massive air defense suites, heavy guns, flag command systems",
+        descEn: "The heavy-hitter and command flagship. Rare today, cruisers carry massive missile loads to dominate multiple target axes (air, surface, undersea) simultaneously, serving as tactical battle coordination nodes.",
+        descId: "Kapal komando laksamana & pemukul berat. Sangat langka hari ini, penjelajah membawa muatan rudal raksasa untuk mendominasi berbagai dimensi pertempuran samudra terbuka secara simultan."
       },
       carrier: {
         disp: "60,000 - 100,000+ tons",
@@ -1898,8 +2224,15 @@
         endurance: "Decades (Food supplies limited to 90 days)",
         weapon: "60-90+ Aircraft (Multirole fighters, EW craft, AEW radars), CIWS shields",
         descEn: "The floating airbase. Global capital power-projection platform. Employs a massive integrated airwing to achieve absolute air superiority and conduct devastating strikes thousands of miles away.",
-        descId: "Pangkalan udara samudra terapung. Simbol kekuatan proyeksi kekuatan global utama. Mengoperasikan puluhan jet tempur dan pesawat peringatan dini untuk mengamankan dominasi ruang udara tempur.",
-        coords: { top: '80%', left: '15%' }
+        descId: "Pangkalan udara samudra terapung. Simbol kekuatan proyeksi kekuatan global utama. Mengoperasikan puluhan jet tempur dan pesawat peringatan dini untuk mengamankan dominasi ruang udara tempur."
+      },
+      amphibious: {
+        disp: "20,000 - 45,000 tons",
+        range: "7,000 - 9,500+ nm",
+        endurance: "30 - 45+ days",
+        weapon: "VSTOL fighter jets, heavy transport helicopters, landing craft (LCAC), well-deck docks",
+        descEn: "The mobile invasion platform. Deploys landing marines, amphibious vehicles, and vertical takeoff support fighters from floodable well decks and a flight deck, leading expeditionary maneuvers.",
+        descId: "Pangkalan invasi garis depan bergerak. Mengirimkan marinir, kendaraan pendarat amfibi, dan jet tempur lepas landas vertikal dari dek basah internal serta dek penerbangan."
       },
       submarine: {
         disp: "1,000 - 20,000+ tons",
@@ -1907,13 +2240,28 @@
         endurance: "60 - 90+ days (Limited by food storage)",
         weapon: "Heavyweight Torpedoes, submarine cruise missiles, ICBM nuclear silos",
         descEn: "The silent sub-surface hunter. Leverages absolute stealth to conduct surveillance, ambush shipping routes, hunt enemy hulls, or act as the ultimate nuclear strategic deterrent (SSBN).",
-        descId: "Pemburu bawah air yang senyap. Mengandalkan kesenyapan mutlak untuk pengintaian intelijen, melumpuhkan armada kapal laut, dan membawa persenjataan balistik nuklir strategis.",
-        coords: { top: '55%', left: '78%' }
+        descId: "Pemburu bawah air yang senyap. Mengandalkan kesenyapan mutlak untuk pengintaian intelijen, melumpuhkan armada kapal laut, dan membawa persenjataan balistik nuklir strategis."
+      },
+      support: {
+        disp: "2,000 - 50,000+ tons",
+        range: "10,000+ nm",
+        endurance: "30 - 45+ days",
+        weapon: "Defensive CIWS, electronic countermeasures, cargo cranes",
+        descEn: "The fleet's lifeline. Replenishment oilers and cargo carriers that transfer fuel, ammo, and food to warships at sea, allowing continuous combat deployment without harbor docking.",
+        descId: "Tali kelangsungan hidup samudra. Kapal tanker dan pengangkut kargo pendukung yang menyuplai bahan bakar, amunisi, dan logistik langsung ke kapal kombatan di tengah samudra."
+      },
+      battleship: {
+        disp: "30,000 - 70,000+ tons",
+        range: "8,000 - 15,000 nm",
+        endurance: "~30 days",
+        weapon: "Massive 14-18 inch main artillery turrets, heavy anti-aircraft rings",
+        descEn: "The armored dreadnought. Historic capital heavy combatants built for direct gun battles. Rendered obsolete by long-range aircraft carriers and modern precision anti-ship missiles.",
+        descId: "Dreadnought raksasa legendaris. Raja permukaan laut masa lalu dengan meriam artileri raksasa dan dinding baja super tebal. Pensiun setelah digantikan peran proyeksi udara kapal induk."
       }
     };
 
     function selectConsoleShip(shipKey) {
-      // 1. Manage active button states
+      // 1. Manage active console button states
       const buttons = document.querySelectorAll('.console-btn');
       buttons.forEach(btn => btn.classList.remove('active'));
       
@@ -1937,21 +2285,35 @@
         document.getElementById('desc-val-en').innerText = data.descEn;
         document.getElementById('desc-val-id').innerText = data.descId;
 
-        // Animate radar target coordinates
-        const blip = document.getElementById('radar-blip');
-        if (blip) {
-          blip.classList.remove('active');
-          setTimeout(() => {
-            blip.style.top = data.coords.top;
-            blip.style.left = data.coords.left;
-            blip.classList.add('active');
-          }, 150);
+        // 4. Highlight the corresponding radar blip node
+        const blips = document.querySelectorAll('.sonar-blip-node');
+        blips.forEach(b => b.classList.remove('active'));
+        
+        const activeBlip = document.getElementById('blip-' + shipKey);
+        if (activeBlip) {
+          activeBlip.classList.add('active');
         }
       }
     }
 
-    // Initialize first console blip position
-    window.addEventListener('load', () => {
+    // Add click events on the blips themselves for dual interactive routing
+    window.addEventListener('DOMContentLoaded', () => {
+      const blips = document.querySelectorAll('.sonar-blip-node');
+      blips.forEach(b => {
+        b.addEventListener('click', () => {
+          const shipKey = b.getAttribute('data-ship');
+          if (shipKey) {
+            selectConsoleShip(shipKey);
+            // Scroll nav button into view if overflowed on mobile
+            const activeBtn = document.getElementById('c-btn-' + shipKey);
+            if (activeBtn && activeBtn.scrollIntoView) {
+              activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+          }
+        });
+      });
+      
+      // Auto initialize first ship opv
       selectConsoleShip('opv');
     });
 
@@ -2098,7 +2460,7 @@
         }
       });
 
-      // ─── BUBBLE SCATTER CHART ───
+      // ─── BUBBLE SCATTER CHART WITH CUSTOM TELEMETRY HULL HOVER LABELS ───
       const ctxBubble = document.getElementById('bubbleChart').getContext('2d');
       bubbleChart = new Chart(ctxBubble, {
         type: 'bubble',
@@ -2110,9 +2472,9 @@
               borderColor: '#ffc83b',
               borderWidth: 1,
               data: [
-                { x: 450, y: 1200, r: 6 }, // FAC
-                { x: 2200, y: 3000, r: 10 }, // Corvette
-                { x: 2500, y: 8000, r: 16 } // OPV
+                { x: 450, y: 1200, r: 6, shipEn: "Fast Attack Craft", shipId: "Kapal Serang Cepat (FAC)", enduranceEn: "3 - 7 days", enduranceId: "3 - 7 hari" },
+                { x: 2200, y: 3000, r: 10, shipEn: "Corvette", shipId: "Korvet", enduranceEn: "10 - 21 days", enduranceId: "10 - 21 hari" },
+                { x: 2500, y: 8000, r: 16, shipEn: "Offshore Patrol Vessel", shipId: "Kapal Patroli Lepas Pantai (OPV)", enduranceEn: "21 - 35+ days", enduranceId: "21 - 35+ hari" }
               ]
             },
             {
@@ -2121,9 +2483,9 @@
               borderColor: '#3b82f6',
               borderWidth: 1,
               data: [
-                { x: 5800, y: 6000, r: 14 }, // Frigate
-                { x: 8500, y: 6300, r: 15 }, // Destroyer
-                { x: 12500, y: 8000, r: 18 } // Cruiser
+                { x: 5800, y: 6000, r: 14, shipEn: "Frigate", shipId: "Frigat", enduranceEn: "21 - 30+ days", enduranceId: "21 - 30+ hari" },
+                { x: 8500, y: 6300, r: 15, shipEn: "Destroyer", shipId: "Perusak (Destroyer)", enduranceEn: "21 - 30+ days", enduranceId: "21 - 30+ hari" },
+                { x: 12500, y: 8000, r: 18, shipEn: "Cruiser", shipId: "Penjelajah (Cruiser)", enduranceEn: "30+ days", enduranceId: "30+ hari" }
               ]
             },
             {
@@ -2132,10 +2494,11 @@
               borderColor: '#00f0ff',
               borderWidth: 1,
               data: [
-                { x: 7500, y: 12000, r: 24 }, // Submarine
-                { x: 26000, y: 12000, r: 20 }, // Support Ship
-                { x: 32000, y: 8500, r: 20 }, // Amphibious
-                { x: 90000, y: 20000, r: 30 } // Aircraft Carrier
+                { x: 7500, y: 12000, r: 24, shipEn: "Submarine", shipId: "Kapal Selam", enduranceEn: "60 - 90+ days", enduranceId: "60 - 90+ hari" },
+                { x: 26000, y: 12000, r: 20, shipEn: "Support & Auxiliary", shipId: "Kapal Pendukung & Bantu", enduranceEn: "30 - 45+ days", enduranceId: "30 - 45+ hari" },
+                { x: 32000, y: 8500, r: 20, shipEn: "Amphibious Assault", shipId: "Kapal Serbu Amfibi", enduranceEn: "30 - 45+ days", enduranceId: "30 - 45+ hari" },
+                { x: 90000, y: 20000, r: 30, shipEn: "Aircraft Carrier", shipId: "Kapal Induk", enduranceEn: "90 days (Food limit)", enduranceId: "90 hari (Batas makanan)" },
+                { x: 50000, y: 11500, r: 15, shipEn: "Battleship (Historical)", shipId: "Kapal Tempur (Battleship)", enduranceEn: "~30 days", enduranceId: "~30 hari" }
               ]
             }
           ]
@@ -2152,11 +2515,18 @@
               ...chartTooltipConfig,
               callbacks: {
                 label: function(context) {
-                  const label = context.dataset.label || '';
-                  const x = context.raw.x;
-                  const y = context.raw.y;
-                  const r = context.raw.r;
-                  return `${label}: Displacement: ${x.toLocaleString()}T, Range: ${y.toLocaleString()}nm, Endurance Ref: ${r}`;
+                  const isId = document.body.classList.contains('lang-id');
+                  const rawData = context.raw || (context.dataset && context.dataset.data ? context.dataset.data[context.dataIndex] : null) || {};
+                  const shipName = isId ? (rawData.shipId || '') : (rawData.shipEn || '');
+                  const categoryLabel = context.dataset ? (context.dataset.label || '') : '';
+                  const x = rawData.x !== undefined ? rawData.x : 0;
+                  const y = rawData.y !== undefined ? rawData.y : 0;
+                  const endurance = isId ? (rawData.enduranceId || '') : (rawData.enduranceEn || '');
+                  
+                  const labelEn = `${shipName} (${categoryLabel}): Disp: ${x.toLocaleString()} Tons, Range: ${y.toLocaleString()} nm, Endurance: ${endurance}`;
+                  const labelId = `${shipName} (${categoryLabel}): Tonase: ${x.toLocaleString()} Ton, Jarak: ${y.toLocaleString()} nm, Daya Tahan: ${endurance}`;
+                  
+                  return isId ? labelId : labelEn;
                 }
               }
             },
