@@ -257,12 +257,13 @@
 
         .hero h1 {
             font-size: 3.8rem;
-            line-height: 1.05;
+            line-height: 1.2;
             margin-bottom: 1.25rem;
             max-width: 900px;
             background: linear-gradient(135deg, var(--text-main) 60%, var(--accent-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            padding-bottom: 0.1em; /* Avoid clipping descenders like 'g' */
         }
 
         .hero p.subtitle {
@@ -854,7 +855,7 @@
             </div>
             <!-- Theme Toggle -->
             <button id="theme-toggle" class="toggle-btn" aria-label="Toggle Theme">
-                <svg id="theme-svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                <svg id="theme-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
             </button>
         </div>
     </header>
@@ -1332,7 +1333,6 @@
             en: {
                 heroTitle: "Interactive Knowledge Hub",
                 heroSubtitle: "An evolving, curated directory of deep clinical guides, interactive analytics, and high-fidelity mechanical simulators.",
-                statusBadge: "SYSTEM OPERATIONAL // LATENCY: OPTIMAL",
                 searchPlaceholder: "Search guides, topics, or terms...",
                 statsActive: "Showing {count} of 24 interactive entries",
                 allTagLabel: "All topics mapped",
@@ -1348,7 +1348,6 @@
             id: {
                 heroTitle: "Hub Pengetahuan Interaktif",
                 heroSubtitle: "Kumpulan kurasi panduan klinis mendalam, analisis interaktif, dan simulator mekanis beresolusi tinggi.",
-                statusBadge: "SISTEM OPERASIONAL // LATENSI: OPTIMAL",
                 searchPlaceholder: "Cari panduan, topik, atau istilah...",
                 statsActive: "Menampilkan {count} dari 24 entri interaktif",
                 allTagLabel: "Semua topik terpetakan",
@@ -1530,6 +1529,44 @@
             });
         }
 
+        // Tagline Updater for last commit date
+        function updateTagline(formattedDate) {
+            const prefix = currentLanguage === 'en' ? 'Update: ' : 'Pembaruan: ';
+            badgeTranslation.textContent = prefix + formattedDate;
+        }
+
+        // Fetch last commit date dynamically from GitHub API
+        function loadLastCommitDate() {
+            const defaultDateStr = "2026-05-24T14:26:39Z"; // Static compile fallback ISO timestamp
+            
+            function formatCommitDate(isoString) {
+                const commitDate = new Date(isoString);
+                if (isNaN(commitDate.getTime())) return "May 24, 2026";
+                
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                return commitDate.toLocaleDateString(currentLanguage === 'en' ? 'en-US' : 'id-ID', options);
+            }
+
+            // Set static fallback first
+            updateTagline(formatCommitDate(defaultDateStr));
+
+            // Fetch live data
+            fetch('https://api.github.com/repos/LoLyeah/lolyeah.github.io/commits/main')
+                .then(res => {
+                    if (!res.ok) throw new Error('API Rate Limit or Network Error');
+                    return res.json();
+                })
+                .then(data => {
+                    if (data && data.commit && data.commit.committer && data.commit.committer.date) {
+                        window.lastCommitDateStr = data.commit.committer.date;
+                        updateTagline(formatCommitDate(data.commit.committer.date));
+                    }
+                })
+                .catch(err => {
+                    console.warn("GitHub API limit exceeded or offline. Static fallback kept.", err);
+                });
+        }
+
         // 3. Language Selection System
         function switchLanguage(lang) {
             currentLanguage = lang;
@@ -1538,7 +1575,16 @@
 
             // Update global static text
             const dict = uiTranslations[lang];
-            badgeTranslation.textContent = dict.statusBadge;
+            
+            // Format dynamic last commit date on lang switch
+            if (window.lastCommitDateStr) {
+                const commitDate = new Date(window.lastCommitDateStr);
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                updateTagline(commitDate.toLocaleDateString(lang === 'en' ? 'en-US' : 'id-ID', options));
+            } else {
+                updateTagline(lang === 'en' ? "May 24, 2026" : "24 Mei 2026");
+            }
+
             heroTitle.textContent = dict.heroTitle;
             heroSubtitle.textContent = dict.heroSubtitle;
             aboutMetaTag.textContent = dict.aboutMeta;
@@ -1642,6 +1688,9 @@
 
         // 7. Initial Boostrap
         document.addEventListener("DOMContentLoaded", () => {
+            // Fetch and apply dynamic commit date first
+            loadLastCommitDate();
+
             // Apply active language configuration
             switchLanguage(currentLanguage);
             
