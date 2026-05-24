@@ -1,658 +1,1674 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoLyeah Interactive Guides</title>
+    <title>LoLyeah // Interactive Knowledge Hub</title>
+    
+    <!-- SEO Optimization -->
+    <meta name="description" content="Explore an evolving collection of clinical deep dives, medical simulators, neurobiological analyses, and interactive guides built by LoLyeah.">
+    <meta name="author" content="LoLyeah">
+    
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Design System (Vanilla CSS) -->
     <style>
-        /* Base Variables - Light Mode */
         :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f4f4f4;
-            --text-primary: #000000;
-            --text-secondary: #555555;
-            --border-light: #e0e0e0;
-            --border-dark: #000000;
-            --hover-glow: rgba(0, 0, 0, 0.05);
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --font-mono: 'JetBrains Mono', 'Courier New', Courier, monospace;
+            /* Palette Architecture - Dark Mode Default */
+            --bg-base: #09090b;
+            --bg-card: rgba(18, 18, 24, 0.65);
+            --bg-navbar: rgba(9, 9, 11, 0.75);
+            --text-main: #fafafa;
+            --text-muted: #a1a1aa;
+            --border-subtle: rgba(250, 250, 250, 0.08);
+            --border-focus: rgba(250, 250, 250, 0.25);
+            --accent-primary: #10b981; /* Neon Emerald */
+            --accent-secondary: #6366f1; /* Cyber Indigo */
+            --accent-glow: rgba(99, 102, 241, 0.15);
+            --card-glow-opacity: 0.12;
+            
+            --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --glass-blur: blur(14px);
+            --spring-transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* Variables - Dark Mode */
-        [data-theme="dark"] {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --text-primary: #ffffff;
-            --text-secondary: #999999;
-            --border-light: #222222;
-            --border-dark: #ffffff;
-            --hover-glow: rgba(255, 255, 255, 0.06);
+        [data-theme="light"] {
+            /* Palette Architecture - Light Mode */
+            --bg-base: #f9fafb;
+            --bg-card: rgba(255, 255, 255, 0.75);
+            --bg-navbar: rgba(249, 250, 251, 0.75);
+            --text-main: #09090b;
+            --text-muted: #52525b;
+            --border-subtle: rgba(9, 9, 11, 0.06);
+            --border-focus: rgba(9, 9, 11, 0.2);
+            --accent-primary: #059669; 
+            --accent-secondary: #4f46e5;
+            --accent-glow: rgba(79, 70, 229, 0.05);
+            --card-glow-opacity: 0.05;
         }
 
-        /* Reset & Base Styles */
+        /* Reset & Core Setup */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            outline: none;
         }
 
         body {
             font-family: var(--font-sans);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
+            background-color: var(--bg-base);
+            color: var(--text-main);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
         a {
             text-decoration: none;
-            color: var(--text-primary);
+            color: inherit;
         }
 
-        /* Typography */
-        h1, h2, h3 {
-            font-weight: 500;
+        /* Ambient Noise Overlay */
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.015;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Premium Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-subtle);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Global Header Typography */
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 700;
             letter-spacing: -0.02em;
         }
 
         .mono {
             font-family: var(--font-mono);
-            text-transform: uppercase;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
-        /* Navigation */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 5%;
-            border-bottom: 1px solid var(--border-light);
-            background: var(--bg-primary);
+        /* Sticky Glass Header */
+        header.site-nav {
             position: sticky;
             top: 0;
             z-index: 100;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            background: var(--bg-navbar);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 1.25rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--spring-transition);
         }
 
-        .logo {
+        .brand {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            font-family: var(--font-display);
             font-weight: 700;
-            font-size: 1.25rem;
-            letter-spacing: -0.05em;
+            font-size: 1.35rem;
+            letter-spacing: -0.04em;
         }
 
-        .logo-placeholder {
-            width: 24px;
-            height: 24px;
-            background-color: var(--text-primary);
-            border-radius: 2px;
-            display: inline-block;
-            transition: background-color 0.3s ease;
+        .brand-logo {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+            border-radius: 6px;
+            box-shadow: 0 0 15px var(--accent-glow);
         }
 
         .nav-controls {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
-        .nav-controls button {
-            background: transparent;
+        /* Multi-Language Selector Hub */
+        .lang-deck {
+            display: flex;
+            align-items: center;
+            background: var(--border-subtle);
+            border-radius: 99px;
+            padding: 0.2rem;
+            position: relative;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .lang-deck button {
             border: none;
+            background: transparent;
+            color: var(--text-muted);
             font-family: var(--font-mono);
-            font-size: 0.85rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.35rem 0.85rem;
             cursor: pointer;
-            color: var(--text-secondary);
-            transition: color 0.2s ease;
-        }
-
-        .nav-controls button:hover {
-            color: var(--text-primary);
-        }
-
-        .lang-switcher button.active {
-            color: var(--text-primary);
-            font-weight: bold;
-        }
-
-        .separator {
-            color: var(--border-light);
+            border-radius: 99px;
+            z-index: 2;
             transition: color 0.3s ease;
         }
 
-        #theme-toggle {
+        .lang-deck button.active {
+            color: #ffffff !important;
+            background: var(--accent-secondary);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Minimalist Dark Mode Toggle */
+        .toggle-btn {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.25rem 0.5rem;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-        }
-
-        #theme-toggle:hover {
-            border-color: var(--text-primary);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 6rem 5% 4rem;
-            display: flex;
-            flex-direction: column;
             justify-content: center;
-            position: relative;
-            background-image: linear-gradient(var(--border-light) 1px, transparent 1px),
-                              linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
-            background-size: 40px 40px;
-            background-position: center center;
-            border-bottom: 1px solid var(--border-light);
-            transition: border-color 0.3s ease;
+            cursor: pointer;
+            color: var(--text-main);
+            transition: var(--spring-transition);
         }
 
-        .hero::after {
+        .toggle-btn:hover {
+            border-color: var(--border-focus);
+            background: var(--border-subtle);
+        }
+
+        /* Cinematic Hero Section */
+        .hero {
+            padding: 7rem 5% 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at center, transparent 0%, var(--bg-primary) 80%);
+            top: -20%;
+            left: 20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            z-index: -1;
             pointer-events: none;
-            transition: background 0.3s ease;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            max-width: 800px;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border: 1px solid var(--border-dark);
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--border-subtle);
+            border: 1px solid var(--border-subtle);
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
             margin-bottom: 2rem;
-            transition: border-color 0.3s ease;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-primary);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            min-height: 1.2em; /* Prevents layout shifting during typing */
+            font-size: 3.8rem;
+            line-height: 1.05;
+            margin-bottom: 1.25rem;
+            max-width: 900px;
+            background: linear-gradient(135deg, var(--text-main) 60%, var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Terminal Cursor */
-        .cursor {
-            display: inline-block;
-            width: 0.5em;
-            height: 1em;
-            background-color: var(--text-primary);
-            vertical-align: text-bottom;
-            animation: blink 1s step-end infinite;
-            margin-left: 6px;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        .hero p {
+        .hero p.subtitle {
             font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 600px;
+            color: var(--text-muted);
+            max-width: 650px;
+            font-weight: 400;
         }
 
-        /* Features/Topics Grid */
-        .topics {
-            padding: 0 5% 6rem;
+        /* Control Deck: Search + Filter Pills */
+        .control-deck {
+            max-width: 1200px;
+            margin: 0 auto 3.5rem;
+            padding: 0 5%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
-        .section-header {
-            padding: 4rem 0 2rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1px; 
-            background-color: var(--border-light);
-            border: 1px solid var(--border-light);
+        .search-block {
             position: relative;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            width: 100%;
         }
 
-        /* Mouse tracking hover effect */
-        .feature-card {
-            background-color: var(--bg-primary);
-            padding: 2.5rem 2rem;
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+            width: 18px;
+            height: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 1.15rem 1rem 1.15rem 3.25rem;
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            transition: var(--spring-transition);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-secondary);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        .search-input:focus + .search-icon {
+            color: var(--accent-secondary);
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--border-subtle);
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--spring-transition);
+        }
+
+        .search-clear:hover {
+            color: var(--text-main);
+            background: var(--border-focus);
+        }
+
+        .search-clear svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Filter Pills Stack */
+        .filter-scroller {
+            overflow-x: auto;
+            white-space: nowrap;
+            display: flex;
+            gap: 0.75rem;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .filter-scroller::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .filter-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            padding: 0.5rem 1.25rem;
+            border-radius: 99px;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: var(--spring-transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-pill:hover {
+            border-color: var(--border-focus);
+            color: var(--text-main);
+        }
+
+        .filter-pill.active {
+            background: var(--text-main);
+            color: var(--bg-base);
+            border-color: var(--text-main);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .stats-badge {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            padding: 0 0.5rem;
+        }
+
+        /* Stunning Cards Grid System */
+        .grid-container {
+            max-width: 1200px;
+            margin: 0 auto 6rem;
+            padding: 0 5%;
+        }
+
+        .grid-deck {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Glassmorphism Interactive Card */
+        .knowledge-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 2.25rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 290px;
             position: relative;
             overflow: hidden;
-            display: block;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+            opacity: 0; /* Animated dynamically by Motion */
         }
 
-        .feature-card::before {
+        /* Mouse tracking radial glow hover effect */
+        .knowledge-card::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background: radial-gradient(
-                800px circle at var(--mouse-x) var(--mouse-y), 
-                var(--hover-glow),
-                transparent 40%
+                700px circle at var(--mouse-x, 0) var(--mouse-y, 0), 
+                var(--accent-glow),
+                transparent 45%
             );
-            z-index: 1;
+            z-index: 0;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
             pointer-events: none;
         }
 
-        .feature-card:hover::before {
+        .knowledge-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-focus);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .knowledge-card:hover::before {
             opacity: 1;
         }
 
-        .feature-card-content {
+        .card-top {
             position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+            z-index: 1;
         }
 
-        .feature-icon {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            display: inline-block;
-        }
-
-        .feature-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            line-height: 1.3;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: 2rem;
-            flex-grow: 1;
-        }
-
-        .card-link {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--text-primary);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: gap 0.2s ease, color 0.3s ease;
-        }
-
-        .feature-card:hover .card-link {
-            gap: 0.8rem;
-        }
-
-        /* Footer */
-        footer {
-            padding: 3rem 5%;
-            border-top: 1px solid var(--border-light);
+        .card-header {
             display: flex;
             justify-content: space-between;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            transition: border-color 0.3s ease;
+            align-items: center;
+            margin-bottom: 1.5rem;
         }
 
-        /* Scroll to Top - Minimalist */
-        .scroll-top {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 40px;
-            height: 40px;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-dark);
+        .card-index {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .card-category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--border-subtle);
+            padding: 0.3rem 0.75rem;
+            border-radius: 99px;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .card-category-badge svg {
+            width: 12px;
+            height: 12px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2px;
+        }
+
+        .knowledge-card h3 {
+            font-size: 1.45rem;
+            line-height: 1.25;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+            transition: var(--spring-transition);
+        }
+
+        .knowledge-card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.5;
+        }
+
+        .card-footer {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 1.25rem;
+        }
+
+        .link-text {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--accent-secondary);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: var(--spring-transition);
+        }
+
+        .link-arrow {
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .knowledge-card:hover .link-text {
+            color: var(--text-main);
+        }
+
+        .knowledge-card:hover .link-arrow {
+            transform: translateX(6px);
+        }
+
+        /* Search Empty State */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 5rem 2rem;
+            background: var(--bg-card);
+            border: 1px dashed var(--border-subtle);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            stroke-width: 1.5px;
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        .empty-state h4 {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            font-size: 0.95rem;
+            max-width: 400px;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state button {
+            background: var(--text-main);
+            color: var(--bg-base);
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 99px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--spring-transition);
+        }
+
+        .empty-state button:hover {
+            opacity: 0.9;
+        }
+
+        /* Cinematic About Section */
+        .about-section {
+            background: radial-gradient(circle at bottom right, var(--accent-glow) 0%, transparent 60%);
+            border-top: 1px solid var(--border-subtle);
+            padding: 6rem 5%;
+            margin-top: 4rem;
+        }
+
+        .about-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.1fr 1.9fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (max-width: 968px) {
+            .about-inner {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+        }
+
+        /* Developer Console Avatar */
+        .dev-terminal {
+            background: rgba(10, 10, 12, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            font-family: var(--font-mono);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dev-terminal::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 10;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .t-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .t-dot.red { background-color: #ef4444; }
+        .t-dot.yellow { background-color: #eab308; }
+        .t-dot.green { background-color: #22c55e; }
+
+        .terminal-title {
+            color: #71717a;
+            font-size: 0.75rem;
+        }
+
+        .terminal-avatar-block {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.75rem;
+        }
+
+        /* Pulsing SVG Avatar Mesh */
+        .avatar-mesh {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #4f46e5, #10b981);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.3s ease;
-            z-index: 999;
-            font-family: var(--font-mono);
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            position: relative;
         }
 
-        .scroll-top.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .avatar-mesh::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border: 1px solid var(--accent-primary);
+            border-radius: 20px;
+            animation: pulse-border 2s infinite ease-in-out;
         }
 
-        .scroll-top:hover {
-            background: var(--text-primary);
-            color: var(--bg-primary);
+        @keyframes pulse-border {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .avatar-meta h4 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-family: var(--font-display);
+            font-weight: 700;
+        }
+
+        .avatar-meta p {
+            color: var(--accent-primary);
+            font-size: 0.75rem;
+            margin-top: 0.15rem;
+        }
+
+        .terminal-log {
+            font-size: 0.8rem;
+            color: #d4d4d8;
+            line-height: 1.8;
+        }
+
+        .log-row {
+            margin-bottom: 0.5rem;
+            display: flex;
+        }
+
+        .log-tag {
+            color: #3b82f6;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .log-val {
+            color: #10b981;
+        }
+
+        /* Bio Block */
+        .about-bio h2 {
+            font-size: 2.75rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.15;
+        }
+
+        .about-bio p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2.25rem;
+            max-width: 650px;
+        }
+
+        .about-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--text-main);
+            color: var(--bg-base);
+            padding: 0.9rem 2.25rem;
+            border-radius: 99px;
+            font-weight: 600;
+            transition: var(--spring-transition);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .action-button svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Footer Section */
+        footer {
+            border-top: 1px solid var(--border-subtle);
+            padding: 3rem 5%;
+            background: var(--bg-base);
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-main);
         }
 
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            footer { flex-direction: column; gap: 1rem; text-align: center; }
-            .nav-controls { gap: 0.75rem; }
+            .hero h1 { font-size: 2.6rem; }
+            .hero p.subtitle { font-size: 1.1rem; }
+            .site-nav { padding: 1.25rem 5%; }
+            .footer-inner { flex-direction: column; gap: 1.25rem; text-align: center; }
+            .knowledge-card { min-height: 270px; padding: 2rem 1.75rem; }
+        }
+
+        /* Native View Transition Names mapping */
+        .card-view-active {
+            view-transition-name: active-card-item;
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">
-            <span class="logo-placeholder"></span>
-            LoLyeah
+    <!-- Ambient noise mask -->
+    <div class="noise-overlay" aria-hidden="true"></div>
+
+    <!-- Navigation Header -->
+    <header class="site-nav">
+        <div class="brand">
+            <span class="brand-logo" aria-hidden="true"></span>
+            <span>LoLyeah</span>
         </div>
         <div class="nav-controls">
-            <div class="lang-switcher">
-                <button id="lang-en" class="active">EN</button>
-                <span class="separator">|</span>
-                <button id="lang-id">ID</button>
+            <!-- Fully Translated Bilingual Deck -->
+            <div class="lang-deck" role="radiogroup" aria-label="Language Selector">
+                <button id="lang-en" class="active" role="radio" aria-checked="true">EN</button>
+                <button id="lang-id" role="radio" aria-checked="false">ID</button>
             </div>
-            <span class="separator">/</span>
-            <button id="theme-toggle">
-                <span id="theme-icon">◐</span>
-                <span id="theme-text">DARK</span>
+            <!-- Theme Toggle -->
+            <button id="theme-toggle" class="toggle-btn" aria-label="Toggle Theme">
+                <svg id="theme-svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
             </button>
-        </div>
-    </nav>
-
-    <header class="hero">
-        <div class="hero-content">
-            <div class="hero-badge mono" data-translate-key="headerSubtitle">An evolving collection of deep dives into various topics.</div>
-            <h1 id="typewriter-title" data-translate-key="headerTitle">LoLyeah Interactive Guides</h1>
         </div>
     </header>
 
-    <section class="topics">
-        <div class="section-header">
-            <h2 class="mono" data-translate-key="mainTitle">Explore a Topic</h2>
+    <!-- Hero Deck -->
+    <main class="hero">
+        <div class="status-badge" id="status-badge">
+            <span class="status-dot"></span>
+            <span id="badge-translation">SYSTEM OPERATIONAL // LATENCY: OPTIMAL</span>
         </div>
-        
-        <div class="features-grid" id="features">
+        <h1 id="hero-title" data-translate-key="heroTitle">Interactive Knowledge Hub</h1>
+        <p class="subtitle" id="hero-subtitle" data-translate-key="heroSubtitle">An evolving, curated directory of deep clinical guides, interactive analytics, and high-fidelity mechanical simulators.</p>
+    </main>
+
+    <!-- Interactive Filtering Deck -->
+    <section class="control-deck">
+        <div class="search-block">
+            <svg class="search-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="search" class="search-input" placeholder="Search guides, topics, or terms..." aria-label="Search guides">
+            <button id="search-clear" class="search-clear" aria-label="Clear Search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></button>
+            </button>
+        </div>
+
+        <div class="filter-wrapper">
+            <div class="filter-scroller" id="filter-deck" role="tablist" aria-label="Category Filters">
+                <button class="filter-pill active" data-category="all" role="tab" aria-selected="true">
+                    <span>All Archive</span>
+                </button>
+                <button class="filter-pill" data-category="clinical" role="tab" aria-selected="false">
+                    <span>Clinical & Medicine</span>
+                </button>
+                <button class="filter-pill" data-category="neurodiversity" role="tab" aria-selected="false">
+                    <span>Neurodevelopment</span>
+                </button>
+                <button class="filter-pill" data-category="analysis" role="tab" aria-selected="false">
+                    <span>Data & Geopolitics</span>
+                </button>
+                <button class="filter-pill" data-category="simulators" role="tab" aria-selected="false">
+                    <span>Simulators & Tools</span>
+                </button>
+                <button class="filter-pill" data-category="experimental" role="tab" aria-selected="false">
+                    <span>Experimental</span>
+                </button>
+            </div>
             
-            <a href="./topics/adhd-diet-guide.html" class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon mono">01</div>
-                    <h3 data-translate-key="adhdCardTitle">An Interactive Guide to Diet and ADHD</h3>
-                    <p data-translate-key="adhdCardDesc">Explore the evidence-based connections between nutrition, dietary patterns, and the management of ADHD symptoms through an interactive, bilingual guide.</p>
-                    <div class="card-link" data-translate-key="adhdCardLink">View Guide &rarr;</div>
-                </div>
-            </a>
-
-            <a href="./topics/stroke.html" class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon mono">02</div>
-                    <h3 data-translate-key="strokeCardTitle">Stroke: An Interactive Infographic</h3>
-                    <p data-translate-key="strokeCardDesc">A visual guide to the causes, immediate actions, treatments, and recovery journey of stroke.</p>
-                    <div class="card-link" data-translate-key="infoCardLink">View Infographic &rarr;</div>
-                </div>
-            </a>
-
-            <a href="./topics/diabetes-guide.html" class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon mono">03</div>
-                    <h3 data-translate-key="diabetesCardTitle">Comprehensive Guide to Diabetes</h3>
-                    <p data-translate-key="diabetesCardDesc">A comprehensive guide to the causes, immediate actions, treatments, and recovery journey of diabetes.</p>
-                    <div class="card-link" data-translate-key="guideCardLink">View Guide &rarr;</div>
-                </div>
-            </a>
-
-            <a href="./topics/foodborne-outbreak.html" class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon mono">04</div>
-                    <h3 data-translate-key="foodborneCardTitle">Foodborne Outbreak Clinical Guide</h3>
-                    <p data-translate-key="foodborneCardDesc">A clinical guide to the causes, immediate actions, treatments, and recovery of foodborne outbreak.</p>
-                    <div class="card-link" data-translate-key="guideCardLink">View Guide &rarr;</div>
-                </div>
-            </a>
-
-            <a href="./topics/laxative-comparison.html" class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon mono">05</div>
-                    <h3 data-translate-key="laxativeCardTitle">Comprehensive Laxatives Comparison</h3>
-                    <p data-translate-key="laxativeCardDesc">A comprehensive comparison between laxatives.</p>
-                    <div class="card-link" data-translate-key="comparisonCardLink">View Comparison &rarr;</div>
-                </div>
-            </a>
-
-            <a href="./topics/ship-class.html" class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon mono">06</div>
-                    <h3 data-translate-key="navalCardTitle">Naval Ship Class Comparison</h3>
-                    <p data-translate-key="navalCardDesc">A comparison between naval ship class in a nutshell.</p>
-                    <div class="card-link" data-translate-key="comparisonCardLink">View Comparison &rarr;</div>
-                </div>
-            </a>
-
-            <a href="./topics/what-if-nusantara.html" class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon mono">07</div>
-                    <h3 data-translate-key="nusantaraCardTitle">What If Nusantara - Indonesian Provincial Independence Analysis</h3>
-                    <p data-translate-key="nusantaraCardDesc">A comparison between every province in Indonesia if every one of them become a sovereign state.</p>
-                    <div class="card-link" data-translate-key="comparisonCardLink">View Comparison &rarr;</div>
-                </div>
-            </a>
-
-            <a href="./topics/testing-homepage.html" class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon mono">08</div>
-                    <h3 data-translate-key="testingCardTitle">On Progress Web Page of LoLyeah</h3>
-                    <p data-translate-key="testingCardDesc">Based on Xiaomi MiMo V2 LLM.</p>
-                    <div class="card-link" data-translate-key="comparisonCardLink">View Page &rarr;</div>
-                </div>
-            </a>
-
-            <a href="./topics/solar-system.html" class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon mono">09</div>
-                    <h3 data-translate-key="solarCardTitle">Solar System Explorer</h3>
-                    <p data-translate-key="solarCardDesc">Solar System simulation, right on your browser.</p>
-                    <div class="card-link" data-translate-key="guideCardLink">View Guide &rarr;</div>
-                </div>
-            </a>
-
-            <a href="./topics/upper-gastro.html" class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon mono">10</div>
-                    <h3 data-translate-key="upperGastroCardTitle">Upper Gastrointestinal Disorders</h3>
-                    <p data-translate-key="upperGastroCardDesc">Interactive guide to Gastritis, GERD, and Peptic Ulcers.</p>
-                    <div class="card-link" data-translate-key="guideCardLink">View Guide &rarr;</div>
-                </div>
-            </a>
-
-            <a href="https://rizqihan.netlify.app/" class="feature-card">
-                <div class="feature-card-content">
-                    <div class="feature-icon mono">11</div>
-                    <h3 data-translate-key="anesthesiaCardTitle">Anesthesia Clinical Assistant</h3>
-                    <p data-translate-key="anesthesiaCardDesc">AI-powered clinical assistant, medical calculators, and offline reference suite tailored for MDs and healthcare professionals.</p>
-                    <div class="card-link" data-translate-key="anesthesiaCardLink">Visit Assistant &rarr;</div>
-                </div>
-            </a>
-
+            <div class="stats-badge">
+                <span id="active-tag-label">All topics mapped</span>
+                <span id="counter-pill">Showing 24 of 24 interactive entries</span>
+            </div>
         </div>
     </section>
 
-    <footer>
-        <div class="logo">
-            <span class="logo-placeholder"></span>
-            LoLyeah
+    <!-- Knowledge Grid Grid -->
+    <section class="grid-container">
+        <div class="grid-deck" id="deck-container">
+            <!-- Cards rendered dynamically by JS engine -->
         </div>
-        <div data-translate-key="footerText">
-            &copy; 2026 LoLyeah. All Rights Reserved.
+    </section>
+
+    <!-- Creative About / Creator Console -->
+    <section class="about-section" id="about">
+        <div class="about-inner">
+            <!-- Left Console -->
+            <div class="dev-terminal">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <span class="t-dot red"></span>
+                        <span class="t-dot yellow"></span>
+                        <span class="t-dot green"></span>
+                    </div>
+                    <span class="terminal-title">lolyeah_telemetry.sys</span>
+                </div>
+                <div class="terminal-avatar-block">
+                    <div class="avatar-mesh">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div class="avatar-meta">
+                        <h4>LoLyeah</h4>
+                        <p class="mono" id="about-meta-tag">Clinical Architect</p>
+                    </div>
+                </div>
+                <div class="terminal-log">
+                    <div class="log-row">
+                        <span class="log-tag">LOC //</span>
+                        <span class="log-val">INDONESIA [WIB]</span>
+                    </div>
+                    <div class="log-row">
+                        <span class="log-tag">STACK //</span>
+                        <span class="log-val">JS / CSS / PYTHON / MD</span>
+                    </div>
+                    <div class="log-row">
+                        <span class="log-tag">STATUS //</span>
+                        <span class="log-val">INTEGRATING SYSTEM V3</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Bio details -->
+            <div class="about-bio">
+                <h2 id="about-bio-title" data-translate-key="aboutBioTitle">Synthesizing Systemic Complexity</h2>
+                <p id="about-bio-desc" data-translate-key="aboutBioDesc">I design and deploy clean, clinical reference frameworks, spatial simulations, and multi-dimensional analysis dashboards. Each topic in this archive represents a deep structural dive into complex systemic mechanics.</p>
+                <div class="about-links">
+                    <a href="https://github.com/LoLyeah" target="_blank" rel="noopener" class="action-button" aria-label="Visit my Github profile">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        <span>GitHub Profile</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Site Footer -->
+    <footer>
+        <div class="footer-inner">
+            <span class="footer-logo">LoLyeah</span>
+            <span id="footer-copy-translation">&copy; 2026 LoLyeah. All Rights Reserved.</span>
         </div>
     </footer>
 
-    <button class="scroll-top" id="scrollTop">UP</button>
-
+    <!-- JS Motion Physics and View Transitions Engine -->
+    <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
     <script>
-        // --- Translations ---
-        const translations = {
+        // Core Repository Database (24 bilingual dynamic guides)
+        const database = [
+            {
+                id: "./topics/adhd-diet-guide.html",
+                num: "01",
+                category: "neurodiversity",
+                link: "./topics/adhd-diet-guide.html",
+                title_en: "Diet & ADHD Guide",
+                title_id: "Panduan Diet & ADHD",
+                desc_en: "Explore the evidence-based connections between nutrition, dietary patterns, and ADHD management.",
+                desc_id: "Jelajahi hubungan berbasis bukti antara nutrisi, pola makan, dan manajemen ADHD.",
+                tag_en: "Neurodiversity",
+                tag_id: "Neurologi",
+                action_en: "View Guide",
+                action_id: "Lihat Panduan"
+            },
+            {
+                id: "./topics/stroke.html",
+                num: "02",
+                category: "clinical",
+                link: "./topics/stroke.html",
+                title_en: "Stroke: Interactive Infographic",
+                title_id: "Stroke: Infografik Interaktif",
+                desc_en: "A visual, high-fidelity guide mapping the causes, emergency timelines, and recovery pathways of stroke.",
+                desc_id: "Panduan visual resolusi tinggi yang memetakan penyebab, lini masa darurat, dan pemulihan stroke.",
+                tag_en: "Clinical",
+                tag_id: "Klinis",
+                action_en: "View Infographic",
+                action_id: "Lihat Infografik"
+            },
+            {
+                id: "./topics/diabetes-guide.html",
+                num: "03",
+                category: "clinical",
+                link: "./topics/diabetes-guide.html",
+                title_en: "Diabetes Clinical Guide",
+                title_id: "Panduan Klinis Diabetes",
+                desc_en: "A comprehensive deep dive into the pathophysiological mechanisms, diagnostics, and management of diabetes.",
+                desc_id: "Pembahasan mendalam tentang mekanisme patofisiologis, diagnostik, dan manajemen diabetes.",
+                tag_en: "Clinical",
+                tag_id: "Klinis",
+                action_en: "View Guide",
+                action_id: "Lihat Panduan"
+            },
+            {
+                id: "./topics/foodborne-outbreak.html",
+                num: "04",
+                category: "clinical",
+                link: "./topics/foodborne-outbreak.html",
+                title_en: "Foodborne Outbreak Guide",
+                title_id: "Panduan Wabah Foodborne",
+                desc_en: "Clinical guidelines on identifying, tracking, and treating common bacterial foodborne pathogens.",
+                desc_id: "Panduan klinis untuk mengidentifikasi, melacak, dan mengobati patogen bakteri bawaan makanan.",
+                tag_en: "Clinical",
+                tag_id: "Klinis",
+                action_en: "View Guide",
+                action_id: "Lihat Panduan"
+            },
+            {
+                id: "./topics/laxative-comparison.html",
+                num: "05",
+                category: "clinical",
+                link: "./topics/laxative-comparison.html",
+                title_en: "Laxative Mechanism Comparison",
+                title_id: "Perbandingan Mekanisme Laksatif",
+                desc_en: "A comparative reference suite for laxative classes, osmotic gradients, and prescribing timelines.",
+                desc_id: "Referensi komparatif lengkap untuk kelas laksatif, gradien osmotik, dan lini masa peresepan.",
+                tag_en: "Clinical",
+                tag_id: "Klinis",
+                action_en: "View Comparison",
+                action_id: "Lihat Perbandingan"
+            },
+            {
+                id: "./topics/ship-class.html",
+                num: "06",
+                category: "simulators",
+                link: "./topics/ship-class.html",
+                title_en: "Naval Ship Class Comparison",
+                title_id: "Perbandingan Kelas Kapal AL",
+                desc_en: "An interactive structural comparison of global naval vessels, architectures, and tonnages.",
+                desc_id: "Perbandingan struktural interaktif tentang kapal angkatan laut global, arsitektur, dan tonase.",
+                tag_en: "Simulators",
+                tag_id: "Simulator",
+                action_en: "View Comparison",
+                action_id: "Lihat Perbandingan"
+            },
+            {
+                id: "./topics/what-if-nusantara.html",
+                num: "07",
+                category: "analysis",
+                link: "./topics/what-if-nusantara.html",
+                title_en: "What If Nusantara",
+                title_id: "Bagaimana Jika Nusantara",
+                desc_en: "Systemic sovereignty analysis of Indonesian provinces as independent nation states.",
+                desc_id: "Analisis kedaulatan sistemik provinsi-provinsi di Indonesia jika menjadi negara merdeka.",
+                tag_en: "Analysis",
+                tag_id: "Analisis",
+                action_en: "View Analysis",
+                action_id: "Lihat Analisis"
+            },
+            {
+                id: "./topics/solar-system.html",
+                num: "08",
+                category: "simulators",
+                link: "./topics/solar-system.html",
+                title_en: "Solar System Explorer",
+                title_id: "Penjelajah Tata Surya",
+                desc_en: "A high-fidelity orbital mechanic simulator rendering the solar system directly in your browser.",
+                desc_id: "Simulasi mekanika orbital beresolusi tinggi yang merender tata surya langsung di peramban Anda.",
+                tag_en: "Simulators",
+                tag_id: "Simulator",
+                action_en: "Launch Simulator",
+                action_id: "Mulai Simulasi"
+            },
+            {
+                id: "./topics/upper-gastro.html",
+                num: "09",
+                category: "clinical",
+                link: "./topics/upper-gastro.html",
+                title_en: "Upper GI Disorders Pathway",
+                title_id: "Jalur Gangguan Lambung Atas",
+                desc_en: "Interactive diagnostic mapping of Gastritis, GERD, and Peptic Ulcer disease pathways.",
+                desc_id: "Pemetaan diagnostik interaktif untuk Gastritis, GERD, dan penyakit Tukak Lambung.",
+                tag_en: "Clinical",
+                tag_id: "Klinis",
+                action_en: "View Pathway",
+                action_id: "Lihat Jalur"
+            },
+            {
+                id: "./topics/a.html",
+                num: "10",
+                category: "experimental",
+                link: "./topics/a.html",
+                title_en: "とても痛い痛がりたい",
+                title_id: "とても痛い痛がりたい",
+                desc_en: "A poetic experimental page featuring conceptual language layouts and character structures.",
+                desc_id: "Halaman eksperimental puitis dengan tata letak bahasa konseptual dan struktur karakter.",
+                tag_en: "Experimental",
+                tag_id: "Eksperimental",
+                action_en: "Explore",
+                action_id: "Jelajahi"
+            },
+            {
+                id: "./topics/art2026.html",
+                num: "11",
+                category: "analysis",
+                link: "./topics/art2026.html",
+                title_en: "US-Indonesia Trade Reciprocity",
+                title_id: "Kemitraan Dagang AS-Indonesia",
+                desc_en: "In-depth policy review of the ART agreement and its direct economic impact on trade pipelines.",
+                desc_id: "Tinjauan kebijakan mendalam tentang perjanjian ART dan dampaknya terhadap jalur perdagangan.",
+                tag_en: "Analysis",
+                tag_id: "Analisis",
+                action_en: "View Review",
+                action_id: "Lihat Tinjauan"
+            },
+            {
+                id: "./topics/bottle-up.html",
+                num: "12",
+                category: "neurodiversity",
+                link: "./topics/bottle-up.html",
+                title_en: "Expressive Suppression & Memory",
+                title_id: "Penekanan Emosi & Memori",
+                desc_en: "A neurological exploration linking cognitive emotional suppression with impaired memory encoding.",
+                desc_id: "Eksplorasi neurologis yang menghubungkan penekanan emosi kognitif dengan gangguan perekaman memori.",
+                tag_en: "Neurodiversity",
+                tag_id: "Neurologi",
+                action_en: "View Dossier",
+                action_id: "Lihat Berkas"
+            },
+            {
+                id: "./topics/econ-outlook-2026.html",
+                num: "13",
+                category: "analysis",
+                link: "./topics/econ-outlook-2026.html",
+                title_en: "2026 Economic Outlook",
+                title_id: "Outlook Ekonomi 2026",
+                desc_en: "Macroeconomic forecasting models, core policy shifts, and growth trends for the year 2026.",
+                desc_id: "Model prakiraan makroekonomi, pergeseran kebijakan inti, dan tren pertumbuhan untuk tahun 2026.",
+                tag_en: "Analysis",
+                tag_id: "Analisis",
+                action_en: "View Outlook",
+                action_id: "Lihat Outlook"
+            },
+            {
+                id: "./topics/specialist-compared.html",
+                num: "14",
+                category: "analysis",
+                link: "./topics/specialist-compared.html",
+                title_en: "Medical Specialties Compared",
+                title_id: "Perbandingan Spesialis Medis",
+                desc_en: "Comparative scope mapping of clinical specialties, pathways, and educational timelines.",
+                desc_id: "Pemetaan lingkup komparatif untuk spesialisasi klinis, jalur karir, dan masa pendidikan.",
+                tag_en: "Analysis",
+                tag_id: "Analisis",
+                action_en: "View Comparison",
+                action_id: "Lihat Perbandingan"
+            },
+            {
+                id: "./topics/radcompare.html",
+                num: "15",
+                category: "analysis",
+                link: "./topics/radcompare.html",
+                title_en: "RadCompare: Radiology Landscape",
+                title_id: "RadCompare: Lanskap Radiologi",
+                desc_en: "Workforce density, technological distribution, and salary models of Radiology in Indonesia vs. Global.",
+                desc_id: "Kepadatan tenaga kerja, distribusi teknologi, dan model gaji Radiologi di Indonesia vs Global.",
+                tag_en: "Analysis",
+                tag_id: "Analisis",
+                action_en: "View Dashboard",
+                action_id: "Lihat Dasbor"
+            },
+            {
+                id: "./topics/antibiotics.html",
+                num: "16",
+                category: "clinical",
+                link: "./topics/antibiotics.html",
+                title_en: "Antibiotic Spectrum Reference",
+                title_id: "Referensi Spektrum Antibiotik",
+                desc_en: "A clinical database mapping antibiotic classes, antimicrobial coverage, and resistance profiles.",
+                desc_id: "Database klinis yang memetakan kelas antibiotik, cakupan antimikroba, dan profil resistensi.",
+                tag_en: "Clinical",
+                tag_id: "Klinis",
+                action_en: "View Database",
+                action_id: "Lihat Database"
+            },
+            {
+                id: "./topics/resource.html",
+                num: "17",
+                category: "analysis",
+                link: "./topics/resource.html",
+                title_en: "Provincial Resource Mapping",
+                title_id: "Pemetaan Sumber Daya Provinsi",
+                desc_en: "Interactive geostatistical data of minerals, rare earth elements, and hydrocarbons in Indonesia.",
+                desc_id: "Data geostatistik interaktif untuk mineral, logam tanah jarang, dan hidrokarbon di Indonesia.",
+                tag_en: "Analysis",
+                tag_id: "Analisis",
+                action_en: "View Map",
+                action_id: "Lihat Peta"
+            },
+            {
+                id: "./topics/scoliosis.html",
+                num: "18",
+                category: "clinical",
+                link: "./topics/scoliosis.html",
+                title_en: "Adult Scoliosis Management",
+                title_id: "Manajemen Skoliosis Dewasa",
+                desc_en: "An evidence-based guide spanning diagnostic sorting, bracing strategies, and surgical timelines.",
+                desc_id: "Panduan berbasis bukti yang mencakup penyaringan diagnostik, strategi penyangga, dan waktu bedah.",
+                tag_en: "Clinical",
+                tag_id: "Klinis",
+                action_en: "View Clinical Guide",
+                action_id: "Lihat Panduan Klinis"
+            },
+            {
+                id: "https://lolyeah.netlify.app/",
+                num: "19",
+                category: "simulators",
+                link: "https://lolyeah.netlify.app/",
+                title_en: "MedQuiz AI",
+                title_id: "MedQuiz AI",
+                desc_en: "Interactive AI-powered clinical reasoning cases and real-time medical simulation scenarios.",
+                desc_id: "Uji penalaran klinis interaktif berbasis AI dengan skenario simulasi medis nyata.",
+                tag_en: "Simulators",
+                tag_id: "Simulator",
+                action_en: "Launch App",
+                action_id: "Buka Aplikasi"
+            },
+            {
+                id: "./topics/audhd-clinical-analysis.html",
+                num: "20",
+                category: "neurodiversity",
+                link: "./topics/audhd-clinical-analysis.html",
+                title_en: "AuDHD Convergent Profiles",
+                title_id: "Profil Konvergen AuDHD",
+                desc_en: "Clinical phenotypic conflicts, diagnostic bottlenecks, and management in autism-ADHD convergence.",
+                desc_id: "Konflik fenotipik klinis, hambatan diagnostik, dan manajemen pada kondisi konvergensi Autisme-ADHD.",
+                tag_en: "Neurodiversity",
+                tag_id: "Neurologi",
+                action_en: "View Analysis",
+                action_id: "Lihat Analisis"
+            },
+            {
+                id: "./topics/stemi.html",
+                num: "21",
+                category: "clinical",
+                link: "./topics/stemi.html",
+                title_en: "STEMI Emergency Pathways",
+                title_id: "Jalur Darurat STEMI",
+                desc_en: "High-fidelity interactive timeline, thrombolysis protocols, and the Killip risk calculator.",
+                desc_id: "Garis waktu interaktif presisi tinggi, protokol trombolisis, dan kalkulator risiko Killip.",
+                tag_en: "Clinical",
+                tag_id: "Klinis",
+                action_en: "Launch Explorer",
+                action_id: "Buka Eksplorator"
+            },
+            {
+                id: "./topics/adhd.html",
+                num: "22",
+                category: "neurodiversity",
+                link: "./topics/adhd.html",
+                title_en: "ADHD Clinical Dossier",
+                title_id: "Dossier Klinis ADHD",
+                desc_en: "DMN dysregulation models, executive network structures, and ASRS-v1.1 diagnostic guides.",
+                desc_id: "Model disregulasi DMN, struktur jaringan eksekutif, dan panduan diagnostik ASRS-v1.1.",
+                tag_en: "Neurodiversity",
+                tag_id: "Neurologi",
+                action_en: "View Dossier",
+                action_id: "Lihat Berkas"
+            },
+            {
+                id: "https://rizqihan.netlify.app/",
+                num: "23",
+                category: "clinical",
+                link: "https://rizqihan.netlify.app/",
+                title_en: "Anesthesia Clinical Assistant",
+                title_id: "Asisten Klinis Anestesi",
+                desc_en: "Intubation drug calculators, clinical reference tables, and emergency calculators tailored for MDs.",
+                desc_id: "Kalkulator obat intubasi, tabel referensi klinis, dan kalkulator darurat yang disesuaikan untuk dokter.",
+                tag_en: "Clinical",
+                tag_id: "Klinis",
+                action_en: "Launch Assistant",
+                action_id: "Buka Asisten"
+            },
+            {
+                id: "./topics/testing-homepage.html",
+                num: "24",
+                category: "experimental",
+                link: "./topics/testing-homepage.html",
+                title_en: "Developer Lab Playground",
+                title_id: "Playground Lab Developer",
+                desc_en: "Live environment checking experimental layouts, active test benches, and LLM endpoints.",
+                desc_id: "Lingkungan aktif yang menguji tata letak eksperimental, bangku uji aktif, dan endpoint LLM.",
+                tag_en: "Experimental",
+                tag_id: "Eksperimental",
+                action_en: "Enter Playground",
+                action_id: "Masuk Playground"
+            }
+        ];
+
+        // Custom Inline SVGs based on Category for supreme visual clarity
+        const iconDatabase = {
+            clinical: `<svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
+            neurodiversity: `<svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 19v3M8 22h8"/></svg>`,
+            analysis: `<svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20V14M3 20h18"/></svg>`,
+            simulators: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>`,
+            experimental: `<svg viewBox="0 0 24 24"><path d="M4.5 3h15M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3M8 11h8M10 3v5"/></svg>`
+        };
+
+        // Static Page UI Translation dictionaries
+        const uiTranslations = {
             en: {
-                headerTitle: "LoLyeah Interactive Guides",
-                headerSubtitle: "An evolving collection of deep dives into various topics.",
-                mainTitle: "Explore a Topic",
-                adhdCardTitle: "An Interactive Guide to Diet and ADHD",
-                adhdCardDesc: "Explore the evidence-based connections between nutrition, dietary patterns, and the management of ADHD symptoms through an interactive, bilingual guide.",
-                adhdCardLink: "View Guide &rarr;",
-                strokeCardTitle: "Stroke: An Interactive Infographic",
-                strokeCardDesc: "A visual guide to the causes, immediate actions, treatments, and recovery journey of stroke.",
-                infoCardLink: "View Infographic &rarr;",
-                diabetesCardTitle: "Comprehensive Guide to Diabetes",
-                diabetesCardDesc: "A comprehensive guide to the causes, immediate actions, treatments, and recovery journey of diabetes.",
-                guideCardLink: "View Guide &rarr;",
-                foodborneCardTitle: "Foodborne Outbreak Clinical Guide",
-                foodborneCardDesc: "A clinical guide to the causes, immediate actions, treatments, and recovery of foodborne outbreak.",
-                laxativeCardTitle: "Comprehensive Laxatives Comparison",
-                laxativeCardDesc: "A comprehensive comparison between laxatives.",
-                navalCardTitle: "Naval Ship Class Comparison",
-                navalCardDesc: "A comparison between naval ship class in a nutshell.",
-                nusantaraCardTitle: "What If Nusantara - Indonesian Provincial Independence Analysis",
-                nusantaraCardDesc: "A comparison between every province in Indonesia if every one of them become a sovereign state.",
-                comparisonCardLink: "View Comparison &rarr;",
-                testingCardTitle: "On Progress Web Page of LoLyeah",
-                testingCardDesc: "Based on Xiaomi MiMo V2 LLM.",
-                solarCardTitle: "Solar System Explorer",
-                solarCardDesc: "Solar System simulation, right on your browser.",
-                upperGastroCardTitle: "Upper Gastrointestinal Disorders",
-                upperGastroCardDesc: "Interactive guide to Gastritis, GERD, and Peptic Ulcers.",
-                anesthesiaCardTitle: "Anesthesia Clinical Assistant",
-                anesthesiaCardDesc: "AI-powered clinical assistant, medical calculators, and offline reference suite tailored for MDs and healthcare professionals.",
-                anesthesiaCardLink: "Visit Assistant &rarr;",
-                footerText: "&copy; 2026 LoLyeah. All Rights Reserved."
+                heroTitle: "Interactive Knowledge Hub",
+                heroSubtitle: "An evolving, curated directory of deep clinical guides, interactive analytics, and high-fidelity mechanical simulators.",
+                statusBadge: "SYSTEM OPERATIONAL // LATENCY: OPTIMAL",
+                searchPlaceholder: "Search guides, topics, or terms...",
+                statsActive: "Showing {count} of 24 interactive entries",
+                allTagLabel: "All topics mapped",
+                specificTagLabel: "Filtered by category: {category}",
+                noResultsTitle: "System Search Failed",
+                noResultsDesc: "No records found in current systemic partition. Try clearing or editing your queries.",
+                noResultsBtn: "Clear Queries",
+                aboutMeta: "Clinical Architect",
+                aboutBioTitle: "Synthesizing Systemic Complexity",
+                aboutBioDesc: "I design and deploy clean, clinical reference frameworks, spatial simulations, and multi-dimensional analysis dashboards. Each topic in this archive represents a deep structural dive into complex systemic mechanics.",
+                footerCopy: "&copy; 2026 LoLyeah. All Rights Reserved."
             },
             id: {
-                headerTitle: "Panduan Interaktif LoLyeah",
-                headerSubtitle: "Kumpulan panduan mendalam tentang berbagai topik yang terus berkembang.",
-                mainTitle: "Jelajahi Topik",
-                adhdCardTitle: "Panduan Interaktif Diet dan ADHD",
-                adhdCardDesc: "Jelajahi hubungan berbasis bukti antara nutrisi, pola makan, dan pengelolaan gejala ADHD melalui panduan interaktif dwibahasa.",
-                adhdCardLink: "Lihat Panduan &rarr;",
-                strokeCardTitle: "Stroke: Infografik Interaktif",
-                strokeCardDesc: "Panduan visual tentang penyebab, tindakan segera, perawatan, dan perjalanan pemulihan stroke.",
-                infoCardLink: "Lihat Infografik &rarr;",
-                diabetesCardTitle: "Panduan Lengkap Diabetes",
-                diabetesCardDesc: "Panduan lengkap tentang penyebab, tindakan segera, perawatan, dan perjalanan pemulihan diabetes.",
-                guideCardLink: "Lihat Panduan &rarr;",
-                foodborneCardTitle: "Panduan Klinis Wabah Penyakit Bawaan Makanan",
-                foodborneCardDesc: "Panduan klinis tentang penyebab, tindakan segera, perawatan, dan pemulihan wabah penyakit bawaan makanan.",
-                laxativeCardTitle: "Perbandingan Lengkap Laksatif",
-                laxativeCardDesc: "Perbandingan lengkap antara laksatif.",
-                navalCardTitle: "Perbandingan Kelas Kapal Angkatan Laut",
-                navalCardDesc: "Perbandingan antara kelas kapal angkatan laut dalam ringkasan.",
-                nusantaraCardTitle: "Apa Jika Nusantara - Analisis Kemerdekaan Provinsi Indonesia",
-                nusantaraCardDesc: "Perbandingan antara setiap provinsi di Indonesia jika setiap provinsi menjadi negara berdaulat.",
-                comparisonCardLink: "Lihat Perbandingan &rarr;",
-                testingCardTitle: "Halaman Web LoLyeah Dalam Proses",
-                testingCardDesc: "Berdasarkan Xiaomi MiMo V2 LLM.",
-                solarCardTitle: "Penjelajah Tata Surya",
-                solarCardDesc: "Simulasi Tata Surya, langsung di browser Anda.",
-                upperGastroCardTitle: "Gangguan Saluran Cerna Atas",
-                upperGastroCardDesc: "Panduan interaktif untuk Gastritis, GERD, dan Tukak Lambung.",
-                anesthesiaCardTitle: "Anesthesia Clinical Assistant",
-                anesthesiaCardDesc: "Asisten klinis berbasis AI, kalkulator medis, dan referensi offline yang dirancang khusus untuk MD dan profesional kesehatan.",
-                anesthesiaCardLink: "Kunjungi Asisten &rarr;",
-                footerText: "&copy; 2026 LoLyeah. Hak Cipta Dilindungi."
+                heroTitle: "Hub Pengetahuan Interaktif",
+                heroSubtitle: "Kumpulan kurasi panduan klinis mendalam, analisis interaktif, dan simulator mekanis beresolusi tinggi.",
+                statusBadge: "SISTEM OPERASIONAL // LATENSI: OPTIMAL",
+                searchPlaceholder: "Cari panduan, topik, atau istilah...",
+                statsActive: "Menampilkan {count} dari 24 entri interaktif",
+                allTagLabel: "Semua topik terpetakan",
+                specificTagLabel: "Difilter berdasarkan kategori: {category}",
+                noResultsTitle: "Pencarian Sistem Gagal",
+                noResultsDesc: "Tidak ada catatan yang ditemukan di partisi sistem ini. Coba bersihkan atau edit pencarian Anda.",
+                noResultsBtn: "Bersihkan Pencarian",
+                aboutMeta: "Arsitek Klinis",
+                aboutBioTitle: "Menyintesis Kompleksitas Sistemik",
+                aboutBioDesc: "Saya merancang dan menerapkan kerangka referensi klinis yang bersih, simulasi spasial, dan dasbor analisis multi-dimensi. Setiap topik dalam arsip ini merepresentasikan pembahasan struktural yang mendalam tentang mekanisme sistemik yang kompleks.",
+                footerCopy: "&copy; 2026 LoLyeah. Hak Cipta Dilindungi."
             }
         };
 
-        // --- Typewriter Animation ---
-        let typingTimeout;
-        function runTypewriter(element, text) {
-            clearTimeout(typingTimeout);
-            element.innerHTML = '<span class="cursor"></span>';
-            let i = 0;
-            
-            function type() {
-                if (i < text.length) {
-                    element.innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
-                    i++;
-                    const speed = Math.random() * 40 + 30; // Randomize typing speed
-                    typingTimeout = setTimeout(type, speed);
-                }
+        // UI Variables State
+        let currentLanguage = localStorage.getItem("lang") || "en";
+        let activeCategory = "all";
+        let searchQuery = "";
+
+        // UI DOM Selectors
+        const deckContainer = document.getElementById("deck-container");
+        const searchInput = document.getElementById("search");
+        const searchClear = document.getElementById("search-clear");
+        const counterPill = document.getElementById("counter-pill");
+        const activeTagLabel = document.getElementById("active-tag-label");
+        const badgeTranslation = document.getElementById("badge-translation");
+        const heroTitle = document.getElementById("hero-title");
+        const heroSubtitle = document.getElementById("hero-subtitle");
+        const aboutMetaTag = document.getElementById("about-meta-tag");
+        const aboutBioTitle = document.getElementById("about-bio-title");
+        const aboutBioDesc = document.getElementById("about-bio-desc");
+        const footerCopyTranslation = document.getElementById("footer-copy-translation");
+
+        const langEn = document.getElementById("lang-en");
+        const langId = document.getElementById("lang-id");
+        const themeToggle = document.getElementById("theme-toggle");
+        const themeSvg = document.getElementById("theme-svg");
+
+        // 1. Unified Render & Filter Engine (Featuring View Transitions API)
+        function renderCards() {
+            // Apply queries
+            const filtered = database.filter(item => {
+                const matchesCategory = activeCategory === "all" || item.category === activeCategory;
+                
+                const titleText = currentLanguage === "en" ? item.title_en : item.title_id;
+                const descText = currentLanguage === "en" ? item.desc_en : item.desc_id;
+                const tagText = currentLanguage === "en" ? item.tag_en : item.tag_id;
+                
+                const query = searchQuery.toLowerCase().trim();
+                const matchesSearch = !query || 
+                    titleText.toLowerCase().includes(query) ||
+                    descText.toLowerCase().includes(query) ||
+                    tagText.toLowerCase().includes(query) ||
+                    item.num.includes(query);
+                
+                return matchesCategory && matchesSearch;
+            });
+
+            // If View Transitions are supported, morph the layout, otherwise fall back to instant render
+            if (document.startViewTransition) {
+                document.startViewTransition(() => {
+                    executeRender(filtered);
+                });
+            } else {
+                executeRender(filtered);
             }
-            // Small delay before starting
-            typingTimeout = setTimeout(type, 300);
         }
 
-        // --- Language Switcher Logic ---
+        function executeRender(items) {
+            deckContainer.innerHTML = "";
+
+            if (items.length === 0) {
+                // Render gorgeous Empty State
+                const dict = uiTranslations[currentLanguage];
+                deckContainer.innerHTML = `
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <h4>${dict.noResultsTitle}</h4>
+                        <p>${dict.noResultsDesc}</p>
+                        <button onclick="clearSearchFilters()">${dict.noResultsBtn}</button>
+                    </div>
+                `;
+                updateCounter(0);
+                return;
+            }
+
+            // Render Cards Grid
+            items.forEach((item, index) => {
+                const title = currentLanguage === "en" ? item.title_en : item.title_id;
+                const desc = currentLanguage === "en" ? item.desc_en : item.desc_id;
+                const tag = currentLanguage === "en" ? item.tag_en : item.tag_id;
+                const action = currentLanguage === "en" ? item.action_en : item.action_id;
+                const icon = iconDatabase[item.category] || "";
+
+                const cardHTML = `
+                    <div class="knowledge-card" 
+                         onclick="window.open('${item.link}', '_self')" 
+                         data-category="${item.category}" 
+                         style="view-transition-name: card-${item.num};"
+                         aria-label="${title} guide">
+                        
+                        <div class="card-top">
+                            <div class="card-header">
+                                <span class="card-index">${item.num} //</span>
+                                <span class="card-category-badge">
+                                    ${icon}
+                                    <span>${tag}</span>
+                                </span>
+                            </div>
+                            <h3>${title}</h3>
+                            <p>${desc}</p>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <span class="link-text">
+                                <span>${action}</span>
+                                <span class="link-arrow" aria-hidden="true">&rarr;</span>
+                            </span>
+                        </div>
+                    </div>
+                `;
+                deckContainer.insertAdjacentHTML("beforeend", cardHTML);
+            });
+
+            // Update stats indicators
+            updateCounter(items.length);
+
+            // Staggered entry animation using Motion
+            Motion.animate(
+                ".knowledge-card",
+                { opacity: [0, 1], y: [15, 0] },
+                { 
+                    delay: Motion.stagger(0.04),
+                    duration: 0.5,
+                    easing: "ease-out"
+                }
+            );
+
+            // Initialize cursor tracking radial gradient on cards
+            initCursorTracking();
+        }
+
+        // Helper stats update
+        function updateCounter(count) {
+            const dict = uiTranslations[currentLanguage];
+            counterPill.textContent = dict.statsActive.replace("{count}", count);
+            
+            if (activeCategory === "all") {
+                activeTagLabel.textContent = dict.allTagLabel;
+            } else {
+                const categoryPill = document.querySelector(`.filter-pill[data-category="${activeCategory}"] span`).textContent;
+                activeTagLabel.textContent = dict.specificTagLabel.replace("{category}", categoryPill);
+            }
+        }
+
+        function clearSearchFilters() {
+            searchInput.value = "";
+            searchQuery = "";
+            searchClear.style.display = "none";
+            activeCategory = "all";
+            
+            document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+            document.querySelector('.filter-pill[data-category="all"]').classList.add("active");
+            
+            renderCards();
+        }
+
+        // 2. Cursor tracking gradient logic
+        function initCursorTracking() {
+            const cards = document.querySelectorAll(".knowledge-card");
+            cards.forEach(card => {
+                card.onmousemove = e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty("--mouse-x", `${x}px`);
+                    card.style.setProperty("--mouse-y", `${y}px`);
+                };
+            });
+        }
+
+        // 3. Language Selection System
         function switchLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem("lang", lang);
             document.documentElement.lang = lang;
 
-            document.querySelectorAll('[data-translate-key]').forEach(el => {
-                const key = el.dataset.translateKey;
-                if (translations[lang][key]) {
-                    // Check if the element is our main header to trigger the typing animation
-                    if(el.id === 'typewriter-title') {
-                        runTypewriter(el, translations[lang][key]);
-                    } else {
-                        el.innerHTML = translations[lang][key];
-                    }
+            // Update global static text
+            const dict = uiTranslations[lang];
+            badgeTranslation.textContent = dict.statusBadge;
+            heroTitle.textContent = dict.heroTitle;
+            heroSubtitle.textContent = dict.heroSubtitle;
+            aboutMetaTag.textContent = dict.aboutMeta;
+            aboutBioTitle.textContent = dict.aboutBioTitle;
+            aboutBioDesc.textContent = dict.aboutBioDesc;
+            footerCopyTranslation.innerHTML = dict.footerCopy;
+
+            // Search placeholder translation
+            searchInput.placeholder = dict.searchPlaceholder;
+
+            // Translate filter pill text
+            const categories = {
+                all: lang === "en" ? "All Archive" : "Semua Arsip",
+                clinical: lang === "en" ? "Clinical & Medicine" : "Klinis & Medis",
+                neurodiversity: lang === "en" ? "Neurodevelopment" : "Saraf & Otak",
+                analysis: lang === "en" ? "Data & Geopolitics" : "Data & Analisis",
+                simulators: lang === "en" ? "Simulators & Tools" : "Simulator & Alat",
+                experimental: lang === "en" ? "Experimental" : "Eksperimental"
+            };
+
+            document.querySelectorAll(".filter-pill").forEach(pill => {
+                const cat = pill.getAttribute("data-category");
+                if (categories[cat]) {
+                    pill.querySelector("span").textContent = categories[cat];
                 }
             });
 
-            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-            document.getElementById('lang-id').classList.toggle('active', lang === 'id');
+            // Toggle active styling
+            langEn.classList.toggle("active", lang === "en");
+            langId.classList.toggle("active", lang === "id");
+            
+            langEn.setAttribute("aria-checked", lang === "en");
+            langId.setAttribute("aria-checked", lang === "id");
+
+            // Rerender all dynamic cards in new language
+            renderCards();
         }
 
-        document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
-        document.getElementById('lang-id').addEventListener('click', () => switchLanguage('id'));
-        switchLanguage('en'); // Default init
+        langEn.addEventListener("click", () => switchLanguage("en"));
+        langId.addEventListener("click", () => switchLanguage("id"));
 
-        // --- Dark Mode Logic ---
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeText = document.getElementById('theme-text');
-        
-        // Check for saved user preference, if any, on load
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        themeText.innerText = currentTheme === 'light' ? 'DARK' : 'LIGHT';
-
-        themeToggle.addEventListener('click', () => {
-            let targetTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', targetTheme);
-            localStorage.setItem('theme', targetTheme);
-            themeText.innerText = targetTheme === 'light' ? 'DARK' : 'LIGHT';
+        // 4. Search Handler
+        searchInput.addEventListener("input", (e) => {
+            searchQuery = e.target.value;
+            searchClear.style.display = searchQuery ? "flex" : "none";
+            renderCards();
         });
 
-        // --- Mouse Tracking Hover Effect ---
-        const featuresGrid = document.getElementById("features");
-        
-        featuresGrid.onmousemove = e => {
-            for(const card of document.getElementsByClassName("feature-card")) {
-                const rect = card.getBoundingClientRect(),
-                      x = e.clientX - rect.left,
-                      y = e.clientY - rect.top;
+        searchClear.addEventListener("click", () => {
+            searchInput.value = "";
+            searchQuery = "";
+            searchClear.style.display = "none";
+            renderCards();
+        });
 
-                card.style.setProperty("--mouse-x", `${x}px`);
-                card.style.setProperty("--mouse-y", `${y}px`);
-            };
+        // 5. Category Selection Handler
+        document.querySelectorAll(".filter-pill").forEach(pill => {
+            pill.addEventListener("click", () => {
+                document.querySelectorAll(".filter-pill").forEach(p => {
+                    p.classList.remove("active");
+                    p.setAttribute("aria-selected", "false");
+                });
+                
+                pill.classList.add("active");
+                pill.setAttribute("aria-selected", "true");
+                activeCategory = pill.getAttribute("data-category");
+                
+                renderCards();
+            });
+        });
+
+        // 6. Modern Dark/Light Mode Engine
+        const sunPath = `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>`;
+        const moonPath = `<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>`;
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute("data-theme", theme);
+            localStorage.setItem("theme", theme);
+            themeSvg.innerHTML = theme === "light" ? moonPath : sunPath;
         }
 
-        // --- Scroll to Top Logic ---
-        const scrollTopBtn = document.getElementById('scrollTop');
-        
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                scrollTopBtn.classList.add('visible');
-            } else {
-                scrollTopBtn.classList.remove('visible');
-            }
+        // Check cache or media preference
+        const cachedTheme = localStorage.getItem("theme");
+        const defaultDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const initialTheme = cachedTheme || (defaultDark ? "dark" : "light");
+        applyTheme(initialTheme);
+
+        themeToggle.addEventListener("click", () => {
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            const targetTheme = currentTheme === "light" ? "dark" : "light";
+            
+            // Motion micro-animation on toggle
+            Motion.animate(
+                "#theme-toggle", 
+                { rotate: [0, 360], scale: [1, 0.8, 1] }, 
+                { duration: 0.4 }
+            );
+            
+            applyTheme(targetTheme);
         });
 
-        scrollTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // 7. Initial Boostrap
+        document.addEventListener("DOMContentLoaded", () => {
+            // Apply active language configuration
+            switchLanguage(currentLanguage);
+            
+            // Initial animation reveals hero elements
+            Motion.animate(
+                "#status-badge, #hero-title, #hero-subtitle, .control-deck",
+                { opacity: [0, 1], y: [30, 0] },
+                { 
+                    delay: Motion.stagger(0.08), 
+                    duration: 0.8,
+                    easing: "ease-out"
+                }
+            );
+
+            // Staggered About terminal trigger on view entry
+            Motion.inView(".about-section", () => {
+                Motion.animate(
+                    ".dev-terminal",
+                    { opacity: [0, 1], x: [-30, 0] },
+                    { duration: 0.8, easing: "ease-out" }
+                );
+                Motion.animate(
+                    ".about-bio",
+                    { opacity: [0, 1], x: [30, 0] },
+                    { duration: 0.8, easing: "ease-out" }
+                );
+            });
         });
     </script>
 </body>
