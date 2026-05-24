@@ -4,145 +4,399 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solar System Explorer / Penjelajah Sistem Tata Surya</title>
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Global Styles */
+        /* Global Variables & Colors */
         :root {
-            --primary-dark: #0a0a1a;
-            --accent: #4ecca3;
-            --accent-light: #6fffd4;
-            --text-light: #e0e0ff;
-            --text-dark: #000000;
-            --glass-bg: rgba(20, 20, 35, 0.7);
-            --glass-border: rgba(100, 120, 255, 0.1);
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
 
-            /* Orbit Distances (Base Size 850px system) */
-            --mercury-dist: 60px;
-            --venus-dist: 90px;
-            --earth-dist: 125px;
-            --mars-dist: 160px;
-            --jupiter-dist: 220px;
-            --saturn-dist: 280px;
-            --uranus-dist: 335px;
-            --neptune-dist: 390px;
+            --bg-deep: #020208;
+            --text-light: #f0f2fd;
+            --text-muted: #8c90b0;
+            --accent: #4ecca3;
+            --accent-glow: rgba(78, 204, 163, 0.45);
+            --accent-dim: rgba(78, 204, 163, 0.15);
+            
+            --glass-bg: rgba(8, 8, 24, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-glow: rgba(100, 120, 255, 0.05);
+
+            /* Orbit Distances */
+            --mercury-dist: 70px;
+            --venus-dist: 105px;
+            --earth-dist: 145px;
+            --mars-dist: 185px;
+            --jupiter-dist: 245px;
+            --saturn-dist: 310px;
+            --uranus-dist: 370px;
+            --neptune-dist: 425px;
+
+            --tilt-x: 0deg;
+            --tilt-y: 0deg;
+            --zoom-factor: 1.0;
+            --orbit-line-opacity: 0.2;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            /* DEEP SPACE BACKGROUND SETUP */
-            background-color: #000;
+            background-color: var(--bg-deep);
             color: var(--text-light);
-            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            font-family: var(--font-sans);
             overflow: hidden;
             height: 100vh;
             width: 100vw;
             display: flex;
             flex-direction: column;
+            position: relative;
+        }
 
+        /* ----------------------------------------------------
+           IMMERSIVE COSMIC STARFIELD & NEBULA BACKGROUND
+           ---------------------------------------------------- */
+        .cosmic-canvas {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, #0c0a22 0%, #03020c 60%, #000000 100%);
+        }
+
+        .stars {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-repeat: repeat;
+        }
+
+        .stars-1 {
             background-image: 
-                /* Stars Layer 1 (Tiny/Distant) */
-                radial-gradient(1px 1px at 10% 10%, rgba(255,255,255,0.9), transparent),
-                radial-gradient(1px 1px at 20% 20%, rgba(255,255,255,0.7), transparent),
-                radial-gradient(2px 2px at 30% 30%, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 40% 40%, rgba(255,255,255,0.9), transparent),
-                radial-gradient(2px 2px at 50% 50%, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1px 1px at 60% 60%, rgba(255,255,255,0.8), transparent),
-                radial-gradient(2px 2px at 70% 70%, rgba(255,255,255,0.7), transparent),
-                radial-gradient(1px 1px at 80% 80%, rgba(255,255,255,0.9), transparent),
-                radial-gradient(1px 1px at 90% 90%, rgba(255,255,255,0.8), transparent),
-                
-                /* Main Cosmic Gradient: Deep Blue/Purple center -> Pure Black edges */
-                radial-gradient(circle at 50% 50%, #202035 0%, #151525 30%, #050510 60%, #000000 100%);
-            
-            background-size: 
-                350px 350px, 300px 300px, 250px 250px, 
-                200px 200px, 150px 150px, 400px 400px, 
-                300px 300px, 200px 200px, 450px 450px,
-                100% 100%;
-                
-            background-repeat: repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
+                radial-gradient(1px 1px at 15% 20%, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 35% 45%, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1.5px 1.5px at 60% 15%, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 80% 70%, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(2px 2px at 10% 85%, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 45% 90%, rgba(255, 255, 255, 0.6), transparent);
+            background-size: 300px 300px;
+            animation: slowTwinkle 18s linear infinite;
         }
-        
-        /* Header */
+
+        .stars-2 {
+            background-image: 
+                radial-gradient(1.5px 1.5px at 25% 10%, rgba(255, 255, 255, 0.85), transparent),
+                radial-gradient(2px 2px at 75% 40%, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 50% 60%, rgba(255, 255, 255, 0.75), transparent),
+                radial-gradient(1.5px 1.5px at 90% 20%, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(2.5px 2.5px at 30% 75%, rgba(255, 255, 255, 0.6), transparent);
+            background-size: 200px 200px;
+            animation: mediumTwinkle 12s linear infinite;
+            opacity: 0.7;
+        }
+
+        .nebula {
+            position: absolute;
+            inset: 0;
+            mix-blend-mode: screen;
+            filter: blur(140px);
+            opacity: 0.35;
+            transition: transform 10s ease;
+        }
+
+        .nebula-purple {
+            background: radial-gradient(circle at 75% 35%, #4f46e5 0%, transparent 60%);
+            animation: pulseNebula 25s ease-in-out infinite alternate;
+        }
+
+        .nebula-teal {
+            background: radial-gradient(circle at 25% 70%, #0d9488 0%, transparent 55%);
+            animation: pulseNebula 35s ease-in-out infinite alternate;
+        }
+
+        @keyframes slowTwinkle {
+            0% { opacity: 0.8; transform: rotate(0deg); }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; transform: rotate(360deg); }
+        }
+
+        @keyframes mediumTwinkle {
+            0% { opacity: 1; transform: rotate(360deg); }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; transform: rotate(0deg); }
+        }
+
+        @keyframes pulseNebula {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.15) translate(-3%, 4%); }
+        }
+
+        /* ----------------------------------------------------
+           HIGH-END NAVIGATION HEADER
+           ---------------------------------------------------- */
         header {
-            text-align: center;
-            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2.5rem;
             z-index: 10;
+            background: linear-gradient(to bottom, rgba(2, 2, 8, 0.75) 0%, transparent 100%);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             flex-shrink: 0;
-            background: rgba(10, 10, 26, 0.3); 
-            backdrop-filter: blur(2px);
         }
-        
+
+        .brand-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
         h1 {
-            color: var(--accent-light);
-            font-size: 1.8rem;
-            text-shadow: 0 0 15px rgba(78, 204, 163, 0.5);
+            font-family: var(--font-display);
             font-weight: 700;
-            margin-bottom: 5px;
+            font-size: 1.6rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #fff 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(78, 204, 163, 0.2);
         }
-        
+
         #subtitle {
-            font-size: 0.9rem;
-            color: #b0c4ff;
-            max-width: 800px;
-            margin: 0 auto;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            font-weight: 400;
         }
-        
-        /* Language Switcher */
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        /* language switcher */
         .language-switcher {
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 99px;
+            padding: 2px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
         }
         
         .lang-btn {
-            background: rgba(40, 40, 60, 0.7);
-            color: var(--text-light);
-            border: 1px solid rgba(100, 120, 255, 0.2);
-            padding: 5px 15px;
-            border-radius: 15px;
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            padding: 6px 14px;
+            border-radius: 99px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s ease;
-            font-size: 0.8rem;
-            backdrop-filter: blur(5px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
         }
-        
+
         .lang-btn:hover {
-            background: rgba(78, 204, 163, 0.3);
-            border-color: var(--accent);
+            color: var(--text-light);
         }
         
         .lang-btn.active {
-            background: linear-gradient(135deg, rgba(78, 204, 163, 0.5), rgba(78, 204, 163, 0.8));
-            color: white;
-            border-color: var(--accent);
+            background: var(--accent);
+            color: var(--bg-deep);
+            box-shadow: 0 0 12px var(--accent-glow);
         }
-        
-        /* Solar System Container */
+
+        /* Back to Main Page Button */
+        .home-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 8px 18px;
+            border-radius: 99px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(255,255,255,0.05);
+            transform: translateY(-1px);
+        }
+
+        /* ----------------------------------------------------
+           MAIN APP CONTAINER SECTION
+           ---------------------------------------------------- */
+        .main-app-container {
+            flex: 1;
+            display: flex;
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 80px);
+            overflow: hidden;
+        }
+
+        /* Left telemetry control sidebar */
+        .telemetry-sidebar {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            width: 280px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            z-index: 10;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 0 15px var(--glass-glow);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .telemetry-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-box-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            width: 14px;
+            height: 14px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 10px 12px 10px 34px;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            font-family: var(--font-sans);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(78, 204, 163, 0.15);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .planet-nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .planet-nav-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .planet-nav-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+
+        .planet-nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+        }
+
+        .planet-nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateX(2px);
+        }
+
+        .planet-nav-item.active {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .planet-nav-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* ----------------------------------------------------
+           SOLAR SYSTEM VIEWPORT AREA
+           ---------------------------------------------------- */
         .solar-system-wrapper {
-            flex: 1; 
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
             overflow: hidden;
             width: 100%;
+            height: 100%;
+            z-index: 1;
         }
-        
+
         #solar-system {
             position: relative;
-            width: 850px; 
-            height: 850px;
+            width: 950px;
+            height: 950px;
             transform-origin: center center;
-            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
+
         /* Sun */
         .sun {
             position: absolute;
@@ -152,30 +406,40 @@
             height: 60px;
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            background: radial-gradient(circle at 30% 30%, #fff7cc, #ffcc00, #ff9900, #ff6600);
+            background: radial-gradient(circle at 35% 35%, #ffffff, #fff2a3 30%, #ffa600 65%, #ff4000 100%);
             z-index: 100;
             cursor: pointer;
             box-shadow: 
-                0 0 30px #ffcc00,
-                0 0 60px #ff9900,
-                0 0 90px #ff6600;
-            transition: transform 0.3s ease;
+                0 0 35px #ffa600,
+                0 0 70px rgba(255, 102, 0, 0.6),
+                0 0 110px rgba(255, 64, 0, 0.3);
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
         }
-        
+
         .sun:hover {
-            transform: translate(-50%, -50%) scale(1.2);
+            transform: translate(-50%, -50%) scale(1.15);
         }
-        
-        /* Orbital Lines */
+
+        /* Orbital Lines styling */
         .orbit-line {
             position: absolute;
             top: 50%;
             left: 50%;
-            border: 1px dashed rgba(255, 255, 255, 0.2); 
+            border: 1px dashed rgba(100, 120, 255, var(--orbit-line-opacity));
             border-radius: 50%;
             transform: translate(-50%, -50%);
             pointer-events: none;
             z-index: 1;
+            transition: all 0.4s ease;
+            transform-style: preserve-3d;
+        }
+
+        .orbit-line.active {
+            border: 1px solid var(--accent);
+            border-style: solid;
+            box-shadow: 0 0 15px rgba(78, 204, 163, 0.15);
+            opacity: 0.8;
         }
 
         /* Planets Common Styles */
@@ -186,381 +450,814 @@
             border-radius: 50%;
             cursor: pointer;
             z-index: 10;
-            border: 1px solid rgba(255, 255, 255, 0.2);
             transform-origin: center center;
-        }
-        
-        .planet:hover {
-            z-index: 100;
-            box-shadow: 0 0 15px white;
-        }
-
-        /* Specific Planet Styles using Variables */
-        .mercury-orbit { width: calc(var(--mercury-dist) * 2); height: calc(var(--mercury-dist) * 2); }
-        .mercury { 
-            width: 12px; height: 12px;
-            background: radial-gradient(circle at 30% 30%, #e0e0e0, #a0a0a0, #606060);
-            animation: orbitMercury 4s linear infinite;
+            transform-style: preserve-3d;
+            transform: translate(-50%, -50%) rotate(var(--angle, 0deg)) translateX(var(--distance));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px; /* Base container size, actual body scaled */
+            height: 40px;
         }
 
-        .venus-orbit { width: calc(var(--venus-dist) * 2); height: calc(var(--venus-dist) * 2); }
-        .venus { 
-            width: 18px; height: 18px;
-            background: radial-gradient(circle at 30% 30%, #fff5d1, #ffdc9b, #b8860b);
-            animation: orbitVenus 6s linear infinite;
-        }
-
-        .earth-orbit { width: calc(var(--earth-dist) * 2); height: calc(var(--earth-dist) * 2); }
-        .earth { 
-            width: 20px; height: 20px;
-            background: radial-gradient(circle at 30% 30%, #9cd7ff, #4a90e2, #2e5c3e);
-            animation: orbitEarth 8s linear infinite;
-        }
-
-        .mars-orbit { width: calc(var(--mars-dist) * 2); height: calc(var(--mars-dist) * 2); }
-        .mars { 
-            width: 16px; height: 16px;
-            background: radial-gradient(circle at 30% 30%, #ff9975, #cc4400, #8b1a00);
-            animation: orbitMars 10s linear infinite;
-        }
-
-        .jupiter-orbit { width: calc(var(--jupiter-dist) * 2); height: calc(var(--jupiter-dist) * 2); }
-        .jupiter { 
-            width: 40px; height: 40px;
-            background: radial-gradient(circle at 30% 30%, #f8f3d6, #d8ca9d, #a67c52);
-            animation: orbitJupiter 14s linear infinite;
-        }
-
-        .saturn-orbit { width: calc(var(--saturn-dist) * 2); height: calc(var(--saturn-dist) * 2); }
-        .saturn { 
-            width: 35px; height: 35px;
-            background: radial-gradient(circle at 30% 30%, #fff8d2, #f4e4a6, #d4b45e);
-            animation: orbitSaturn 18s linear infinite;
-        }
-        .saturn::after {
-            content: '';
+        .planet-body {
             position: absolute;
-            width: 50px; height: 12px;
-            background: radial-gradient(ellipse at center, rgba(210, 180, 140, 0.8) 0%, rgba(210, 180, 140, 0.4) 50%, transparent 70%);
             border-radius: 50%;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) rotate(-20deg);
-            pointer-events: none;
-            border: 1px solid rgba(210, 180, 140, 0.3);
+            width: 100%;
+            height: 100%;
+            box-shadow: inset -4px -4px 10px rgba(0, 0, 0, 0.7);
+            transform-style: preserve-3d;
+            transform: rotate(calc(-1 * var(--angle, 0deg))) rotateY(calc(-1 * var(--tilt-y, 0deg))) rotateX(calc(-1 * var(--tilt-x, 0deg)));
+            transition: transform 0.15s ease-out, box-shadow 0.3s ease;
         }
 
-        .uranus-orbit { width: calc(var(--uranus-dist) * 2); height: calc(var(--uranus-dist) * 2); }
-        .uranus { 
+        .planet:hover .planet-body {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), inset -2px -2px 6px rgba(0,0,0,0.6);
+        }
+
+        .planet.focused .planet-body {
+            box-shadow: 0 0 20px var(--accent), inset -2px -2px 6px rgba(0,0,0,0.6);
+        }
+
+        /* Specific Planet Dimensions and Gradients */
+        .mercury .planet-body {
+            width: 12px; height: 12px;
+            background: radial-gradient(circle at 30% 30%, #e0e0e0, #888899, #444455);
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.15), inset -2px -2px 4px rgba(0, 0, 0, 0.6);
+        }
+        .venus .planet-body {
+            width: 18px; height: 18px;
+            background: radial-gradient(circle at 30% 30%, #fff5d1, #dfa95c, #85531d);
+            box-shadow: 0 0 10px rgba(223, 169, 92, 0.3), inset -3px -3px 5px rgba(0, 0, 0, 0.6);
+        }
+        .earth .planet-body {
+            width: 21px; height: 21px;
+            background: radial-gradient(circle at 30% 30%, #c4e4ff, #4185d8, #184b2c);
+            box-shadow: 0 0 12px rgba(65, 133, 216, 0.4), inset -3px -3px 5px rgba(0, 0, 0, 0.6);
+        }
+        .mars .planet-body {
+            width: 16px; height: 16px;
+            background: radial-gradient(circle at 30% 30%, #ffab8b, #cc4e11, #691700);
+            box-shadow: 0 0 10px rgba(204, 78, 17, 0.35), inset -3px -3px 5px rgba(0, 0, 0, 0.6);
+        }
+        .jupiter .planet-body {
+            width: 40px; height: 40px;
+            background: radial-gradient(circle at 30% 30%, #f7f1db, #ccb08f, #7a5135);
+            box-shadow: 0 0 18px rgba(204, 176, 143, 0.25), inset -5px -5px 12px rgba(0, 0, 0, 0.6);
+        }
+        .saturn .planet-body {
+            width: 33px; height: 33px;
+            background: radial-gradient(circle at 30% 30%, #fffbdc, #d5bb86, #806c45);
+            box-shadow: 0 0 16px rgba(213, 187, 134, 0.25), inset -4px -4px 10px rgba(0, 0, 0, 0.6);
+        }
+        .uranus .planet-body {
             width: 24px; height: 24px;
-            background: radial-gradient(circle at 30% 30%, #c0f0ff, #7dd3e0, #4fa8c5);
-            animation: orbitUranus 22s linear infinite;
+            background: radial-gradient(circle at 30% 30%, #d8f6ff, #62bfcc, #246e7a);
+            box-shadow: 0 0 14px rgba(98, 191, 204, 0.4), inset -4px -4px 8px rgba(0, 0, 0, 0.6);
+        }
+        .neptune .planet-body {
+            width: 23px; height: 23px;
+            background: radial-gradient(circle at 30% 30%, #badaff, #2752cf, #091e63);
+            box-shadow: 0 0 14px rgba(39, 82, 207, 0.4), inset -4px -4px 8px rgba(0, 0, 0, 0.6);
         }
 
-        .neptune-orbit { width: calc(var(--neptune-dist) * 2); height: calc(var(--neptune-dist) * 2); }
-        .neptune { 
-            width: 22px; height: 22px;
-            background: radial-gradient(circle at 30% 30%, #a0d0ff, #4169e1, #254898);
-            animation: orbitNeptune 26s linear infinite;
+        /* 3D Saturn Rings */
+        .saturn-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 58px;
+            height: 18px;
+            background: repeating-radial-gradient(
+                ellipse at center,
+                rgba(213, 187, 134, 0.85) 0%,
+                rgba(213, 187, 134, 0.4) 40%,
+                rgba(8, 8, 24, 0.05) 45%,
+                rgba(213, 187, 134, 0.65) 50%,
+                transparent 70%
+            );
+            border-radius: 50%;
+            transform: translate(-50%, -50%) rotateX(72deg) rotateY(-18deg);
+            pointer-events: none;
+            border: 1px solid rgba(213, 187, 134, 0.2);
         }
 
-        /* Animations */
-        @keyframes orbitMercury {
-            from { transform: rotate(0deg) translateX(var(--mercury-dist)) rotate(0deg) translate(-50%, -50%); }
-            to   { transform: rotate(360deg) translateX(var(--mercury-dist)) rotate(-360deg) translate(-50%, -50%); }
-        }
-        @keyframes orbitVenus {
-            from { transform: rotate(0deg) translateX(var(--venus-dist)) rotate(0deg) translate(-50%, -50%); }
-            to   { transform: rotate(360deg) translateX(var(--venus-dist)) rotate(-360deg) translate(-50%, -50%); }
-        }
-        @keyframes orbitEarth {
-            from { transform: rotate(0deg) translateX(var(--earth-dist)) rotate(0deg) translate(-50%, -50%); }
-            to   { transform: rotate(360deg) translateX(var(--earth-dist)) rotate(-360deg) translate(-50%, -50%); }
-        }
-        @keyframes orbitMars {
-            from { transform: rotate(0deg) translateX(var(--mars-dist)) rotate(0deg) translate(-50%, -50%); }
-            to   { transform: rotate(360deg) translateX(var(--mars-dist)) rotate(-360deg) translate(-50%, -50%); }
-        }
-        @keyframes orbitJupiter {
-            from { transform: rotate(0deg) translateX(var(--jupiter-dist)) rotate(0deg) translate(-50%, -50%); }
-            to   { transform: rotate(360deg) translateX(var(--jupiter-dist)) rotate(-360deg) translate(-50%, -50%); }
-        }
-        @keyframes orbitSaturn {
-            from { transform: rotate(0deg) translateX(var(--saturn-dist)) rotate(0deg) translate(-50%, -50%); }
-            to   { transform: rotate(360deg) translateX(var(--saturn-dist)) rotate(-360deg) translate(-50%, -50%); }
-        }
-        @keyframes orbitUranus {
-            from { transform: rotate(0deg) translateX(var(--uranus-dist)) rotate(0deg) translate(-50%, -50%); }
-            to   { transform: rotate(360deg) translateX(var(--uranus-dist)) rotate(-360deg) translate(-50%, -50%); }
-        }
-        @keyframes orbitNeptune {
-            from { transform: rotate(0deg) translateX(var(--neptune-dist)) rotate(0deg) translate(-50%, -50%); }
-            to   { transform: rotate(360deg) translateX(var(--neptune-dist)) rotate(-360deg) translate(-50%, -50%); }
-        }
-        
-        /* Planet Label */
+        /* Dynamic Planet Label billboarding */
         .planet-label {
             position: absolute;
-            color: white;
-            font-size: 14px;
-            text-shadow: 0 0 3px black;
-            opacity: 0;
-            transition: opacity 0.3s;
+            color: #fff;
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            opacity: 0.45;
+            transition: all 0.3s ease;
             pointer-events: none;
             z-index: 200;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 4px 8px;
+            background: rgba(2, 2, 8, 0.8);
+            padding: 3px 8px;
             border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.06);
             white-space: nowrap;
             top: 100%;
             left: 50%;
-            transform: translateX(-50%); 
-            margin-top: 5px;
-            border: 1px solid rgba(78, 204, 163, 0.3);
+            transform: translateX(-50%) rotate(calc(-1 * var(--angle, 0deg))) rotateY(calc(-1 * var(--tilt-y, 0deg))) rotateX(calc(-1 * var(--tilt-x, 0deg)));
+            margin-top: 12px;
         }
         
-        .planet:hover .planet-label {
+        .planet:hover .planet-label,
+        .planet.focused .planet-label {
             opacity: 1;
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 10px rgba(78, 204, 163, 0.15);
         }
 
-        .planet:hover {
-            animation-play-state: paused;
-        }
-        
-        /* Modal for Planet Information */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        
-        .modal-content {
+        /* ----------------------------------------------------
+           BOTTOM COCKPIT HUD (CONTROLLER DECK)
+           ---------------------------------------------------- */
+        .cockpit-hud {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
             background: var(--glass-bg);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            transform: scale(0.8);
-            transition: transform 0.3s ease;
-            backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-radius: 99px;
+            padding: 10px 24px;
+            z-index: 10;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 15px var(--glass-glow);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .hud-control-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hud-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .hud-label {
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .hud-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255,255,255,0.08);
             color: var(--text-light);
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .hud-btn:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        .hud-btn.active {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 12px rgba(78, 204, 163, 0.2);
+        }
+
+        .hud-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hud-slider {
+            -webkit-appearance: none;
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .hud-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent-glow);
+            transition: transform 0.1s ease;
+        }
+
+        .hud-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+        }
+
+        .hud-slider-val {
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            color: var(--text-light);
+            min-width: 25px;
+        }
+
+        /* ----------------------------------------------------
+           RIGHT HOLOGRAPHIC SCAN PANEL (FLOATING CARD)
+           ---------------------------------------------------- */
+        .scan-panel {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 360px;
+            height: calc(100% - 4rem);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            z-index: 10;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 0 20px var(--glass-glow);
             display: flex;
             flex-direction: column;
+            transform: translateX(120%);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
         }
-        
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
+
+        .scan-panel.active {
+            transform: translateX(0);
         }
-        
-        .modal-header {
+
+        /* High-tech Scanning Effects */
+        .scan-overlay {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(rgba(18, 16, 26, 0) 50%, rgba(0, 0, 0, 0.18) 50%),
+                linear-gradient(90deg, rgba(78, 204, 163, 0.015) 0%, transparent 100%);
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            box-shadow: 0 0 10px var(--accent);
+            opacity: 0.4;
+            top: 0;
+            animation: scanAnim 4s linear infinite;
+            z-index: 2;
+        }
+
+        @keyframes scanAnim {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+
+        .scan-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(100, 120, 255, 0.1);
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 2;
         }
-        
-        .modal-title {
-            font-size: 1.8rem;
-            color: var(--accent-light);
+
+        .scan-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
             font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        
-        .close-modal {
-            background: none;
+
+        .scan-type {
+            font-size: 0.65rem;
+            font-family: var(--font-mono);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .close-scan {
+            background: transparent;
             border: none;
-            color: #ff8080;
-            font-size: 1.5rem;
+            color: var(--text-muted);
+            font-size: 1.25rem;
             cursor: pointer;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s ease;
         }
-        
-        .planet-visual {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            border: 2px solid var(--accent);
-            box-shadow: 0 0 20px rgba(78, 204, 163, 0.2);
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
+
+        .close-scan:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #ff8080;
         }
-        
-        .info-section {
-            background: rgba(40, 40, 60, 0.4);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 3px solid var(--accent);
+
+        .scan-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
-        
-        .section-title {
-            color: var(--accent-light);
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            font-weight: 600;
+
+        .scan-body::-webkit-scrollbar {
+            width: 4px;
         }
-        
-        .stat-grid {
+        .scan-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+        }
+
+        /* Interactive tab switcher */
+        .scan-tabs {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            padding: 2px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            padding: 8px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent);
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.05);
+        }
+
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        /* Interactive stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
         }
-        
-        .stat-item {
-            background: rgba(60, 60, 90, 0.4);
-            padding: 8px;
-            border-radius: 6px;
-            text-align: center;
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
-        
+
         .stat-label {
-            font-size: 0.75rem;
-            color: #a0b0ff;
+            font-size: 0.65rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
         }
-        
+
         .stat-value {
-            font-size: 1rem;
+            font-size: 0.85rem;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* Tab Content Atmospheric Section */
+        .composition-box {
+            background: rgba(255, 255, 255, 0.01);
+            border-left: 2.5px solid var(--accent);
+            padding: 12px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        /* Earth comparison progress bars */
+        .comparison-section {
+            background: rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .comparison-title {
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 2px;
+        }
+
+        .comparison-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.68rem;
+        }
+
+        .comp-label {
+            color: var(--text-muted);
+        }
+
+        .comp-val {
+            font-family: var(--font-mono);
+            color: var(--accent);
             font-weight: 600;
-            color: var(--accent-light);
         }
 
+        .comp-bar-bg {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .comp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-glow), var(--accent));
+            box-shadow: 0 0 8px var(--accent-glow);
+            width: 0%;
+            border-radius: 3px;
+            transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Facts List */
         .facts-list {
-            padding-left: 20px;
-            line-height: 1.4;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        /* Read More Button Styles */
-        .read-more-btn {
-            display: block;
+        .facts-list li {
+            position: relative;
+            padding-left: 20px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #d1d5db;
+        }
+
+        .facts-list li::before {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 7px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 6px var(--accent);
+        }
+
+        /* Read more actions button */
+        .wiki-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             width: 100%;
             padding: 12px;
-            margin-top: 10px;
-            background: linear-gradient(135deg, rgba(78, 204, 163, 0.2), rgba(78, 204, 163, 0.4));
-            color: var(--accent-light);
-            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-light);
             text-decoration: none;
-            border-radius: 10px;
-            border: 1px solid var(--accent);
+            border-radius: 8px;
             font-weight: 600;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            letter-spacing: 0.02em;
             transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(78, 204, 163, 0.1);
+            margin-top: auto;
         }
 
-        .read-more-btn:hover {
-            background: linear-gradient(135deg, rgba(78, 204, 163, 0.4), rgba(78, 204, 163, 0.7));
-            color: white;
-            box-shadow: 0 0 20px rgba(78, 204, 163, 0.4);
-            transform: translateY(-2px);
+        .wiki-btn:hover {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 15px rgba(78, 204, 163, 0.12);
         }
 
-        /* Footer */
+        /* ----------------------------------------------------
+           RESPONSIVE FOOTER STYLING
+           ---------------------------------------------------- */
         footer {
             text-align: center;
-            padding: 10px;
-            color: #7080a0;
-            font-size: 0.8rem;
+            padding: 1rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            z-index: 10;
+            background: linear-gradient(to top, rgba(2, 2, 8, 0.75) 0%, transparent 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
             flex-shrink: 0;
-            background: rgba(10, 10, 26, 0.3);
-            backdrop-filter: blur(2px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 2.5rem;
+            padding-right: 2.5rem;
+            backdrop-filter: blur(8px);
         }
-        
-        /* Scrollbar */
-        .modal-content::-webkit-scrollbar { width: 6px; }
-        .modal-content::-webkit-scrollbar-track { background: rgba(30, 30, 50, 0.3); }
-        .modal-content::-webkit-scrollbar-thumb { background: rgba(78, 204, 163, 0.5); border-radius: 3px; }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        footer a:hover {
+            color: #fff;
+            text-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        @media (max-width: 1100px) {
+            .telemetry-sidebar {
+                display: none;
+            }
+            .scan-panel {
+                height: 50%;
+                width: calc(100% - 4rem);
+                top: auto;
+                bottom: 6rem;
+                transform: translateY(150%);
+            }
+            .scan-panel.active {
+                transform: translateY(0);
+            }
+            .cockpit-hud {
+                bottom: 1.5rem;
+            }
+            footer {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Stars twinkling cosmic background canvas -->
+    <div class="cosmic-canvas">
+        <div class="stars stars-1"></div>
+        <div class="stars stars-2"></div>
+        <div class="nebula nebula-purple"></div>
+        <div class="nebula nebula-teal"></div>
+    </div>
+
+    <!-- Telemetry Navigation Header -->
     <header>
-        <h1>Solar System Explorer</h1>
-        <p id="subtitle">Click on any planet to discover its secrets / Klik pada planet untuk menemukan rahasianya</p>
+        <div class="brand-section">
+            <h1 id="title-tag">Solar System Explorer</h1>
+            <p id="subtitle">Spaceship HUD Telemetry Dashboard / Dasbor Telemetri HUD Pesawat Antariksa</p>
+        </div>
         
-        <div class="language-switcher">
-            <button id="lang-en" class="lang-btn active">English</button>
-            <button id="lang-id" class="lang-btn">Bahasa Indonesia</button>
+        <div class="header-controls">
+            <div class="language-switcher">
+                <button id="lang-en" class="lang-btn active">EN</button>
+                <button id="lang-id" class="lang-btn">ID</button>
+            </div>
+            
+            <a href="/index.html" class="home-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                HOME
+            </a>
         </div>
     </header>
     
-    <div class="solar-system-wrapper" id="solar-wrapper">
-        <div id="solar-system">
-            <div class="sun" data-planet="sun"></div>
+    <!-- Main Interactive Explorer View -->
+    <div class="main-app-container">
+        
+        <!-- Left Quick Telemetry Selector -->
+        <div class="telemetry-sidebar">
+            <div class="telemetry-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2 2-2.8 2.8-2 2-1.2 1.2 1.2-1.2 2-2 2.8-2.8 2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                Telemetry Finder
             </div>
-    </div>
-    
-    <footer>
-        <p id="credits">Educational visualization. Data from NASA, ESA, and scientific sources.</p>
-        <p class="mt-4">&copy; 2026 LoLyeah.github.io. All rights reserved. | <a href="/index.html" class="text-blue-600 hover:underline">Home</a></p>
-    </footer>
+            <div class="search-box-wrapper">
+                <svg class="search-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="planet-search" class="search-input" placeholder="Search planet...">
+            </div>
+            <ul class="planet-nav-list" id="planet-menu">
+                <!-- Javascript will populate standard clickable items -->
+            </ul>
+        </div>
+        
+        <!-- Solar Canvas Window -->
+        <div class="solar-system-wrapper" id="solar-wrapper">
+            <div id="solar-system">
+                <!-- Javascript will populate orbits and billboarded planets -->
+            </div>
+        </div>
 
-    <div class="modal-overlay" id="planet-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="modal-title">Planet Name</h2>
-                <button class="close-modal" onclick="closeModal()">×</button>
-            </div>
-            <div class="planet-visual" id="planet-visual"></div>
-            <div class="info-section">
-                <h3 class="section-title" id="key-facts-title">Key Facts</h3>
-                <div class="stat-grid" id="stats-grid"></div>
-            </div>
-            <div class="info-section">
-                <h3 class="section-title" id="composition-title">Composition</h3>
-                <p id="composition-content"></p>
-            </div>
-            <div class="info-section">
-                <h3 class="section-title" id="interesting-facts-title">Interesting Facts</h3>
-                <ul class="facts-list" id="facts-list"></ul>
-            </div>
-            <div class="info-section" id="curiosities-section">
-                <h3 class="section-title" id="curiosities-title">Cosmic Curiosities</h3>
-                <ul class="facts-list" id="curiosities-list"></ul>
+        <!-- Floating Holographic Detail Scanner Panel -->
+        <div class="scan-panel" id="planet-modal">
+            <div class="scan-overlay"></div>
+            <div class="scan-line"></div>
+            
+            <div class="scan-header">
+                <div class="scan-title">
+                    <span id="modal-title">Planet Name</span>
+                    <span class="scan-type" id="planet-type">Star</span>
+                </div>
+                <button class="close-scan" onclick="closeModal()">×</button>
             </div>
             
-            <a href="#" target="_blank" class="read-more-btn" id="read-more-btn">
-                Read More on Wikipedia
-            </a>
+            <div class="scan-body">
+                <!-- High-tech selector tabs -->
+                <div class="scan-tabs">
+                    <button class="tab-btn active" onclick="switchTab('overview')">Telemetry</button>
+                    <button class="tab-btn" onclick="switchTab('composition')">Atmosphere</button>
+                    <button class="tab-btn" onclick="switchTab('curiosities')">Cosmics</button>
+                </div>
+                
+                <!-- Tab 1: Telemetry Data & Earth Comparator -->
+                <div class="tab-content active" id="tab-overview">
+                    <div class="stats-grid" id="stats-grid">
+                        <!-- Stats filled via JS -->
+                    </div>
+                    
+                    <div class="comparison-section">
+                        <div class="comparison-title" id="earth-comp-label">Earth Scale Comparison</div>
+                        
+                        <div class="comparison-item">
+                            <div class="comparison-header">
+                                <span class="comp-label" id="size-comp-text">Relative Diameter</span>
+                                <span class="comp-val" id="size-comp-val">0.0x Earth</span>
+                            </div>
+                            <div class="comp-bar-bg">
+                                <div class="comp-bar-fill" id="size-bar"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="comparison-item">
+                            <div class="comparison-header">
+                                <span class="comp-label" id="grav-comp-text">Relative Gravity</span>
+                                <span class="comp-val" id="grav-comp-val">0.0x Earth</span>
+                            </div>
+                            <div class="comp-bar-bg">
+                                <div class="comp-bar-fill" id="grav-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Composition Detail -->
+                <div class="tab-content" id="tab-composition">
+                    <div class="composition-box" id="composition-content">
+                        Hydrogen (73%), Helium (25%), Other elements (2%)
+                    </div>
+                </div>
+
+                <!-- Tab 3: Curiosities list -->
+                <div class="tab-content" id="tab-curiosities">
+                    <ul class="facts-list" id="facts-list">
+                        <!-- Curiosities loaded dynamically -->
+                    </ul>
+                </div>
+                
+                <!-- Action link Button -->
+                <a href="#" target="_blank" class="wiki-btn" id="read-more-btn">
+                    Read More on Wikipedia
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
+            </div>
         </div>
+
+        <!-- Cockpit HUD Floating Dock -->
+        <div class="cockpit-hud">
+            <div class="hud-control-group">
+                <button class="hud-btn" id="hud-play-btn">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    <span id="btn-pause-text">PAUSE</span>
+                </button>
+            </div>
+            
+            <div class="hud-divider"></div>
+            
+            <div class="hud-control-group">
+                <span class="hud-label">ZOOM</span>
+                <div class="hud-slider-container">
+                    <input type="range" class="hud-slider" id="zoom-slider" min="0.5" max="2.0" step="0.05" value="1.0">
+                    <span class="hud-slider-val" id="zoom-val">100%</span>
+                </div>
+            </div>
+
+            <div class="hud-divider"></div>
+
+            <div class="hud-control-group">
+                <span class="hud-label">SPEED</span>
+                <div class="hud-slider-container">
+                    <input type="range" class="hud-slider" id="speed-slider" min="0" max="8" step="0.2" value="1.0">
+                    <span class="hud-slider-val" id="speed-val">1.0x</span>
+                </div>
+            </div>
+
+            <div class="hud-divider"></div>
+
+            <div class="hud-control-group">
+                <button class="hud-btn" id="hud-orbit-btn">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    ORBITS
+                </button>
+                
+                <button class="hud-btn" id="hud-perspective-btn">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    3D VIEW
+                </button>
+            </div>
+        </div>
+        
     </div>
+    
+    <!-- Immersive Space Footer -->
+    <footer>
+        <p id="credits">Educational visualization. Telemetry and scientific data sourced from NASA and ESA.</p>
+        <p>&copy; 2026 <a href="/index.html">LoLyeah.github.io</a>. All rights reserved.</p>
+    </footer>
 
     <script>
-        // Translations
+        // Immersive Translations Object (100% Preserved original content + ratio data added)
         const translations = {
             en: {
                 title: "Solar System Explorer",
-                subtitle: "Click on any planet to discover its secrets",
+                subtitle: "Spaceship HUD Telemetry Dashboard / Dasbor Telemetri HUD Pesawat Antariksa",
                 keyFactsTitle: "Key Facts",
                 compositionTitle: "Composition",
                 interestingFactsTitle: "Interesting Facts",
                 curiositiesTitle: "Cosmic Curiosities",
                 readMoreLabel: "Read More on Wikipedia",
-                credits: "Educational visualization. Data from NASA, ESA, and scientific sources.",
+                credits: "Educational visualization. Telemetry and scientific data sourced from NASA and ESA.",
+                searchPlaceholder: "Search planet...",
+                earthCompTitle: "Earth Scale Comparison",
+                relativeDiameter: "Relative Diameter",
+                relativeGravity: "Relative Gravity",
                 planets: {
                     sun: {
                         name: "The Sun",
@@ -571,8 +1268,11 @@
                         temperature: "5,500°C (surface)",
                         moons: "N/A",
                         gravity: "274 m/s²",
+                        sizeRatio: 109.3,
+                        gravityRatio: 27.9,
                         composition: "Hydrogen (73%), Helium (25%), Other elements (2%)",
                         wikiUrl: "https://en.wikipedia.org/wiki/Sun",
+                        color: "#ff8c00",
                         facts: [
                             "Contains 99.86% of solar system mass",
                             "Light reaches Earth in 8 minutes",
@@ -586,19 +1286,22 @@
                             "Solar flares release huge energy",
                             "If Sun were a basketball, Earth would be a grain of sand 30m away"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #fff7cc, #ffcc00, #ff9900, #ff6600)"
+                        gradient: "radial-gradient(circle at 30% 30%, #ffffff, #ffa600, #ff4000)"
                     },
                     mercury: {
                         name: "Mercury",
                         type: "Terrestrial",
                         diameter: "4,879 km",
-                        distance: "57.9 million km",
+                        distance: "57.9M km",
                         orbitalPeriod: "88 Earth days",
                         temperature: "-180°C to 430°C",
                         moons: "0",
                         gravity: "3.7 m/s²",
+                        sizeRatio: 0.383,
+                        gravityRatio: 0.378,
                         composition: "Metal core (42%), Mantle (42%), Crust (16%)",
                         wikiUrl: "https://en.wikipedia.org/wiki/Mercury_(planet)",
+                        color: "#a0a0a0",
                         facts: [
                             "Smallest planet in solar system",
                             "No atmosphere and no moons",
@@ -612,19 +1315,22 @@
                             "Extreme temperature variations",
                             "Visited by Mariner 10 in 1974"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #e0e0e0, #a0a0a0, #606060)"
+                        gradient: "radial-gradient(circle at 30% 30%, #e0e0e0, #888899, #444455)"
                     },
                     venus: {
                         name: "Venus",
                         type: "Terrestrial",
                         diameter: "12,104 km",
-                        distance: "108.2 million km",
+                        distance: "108.2M km",
                         orbitalPeriod: "225 Earth days",
                         temperature: "465°C (average)",
                         moons: "0",
                         gravity: "8.87 m/s²",
+                        sizeRatio: 0.949,
+                        gravityRatio: 0.905,
                         composition: "96.5% CO₂, 3.5% N₂, 0.015% SO₂",
                         wikiUrl: "https://en.wikipedia.org/wiki/Venus",
+                        color: "#dfa95c",
                         facts: [
                             "Hottest planet due to CO₂ atmosphere",
                             "Retrograde rotation (spins backward)",
@@ -638,19 +1344,22 @@
                             "So hot lead and zinc melt",
                             "Once thought to be Earth's twin"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #fff5d1, #ffdc9b, #b8860b)"
+                        gradient: "radial-gradient(circle at 30% 30%, #fff5d1, #dfa95c, #85531d)"
                     },
                     earth: {
                         name: "Earth",
                         type: "Terrestrial",
                         diameter: "12,742 km",
-                        distance: "149.6 million km (1 AU)",
+                        distance: "149.6M km (1 AU)",
                         orbitalPeriod: "365.25 days",
                         temperature: "15°C (average)",
                         moons: "1",
                         gravity: "9.8 m/s²",
+                        sizeRatio: 1.0,
+                        gravityRatio: 1.0,
                         composition: "65% O, 18% Si, 10% Al, 5% Fe",
                         wikiUrl: "https://en.wikipedia.org/wiki/Earth",
+                        color: "#4185d8",
                         facts: [
                             "Only known planet with life",
                             "71% covered by water",
@@ -664,19 +1373,22 @@
                             "Would fit inside Jupiter 1,300 times",
                             "Constant surface movement from plate tectonics"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #9cd7ff, #4a90e2, #2e5c3e)"
+                        gradient: "radial-gradient(circle at 30% 30%, #c4e4ff, #4185d8, #184b2c)"
                     },
                     mars: {
                         name: "Mars",
                         type: "Terrestrial",
                         diameter: "6,779 km",
-                        distance: "227.9 million km",
+                        distance: "227.9M km",
                         orbitalPeriod: "687 Earth days",
                         temperature: "-65°C (average)",
                         moons: "2",
                         gravity: "3.7 m/s²",
+                        sizeRatio: 0.532,
+                        gravityRatio: 0.378,
                         composition: "50% Silicate crust, 30% Core, 20% Mantle",
                         wikiUrl: "https://en.wikipedia.org/wiki/Mars",
+                        color: "#cc4e11",
                         facts: [
                             "Red Planet from iron oxide (rust)",
                             "Largest volcano in solar system",
@@ -690,19 +1402,22 @@
                             "Atmosphere 0.6% of Earth's pressure",
                             "Two small captured asteroid moons"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #ff9975, #cc4400, #8b1a00)"
+                        gradient: "radial-gradient(circle at 30% 30%, #ffab8b, #cc4e11, #691700)"
                     },
                     jupiter: {
                         name: "Jupiter",
                         type: "Gas Giant",
                         diameter: "139,820 km",
-                        distance: "778.5 million km",
+                        distance: "778.5M km",
                         orbitalPeriod: "11.9 Earth years",
                         temperature: "-110°C (cloud tops)",
                         moons: "95",
                         gravity: "24.8 m/s²",
+                        sizeRatio: 10.97,
+                        gravityRatio: 2.53,
                         composition: "90% H₂, 10% He, 0.1% CH₄",
                         wikiUrl: "https://en.wikipedia.org/wiki/Jupiter",
+                        color: "#ccb08f",
                         facts: [
                             "Largest planet",
                             "Great Red Spot is giant storm larger than Earth",
@@ -716,19 +1431,22 @@
                             "Shortest day among planets",
                             "1,300 Earths would fill its volume"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #f8f3d6, #d8ca9d, #a67c52)"
+                        gradient: "radial-gradient(circle at 30% 30%, #f7f1db, #ccb08f, #7a5135)"
                     },
                     saturn: {
                         name: "Saturn",
                         type: "Gas Giant",
                         diameter: "116,460 km",
-                        distance: "1,434 million km",
+                        distance: "1,434M km",
                         orbitalPeriod: "29.5 Earth years",
                         temperature: "-140°C (cloud tops)",
                         moons: "146",
                         gravity: "10.7 m/s²",
+                        sizeRatio: 9.14,
+                        gravityRatio: 1.09,
                         composition: "96% H₂, 3% He, 0.4% CH₄",
                         wikiUrl: "https://en.wikipedia.org/wiki/Saturn",
+                        color: "#d5bb86",
                         facts: [
                             "Famous for prominent ring system",
                             "Least dense planet - would float in water",
@@ -742,19 +1460,22 @@
                             "Titan has liquid methane rivers and lakes",
                             "Known to ancient civilizations"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #fff8d2, #f4e4a6, #d4b45e)"
+                        gradient: "radial-gradient(circle at 30% 30%, #fffbdc, #d5bb86, #806c45)"
                     },
                     uranus: {
                         name: "Uranus",
                         type: "Ice Giant",
                         diameter: "50,724 km",
-                        distance: "2,871 million km",
+                        distance: "2,871M km",
                         orbitalPeriod: "84 Earth years",
                         temperature: "-195°C (cloud tops)",
                         moons: "27",
                         gravity: "8.7 m/s²",
+                        sizeRatio: 3.98,
+                        gravityRatio: 0.887,
                         composition: "83% H₂, 15% He, 2.3% CH₄",
                         wikiUrl: "https://en.wikipedia.org/wiki/Uranus",
+                        color: "#62bfcc",
                         facts: [
                             "Rotates on its side (98° tilt)",
                             "Coldest planetary atmosphere",
@@ -768,19 +1489,22 @@
                             "Has 'hurricane-like' storms up to 900 km/h",
                             "Unique off-center magnetic field"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #c0f0ff, #7dd3e0, #4fa8c5)"
+                        gradient: "radial-gradient(circle at 30% 30%, #d8f6ff, #62bfcc, #246e7a)"
                     },
                     neptune: {
                         name: "Neptune",
                         type: "Ice Giant",
                         diameter: "49,244 km",
-                        distance: "4,495 million km",
+                        distance: "4,495M km",
                         orbitalPeriod: "165 Earth years",
                         temperature: "-200°C (cloud tops)",
                         moons: "16",
                         gravity: "11.0 m/s²",
+                        sizeRatio: 3.86,
+                        gravityRatio: 1.12,
                         composition: "80% H₂, 19% He, 1.5% CH₄",
                         wikiUrl: "https://en.wikipedia.org/wiki/Neptune",
+                        color: "#2752cf",
                         facts: [
                             "Strongest winds in solar system",
                             "First planet located by math calculations",
@@ -794,19 +1518,23 @@
                             "Triton may be captured Kuiper Belt object",
                             "First planet discovered after telescope invention"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #a0d0ff, #4169e1, #254898)"
+                        gradient: "radial-gradient(circle at 30% 30%, #badaff, #2752cf, #091e63)"
                     }
                 }
             },
             id: {
-                title: "Penjelajah Sistem Tata Surya",
-                subtitle: "Klik pada planet untuk menemukan rahasianya",
+                title: "Penjelajah Tata Surya",
+                subtitle: "Spaceship HUD Telemetry Dashboard / Dasbor Telemetri HUD Pesawat Antariksa",
                 keyFactsTitle: "Fakta Utama",
                 compositionTitle: "Komposisi",
                 interestingFactsTitle: "Fakta Menarik",
                 curiositiesTitle: "Keingintahuan Kosmik",
                 readMoreLabel: "Baca Selengkapnya di Wikipedia",
-                credits: "Visualisasi edukasional. Data dari NASA, ESA, dan sumber ilmiah.",
+                credits: "Visualisasi edukasional. Telemetri dan data ilmiah bersumber dari NASA dan ESA.",
+                searchPlaceholder: "Cari planet...",
+                earthCompTitle: "Perbandingan Skala Bumi",
+                relativeDiameter: "Diameter Relatif",
+                relativeGravity: "Gravitasi Relatif",
                 planets: {
                     sun: {
                         name: "Matahari",
@@ -817,8 +1545,11 @@
                         temperature: "5.500°C (permukaan)",
                         moons: "N/A",
                         gravity: "274 m/s²",
+                        sizeRatio: 109.3,
+                        gravityRatio: 27.9,
                         composition: "Hidrogen (73%), Helium (25%), Elemen lain (2%)",
                         wikiUrl: "https://id.wikipedia.org/wiki/Matahari",
+                        color: "#ff8c00",
                         facts: [
                             "Menyumbang 99,86% massa tata surya",
                             "Cahaya sampai Bumi dalam 8 menit",
@@ -832,19 +1563,22 @@
                             "Letusan matahari melepaskan energi besar",
                             "Jika Matahari bola basket, Bumi pasir 30m jauhnya"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #fff7cc, #ffcc00, #ff9900, #ff6600)"
+                        gradient: "radial-gradient(circle at 30% 30%, #ffffff, #ffa600, #ff4000)"
                     },
                     mercury: {
                         name: "Merkurius",
                         type: "Planet Berbatu",
                         diameter: "4.879 km",
-                        distance: "57,9 juta km",
+                        distance: "57,9J km",
                         orbitalPeriod: "88 hari Bumi",
                         temperature: "-180°C hingga 430°C",
                         moons: "0",
                         gravity: "3,7 m/s²",
+                        sizeRatio: 0.383,
+                        gravityRatio: 0.378,
                         composition: "Inti logam (42%), Mantel (42%), Kerak (16%)",
                         wikiUrl: "https://id.wikipedia.org/wiki/Merkurius",
+                        color: "#a0a0a0",
                         facts: [
                             "Planet terkecil dalam tata surya",
                             "Tidak ada atmosfer dan tidak ada bulan",
@@ -858,19 +1592,22 @@
                             "Variasi suhu ekstrem",
                             "Dikunjungi Mariner 10 tahun 1974"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #e0e0e0, #a0a0a0, #606060)"
+                        gradient: "radial-gradient(circle at 30% 30%, #e0e0e0, #888899, #444455)"
                     },
                     venus: {
                         name: "Venus",
                         type: "Planet Berbatu",
                         diameter: "12.104 km",
-                        distance: "108,2 juta km",
+                        distance: "108,2J km",
                         orbitalPeriod: "225 hari Bumi",
                         temperature: "465°C (rata-rata)",
                         moons: "0",
                         gravity: "8,87 m/s²",
+                        sizeRatio: 0.949,
+                        gravityRatio: 0.905,
                         composition: "96,5% CO₂, 3,5% N₂, 0,015% SO₂",
                         wikiUrl: "https://id.wikipedia.org/wiki/Venus",
+                        color: "#dfa95c",
                         facts: [
                             "Planet terpanas karena CO₂ atmosfer",
                             "Rotasi retrograde (mundur)",
@@ -884,19 +1621,22 @@
                             "Sangat panas timah dan seng mencair",
                             "Dikira kembaran Bumi dulu"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #fff5d1, #ffdc9b, #b8860b)"
+                        gradient: "radial-gradient(circle at 30% 30%, #fff5d1, #dfa95c, #85531d)"
                     },
                     earth: {
                         name: "Bumi",
                         type: "Planet Berbatu",
                         diameter: "12.742 km",
-                        distance: "149,6 juta km (1 AU)",
+                        distance: "149,6J km (1 AU)",
                         orbitalPeriod: "365,25 hari",
                         temperature: "15°C (rata-rata)",
                         moons: "1",
                         gravity: "9,8 m/s²",
+                        sizeRatio: 1.0,
+                        gravityRatio: 1.0,
                         composition: "65% O, 18% Si, 10% Al, 5% Fe",
                         wikiUrl: "https://id.wikipedia.org/wiki/Bumi",
+                        color: "#4185d8",
                         facts: [
                             "Satu-satunya planet dengan kehidupan",
                             "71% tertutup air",
@@ -910,19 +1650,22 @@
                             "Bisa muat di Jupiter 1.300x",
                             "Permukaan selalu bergerak dari lempeng tektonik"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #9cd7ff, #4a90e2, #2e5c3e)"
+                        gradient: "radial-gradient(circle at 30% 30%, #c4e4ff, #4185d8, #184b2c)"
                     },
                     mars: {
                         name: "Mars",
                         type: "Planet Berbatu",
                         diameter: "6.779 km",
-                        distance: "227,9 juta km",
+                        distance: "227,9J km",
                         orbitalPeriod: "687 hari Bumi",
                         temperature: "-65°C (rata-rata)",
                         moons: "2",
                         gravity: "3,7 m/s²",
+                        sizeRatio: 0.532,
+                        gravityRatio: 0.378,
                         composition: "50% Kerak silikat, 30% Inti, 20% Mantel",
                         wikiUrl: "https://id.wikipedia.org/wiki/Mars",
+                        color: "#cc4e11",
                         facts: [
                             "Planet Merah dari besi oksida",
                             "Gunung berapi terbesar dalam tata surya",
@@ -936,19 +1679,22 @@
                             "Atmosfer 0,6% tekanan Bumi",
                             "Dua bulan kecil asteroid tertangkap"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #ff9975, #cc4400, #8b1a00)"
+                        gradient: "radial-gradient(circle at 30% 30%, #ffab8b, #cc4e11, #691700)"
                     },
                     jupiter: {
                         name: "Jupiter",
                         type: "Raksasa Gas",
                         diameter: "139.820 km",
-                        distance: "778,5 juta km",
+                        distance: "778,5J km",
                         orbitalPeriod: "11,9 tahun Bumi",
                         temperature: "-110°C (puncak awan)",
                         moons: "95",
                         gravity: "24,8 m/s²",
+                        sizeRatio: 10.97,
+                        gravityRatio: 2.53,
                         composition: "90% H₂, 10% He, 0,1% CH₄",
                         wikiUrl: "https://id.wikipedia.org/wiki/Jupiter",
+                        color: "#ccb08f",
                         facts: [
                             "Planet terbesar",
                             "Bintik Merah Besar adalah badai raksasa",
@@ -962,19 +1708,22 @@
                             "Hari terpendek di antara planet",
                             "1.300 Bumi akan mengisi volumenya"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #f8f3d6, #d8ca9d, #a67c52)"
+                        gradient: "radial-gradient(circle at 30% 30%, #f7f1db, #ccb08f, #7a5135)"
                     },
                     saturn: {
                         name: "Saturnus",
                         type: "Raksasa Gas",
                         diameter: "116.460 km",
-                        distance: "1.434 juta km",
+                        distance: "1.434J km",
                         orbitalPeriod: "29,5 tahun Bumi",
                         temperature: "-140°C (puncak awan)",
                         moons: "146",
                         gravity: "10,7 m/s²",
+                        sizeRatio: 9.14,
+                        gravityRatio: 1.09,
                         composition: "96% H₂, 3% He, 0,4% CH₄",
                         wikiUrl: "https://id.wikipedia.org/wiki/Saturnus",
+                        color: "#d5bb86",
                         facts: [
                             "Terkenal dengan sistem cincinnya",
                             "Kerapatan terendah - bisa terapung di air",
@@ -988,19 +1737,22 @@
                             "Titan punya sungai dan danau metana cair",
                             "Dikenal peradaban kuno"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #fff8d2, #f4e4a6, #d4b45e)"
+                        gradient: "radial-gradient(circle at 30% 30%, #fffbdc, #d5bb86, #806c45)"
                     },
                     uranus: {
                         name: "Uranus",
                         type: "Raksasa Es",
                         diameter: "50.724 km",
-                        distance: "2.871 juta km",
+                        distance: "2.871J km",
                         orbitalPeriod: "84 tahun Bumi",
                         temperature: "-195°C (puncak awan)",
                         moons: "27",
                         gravity: "8,7 m/s²",
-                        composition: "83% H₂, 15% He, 2,3% CH₄",
+                        sizeRatio: 3.98,
+                        gravityRatio: 0.887,
+                        composition: "83% H₂, 15% He, 2.3% CH₄",
                         wikiUrl: "https://id.wikipedia.org/wiki/Uranus",
+                        color: "#62bfcc",
                         facts: [
                             "Berputar miring (98°)",
                             "Atmosfer terdingin",
@@ -1014,19 +1766,22 @@
                             "Badai mirip topan hingga 900 km/jam",
                             "Medan magnet unik tidak berpusat"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #c0f0ff, #7dd3e0, #4fa8c5)"
+                        gradient: "radial-gradient(circle at 30% 30%, #d8f6ff, #62bfcc, #246e7a)"
                     },
                     neptune: {
                         name: "Neptunus",
                         type: "Raksasa Es",
                         diameter: "49.244 km",
-                        distance: "4.495 juta km",
+                        distance: "4.495J km",
                         orbitalPeriod: "165 tahun Bumi",
                         temperature: "-200°C (puncak awan)",
                         moons: "16",
                         gravity: "11,0 m/s²",
+                        sizeRatio: 3.86,
+                        gravityRatio: 1.12,
                         composition: "80% H₂, 19% He, 1,5% CH₄",
                         wikiUrl: "https://id.wikipedia.org/wiki/Neptunus",
+                        color: "#2752cf",
                         facts: [
                             "Angin terkuat dalam tata surya",
                             "Planet pertama ditemukan dengan matematika",
@@ -1040,211 +1795,500 @@
                             "Triton bisa benda Kuiper Belt tertangkap",
                             "Planet pertama ditemukan setelah teleskop"
                         ],
-                        gradient: "radial-gradient(circle at 30% 30%, #a0d0ff, #4169e1, #254898)"
+                        gradient: "radial-gradient(circle at 30% 30%, #badaff, #2752cf, #091e63)"
                     }
                 }
             }
         };
 
-        // State
+        // Cockpit State Machine
         let currentLang = 'en';
         let selectedPlanet = null;
+        let isPaused = false;
+        let orbitSpeedScale = 1.0;
+        let zoomFactor = 1.0;
+        let is3D = false;
+        let showOrbits = true;
+        let activeTab = 'overview';
 
-        // Initialization
-        document.addEventListener('DOMContentLoaded', function() {
+        // Precise Orbit Angles (degrees)
+        const planetSpeeds = {
+            mercury: 360 / 6,    // Complete orbit in 6s at 1x
+            venus: 360 / 10,
+            earth: 360 / 14,
+            mars: 360 / 18,
+            jupiter: 360 / 26,
+            saturn: 360 / 34,
+            uranus: 360 / 42,
+            neptune: 360 / 50
+        };
+
+        const planetAngles = {
+            mercury: Math.random() * 360,
+            venus: Math.random() * 360,
+            earth: Math.random() * 360,
+            mars: Math.random() * 360,
+            jupiter: Math.random() * 360,
+            saturn: Math.random() * 360,
+            uranus: Math.random() * 360,
+            neptune: Math.random() * 360
+        };
+
+        let lastFrameTime = performance.now();
+
+        // ----------------------------------------------------
+        // MAIN APPLICATION LIFECYCLE
+        // ----------------------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
             initializeSolarSystem();
+            initializeSidebarMenu();
             setupEventListeners();
-            resizeSolarSystem(); // Initial resize
+            resizeSolarSystem();
             
-            // Add resize listener
             window.addEventListener('resize', resizeSolarSystem);
+            
+            // Start the frame animation loop
+            requestAnimationFrame(animateOrbits);
         });
 
         // ----------------------------------------------------
-        // AUTO-RESIZE LOGIC
+        // ENGINE: ANIMATION FRAME LOOP
         // ----------------------------------------------------
-        function resizeSolarSystem() {
-            const solarSystem = document.getElementById('solar-system');
-            const wrapper = document.getElementById('solar-wrapper');
-            
-            const baseSize = 850; 
-            
-            const availableWidth = wrapper.clientWidth;
-            const availableHeight = wrapper.clientHeight;
-            
-            const padding = 40;
-            const scaleX = (availableWidth - padding) / baseSize;
-            const scaleY = (availableHeight - padding) / baseSize;
-            
-            const scale = Math.min(scaleX, scaleY);
-            
-            solarSystem.style.transform = `scale(${scale})`;
+        function animateOrbits(time) {
+            const delta = (time - lastFrameTime) / 1000; // time in seconds
+            lastFrameTime = time;
+
+            if (!isPaused && orbitSpeedScale > 0) {
+                for (const planet in planetAngles) {
+                    const baseSpeed = planetSpeeds[planet];
+                    const scaledSpeed = baseSpeed * orbitSpeedScale;
+                    planetAngles[planet] = (planetAngles[planet] + scaledSpeed * delta) % 360;
+                    
+                    const planetEl = document.querySelector(`.planet.${planet}`);
+                    if (planetEl) {
+                        planetEl.style.setProperty('--angle', `${planetAngles[planet]}deg`);
+                    }
+                }
+            }
+            requestAnimationFrame(animateOrbits);
         }
 
+        // ----------------------------------------------------
+        // INITIALIZERS
+        // ----------------------------------------------------
         function initializeSolarSystem() {
             const solarSystem = document.getElementById('solar-system');
-            solarSystem.innerHTML = '<div class="sun" data-planet="sun"></div>';
+            solarSystem.innerHTML = `
+                <div class="sun" data-planet="sun" id="sun-body"></div>
+            `;
             
             const planets = ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'];
             
             planets.forEach(planet => {
+                // Render dashed orbit lines
                 const orbitLine = document.createElement('div');
                 orbitLine.className = `orbit-line ${planet}-orbit`;
+                orbitLine.style.width = `calc(var(--${planet}-dist) * 2)`;
+                orbitLine.style.height = `calc(var(--${planet}-dist) * 2)`;
                 solarSystem.appendChild(orbitLine);
 
+                // Render billboarding planet container
                 const planetEl = document.createElement('div');
                 planetEl.className = `planet ${planet}`;
                 planetEl.dataset.planet = planet;
+                planetEl.style.setProperty('--distance', `var(--${planet}-dist)`);
+                planetEl.style.setProperty('--angle', `${planetAngles[planet]}deg`);
                 
+                // Nest the beautiful counter-rotating 3D body
+                const bodyEl = document.createElement('div');
+                bodyEl.className = `planet-body`;
+                
+                if (planet === 'saturn') {
+                    const ring = document.createElement('div');
+                    ring.className = 'saturn-ring';
+                    bodyEl.appendChild(ring);
+                }
+                
+                // Telemetry label
                 const label = document.createElement('div');
                 label.className = 'planet-label';
                 label.textContent = translations[currentLang].planets[planet].name;
-                planetEl.appendChild(label);
                 
+                planetEl.appendChild(bodyEl);
+                planetEl.appendChild(label);
                 solarSystem.appendChild(planetEl);
             });
             
+            // Add click listeners to entities
             document.querySelectorAll('.planet, .sun').forEach(body => {
-                body.addEventListener('click', function() {
-                    const planet = this.dataset.planet;
-                    showPlanetInfo(planet);
+                body.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const planetName = this.dataset.planet;
+                    selectAndFocusPlanet(planetName);
                 });
             });
             
-            updatePlanetLabels();
+            // Add hover highlights to helper orbits
+            document.querySelectorAll('.planet').forEach(planetEl => {
+                planetEl.addEventListener('mouseenter', function() {
+                    const name = this.dataset.planet;
+                    const orbit = document.querySelector(`.orbit-line.${name}-orbit`);
+                    if (orbit) orbit.classList.add('active');
+                });
+                planetEl.addEventListener('mouseleave', function() {
+                    const name = this.dataset.planet;
+                    const orbit = document.querySelector(`.orbit-line.${name}-orbit`);
+                    if (orbit) orbit.classList.remove('active');
+                });
+            });
+        }
+
+        function initializeSidebarMenu() {
+            const menu = document.getElementById('planet-menu');
+            menu.innerHTML = '';
+            
+            // Sun item
+            const sunItem = document.createElement('li');
+            sunItem.className = 'planet-nav-item';
+            sunItem.dataset.planet = 'sun';
+            sunItem.innerHTML = `
+                <span>THE SUN</span>
+                <span class="planet-nav-indicator" style="background: #ffa600; box-shadow: 0 0 8px #ffa600;"></span>
+            `;
+            menu.appendChild(sunItem);
+
+            const planets = ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'];
+            
+            planets.forEach(p => {
+                const item = document.createElement('li');
+                item.className = 'planet-nav-item';
+                item.dataset.planet = p;
+                
+                const pInfo = translations[currentLang].planets[p];
+                item.innerHTML = `
+                    <span>${pInfo.name.toUpperCase()}</span>
+                    <span class="planet-nav-indicator" style="background: ${pInfo.color}; box-shadow: 0 0 8px ${pInfo.color};"></span>
+                `;
+                menu.appendChild(item);
+            });
+
+            // Click listener for left menu
+            document.querySelectorAll('.planet-nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const name = this.dataset.planet;
+                    selectAndFocusPlanet(name);
+                });
+            });
+        }
+
+        // ----------------------------------------------------
+        // SYSTEM ACTIONS & HANDLERS
+        // ----------------------------------------------------
+        function selectAndFocusPlanet(planet) {
+            selectedPlanet = planet;
+            
+            // Highlight list in sidebar
+            document.querySelectorAll('.planet-nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.planet === planet);
+            });
+
+            // Focus on planet visually
+            document.querySelectorAll('.planet').forEach(pEl => {
+                pEl.classList.toggle('focused', pEl.dataset.planet === planet);
+            });
+
+            // Open Scan details
+            showPlanetInfo(planet);
         }
 
         function setupEventListeners() {
-            document.getElementById('lang-en').addEventListener('click', function() {
+            // Language selector listeners
+            document.getElementById('lang-en').addEventListener('click', () => {
                 if (currentLang !== 'en') {
                     currentLang = 'en';
                     updateLanguage();
                 }
             });
             
-            document.getElementById('lang-id').addEventListener('click', function() {
+            document.getElementById('lang-id').addEventListener('click', () => {
                 if (currentLang !== 'id') {
                     currentLang = 'id';
                     updateLanguage();
                 }
             });
-            
-            document.getElementById('planet-modal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeModal();
+
+            // Play / Pause hud action
+            const playBtn = document.getElementById('hud-play-btn');
+            playBtn.addEventListener('click', () => {
+                isPaused = !isPaused;
+                playBtn.classList.toggle('active', isPaused);
+                
+                const textNode = document.getElementById('btn-pause-text');
+                const svgNode = playBtn.querySelector('svg');
+                
+                if (isPaused) {
+                    textNode.textContent = currentLang === 'en' ? 'RESUME' : 'JALANKAN';
+                    svgNode.innerHTML = `<path d="M8 5v14l11-7z"/>`; // Play Icon
+                } else {
+                    textNode.textContent = currentLang === 'en' ? 'PAUSE' : 'JEDA';
+                    svgNode.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`; // Pause Icon
                 }
             });
-            
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeModal();
-                }
+
+            // Zoom hud slider
+            const zoomSlider = document.getElementById('zoom-slider');
+            const zoomVal = document.getElementById('zoom-val');
+            zoomSlider.addEventListener('input', (e) => {
+                zoomFactor = parseFloat(e.target.value);
+                zoomVal.textContent = `${Math.round(zoomFactor * 100)}%`;
+                updateSystemTransforms();
+            });
+
+            // Speed hud slider
+            const speedSlider = document.getElementById('speed-slider');
+            const speedVal = document.getElementById('speed-val');
+            speedSlider.addEventListener('input', (e) => {
+                orbitSpeedScale = parseFloat(e.target.value);
+                speedVal.textContent = `${orbitSpeedScale.toFixed(1)}x`;
+            });
+
+            // Helper orbits line toggler
+            const orbitBtn = document.getElementById('hud-orbit-btn');
+            orbitBtn.addEventListener('click', () => {
+                showOrbits = !showOrbits;
+                orbitBtn.classList.toggle('active', !showOrbits);
+                
+                document.documentElement.style.setProperty('--orbit-line-opacity', showOrbits ? '0.2' : '0.0');
+            });
+
+            // 3D Perspective isometric toggler
+            const perspectiveBtn = document.getElementById('hud-perspective-btn');
+            perspectiveBtn.addEventListener('click', () => {
+                is3D = !is3D;
+                perspectiveBtn.classList.toggle('active', is3D);
+                
+                const tiltX = is3D ? '60deg' : '0deg';
+                const tiltY = is3D ? '-15deg' : '0deg';
+                
+                document.documentElement.style.setProperty('--tilt-x', tiltX);
+                document.documentElement.style.setProperty('--tilt-y', tiltY);
+                
+                updateSystemTransforms();
+            });
+
+            // Real-time search engine
+            const searchInput = document.getElementById('planet-search');
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                
+                document.querySelectorAll('.planet-nav-item').forEach(item => {
+                    const text = item.querySelector('span').textContent.toLowerCase();
+                    if (text.includes(query)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+
+            // Close on escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeModal();
             });
         }
 
+        // ----------------------------------------------------
+        // SYSTEM RESIZE & SCALE COORDINATORS
+        // ----------------------------------------------------
+        function resizeSolarSystem() {
+            const solarSystem = document.getElementById('solar-system');
+            const wrapper = document.getElementById('solar-wrapper');
+            
+            const baseSize = 950;
+            const availableWidth = wrapper.clientWidth;
+            const availableHeight = wrapper.clientHeight;
+            
+            const padding = 60;
+            const scaleX = (availableWidth - padding) / baseSize;
+            const scaleY = (availableHeight - padding) / baseSize;
+            
+            const scale = Math.min(scaleX, scaleY);
+            
+            // Apply scale combined with zoom factor
+            solarSystem.dataset.scale = scale;
+            updateSystemTransforms();
+        }
+
+        function updateSystemTransforms() {
+            const solarSystem = document.getElementById('solar-system');
+            const baseScale = parseFloat(solarSystem.dataset.scale || 1.0);
+            
+            const finalScale = baseScale * zoomFactor;
+            const tiltX = is3D ? '60deg' : '0deg';
+            const tiltY = is3D ? '-15deg' : '0deg';
+
+            // Rotate the main canvas space
+            solarSystem.style.transform = `scale(${finalScale}) rotateX(${tiltX}) rotateY(${tiltY})`;
+            
+            // Billboard-correct the Sun
+            const sun = document.getElementById('sun-body');
+            if (sun) {
+                sun.style.transform = `translate(-50%, -50%) rotateY(calc(-1 * ${tiltY})) rotateX(calc(-1 * ${tiltX}))`;
+            }
+        }
+
+        // ----------------------------------------------------
+        // LANGUAGE TRANSLATION SYNC
+        // ----------------------------------------------------
         function updateLanguage() {
-            document.querySelector('h1').textContent = translations[currentLang].title;
-            document.getElementById('subtitle').textContent = translations[currentLang].subtitle;
-            document.getElementById('credits').textContent = translations[currentLang].credits;
+            const t = translations[currentLang];
+            
+            document.getElementById('title-tag').textContent = t.title;
+            document.getElementById('subtitle').textContent = t.subtitle;
+            document.getElementById('credits').textContent = t.credits;
+            document.getElementById('planet-search').placeholder = t.searchPlaceholder;
             
             document.getElementById('lang-en').classList.toggle('active', currentLang === 'en');
             document.getElementById('lang-id').classList.toggle('active', currentLang === 'id');
             
-            updatePlanetLabels();
+            // Sync Left Sidebar Names
+            initializeSidebarMenu();
+            
+            // Sync Solar Labels
+            document.querySelectorAll('.planet').forEach(planetEl => {
+                const name = planetEl.dataset.planet;
+                const label = planetEl.querySelector('.planet-label');
+                if (label) {
+                    label.textContent = t.planets[name].name;
+                }
+            });
             
             if (selectedPlanet) {
                 showPlanetInfo(selectedPlanet);
             }
         }
 
-        function updatePlanetLabels() {
-            const planets = document.querySelectorAll('.planet');
-            planets.forEach(planet => {
-                const planetName = planet.dataset.planet;
-                const label = planet.querySelector('.planet-label');
-                if (label) {
-                    label.textContent = translations[currentLang].planets[planetName].name;
-                }
-            });
-        }
-
+        // ----------------------------------------------------
+        // HOLOGRAPHIC SCAN DETAILS COORDINATORS
+        // ----------------------------------------------------
         function showPlanetInfo(planet) {
             const t = translations[currentLang];
             const info = t.planets[planet];
-            const modal = document.getElementById('planet-modal');
+            const panel = document.getElementById('planet-modal');
             
             document.getElementById('modal-title').textContent = info.name;
-            document.getElementById('key-facts-title').textContent = t.keyFactsTitle;
-            document.getElementById('composition-title').textContent = t.compositionTitle;
-            document.getElementById('interesting-facts-title').textContent = t.interestingFactsTitle;
-            document.getElementById('curiosities-title').textContent = t.curiositiesTitle;
+            document.getElementById('planet-type').textContent = info.type;
             
-            const visual = document.getElementById('planet-visual');
-            visual.style.background = info.gradient;
-            
+            // Build telemetry stats
             const statsGrid = document.getElementById('stats-grid');
             statsGrid.innerHTML = `
-                <div class="stat-item">
-                    <div class="stat-label">${currentLang === 'en' ? 'Type' : 'Tipe'}</div>
-                    <div class="stat-value">${info.type}</div>
+                <div class="stat-card">
+                    <span class="stat-label">${currentLang === 'en' ? 'DIAMETER' : 'DIAMETER'}</span>
+                    <span class="stat-value">${info.diameter}</span>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-label">${currentLang === 'en' ? 'Diameter' : 'Diameter'}</div>
-                    <div class="stat-value">${info.diameter}</div>
+                <div class="stat-card">
+                    <span class="stat-label">${currentLang === 'en' ? 'DISTANCE' : 'JARAK'}</span>
+                    <span class="stat-value">${info.distance}</span>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-label">${currentLang === 'en' ? 'Distance' : 'Jarak'}</div>
-                    <div class="stat-value">${info.distance}</div>
+                <div class="stat-card">
+                    <span class="stat-label">${currentLang === 'en' ? 'ORBIT PERIOD' : 'PERIODE ORBIT'}</span>
+                    <span class="stat-value">${info.orbitalPeriod}</span>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-label">${currentLang === 'en' ? 'Orbit' : 'Orbit'}</div>
-                    <div class="stat-value">${info.orbitalPeriod}</div>
+                <div class="stat-card">
+                    <span class="stat-label">${currentLang === 'en' ? 'TEMPERATURE' : 'SUHU'}</span>
+                    <span class="stat-value">${info.temperature}</span>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-label">${currentLang === 'en' ? 'Temp' : 'Suhu'}</div>
-                    <div class="stat-value">${info.temperature}</div>
+                <div class="stat-card">
+                    <span class="stat-label">${currentLang === 'en' ? 'MOONS' : 'BULAN'}</span>
+                    <span class="stat-value">${info.moons}</span>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-label">${currentLang === 'en' ? 'Moons' : 'Bulan'}</div>
-                    <div class="stat-value">${info.moons}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">${currentLang === 'en' ? 'Gravity' : 'Gravitas'}</div>
-                    <div class="stat-value">${info.gravity}</div>
+                <div class="stat-card">
+                    <span class="stat-label">${currentLang === 'en' ? 'GRAVITY' : 'GRAVITASI'}</span>
+                    <span class="stat-value">${info.gravity}</span>
                 </div>
             `;
             
+            // Build comparative meters
+            document.getElementById('earth-comp-label').textContent = t.earthCompTitle;
+            document.getElementById('size-comp-text').textContent = t.relativeDiameter;
+            document.getElementById('grav-comp-text').textContent = t.relativeGravity;
+
+            const sizeRatio = info.sizeRatio;
+            const gravityRatio = info.gravityRatio;
+
+            const sizeLabelVal = sizeRatio < 1.0 ? `${Math.round(sizeRatio * 100)}% of Earth` : `${sizeRatio.toFixed(1)}x Earth`;
+            const gravLabelVal = gravityRatio < 1.0 ? `${Math.round(gravityRatio * 100)}% of Earth` : `${gravityRatio.toFixed(1)}x Earth`;
+
+            document.getElementById('size-comp-val').textContent = sizeLabelVal;
+            document.getElementById('grav-comp-val').textContent = gravLabelVal;
+
+            // Fill bars (capped at 100%)
+            const sizeBarWidth = Math.min(100, (sizeRatio / 12.0) * 100); // Scaled appropriately
+            const gravBarWidth = Math.min(100, (gravityRatio / 3.0) * 100); 
+
+            // Trigger animation on fill
+            setTimeout(() => {
+                document.getElementById('size-bar').style.width = `${planet === 'sun' ? 100 : Math.max(5, sizeBarWidth)}%`;
+                document.getElementById('grav-bar').style.width = `${planet === 'sun' ? 100 : Math.max(5, gravBarWidth)}%`;
+            }, 50);
+
+            // Tab 2: Composition
             document.getElementById('composition-content').textContent = info.composition;
             
+            // Tab 3: Cosmics/Curiosities list
             const factsList = document.getElementById('facts-list');
-            factsList.innerHTML = info.facts.map(fact => `<li>${fact}</li>`).join('');
+            factsList.innerHTML = '';
             
-            const curiositiesList = document.getElementById('curiosities-list');
-            const curiositiesSection = document.getElementById('curiosities-section');
-            
-            if (info.curiosities && info.curiosities.length > 0) {
-                curiositiesList.innerHTML = info.curiosities.map(curiosity => `<li>${curiosity}</li>`).join('');
-                curiositiesSection.style.display = 'block';
-            } else {
-                curiositiesSection.style.display = 'none';
-            }
+            const combinedFacts = [...info.facts, ...(info.curiosities || [])];
+            combinedFacts.forEach(fact => {
+                const li = document.createElement('li');
+                li.textContent = fact;
+                factsList.appendChild(li);
+            });
 
-            // Update Read More Button
+            // Action Read More button links
             const readMoreBtn = document.getElementById('read-more-btn');
             readMoreBtn.href = info.wikiUrl;
-            readMoreBtn.textContent = t.readMoreLabel;
+            readMoreBtn.innerHTML = `
+                ${t.readMoreLabel}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            `;
             
-            modal.classList.add('active');
-            selectedPlanet = planet;
+            panel.classList.add('active');
+            switchTab(activeTab); // Keep current active tab state
+        }
+
+        function switchTab(tabId) {
+            activeTab = tabId;
+            
+            // Toggle tab active button state
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('onclick').includes(tabId));
+            });
+
+            // Toggle active content divs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === `tab-${tabId}`);
+            });
         }
 
         function closeModal() {
-            const modal = document.getElementById('planet-modal');
-            modal.classList.remove('active');
+            const panel = document.getElementById('planet-modal');
+            panel.classList.remove('active');
+            
+            // Remove focusing highlights
+            document.querySelectorAll('.planet').forEach(pEl => {
+                pEl.classList.remove('focused');
+            });
+            document.querySelectorAll('.planet-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
             selectedPlanet = null;
         }
 
         window.closeModal = closeModal;
+        window.switchTab = switchTab;
     </script>
 </body>
 </html>
