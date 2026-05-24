@@ -1847,6 +1847,13 @@
             dom.planets = document.querySelectorAll('.planet');
             dom.planetNavItems = document.querySelectorAll('.planet-nav-item');
 
+            // Map planet elements by name for 60fps hot-loop queries
+            dom.planetEls = {};
+            dom.planets.forEach(pEl => {
+                const name = pEl.dataset.planet;
+                dom.planetEls[name] = pEl;
+            });
+
             setupEventListeners();
             resizeSolarSystem();
             
@@ -1869,7 +1876,7 @@
                     const scaledSpeed = baseSpeed * orbitSpeedScale;
                     planetAngles[planet] = (planetAngles[planet] + scaledSpeed * delta) % 360;
                     
-                    const planetEl = document.querySelector(`.planet.${planet}`);
+                    const planetEl = dom.planetEls[planet];
                     if (planetEl) {
                         planetEl.style.setProperty('--angle', `${planetAngles[planet]}deg`);
                     }
