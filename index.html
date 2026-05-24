@@ -361,29 +361,48 @@
 
         .search-icon {
             position: absolute;
-            left: 1rem;
+            left: 1.25rem;
             color: var(--text-secondary);
             font-size: 0.95rem;
             pointer-events: none;
             transition: color 0.2s ease;
+            z-index: 2;
         }
 
         .search-input {
             width: 100%;
-            padding: 0.85rem 2.5rem 0.85rem 2.5rem;
+            padding: 1rem 3rem 1rem 3rem;
             font-family: var(--font-sans);
             font-size: 0.95rem;
-            background: var(--bg-primary);
+            /* Glassmorphism architecture */
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             color: var(--text-primary);
-            border: 1px solid var(--border-light);
-            border-radius: 4px;
-            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 8px; /* Slightly rounded for premium modern look */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.03);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Dark mode overrides for glassmorphic elements */
+        [data-theme="dark"] .search-input {
+            background: rgba(10, 10, 10, 0.55);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
         .search-input:focus {
             outline: none;
+            background: rgba(255, 255, 255, 0.7);
             border-color: var(--border-dark);
-            box-shadow: 0 0 0 3px var(--hover-glow);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08), 0 0 0 3px var(--hover-glow);
+        }
+
+        [data-theme="dark"] .search-input:focus {
+            background: rgba(10, 10, 10, 0.8);
+            border-color: var(--border-dark);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 0 3px var(--hover-glow);
         }
 
         .search-input:focus + .search-icon {
@@ -393,16 +412,22 @@
         /* Keyboard Shortcut */
         .search-shortcut {
             position: absolute;
-            right: 1rem;
+            right: 1.25rem;
             font-family: var(--font-mono);
             font-size: 0.75rem;
             color: var(--text-secondary);
-            background: var(--bg-secondary);
-            padding: 0.1rem 0.4rem;
-            border: 1px solid var(--border-light);
-            border-radius: 3px;
+            background: rgba(0, 0, 0, 0.04);
+            padding: 0.15rem 0.45rem;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 4px;
             pointer-events: none;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2;
+        }
+
+        [data-theme="dark"] .search-shortcut {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.08);
         }
 
         .search-input:focus ~ .search-shortcut,
@@ -414,7 +439,7 @@
         /* Clear Button */
         .search-clear-btn {
             position: absolute;
-            right: 0.85rem;
+            right: 1.25rem;
             background: transparent;
             border: none;
             color: var(--text-secondary);
@@ -426,6 +451,7 @@
             justify-content: center;
             line-height: 1;
             transition: color 0.2s ease;
+            z-index: 2;
         }
 
         .search-clear-btn:hover {
