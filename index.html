@@ -368,9 +368,17 @@
 
         /* Search Container & Glassmorphism architecture */
         .search-container {
-            margin: 0.5rem 0 2.25rem 0;
+            margin: 3rem 0 2.5rem 0;
             max-width: 600px;
             width: 100%;
+        }
+
+        .last-update {
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            opacity: 0.85;
+            transition: color 0.3s ease;
         }
 
         .search-wrapper {
@@ -557,13 +565,11 @@
         <div class="hero-content">
             <div class="hero-badge mono" data-translate-key="headerSubtitle">An evolving collection of deep dives into various topics.</div>
             <h1 id="typewriter-title" data-translate-key="headerTitle">LoLyeah Interactive Guides</h1>
+            <div class="last-update mono" data-translate-key="lastUpdate">Last Update: May 25, 2026</div>
         </div>
     </header>
 
     <section class="topics">
-        <div class="section-header">
-            <h2 class="mono" data-translate-key="mainTitle">Explore a Topic</h2>
-        </div>
 
         <!-- Completely Revamped Search Feature Wrapper -->
         <div class="search-container">
@@ -893,7 +899,8 @@
                 searchPlaceholder: "Search topics...",
                 noResultsTitle: "No topics found",
                 noResultsDesc: "We couldn't find any guides matching your search. Try a different keyword.",
-                clearSearchBtn: "Clear Search"
+                clearSearchBtn: "Clear Search",
+                lastUpdate: "Last Update: May 25, 2026"
             },
             id: {
                 headerTitle: "Panduan Interaktif LoLyeah",
@@ -961,7 +968,8 @@
                 searchPlaceholder: "Cari topik...",
                 noResultsTitle: "Topik tidak ditemukan",
                 noResultsDesc: "Kami tidak menemukan panduan yang cocok dengan pencarian Anda. Coba kata kunci lain.",
-                clearSearchBtn: "Hapus Pencarian"
+                clearSearchBtn: "Hapus Pencarian",
+                lastUpdate: "Pembaruan Terakhir: 25 Mei 2026"
             }
         };
 
@@ -1006,9 +1014,52 @@
             document.getElementById('lang-id').classList.toggle('active', lang === 'id');
         }
 
+        // --- Fetch Last GitHub Commit Date ---
+        const fallbackDate = new Date('2026-05-25T00:52:03+07:00');
+        
+        function formatCommitDate(date, lang) {
+            const day = date.getDate();
+            const year = date.getFullYear();
+            if (lang === 'en') {
+                const monthsEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                return `Last Update: ${monthsEn[date.getMonth()]} ${day}, ${year}`;
+            } else {
+                const monthsId = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                return `Pembaruan Terakhir: ${day} ${monthsId[date.getMonth()]} ${year}`;
+            }
+        }
+
+        // Initialize translation keys with formatted fallback date
+        translations.en.lastUpdate = formatCommitDate(fallbackDate, 'en');
+        translations.id.lastUpdate = formatCommitDate(fallbackDate, 'id');
+
+        async function fetchLastCommitDate() {
+            try {
+                const response = await fetch('https://api.github.com/repos/LoLyeah/lolyeah.github.io/commits/main');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.commit && data.commit.committer && data.commit.committer.date) {
+                        const commitDate = new Date(data.commit.committer.date);
+                        translations.en.lastUpdate = formatCommitDate(commitDate, 'en');
+                        translations.id.lastUpdate = formatCommitDate(commitDate, 'id');
+                        
+                        // Update the DOM element directly if it is currently displayed
+                        const lastUpdateEl = document.querySelector('[data-translate-key="lastUpdate"]');
+                        if (lastUpdateEl) {
+                            const currentLang = document.documentElement.lang || 'en';
+                            lastUpdateEl.innerHTML = translations[currentLang].lastUpdate;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not fetch last commit date from GitHub API, using fallback:', e.message);
+            }
+        }
+
         document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
         document.getElementById('lang-id').addEventListener('click', () => switchLanguage('id'));
         switchLanguage('en'); // Default init
+        fetchLastCommitDate(); // Asynchronously fetch actual date from GitHub API
 
         // --- Dark Mode Logic ---
         const themeToggle = document.getElementById('theme-toggle');
