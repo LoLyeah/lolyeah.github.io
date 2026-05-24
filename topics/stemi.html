@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STEMI: ST-Elevation Myocardial Infarction — Clinical Dossier</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts for Apple Typography Approximation -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Configuration using Premium Apple Tokens -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        text: ['"Inter"', 'sans-serif'],
+                        mono: ['"Space Mono"', 'monospace'],
+                    },
+                    colors: {
+                        apple: {
+                            black: '#000000',
+                            grayPale: '#f5f5f7',
+                            ink: '#1d1d1f',
+                            blue: '#0071e3',
+                            blueLink: '#0066cc',
+                            blueHighLuma: '#2997ff',
+                            white: '#ffffff',
+                            graphiteA: '#272729',
+                            graphiteB: '#262629',
+                            graphiteC: '#28282b',
+                            graySecondary: '#86868b',
+                            borderSoft: '#e5e7eb',
+                            borderMid: '#86868b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            scroll-behavior: smooth;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(229, 231, 235, 0.6);
+        }
+
+        .glass-panel-dark {
+            background: rgba(26, 26, 29, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Tab Slider Indicator */
+        .tab-indicator {
+            transition: all 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* Tab Transitions */
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scroll Animations (Apple Style) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Utilities */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .card-border {
+            border: 1px solid rgba(210, 210, 215, 0.5);
+            border-radius: 20px;
+        }
+
+        /* Cinematic Hero Background */
+        .hero-bg {
+            background-color: #050508;
+            background-image: 
+                radial-gradient(ellipse 60% 60% at 50% 10%, rgba(239, 68, 68, 0.15) 0%, transparent 80%),
+                radial-gradient(circle at 10% 80%, rgba(248, 113, 113, 0.05) 0%, transparent 50%),
+                linear-gradient(to bottom, rgba(5, 5, 8, 0.2) 0%, #050508 100%);
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Timeline Styles */
+        .timeline-connector {
+            position: relative;
+        }
+        .timeline-connector::after {
+            content: '';
+            position: absolute;
+            top: 2rem;
+            bottom: -2rem;
+            left: 1.5rem;
+            width: 2px;
+            background: rgba(239, 68, 68, 0.15);
+        }
+        .timeline-item:last-child .timeline-connector::after {
+            display: none;
+        }
+
+        /* Cascade Steps styles */
+        .cascade-step {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .cascade-step.selected {
+            background: rgba(239, 68, 68, 0.05);
+            border-color: rgba(239, 68, 68, 0.3);
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.04);
+        }
+
+        /* Coronary territory explorer styles */
+        .territory-pill {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .territory-pill.active {
+            background: #ef4444;
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Killip Styles */
+        .killip-badge {
+            transition: all 0.3s ease;
+        }
+
+        /* Interactive C.H.E.S.T card flip */
+        .fast-card {
+            perspective: 1000px;
+            height: 180px;
+            cursor: pointer;
+        }
+        .fast-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-style: preserve-3d;
+        }
+        .fast-card:hover .fast-card-inner, .fast-card.flipped .fast-card-inner {
+            transform: rotateY(180deg);
+        }
+        .fast-card-front, .fast-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        .fast-card-front {
+            background: #f5f5f7;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            color: #1d1d1f;
+        }
+        .fast-card-back {
+            background: #ef4444;
+            color: white;
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="font-text text-apple-ink bg-apple-white antialiased">
+
+    <!-- Global Navigation Header -->
+    <nav class="bg-[rgba(255,255,255,0.8)] backdrop-blur-xl border-b border-apple-borderSoft/60 text-apple-ink text-xs h-[52px] flex items-center justify-center fixed w-full top-0 z-50 transition-all">
+        <div class="max-w-7xl w-full px-6 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
+                <span class="font-display font-bold text-[15px] tracking-tight">MedGuide<span class="text-red-500">.STEMI</span></span>
+            </div>
+            
+            <div class="flex items-center space-x-6">
+                <!-- Apple-style Language Segmented Control -->
+                <div class="bg-apple-grayPale border border-apple-borderSoft rounded-full p-[2px] flex items-center shadow-inner">
+                    <button onclick="setLang('en')" id="btn-en" class="px-4 py-[3px] text-[10px] rounded-full bg-apple-white text-apple-ink font-semibold transition-all shadow-sm">EN</button>
+                    <button onclick="setLang('id')" id="btn-id" class="px-4 py-[3px] text-[10px] rounded-full text-apple-graySecondary hover:text-apple-ink transition-all font-medium">ID</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Showcase Hero Chapter -->
+    <header id="hero-section" class="hero-bg pt-32 pb-24 text-center text-apple-white mt-[52px] relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-6 relative z-10 reveal active">
+            <span class="inline-block bg-red-500/10 border border-red-400/30 text-red-400 font-mono tracking-widest text-[9px] uppercase px-4 py-1.5 rounded-full mb-6" data-i18n="hero_badge">TACTICAL CLINICAL INTELLIGENCE — EMERGENCY CARDIOLOGY ALERT</span>
+            <h1 class="font-display text-[64px] sm:text-[84px] font-extrabold mb-4 tracking-tighter leading-[0.95]" data-i18n="hero_title">STEMI.</h1>
+            <p class="font-display text-2xl sm:text-3xl text-apple-graySecondary font-semibold mb-6 tracking-tight" data-i18n="hero_sub">Understanding the Heart Attack.</p>
+            <p class="text-[17px] text-apple-graySecondary max-w-2xl mx-auto leading-relaxed font-normal" data-i18n="hero_desc">
+                A high-fidelity clinical exploration covering cellular myocardial pathophysiology, emergency reperfusion timelines, coronary anatomy mapping, and primary angioplasty standards. Time is muscle.
+            </p>
+        </div>
+    </header>
+
+    <!-- Tab Navigation (Sticky Segmented Utility Bar) -->
+    <div id="content-core" class="sticky top-[52px] z-40 bg-[rgba(255,255,255,0.85)] backdrop-blur-xl border-b border-apple-borderSoft/60 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-3">
+            <div class="relative bg-apple-grayPale p-1 rounded-2xl border border-apple-borderSoft flex space-x-1 overflow-x-auto no-scrollbar items-center max-w-4xl mx-auto">
+                
+                <!-- Tab Indicator Background (Sliding Pill Effect) -->
+                <div id="tab-active-pill" class="tab-indicator absolute top-1 bottom-1 left-1 rounded-xl bg-apple-white shadow-sm border border-apple-borderSoft/50" style="width: 140px; transform: translateX(0px);"></div>
+                
+                <button onclick="switchTab('intro', this)" class="tab-btn relative z-10 flex-1 px-4 py-2 text-xs font-semibold text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="intro">
+                    <span data-i18n="nav_intro">Introduction</span>
+                </button>
+                <button onclick="switchTab('patho', this)" class="tab-btn relative z-10 flex-1 px-4 py-2 text-xs font-medium text-apple-graySecondary hover:text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="patho">
+                    <span data-i18n="nav_patho">Pathophysiology</span>
+                </button>
+                <button onclick="switchTab('etiology', this)" class="tab-btn relative z-10 flex-1 px-4 py-2 text-xs font-medium text-apple-graySecondary hover:text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="etiology">
+                    <span data-i18n="nav_etiology">Etiology & Territories</span>
+                </button>
+                <button onclick="switchTab('symptoms', this)" class="tab-btn relative z-10 flex-1 px-4 py-2 text-xs font-medium text-apple-graySecondary hover:text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="symptoms">
+                    <span data-i18n="nav_diagnostics">Diagnostics</span>
+                </button>
+                <button onclick="switchTab('treatment', this)" class="tab-btn relative z-10 flex-1 px-4 py-2 text-xs font-medium text-apple-graySecondary hover:text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="treatment">
+                    <span data-i18n="nav_treatment">Treatment</span>
+                </button>
+                <button onclick="switchTab('rehab', this)" class="tab-btn relative z-10 flex-1 px-4 py-2 text-xs font-medium text-apple-graySecondary hover:text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="rehab">
+                    <span data-i18n="nav_rehab">Rehabilitation</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <main class="min-h-screen">
+
+        <!-- TAB 1: INTRODUCTION -->
+        <section id="intro" class="tab-content active">
+            <div class="bg-apple-grayPale py-20 border-b border-apple-borderSoft/40">
+                <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start reveal">
+                    <div>
+                        <div class="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 font-bold text-lg mb-6">?</div>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-6 leading-tight" data-i18n="intro_title">What is STEMI?</h2>
+                        <p class="text-[17px] text-apple-graySecondary mb-6 leading-relaxed" data-i18n="intro_desc1">
+                            ST-Elevation Myocardial Infarction (STEMI) is a critical cardiac emergency characterized by the sudden, total occlusion of a major coronary artery. This sudden disruption of blood supply deprives myocardial cells of oxygen, triggering rapid, transmural ischemia that evolves into irreversible muscular necrosis within hours.
+                        </p>
+                        <p class="text-[17px] text-apple-graySecondary mb-8 leading-relaxed" data-i18n="intro_desc2">
+                            Immediate reperfusion therapy is mandatory to prevent massive, permanent myocardial loss. Percutaneous Coronary Intervention (PCI) inside a catheterization lab represents the gold-standard pathway, physically restoring arterial patency and dramatically shifting patient survival metrics.
+                        </p>
+
+                        <!-- Severity Scales reference -->
+                        <div class="border-t border-apple-borderSoft pt-6">
+                            <h4 class="font-display font-bold text-[15px] mb-4 text-apple-ink" data-i18n="severity_title">Killip Classification & Clinical Severity</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-apple-white p-4 rounded-2xl border border-apple-borderSoft/60">
+                                    <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-500/10 text-green-500 mb-2 font-mono">Class I</span>
+                                    <h5 class="font-bold text-xs text-apple-ink" data-i18n="sev_minor_lbl">No Heart Failure</h5>
+                                    <p class="text-[11px] text-apple-graySecondary mt-1 leading-normal" data-i18n="sev_minor_desc">No clinical signs of pulmonary congestion or S3 gallop. Predicts ~6% mortality.</p>
+                                </div>
+                                <div class="bg-apple-white p-4 rounded-2xl border border-apple-borderSoft/60">
+                                    <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-500/10 text-yellow-500 mb-2 font-mono">Class II</span>
+                                    <h5 class="font-bold text-xs text-apple-ink" data-i18n="sev_mod_lbl">Mild-Moderate HF</h5>
+                                    <p class="text-[11px] text-apple-graySecondary mt-1 leading-normal" data-i18n="sev_mod_desc">Basilar rales, S3 gallop, or jugular venous distention. Predicts ~17% mortality.</p>
+                                </div>
+                                <div class="bg-apple-white p-4 rounded-2xl border border-apple-borderSoft/60 mt-2">
+                                    <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-500/10 text-orange-500 mb-2 font-mono">Class III</span>
+                                    <h5 class="font-bold text-xs text-apple-ink" data-i18n="sev_modsev_lbl">Pulmonary Edema</h5>
+                                    <p class="text-[11px] text-apple-graySecondary mt-1 leading-normal" data-i18n="sev_modsev_desc">Frank pulmonary congestion; widespread rales over >50% of lung fields. Predicts ~38% mortality.</p>
+                                </div>
+                                <div class="bg-apple-white p-4 rounded-2xl border border-apple-borderSoft/60 mt-2">
+                                    <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-500/10 text-red-500 mb-2 font-mono">Class IV</span>
+                                    <h5 class="font-bold text-xs text-apple-ink" data-i18n="sev_sev_lbl">Cardiogenic Shock</h5>
+                                    <p class="text-[11px] text-apple-graySecondary mt-1 leading-normal" data-i18n="sev_sev_desc">Severe hypotension (SBP &lt; 90) paired with clinical signs of low peripheral perfusion. Predicts &gt;70% mortality.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-apple-white card-border p-8 shadow-sm border border-apple-borderSoft/70 w-full flex flex-col justify-between h-full">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-apple-borderSoft pb-4 mb-6">
+                                <h3 class="font-display font-bold text-base text-apple-ink" data-i18n="ratio_title">Global Acute Coronary Syndrome (ACS) Distribution</h3>
+                                <span class="bg-red-500/10 text-red-500 text-[10px] font-bold font-mono px-3 py-1 rounded-full">Reperfusion Target</span>
+                            </div>
+                            <div class="relative h-[280px] w-full flex justify-center items-center">
+                                <canvas id="acsTypesChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="mt-8 space-y-4">
+                            <div class="border-t border-apple-borderSoft pt-4">
+                                <h3 class="font-display font-bold text-[15px] mb-1 text-apple-ink flex justify-between">
+                                    <span data-i18n="type_stemi_title">STEMI (35%)</span>
+                                    <span class="text-red-500 font-mono font-bold">35%</span>
+                                </h3>
+                                <p class="text-xs text-apple-graySecondary leading-relaxed" data-i18n="type_stemi_desc">Complete coronary occlusion. Characterized by ST-segment elevations and severe transmural necrosis. Demands immediate physical reperfusion.</p>
+                            </div>
+                            <div class="border-t border-apple-borderSoft pt-4">
+                                <h3 class="font-display font-bold text-[15px] mb-1 text-apple-ink flex justify-between">
+                                    <span data-i18n="type_nste_title">NSTEMI / UA (65%)</span>
+                                    <span class="text-apple-ink font-mono font-bold">65%</span>
+                                </h3>
+                                <p class="text-xs text-apple-graySecondary leading-relaxed" data-i18n="type_nste_desc">Subtotal coronary occlusion. Characterized by ST-segment depressions, T-wave inversions, and elevated biomarkers (or none in Unstable Angina).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-apple-white py-24 border-t border-apple-borderSoft">
+                <div class="max-w-5xl mx-auto px-6 text-center reveal">
+                    <h2 class="font-display text-[32px] sm:text-[40px] font-extrabold tracking-tight mb-4 text-apple-ink" data-i18n="impact_main_title">The Critical Magnitude</h2>
+                    <p class="text-lg text-apple-graySecondary max-w-2xl mx-auto mb-16 leading-relaxed" data-i18n="impact_main_sub">Acute time benchmarks and clinical statistics illustrating why every second counts.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                        <div class="bg-apple-grayPale rounded-[24px] border border-apple-borderSoft/40 p-8 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                            <span class="text-4xl font-extrabold text-red-500 block mb-4 border-b border-apple-borderSoft pb-4 font-display" data-i18n="card1_stat">90 Minutes</span>
+                            <p class="text-[14px] text-apple-graySecondary leading-relaxed" data-i18n="card1_desc">Target door-to-balloon limit from hospital arrival to mechanical stent deployment. Salvages ischemic tissue.</p>
+                        </div>
+                        <div class="bg-apple-grayPale rounded-[24px] border border-apple-borderSoft/40 p-8 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                            <span class="text-4xl font-extrabold text-apple-ink block mb-4 border-b border-apple-borderSoft pb-4 font-display" data-i18n="card2_stat">40 Minutes</span>
+                            <p class="text-[14px] text-apple-graySecondary leading-relaxed" data-i18n="card2_desc">The time limit beyond which irreversible transmural myocardial necrosis spreads rapidly from subendocardium to epicardium.</p>
+                        </div>
+                        <div class="bg-apple-grayPale rounded-[24px] border border-apple-borderSoft/40 p-8 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                            <span class="text-4xl font-extrabold text-apple-ink block mb-4 border-b border-apple-borderSoft pb-4 font-display" data-i18n="card3_stat">30%</span>
+                            <p class="text-[14px] text-apple-graySecondary leading-relaxed" data-i18n="card3_desc">Relative mortality risk reduction achieved by proper primary angioplasty intervention compared to late fibrinolysis.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- CONTINUATION FLOW TRIGGER -->
+                    <div class="mt-20 flex justify-center">
+                        <button onclick="goToNext('patho')" class="bg-red-500 text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-90 active:scale-95 transition-all shadow-md flex items-center gap-3">
+                            <span data-i18n="btn_to_patho">Continue to Pathophysiology</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: PATHOPHYSIOLOGY -->
+        <section id="patho" class="tab-content">
+            <div class="bg-[rgba(5,5,8,0.98)] py-20 text-apple-white border-b border-apple-borderSoft/10">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="inline-block text-xs font-bold text-red-400 uppercase tracking-wider mb-2 font-mono" data-i18n="patho_badge">Molecular Pathogenesis</span>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-6" data-i18n="patho_title">The Myocardial Ischemic Cascade</h2>
+                        <p class="text-[17px] text-apple-graySecondary leading-relaxed" data-i18n="patho_desc">
+                            A rapid interruption of coronary perfusion triggers a devastating biochemical cascade. Click on each step of the explorer below to analyze the cellular mechanics in detail.
+                        </p>
+                    </div>
+                    
+                    <!-- INTERACTIVE CASCADE TIMELINE EXPLORER -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-6xl mx-auto mt-12">
+                        <!-- LEFT TABS -->
+                        <div class="lg:col-span-5 flex flex-col space-y-4">
+                            <div onclick="selectCascade(0)" id="cas-0" class="cascade-step cursor-pointer p-5 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center space-x-4 selected">
+                                <span class="w-8 h-8 rounded-full bg-red-500/10 text-red-400 font-mono font-bold flex items-center justify-center shrink-0">1</span>
+                                <div class="text-left">
+                                    <h4 class="font-display font-bold text-[15px] text-white" data-i18n="cas_step1_title">Plaque Rupture & Thrombosis</h4>
+                                    <p class="text-xs text-apple-graySecondary mt-1 leading-normal" data-i18n="cas_step1_sub">Vascular occlusion begins with atheromatous plaque disruption.</p>
+                                </div>
+                            </div>
+                            <div onclick="selectCascade(1)" id="cas-1" class="cascade-step cursor-pointer p-5 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center space-x-4">
+                                <span class="w-8 h-8 rounded-full bg-orange-500/10 text-orange-400 font-mono font-bold flex items-center justify-center shrink-0">2</span>
+                                <div class="text-left">
+                                    <h4 class="font-display font-bold text-[15px] text-white" data-i18n="cas_step2_title">Anaerobic Shift & ATP Loss</h4>
+                                    <p class="text-xs text-apple-graySecondary mt-1 leading-normal" data-i18n="cas_step2_sub">Oxidative failure shifts metabolism to lactate.</p>
+                                </div>
+                            </div>
+                            <div onclick="selectCascade(2)" id="cas-2" class="cascade-step cursor-pointer p-5 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center space-x-4">
+                                <span class="w-8 h-8 rounded-full bg-yellow-500/10 text-yellow-400 font-mono font-bold flex items-center justify-center shrink-0">3</span>
+                                <div class="text-left">
+                                    <h4 class="font-display font-bold text-[15px] text-white" data-i18n="cas_step3_title">Contractile Dysfunction</h4>
+                                    <p class="text-xs text-apple-graySecondary mt-1 leading-normal" data-i18n="cas_step3_sub">Myofibril stasis causes wall motion abnormalities.</p>
+                                </div>
+                            </div>
+                            <div onclick="selectCascade(3)" id="cas-3" class="cascade-step cursor-pointer p-5 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center space-x-4">
+                                <span class="w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 font-mono font-bold flex items-center justify-center shrink-0">4</span>
+                                <div class="text-left">
+                                    <h4 class="font-display font-bold text-[15px] text-white" data-i18n="cas_step4_title">Necrosis & Sarcolemmal Rupture</h4>
+                                    <p class="text-xs text-apple-graySecondary mt-1 leading-normal" data-i18n="cas_step4_sub">Irreversible cellular breakdown releases troponin.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT DISPLAY PANEL (GLASSMORPHIC DARK) -->
+                        <div class="lg:col-span-7 glass-panel-dark rounded-[28px] p-8 flex flex-col justify-between text-left relative overflow-hidden">
+                            <!-- Background gradient pulse -->
+                            <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-red-500/10 blur-[60px] pointer-events-none"></div>
+                            
+                            <div id="cascade-display-content">
+                                <!-- Dynamic cellular graphics / text rendered here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CORE VS PENUMBRA CLINICAL DESCRIPTION -->
+            <div class="bg-apple-white py-24">
+                <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center reveal">
+                    <div>
+                        <span class="inline-block text-xs font-bold text-red-500 uppercase tracking-wider mb-2 font-mono" data-i18n="penumbra_badge">Perfusion Boundaries</span>
+                        <h2 class="font-display text-[32px] sm:text-[40px] font-extrabold tracking-tight mb-6 leading-tight text-apple-ink" data-i18n="penumbra_title">Myocardial Infarct Core vs. Area at Risk</h2>
+                        <p class="text-body text-apple-graySecondary mb-8 leading-relaxed" data-i18n="penumbra_desc">
+                            The spatial division of myocardial ischemia dictates emergency timing. Prompt recanalization aims exclusively to rescue the salvageable ischemic boundaries (Area at Risk) from expanding necrotic waves.
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <div class="border-l-4 border-apple-ink pl-4 transition-all hover:border-red-500 duration-300">
+                                <h4 class="font-display font-bold text-lg mb-1 text-apple-ink" data-i18n="core_card_title">Infarct Core (Subendocardial Wavefront)</h4>
+                                <p class="text-sm text-apple-graySecondary leading-relaxed" data-i18n="core_card_desc">Irreversible necrotic damage. Deprived of oxygen, intracellular ATP depletion halts membrane integrity within 20-30 minutes, initiating progressive necrosis from subendocardium outward.</p>
+                            </div>
+                            <div class="border-l-4 border-red-500 pl-4 transition-all hover:border-red-400 duration-300">
+                                <h4 class="font-display font-bold text-lg mb-1 text-red-500" data-i18n="pen_card_title">Area at Risk (Salvageable Myocardium)</h4>
+                                <p class="text-sm text-apple-graySecondary leading-relaxed" data-i18n="pen_card_desc">Ischemic, poorly functioning myocardial margins supported by coronary collateral circulation. Highly viable if blood flow is restored inside the acute intervention window.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-apple-grayPale p-10 rounded-[28px] flex items-center justify-center shadow-inner relative aspect-square border border-apple-borderSoft/40 max-w-md mx-auto">
+                        <div class="relative w-72 h-72 rounded-full bg-red-500/10 flex items-center justify-center shadow-inner border border-red-500/10">
+                            <!-- Collateral ring animation -->
+                            <div class="absolute inset-0 rounded-full border border-red-400/30 animate-pulse"></div>
+                            <div class="absolute inset-4 rounded-full border border-red-500/15 animate-ping opacity-30"></div>
+                            
+                            <span class="absolute top-10 text-red-500 font-bold text-xs text-center tracking-wide" data-i18n="penumbra_visual_label">SALVAGEABLE MYOCARDIUM<br><span class="font-mono font-normal">Ischemic / Hypoperfused</span></span>
+                            
+                            <div class="w-36 h-36 rounded-full bg-apple-ink flex items-center justify-center z-10 shadow-lg border border-white/5">
+                                <span class="text-white font-bold text-xs text-center tracking-wide" data-i18n="core_visual_label">INFARCT CORE<br><span class="font-mono text-red-400 font-normal">Necrotic wavefront</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-20 flex justify-center reveal">
+                    <button onclick="goToNext('etiology')" class="bg-apple-ink text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-90 active:scale-95 transition-all shadow-md flex items-center gap-3">
+                        <span data-i18n="btn_to_etio">Continue to Etiology & Territories</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: ETIOLOGY & TERRITORIES -->
+        <section id="etiology" class="tab-content">
+            <div class="bg-apple-grayPale py-20">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="inline-block text-xs font-bold text-red-500 uppercase tracking-wider mb-2 font-mono" data-i18n="etio_badge">ACS Mechanisms</span>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-6" data-i18n="etio_title">Etiology & Risk Profiles</h2>
+                        <p class="text-[17px] text-apple-graySecondary leading-relaxed" data-i18n="etio_desc">
+                            Acute coronary syndromes are classified based on the nature of arterial disruption, dictating emergent antiplatelet loads, angiographic timelines, and long-term preventions.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                        <div class="bg-apple-white card-border p-8 shadow-sm">
+                            <div class="flex items-center space-x-3 mb-6 border-b border-apple-borderSoft pb-4">
+                                <span class="w-3.5 h-3.5 rounded-full bg-red-500"></span>
+                                <h3 class="font-display font-bold text-lg text-apple-ink" data-i18n="etio_is_title">Myocardial Infarction Types</h3>
+                            </div>
+                            <ul class="space-y-4 text-body text-apple-graySecondary">
+                                <li class="pb-2 border-b border-apple-borderSoft/40"><strong class="text-apple-ink block text-[15px] mb-0.5" data-i18n="toast1_title">Type 1 MI: Spontaneous plaque rupture</strong> <span class="text-xs" data-i18n="toast1_desc">Atherothrombotic coronary artery disease. Plaque rupture or erosion triggers local platelet thrombus, causing acute occlusion.</span></li>
+                                <li class="pb-2 border-b border-apple-borderSoft/40"><strong class="text-apple-ink block text-[15px] mb-0.5" data-i18n="toast2_title">Type 2 MI: Supply-Demand Mismatch</strong> <span class="text-xs" data-i18n="toast2_desc">Myocardial injury secondary to elevated demand or reduced supply. Triggers include profound anemia, severe tachycardia, hypoxemia, or coronary spasm.</span></li>
+                                <li class="pb-2 border-b border-apple-borderSoft/40"><strong class="text-apple-ink block text-[15px] mb-0.5" data-i18n="toast3_title">Type 3 MI: Sudden cardiac death</strong> <span class="text-xs" data-i18n="toast3_desc">Cardiac death prior to blood biomarkers, typically with symptoms suggestive of myocardial ischemia and new ECG changes.</span></li>
+                                <li><strong class="text-apple-ink block text-[15px] mb-0.5" data-i18n="toast4_title">Type 4 & 5 MI: Procedure-related</strong> <span class="text-xs" data-i18n="toast4_desc">Infarction associated with Percutaneous Coronary Intervention (PCI) or Coronary Artery Bypass Grafting (CABG) surgery.</span></li>
+                            </ul>
+                        </div>
+                        <div class="bg-apple-white card-border p-8 shadow-sm">
+                            <div class="flex items-center space-x-3 mb-6 border-b border-apple-borderSoft pb-4">
+                                <span class="w-3.5 h-3.5 rounded-full bg-apple-ink"></span>
+                                <h3 class="font-display font-bold text-lg text-apple-ink" data-i18n="etio_hem_title">Risk Factors & Secondary Protection</h3>
+                            </div>
+                            <ul class="space-y-6 text-body text-apple-graySecondary">
+                                <li class="pb-4 border-b border-apple-borderSoft/40">
+                                    <strong class="text-apple-ink block text-[15px] mb-1" data-i18n="hem1_title">Coronary Atherosclerosis Drivers</strong> 
+                                    <span class="text-xs" data-i18n="hem1_desc">Chronic dyslipidemia (elevated ApoB/LDL), arterial hypertension, diabetes mellitus, cigarette smoking, and genetic predispositions act as core atheroma accelerators.</span>
+                                </li>
+                                <li>
+                                    <strong class="text-apple-ink block text-[15px] mb-1" data-i18n="hem2_title">Ventricular Remodeling Risk</strong> 
+                                    <span class="text-xs" data-i18n="hem2_desc">Extensive transmural necrosis triggers high local stress on the ventricular wall, causing thinning and mechanical expansion (negative remodeling), leading to chronic heart failure.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- PREVENTION IMPACT CHART SECTION -->
+                    <div class="bg-apple-white card-border p-8 md:p-12 shadow-sm border border-apple-borderSoft/80">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-apple-borderSoft pb-4 mb-6">
+                            <div>
+                                <h3 class="font-display font-bold text-lg text-apple-ink" data-i18n="prev_chart_title">Secondary Prevention Impact</h3>
+                                <p class="text-xs text-apple-graySecondary mt-1" data-i18n="prev_chart_sub">Estimated relative reduction of recurrence risk achieved by guideline-directed medical therapies.</p>
+                            </div>
+                            <span class="bg-green-500/10 text-green-500 font-mono text-[10px] font-bold px-3 py-1 rounded-full mt-2 md:mt-0">DAPT & Lifestyle Target</span>
+                        </div>
+                        <div class="relative h-[320px] w-full mt-8">
+                            <canvas id="preventionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- VASCULAR TERRITORIES ACCORDION / NAVIGATION MAP -->
+                    <div class="bg-apple-white card-border p-8 md:p-12 shadow-sm mt-8 border border-apple-borderSoft/80 reveal">
+                        <div class="text-center max-w-2xl mx-auto mb-10">
+                            <h3 class="font-display font-bold text-2xl text-apple-ink mb-3" data-i18n="map_title">Coronary Territory & Deficit Explorer</h3>
+                            <p class="text-xs text-apple-graySecondary" data-i18n="map_desc">Select a specific coronary artery below to explore the exact anatomical territories and clinical deficits caused by acute occlusions.</p>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 justify-center mb-8 border-b border-apple-borderSoft/60 pb-6">
+                            <button onclick="selectTerritory('lad')" id="btn-t-lad" class="territory-pill px-5 py-2 text-xs font-semibold rounded-full border border-apple-borderSoft bg-apple-grayPale text-apple-ink active">LAD (Left Anterior Descending)</button>
+                            <button onclick="selectTerritory('rca')" id="btn-t-rca" class="territory-pill px-5 py-2 text-xs font-semibold rounded-full border border-apple-borderSoft bg-apple-grayPale text-apple-ink">RCA (Right Coronary Artery)</button>
+                            <button onclick="selectTerritory('lcx')" id="btn-t-lcx" class="territory-pill px-5 py-2 text-xs font-semibold rounded-full border border-apple-borderSoft bg-apple-grayPale text-apple-ink">LCx (Left Circumflex)</button>
+                        </div>
+                        
+                        <!-- DISPLAY BLOCK -->
+                        <div class="bg-apple-grayPale rounded-[24px] p-8 border border-apple-borderSoft/60 text-left min-h-[220px] flex flex-col justify-between" id="territory-display-panel">
+                            <!-- Dynamic Content -->
+                        </div>
+                    </div>
+
+                    <div class="mt-20 flex justify-center">
+                        <button onclick="goToNext('symptoms')" class="bg-red-500 text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-90 active:scale-95 transition-all shadow-md flex items-center gap-3">
+                            <span data-i18n="btn_to_diag">Continue to Diagnostics</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: SYMPTOMS & DIAGNOSTICS -->
+        <section id="symptoms" class="tab-content">
+            <div class="bg-[rgba(5,5,8,0.98)] py-20 text-apple-white border-b border-apple-borderSoft/10">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="inline-block text-xs font-bold text-red-400 uppercase tracking-wider mb-2 font-mono" data-i18n="diag_badge">Emergent Recognition</span>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-6" data-i18n="diag_title">Immediate Symptom Assessment</h2>
+                        <p class="text-[17px] text-apple-graySecondary leading-relaxed" data-i18n="diag_desc">
+                            Immediate identification of typical STEMI signs guarantees prompt dispatch. Use the interactive C.H.E.S.T. cards below to review diagnostic checks. Hover or tap each letter.
+                        </p>
+                    </div>
+                    
+                    <!-- INTERACTIVE C.H.E.S.T. FLIP CARDS -->
+                    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 max-w-6xl mx-auto">
+                        <div class="fast-card" onclick="this.classList.toggle('flipped')">
+                            <div class="fast-card-inner">
+                                <div class="fast-card-front"><span class="text-5xl font-bold font-display">C</span><span class="text-xs font-semibold mt-2" data-i18n="befast_b">Chest Pain</span></div>
+                                <div class="fast-card-back"><span class="text-[11px] leading-normal font-normal" data-i18n="befast_b_desc">Crushing, pressure-like substernal discomfort radiating to left arm, neck, or jaw.</span></div>
+                            </div>
+                        </div>
+                        <div class="fast-card" onclick="this.classList.toggle('flipped')">
+                            <div class="fast-card-inner">
+                                <div class="fast-card-front"><span class="text-5xl font-bold font-display">H</span><span class="text-xs font-semibold mt-2" data-i18n="befast_e">Hyperhidrosis</span></div>
+                                <div class="fast-card-back"><span class="text-[11px] leading-normal font-normal" data-i18n="befast_e_desc">Sudden cold sweats, diaphoresis paired with nausea and severe anxiety.</span></div>
+                            </div>
+                        </div>
+                        <div class="fast-card" onclick="this.classList.toggle('flipped')">
+                            <div class="fast-card-inner">
+                                <div class="fast-card-front"><span class="text-5xl font-bold font-display">E</span><span class="text-xs font-semibold mt-2" data-i18n="befast_f">ECG Changes</span></div>
+                                <div class="fast-card-back"><span class="text-[11px] leading-normal font-normal" data-i18n="befast_f_desc">ST elevations >= 1mm in 2 contiguous leads, or new LBBB. Diagnostic criteria.</span></div>
+                            </div>
+                        </div>
+                        <div class="fast-card" onclick="this.classList.toggle('flipped')">
+                            <div class="fast-card-inner">
+                                <div class="fast-card-front"><span class="text-5xl font-bold font-display">S</span><span class="text-xs font-semibold mt-2" data-i18n="befast_a">Short of Breath</span></div>
+                                <div class="fast-card-back"><span class="text-[11px] leading-normal font-normal" data-i18n="befast_a_desc">Sudden dyspnea, orthopnea, secondary to acute LV backpressure.</span></div>
+                            </div>
+                        </div>
+                        <div class="fast-card" onclick="this.classList.toggle('flipped')">
+                            <div class="fast-card-inner">
+                                <div class="fast-card-front"><span class="text-5xl font-bold font-display">T</span><span class="text-xs font-semibold mt-2" data-i18n="befast_s">Time to Act</span></div>
+                                <div class="fast-card-back"><span class="text-[11px] leading-normal font-normal" data-i18n="befast_s_desc">Activate STEMI alert, chew 324mg non-enteric Aspirin. Get to Cath Lab.</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INTERACTIVE KILLIP CALCULATOR -->
+            <div class="bg-apple-white py-24 border-t border-apple-borderSoft">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+                        
+                        <!-- LEFT TEXT -->
+                        <div class="lg:col-span-5">
+                            <span class="inline-block text-xs font-bold text-red-500 uppercase tracking-wider mb-2 font-mono" data-i18n="nihss_badge">Severity Scoring</span>
+                            <h2 class="font-display text-[32px] sm:text-[40px] font-extrabold tracking-tight mb-6 leading-tight text-apple-ink" data-i18n="nihss_title">Interactive Killip Score Calculator</h2>
+                            <p class="text-body text-apple-graySecondary mb-8 leading-relaxed" data-i18n="nihss_desc">
+                                Select patient parameters using the clinical checklist on the right. Our system will dynamically calculate the Killip Class, project mortality risk, and recommend emergent acute cardiology interventions.
+                            </p>
+                            
+                            <!-- COMPUTED VALUE CARD (APPLE STYLING) -->
+                            <div class="bg-apple-grayPale p-6 rounded-[24px] border border-apple-borderSoft/60 text-left">
+                                <span class="text-[10px] font-mono text-apple-graySecondary block uppercase tracking-widest font-bold" data-i18n="nihss_calc_lbl">Computed Killip Classification</span>
+                                <div class="flex items-baseline space-x-3 mt-1">
+                                    <span class="text-5xl font-extrabold text-apple-ink tracking-tighter" id="killip-class-display">Class I</span>
+                                </div>
+                                
+                                <div class="border-t border-apple-borderSoft/60 pt-4 mt-4">
+                                    <div id="killip-severity-badge" class="killip-badge inline-block px-4 py-1.5 rounded-full text-xs font-bold bg-green-500/10 text-green-600">No Congestive Failure</div>
+                                    <div class="mt-4 text-xs font-semibold text-apple-ink" data-i18n="nihss_rec_title">Emergent Clinical Actions:</div>
+                                    <p class="text-xs text-apple-graySecondary leading-relaxed mt-2" id="killip-recommendation-text">No heart failure detected. Proceed immediately to primary coronary angiography and PCI within 90 minutes. Load standard DAPT.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT SURVEY FORM -->
+                        <div class="lg:col-span-7 bg-apple-white card-border p-8 md:p-10 shadow-sm border border-apple-borderSoft/80">
+                            <h3 class="font-display font-bold text-lg text-apple-ink mb-6 pb-4 border-b border-apple-borderSoft" data-i18n="nihss_form_title">Acute Clinical Findings</h3>
+                            
+                            <form class="space-y-6 text-left" onchange="calculateKillip()">
+                                <div>
+                                    <label class="block text-xs font-bold text-apple-ink uppercase tracking-wider mb-2 font-mono" data-i18n="nihss_q1">Pulmonary Rales (Lung Congestion)</label>
+                                    <select id="killip-rales" class="w-full bg-apple-grayPale border border-apple-borderSoft rounded-xl p-3 text-xs font-medium text-apple-ink focus:outline-none focus:border-red-500 transition-colors">
+                                        <option value="0" data-i18n="nihss_q1_o0">0 - Absent; completely clear lung fields</option>
+                                        <option value="2" data-i18n="nihss_q1_o1">2 - Mild; basilar rales over &lt;50% of lung fields</option>
+                                        <option value="6" data-i18n="nihss_q1_o2">6 - Widespread; crackles over &gt;50% of lung fields</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-apple-ink uppercase tracking-wider mb-2 font-mono" data-i18n="nihss_q2">Third Heart Sound (S3 Gallop)</label>
+                                    <select id="killip-s3" class="w-full bg-apple-grayPale border border-apple-borderSoft rounded-xl p-3 text-xs font-medium text-apple-ink focus:outline-none focus:border-red-500 transition-colors">
+                                        <option value="0" data-i18n="nihss_q2_o0">0 - Absent; normal S1 and S2 heart sounds</option>
+                                        <option value="3" data-i18n="nihss_q2_o1">3 - Present; soft low-pitched extra diastolic sound</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-apple-ink uppercase tracking-wider mb-2 font-mono" data-i18n="nihss_q3">Systolic Blood Pressure (SBP)</label>
+                                    <select id="killip-sbp" class="w-full bg-apple-grayPale border border-apple-borderSoft rounded-xl p-3 text-xs font-medium text-apple-ink focus:outline-none focus:border-red-500 transition-colors">
+                                        <option value="0" data-i18n="nihss_q3_o0">0 - Normal (SBP &gt; 100 mmHg)</option>
+                                        <option value="2" data-i18n="nihss_q3_o1">2 - Borderline (SBP 90 - 100 mmHg)</option>
+                                        <option value="8" data-i18n="nihss_q3_o2">8 - Severe Hypotension (SBP &lt; 90 mmHg)</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-apple-ink uppercase tracking-wider mb-2 font-mono" data-i18n="nihss_q4">Jugular Venous Distension (JVD)</label>
+                                    <select id="killip-jvd" class="w-full bg-apple-grayPale border border-apple-borderSoft rounded-xl p-3 text-xs font-medium text-apple-ink focus:outline-none focus:border-red-500 transition-colors">
+                                        <option value="0" data-i18n="nihss_q4_o0">0 - Absent; normal jugular venous pulsations</option>
+                                        <option value="2" data-i18n="nihss_q4_o1">2 - Present; elevated central venous pressure</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-apple-ink uppercase tracking-wider mb-2 font-mono" data-i18n="nihss_q5">Tissue End-Organ Perfusion</label>
+                                    <select id="killip-perfusion" class="w-full bg-apple-grayPale border border-apple-borderSoft rounded-xl p-3 text-xs font-medium text-apple-ink focus:outline-none focus:border-red-500 transition-colors">
+                                        <option value="0" data-i18n="nihss_q5_o0">0 - Normal; warm skin, normal urine output</option>
+                                        <option value="4" data-i18n="nihss_q5_o1">4 - Impaired; cold/clammy skin, cyanosis, or oliguria</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DTN TIMELINE -->
+            <div class="bg-apple-grayPale py-24 border-t border-apple-borderSoft/60">
+                <div class="max-w-5xl mx-auto px-6 reveal">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="inline-block text-xs font-bold text-red-500 uppercase tracking-wider mb-2 font-mono" data-i18n="dtn_badge">Door-to-Balloon Benchmark</span>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-4 text-apple-ink" data-i18n="dtn_title">Emergent Reperfusion Timeline</h2>
+                        <p class="text-[17px] text-apple-graySecondary leading-relaxed" data-i18n="dtn_desc">Target benchmarks for acute STEMI mechanical reperfusion. The primary PCI clock starts immediately upon First Medical Contact (FMC).</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+                        <div class="bg-apple-white card-border p-6 shadow-sm border border-apple-borderSoft/40 hover:shadow-md transition-all duration-300">
+                            <span class="w-6 h-6 rounded-full bg-red-500 text-white font-mono text-[10px] font-bold flex items-center justify-center mb-4">1</span>
+                            <h4 class="font-display font-bold text-sm text-apple-ink mb-2" data-i18n="dtn1_lbl">FMC &amp; 12-lead ECG (&le; 10 min)</h4>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed" data-i18n="dtn1_desc">Perform clinical assessment, obtain 12-lead ECG. Identify ST elevations, load Aspirin 324mg chewable.</p>
+                        </div>
+                        <div class="bg-apple-white card-border p-6 shadow-sm border border-apple-borderSoft/40 hover:shadow-md transition-all duration-300">
+                            <span class="w-6 h-6 rounded-full bg-red-500 text-white font-mono text-[10px] font-bold flex items-center justify-center mb-4">2</span>
+                            <h4 class="font-display font-bold text-sm text-apple-ink mb-2" data-i18n="dtn2_lbl">STEMI Alert Activation</h4>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed" data-i18n="dtn2_desc">Immediately activate the emergency interventional cardiology team and prepare catheterization lab.</p>
+                        </div>
+                        <div class="bg-apple-white card-border p-6 shadow-sm border border-apple-borderSoft/40 hover:shadow-md transition-all duration-300">
+                            <span class="w-6 h-6 rounded-full bg-red-500 text-white font-mono text-[10px] font-bold flex items-center justify-center mb-4">3</span>
+                            <h4 class="font-display font-bold text-sm text-apple-ink mb-2" data-i18n="dtn3_lbl">ED Transit &amp; DAPT Load (&le; 30 min)</h4>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed" data-i18n="dtn3_desc">Transit patient directly. Load P2Y12 inhibitor (Ticagrelor 180mg or Clopidogrel 600mg) and IV Unfractionated Heparin.</p>
+                        </div>
+                        <div class="bg-apple-white card-border p-6 shadow-sm border border-apple-borderSoft/40 hover:shadow-md transition-all duration-300 mt-2">
+                            <span class="w-6 h-6 rounded-full bg-red-500 text-white font-mono text-[10px] font-bold flex items-center justify-center mb-4">4</span>
+                            <h4 class="font-display font-bold text-sm text-apple-ink mb-2" data-i18n="dtn4_lbl">Cath Lab Arrival (&le; 60 min)</h4>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed" data-i18n="dtn4_desc">Direct transport to angiography table. Establish arterial access (radial artery preferred over femoral).</p>
+                        </div>
+                        <div class="bg-apple-white card-border p-6 shadow-sm border border-apple-borderSoft/40 hover:shadow-md transition-all duration-300 mt-2">
+                            <span class="w-6 h-6 rounded-full bg-red-500 text-white font-mono text-[10px] font-bold flex items-center justify-center mb-4">5</span>
+                            <h4 class="font-display font-bold text-sm text-apple-ink mb-2" data-i18n="dtn5_lbl">Wire Crossing (&le; 90 min)</h4>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed" data-i18n="dtn5_desc">Cross blocked segment with angioplasty guide wire. Re-establishes basic micro-vascular perfusion.</p>
+                        </div>
+                        <div class="bg-apple-white card-border p-6 shadow-sm border border-apple-borderSoft/40 hover:shadow-md transition-all duration-300 mt-2">
+                            <span class="w-6 h-6 rounded-full bg-red-500 text-white font-mono text-[10px] font-bold flex items-center justify-center mb-4">6</span>
+                            <h4 class="font-display font-bold text-sm text-apple-ink mb-2" data-i18n="dtn6_lbl">Balloon &amp; Stent Deployment</h4>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed" data-i18n="dtn6_desc">Balloon angioplasty and Drug-Eluting Stent (DES) deployment to restore optimal TIMI-3 coronary flow.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-20 flex justify-center">
+                        <button onclick="goToNext('treatment')" class="bg-apple-ink text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-90 active:scale-95 transition-all shadow-md flex items-center gap-3">
+                            <span data-i18n="btn_to_treat">Continue to Treatment</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: TREATMENT -->
+        <section id="treatment" class="tab-content">
+            <div class="bg-apple-white py-20 border-b border-apple-borderSoft/40">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="inline-block text-xs font-bold text-red-500 uppercase tracking-wider mb-2 font-mono" data-i18n="rx_is_badge">Primary Reperfusion</span>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-6" data-i18n="rx_is_title">Reperfusion Interventions</h2>
+                        <p class="text-[17px] text-apple-graySecondary leading-relaxed" data-i18n="rx_is_desc">
+                            Standard clinical guidelines dictate reperfusion strategy based on time to PCI and geographical limits.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch max-w-6xl mx-auto">
+                        <!-- PCI Card -->
+                        <div class="bg-apple-grayPale card-border p-8 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <span class="inline-block bg-red-500/10 text-red-500 text-[10px] font-bold font-mono px-3.5 py-1.5 rounded-full mb-6 uppercase" data-i18n="rx_is1_badge">Window: &le; 90 - 120 Minutes</span>
+                                <h3 class="font-display font-bold text-2xl text-apple-ink mb-4" data-i18n="rx_is1_title">Primary PCI (Percutaneous Coronary Intervention)</h3>
+                                <p class="text-sm text-apple-graySecondary leading-relaxed mb-6" data-i18n="rx_is1_desc">
+                                    Preferred gold-standard. Catheterization lab mechanical reperfusion within 90 minutes of FMC (or 120 min if transfer required). Involves diagnostic coronary angiogram, balloon dilation, and Drug-Eluting Stent (DES) insertion.
+                                </p>
+                            </div>
+                            <div class="border-t border-apple-borderSoft pt-6">
+                                <h4 class="font-display font-bold text-xs text-apple-ink mb-2">Procedural Best Practices:</h4>
+                                <ul class="space-y-2 text-xs text-apple-graySecondary leading-relaxed">
+                                    <li class="flex items-start gap-2"><span class="text-red-500 font-bold">✓</span> <span>Radial artery access associated with significantly lower access-site bleeding.</span></li>
+                                    <li class="flex items-start gap-2"><span class="text-red-500 font-bold">✓</span> <span>Intracoronary thrombus aspiration considered for extremely heavy thrombus burdens.</span></li>
+                                    <li class="flex items-start gap-2"><span class="text-red-500 font-bold">✓</span> <span>Dual antiplatelet loading (chewable Aspirin + Ticagrelor or Prasugrel) immediately.</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Fibrinolysis Card -->
+                        <div class="bg-apple-white card-border p-8 shadow-sm flex flex-col justify-between border border-apple-borderSoft/80">
+                            <div>
+                                <span class="inline-block bg-[#ef444410] text-red-500 text-[10px] font-bold font-mono px-3.5 py-1.5 rounded-full mb-6 uppercase" data-i18n="rx_is2_badge">Window: &le; 30 Minutes (Door-to-Needle)</span>
+                                <h3 class="font-display font-bold text-2xl text-apple-ink mb-4" data-i18n="rx_is2_title">Emergent Fibrinolysis</h3>
+                                <p class="text-sm text-apple-graySecondary leading-relaxed mb-6" data-i18n="rx_is2_desc">
+                                    Indicated ONLY when PCI cannot be physically performed within 120 minutes of FMC. Dissolves fibrin clot using weight-based Tenecteplase (TNK-tPA) as single IV bolus. Must transfer for routine rescue PCI within 24h.
+                                </p>
+                            </div>
+                            
+                            <div class="border-t border-apple-borderSoft pt-6">
+                                <strong class="text-xs font-bold text-apple-ink block uppercase tracking-wider mb-2" data-i18n="mt_criteria_title">Weight-Based TNK-tPA Dosing:</strong>
+                                <table class="w-full text-left text-xs text-apple-graySecondary leading-relaxed">
+                                    <thead>
+                                        <tr class="border-b border-apple-borderSoft text-apple-ink">
+                                            <th class="py-1">Patient Weight</th>
+                                            <th class="py-1">TNK Dose</th>
+                                            <th class="py-1">Bolus Vol.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-apple-borderSoft/40">
+                                            <td class="py-1">&lt; 60 kg</td>
+                                            <td class="py-1 font-bold text-apple-ink">30 mg</td>
+                                            <td class="py-1">6 mL</td>
+                                        </tr>
+                                        <tr class="border-b border-apple-borderSoft/40">
+                                            <td class="py-1">60 to &lt; 70 kg</td>
+                                            <td class="py-1 font-bold text-apple-ink">35 mg</td>
+                                            <td class="py-1">7 mL</td>
+                                        </tr>
+                                        <tr class="border-b border-apple-borderSoft/40">
+                                            <td class="py-1">70 to &lt; 80 kg</td>
+                                            <td class="py-1 font-bold text-apple-ink">40 mg</td>
+                                            <td class="py-1">8 mL</td>
+                                        </tr>
+                                        <tr class="border-b border-apple-borderSoft/40">
+                                            <td class="py-1">80 to &lt; 90 kg</td>
+                                            <td class="py-1 font-bold text-apple-ink">45 mg</td>
+                                            <td class="py-1">9 mL</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-1">&ge; 90 kg</td>
+                                            <td class="py-1 font-bold text-apple-ink">50 mg</td>
+                                            <td class="py-1">10 mL</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- THROMBOLYSIS CONTRAINDICATIONS ACCORDION -->
+                    <div class="bg-apple-white card-border p-8 shadow-sm border border-apple-borderSoft/80 max-w-6xl mx-auto mt-8">
+                        <h3 class="font-display font-bold text-xl text-apple-ink mb-6 border-b border-apple-borderSoft pb-4" data-i18n="contra_title">Fibrinolysis Contraindications Checklist</h3>
+                        <div class="space-y-4">
+                            <div class="border-b border-apple-borderSoft/60 pb-4">
+                                <button onclick="toggleAccordion('contra-abs')" class="w-full flex justify-between items-center text-left focus:outline-none">
+                                    <span class="font-display font-bold text-sm text-red-500" data-i18n="contra_abs_title">Absolute Contraindications (Fibrinolysis Forbidden)</span>
+                                    <span id="icon-contra-abs" class="text-apple-ink text-sm">＋</span>
+                                </button>
+                                <div id="panel-contra-abs" class="hidden mt-4 pl-4 text-xs text-apple-graySecondary space-y-2 leading-relaxed">
+                                    <p>• <span class="font-semibold text-apple-ink" data-i18n="c_abs1">Prior hemorrhagic stroke</span> or stroke of unknown etiology at any time.</p>
+                                    <p>• <span class="font-semibold text-apple-ink" data-i18n="c_abs2">Ischemic stroke</span> within the preceding 3 months.</p>
+                                    <p>• <span class="font-semibold text-apple-ink" data-i18n="c_abs3">Active internal bleeding</span> (excluding menses) or bleeding diathesis.</p>
+                                    <p>• <span class="font-semibold text-apple-ink" data-i18n="c_abs4">Suspected aortic dissection</span> or active pericarditis.</p>
+                                    <p>• <span class="font-semibold text-apple-ink" data-i18n="c_abs5">Intracranial neoplasm</span>, structural cerebral vascular lesion (AVM, aneurysm).</p>
+                                    <p>• <span class="font-semibold text-apple-ink">Significant closed-head</span> or facial trauma within preceding 3 months.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button onclick="toggleAccordion('contra-rel')" class="w-full flex justify-between items-center text-left focus:outline-none">
+                                    <span class="font-display font-bold text-sm text-yellow-600" data-i18n="contra_rel_title">Relative Contraindications (Benefit-Risk evaluated)</span>
+                                    <span id="icon-contra-rel" class="text-apple-ink text-sm">＋</span>
+                                </button>
+                                <div id="panel-contra-rel" class="hidden mt-4 pl-4 text-xs text-apple-graySecondary space-y-2 leading-relaxed">
+                                    <p>• <span class="font-semibold text-apple-ink" data-i18n="c_rel1">Severe, poorly controlled hypertension</span> (SBP &gt; 180 or DBP &gt; 110 mmHg on presentation).</p>
+                                    <p>• <span class="font-semibold text-apple-ink" data-i18n="c_rel2">Pregnancy</span> or active therapeutic oral anticoagulant use (INR &gt; 2.0).</p>
+                                    <p>• <span class="font-semibold text-apple-ink" data-i18n="c_rel3">Major surgery</span> or serious traumatic injury within the preceding 3 weeks.</p>
+                                    <p>• <span class="font-semibold text-apple-ink" data-i18n="c_rel4">Active peptic ulcer</span> or recent internal bleeding within 2-4 weeks.</p>
+                                    <p>• <span class="font-semibold text-apple-ink" data-i18n="c_rel5">Traumatic or prolonged resuscitation</span> (&gt; 10 minutes) or noncompressible vascular punctures.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MONA-BASH Protocol Chapter -->
+            <div class="bg-apple-white py-20 border-t border-apple-borderSoft">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="inline-block text-xs font-bold text-red-500 uppercase tracking-wider mb-2 font-mono" data-i18n="rx_hem_badge">Medical Management</span>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-4" data-i18n="rx_hem_title">Emergency MONA-BASH Protocol</h2>
+                        <p class="text-[17px] text-apple-graySecondary leading-relaxed" data-i18n="rx_hem_desc">
+                            Guideline-directed medical therapy initiated in parallel with mechanical coronary reperfusion. Note critical hemodynamic safety limits.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                        <div class="card-border p-6 hover:-translate-y-1 transition-all duration-300 bg-apple-grayPale">
+                            <span class="text-xl font-bold font-mono text-red-500 mb-2 block">M</span>
+                            <h3 class="font-display font-bold text-base mb-2 text-apple-ink" data-i18n="hem_m1_title">Morphine</h3>
+                            <p class="text-[12px] text-apple-graySecondary leading-relaxed" data-i18n="hem_m1_desc">Indicated for severe refractory ischemic chest pain. Induces venodilation, lowering preload. **WARNING**: Avoid in RV/inferior STEMI due to profound hypotension risk.</p>
+                        </div>
+                        <div class="card-border p-6 hover:-translate-y-1 transition-all duration-300 bg-apple-grayPale">
+                            <span class="text-xl font-bold font-mono text-red-500 mb-2 block">O</span>
+                            <h3 class="font-display font-bold text-base mb-2 text-apple-ink" data-i18n="hem_m2_title">Oxygen</h3>
+                            <p class="text-[12px] text-apple-graySecondary leading-relaxed" data-i18n="hem_m2_desc">Administered only if oxygen saturation ($SaO_2$) falls below 90% or patient exhibits severe respiratory distress. Routine oxygen in normoxic patients triggers coronary vasoconstriction.</p>
+                        </div>
+                        <div class="card-border p-6 hover:-translate-y-1 transition-all duration-300 bg-apple-grayPale">
+                            <span class="text-xl font-bold font-mono text-red-500 mb-2 block">N</span>
+                            <h3 class="font-display font-bold text-base mb-2 text-apple-ink" data-i18n="hem_m3_title">Nitroglycerin</h3>
+                            <p class="text-[12px] text-apple-graySecondary leading-relaxed" data-i18n="hem_m3_desc">Sublingual or IV. Induces venodilation to reduce LV preload and wall stress. **CRITICAL**: CONTRAINDICATED in right ventricular (inferior) infarction or if PDE-5 inhibitors used recently.</p>
+                        </div>
+                        <div class="card-border p-6 hover:-translate-y-1 transition-all duration-300 bg-apple-grayPale">
+                            <span class="text-xl font-bold font-mono text-red-500 mb-2 block">A</span>
+                            <h3 class="font-display font-bold text-base mb-2 text-apple-ink">Aspirin</h3>
+                            <p class="text-[12px] text-apple-graySecondary leading-relaxed">Chewable, non-enteric coated 162-325mg immediately. Irreversibly acetylates COX-1 to block thromboxane A2 aggregation. Crucial mortality reduction.</p>
+                        </div>
+                    </div>
+
+                    <!-- BASH PART -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto mt-6">
+                        <div class="card-border p-6 hover:-translate-y-1 transition-all duration-300 bg-apple-grayPale">
+                            <span class="text-xl font-bold font-mono text-apple-ink mb-2 block">B</span>
+                            <h3 class="font-display font-bold text-base mb-2 text-apple-ink">Beta-blockers</h3>
+                            <p class="text-[12px] text-apple-graySecondary leading-relaxed">Oral beta-blockers (e.g. metoprolol) started within 24h. Lower heart rate and contractility, reducing myocardial oxygen demand. Avoid in cardiogenic shock (Killip Class IV).</p>
+                        </div>
+                        <div class="card-border p-6 hover:-translate-y-1 transition-all duration-300 bg-apple-grayPale">
+                            <span class="text-xl font-bold font-mono text-apple-ink mb-2 block">A</span>
+                            <h3 class="font-display font-bold text-base mb-2 text-apple-ink">ACEi / ARNI</h3>
+                            <p class="text-[12px] text-apple-graySecondary leading-relaxed">Oral ACE inhibitors (e.g. lisinopril) or ARNI (Sacubitril-Valsartan) started within 24h. Halts deleterious chronic ventricular remodeling, preserving ejection fraction.</p>
+                        </div>
+                        <div class="card-border p-6 hover:-translate-y-1 transition-all duration-300 bg-apple-grayPale">
+                            <span class="text-xl font-bold font-mono text-apple-ink mb-2 block">S</span>
+                            <h3 class="font-display font-bold text-base mb-2 text-apple-ink">Statin Therapy</h3>
+                            <p class="text-[12px] text-apple-graySecondary leading-relaxed">Immediate high-intensity statin (Atorvastatin 80mg or Rosuvastatin 40mg). Plaque-stabilizing, anti-inflammatory pleiotropic effects, lowering LDL target &lt; 55 mg/dL.</p>
+                        </div>
+                        <div class="card-border p-6 hover:-translate-y-1 transition-all duration-300 bg-apple-grayPale">
+                            <span class="text-xl font-bold font-mono text-apple-ink mb-2 block">H</span>
+                            <h3 class="font-display font-bold text-base mb-2 text-apple-ink">Heparinization</h3>
+                            <p class="text-[12px] text-apple-graySecondary leading-relaxed">Anticoagulation using Unfractionated Heparin (UFH) or Enoxaparin. Prevents thrombus propagation and maintains coronary patency during coronary intervention.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Novel Treatments Chapter -->
+            <div class="bg-[rgba(5,5,8,0.98)] py-20 text-apple-white border-t border-apple-graphiteA">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <h2 class="font-display text-3xl font-extrabold mb-8 text-white" data-i18n="rx_novel_title">Investigational &amp; Cardioprotective Therapies</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
+                        <div class="bg-apple-graphiteA p-8 rounded-[24px] border border-white/5 text-left">
+                            <h3 class="font-display font-bold text-base mb-2 text-apple-white" data-i18n="novel1_title">Intracoronary Stem Cell Therapies</h3>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed" data-i18n="novel1_desc">Direct infusion of autologous bone marrow-derived mononuclear cells into the infracted coronary artery post-PCI, promoting local angiogenesis and long-term myocardial regeneration.</p>
+                        </div>
+                        <div class="bg-apple-graphiteA p-8 rounded-[24px] border border-white/5 text-left">
+                            <h3 class="font-display font-bold text-base mb-2 text-apple-white" data-i18n="novel2_title">Targeted Hypothermia in Reperfusion Injury</h3>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed" data-i18n="novel2_desc">Focal therapeutic endovascular cooling of the LV prior to coronary balloon inflation to reduce micro-vascular damage and reperfusion-induced oxygen free radical spikes.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-20 flex justify-center">
+                        <button onclick="goToNext('rehab')" class="bg-red-500 text-apple-white px-8 py-4 rounded-full font-semibold hover:bg-red-600 active:scale-95 transition-all shadow-lg flex items-center gap-3">
+                            <span data-i18n="btn_to_rehab">Continue to Rehabilitation</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: REHABILITATION -->
+        <section id="rehab" class="tab-content">
+            <div class="bg-apple-grayPale py-20">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="inline-block text-xs font-bold text-red-500 uppercase tracking-wider mb-2 font-mono" data-i18n="rehab_badge">Myocardial Recovery</span>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-6 text-apple-ink" data-i18n="rehab_title">The Pathway to Cardiac Rehabilitation</h2>
+                        <p class="text-[17px] text-apple-graySecondary leading-relaxed" data-i18n="rehab_desc">
+                            Structured cardiac recovery is crucial to preserve left ventricular ejection fraction and prevent recurrent ischemic events. Use the deficit matrix below to explore recovery guidelines.
+                        </p>
+                    </div>
+                    
+                    <!-- TARGETED REHAB MATRIX -->
+                    <div class="bg-apple-white card-border p-8 md:p-12 shadow-sm border border-apple-borderSoft/80 max-w-6xl mx-auto">
+                        <div class="text-center max-w-xl mx-auto mb-8">
+                            <h3 class="font-display font-bold text-xl text-apple-ink mb-2" data-i18n="matrix_title">Therapeutic Recovery Matrix</h3>
+                            <p class="text-xs text-apple-graySecondary" data-i18n="matrix_desc">Select a specific cardiac recovery target below to view standard guidelines, cellular mechanisms, and risk modifiers.</p>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 justify-center mb-8 border-b border-apple-borderSoft/60 pb-6">
+                            <button onclick="selectRehab('aerobic')" id="btn-r-aerobic" class="territory-pill px-5 py-2 text-xs font-semibold rounded-full border border-apple-borderSoft bg-apple-grayPale text-apple-ink active">Aerobic Conditioning</button>
+                            <button onclick="selectRehab('dapt')" id="btn-r-dapt" class="territory-pill px-5 py-2 text-xs font-semibold rounded-full border border-apple-borderSoft bg-apple-grayPale text-apple-ink">Stent &amp; DAPT Compliance</button>
+                            <button onclick="selectRehab('remod')" id="btn-r-remod" class="territory-pill px-5 py-2 text-xs font-semibold rounded-full border border-apple-borderSoft bg-apple-grayPale text-apple-ink">Remodeling Prevention</button>
+                            <button onclick="selectRehab('lipids')" id="btn-r-lipids" class="territory-pill px-5 py-2 text-xs font-semibold rounded-full border border-apple-borderSoft bg-apple-grayPale text-apple-ink">Lipid &amp; Risk Control</button>
+                        </div>
+                        
+                        <div class="bg-apple-grayPale rounded-[24px] p-8 border border-apple-borderSoft/60 text-left min-h-[220px] flex flex-col justify-between" id="rehab-display-panel">
+                            <!-- Dynamic Content -->
+                        </div>
+                    </div>
+
+                    <!-- NEXT GEN TECH -->
+                    <div class="bg-apple-white card-border p-8 md:p-12 shadow-sm mt-8 border border-apple-borderSoft/80 flex flex-col lg:flex-row gap-8 items-center reveal max-w-6xl mx-auto">
+                        <div class="flex-1 text-left">
+                            <span class="text-red-500 font-semibold text-xs uppercase tracking-wider mb-2 block font-mono" data-i18n="tech_badge">Breakthrough Technologies</span>
+                            <h3 class="font-display font-extrabold text-3xl mb-4 text-apple-ink" data-i18n="tech_title">Wearable Telemetry, VR Conditioning, &amp; AI Arrhythmia Screening</h3>
+                            <p class="text-sm text-apple-graySecondary leading-relaxed" data-i18n="tech_desc">
+                                Modern cardiac rehabilitation leverages wearable biosensors and continuous telemetry to safely monitor myocardial responses. Patients engage in structured exercise under virtual telemetry supervision, while home-based Virtual Reality conditioning games encourage cardiovascular endurance. Concurrently, AI-powered implantable loop recorders and watch-based ECG devices screen for late ventricular arrhythmias or atrial fibrillation, mitigating sudden cardiac death risk.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-20 flex justify-center">
+                        <button onclick="goToNext('intro')" class="bg-apple-ink text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-85 active:scale-95 transition-all shadow-md flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                            <span data-i18n="btn_to_start">Return to Beginning</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-apple-white py-16 border-t border-apple-borderSoft text-center">
+        <div class="max-w-7xl mx-auto px-6 reveal">
+            <p class="text-xs text-apple-graySecondary mb-2 font-medium"><span data-i18n="footer_s1">Clinical guidelines and trial data sourced from ACC/AHA STEMI Guidelines.</span></p>
+            <p class="text-xs text-apple-graySecondary mb-4"><span data-i18n="footer_s2">For educational and training use only. Do not substitute professional clinical evaluation.</span></p>
+            <div class="border-t border-apple-borderSoft/60 pt-8 mt-8">
+                <p class="text-xs text-apple-graySecondary">&copy; 2026 MedGuide by LoLyeah. All rights reserved. | <a href="/index.html" class="text-apple-blue hover:text-apple-blueLink font-medium">Home</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Language Database
+        const chartTranslations = {
+            en: {
+                acsTypes: ['STEMI', 'NSTEMI / UA'],
+                prevention: [['DAPT', '(Antiplatelet)'], ['High-intensity', 'Statin'], ['Beta-blocker', 'Therapy'], ['ACEi / ARNI', 'Therapy'], ['Smoking', 'Cessation'], ['Aerobic', 'Reconditioning']],
+                impactLabel: 'Recurrence Risk Reduction (%)'
+            },
+            id: {
+                acsTypes: ['STEMI', 'NSTEMI / UA'],
+                prevention: [['DAPT', '(Antitrombosit)'], ['Statin Dosis', 'Tinggi'], ['Terapi', 'Beta-blocker'], ['Terapi', 'ACEi / ARNI'], ['Berhenti', 'Merokok'], ['Rekondisi', 'Aerobik']],
+                impactLabel: 'Penurunan Risiko Kambuh (%)'
+            }
+        };
+
+        const T = {
+            en: {
+                hero_badge: "TACTICAL CLINICAL INTELLIGENCE — EMERGENCY CARDIOLOGY ALERT",
+                hero_title: "STEMI.",
+                hero_sub: "Understanding the Heart Attack.",
+                hero_desc: "A high-fidelity clinical exploration covering cellular myocardial pathophysiology, emergency reperfusion timelines, coronary anatomy mapping, and primary angioplasty standards. Time is muscle.",
+                nav_intro: "Introduction",
+                nav_patho: "Pathophysiology",
+                nav_etiology: "Etiology & Territories",
+                nav_diagnostics: "Diagnostics",
+                nav_treatment: "Treatment",
+                nav_rehab: "Rehabilitation",
+                
+                intro_title: "What is STEMI?",
+                intro_desc1: "ST-Elevation Myocardial Infarction (STEMI) is a critical cardiac emergency characterized by the sudden, total occlusion of a major coronary artery. This sudden disruption of blood supply deprives myocardial cells of oxygen, triggering rapid, transmural ischemia that evolves into irreversible muscular necrosis within hours.",
+                intro_desc2: "Immediate reperfusion therapy is mandatory to prevent massive, permanent myocardial loss. Percutaneous Coronary Intervention (PCI) inside a catheterization lab represents the gold-standard pathway, physically restoring arterial patency and dramatically shifting patient survival metrics.",
+                severity_title: "Killip Classification & Clinical Severity",
+                sev_minor_lbl: "No Heart Failure",
+                sev_minor_desc: "No clinical signs of pulmonary congestion or S3 gallop. Predicts ~6% mortality.",
+                sev_mod_lbl: "Mild-Moderate HF",
+                sev_mod_desc: "Basilar rales, S3 gallop, or jugular venous distention. Predicts ~17% mortality.",
+                sev_modsev_lbl: "Pulmonary Edema",
+                sev_modsev_desc: "Frank pulmonary congestion; widespread rales over >50% of lung fields. Predicts ~38% mortality.",
+                sev_sev_lbl: "Cardiogenic Shock",
+                sev_sev_desc: "Severe hypotension (SBP &lt; 90) paired with clinical signs of low peripheral perfusion. Predicts &gt;70% mortality.",
+                ratio_title: "Global Acute Coronary Syndrome (ACS) Distribution",
+                type_stemi_title: "STEMI",
+                type_stemi_desc: "Complete coronary occlusion. Characterized by ST-segment elevations and severe transmural necrosis. Demands immediate physical reperfusion.",
+                type_nste_title: "NSTEMI / UA",
+                type_nste_desc: "Subtotal coronary occlusion. Characterized by ST-segment depressions, T-wave inversions, and elevated biomarkers (or none in Unstable Angina).",
+                impact_main_title: "The Critical Magnitude",
+                impact_main_sub: "Acute time benchmarks and clinical statistics illustrating why every second counts.",
+                card1_stat: "90 Minutes",
+                card1_desc: "Target door-to-balloon limit from hospital arrival to mechanical stent deployment. Salvages ischemic tissue.",
+                card2_stat: "40 Minutes",
+                card2_desc: "The time limit beyond which irreversible transmural myocardial necrosis spreads rapidly from subendocardium to epicardium.",
+                card3_stat: "30%",
+                card3_desc: "Relative mortality risk reduction achieved by proper primary angioplasty intervention compared to late fibrinolysis.",
+                btn_to_patho: "Continue to Pathophysiology",
+                
+                patho_badge: "Molecular Pathogenesis",
+                patho_title: "The Myocardial Ischemic Cascade",
+                patho_desc: "A rapid interruption of coronary perfusion triggers a devastating biochemical cascade. Click on each step of the explorer below to analyze the cellular mechanics in detail.",
+                cas_step1_title: "Plaque Rupture & Thrombosis",
+                cas_step1_sub: "Vascular occlusion begins with atheromatous plaque disruption.",
+                cas_step2_title: "Anaerobic Shift & ATP Loss",
+                cas_step2_sub: "Oxidative failure shifts metabolism to lactate.",
+                cas_step3_title: "Contractile Dysfunction",
+                cas_step3_sub: "Myofibril stasis causes wall motion abnormalities.",
+                cas_step4_title: "Necrosis & Sarcolemmal Rupture",
+                cas_step4_sub: "Irreversible cellular breakdown releases troponin.",
+                penumbra_badge: "Perfusion Boundaries",
+                penumbra_title: "Myocardial Infarct Core vs. Area at Risk",
+                penumbra_desc: "The spatial division of myocardial ischemia dictates emergency timing. Prompt recanalization aims exclusively to rescue the salvageable ischemic boundaries (Area at Risk) from expanding necrotic waves.",
+                core_card_title: "Infarct Core (Subendocardial Wavefront)",
+                core_card_desc: "Irreversible necrotic damage. Deprived of oxygen, intracellular ATP depletion halts membrane integrity within 20-30 minutes, initiating progressive necrosis from subendocardium outward.",
+                pen_card_title: "Area at Risk (Salvageable Myocardium)",
+                pen_card_desc: "Ischemic, poorly functioning myocardial margins supported by coronary collateral circulation. Highly viable if blood flow is restored inside the acute intervention window.",
+                penumbra_visual_label: "SALVAGEABLE MYOCARDIUM<br><span class=\"font-mono font-normal\">Ischemic / Hypoperfused</span>",
+                core_visual_label: "INFARCT CORE<br><span class=\"font-mono text-red-400 font-normal\">Necrotic wavefront</span>",
+                btn_to_etio: "Continue to Etiology & Territories",
+                
+                etio_badge: "ACS Mechanisms",
+                etio_title: "Etiology & Risk Profiles",
+                etio_desc: "Acute coronary syndromes are classified based on the nature of arterial disruption, dictating emergent antiplatelet loads, angiographic timelines, and long-term preventions.",
+                etio_is_title: "Myocardial Infarction Types",
+                toast1_title: "Type 1 MI: Spontaneous plaque rupture",
+                toast1_desc: "Atherothrombotic coronary artery disease. Plaque rupture or erosion triggers local platelet thrombus, causing acute occlusion.",
+                toast2_title: "Type 2 MI: Supply-Demand Mismatch",
+                toast2_desc: "Myocardial injury secondary to elevated demand or reduced supply. Triggers include profound anemia, severe tachycardia, hypoxemia, or coronary spasm.",
+                toast3_title: "Type 3 MI: Sudden cardiac death",
+                toast3_desc: "Cardiac death prior to blood biomarkers, typically with symptoms suggestive of myocardial ischemia and new ECG changes.",
+                toast4_title: "Type 4 & 5 MI: Procedure-related",
+                toast4_desc: "Infarction associated with Percutaneous Coronary Intervention (PCI) or Coronary Artery Bypass Grafting (CABG) surgery.",
+                etio_hem_title: "Risk Factors & Secondary Protection",
+                hem1_title: "Coronary Atherosclerosis Drivers",
+                hem1_desc: "Chronic dyslipidemia (elevated ApoB/LDL), arterial hypertension, diabetes mellitus, cigarette smoking, and genetic predispositions act as core atheroma accelerators.",
+                hem2_title: "Ventricular Remodeling Risk",
+                hem2_desc: "Extensive transmural necrosis triggers high local stress on the ventricular wall, causing thinning and mechanical expansion (negative remodeling), leading to chronic heart failure.",
+                prev_chart_title: "Secondary Prevention Impact",
+                prev_chart_sub: "Estimated relative reduction of recurrence risk achieved by guideline-directed medical therapies.",
+                map_title: "Coronary Territory & Deficit Explorer",
+                map_desc: "Select a specific coronary artery below to explore the exact anatomical territories and clinical deficits caused by acute occlusions.",
+                btn_to_diag: "Continue to Diagnostics",
+                
+                diag_badge: "Emergent Recognition",
+                diag_title: "Immediate Symptom Assessment",
+                diag_desc: "Immediate identification of typical STEMI signs guarantees prompt dispatch. Use the interactive C.H.E.S.T. cards below to review diagnostic checks. Hover or tap each letter.",
+                befast_b: "Chest Pain",
+                befast_b_desc: "Crushing, pressure-like substernal discomfort radiating to left arm, neck, or jaw.",
+                befast_e: "Hyperhidrosis",
+                befast_e_desc: "Sudden cold sweats, diaphoresis paired with nausea and severe anxiety.",
+                befast_f: "ECG Changes",
+                befast_f_desc: "ST elevations >= 1mm in 2 contiguous leads, or new LBBB. Diagnostic criteria.",
+                befast_a: "Short of Breath",
+                befast_a_desc: "Sudden dyspnea, orthopnea, secondary to acute LV backpressure.",
+                befast_s: "Time to Act",
+                befast_s_desc: "Activate STEMI alert, chew 324mg non-enteric Aspirin. Get to Cath Lab.",
+                nihss_badge: "Severity Scoring",
+                nihss_title: "Interactive Killip Score Calculator",
+                nihss_desc: "Select patient parameters using the clinical checklist on the right. Our system will dynamically calculate the Killip Class, project mortality risk, and recommend emergent acute cardiology interventions.",
+                nihss_calc_lbl: "Computed Killip Classification",
+                sev_none_badge: "No Congestive Failure",
+                nihss_rec_title: "Emergent Clinical Actions:",
+                nihss_rec_none: "No heart failure detected. Proceed immediately to primary coronary angiography and PCI within 90 minutes. Load standard DAPT.",
+                nihss_form_title: "Acute Clinical Findings",
+                nihss_q1: "Pulmonary Rales (Lung Congestion)",
+                nihss_q1_o0: "0 - Absent; completely clear lung fields",
+                nihss_q1_o1: "2 - Mild; basilar rales over &lt;50% of lung fields",
+                nihss_q1_o2: "6 - Widespread; crackles over &gt;50% of lung fields",
+                nihss_q2: "Third Heart Sound (S3 Gallop)",
+                nihss_q2_o0: "0 - Absent; normal S1 and S2 heart sounds",
+                nihss_q2_o1: "3 - Present; soft low-pitched extra diastolic sound",
+                nihss_q3: "Systolic Blood Pressure (SBP)",
+                nihss_q3_o0: "0 - Normal (SBP &gt; 100 mmHg)",
+                nihss_q3_o1: "2 - Borderline (SBP 90 - 100 mmHg)",
+                nihss_q3_o2: "8 - Severe Hypotension (SBP &lt; 90 mmHg)",
+                nihss_q4: "Jugular Venous Distension (JVD)",
+                nihss_q4_o0: "0 - Absent; normal jugular venous pulsations",
+                nihss_q4_o1: "2 - Present; elevated central venous pressure",
+                nihss_q5: "Tissue End-Organ Perfusion",
+                nihss_q5_o0: "0 - Normal; warm skin, normal urine output",
+                nihss_q5_o1: "4 - Impaired; cold/clammy skin, cyanosis, or oliguria",
+                dtn_badge: "Door-to-Balloon Benchmark",
+                dtn_title: "Emergent Reperfusion Timeline",
+                dtn_desc: "Target benchmarks for acute STEMI mechanical reperfusion. The primary PCI clock starts immediately upon First Medical Contact (FMC).",
+                dtn1_lbl: "FMC &amp; 12-lead ECG (&le; 10 min)",
+                dtn1_desc: "Perform clinical assessment, obtain 12-lead ECG. Identify ST elevations, load Aspirin 324mg chewable.",
+                dtn2_lbl: "STEMI Alert Activation",
+                dtn2_desc: "Immediately activate the emergency interventional cardiology team and prepare catheterization lab.",
+                dtn3_lbl: "ED Transit &amp; DAPT Load (&le; 30 min)",
+                dtn3_desc: "Transit patient directly. Load P2Y12 inhibitor (Ticagrelor 180mg or Clopidogrel 600mg) and IV Unfractionated Heparin.",
+                dtn4_lbl: "Cath Lab Arrival (&le; 60 min)",
+                dtn4_desc: "Direct transport to angiography table. Establish arterial access (radial artery preferred over femoral).",
+                dtn5_lbl: "Wire Crossing (&le; 90 min)",
+                dtn5_desc: "Cross blocked segment with angioplasty guide wire. Re-establishes basic micro-vascular perfusion.",
+                dtn6_lbl: "Balloon &amp; Stent Deployment",
+                dtn6_desc: "Balloon angioplasty and Drug-Eluting Stent (DES) deployment to restore optimal TIMI-3 coronary flow.",
+                btn_to_treat: "Continue to Treatment",
+                
+                rx_is_badge: "Primary Reperfusion",
+                rx_is_title: "Reperfusion Interventions",
+                rx_is_desc: "Standard clinical guidelines dictate reperfusion strategy based on time to PCI and geographical limits.",
+                rx_is1_badge: "Window: &le; 90 - 120 Minutes",
+                rx_is1_title: "Primary PCI (Percutaneous Coronary Intervention)",
+                rx_is1_desc: "Preferred gold-standard. Catheterization lab mechanical reperfusion within 90 minutes of FMC (or 120 min if transfer required). Involves diagnostic coronary angiogram, balloon dilation, and Drug-Eluting Stent (DES) insertion.",
+                rx_is2_badge: "Window: &le; 30 Minutes (Door-to-Needle)",
+                rx_is2_title: "Emergent Fibrinolysis",
+                rx_is2_desc: "Indicated ONLY when PCI cannot be physically performed within 120 minutes of FMC. Dissolves fibrin clot using weight-based Tenecteplase (TNK-tPA) as single IV bolus. Must transfer for routine rescue PCI within 24h.",
+                mt_criteria_title: "Weight-Based TNK-tPA Dosing:",
+                contra_title: "Fibrinolysis Contraindications Checklist",
+                contra_abs_title: "Absolute Contraindications (Fibrinolysis Forbidden)",
+                c_abs1: "Prior hemorrhagic stroke",
+                c_abs2: "Ischemic stroke",
+                c_abs3: "Active internal bleeding",
+                c_abs4: "Suspected aortic dissection",
+                c_abs5: "Intracranial neoplasm",
+                contra_rel_title: "Relative Contraindications (Benefit-Risk evaluated)",
+                c_rel1: "Severe, poorly controlled hypertension",
+                c_rel2: "Pregnancy",
+                c_rel3: "Major surgery",
+                c_rel4: "Active peptic ulcer",
+                c_rel5: "Traumatic or prolonged resuscitation",
+                rx_hem_badge: "Medical Management",
+                rx_hem_title: "Emergency MONA-BASH Protocol",
+                rx_hem_desc: "Guideline-directed medical therapy initiated in parallel with mechanical coronary reperfusion. Note critical hemodynamic safety limits.",
+                hem_m1_title: "Morphine",
+                hem_m1_desc: "Indicated for severe refractory ischemic chest pain. Induces venodilation, lowering preload. **WARNING**: Avoid in RV/inferior STEMI due to profound hypotension risk.",
+                hem_m2_title: "Oxygen",
+                hem_m2_desc: "Administered only if oxygen saturation ($SaO_2$) falls below 90% or patient exhibits severe respiratory distress. Routine oxygen in normoxic patients triggers coronary vasoconstriction.",
+                hem_m3_title: "Nitroglycerin",
+                hem_m3_desc: "Sublingual or IV. Induces venodilation to reduce LV preload and wall stress. **CRITICAL**: CONTRAINDICATED in right ventricular (inferior) infarction or if PDE-5 inhibitors used recently.",
+                rx_novel_title: "Investigational & Cardioprotective Therapies",
+                novel1_title: "Intracoronary Stem Cell Therapies",
+                novel1_desc: "Direct infusion of autologous bone marrow-derived mononuclear cells into the infracted coronary artery post-PCI, promoting local angiogenesis and long-term myocardial regeneration.",
+                novel2_title: "Targeted Hypothermia in Reperfusion Injury",
+                novel2_desc: "Focal therapeutic endovascular cooling of the LV prior to coronary balloon inflation to reduce micro-vascular damage and reperfusion-induced oxygen free radical spikes.",
+                btn_to_rehab: "Continue to Rehabilitation",
+                
+                rehab_badge: "Myocardial Recovery",
+                rehab_title: "The Pathway to Cardiac Rehabilitation",
+                rehab_desc: "Structured cardiac recovery is crucial to preserve left ventricular ejection fraction and prevent recurrent ischemic events. Use the deficit matrix below to explore recovery guidelines.",
+                matrix_title: "Therapeutic Recovery Matrix",
+                matrix_desc: "Select a specific cardiac recovery target below to view standard guidelines, cellular mechanisms, and risk modifiers.",
+                tech_badge: "Breakthrough Technologies",
+                tech_title: "Wearable Telemetry, VR Conditioning, & AI Arrhythmia Screening",
+                tech_desc: "Modern cardiac rehabilitation leverages wearable biosensors and continuous telemetry to safely monitor myocardial responses. Patients engage in structured exercise under virtual telemetry supervision, while home-based Virtual Reality conditioning games encourage cardiovascular endurance. Concurrently, AI-powered implantable loop recorders and watch-based ECG devices screen for late ventricular arrhythmias or atrial fibrillation, mitigating sudden cardiac death risk.",
+                btn_to_start: "Return to Beginning",
+                
+                footer_s1: "Clinical guidelines and trial data sourced from ACC/AHA STEMI Guidelines.",
+                footer_s2: "For educational and training use only. Do not substitute professional clinical evaluation."
+            },
+            id: {
+                hero_badge: "INTELIJEN KLINIS TAKTIS — PERINGATAN DARURAT KARDIOLOGI",
+                hero_title: "STEMI.",
+                hero_sub: "Memahami Serangan Jantung.",
+                hero_desc: "Eksplorasi klinis resolusi tinggi mencakup patofisiologi seluler miokardium, garis waktu reperfusi darurat, pemetaan anatomi koroner, dan standar angioplasti primer. Waktu adalah otot.",
+                nav_intro: "Pengantar",
+                nav_patho: "Patofisiologi",
+                nav_etiology: "Etiologi & Wilayah",
+                nav_diagnostics: "Diagnosis",
+                nav_treatment: "Pengobatan",
+                nav_rehab: "Rehabilitasi",
+                
+                intro_title: "Apa itu STEMI?",
+                intro_desc1: "ST-Elevation Myocardial Infarction (STEMI) adalah keadaan darurat jantung kritis yang ditandai dengan oklusi total mendadak pada arteri koroner utama. Gangguan aliran darah yang tiba-tiba ini merampas oksigen sel miokardium, memicu iskemia transmural cepat yang berkembang menjadi nekrosis otot ireversibel dalam beberapa jam.",
+                intro_desc2: "Terapi reperfusi segera wajib dilakukan untuk mencegah kehilangan miokardium permanen yang masif. Intervensi Koroner Perkutan (PCI) di lab kateterisasi mewakili jalur standar emas, memulihkan patensi arteri secara fisik dan secara dramatis mengubah metrik kelangsungan hidup pasien.",
+                severity_title: "Klasifikasi Killip & Keparahan Klinis",
+                sev_minor_lbl: "Tanpa Gagal Jantung",
+                sev_minor_desc: "Tidak ada tanda-tanda klinis kemacetan paru atau derap S3. Memprediksi mortalitas ~6%.",
+                sev_mod_lbl: "Gagal Jantung Ringan-Sedang",
+                sev_mod_desc: "Rales basilar, derap S3, atau distensi vena jugularis. Memprediksi mortalitas ~17%.",
+                sev_modsev_lbl: "Edema Paru",
+                sev_modsev_desc: "Kongesti paru nyata; rales tersebar luas di &gt;50% lapang paru. Memprediksi mortalitas ~38%.",
+                sev_sev_lbl: "Syok Kardiogenik",
+                sev_sev_desc: "Hipotensi berat (SBP &lt; 90) dipasangkan dengan tanda-tanda klinis perfusi perifer yang rendah. Memprediksi mortalitas &gt;70%.",
+                ratio_title: "Distribusi Sindrom Koroner Akut (SKA) Global",
+                type_stemi_title: "STEMI",
+                type_stemi_desc: "Oklusi koroner total. Ditandai dengan elevasi segmen ST dan nekrosis transmural parah. Menuntut reperfusi fisik segera.",
+                type_nste_title: "NSTEMI / UA",
+                type_nste_desc: "Oklusi koroner subtotal. Ditandai dengan depresi segmen ST, inversi gelombang T, dan peningkatan biomarker (atau tidak ada pada Unstable Angina).",
+                impact_main_title: "Besaran Kritis",
+                impact_main_sub: "Tolok ukur waktu akut dan statistik klinis yang menggambarkan mengapa setiap detik sangat berharga.",
+                card1_stat: "90 Menit",
+                card1_desc: "Target batas door-to-balloon dari kedatangan di rumah sakit hingga pemasangan stent mekanis. Menyelamatkan jaringan iskemik.",
+                card2_stat: "40 Menit",
+                card2_desc: "Batas waktu setelah nekrosis miokardial transmural ireversibel menyebar dengan cepat dari subendokardium ke epikardium.",
+                card3_stat: "30%",
+                card3_desc: "Penurunan risiko kematian relatif yang dicapai oleh intervensi angioplasti primer yang tepat dibandingkan dengan fibrinolisis lambat.",
+                btn_to_patho: "Lanjut ke Patofisiologi",
+                
+                patho_badge: "Patogenesis Molekuler",
+                patho_title: "Kaskade Iskemik Miokardium",
+                patho_desc: "Gangguan cepat pada perfusi koroner memicu kaskade biokimia yang merusak. Klik pada setiap langkah penjelajah di bawah ini untuk menganalisis mekanika seluler secara detail.",
+                cas_step1_title: "Pecahnya Plak & Trombosis",
+                cas_step1_sub: "Oklusi vaskular dimulai dengan gangguan plak ateromatosa.",
+                cas_step2_title: "Pergeseran Anaerob & Kehilangan ATP",
+                cas_step2_sub: "Kegagalan oksidatif menggeser metabolisme menjadi laktat.",
+                cas_step3_title: "Disfungsi Kontraktil",
+                cas_step3_sub: "Stasis myofibril menyebabkan abnormalitas gerakan dinding.",
+                cas_step4_title: "Nekrosis & Robekan Sarkolema",
+                cas_step4_sub: "Kerusakan seluler ireversibel melepaskan troponin.",
+                penumbra_badge: "Batas Perfusi",
+                penumbra_title: "Inti Infark Miokardium vs. Area Berisiko",
+                penumbra_desc: "Pembagian spasial iskemia miokardium mendikte waktu darurat. Rekanalisasi segera bertujuan khusus untuk menyelamatkan batas iskemik yang dapat diselamatkan (Area Berisiko) dari gelombang nekrotik yang meluas.",
+                core_card_title: "Inti Infark (Wavefront Subendokardium)",
+                core_card_desc: "Kerusakan nekrotik ireversibel. Deprived of oxygen, penyusutan ATP intraseluler menghentikan integritas membran dalam 20-30 menit, memulai nekrosis progresif dari subendokardium ke luar.",
+                pen_card_title: "Area Berisiko (Miokardium yang Dapat Diselamatkan)",
+                pen_card_desc: "Margin miokardial iskemik yang berfungsi buruk didukung oleh sirkulasi kolateral koroner. Sangat layak jika aliran darah dipulihkan di dalam jendela intervensi akut.",
+                penumbra_visual_label: "MIOKARDIUM SELAMAT<br><span class=\"font-mono font-normal\">Iskemik / Kurang Perfusi</span>",
+                core_visual_label: "INTI INFARK<br><span class=\"font-mono text-red-400 font-normal\">Wavefront Nekrotik</span>",
+                btn_to_etio: "Lanjut ke Etiologi & Wilayah",
+                
+                etio_badge: "Mekanisme SKA",
+                etio_title: "Etiology & Profil Risiko",
+                etio_desc: "Sindrom koroner akut diklasifikasikan berdasarkan sifat gangguan arteri, mendikte beban antitrombosit darurat, garis waktu angiografik, dan pencegahan jangka panjang.",
+                etio_is_title: "Jenis Infark Miokardium",
+                toast1_title: "MI Tipe 1: Pecahnya plak spontan",
+                toast1_desc: "Penyakit arteri koroner aterotrombosis. Pecahnya atau erosi plak memicu trombus trombosit lokal, menyebabkan oklusi akut.",
+                toast2_title: "MI Tipe 2: Ketidakseimbangan Suplai-Kebutuhan",
+                toast2_desc: "Cedera miokard sekunder akibat peningkatan kebutuhan atau penurunan suplai. Pemicu termasuk anemia berat, takikardia parah, hipoksemia, atau spasme koroner.",
+                toast3_title: "MI Tipe 3: Kematian jantung mendadak",
+                toast3_desc: "Kematian jantung sebelum biomarker darah, biasanya dengan gejala yang menunjukkan iskemia miokard dan perubahan ECG baru.",
+                toast4_title: "MI Tipe 4 & 5: Terkait Prosedur",
+                toast4_desc: "Infark yang terkait dengan Intervensi Koroner Perkutan (PCI) atau operasi Bypass Arteri Koroner (CABG).",
+                etio_hem_title: "Faktor Risiko & Pencegahan Sekunder",
+                hem1_title: "Pemicu Aterosklerosis Koroner",
+                hem1_desc: "Dislipidemia kronis (ApoB/LDL meningkat), hipertensi arterial, diabetes mellitus, merokok, dan predisposisi genetik bertindak sebagai akselerator utama ateroma.",
+                hem2_title: "Risiko Remodeling Ventrikel",
+                hem2_desc: "Nekrosis transmural yang luas memicu stres lokal yang tinggi pada dinding ventrikel, menyebabkan penipisan dan ekspansi mekanis (remodeling negatif), yang menyebabkan gagal jantung kronis.",
+                prev_chart_title: "Dampak Pencegahan Sekunder",
+                prev_chart_sub: "Perkiraan penurunan risiko relatif kekambuhan yang dicapai melalui terapi medis yang diarahkan pada pedoman.",
+                map_title: "Penjelajah Wilayah Koroner & Defisit",
+                map_desc: "Pilih arteri koroner tertentu di bawah ini untuk menjelajahi wilayah anatomi persis dan defisit klinis yang disebabkan oleh oklusi akut.",
+                btn_to_diag: "Lanjut ke Diagnosis",
+                
+                diag_badge: "Pengenalan Darurat",
+                diag_title: "Penilaian Gejala Segera",
+                diag_desc: "Identifikasi tanda STEMI yang khas dengan cepat menjamin pengiriman ambulans segera. Gunakan kartu interaktif C.H.E.S.T. di bawah ini untuk meninjau pemeriksaan diagnostik. Sentuh setiap huruf.",
+                befast_b: "Nyeri Dada",
+                befast_b_desc: "Ketidaknyamanan substernal yang menghancurkan, seperti ditekan, memancar ke lengan kiri, leher, atau rahang.",
+                befast_e: "Hiperhidrosis",
+                befast_e_desc: "Keringat dingin mendadak, diaphoresis dipasangkan dengan mual dan kecemasan parah.",
+                befast_f: "Perubahan ECG",
+                befast_f_desc: "Elevasi ST >= 1mm di 2 lead berdekatan, atau LBBB baru. Kriteria diagnostik.",
+                befast_a: "Sesak Napas",
+                befast_a_desc: "Dispnea mendadak, ortopnea, sekunder akibat tekanan balik LV akut.",
+                befast_s: "Waktu Bertindak",
+                befast_s_desc: "Aktifkan tanda STEMI, kunyah 324mg Aspirin non-enterik. Bawa ke Lab Kateter.",
+                nihss_badge: "Penilaian Keparahan",
+                nihss_title: "Kalkulator Skor Killip Interaktif",
+                nihss_desc: "Pilih parameter pasien menggunakan daftar periksa klinis di sebelah kanan. Sistem kami secara dinamis akan menghitung Kelas Killip, proyeksi risiko kematian, dan merekomendasikan intervensi kardiologi akut darurat.",
+                nihss_calc_lbl: "Klasifikasi Killip Terhitung",
+                sev_none_badge: "Tanpa Gagal Jantung Kongestif",
+                nihss_rec_title: "Tindakan Klinis Darurat:",
+                nihss_rec_none: "Tidak ada gagal jantung terdeteksi. Lanjutkan segera ke angiografi koroner primer dan PCI dalam waktu 90 menit. Muat DAPT standar.",
+                nihss_form_title: "Temuan Klinis Akut",
+                nihss_q1: "Rales Paru (Kongesti Paru)",
+                nihss_q1_o0: "0 - Tidak ada; lapang paru benar-benar bersih",
+                nihss_q1_o1: "2 - Ringan; rales basilar di &lt;50% lapang paru",
+                nihss_q1_o2: "6 - Luas; crackles di &gt;50% lapang paru",
+                nihss_q2: "Bunyi Jantung Ketiga (Derap S3)",
+                nihss_q2_o0: "0 - Tidak ada; bunyi jantung S1 dan S2 normal",
+                nihss_q2_o1: "3 - Ada; bunyi diastolik ekstra bernada rendah yang lembut",
+                nihss_q3: "Tekanan Darah Sistolik (SBP)",
+                nihss_q3_o0: "0 - Normal (SBP &gt; 100 mmHg)",
+                nihss_q3_o1: "2 - Batas Rendah (SBP 90 - 100 mmHg)",
+                nihss_q3_o2: "8 - Hipotensi Berat (SBP &lt; 90 mmHg)",
+                nihss_q4: "Distensi Vena Jugularis (JVD)",
+                nihss_q4_o0: "0 - Tidak ada; pulsasi vena jugularis normal",
+                nihss_q4_o1: "2 - Ada; peningkatan tekanan vena sentral",
+                nihss_q5: "Perfusi Organ Jaringan",
+                nihss_q5_o0: "0 - Normal; kulit hangat, produksi urin normal",
+                nihss_q5_o1: "4 - Terganggu; kulit dingin/basah, sianosis, atau oliguria",
+                dtn_badge: "Tolok Ukur Door-to-Balloon",
+                dtn_title: "Garis Waktu Reperfusi Darurat",
+                dtn_desc: "Tolok ukur target untuk reperfusi mekanis STEMI akut. Jam PCI primer dimulai segera setelah Kontak Medis Pertama (FMC).",
+                dtn1_lbl: "FMC &amp; ECG 12-lead (&le; 10 mnt)",
+                dtn1_desc: "Lakukan penilaian klinis, dapatkan ECG 12-lead. Identifikasi elevasi ST, muat Aspirin 324mg yang dapat dikunyah.",
+                dtn2_lbl: "Aktivasi Peringatan STEMI",
+                dtn2_desc: "Segera aktifkan tim kardiologi intervensi darurat dan siapkan lab kateterisasi.",
+                dtn3_lbl: "Transit ED &amp; Beban DAPT (&le; 30 mnt)",
+                dtn3_desc: "Transit pasien secara langsung. Muat inhibitor P2Y12 (Ticagrelor 180mg atau Clopidogrel 600mg) dan Heparin IV.",
+                dtn4_lbl: "Tiba di Lab Kateter (&le; 60 mnt)",
+                dtn4_desc: "Transportasi langsung ke meja angiografi. Tetapkan akses arteri (arteri radial lebih disukai daripada femoral).",
+                dtn5_lbl: "Persilangan Kawat (&le; 90 mnt)",
+                dtn5_desc: "Seberangi segmen tersumbat dengan kawat pemandu angioplasti. Membangun kembali perfusi mikro-vaskular dasar.",
+                dtn6_lbl: "Pelebaran Balon &amp; Stent",
+                dtn6_desc: "Angioplasti balon dan pemasangan Drug-Eluting Stent (DES) untuk memulihkan aliran koroner TIMI-3 yang optimal.",
+                btn_to_treat: "Lanjut ke Pengobatan",
+                
+                rx_is_badge: "Reperfusi Primer",
+                rx_is_title: "Intervensi Reperfusi",
+                rx_is_desc: "Pedoman klinis standar mendikte strategi reperfusi berdasarkan waktu ke PCI dan batas geografis.",
+                rx_is1_badge: "Jendela: &le; 90 - 120 Menit",
+                rx_is1_title: "PCI Primer (Intervensi Koroner Perkutan)",
+                rx_is1_desc: "Standar emas pilihan. Reperfusi mekanis lab kateterisasi dalam waktu 90 menit dari FMC (atau 120 menit jika transfer diperlukan). Melibatkan angiogram koroner diagnostik, pelebaran balon, dan insersi Drug-Eluting Stent (DES).",
+                rx_is2_badge: "Jendela: &le; 30 Menit (Door-to-Needle)",
+                rx_is2_title: "Fibrinolisis Darurat",
+                rx_is2_desc: "Diindikasikan HANYA jika PCI tidak dapat dilakukan secara fisik dalam waktu 120 menit dari FMC. Melarutkan bekuan fibrin menggunakan Tenecteplase (TNK-tPA) berbasis berat badan sebagai bolus IV tunggal. Wajib transfer untuk PCI penyelamatan rutin dalam 24 jam.",
+                mt_criteria_title: "Dosis Tenecteplase (TNK-tPA) Berdasarkan Berat Badan:",
+                contra_title: "Daftar Periksa Kontraindikasi Fibrinolisis",
+                contra_abs_title: "Kontraindikasi Absolut (Fibrinolisis Dilarang)",
+                c_abs1: "Riwayat stroke hemoragik",
+                c_abs2: "Stroke iskemik",
+                c_abs3: "Perdarahan internal aktif",
+                c_abs4: "Dicurigai diseksi aorta",
+                c_abs5: "Neoplasma intrakranial",
+                contra_rel_title: "Kontraindikasi Relatif (Manfaat-Risiko dievaluasi)",
+                c_rel1: "Hipertensi berat tidak terkontrol",
+                c_rel2: "Kehamilan",
+                c_rel3: "Operasi besar",
+                c_rel4: "Ulkus peptikum aktif",
+                c_rel5: "Resusitasi jantung traumatis atau berkepanjangan",
+                rx_hem_badge: "Manajemen Medis",
+                rx_hem_title: "Protokol Darurat MONA-BASH",
+                rx_hem_desc: "Terapi medis yang diarahkan pada pedoman dimulai secara paralel dengan reperfusi koroner mekanis. Catat batas keamanan hemodinamik kritis.",
+                hem_m1_title: "Morfin",
+                hem_m1_desc: "Diindikasikan untuk nyeri dada iskemik refrakter berat. Memicu venodilatasi, menurunkan preload. **PERINGATAN**: Hindari pada STEMI RV/inferior karena risiko hipotensi berat.",
+                hem_m2_title: "Oksigen",
+                hem_m2_desc: "Diberikan hanya jika saturasi oksigen ($SaO_2$) turun di bawah 90% atau pasien menunjukkan gangguan pernapasan parah. Oksigen rutin pada pasien normoksik memicu vasokonstriksi koroner.",
+                hem_m3_title: "Nitrogliserin",
+                hem_m3_desc: "Sublingual atau IV. Menginduksi venodilatasi untuk mengurangi preload LV dan stres dinding. **KRITIS**: KONTRAINDIKASI pada infark ventrikel kanan (inferior) atau jika inhibitor PDE-5 baru saja digunakan.",
+                rx_novel_title: "Terapi Eksperimental & Cardioprotectif",
+                novel1_title: "Terapi Sel Punca Intrakoroner",
+                novel1_desc: "Infusi langsung sel mononuklear yang berasal dari sumsum tulang autologus ke arteri koroner yang mengalami infark pasca-PCI, mempromosikan angiogenesis lokal dan regenerasi miokard jangka panjang.",
+                novel2_title: "Hipotermia Tertarget pada Cedera Reperfusi",
+                novel2_desc: "Pendinginan endovaskular terapeutik fokal dari LV sebelum inflasi balon koroner untuk mengurangi kerusakan mikrovaskular dan lonjakan radikal bebas oksigen akibat reperfusi.",
+                btn_to_rehab: "Lanjut ke Rehabilitasi",
+                
+                rehab_badge: "Pemulihan Miokardium",
+                rehab_title: "Jalur Menuju Rehabilitasi Jantung",
+                rehab_desc: "Rehabilitasi jantung terstruktur sangat penting untuk mempertahankan fraksi ejeksi ventrikel kiri dan mencegah kejadian iskemik berulang. Gunakan matriks pemulihan di bawah ini untuk mengeksplorasi pedoman.",
+                matrix_title: "Matriks Pemulihan Terapeutik",
+                matrix_desc: "Pilih target pemulihan jantung tertentu di bawah ini untuk melihat pedoman standar, mekanisme seluler, dan pengubah risiko.",
+                tech_badge: "Teknologi Terobosan",
+                tech_title: "Telemetri Dapat Dipakai, Pengkondisian VR, & Skrining Aritmia AI",
+                tech_desc: "Rehabilitasi jantung modern memanfaatkan biosensor yang dapat dipakai dan telemetri berkelanjutan untuk memantau respons miokard secara aman. Pasien melakukan latihan terstruktur di bawah pengawasan telemetri virtual, sementara pengkondisian Realitas Virtual berbasis rumah mendorong ketahanan kardiovaskular. Secara bersamaan, perekam loop implan bertenaga AI dan perangkat ECG jam tangan memantau aritmia ventrikel lambat atau fibrilasi atrium, meminimalkan risiko kematian jantung mendadak.",
+                btn_to_start: "Kembali ke Awal",
+                
+                footer_s1: "Pedoman klinis dan data uji klinis bersumber dari Pedoman STEMI ACC/AHA.",
+                footer_s2: "Hanya untuk penggunaan pendidikan dan pelatihan. Bukan pengganti evaluasi klinis profesional."
+            }
+        };
+
+        let currentLang = 'en';
+
+        function parseMarkdown(text) {
+            if (!text) return '';
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-apple-ink">$1</strong>')
+                .replace(/\$(.*?)\$/g, '$1')
+                .replace(/SaO\_2/g, 'SaO<sub>2</sub>');
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            
+            const btnEn = document.getElementById('btn-en');
+            const btnId = document.getElementById('btn-id');
+            
+            if (lang === 'en') {
+                btnEn.className = "px-4 py-[3px] text-[10px] rounded-full bg-apple-white text-apple-ink font-semibold transition-all shadow-sm border border-apple-borderSoft/35";
+                btnId.className = "px-4 py-[3px] text-[10px] rounded-full text-apple-graySecondary hover:text-apple-ink transition-all font-medium";
+            } else {
+                btnId.className = "px-4 py-[3px] text-[10px] rounded-full bg-apple-white text-apple-ink font-semibold transition-all shadow-sm border border-apple-borderSoft/35";
+                btnEn.className = "px-4 py-[3px] text-[10px] rounded-full text-apple-graySecondary hover:text-apple-ink transition-all font-medium";
+            }
+
+            // Loop all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (T[lang][key]) {
+                    el.innerHTML = parseMarkdown(T[lang][key]);
+                }
+            });
+
+            // Update dynamically rendered content components
+            updateCascadeUI();
+            updateTerritoryUI();
+            updateRehabUI();
+            calculateKillip(); // Update Killip recommendations
+
+            // Update Chart.js configurations
+            if(window.acsChartInstance) {
+                window.acsChartInstance.data.labels = chartTranslations[lang].acsTypes;
+                window.acsChartInstance.update();
+            }
+            if(window.preventionChartInstance) {
+                window.preventionChartInstance.data.labels = chartTranslations[lang].prevention;
+                window.preventionChartInstance.data.datasets[0].label = chartTranslations[lang].impactLabel;
+                window.preventionChartInstance.update();
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // TAB SYSTEM
+        // ═══════════════════════════════════════════════════════
+        function switchTab(tabId, btnElement) {
+            // Update Tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-apple-ink', 'font-semibold');
+                btn.classList.add('text-apple-graySecondary', 'font-medium');
+            });
+            
+            if (btnElement) {
+                btnElement.classList.remove('text-apple-graySecondary', 'font-medium');
+                btnElement.classList.add('text-apple-ink', 'font-semibold');
+                
+                // Animate sliding indicator background
+                const indicator = document.getElementById('tab-active-pill');
+                indicator.style.width = `${btnElement.offsetWidth}px`;
+                indicator.style.transform = `translateX(${btnElement.offsetLeft - 4}px)`;
+            }
+
+            document.querySelectorAll('.tab-content').forEach(panel => {
+                panel.classList.remove('active');
+                if(panel.id === tabId) {
+                    panel.classList.add('active');
+                    if(tabId === 'etiology') renderPreventionChart();
+                }
+            });
+            
+            setTimeout(() => { observeElements(); }, 60);
+        }
+
+        function goToNext(tabId) {
+            const btn = document.querySelector(`.tab-btn[data-target="${tabId}"]`);
+            switchTab(tabId, btn);
+            
+            setTimeout(() => {
+                const heroSection = document.getElementById('hero-section');
+                const globalNavHeight = 52; 
+                const heroBottomY = heroSection.getBoundingClientRect().bottom + window.pageYOffset;
+                const targetScrollPosition = heroBottomY - globalNavHeight;
+        
+                window.scrollTo({
+                    top: targetScrollPosition,
+                    behavior: 'smooth'
+                });
+            }, 60);
+        }
+
+        // Intersection Observer scroll reveals
+        function observeElements() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.08 });
+
+            document.querySelectorAll('.tab-content.active .reveal, header .reveal, footer .reveal').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // INTERACTIVE DATASTORES & RENDERING MODULES
+        // ═══════════════════════════════════════════════════════
+
+        // 1. Myocardial Ischemic Cascade Explorer
+        const cascadeData = [
+            {
+                step: 1,
+                titleEn: "Plaque Rupture & Thrombosis",
+                titleId: "Pecahnya Plak & Trombosis",
+                descEn: "Coronary vascular occlusion begins with the sudden fissure or rupture of a vulnerable, cholesterol-rich atheromatous plaque in the arterial wall. Disruption exposes the highly thrombogenic lipid core to passing blood. Platelets aggregate rapidly on the collagen matrix, initiating thrombase activation and fibrin mesh generation, which forms an occluding **red thrombus** that cuts off downstream blood flow.",
+                descId: "Oklusi vaskular koroner dimulai dengan fisura atau pecahnya plak ateromatosa rentan yang kaya kolesterol secara tiba-tiba di dinding arteri. Gangguan tersebut memaparkan inti lipid yang sangat trombogenik ke darah yang lewat. Trombosit menumpuk dengan cepat pada matriks kolagen, memicu aktivasi trombosit dan pembuatan jaring fibrin, membentuk **trombus merah** penyumbat yang memutus aliran darah hilir.",
+                accent: "text-red-400"
+            },
+            {
+                step: 2,
+                titleEn: "Anaerobic Shift & ATP Loss",
+                titleId: "Pergeseran Anaerob & Kehilangan ATP",
+                descEn: "Within 60 seconds of complete oxygen deprivation, oxidative phosphorylation halts inside cardiac mitochondria. Myocytes shift to **anaerobic glycolysis** in a desperate attempt to maintain viability. Lactic acid accumulates rapidly, dropping intracellular pH. Lacking oxygen, cellular ATP stores deplete in minutes, causing failure of energy-dependent calcium/sodium transport pumps.",
+                descId: "Dalam waktu 60 detik setelah kekurangan oksigen total, fosforilasi oksidatif terhenti di dalam mitokondria jantung. Miosit bergeser ke **glikolisis anaerobik** dalam upaya putus asa untuk menjaga viabilitas. Asam laktat menumpuk dengan cepat, menurunkan pH intraseluler. Kekurangan oksigen menyebabkan simpanan ATP seluler menyusut dalam hitungan menit, memicu kegagalan pompa transpor natrium/kalsium membran.",
+                accent: "text-orange-400"
+            },
+            {
+                step: 3,
+                titleEn: "Contractile Dysfunction",
+                titleId: "Disfungsi Kontraktil",
+                descEn: "Deprived of ATP, cardiac myofibrils are unable to initiate actin-myosin cross-bridge cycling. This causes immediate cessation of active mechanical contraction in the ischemic zone (myocardial stunning). Within minutes, localized wall motion abnormalities emerge (akinesia or dyskinesia), causing systolic stroke volume to drop and diastolic filling pressures to rise.",
+                descId: "Kekurangan ATP menyebabkan miofibril jantung tidak dapat memulai siklus jembatan silang aktin-miosin. Ini memicu terhentinya kontraksi mekanis aktif di zona iskemik secara instan (myocardial stunning). Dalam hitungan menit, abnormalitas gerakan dinding terlokalisasi muncul (akinesia atau dyskinesia), memicu penurunan volume sekuncup sistolik dan kenaikan tekanan pengisian diastolik.",
+                accent: "text-yellow-400"
+            },
+            {
+                step: 4,
+                titleEn: "Necrosis & Sarcolemmal Rupture",
+                titleId: "Nekrosis & Robekan Sarkolema",
+                descEn: "If occlusion persists beyond 20-30 minutes, prolonged energy failure triggers cell death. Intracellular calcium overload activates autolytic lipases and proteases, causing irreversible sarcolemmal membrane disintegration. Cardiac proteins, primarily **Troponin T/I** and **CK-MB**, leak through ruptured membranes into the bloodstream. Necrosis moves as a wavefront from the vulnerable subendocardium to the epicardium.",
+                descId: "Jika oklusi berlanjut melebihi 20-30 menit, kegagalan energi yang berkepanjangan memicu kematian sel. Kelebihan kalsium intraseluler mengaktifkan lipase dan protease autolitik, menyebabkan disintegrasi membran sarkolema secara ireversibel. Protein jantung, terutama **Troponin T/I** dan **CK-MB**, bocor melalui membran yang rusak ke aliran darah. Nekrosis bergerak sebagai gelombang dari subendokardium ke epikardium.",
+                accent: "text-blue-400"
+            }
+        ];
+
+        let selectedCascadeIndex = 0;
+
+        function selectCascade(index) {
+            selectedCascadeIndex = index;
+            document.querySelectorAll('.cascade-step').forEach((el, idx) => {
+                if (idx === index) el.classList.add('selected');
+                else el.classList.remove('selected');
+            });
+            updateCascadeUI();
+        }
+
+        function updateCascadeUI() {
+            const displayPanel = document.getElementById('cascade-display-content');
+            const data = cascadeData[selectedCascadeIndex];
+            const title = currentLang === 'en' ? data.titleEn : data.titleId;
+            const desc = currentLang === 'en' ? data.descEn : data.descId;
+            
+            displayPanel.innerHTML = `
+                <div class="space-y-4">
+                    <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold font-mono tracking-widest bg-white/5 ${data.accent} border border-white/10 uppercase">
+                        STAGE ${data.step} — PATHOGENESIS
+                    </span>
+                    <h3 class="font-display font-extrabold text-2xl text-white mt-2">${parseMarkdown(title)}</h3>
+                    <p class="text-sm text-apple-graySecondary leading-relaxed mt-4">${parseMarkdown(desc)}</p>
+                </div>
+                <div class="mt-8 border-t border-white/5 pt-4 flex justify-between items-center text-[10px] font-mono text-apple-graySecondary">
+                    <span>STATUS: ACTIVE MYOCARDIAL ISCHEMIA</span>
+                    <span>CELL VIABILITY: ${data.step === 4 ? 'CRITICAL (NECROSIS WAVEFRONT)' : 'RESCUABLE'}</span>
+                </div>
+            `;
+        }
+
+        // 2. Coronary Territories explorer
+        const territoryData = {
+            lad: {
+                titleEn: "Left Anterior Descending (LAD) Artery Territory",
+                titleId: "Wilayah Arteri Koroner LAD (Left Anterior Descending)",
+                specsEn: "Known clinically as the **'Widowmaker'**. Supplies the anterior wall of the left ventricle, the anterior two-thirds of the interventricular septum, and the cardiac apex.",
+                specsId: "Dikenal secara klinis sebagai **'Widowmaker'**. Menyuplai dinding anterior ventrikel kiri, dua pertiga anterior septum interventrikular, dan apeks jantung.",
+                deficitsEn: [
+                    "**Anterior Wall STEMI:** Indicated by ST-segment elevations in V1-V4 ECG leads.",
+                    "**High Heart Failure Risk:** Massive tissue loss frequently triggers profound Killip Class III/IV dysfunction.",
+                    "**Bundle Branch Blocks:** Ischemia in the bundle of His or bundle branches can cause sudden new RBBB or LBBB.",
+                    "**Apical Dyskinesia:** Restricts contractility of the apex, causing apical ballooning or thrombus formation."
+                ],
+                deficitsId: [
+                    "**STEMI Dinding Anterior:** Ditunjukkan dengan elevasi segmen ST pada lead ECG V1-V4.",
+                    "**Risiko Gagal Jantung Tinggi:** Kehilangan jaringan masif sering kali memicu disfungsi berat Killip Kelas III/IV.",
+                    "**Blok Cabang Berkas (BBB):** Iskemia pada berkas His atau cabang berkas dapat menyebabkan LBBB atau RBBB baru secara mendadak.",
+                    "**Dyskinesia Apikal:** Membatasi kontraktilitas apeks, memicu penggelembungan apikal atau pembentukan trombus."
+                ]
+            },
+            rca: {
+                titleEn: "Right Coronary Artery (RCA) Territory",
+                titleId: "Wilayah Arteri Koroner RCA (Right Coronary Artery)",
+                specsEn: "Supplies the inferior wall of the left ventricle, the posterior interventricular septum, the right ventricle (RV), and the pacemaking SA/AV nodes.",
+                specsId: "Menyuplai dinding inferior ventrikel kiri, septum interventrikular posterior, ventrikel kanan (RV), dan nodus pacu jantung SA/AV.",
+                deficitsEn: [
+                    "**Inferior Wall STEMI:** Indicated by ST elevations in leads II, III, and aVF. Lead III elevation is often > II.",
+                    "**Right Ventricular (RV) Infarction:** Occurs in up to 40% of inferior STEMIs; characterized by extreme preload dependence.",
+                    "**Bradyarrhythmias & AV Block:** Ischemia in SA/AV nodes triggers severe sinus bradycardia or complete heart block.",
+                    "**Vasoactive Sensitivity:** Extreme hypotension risk with Nitroglycerin or Morphine due to loss of RV filling preload."
+                ],
+                deficitsId: [
+                    "**STEMI Dinding Inferior:** Ditunjukkan dengan elevasi ST pada lead II, III, dan aVF. Elevasi lead III sering kali > II.",
+                    "**Infark Ventrikel Kanan (RV):** Terjadi pada hingga 40% kasus STEMI inferior; ditandai ketergantungan preload yang ekstrim.",
+                    "**Bradiaritmia & Blok AV:** Iskemia pada nodus SA/AV memicu bradikardia sinus berat atau blok jantung total.",
+                    "**Sensitivitas Vasoaktif:** Risiko hipotensi ekstrem dengan Nitrogliserin atau Morfin karena hilangnya preload pengisian RV."
+                ]
+            },
+            lcx: {
+                titleEn: "Left Circumflex (LCx) Artery Territory",
+                titleId: "Wilayah Arteri Koroner LCx (Left Circumflex)",
+                specsEn: "Supplies the lateral and posterolateral walls of the left ventricle, and the anterolateral papillary muscle.",
+                specsId: "Menyuplai dinding lateral dan posterolateral ventrikel kiri, serta otot papilaris anterolateral.",
+                deficitsEn: [
+                    "**Lateral Wall STEMI:** Characterized by ST elevations in high lateral leads I and aVL, or precordial V5-V6.",
+                    "**Posterior Wall Infarction:** Occlusion yields isolated ST-segment depressions in anterior V1-V3 (reciprocal changes).",
+                    "**Acute Mitral Regurgitation:** Ischemia of the papillary muscle causes acute valvular dysfunction and pulmonary backpressure.",
+                    "**Variable Dominance:** In 10% of patients (left-dominant circulation), LCx supplies the inferior wall and AV node."
+                ],
+                deficitsId: [
+                    "**STEMI Dinding Lateral:** Ditandai dengan elevasi ST pada lead lateral tinggi I dan aVL, atau prekordial V5-V6.",
+                    "**Infark Dinding Posterior:** Oklusi menghasilkan depresi segmen ST terisolasi pada V1-V3 anterior (perubahan timbal balik).",
+                    "**Regurgitasi Mitral Akut:** Iskemia otot papilaris menyebabkan disfungsi katup akut dan peningkatan tekanan balik paru.",
+                    "**Dominansi Variabel:** Pada 10% pasien (sirkulasi dominan kiri), LCx menyuplai dinding inferior dan nodus AV."
+                ]
+            }
+        };
+
+        let selectedTerritoryKey = 'lad';
+
+        function selectTerritory(key) {
+            selectedTerritoryKey = key;
+            document.querySelectorAll('.territory-pill').forEach(btn => {
+                if (btn.id === `btn-t-${key}`) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            updateTerritoryUI();
+        }
+
+        function updateTerritoryUI() {
+            const panel = document.getElementById('territory-display-panel');
+            const data = territoryData[selectedTerritoryKey];
+            const title = currentLang === 'en' ? data.titleEn : data.titleId;
+            const specs = currentLang === 'en' ? data.specsEn : data.specsId;
+            const deficits = currentLang === 'en' ? data.deficitsEn : data.deficitsId;
+
+            let bulletsHtml = '';
+            deficits.forEach(def => {
+                bulletsHtml += `<li class="flex items-start gap-2 text-xs text-apple-graySecondary leading-relaxed"><span class="text-red-500 font-bold">✓</span> <span>${parseMarkdown(def)}</span></li>`;
+            });
+
+            panel.innerHTML = `
+                <div>
+                    <h4 class="font-display font-extrabold text-[17px] text-apple-ink mb-1">${parseMarkdown(title)}</h4>
+                    <p class="text-xs text-apple-graySecondary italic leading-relaxed mb-4">${parseMarkdown(specs)}</p>
+                    <div class="border-t border-apple-borderSoft/60 pt-4 mt-2">
+                        <strong class="text-[11px] font-mono text-apple-ink block uppercase tracking-wider mb-2 font-bold">${currentLang === 'en' ? 'PRIMARY CLINICAL DEFICIT PROFILE:' : 'PROFIL DEFISIT KLINIS UTAMA:'}</strong>
+                        <ul class="space-y-3">
+                            ${bulletsHtml}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 3. Rehab matrix explorer
+        const rehabData = {
+            aerobic: {
+                titleEn: "Aerobic Conditioning &amp; Ventricular Adaptation",
+                titleId: "Kondisi Aerobik &amp; Adaptasi Ventrikel",
+                descEn: "Guideline-directed progressive aerobic exercise (treadmill walk, cycling) targeting 30-60 minutes, 3-5 days/week. Elevates cardiac reserve, drives favorable ventricular remodeling, and optimizes vascular endothelial nitric oxide synthesis to reduce arterial stiffness.",
+                descId: "Latihan aerobik progresif terarah (berjalan, bersepeda) menyasar 30-60 menit, 3-5 hari/minggu. Meningkatkan cadangan jantung, mendorong remodeling ventrikel yang menguntungkan, dan mengoptimalkan sintesis nitrat oksida endotel.",
+                mechEn: "Improves skeletal muscle oxygen extraction capacity, increases mitochondrial density, and lowers chronic myocardial wall stress.",
+                mechId: "Meningkatkan kapasitas ekstraksi oksigen otot rangka, meningkatkan kerapatan mitokondria, dan menurunkan stres dinding miokardial kronis."
+            },
+            dapt: {
+                titleEn: "Stent Patency &amp; DAPT Compliance",
+                titleId: "Paten Stent &amp; Kepatuhan Terapi DAPT",
+                descEn: "Strict adherence to Dual Antiplatelet Therapy (typically Aspirin 81mg + Ticagrelor 90mg BID or Prasugrel 10mg daily) for 12 months post-PCI. Crucial to prevent acute or late stent thrombosis, which presents as recurrent cardiogenic shock or catastrophic STEMI.",
+                descId: "Kepatuhan ketat terhadap Terapi Antiplatelet Ganda (biasanya Aspirin 81mg + Ticagrelor 90mg BID) selama 12 bulan pasca-PCI. Sangat krusial untuk mencegah trombosis stent akut yang mematikan.",
+                mechEn: "Blocks ADP P2Y12 platelet receptors to inhibit thrombus formation over the exposed metallic mesh of the coronary stent.",
+                mechId: "Memblokir reseptor trombosit ADP P2Y12 untuk menghambat pembentukan trombus di atas jaring logam stent koroner."
+            },
+            remod: {
+                titleEn: "Ventricular Remodeling Blockade",
+                titleId: "Blokade Remodeling Ventrikel Kiri",
+                descEn: "Aggressive titration of oral medications to prevent expansion of necrotic zones. Relies on **ACE inhibitors/ARNI** (Sacubitril-Valsartan) to lower filling pressures, and **selective Beta-blockers** (Carvedilol, Bisoprolol) to reduce myocardial oxygen demand and prevent catecholamine-induced toxicity.",
+                descId: "Titrasi agresif obat-obatan oral untuk mencegah ekspansi zona nekrotik. Mengandalkan **ACE inhibitor/ARNI** (Sacubitril-Valsartan) untuk menurunkan tekanan pengisian, serta **Beta-blocker selektif**.",
+                mechEn: "Inhibits systemic renin-angiotensin-aldosterone cascade, halting deleterious extracellular matrix collagen deposition.",
+                mechId: "Menghambat kaskade renin-angiotensin-aldosterone sistemik, menghentikan penumpukan kolagen matriks ekstraseluler yang merusak."
+            },
+            lipids: {
+                titleEn: "Intensive Lipids &amp; Atheroma Regression",
+                titleId: "Lipid Intensif &amp; Regresi Ateroma",
+                descEn: "Maximum-intensity Statin therapy (Atorvastatin 80mg or Rosuvastatin 40mg) combined with Ezetimibe or PCSK9 inhibitors (Evolocumab) targeting an aggressive **LDL-C limit &lt; 55 mg/dL** (1.4 mmol/L) to stabilize and regress lipid-rich atheromas.",
+                descId: "Terapi Statin intensitas maksimum (Atorvastatin 80mg) dikombinasikan dengan Ezetimibe atau inhibitor PCSK9 menyasar target agresif **LDL-C &lt; 55 mg/dL** untuk menstabilkan plak.",
+                mechEn: "Inhibits HMG-CoA reductase and stimulates hepatic LDL receptors, clearing ApoB-containing lipoproteins and reducing arterial inflammation.",
+                mechId: "Menghambat HMG-CoA reduktase dan menstimulasi reseptor LDL hepatik, membersihkan lipoprotein ApoB dan meredakan peradangan arteri."
+            }
+        };
+
+        let selectedRehabKey = 'aerobic';
+
+        function selectRehab(key) {
+            selectedRehabKey = key;
+            document.querySelectorAll('#rehab .territory-pill').forEach(btn => {
+                if (btn.id === `btn-r-${key}`) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            updateRehabUI();
+        }
+
+        function updateRehabUI() {
+            const panel = document.getElementById('rehab-display-panel');
+            const data = rehabData[selectedRehabKey];
+            const title = currentLang === 'en' ? data.titleEn : data.titleId;
+            const desc = currentLang === 'en' ? data.descEn : data.descId;
+            const mech = currentLang === 'en' ? data.mechEn : data.mechId;
+
+            panel.innerHTML = `
+                <div>
+                    <h4 class="font-display font-extrabold text-[17px] text-apple-ink mb-3">${parseMarkdown(title)}</h4>
+                    <p class="text-xs text-apple-graySecondary leading-relaxed mb-4">${parseMarkdown(desc)}</p>
+                    <div class="border-t border-apple-borderSoft/60 pt-4 mt-2 bg-apple-white rounded-2xl p-4 border border-apple-borderSoft/30">
+                        <strong class="text-[10px] font-mono text-red-500 block uppercase tracking-wider mb-1 font-bold">${currentLang === 'en' ? 'BIOLOGICAL MECHANISM OF ADAPTATION:' : 'MEKANISME BIOLOGIS ADAPTASI:'}</strong>
+                        <p class="text-[11px] text-apple-ink leading-relaxed font-medium">${parseMarkdown(mech)}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // KILLIP CALCULATOR ALGORITHM
+        // ═══════════════════════════════════════════════════════
+        function calculateKillip() {
+            const rales = parseInt(document.getElementById('killip-rales').value);
+            const s3 = parseInt(document.getElementById('killip-s3').value);
+            const sbp = parseInt(document.getElementById('killip-sbp').value);
+            const jvd = parseInt(document.getElementById('killip-jvd').value);
+            const perf = parseInt(document.getElementById('killip-perfusion').value);
+
+            const total = rales + s3 + sbp + jvd + perf;
+            
+            // Classify and update Recommendation
+            const displayScore = document.getElementById('killip-class-display');
+            const badge = document.getElementById('killip-severity-badge');
+            const recText = document.getElementById('killip-recommendation-text');
+
+            if (total === 0) {
+                displayScore.innerText = "Class I";
+                badge.className = "killip-badge inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-bold bg-green-500/10 text-green-600";
+                badge.innerHTML = currentLang === 'en' ? 'No Heart Failure (Mortality ~6%)' : 'Tanpa Gagal Jantung (Mortalitas ~6%)';
+                recText.innerHTML = currentLang === 'en' 
+                    ? "No signs of pulmonary congestion. Highly eligible for standard primary PCI. Prepare DAPT load, heparinize, and proceed directly to cath lab within 90 minutes."
+                    : "Tidak ada kemacetan paru. Sangat layak untuk PCI primer standar. Siapkan pemuatan DAPT, heparin, dan lanjutkan langsung ke lab kateter dalam 90 menit.";
+            } else if (total >= 1 && total <= 4) {
+                displayScore.innerText = "Class II";
+                badge.className = "killip-badge inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-bold bg-yellow-500/15 text-yellow-600";
+                badge.innerHTML = currentLang === 'en' ? 'Mild-Moderate HF (Mortality ~17%)' : 'Gagal Jantung Ringan-Sedang (Mortalitas ~17%)';
+                recText.innerHTML = currentLang === 'en' 
+                    ? "Mild congestive signs (basilar rales or JVD). Indicated for emergent PCI. Prepare low-dose IV loop diuretics (furosemide) cautiously. Proceed immediately to cath lab. Watch SBP closely."
+                    : "Tanda kongestif ringan (rales basilar atau JVD). Diindikasikan untuk PCI darurat. Siapkan diuretik loop IV dosis rendah (furosemid) secara hati-hati. Segera ke lab kateter.";
+            } else if (total >= 5 && total <= 7) {
+                displayScore.innerText = "Class III";
+                badge.className = "killip-badge inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-bold bg-orange-500/15 text-orange-500";
+                badge.innerHTML = currentLang === 'en' ? 'Frank Pulmonary Edema (Mortality ~38%)' : 'Edema Paru Akut (Mortalitas ~38%)';
+                recText.innerHTML = currentLang === 'en'
+                    ? "Severe pulmonary congestion. Administer high-flow supplemental oxygen, initiate non-invasive positive pressure ventilation (BiPAP), and deliver IV nitrates cautiously (if SBP > 100). Emergency transfer to cath lab is top priority."
+                    : "Kemacetan paru yang parah. Berikan oksigen tambahan aliran tinggi, ventilasi tekanan positif non-invasif (BiPAP), dan berikan nitrat IV secara hati-hati (jika SBP > 100). Transfer darurat ke lab kateter.";
+            } else {
+                displayScore.innerText = "Class IV";
+                badge.className = "killip-badge inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-bold bg-red-500/15 text-red-600";
+                badge.innerHTML = currentLang === 'en' ? 'Cardiogenic Shock (Mortality ~70-80%)' : 'Syok Kardiogenik (Mortalitas ~70-80%)';
+                recText.innerHTML = currentLang === 'en'
+                    ? "Severe pump failure. Hemodynamic collapse requires immediate mechanical circulatory support evaluation (e.g. Intra-Aortic Balloon Pump [IABP] or Impella). Initiate carefully titrated vasopressors (Norepinephrine) or inotropes (Dobutamine). Mobilize cath lab team for emergency bailout PCI."
+                    : "Kegagalan pompa parah. Kolaps hemodinamik memerlukan evaluasi bantuan sirkulasi mekanis segera (misalnya IABP atau Impella). Mulai vasopresor (Norepinefrin) atau inotrop (Dobutamin). PCI darurat segera.";
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // ACCORDION TOGGLE
+        // ═══════════════════════════════════════════════════════
+        function toggleAccordion(panelId) {
+            const panel = document.getElementById(`panel-${panelId}`);
+            const icon = document.getElementById(`icon-${panelId}`);
+            
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                icon.innerText = '－';
+            } else {
+                panel.classList.add('hidden');
+                icon.innerText = '＋';
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // INITIALIZATION
+        // ═══════════════════════════════════════════════════════
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set dynamic pill position initially
+            const activeBtn = document.querySelector('.tab-btn.relative');
+            const indicator = document.getElementById('tab-active-pill');
+            indicator.style.width = `${activeBtn.offsetWidth}px`;
+            indicator.style.transform = `translateX(${activeBtn.offsetLeft - 4}px)`;
+
+            setLang('en');
+            observeElements(); // Start observers
+            calculateKillip(); // Run initial Killip
+
+            // Initialize Charts
+            const acsCtx = document.getElementById('acsTypesChart').getContext('2d');
+            window.acsChartInstance = new Chart(acsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: chartTranslations[currentLang].acsTypes,
+                    datasets: [{ data:[35, 65], backgroundColor:['#ef4444', '#1d1d1f'], borderWidth: 0, hoverOffset: 4 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '75%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { family: "'Inter', sans-serif", size: 14 }, color: '#6e6e73', usePointStyle: true, padding: 20 } },
+                        tooltip: { backgroundColor: '#1d1d1f', titleFont: { family: "'Inter', sans-serif", size: 14 }, bodyFont: { family: "'Inter', sans-serif", size: 14 }, padding: 12, cornerRadius: 8 }
+                    }
+                }
+            });
+
+            window.renderPreventionChart = function() {
+                const preventionCtx = document.getElementById('preventionChart');
+                if(!preventionCtx) return;
+                if(window.preventionChartInstance) { window.preventionChartInstance.destroy(); }
+
+                window.preventionChartInstance = new Chart(preventionCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: chartTranslations[currentLang].prevention,
+                        datasets:[{
+                            label: chartTranslations[currentLang].impactLabel,
+                            data:[40, 30, 25, 20, 50, 25],
+                            backgroundColor: '#ef4444', borderRadius: 6, barPercentage: 0.6
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                        scales: {
+                            x: { border: { display: false }, grid: { color: '#f5f5f7' }, ticks: { font: { family: "'Inter', sans-serif", size: 12 }, color: '#6e6e73' } },
+                            y: { grid: { display: false }, ticks: { font: { family: "'Inter', sans-serif", size: 13, weight: '500' }, color: '#1d1d1f' } }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { backgroundColor: '#1d1d1f', titleFont: { family: "'Inter', sans-serif", size: 14 }, bodyFont: { family: "'Inter', sans-serif", size: 14 }, padding: 12, cornerRadius: 8 }
+                        }
+                    }
+                });
+            };
+        });
+    </script>
+</body>
+</html>
