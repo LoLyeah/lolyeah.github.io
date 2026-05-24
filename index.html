@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoLyeah Interactive Guides</title>
+    
+    <!-- Premium Fonts from Beta Landing -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         /* Base Variables - Light Mode */
         :root {
@@ -14,8 +20,15 @@
             --border-light: #e0e0e0;
             --border-dark: #000000;
             --hover-glow: rgba(0, 0, 0, 0.05);
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --font-mono: 'JetBrains Mono', 'Courier New', Courier, monospace;
+            --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-display: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            /* Accent Palettes - Light Mode */
+            --accent-primary: #059669;
+            --accent-secondary: #4f46e5;
+            --accent-glow: rgba(79, 70, 229, 0.05);
+            --spring-transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 
             /* Glassmorphic Search Tokens - Light Mode */
             --search-bg: rgba(255, 255, 255, 0.45);
@@ -37,6 +50,11 @@
             --border-light: #222222;
             --border-dark: #ffffff;
             --hover-glow: rgba(255, 255, 255, 0.06);
+
+            /* Accent Palettes - Dark Mode */
+            --accent-primary: #10b981;
+            --accent-secondary: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.15);
 
             /* Glassmorphic Search Tokens - Dark Mode */
             --search-bg: rgba(10, 10, 10, 0.55);
@@ -72,15 +90,16 @@
         }
 
         /* Typography */
-        h1, h2, h3 {
-            font-weight: 500;
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 700;
             letter-spacing: -0.02em;
         }
 
         .mono {
             font-family: var(--font-mono);
             text-transform: uppercase;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             letter-spacing: 0.05em;
         }
 
@@ -366,6 +385,230 @@
             .nav-controls { gap: 0.75rem; }
         }
 
+        /* Navbar Action Buttons */
+        .nav-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: var(--spring-transition);
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+            letter-spacing: 0.05em;
+        }
+
+        .nav-btn:hover {
+            color: var(--accent-primary);
+        }
+
+        /* Cinematic Collapsible About Section */
+        .about-section {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            background: radial-gradient(circle at bottom right, var(--accent-glow) 0%, transparent 60%);
+            border-top: 1px solid transparent;
+            padding: 0 5%;
+            transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                        opacity 0.5s ease, 
+                        padding 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.3s ease;
+        }
+
+        .about-section.expanded {
+            max-height: 1000px;
+            opacity: 1;
+            padding: 6rem 5% 4rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .about-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.1fr 1.9fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (max-width: 968px) {
+            .about-inner {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            .about-section.expanded {
+                padding: 4rem 5% 3rem;
+            }
+        }
+
+        /* Developer Console Terminal */
+        .dev-terminal {
+            background: rgba(10, 10, 12, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            font-family: var(--font-mono);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dev-terminal::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 10;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .t-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .t-dot.red { background-color: #ef4444; }
+        .t-dot.yellow { background-color: #eab308; }
+        .t-dot.green { background-color: #22c55e; }
+
+        .terminal-title {
+            color: #71717a;
+            font-size: 0.75rem;
+        }
+
+        .terminal-avatar-block {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.75rem;
+        }
+
+        /* Pulsing SVG Avatar Mesh */
+        .avatar-mesh {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            position: relative;
+        }
+
+        .avatar-mesh::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border: 1px solid var(--accent-primary);
+            border-radius: 20px;
+            animation: pulse-border 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .avatar-meta h4 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-family: var(--font-display);
+            font-weight: 700;
+        }
+
+        .avatar-meta p {
+            color: var(--accent-primary);
+            font-size: 0.75rem;
+            margin-top: 0.15rem;
+        }
+
+        .terminal-log {
+            font-size: 0.8rem;
+            color: #d4d4d8;
+            line-height: 1.8;
+        }
+
+        .log-row {
+            margin-bottom: 0.5rem;
+            display: flex;
+        }
+
+        .log-tag {
+            color: #3b82f6;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .log-val {
+            color: #10b981;
+        }
+
+        /* Biography details */
+        .about-bio h2 {
+            font-size: 2.75rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.15;
+            color: var(--text-primary);
+        }
+
+        .about-bio p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.25rem;
+            max-width: 650px;
+        }
+
+        .about-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            padding: 0.9rem 2.25rem;
+            border-radius: 99px;
+            font-weight: 600;
+            font-family: var(--font-display);
+            transition: var(--spring-transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .action-button svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
         /* Search Container & Glassmorphism architecture */
         .search-container {
             margin: 3rem 0 2.5rem 0;
@@ -548,6 +791,8 @@
             LoLyeah
         </div>
         <div class="nav-controls">
+            <button id="about-toggle" class="nav-btn mono" data-translate-key="aboutBtn">ABOUT</button>
+            <span class="separator">/</span>
             <div class="lang-switcher">
                 <button id="lang-en" class="active">EN</button>
                 <span class="separator">|</span>
@@ -815,6 +1060,58 @@
         </div>
     </section>
 
+    <!-- Collapsible About / Creator Telemetry Console -->
+    <section class="about-section" id="about">
+        <div class="about-inner">
+            <!-- Left Developer Console -->
+            <div class="dev-terminal">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <span class="t-dot red"></span>
+                        <span class="t-dot yellow"></span>
+                        <span class="t-dot green"></span>
+                    </div>
+                    <span class="terminal-title">lolyeah_telemetry.sys</span>
+                </div>
+                <div class="terminal-avatar-block">
+                    <div class="avatar-mesh">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div class="avatar-meta">
+                        <h4>LoLyeah</h4>
+                        <p class="mono" id="about-meta-tag" data-translate-key="aboutMeta">Clinical Architect</p>
+                    </div>
+                </div>
+                <div class="terminal-log">
+                    <div class="log-row">
+                        <span class="log-tag">LOC //</span>
+                        <span class="log-val">INDONESIA [WIB]</span>
+                    </div>
+                    <div class="log-row">
+                        <span class="log-tag">STACK //</span>
+                        <span class="log-val">JS / CSS / PYTHON / MD</span>
+                    </div>
+                    <div class="log-row">
+                        <span class="log-tag">STATUS //</span>
+                        <span class="log-val">INTEGRATING SYSTEM V3</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Bio Details -->
+            <div class="about-bio">
+                <h2 id="about-bio-title" data-translate-key="aboutBioTitle">Synthesizing Systemic Complexity</h2>
+                <p id="about-bio-desc" data-translate-key="aboutBioDesc">I design and deploy clean, clinical reference frameworks, spatial simulations, and multi-dimensional analysis dashboards. Each topic in this archive represents a deep structural dive into complex systemic mechanics.</p>
+                <div class="about-links">
+                    <a href="https://github.com/LoLyeah" target="_blank" rel="noopener" class="action-button" aria-label="Visit my Github profile">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        <span>GitHub Profile</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer>
         <div class="logo">
             <span class="logo-placeholder"></span>
@@ -900,7 +1197,11 @@
                 noResultsTitle: "No topics found",
                 noResultsDesc: "We couldn't find any guides matching your search. Try a different keyword.",
                 clearSearchBtn: "Clear Search",
-                lastUpdate: "Last Update: May 25, 2026"
+                lastUpdate: "Last Update: May 25, 2026",
+                aboutBtn: "ABOUT",
+                aboutMeta: "Clinical Architect",
+                aboutBioTitle: "Synthesizing Systemic Complexity",
+                aboutBioDesc: "I design and deploy clean, clinical reference frameworks, spatial simulations, and multi-dimensional analysis dashboards. Each topic in this archive represents a deep structural dive into complex systemic mechanics."
             },
             id: {
                 headerTitle: "Panduan Interaktif LoLyeah",
@@ -969,7 +1270,11 @@
                 noResultsTitle: "Topik tidak ditemukan",
                 noResultsDesc: "Kami tidak menemukan panduan yang cocok dengan pencarian Anda. Coba kata kunci lain.",
                 clearSearchBtn: "Hapus Pencarian",
-                lastUpdate: "Pembaruan Terakhir: 25 Mei 2026"
+                lastUpdate: "Pembaruan Terakhir: 25 Mei 2026",
+                aboutBtn: "TENTANG",
+                aboutMeta: "Arsitek Klinis",
+                aboutBioTitle: "Menyintesis Kompleksitas Sistemik",
+                aboutBioDesc: "Saya merancang dan menerapkan kerangka referensi klinis yang bersih, simulasi spasial, dan dasbor analisis multi-dimensi. Setiap topik dalam arsip ini merepresentasikan pembahasan struktural yang mendalam tentang mekanisme sistemik yang kompleks."
             }
         };
 
@@ -1060,6 +1365,21 @@
         document.getElementById('lang-id').addEventListener('click', () => switchLanguage('id'));
         switchLanguage('en'); // Default init
         fetchLastCommitDate(); // Asynchronously fetch actual date from GitHub API
+
+        // --- Collapsible About Reveal Logic ---
+        const aboutToggle = document.getElementById('about-toggle');
+        const aboutSection = document.getElementById('about');
+
+        aboutToggle.addEventListener('click', () => {
+            const isExpanded = aboutSection.classList.toggle('expanded');
+            
+            if (isExpanded) {
+                // Smoothly scroll to the about section after transition initiates
+                setTimeout(() => {
+                    aboutSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 150);
+            }
+        });
 
         // --- Dark Mode Logic ---
         const themeToggle = document.getElementById('theme-toggle');
