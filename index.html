@@ -366,9 +366,9 @@
             .nav-controls { gap: 0.75rem; }
         }
 
-        /* Search Interface & Container */
+        /* Search Container & Glassmorphism architecture */
         .search-container {
-            margin-bottom: 2.5rem;
+            margin: 2.5rem 0;
             max-width: 600px;
             width: 100%;
         }
@@ -382,24 +382,25 @@
         .search-icon {
             position: absolute;
             left: 1.25rem;
+            width: 18px;
+            height: 18px;
             color: var(--text-secondary);
-            font-size: 0.95rem;
             pointer-events: none;
-            transition: color 0.2s ease;
+            transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 2;
         }
 
         .search-input {
             width: 100%;
-            padding: 1rem 3rem 1rem 3rem;
+            padding: 1.1rem 3.25rem 1.1rem 3.25rem;
             font-family: var(--font-sans);
             font-size: 0.95rem;
             background: var(--search-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             color: var(--text-primary);
             border: 1px solid var(--search-border);
-            border-radius: 8px; /* Slightly rounded for premium modern look */
+            border-radius: 12px; /* Smooth elegant curves */
             box-shadow: var(--search-shadow);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -408,7 +409,7 @@
             outline: none;
             background: var(--search-bg-focus);
             border-color: var(--search-border-focus);
-            box-shadow: var(--search-shadow-focus), 0 0 0 3px var(--hover-glow);
+            box-shadow: var(--search-shadow-focus), 0 0 0 4px var(--hover-glow);
         }
 
         .search-input:focus + .search-icon {
@@ -417,10 +418,10 @@
 
         .search-input::placeholder {
             color: var(--text-secondary);
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
-        /* Keyboard Shortcut */
+        /* Keyboard Shortcut Badge */
         .search-shortcut {
             position: absolute;
             right: 1.25rem;
@@ -428,9 +429,9 @@
             font-size: 0.75rem;
             color: var(--text-secondary);
             background: var(--search-shortcut-bg);
-            padding: 0.15rem 0.45rem;
+            padding: 0.2rem 0.5rem;
             border: 1px solid var(--search-shortcut-border);
-            border-radius: 4px;
+            border-radius: 6px;
             pointer-events: none;
             transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 2;
@@ -442,48 +443,60 @@
             pointer-events: none;
         }
 
-        /* Clear Button */
+        /* Revamped Clear Button with SVG icon */
         .search-clear-btn {
             position: absolute;
             right: 1.25rem;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.25rem;
-            cursor: pointer;
-            padding: 0.25rem;
-            display: none;
+            background: var(--search-shortcut-bg);
+            border: 1px solid var(--search-shortcut-border);
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            display: none; /* Controlled dynamically in JS */
             align-items: center;
             justify-content: center;
-            line-height: 1;
-            transition: color 0.2s ease;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 2;
         }
 
         .search-clear-btn:hover {
             color: var(--text-primary);
+            background: var(--hover-glow);
+            border-color: var(--search-border-focus);
         }
 
-        /* Empty / No Results State */
+        .search-clear-btn svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Empty State revamp matching the styles */
         .no-results-container {
             text-align: center;
             padding: 5rem 2rem;
-            border: 1px dashed var(--border-light);
-            border-radius: 4px;
-            background: var(--bg-primary);
+            border: 1px dashed var(--search-border);
+            border-radius: 12px;
+            background: var(--search-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             color: var(--text-secondary);
             margin: 2rem 0;
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            box-shadow: var(--search-shadow);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .no-results-icon {
-            font-size: 2.5rem;
+            color: var(--text-secondary);
             margin-bottom: 1.5rem;
-            opacity: 0.7;
+            width: 48px;
+            height: 48px;
+            opacity: 0.6;
         }
 
         .no-results-container h3 {
@@ -497,22 +510,23 @@
             font-size: 0.95rem;
             max-width: 450px;
             margin-bottom: 1.5rem;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         #reset-search-btn {
             background: transparent;
-            border: 1px solid var(--border-light);
-            padding: 0.5rem 1.25rem;
+            border: 1px solid var(--search-border);
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             font-family: var(--font-mono);
             font-size: 0.8rem;
             color: var(--text-secondary);
         }
 
         #reset-search-btn:hover {
-            border-color: var(--text-primary);
+            border-color: var(--border-dark);
             color: var(--text-primary);
             background: var(--hover-glow);
         }
@@ -551,12 +565,24 @@
             <h2 class="mono" data-translate-key="mainTitle">Explore a Topic</h2>
         </div>
 
-        <!-- Search Feature Wrapper -->
+        <!-- Completely Revamped Search Feature Wrapper -->
         <div class="search-container">
             <div class="search-wrapper">
-                <span class="search-icon">🔍</span>
+                <!-- Vectorized Search SVG Icon -->
+                <svg class="search-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="M21 21l-4.35-4.35"></path>
+                </svg>
+                
                 <input type="text" id="search-input" data-translate-key="searchPlaceholder" placeholder="Search topics..." autocomplete="off" spellcheck="false">
-                <button id="search-clear" class="search-clear-btn" aria-label="Clear search">&times;</button>
+                
+                <!-- Revamped Clear Button with Vectorized Close SVG -->
+                <button id="search-clear" class="search-clear-btn" aria-label="Clear search">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M18 6L6 18M6 6l12 12"></path>
+                    </svg>
+                </button>
+                
                 <span class="search-shortcut">/</span>
             </div>
         </div>
@@ -770,9 +796,13 @@
             </a>
         </div>
 
-        <!-- Empty State Container -->
+        <!-- Completely Revamped Empty State Container -->
         <div id="no-results" class="no-results-container">
-            <div class="no-results-icon">🔍</div>
+            <!-- Bespoke Magnifying glass custom SVG -->
+            <svg class="no-results-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="M21 21l-4.35-4.35M11 8v6M8 11h6"></path>
+            </svg>
             <h3 data-translate-key="noResultsTitle">No topics found</h3>
             <p data-translate-key="noResultsDesc">We couldn't find any guides matching your search. Try a different keyword.</p>
             <button id="reset-search-btn" data-translate-key="clearSearchBtn">Clear Search</button>
