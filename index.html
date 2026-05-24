@@ -345,6 +345,145 @@
             footer { flex-direction: column; gap: 1rem; text-align: center; }
             .nav-controls { gap: 0.75rem; }
         }
+
+        /* Search Interface & Container */
+        .search-container {
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            pointer-events: none;
+            transition: color 0.2s ease;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.85rem 2.5rem 0.85rem 2.5rem;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--border-dark);
+            box-shadow: 0 0 0 3px var(--hover-glow);
+        }
+
+        .search-input:focus + .search-icon {
+            color: var(--text-primary);
+        }
+
+        /* Keyboard Shortcut */
+        .search-shortcut {
+            position: absolute;
+            right: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            padding: 0.1rem 0.4rem;
+            border: 1px solid var(--border-light);
+            border-radius: 3px;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .search-input:focus ~ .search-shortcut,
+        .search-input:not(:placeholder-shown) ~ .search-shortcut {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Clear Button */
+        .search-clear-btn {
+            position: absolute;
+            right: 0.85rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            transition: color 0.2s ease;
+        }
+
+        .search-clear-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* Empty / No Results State */
+        .no-results-container {
+            text-align: center;
+            padding: 5rem 2rem;
+            border: 1px dashed var(--border-light);
+            border-radius: 4px;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            margin: 2rem 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .no-results-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.7;
+        }
+
+        .no-results-container h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .no-results-container p {
+            font-size: 0.95rem;
+            max-width: 450px;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        #reset-search-btn {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            padding: 0.5rem 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        #reset-search-btn:hover {
+            border-color: var(--text-primary);
+            color: var(--text-primary);
+            background: var(--hover-glow);
+        }
     </style>
 </head>
 <body>
@@ -378,6 +517,16 @@
     <section class="topics">
         <div class="section-header">
             <h2 class="mono" data-translate-key="mainTitle">Explore a Topic</h2>
+        </div>
+
+        <!-- Search Feature Wrapper -->
+        <div class="search-container">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" data-translate-key="searchPlaceholder" placeholder="Search topics..." autocomplete="off" spellcheck="false">
+                <button id="search-clear" class="search-clear-btn" aria-label="Clear search">&times;</button>
+                <span class="search-shortcut">/</span>
+            </div>
         </div>
         
         <div class="features-grid" id="features">
@@ -588,6 +737,14 @@
                 </div>
             </a>
         </div>
+
+        <!-- Empty State Container -->
+        <div id="no-results" class="no-results-container">
+            <div class="no-results-icon">🔍</div>
+            <h3 data-translate-key="noResultsTitle">No topics found</h3>
+            <p data-translate-key="noResultsDesc">We couldn't find any guides matching your search. Try a different keyword.</p>
+            <button id="reset-search-btn" data-translate-key="clearSearchBtn">Clear Search</button>
+        </div>
     </section>
 
     <footer>
@@ -601,6 +758,9 @@
     </footer>
 
     <button class="scroll-top" id="scrollTop">UP</button>
+
+    <!-- JS Motion Physics and View Transitions Engine -->
+    <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
 
     <script>
         // --- Translations ---
@@ -667,7 +827,11 @@
                 anesthesiaCardTitle: "Anesthesia Clinical Assistant",
                 anesthesiaCardDesc: "AI-powered clinical assistant, medical calculators, and offline reference suite tailored for MDs and healthcare professionals.",
                 anesthesiaCardLink: "Visit Assistant &rarr;",
-                footerText: "&copy; 2026 LoLyeah. All Rights Reserved."
+                footerText: "&copy; 2026 LoLyeah. All Rights Reserved.",
+                searchPlaceholder: "Search topics...",
+                noResultsTitle: "No topics found",
+                noResultsDesc: "We couldn't find any guides matching your search. Try a different keyword.",
+                clearSearchBtn: "Clear Search"
             },
             id: {
                 headerTitle: "Panduan Interaktif LoLyeah",
@@ -731,7 +895,11 @@
                 anesthesiaCardTitle: "Anesthesia Clinical Assistant",
                 anesthesiaCardDesc: "Asisten klinis berbasis AI, kalkulator medis, dan referensi offline yang dirancang khusus untuk MD dan profesional kesehatan.",
                 anesthesiaCardLink: "Kunjungi Asisten &rarr;",
-                footerText: "&copy; 2026 LoLyeah. Hak Cipta Dilindungi."
+                footerText: "&copy; 2026 Hak Cipta Dilindungi.",
+                searchPlaceholder: "Cari topik...",
+                noResultsTitle: "Topik tidak ditemukan",
+                noResultsDesc: "Kami tidak menemukan panduan yang cocok dengan pencarian Anda. Coba kata kunci lain.",
+                clearSearchBtn: "Hapus Pencarian"
             }
         };
 
@@ -764,6 +932,8 @@
                     // Check if the element is our main header to trigger the typing animation
                     if(el.id === 'typewriter-title') {
                         runTypewriter(el, translations[lang][key]);
+                    } else if (el.tagName === 'INPUT') {
+                        el.placeholder = translations[lang][key];
                     } else {
                         el.innerHTML = translations[lang][key];
                     }
@@ -821,6 +991,156 @@
 
         scrollTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // --- Search Logic & Handlers ---
+        const searchInput = document.getElementById("search-input");
+        const searchClear = document.getElementById("search-clear");
+        const noResults = document.getElementById("no-results");
+        const featuresGrid = document.getElementById("features");
+
+        // Index the cards for extremely performant instant filtering
+        const searchIndex = [];
+        document.querySelectorAll(".feature-card").forEach((card) => {
+            const titleEl = card.querySelector("h3");
+            const descEl = card.querySelector("p");
+            const numberEl = card.querySelector(".feature-icon");
+            
+            const titleKey = titleEl ? titleEl.dataset.translateKey : null;
+            const descKey = descEl ? descEl.dataset.translateKey : null;
+            const cardNum = numberEl ? numberEl.textContent.trim() : "";
+            
+            searchIndex.push({
+                element: card,
+                titleKey,
+                descKey,
+                cardNum
+            });
+        });
+
+        // Trigger staggered entry animation using Motion on page load
+        window.addEventListener("DOMContentLoaded", () => {
+            // Progressive Enhancement: set opacity to 0 via JS right before animation runs.
+            // If Motion fails to load or run, the cards are already visible.
+            if (typeof Motion !== 'undefined') {
+                const cards = document.querySelectorAll(".feature-card");
+                cards.forEach(card => card.style.opacity = "0");
+                
+                Motion.animate(
+                    ".feature-card",
+                    { opacity: [0, 1], y: [20, 0] },
+                    { 
+                        delay: Motion.stagger(0.02),
+                        duration: 0.55,
+                        easing: "ease-out"
+                    }
+                );
+            }
+        });
+
+        function performSearch() {
+            const query = searchInput.value.toLowerCase().trim();
+            
+            // Toggle clear button visibility
+            searchClear.style.display = query ? "flex" : "none";
+            
+            let visibleCount = 0;
+            const cardsToAnimate = [];
+            
+            searchIndex.forEach(item => {
+                const titleEN = item.titleKey && translations.en[item.titleKey] ? translations.en[item.titleKey].toLowerCase() : "";
+                const titleID = item.titleKey && translations.id[item.titleKey] ? translations.id[item.titleKey].toLowerCase() : "";
+                const descEN = item.descKey && translations.en[item.descKey] ? translations.en[item.descKey].toLowerCase() : "";
+                const descID = item.descKey && translations.id[item.descKey] ? translations.id[item.descKey].toLowerCase() : "";
+                const num = item.cardNum.toLowerCase();
+                
+                const matches = !query || 
+                                titleEN.includes(query) || 
+                                titleID.includes(query) || 
+                                descEN.includes(query) || 
+                                descID.includes(query) || 
+                                num.includes(query);
+                
+                if (matches) {
+                    if (item.element.style.display === "none") {
+                        item.element.style.display = "";
+                        cardsToAnimate.push(item.element);
+                    } else if (item.element.style.display === "") {
+                        if (query && parseFloat(item.element.style.opacity || 0) === 0) {
+                            cardsToAnimate.push(item.element);
+                        }
+                    }
+                    visibleCount++;
+                } else {
+                    item.element.style.display = "none";
+                    item.element.style.opacity = "0"; // Reset for subsequent fade-ins
+                }
+            });
+            
+            // Animate filtered entries beautifully
+            if (cardsToAnimate.length > 0 && typeof Motion !== 'undefined') {
+                Motion.animate(
+                    cardsToAnimate,
+                    { opacity: [0, 1], y: [10, 0], scale: [0.98, 1] },
+                    { 
+                        delay: Motion.stagger(0.015),
+                        duration: 0.35,
+                        easing: "ease-out"
+                    }
+                );
+            } else if (cardsToAnimate.length > 0) {
+                // Fallback if Motion is missing
+                cardsToAnimate.forEach(card => card.style.opacity = "1");
+            }
+            
+            // Switch view grid or empty state
+            if (visibleCount === 0) {
+                featuresGrid.style.display = "none";
+                noResults.style.display = "flex";
+                if (typeof Motion !== 'undefined') {
+                    Motion.animate(
+                        noResults,
+                        { opacity: [0, 1], scale: [0.97, 1] },
+                        { duration: 0.4, easing: "ease-out" }
+                    );
+                } else {
+                    noResults.style.opacity = "1";
+                }
+            } else {
+                featuresGrid.style.display = "grid";
+                noResults.style.display = "none";
+            }
+        }
+
+        searchInput.addEventListener("input", performSearch);
+
+        searchClear.addEventListener("click", () => {
+            searchInput.value = "";
+            performSearch();
+            searchInput.focus();
+        });
+
+        document.getElementById("reset-search-btn").addEventListener("click", () => {
+            searchInput.value = "";
+            performSearch();
+            searchInput.focus();
+        });
+
+        // Hotkeys: '/' or 'Cmd+K'/'Ctrl+K' to focus. 'Esc' to blur.
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "/" && document.activeElement !== searchInput) {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            }
+            if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            }
+            if (e.key === "Escape" && document.activeElement === searchInput) {
+                searchInput.blur();
+            }
         });
     </script>
 </body>
