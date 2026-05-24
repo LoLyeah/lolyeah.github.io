@@ -804,13 +804,25 @@
         }
 
         .tab-content {
-            display: none;
+            display: flex;
             flex-direction: column;
             gap: 1.25rem;
+            opacity: 0;
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
+            pointer-events: none;
+            transition: opacity 0.12s ease-out, transform 0.15s ease-out;
+            transform: translateY(4px);
         }
 
         .tab-content.active {
-            display: flex;
+            opacity: 1;
+            visibility: visible;
+            height: auto;
+            overflow: visible;
+            pointer-events: auto;
+            transform: translateY(0);
         }
 
         /* Interactive stats grid */
@@ -1040,7 +1052,7 @@
     <header>
         <div class="brand-section">
             <h1 id="title-tag">Solar System Explorer</h1>
-            <p id="subtitle">Spaceship HUD Telemetry Dashboard / Dasbor Telemetri HUD Pesawat Antariksa</p>
+            <p id="subtitle">Spaceship HUD Telemetry Dashboard</p>
         </div>
         
         <div class="header-controls">
@@ -1097,9 +1109,9 @@
             <div class="scan-body">
                 <!-- High-tech selector tabs -->
                 <div class="scan-tabs">
-                    <button class="tab-btn active" onclick="switchTab('overview')">Telemetry</button>
-                    <button class="tab-btn" onclick="switchTab('composition')">Atmosphere</button>
-                    <button class="tab-btn" onclick="switchTab('curiosities')">Cosmics</button>
+                    <button class="tab-btn active" data-tab="overview">Telemetry</button>
+                    <button class="tab-btn" data-tab="composition">Atmosphere</button>
+                    <button class="tab-btn" data-tab="curiosities">Cosmics</button>
                 </div>
                 
                 <!-- Tab 1: Telemetry Data & Earth Comparator -->
@@ -1212,7 +1224,7 @@
         const translations = {
             en: {
                 title: "Solar System Explorer",
-                subtitle: "Spaceship HUD Telemetry Dashboard / Dasbor Telemetri HUD Pesawat Antariksa",
+                subtitle: "Spaceship HUD Telemetry Dashboard",
                 keyFactsTitle: "Key Facts",
                 compositionTitle: "Composition",
                 interestingFactsTitle: "Interesting Facts",
@@ -1489,7 +1501,7 @@
             },
             id: {
                 title: "Penjelajah Tata Surya",
-                subtitle: "Spaceship HUD Telemetry Dashboard / Dasbor Telemetri HUD Pesawat Antariksa",
+                subtitle: "Dasbor Telemetri Pesawat Antariksa",
                 keyFactsTitle: "Fakta Utama",
                 compositionTitle: "Komposisi",
                 interestingFactsTitle: "Fakta Menarik",
@@ -1801,12 +1813,46 @@
 
         let lastFrameTime = performance.now();
 
+        // Cached DOM Elements
+        const dom = {};
+
         // ----------------------------------------------------
         // MAIN APPLICATION LIFECYCLE
         // ----------------------------------------------------
         document.addEventListener('DOMContentLoaded', () => {
+            // Cache elements
+            dom.planetModal = document.getElementById('planet-modal');
+            dom.modalTitle = document.getElementById('modal-title');
+            dom.planetType = document.getElementById('planet-type');
+            dom.statsGrid = document.getElementById('stats-grid');
+            dom.earthCompLabel = document.getElementById('earth-comp-label');
+            dom.sizeCompText = document.getElementById('size-comp-text');
+            dom.gravCompText = document.getElementById('grav-comp-text');
+            dom.sizeCompVal = document.getElementById('size-comp-val');
+            dom.gravCompVal = document.getElementById('grav-comp-val');
+            dom.sizeBar = document.getElementById('size-bar');
+            dom.gravBar = document.getElementById('grav-bar');
+            dom.compositionContent = document.getElementById('composition-content');
+            dom.factsList = document.getElementById('facts-list');
+            dom.readMoreBtn = document.getElementById('read-more-btn');
+            dom.tabBtns = document.querySelectorAll('.tab-btn');
+            dom.tabContents = document.querySelectorAll('.tab-content');
+            
+            // Bind tab selectors cleanly
+            dom.tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.dataset.tab;
+                    switchTab(tabId);
+                });
+            });
+
             initializeSolarSystem();
             initializeSidebarMenu();
+            
+            // Cache dynamically created elements
+            dom.planets = document.querySelectorAll('.planet');
+            dom.planetNavItems = document.querySelectorAll('.planet-nav-item');
+
             setupEventListeners();
             resizeSolarSystem();
             
@@ -2126,16 +2172,14 @@
         function showPlanetInfo(planet) {
             const t = translations[currentLang];
             const info = t.planets[planet];
-            const panel = document.getElementById('planet-modal');
             
-            document.getElementById('modal-title').textContent = info.name;
-            document.getElementById('planet-type').textContent = info.type;
+            dom.modalTitle.textContent = info.name;
+            dom.planetType.textContent = info.type;
             
             // Build telemetry stats
-            const statsGrid = document.getElementById('stats-grid');
-            statsGrid.innerHTML = `
+            dom.statsGrid.innerHTML = `
                 <div class="stat-card">
-                    <span class="stat-label">${currentLang === 'en' ? 'DIAMETER' : 'DIAMETER'}</span>
+                    <span class="stat-label">DIAMETER</span>
                     <span class="stat-value">${info.diameter}</span>
                 </div>
                 <div class="stat-card">
@@ -2161,9 +2205,9 @@
             `;
             
             // Build comparative meters
-            document.getElementById('earth-comp-label').textContent = t.earthCompTitle;
-            document.getElementById('size-comp-text').textContent = t.relativeDiameter;
-            document.getElementById('grav-comp-text').textContent = t.relativeGravity;
+            dom.earthCompLabel.textContent = t.earthCompTitle;
+            dom.sizeCompText.textContent = t.relativeDiameter;
+            dom.gravCompText.textContent = t.relativeGravity;
 
             const sizeRatio = info.sizeRatio;
             const gravityRatio = info.gravityRatio;
@@ -2171,8 +2215,8 @@
             const sizeLabelVal = sizeRatio < 1.0 ? `${Math.round(sizeRatio * 100)}% of Earth` : `${sizeRatio.toFixed(1)}x Earth`;
             const gravLabelVal = gravityRatio < 1.0 ? `${Math.round(gravityRatio * 100)}% of Earth` : `${gravityRatio.toFixed(1)}x Earth`;
 
-            document.getElementById('size-comp-val').textContent = sizeLabelVal;
-            document.getElementById('grav-comp-val').textContent = gravLabelVal;
+            dom.sizeCompVal.textContent = sizeLabelVal;
+            dom.gravCompVal.textContent = gravLabelVal;
 
             // Fill bars (capped at 100%)
             const sizeBarWidth = Math.min(100, (sizeRatio / 12.0) * 100); // Scaled appropriately
@@ -2180,59 +2224,56 @@
 
             // Trigger animation on fill
             setTimeout(() => {
-                document.getElementById('size-bar').style.width = `${planet === 'sun' ? 100 : Math.max(5, sizeBarWidth)}%`;
-                document.getElementById('grav-bar').style.width = `${planet === 'sun' ? 100 : Math.max(5, gravBarWidth)}%`;
+                dom.sizeBar.style.width = `${planet === 'sun' ? 100 : Math.max(5, sizeBarWidth)}%`;
+                dom.gravBar.style.width = `${planet === 'sun' ? 100 : Math.max(5, gravBarWidth)}%`;
             }, 50);
 
             // Tab 2: Composition
-            document.getElementById('composition-content').textContent = info.composition;
+            dom.compositionContent.textContent = info.composition;
             
             // Tab 3: Cosmics/Curiosities list
-            const factsList = document.getElementById('facts-list');
-            factsList.innerHTML = '';
+            dom.factsList.innerHTML = '';
             
             const combinedFacts = [...info.facts, ...(info.curiosities || [])];
             combinedFacts.forEach(fact => {
                 const li = document.createElement('li');
                 li.textContent = fact;
-                factsList.appendChild(li);
+                dom.factsList.appendChild(li);
             });
 
             // Action Read More button links
-            const readMoreBtn = document.getElementById('read-more-btn');
-            readMoreBtn.href = info.wikiUrl;
-            readMoreBtn.innerHTML = `
+            dom.readMoreBtn.href = info.wikiUrl;
+            dom.readMoreBtn.innerHTML = `
                 ${t.readMoreLabel}
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
             `;
             
-            panel.classList.add('active');
+            dom.planetModal.classList.add('active');
             switchTab(activeTab); // Keep current active tab state
         }
 
         function switchTab(tabId) {
             activeTab = tabId;
             
-            // Toggle tab active button state
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('onclick').includes(tabId));
+            // Toggle tab active button state cleanly via cached elements
+            dom.tabBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tabId);
             });
 
-            // Toggle active content divs
-            document.querySelectorAll('.tab-content').forEach(content => {
+            // Toggle active content divs cleanly via cached elements
+            dom.tabContents.forEach(content => {
                 content.classList.toggle('active', content.id === `tab-${tabId}`);
             });
         }
 
         function closeModal() {
-            const panel = document.getElementById('planet-modal');
-            panel.classList.remove('active');
+            dom.planetModal.classList.remove('active');
             
-            // Remove focusing highlights
-            document.querySelectorAll('.planet').forEach(pEl => {
+            // Remove focusing highlights using pre-cached variables
+            dom.planets.forEach(pEl => {
                 pEl.classList.remove('focused');
             });
-            document.querySelectorAll('.planet-nav-item').forEach(item => {
+            dom.planetNavItems.forEach(item => {
                 item.classList.remove('active');
             });
             
