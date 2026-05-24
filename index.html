@@ -16,6 +16,16 @@
             --hover-glow: rgba(0, 0, 0, 0.05);
             --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --font-mono: 'JetBrains Mono', 'Courier New', Courier, monospace;
+
+            /* Glassmorphic Search Tokens - Light Mode */
+            --search-bg: rgba(255, 255, 255, 0.45);
+            --search-bg-focus: rgba(255, 255, 255, 0.7);
+            --search-border: rgba(0, 0, 0, 0.08);
+            --search-border-focus: var(--border-dark);
+            --search-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.03);
+            --search-shadow-focus: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+            --search-shortcut-bg: rgba(0, 0, 0, 0.04);
+            --search-shortcut-border: rgba(0, 0, 0, 0.06);
         }
 
         /* Variables - Dark Mode */
@@ -27,6 +37,16 @@
             --border-light: #222222;
             --border-dark: #ffffff;
             --hover-glow: rgba(255, 255, 255, 0.06);
+
+            /* Glassmorphic Search Tokens - Dark Mode */
+            --search-bg: rgba(10, 10, 10, 0.55);
+            --search-bg-focus: rgba(10, 10, 10, 0.8);
+            --search-border: rgba(255, 255, 255, 0.08);
+            --search-border-focus: var(--border-dark);
+            --search-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --search-shadow-focus: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            --search-shortcut-bg: rgba(255, 255, 255, 0.06);
+            --search-shortcut-border: rgba(255, 255, 255, 0.08);
         }
 
         /* Reset & Base Styles */
@@ -374,39 +394,30 @@
             padding: 1rem 3rem 1rem 3rem;
             font-family: var(--font-sans);
             font-size: 0.95rem;
-            /* Glassmorphism architecture */
-            background: rgba(255, 255, 255, 0.45);
+            background: var(--search-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             color: var(--text-primary);
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--search-border);
             border-radius: 8px; /* Slightly rounded for premium modern look */
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.03);
+            box-shadow: var(--search-shadow);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* Dark mode overrides for glassmorphic elements */
-        [data-theme="dark"] .search-input {
-            background: rgba(10, 10, 10, 0.55);
-            border-color: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
         .search-input:focus {
             outline: none;
-            background: rgba(255, 255, 255, 0.7);
-            border-color: var(--border-dark);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08), 0 0 0 3px var(--hover-glow);
-        }
-
-        [data-theme="dark"] .search-input:focus {
-            background: rgba(10, 10, 10, 0.8);
-            border-color: var(--border-dark);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 0 3px var(--hover-glow);
+            background: var(--search-bg-focus);
+            border-color: var(--search-border-focus);
+            box-shadow: var(--search-shadow-focus), 0 0 0 3px var(--hover-glow);
         }
 
         .search-input:focus + .search-icon {
             color: var(--text-primary);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.6;
         }
 
         /* Keyboard Shortcut */
@@ -416,18 +427,13 @@
             font-family: var(--font-mono);
             font-size: 0.75rem;
             color: var(--text-secondary);
-            background: rgba(0, 0, 0, 0.04);
+            background: var(--search-shortcut-bg);
             padding: 0.15rem 0.45rem;
-            border: 1px solid rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--search-shortcut-border);
             border-radius: 4px;
             pointer-events: none;
             transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 2;
-        }
-
-        [data-theme="dark"] .search-shortcut {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.08);
         }
 
         .search-input:focus ~ .search-shortcut,
