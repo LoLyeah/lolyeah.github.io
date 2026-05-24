@@ -978,16 +978,29 @@
         const themeToggle = document.getElementById('theme-toggle');
         const themeText = document.getElementById('theme-text');
         
-        // Check for saved user preference, if any, on load
-        const currentTheme = localStorage.getItem('theme') || 'light';
+        // Check for saved user preference, if any, on load with sandboxed fallback
+        let currentTheme = 'light';
+        try {
+            currentTheme = localStorage.getItem('theme') || 'light';
+        } catch (e) {
+            console.warn("localStorage is blocked or disabled in this sandbox environment. Defaulting to light theme:", e.message);
+        }
         document.documentElement.setAttribute('data-theme', currentTheme);
-        themeText.innerText = currentTheme === 'light' ? 'DARK' : 'LIGHT';
+        if (themeText) {
+            themeText.innerText = currentTheme === 'light' ? 'DARK' : 'LIGHT';
+        }
 
         themeToggle.addEventListener('click', () => {
             let targetTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', targetTheme);
-            localStorage.setItem('theme', targetTheme);
-            themeText.innerText = targetTheme === 'light' ? 'DARK' : 'LIGHT';
+            try {
+                localStorage.setItem('theme', targetTheme);
+            } catch (e) {
+                console.warn("localStorage is blocked or disabled in this sandbox environment. Theme changes will not persist:", e.message);
+            }
+            if (themeText) {
+                themeText.innerText = targetTheme === 'light' ? 'DARK' : 'LIGHT';
+            }
         });
 
         // --- Mouse Tracking Hover Effect ---
@@ -1043,25 +1056,35 @@
             });
         });
 
-        // Trigger staggered entry animation using Motion on page load
-        window.addEventListener("DOMContentLoaded", () => {
-            // Progressive Enhancement: set opacity to 0 via JS right before animation runs.
-            // If Motion fails to load or run, the cards are already visible.
+        // Trigger staggered entry animation using Motion on page load with state fallback check
+        function runEntranceAnimation() {
             if (typeof Motion !== 'undefined') {
-                const cards = document.querySelectorAll(".feature-card");
-                cards.forEach(card => card.style.opacity = "0");
-                
-                Motion.animate(
-                    ".feature-card",
-                    { opacity: [0, 1], y: [20, 0] },
-                    { 
-                        delay: Motion.stagger(0.02),
-                        duration: 0.55,
-                        easing: "ease-out"
-                    }
-                );
+                try {
+                    const cards = document.querySelectorAll(".feature-card");
+                    cards.forEach(card => card.style.opacity = "0");
+                    
+                    Motion.animate(
+                        ".feature-card",
+                        { opacity: [0, 1], y: [20, 0] },
+                        { 
+                            delay: Motion.stagger(0.02),
+                            duration: 0.55,
+                            easing: "ease-out"
+                        }
+                    );
+                } catch (e) {
+                    console.error("Motion entry stagger failed, falling back to instant opacity display:", e);
+                    document.querySelectorAll(".feature-card").forEach(card => card.style.opacity = "1");
+                }
             }
-        });
+        }
+
+        // Avoid readyState race condition
+        if (document.readyState === "loading") {
+            window.addEventListener("DOMContentLoaded", runEntranceAnimation);
+        } else {
+            runEntranceAnimation();
+        }
 
         function performSearch() {
             const query = searchInput.value.toLowerCase().trim();
@@ -1102,17 +1125,22 @@
                 }
             });
             
-            // Animate filtered entries beautifully
+            // Animate filtered entries beautifully with try-catch safety
             if (cardsToAnimate.length > 0 && typeof Motion !== 'undefined') {
-                Motion.animate(
-                    cardsToAnimate,
-                    { opacity: [0, 1], y: [10, 0], scale: [0.98, 1] },
-                    { 
-                        delay: Motion.stagger(0.015),
-                        duration: 0.35,
-                        easing: "ease-out"
-                    }
-                );
+                try {
+                    Motion.animate(
+                        cardsToAnimate,
+                        { opacity: [0, 1], y: [10, 0], scale: [0.98, 1] },
+                        { 
+                            delay: Motion.stagger(0.015),
+                            duration: 0.35,
+                            easing: "ease-out"
+                        }
+                    );
+                } catch (e) {
+                    console.warn("Motion animate failed in performSearch, showing instantly:", e);
+                    cardsToAnimate.forEach(card => card.style.opacity = "1");
+                }
             } else if (cardsToAnimate.length > 0) {
                 // Fallback if Motion is missing
                 cardsToAnimate.forEach(card => card.style.opacity = "1");
@@ -1123,11 +1151,15 @@
                 featuresGrid.style.display = "none";
                 noResults.style.display = "flex";
                 if (typeof Motion !== 'undefined') {
-                    Motion.animate(
-                        noResults,
-                        { opacity: [0, 1], scale: [0.97, 1] },
-                        { duration: 0.4, easing: "ease-out" }
-                    );
+                    try {
+                        Motion.animate(
+                            noResults,
+                            { opacity: [0, 1], scale: [0.97, 1] },
+                            { duration: 0.4, easing: "ease-out" }
+                        );
+                    } catch (e) {
+                        noResults.style.opacity = "1";
+                    }
                 } else {
                     noResults.style.opacity = "1";
                 }
