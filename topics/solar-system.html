@@ -1007,27 +1007,131 @@
             text-shadow: 0 0 8px var(--accent-glow);
         }
 
+        /* ----------------------------------------------------
+           MOBILE MULTI-TOUCH TELEMETRY SELECTOR BAR
+           ---------------------------------------------------- */
+        .mobile-telemetry-selector {
+            display: none;
+            background: rgba(8, 8, 24, 0.55);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none; /* Hide scrollbar Firefox */
+            z-index: 9;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .mobile-telemetry-selector::-webkit-scrollbar {
+            display: none; /* Hide scrollbar Chrome/Safari */
+        }
+
+        .mobile-sel-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 99px;
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-sel-btn:hover {
+            color: var(--text-light);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .mobile-sel-btn.active {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 12px rgba(78, 204, 163, 0.2);
+        }
+
         @media (max-width: 1100px) {
+            .mobile-telemetry-selector {
+                display: flex;
+            }
             .telemetry-sidebar {
                 display: none;
             }
             .scan-panel {
-                height: 50%;
-                width: calc(100% - 4rem);
+                position: absolute;
                 top: auto;
-                bottom: 6rem;
+                bottom: 6.5rem;
+                left: 1.5rem;
+                right: 1.5rem;
+                width: auto;
+                height: 52%;
                 transform: translateY(150%);
+                transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             }
             .scan-panel.active {
                 transform: translateY(0);
             }
             .cockpit-hud {
-                bottom: 1.5rem;
+                bottom: 1rem;
             }
             footer {
                 flex-direction: column;
                 gap: 8px;
                 text-align: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cockpit-hud {
+                bottom: 1rem;
+                width: calc(100% - 2rem);
+                border-radius: 24px;
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px 16px;
+            }
+            .hud-divider {
+                display: none;
+            }
+            .hud-control-group {
+                gap: 8px;
+            }
+            .hud-slider {
+                width: 60px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .scan-panel {
+                left: 1rem;
+                right: 1rem;
+                height: 55%;
+                bottom: 7.5rem;
+            }
+            .scan-body {
+                padding: 1rem;
+                gap: 1rem;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .stat-card {
+                padding: 8px;
+            }
+            .brand-section h1 {
+                font-size: 1.3rem;
+            }
+            header {
+                padding: 1rem;
             }
         }
     </style>
@@ -1061,6 +1165,11 @@
             </a>
         </div>
     </header>
+    
+    <!-- Mobile Horizontal Swiper Planet Selector -->
+    <div class="mobile-telemetry-selector" id="mobile-selector">
+        <!-- Javascript will populate buttons -->
+    </div>
     
     <!-- Main Interactive Explorer View -->
     <div class="main-app-container">
@@ -1842,10 +1951,12 @@
 
             initializeSolarSystem();
             initializeSidebarMenu();
+            initializeMobileSelector();
             
             // Cache dynamically created elements
             dom.planets = document.querySelectorAll('.planet');
             dom.planetNavItems = document.querySelectorAll('.planet-nav-item');
+            dom.mobileSelBtns = document.querySelectorAll('.mobile-sel-btn');
 
             // Map planet elements by name for 60fps hot-loop queries
             dom.planetEls = {};
@@ -1987,21 +2098,71 @@
             });
         }
 
+        function initializeMobileSelector() {
+            const selector = document.getElementById('mobile-selector');
+            if (!selector) return;
+            selector.innerHTML = '';
+            
+            // Sun item
+            const sunBtn = document.createElement('button');
+            sunBtn.className = 'mobile-sel-btn';
+            sunBtn.dataset.planet = 'sun';
+            if (selectedPlanet === 'sun') sunBtn.classList.add('active');
+            
+            const sunInfo = translations[currentLang].planets.sun;
+            sunBtn.innerHTML = `<span class="planet-nav-indicator" style="background: ${sunInfo.color}; display:inline-block; width:6px; height:6px; border-radius:50%; box-shadow: 0 0 8px ${sunInfo.color};"></span> ${sunInfo.name.toUpperCase()}`;
+            selector.appendChild(sunBtn);
+            
+            const planets = ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'];
+            planets.forEach(p => {
+                const btn = document.createElement('button');
+                btn.className = 'mobile-sel-btn';
+                btn.dataset.planet = p;
+                if (selectedPlanet === p) btn.classList.add('active');
+                
+                const pInfo = translations[currentLang].planets[p];
+                btn.innerHTML = `<span class="planet-nav-indicator" style="background: ${pInfo.color}; display:inline-block; width:6px; height:6px; border-radius:50%; box-shadow: 0 0 8px ${pInfo.color};"></span> ${pInfo.name.toUpperCase()}`;
+                selector.appendChild(btn);
+            });
+            
+            // Add click event listeners
+            document.querySelectorAll('.mobile-sel-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const name = this.dataset.planet;
+                    selectAndFocusPlanet(name);
+                });
+            });
+
+            // Keep DOM selector cache synchronized
+            dom.mobileSelBtns = document.querySelectorAll('.mobile-sel-btn');
+        }
+
         // ----------------------------------------------------
         // SYSTEM ACTIONS & HANDLERS
         // ----------------------------------------------------
         function selectAndFocusPlanet(planet) {
             selectedPlanet = planet;
             
-            // Highlight list in sidebar
-            document.querySelectorAll('.planet-nav-item').forEach(item => {
-                item.classList.toggle('active', item.dataset.planet === planet);
-            });
+            // Highlight list in sidebar using cached elements
+            if (dom.planetNavItems) {
+                dom.planetNavItems.forEach(item => {
+                    item.classList.toggle('active', item.dataset.planet === planet);
+                });
+            }
 
-            // Focus on planet visually
-            document.querySelectorAll('.planet').forEach(pEl => {
-                pEl.classList.toggle('focused', pEl.dataset.planet === planet);
-            });
+            // Focus on planet visually using cached elements
+            if (dom.planets) {
+                dom.planets.forEach(pEl => {
+                    pEl.classList.toggle('focused', pEl.dataset.planet === planet);
+                });
+            }
+
+            // Highlight mobile horizontal swiper menu using cached elements
+            if (dom.mobileSelBtns) {
+                dom.mobileSelBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.planet === planet);
+                });
+            }
 
             // Open Scan details
             showPlanetInfo(planet);
@@ -2133,8 +2294,20 @@
             const tiltX = is3D ? '60deg' : '0deg';
             const tiltY = is3D ? '-15deg' : '0deg';
 
-            // Rotate the main canvas space
-            solarSystem.style.transform = `scale(${finalScale}) rotateX(${tiltX}) rotateY(${tiltY})`;
+            // Shift the center if a planet is selected to make room for detail panels without overlapping
+            let translateX = 0;
+            let translateY = 0;
+            
+            if (selectedPlanet) {
+                if (window.innerWidth > 1100) {
+                    translateX = -120; // Shift left on desktop
+                } else {
+                    translateY = -120; // Shift up on mobile/tablets
+                }
+            }
+
+            // Rotate and translate the main canvas space smoothly
+            solarSystem.style.transform = `scale(${finalScale}) rotateX(${tiltX}) rotateY(${tiltY}) translate3d(${translateX}px, ${translateY}px, 0)`;
             
             // Billboard-correct the Sun
             const sun = document.getElementById('sun-body');
@@ -2156,6 +2329,9 @@
             
             // Sync Left Sidebar Names
             initializeSidebarMenu();
+            
+            // Sync Mobile Selector Names
+            initializeMobileSelector();
             
 
             
