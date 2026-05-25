@@ -1078,6 +1078,16 @@
             }
             .bottom-sheet-handle {
                 display: block;
+                cursor: grab;
+                touch-action: none;
+            }
+            .scan-header {
+                cursor: grab;
+                touch-action: none;
+            }
+            .close-scan, .tab-btn {
+                cursor: pointer;
+                touch-action: auto;
             }
             .scan-panel {
                 position: absolute;
@@ -1086,15 +1096,22 @@
                 left: 0;
                 right: 0;
                 width: 100%;
-                height: 52%;
+                height: 85%;
                 border-radius: 24px 24px 0 0;
                 border-bottom: none;
                 z-index: 100;
                 transform: translateY(105%);
-                transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+                transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                will-change: transform;
             }
-            .scan-panel.active {
-                transform: translateY(0);
+            .scan-panel.state-hidden {
+                transform: translateY(105%) !important;
+            }
+            .scan-panel.state-half {
+                transform: translateY(35%) !important;
+            }
+            .scan-panel.state-full {
+                transform: translateY(0) !important;
             }
             .cockpit-hud {
                 bottom: 1rem;
@@ -1132,9 +1149,15 @@
                 left: 0;
                 right: 0;
                 width: 100%;
-                height: 55%;
+                height: 88%;
                 bottom: 0;
                 border-radius: 20px 20px 0 0;
+            }
+            .scan-panel.state-half {
+                transform: translateY(38%) !important;
+            }
+            .scan-panel.state-full {
+                transform: translateY(0) !important;
             }
             .scan-body {
                 padding: 1rem;
@@ -1946,6 +1969,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Cache elements
             dom.planetModal = document.getElementById('planet-modal');
+            dom.bottomSheetHandle = document.querySelector('.bottom-sheet-handle');
+            dom.scanHeader = document.querySelector('.scan-header');
             dom.modalTitle = document.getElementById('modal-title');
             dom.planetType = document.getElementById('planet-type');
             dom.statsGrid = document.getElementById('stats-grid');
@@ -1987,9 +2012,10 @@
             });
 
             setupEventListeners();
-            resizeSolarSystem();
+            setupBottomSheetDrag();
+            handleResize();
             
-            window.addEventListener('resize', resizeSolarSystem);
+            window.addEventListener('resize', handleResize);
             
             // Start the frame animation loop
             requestAnimationFrame(animateOrbits);
@@ -2337,6 +2363,128 @@
             }
         }
 
+        function handleResize() {
+            resizeSolarSystem();
+            if (window.innerWidth <= 1100) {
+                if (selectedPlanet && !dom.planetModal.classList.contains('state-full') && !dom.planetModal.classList.contains('state-half')) {
+                    dom.planetModal.classList.add('state-half');
+                    dom.planetModal.classList.remove('state-hidden');
+                }
+            } else {
+                dom.planetModal.classList.remove('state-full', 'state-half', 'state-hidden');
+            }
+        }
+
+        function setupBottomSheetDrag() {
+            let isDragging = false;
+            let startY = 0;
+            let sheetHeight = 0;
+            let initialTranslateY = 0;
+
+            const getCurrentTranslateY = (height) => {
+                if (dom.planetModal.classList.contains('state-full')) {
+                    return 0;
+                } else if (dom.planetModal.classList.contains('state-half')) {
+                    const isSmallScreen = window.innerWidth <= 500;
+                    const halfPercent = isSmallScreen ? 0.38 : 0.35;
+                    return height * halfPercent;
+                } else {
+                    return height * 1.05;
+                }
+            };
+
+            const startDrag = (e) => {
+                // Avoid initiating drag on interactive elements inside header
+                if (e.target.closest('.close-scan') || e.target.closest('.tab-btn')) {
+                    return;
+                }
+                
+                // Active only for mobile/tablet responsive breakpoints
+                if (window.innerWidth > 1100) return;
+
+                isDragging = true;
+                const touch = e.touches ? e.touches[0] : e;
+                startY = touch.clientY;
+                sheetHeight = dom.planetModal.offsetHeight;
+                initialTranslateY = getCurrentTranslateY(sheetHeight);
+
+                dom.planetModal.style.transition = 'none';
+
+                // Bind move & end globally for smooth tracking off-element
+                document.addEventListener('touchmove', onDrag, { passive: false });
+                document.addEventListener('touchend', endDrag);
+                document.addEventListener('mousemove', onDrag);
+                document.addEventListener('mouseup', endDrag);
+            };
+
+            const onDrag = (e) => {
+                if (!isDragging) return;
+
+                // Stop browser drag and page scroll behavior
+                if (e.cancelable) {
+                    e.preventDefault();
+                }
+
+                const touch = e.touches ? e.touches[0] : e;
+                const deltaY = touch.clientY - startY;
+                let newTranslateY = initialTranslateY + deltaY;
+
+                // Rubberband dampening when dragging past top/full state
+                if (newTranslateY < 0) {
+                    newTranslateY = newTranslateY * 0.25;
+                }
+
+                // Rubberband dampening when dragging down past hidden state
+                const hiddenVal = sheetHeight * 1.05;
+                if (newTranslateY > hiddenVal) {
+                    newTranslateY = hiddenVal + (newTranslateY - hiddenVal) * 0.2;
+                }
+
+                dom.planetModal.style.transform = `translateY(${newTranslateY}px)`;
+            };
+
+            const endDrag = (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+
+                document.removeEventListener('touchmove', onDrag);
+                document.removeEventListener('touchend', endDrag);
+                document.removeEventListener('mousemove', onDrag);
+                document.removeEventListener('mouseup', endDrag);
+
+                // Compute final drag translation
+                let finalTranslateY = initialTranslateY;
+                const touch = e.changedTouches ? e.changedTouches[0] : e;
+                if (touch && touch.clientY) {
+                    const deltaY = touch.clientY - startY;
+                    finalTranslateY = initialTranslateY + deltaY;
+                }
+
+                // Restore transitioning animation
+                dom.planetModal.style.transition = '';
+                dom.planetModal.style.transform = '';
+
+                // Snapping thresholds relative to panel height
+                const ratio = finalTranslateY / sheetHeight;
+
+                dom.planetModal.classList.remove('state-full', 'state-half', 'state-hidden');
+
+                if (ratio < 0.18) {
+                    dom.planetModal.classList.add('state-full');
+                } else if (ratio < 0.70) {
+                    dom.planetModal.classList.add('state-half');
+                } else {
+                    closeModal();
+                }
+            };
+
+            // Bind events to handle and header
+            dom.bottomSheetHandle.addEventListener('touchstart', startDrag);
+            dom.bottomSheetHandle.addEventListener('mousedown', startDrag);
+            dom.scanHeader.addEventListener('touchstart', startDrag);
+            dom.scanHeader.addEventListener('mousedown', startDrag);
+        }
+
         function updateLanguage() {
             const t = translations[currentLang];
             document.title = t.title;
@@ -2444,6 +2592,10 @@
             `;
             
             dom.planetModal.classList.add('active');
+            if (window.innerWidth <= 1100) {
+                dom.planetModal.classList.remove('state-hidden', 'state-full');
+                dom.planetModal.classList.add('state-half');
+            }
             switchTab(activeTab); // Keep current active tab state
         }
 
@@ -2462,7 +2614,8 @@
         }
 
         function closeModal() {
-            dom.planetModal.classList.remove('active');
+            dom.planetModal.classList.remove('active', 'state-full', 'state-half');
+            dom.planetModal.classList.add('state-hidden');
             
             // Remove focusing highlights using pre-cached variables
             dom.planets.forEach(pEl => {
