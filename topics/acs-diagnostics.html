@@ -197,6 +197,19 @@
 </head>
 <body class="font-text text-apple-ink bg-apple-white antialiased">
 
+    <!-- Global SVG ECG Grids Definition -->
+    <svg class="hidden" width="0" height="0">
+        <defs>
+            <pattern id="ecg-red-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#fecaca" stroke-width="0.5"/>
+            </pattern>
+            <pattern id="ecg-red-grid-large" width="50" height="50" patternUnits="userSpaceOnUse">
+                <rect width="50" height="50" fill="url(#ecg-red-grid)"/>
+                <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#fca5a5" stroke-width="1"/>
+            </pattern>
+        </defs>
+    </svg>
+
     <!-- Global Navigation Header -->
     <nav class="bg-[rgba(255,255,255,0.8)] backdrop-blur-xl border-b border-apple-borderSoft/60 text-apple-ink text-xs h-[52px] flex items-center justify-center fixed w-full top-0 z-50 transition-all">
         <div class="max-w-7xl w-full px-6 flex justify-between items-center">
@@ -537,27 +550,8 @@
                             </ul>
                         </div>
                         
-                        <div class="bg-apple-white card-border p-6 shadow-sm border border-apple-borderSoft/60">
-                            <h3 class="font-display font-bold text-base text-apple-ink mb-4 pb-2 border-b border-apple-borderSoft">Classic Anterior STEMI Strip</h3>
-                            <p class="text-xs text-apple-graySecondary leading-relaxed mb-4">Typical tombstoning pattern in lead V3 during an acute proximal LAD occlusion.</p>
-                            
-                            <div class="border border-red-100 rounded-xl overflow-hidden bg-[#fffaf5] flex justify-center py-4">
-                                <svg class="w-full max-w-md h-36" viewBox="0 0 300 120">
-                                    <defs>
-                                        <pattern id="ecg-red-grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                                            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#fecaca" stroke-width="0.5"/>
-                                        </pattern>
-                                        <pattern id="ecg-red-grid-large" width="50" height="50" patternUnits="userSpaceOnUse">
-                                            <rect width="50" height="50" fill="url(#ecg-red-grid)"/>
-                                            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#fca5a5" stroke-width="1"/>
-                                        </pattern>
-                                    </defs>
-                                    <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
-                                    <!-- STEMI Wavelet -->
-                                    <path d="M 0 70 L 30 70 C 35 70 38 64 42 64 C 46 64 49 70 54 70 L 70 70 L 78 85 L 88 15 L 94 40 C 96 30 110 20 125 20 L 138 20 C 145 20 155 35 162 50 C 170 65 178 70 190 70 L 300 70" fill="none" stroke="#b91c1c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <text x="114" y="15" fill="#b91c1c" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">ST ELEVATION (TOMBSTONE)</text>
-                                </svg>
-                            </div>
+                        <div id="stemi-interactive-strip-container" class="bg-apple-white card-border p-6 shadow-sm border border-apple-borderSoft/60 min-h-[296px]">
+                            <!-- Dynamic STEMI strip contents rendered here by updateStemiStripUI() -->
                         </div>
                     </div>
                 </div>
@@ -708,18 +702,8 @@
                             </ul>
                         </div>
                         
-                        <div class="bg-apple-white card-border p-6 shadow-sm border border-apple-borderSoft/60">
-                            <h3 class="font-display font-bold text-base text-apple-ink mb-4 pb-2 border-b border-apple-borderSoft">Horizontal ST-Depression Strip</h3>
-                            <p class="text-xs text-apple-graySecondary leading-relaxed mb-4">Subendocardial ischemia in leads V4-V6 with flat horizontal ST depression.</p>
-                            
-                            <div class="border border-amber-100 rounded-xl overflow-hidden bg-[#fffaf5] flex justify-center py-4">
-                                <svg class="w-full max-w-md h-36" viewBox="0 0 300 120">
-                                    <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
-                                    <!-- ST Depression Wavelet -->
-                                    <path d="M 0 70 L 30 70 C 35 70 38 64 42 64 C 46 64 49 70 54 70 L 70 70 L 78 85 L 88 15 L 94 90 C 96 90 98 85 102 85 L 140 85 C 150 85 160 70 170 70 L 300 70" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <text x="120" y="105" fill="#d97706" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">ST DEPRESSION (HORIZONTAL)</text>
-                                </svg>
-                            </div>
+                        <div id="nstemi-interactive-strip-container" class="bg-apple-white card-border p-6 shadow-sm border border-apple-borderSoft/60 min-h-[296px]">
+                            <!-- Dynamic NSTEMI strip contents rendered here by updateNstemiStripUI() -->
                         </div>
                     </div>
                 </div>
@@ -1753,6 +1737,166 @@
             `;
         }
 
+        // 3. STEMI Interactive Strip Explorer
+        const stemiStripData = [
+            {
+                name: "Anterior (LAD)",
+                title: "Classic Anterior STEMI Strip",
+                desc: "Typical tombstoning pattern in lead V3 during an acute proximal LAD occlusion.",
+                svgCode: `<svg class="w-full max-w-md h-36" viewBox="0 0 300 120">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <!-- STEMI Wavelet -->
+                            <path d="M 0 70 L 30 70 C 35 70 38 64 42 64 C 46 64 49 70 54 70 L 70 70 L 78 85 L 88 15 L 94 40 C 96 30 110 20 125 20 L 138 20 C 145 20 155 35 162 50 C 170 65 178 70 190 70 L 300 70" fill="none" stroke="#b91c1c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="150" y="105" fill="#b91c1c" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">ST ELEVATION (TOMBSTONE)</text>
+                         </svg>`
+            },
+            {
+                name: "Inferior (RCA)",
+                title: "Acute Inferior STEMI Strip",
+                desc: "ST elevation in lead III with reciprocal ST depression in lead aVL during an acute inferior wall infarction.",
+                svgCode: `<svg class="w-full max-w-md h-36" viewBox="0 0 300 120">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <!-- Inferior STEMI Lead III Wavelet -->
+                            <path d="M 0 70 L 40 70 C 45 70 48 64 52 64 C 56 64 59 70 64 70 L 75 70 L 80 80 L 88 35 L 94 70 L 98 52 L 115 52 C 125 52 135 70 145 70 L 300 70" fill="none" stroke="#b91c1c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="150" y="105" fill="#b91c1c" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">ST ELEVATION IN LEAD III</text>
+                         </svg>`
+            },
+            {
+                name: "Lateral (LCx)",
+                title: "Acute High Lateral STEMI Strip",
+                desc: "ST elevation in high lateral lead aVL with reciprocal inferior depression during an acute LCx occlusion.",
+                svgCode: `<svg class="w-full max-w-md h-36" viewBox="0 0 300 120">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <!-- Lateral STEMI Wavelet -->
+                            <path d="M 0 70 L 40 70 C 45 70 48 64 52 64 C 56 64 59 70 64 70 L 75 70 L 80 80 L 88 30 L 94 65 L 98 48 L 115 48 C 125 48 135 70 145 70 L 300 70" fill="none" stroke="#b91c1c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="150" y="105" fill="#b91c1c" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">ST ELEVATION IN LEAD aVL</text>
+                         </svg>`
+            }
+        ];
+
+        let selectedStemiStripIndex = 0;
+
+        function selectStemiStrip(index) {
+            selectedStemiStripIndex = index;
+            updateStemiStripUI();
+        }
+
+        function updateStemiStripUI() {
+            const container = document.getElementById('stemi-interactive-strip-container');
+            if (!container) return;
+            const data = stemiStripData[selectedStemiStripIndex];
+            
+            let tabsHtml = `<div class="flex flex-wrap gap-1 bg-apple-grayPale p-1 rounded-xl border border-apple-borderSoft/60 shrink-0">`;
+            stemiStripData.forEach((item, idx) => {
+                const isActive = idx === selectedStemiStripIndex;
+                const activeClass = isActive 
+                    ? 'bg-amber-500 text-white shadow-sm font-semibold' 
+                    : 'text-apple-graySecondary hover:text-apple-ink font-medium';
+                tabsHtml += `
+                    <button onclick="selectStemiStrip(${idx})" class="px-2.5 py-1 text-[10px] rounded-lg transition-all ${activeClass}">
+                        ${item.name}
+                    </button>
+                `;
+            });
+            tabsHtml += `</div>`;
+
+            container.innerHTML = `
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-apple-borderSoft pb-4 mb-4">
+                            <h3 class="font-display font-bold text-base text-apple-ink">${data.title}</h3>
+                            ${tabsHtml}
+                        </div>
+                        <p class="text-xs text-apple-graySecondary leading-relaxed mb-4 min-h-[32px]">${data.desc}</p>
+                    </div>
+                    
+                    <div class="border border-red-100 rounded-xl overflow-hidden bg-[#fffaf5] flex justify-center py-4">
+                        ${data.svgCode}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 4. NSTEMI/UA Interactive Strip Explorer
+        const nstemiStripData = [
+            {
+                name: "Horizontal Depression",
+                title: "Horizontal ST-Depression Strip",
+                desc: "Subendocardial ischemia in leads V4-V6 with flat horizontal ST depression.",
+                svgCode: `<svg class="w-full max-w-md h-36" viewBox="0 0 300 120">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <!-- ST Depression Wavelet -->
+                            <path d="M 0 70 L 30 70 C 35 70 38 64 42 64 C 46 64 49 70 54 70 L 70 70 L 78 85 L 88 15 L 94 90 C 96 90 98 85 102 85 L 140 85 C 150 85 160 70 170 70 L 300 70" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="150" y="105" fill="#d97706" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">ST DEPRESSION (HORIZONTAL)</text>
+                         </svg>`
+            },
+            {
+                name: "Downsloping Depression",
+                title: "Downsloping ST-Depression Strip",
+                desc: "Highly pathological downsloping ST segment in precordial leads indicating severe subendocardial ischemia.",
+                svgCode: `<svg class="w-full max-w-md h-36" viewBox="0 0 300 120">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <!-- Downsloping ST Depression -->
+                            <path d="M 0 60 L 40 60 C 45 60 48 54 52 54 C 56 54 59 60 64 60 L 75 60 L 80 72 L 88 20 L 94 75 L 98 70 L 115 80 C 125 85 135 60 145 60 L 300 60" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="150" y="105" fill="#d97706" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">DOWNSLOPING ST DEPRESSION</text>
+                         </svg>`
+            },
+            {
+                name: "Deep T-Wave Inversion",
+                title: "Symmetrical T-Wave Inversion Strip",
+                desc: "Deep, symmetrical T-wave inversions in leads with prominent R-waves, reflecting acute subendocardial ischemia.",
+                svgCode: `<svg class="w-full max-w-md h-36" viewBox="0 0 300 120">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <!-- Symmetrical Inverted T-wave -->
+                            <path d="M 0 50 L 40 50 C 45 50 48 44 52 44 C 56 54 59 50 64 50 L 75 50 L 80 58 L 88 15 L 94 50 C 102 85 122 85 135 50 L 300 50" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="150" y="105" fill="#d97706" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">DEEP SYMMETRICAL T-WAVE INVERSION</text>
+                         </svg>`
+            }
+        ];
+
+        let selectedNstemiStripIndex = 0;
+
+        function selectNstemiStrip(index) {
+            selectedNstemiStripIndex = index;
+            updateNstemiStripUI();
+        }
+
+        function updateNstemiStripUI() {
+            const container = document.getElementById('nstemi-interactive-strip-container');
+            if (!container) return;
+            const data = nstemiStripData[selectedNstemiStripIndex];
+            
+            let tabsHtml = `<div class="flex flex-wrap gap-1 bg-apple-grayPale p-1 rounded-xl border border-apple-borderSoft/60 shrink-0">`;
+            nstemiStripData.forEach((item, idx) => {
+                const isActive = idx === selectedNstemiStripIndex;
+                const activeClass = isActive 
+                    ? 'bg-amber-500 text-white shadow-sm font-semibold' 
+                    : 'text-apple-graySecondary hover:text-apple-ink font-medium';
+                tabsHtml += `
+                    <button onclick="selectNstemiStrip(${idx})" class="px-2.5 py-1 text-[10px] rounded-lg transition-all ${activeClass}">
+                        ${item.name}
+                    </button>
+                `;
+            });
+            tabsHtml += `</div>`;
+
+            container.innerHTML = `
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-apple-borderSoft pb-4 mb-4">
+                            <h3 class="font-display font-bold text-base text-apple-ink">${data.title}</h3>
+                            ${tabsHtml}
+                        </div>
+                        <p class="text-xs text-apple-graySecondary leading-relaxed mb-4 min-h-[32px]">${data.desc}</p>
+                    </div>
+                    
+                    <div class="border border-amber-100 rounded-xl overflow-hidden bg-[#fffaf5] flex justify-center py-4">
+                        ${data.svgCode}
+                    </div>
+                </div>
+            `;
+        }
+
         // ═══════════════════════════════════════════════════════
         // GRACE RISK SCORE CALCULATOR ALGORITHM
         // ═══════════════════════════════════════════════════════
@@ -1817,6 +1961,8 @@
 
             observeElements(); // Start observers
             updateTerritoryUI(); // Load LAD first
+            updateStemiStripUI(); // Load Anterior STEMI first
+            updateNstemiStripUI(); // Load Horizontal ST depression first
             updateSTEUI(); // Load de Winter first
             calculateGRACE(); // Run initial GRACE calculation
 
