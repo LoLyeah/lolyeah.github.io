@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acute Coronary Syndrome (ACS) Diagnostics — Clinical Reference</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Configuration with Premium Apple Tokens & Amber Accents -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        text: ['"Inter"', 'sans-serif'],
+                        mono: ['"Space Mono"', 'monospace'],
+                    },
+                    colors: {
+                        apple: {
+                            black: '#000000',
+                            grayPale: '#f5f5f7',
+                            ink: '#1d1d1f',
+                            white: '#ffffff',
+                            graphiteA: '#272729',
+                            graphiteB: '#262629',
+                            graphiteC: '#28282b',
+                            graySecondary: '#86868b',
+                            borderSoft: '#e5e7eb',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            scroll-behavior: smooth;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(229, 231, 235, 0.6);
+        }
+
+        .glass-panel-dark {
+            background: rgba(26, 26, 29, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Tab Slider Indicator */
+        .tab-indicator {
+            transition: all 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* Tab Transitions */
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scroll Animations (Apple Style) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Utilities */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .card-border {
+            border: 1px solid rgba(210, 210, 215, 0.5);
+            border-radius: 20px;
+        }
+
+        /* Cinematic Hero Background with Amber Radial Gradients */
+        .hero-bg {
+            background-color: #050508;
+            background-image: 
+                radial-gradient(ellipse 60% 60% at 50% 10%, rgba(245, 158, 11, 0.15) 0%, transparent 80%),
+                radial-gradient(circle at 10% 80%, rgba(251, 191, 36, 0.03) 0%, transparent 50%),
+                linear-gradient(to bottom, rgba(5, 5, 8, 0.2) 0%, #050508 100%);
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Timeline Styles */
+        .timeline-connector {
+            position: relative;
+        }
+        .timeline-connector::after {
+            content: '';
+            position: absolute;
+            top: 2rem;
+            bottom: -2rem;
+            left: 1.5rem;
+            width: 2px;
+            background: rgba(245, 158, 11, 0.15);
+        }
+        .timeline-item:last-child .timeline-connector::after {
+            display: none;
+        }
+
+        /* Cascade Steps styles */
+        .cascade-step {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .cascade-step.selected {
+            background: rgba(245, 158, 11, 0.05);
+            border-color: rgba(245, 158, 11, 0.3);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.04);
+        }
+
+        /* Coronary territory explorer styles */
+        .territory-pill {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .territory-pill.active {
+            background: #f59e0b;
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Interactive C.H.E.S.T card flip */
+        .fast-card {
+            perspective: 1000px;
+            height: 200px;
+            cursor: pointer;
+        }
+        .fast-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-style: preserve-3d;
+        }
+        .fast-card:hover .fast-card-inner, .fast-card.flipped .fast-card-inner {
+            transform: rotateY(180deg);
+        }
+        .fast-card-front, .fast-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.25rem;
+        }
+        .fast-card-front {
+            background: #f5f5f7;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            color: #1d1d1f;
+        }
+        .fast-card-back {
+            background: #d97706;
+            color: white;
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="font-text text-apple-ink bg-apple-white antialiased">
+
+    <!-- Global Navigation Header -->
+    <nav class="bg-[rgba(255,255,255,0.8)] backdrop-blur-xl border-b border-apple-borderSoft/60 text-apple-ink text-xs h-[52px] flex items-center justify-center fixed w-full top-0 z-50 transition-all">
+        <div class="max-w-7xl w-full px-6 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+                <span class="font-display font-bold text-[15px] tracking-tight">MedGuide<span class="text-amber-500">.ACS</span></span>
+            </div>
+            
+            <div class="text-[11px] font-mono text-apple-graySecondary font-medium uppercase tracking-wider">
+                Acute Coronary Syndrome Diagnostics
+            </div>
+        </div>
+    </nav>
+
+    <!-- Showcase Hero Chapter -->
+    <header id="hero-section" class="hero-bg pt-32 pb-24 text-center text-apple-white mt-[52px] relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-6 relative z-10 reveal active">
+            <span class="inline-block bg-amber-500/10 border border-amber-400/30 text-amber-400 font-mono tracking-widest text-[9px] uppercase px-4 py-1.5 rounded-full mb-6">TACTICAL CLINICAL REFERENCE — CARDIAC EMERGENCY INSTRUCTION</span>
+            <h1 class="font-display text-[54px] sm:text-[76px] font-extrabold mb-4 tracking-tighter leading-[0.95]">ACS Diagnostics.</h1>
+            <p class="font-display text-xl sm:text-2xl text-apple-graySecondary font-semibold mb-6 tracking-tight">Differentiating STEMI, NSTEMI, ST Equivalents & Red Flags</p>
+            <p class="text-[16px] text-apple-graySecondary max-w-2xl mx-auto leading-relaxed font-normal">
+                A definitive clinical reference page outlining ECG criteria, pathophysiology, localized coronary artery anatomy mapping, equivalents of occlusion, and specific emergency treatment protocols.
+            </p>
+        </div>
+    </header>
+
+    <!-- Tab Navigation (Sticky Segmented Utility Bar) -->
+    <div id="content-core" class="sticky top-[52px] z-40 bg-[rgba(255,255,255,0.85)] backdrop-blur-xl border-b border-apple-borderSoft/60 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-3">
+            <div class="relative bg-apple-grayPale p-1 rounded-2xl border border-apple-borderSoft flex space-x-1 overflow-x-auto no-scrollbar items-center max-w-5xl mx-auto">
+                
+                <!-- Tab Indicator Background (Sliding Pill Effect) -->
+                <div id="tab-active-pill" class="tab-indicator absolute top-1 bottom-1 left-1 rounded-xl bg-apple-white shadow-sm border border-apple-borderSoft/50" style="width: 100px; transform: translateX(0px);"></div>
+                
+                <button onclick="switchTab('overview', this)" class="tab-btn relative z-10 flex-1 px-3 py-2 text-xs font-semibold text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="overview">
+                    Overview
+                </button>
+                <button onclick="switchTab('ecg', this)" class="tab-btn relative z-10 flex-1 px-3 py-2 text-xs font-medium text-apple-graySecondary hover:text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="ecg">
+                    ECG Diagnostics
+                </button>
+                <button onclick="switchTab('stemi', this)" class="tab-btn relative z-10 flex-1 px-3 py-2 text-xs font-medium text-apple-graySecondary hover:text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="stemi">
+                    STEMI
+                </button>
+                <button onclick="switchTab('nstemi', this)" class="tab-btn relative z-10 flex-1 px-3 py-2 text-xs font-medium text-apple-graySecondary hover:text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="nstemi">
+                    NSTEMI & UA
+                </button>
+                <button onclick="switchTab('ste', this)" class="tab-btn relative z-10 flex-1 px-3 py-2 text-xs font-medium text-apple-graySecondary hover:text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="ste">
+                    ST Equivalents
+                </button>
+                <button onclick="switchTab('redflag', this)" class="tab-btn relative z-10 flex-1 px-3 py-2 text-xs font-medium text-apple-graySecondary hover:text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="redflag">
+                    Red Flags
+                </button>
+                <button onclick="switchTab('quickref', this)" class="tab-btn relative z-10 flex-1 px-3 py-2 text-xs font-medium text-apple-graySecondary hover:text-apple-ink transition-all whitespace-nowrap rounded-xl" data-target="quickref">
+                    Quick Reference
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <main class="min-h-screen">
+
+        <!-- TAB 1: OVERVIEW -->
+        <section id="overview" class="tab-content active">
+            <div class="bg-apple-grayPale py-20 border-b border-apple-borderSoft/40">
+                <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start reveal">
+                    <div>
+                        <div class="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-600 font-bold text-lg mb-6">?</div>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-6 leading-tight">The ACS Spectrum</h2>
+                        <p class="text-[17px] text-apple-graySecondary mb-6 leading-relaxed">
+                            Acute Coronary Syndrome (ACS) refers to a spectrum of clinical conditions compatible with acute myocardial ischemia and/or infarction that are caused by the sudden rupture or erosion of an atheromatous plaque, resulting in varying degrees of coronary artery occlusion.
+                        </p>
+                        <p class="text-[17px] text-apple-graySecondary mb-8 leading-relaxed">
+                            ACS represents a life-threatening medical emergency. It is clinically divided based on ECG findings and serum biomarkers (cardiac troponins) into three primary categories:
+                        </p>
+
+                        <!-- Subtypes List -->
+                        <div class="border-t border-apple-borderSoft pt-6">
+                            <h4 class="font-display font-bold text-[15px] mb-4 text-apple-ink">Clinical Classification & Pathology</h4>
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="bg-apple-white p-5 rounded-2xl border border-apple-borderSoft/60 flex items-start gap-4">
+                                    <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold bg-red-500/10 text-red-600 font-mono shrink-0">STEMI</span>
+                                    <div>
+                                        <h5 class="font-bold text-sm text-apple-ink">ST-Elevation Myocardial Infarction</h5>
+                                        <p class="text-[12px] text-apple-graySecondary mt-1 leading-normal">Sudden, <strong>complete, transmural</strong> occlusion of a major coronary artery. Causes acute, full-thickness ischemic necrosis. Demands immediate physical reperfusion (primary PCI or fibrinolytics).</p>
+                                    </div>
+                                </div>
+                                <div class="bg-apple-white p-5 rounded-2xl border border-apple-borderSoft/60 flex items-start gap-4">
+                                    <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-600 font-mono shrink-0">NSTEMI</span>
+                                    <div>
+                                        <h5 class="font-bold text-sm text-apple-ink">Non-ST-Elevation Myocardial Infarction</h5>
+                                        <p class="text-[12px] text-apple-graySecondary mt-1 leading-normal"><strong>Partial or intermittent</strong> coronary artery occlusion. Causes subendocardial ischemia leading to myocardial necrosis (demonstrated by positive cardiac troponin elevation). Immediate reperfusion is not mandatory but guided by risk stratification.</p>
+                                    </div>
+                                </div>
+                                <div class="bg-apple-white p-5 rounded-2xl border border-apple-borderSoft/60 flex items-start gap-4">
+                                    <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold bg-gray-500/10 text-gray-600 font-mono shrink-0">UA</span>
+                                    <div>
+                                        <h5 class="font-bold text-sm text-apple-ink">Unstable Angina</h5>
+                                        <p class="text-[12px] text-apple-graySecondary mt-1 leading-normal">Partial coronary stenosis with ischemia but <strong>no necrosis</strong> (indicated by negative cardiac troponins). Represents an unstable plaque that could progress to myocardial infarction without therapeutic intervention.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-apple-white card-border p-8 shadow-sm border border-apple-borderSoft/70 w-full flex flex-col justify-between h-full">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-apple-borderSoft pb-4 mb-6">
+                                <h3 class="font-display font-bold text-base text-apple-ink">Epidemiology & Prevalence</h3>
+                                <span class="bg-amber-500/10 text-amber-600 text-[10px] font-bold font-mono px-3 py-1 rounded-full">ACS Distribution</span>
+                            </div>
+                            <div class="relative h-[280px] w-full flex justify-center items-center">
+                                <canvas id="acsPrevalenceChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="mt-8 space-y-4">
+                            <div class="border-t border-apple-borderSoft pt-4">
+                                <h3 class="font-display font-bold text-[15px] mb-1 text-apple-ink flex justify-between">
+                                    <span>NSTEMI</span>
+                                    <span class="text-amber-500 font-mono font-bold">40%</span>
+                                </h3>
+                                <p class="text-xs text-apple-graySecondary leading-relaxed">Partial occlusion with cellular necrosis. Represents the largest and growing sub-category of ACS presentations in modern clinics.</p>
+                            </div>
+                            <div class="border-t border-apple-borderSoft pt-4">
+                                <h3 class="font-display font-bold text-[15px] mb-1 text-apple-ink flex justify-between">
+                                    <span>STEMI</span>
+                                    <span class="text-red-500 font-mono font-bold">35%</span>
+                                </h3>
+                                <p class="text-xs text-apple-graySecondary leading-relaxed">Complete transmural occlusion. The most acute and time-critical event demanding emergency department mobilization.</p>
+                            </div>
+                            <div class="border-t border-apple-borderSoft pt-4">
+                                <h3 class="font-display font-bold text-[15px] mb-1 text-apple-ink flex justify-between">
+                                    <span>Unstable Angina</span>
+                                    <span class="text-gray-500 font-mono font-bold">25%</span>
+                                </h3>
+                                <p class="text-xs text-apple-graySecondary leading-relaxed">Myocardial ischemia without tissue death. Critical warning signal of severe atherosclerotic coronary artery disease instability.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-apple-white py-24 border-t border-apple-borderSoft">
+                <div class="max-w-5xl mx-auto px-6 text-center reveal">
+                    <h2 class="font-display text-[32px] sm:text-[40px] font-extrabold tracking-tight mb-4 text-apple-ink">Key Performance Metrics</h2>
+                    <p class="text-lg text-apple-graySecondary max-w-2xl mx-auto mb-16 leading-relaxed">Essential time-critical benchmarks for emergency response teams in suspected acute coronary syndrome.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                        <div class="bg-apple-grayPale rounded-[24px] border border-apple-borderSoft/40 p-8 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                            <span class="text-4xl font-extrabold text-amber-500 block mb-4 border-b border-apple-borderSoft pb-4 font-display">10 Minutes</span>
+                            <p class="text-[14px] text-apple-graySecondary leading-relaxed">Target window to acquire and interpret the initial 12-lead ECG in emergency departments for any patient presenting with suspected ACS chest pain.</p>
+                        </div>
+                        <div class="bg-apple-grayPale rounded-[24px] border border-apple-borderSoft/40 p-8 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                            <span class="text-4xl font-extrabold text-apple-ink block mb-4 border-b border-apple-borderSoft pb-4 font-display">90 Minutes</span>
+                            <p class="text-[14px] text-apple-graySecondary leading-relaxed">Target Door-to-Balloon (D2B) time for primary Percutaneous Coronary Intervention (PCI) in patients presenting with acute STEMI at a PCI-capable center.</p>
+                        </div>
+                        <div class="bg-apple-grayPale rounded-[24px] border border-apple-borderSoft/40 p-8 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                            <span class="text-4xl font-extrabold text-apple-ink block mb-4 border-b border-apple-borderSoft pb-4 font-display">&gt;99%</span>
+                            <p class="text-[14px] text-apple-graySecondary leading-relaxed">Diagnostic sensitivity of fifth-generation high-sensitivity cardiac troponin (hs-cTn) assays at identifying cell damage within 3 hours of symptom onset.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- CONTINUATION FLOW TRIGGER -->
+                    <div class="mt-20 flex justify-center">
+                        <button onclick="goToNext('ecg')" class="bg-amber-500 text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-90 active:scale-95 transition-all shadow-md flex items-center gap-3">
+                            <span>Continue to ECG Diagnostics</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: ECG DIAGNOSTICS -->
+        <section id="ecg" class="tab-content">
+            <div class="bg-[rgba(5,5,8,0.98)] py-20 text-apple-white border-b border-apple-borderSoft/10">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="inline-block text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 font-mono">12-Lead ECG Analysis</span>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-6">Electrocardiographic Markers</h2>
+                        <p class="text-[17px] text-apple-graySecondary leading-relaxed">
+                            The ECG is the primary diagnostic filter. Restoring myocardial perfusion requires accurate identification of J-point displacements, ST segment trends, and T-wave abnormalities.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-6xl mx-auto">
+                        <!-- Anatomy of ST displacement -->
+                        <div class="lg:col-span-5 flex flex-col justify-between p-8 bg-white/[0.02] border border-white/5 rounded-[28px]">
+                            <div>
+                                <span class="bg-amber-500/10 text-amber-400 text-[10px] font-mono px-3 py-1 rounded-full font-bold uppercase tracking-wider">ECG Interpretation</span>
+                                <h3 class="font-display font-extrabold text-xl text-white mt-4 mb-2">The ST Segment & J-Point</h3>
+                                <p class="text-xs text-apple-graySecondary leading-relaxed mb-4">
+                                    The **J-Point** is the junction where the QRS complex ends and the ST segment begins. ST deviation is measured relative to the preceding **TP segment** (isoelectric baseline). ST elevation represents transmural injury, whereas ST depression indicates subendocardial ischemia.
+                                </p>
+                                <div class="space-y-3 text-xs text-apple-graySecondary">
+                                    <div class="flex items-start gap-2">
+                                        <span class="text-amber-500 font-bold">1.</span>
+                                        <span><strong>J-Point:</strong> Key reference point to measure elevation or depression. Check at least two contiguous leads.</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="text-amber-500 font-bold">2.</span>
+                                        <span><strong>ST Segment Slope:</strong> Flat or downsloping ST segments are highly pathological. Upsloping can be normal but has crucial exclusions (e.g., de Winter).</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="text-amber-500 font-bold">3.</span>
+                                        <span><strong>T-Wave Changes:</strong> Inversions (especially deep, symmetrical) or hyperacute peaks are critical early markers.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Static SVG ECG Anatomy -->
+                            <div class="mt-8 border border-white/5 rounded-2xl bg-black/40 overflow-hidden flex flex-col items-center justify-center p-4">
+                                <span class="text-[9px] font-mono text-apple-graySecondary mb-2">SCHEMATIC ST-ELEVATION COMPLEX</span>
+                                <svg class="w-full max-w-xs h-36" viewBox="0 0 300 120">
+                                    <defs>
+                                        <pattern id="ecg-anatomy-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                                            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#222" stroke-width="0.5"/>
+                                        </pattern>
+                                    </defs>
+                                    <rect width="100%" height="100%" fill="#0a0a0f"/>
+                                    <rect width="100%" height="100%" fill="url(#ecg-anatomy-grid)"/>
+                                    <!-- ECG wave -->
+                                    <path d="M 10 70 L 40 70 C 45 70 48 64 52 64 C 56 64 59 70 64 70 L 80 70 L 88 85 L 98 20 L 108 105 L 114 50 L 150 50 C 170 50 185 70 195 70 L 290 70" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <!-- Highlights -->
+                                    <circle cx="114" cy="50" r="4" fill="#ef4444"/> <!-- J-point -->
+                                    <text x="114" y="42" fill="#ef4444" font-family="'Space Mono', monospace" font-size="8" text-anchor="middle" font-weight="bold">J-POINT</text>
+                                    
+                                    <!-- ST elevation line -->
+                                    <line x1="114" y1="50" x2="150" y2="50" stroke="#f87171" stroke-width="1.5" stroke-dasharray="2,2"/>
+                                    <line x1="80" y1="70" x2="160" y2="70" stroke="#fff" stroke-width="1" stroke-dasharray="3,3" opacity="0.4"/>
+                                    <!-- Deviation bracket -->
+                                    <path d="M 152 70 L 156 70 L 156 50 L 152 50" fill="none" stroke="#f87171" stroke-width="1.5"/>
+                                    <text x="162" y="64" fill="#f87171" font-family="'Space Mono', monospace" font-size="8" font-weight="bold">ST ELEVATION</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Territory Mapper -->
+                        <div class="lg:col-span-7 glass-panel-dark rounded-[28px] p-8 flex flex-col justify-between relative overflow-hidden">
+                            <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-amber-500/10 blur-[60px] pointer-events-none"></div>
+                            
+                            <div>
+                                <h3 class="font-display font-extrabold text-xl text-white mb-2">Coronary Territory Mapper</h3>
+                                <p class="text-xs text-apple-graySecondary mb-6 leading-relaxed">
+                                    Coronary vascular anatomy correlates strongly with specific lead changes on a standard 12-lead ECG. Select a coronary territory to identify its affected leads and typical patterns.
+                                </p>
+                                
+                                <div class="flex flex-wrap gap-2.5 mb-6">
+                                    <button onclick="selectTerritory('lad')" id="btn-t-lad" class="territory-pill active px-4 py-2 text-xs font-semibold rounded-full bg-white/5 border border-white/10 hover:bg-white/10">Left Anterior Descending (LAD)</button>
+                                    <button onclick="selectTerritory('rca')" id="btn-t-rca" class="territory-pill px-4 py-2 text-xs font-semibold rounded-full bg-white/5 border border-white/10 hover:bg-white/10">Right Coronary (RCA)</button>
+                                    <button onclick="selectTerritory('lcx')" id="btn-t-lcx" class="territory-pill px-4 py-2 text-xs font-semibold rounded-full bg-white/5 border border-white/10 hover:bg-white/10">Left Circumflex (LCx)</button>
+                                </div>
+                                
+                                <div id="territory-display-panel" class="bg-black/20 rounded-2xl p-5 border border-white/5 min-h-[160px] text-left">
+                                    <!-- Dynamic content injected here -->
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 border-t border-white/5 pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                                    <span class="text-[10px] font-mono text-apple-graySecondary uppercase">CORRELATED ECG STRIP (SCHEMATIC)</span>
+                                </div>
+                                
+                                <!-- Dynamic Territory SVG strip -->
+                                <div id="territory-svg-container" class="w-full sm:w-64 h-24 bg-black/40 border border-white/5 rounded-xl overflow-hidden">
+                                    <!-- Dynamic SVG injected by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-apple-white py-24">
+                <div class="max-w-6xl mx-auto px-6 reveal">
+                    <h2 class="font-display text-[32px] sm:text-[40px] font-extrabold tracking-tight mb-4 text-apple-ink text-center">Diagnostic ST Thresholds</h2>
+                    <p class="text-lg text-apple-graySecondary max-w-2xl mx-auto mb-16 text-center leading-relaxed">
+                        ACCF/AHA guidelines stipulate strict millivolt limits to differentiate anatomical STEMI from non-specific elevations.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-apple-grayPale p-8 rounded-[24px] border border-apple-borderSoft/40">
+                            <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-600 mb-4 font-mono">Standard Leads</span>
+                            <h4 class="font-display font-bold text-lg mb-2 text-apple-ink">All leads except V2-V3</h4>
+                            <p class="text-2xl font-extrabold text-apple-ink mb-3">&ge; 1.0 mm <span class="text-xs font-normal text-apple-graySecondary font-mono">(0.1 mV)</span></p>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed">
+                                Requires new ST-segment elevation at the J-point in at least two contiguous leads. This applies to high lateral (I, aVL), inferior (II, III, aVF), and lateral precordial (V5-V6) channels.
+                            </p>
+                        </div>
+                        <div class="bg-apple-grayPale p-8 rounded-[24px] border border-apple-borderSoft/40">
+                            <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-600 mb-4 font-mono">Precordial Males</span>
+                            <h4 class="font-display font-bold text-lg mb-2 text-apple-ink">Leads V2-V3 in Men</h4>
+                            <p class="text-2xl font-extrabold text-apple-ink mb-3">&ge; 2.0 mm / 2.5 mm</p>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed">
+                                High normal elevation occurs in healthy precordial leads of males. Diagnostic threshold is **&ge; 2.0 mm** for men aged &ge; 40 years, and **&ge; 2.5 mm** for younger men (&lt; 40 years).
+                            </p>
+                        </div>
+                        <div class="bg-apple-grayPale p-8 rounded-[24px] border border-apple-borderSoft/40">
+                            <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-600 mb-4 font-mono">Precordial Females</span>
+                            <h4 class="font-display font-bold text-lg mb-2 text-apple-ink">Leads V2-V3 in Women</h4>
+                            <p class="text-2xl font-extrabold text-apple-ink mb-3">&ge; 1.5 mm <span class="text-xs font-normal text-apple-graySecondary font-mono">(0.15 mV)</span></p>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed">
+                                Irrespective of patient age, women have smaller normal precordial amplitudes. ST elevation of **&ge; 1.5 mm** in leads V2-V3 is diagnostic of acute injury in female presentations.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="py-12 border-t border-apple-borderSoft text-center">
+                <button onclick="goToNext('stemi')" class="bg-amber-500 text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-90 active:scale-95 transition-all shadow-md flex items-center gap-3 mx-auto">
+                    <span>Continue to STEMI Protocol</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 3: STEMI -->
+        <section id="stemi" class="tab-content">
+            <div class="bg-apple-grayPale py-20 border-b border-apple-borderSoft/40">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                        <div>
+                            <span class="inline-block bg-red-500/10 text-red-600 font-mono text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wider mb-4">Complete Occlusion Infarction</span>
+                            <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-6">STEMI Diagnosis</h2>
+                            <p class="text-[17px] text-apple-graySecondary mb-6 leading-relaxed">
+                                ST-Elevation Myocardial Infarction occurs when a thrombus completely blocks a coronary artery, cutting off blood flow to a major section of the myocardium. If untreated, cellular death is rapid and transmural.
+                            </p>
+                            
+                            <h4 class="font-display font-bold text-base mb-4 text-apple-ink">Key Diagnostic Criteria</h4>
+                            <ul class="space-y-3.5 mb-8 text-sm text-apple-graySecondary">
+                                <li class="flex items-start gap-2.5"><span class="text-red-500 font-bold">&#10003;</span> <span><strong>Clinical Presentation:</strong> Persistent, crushing retrosternal chest pain (often radiating to left arm, neck, or jaw), dyspnea, diaphoresis, or anxiety.</span></li>
+                                <li class="flex items-start gap-2.5"><span class="text-red-500 font-bold">&#10003;</span> <span><strong>ECG Pattern:</strong> ST elevation meeting diagnostic criteria in at least 2 anatomically contiguous leads, or a new Left Bundle Branch Block (LBBB) in clinical context.</span></li>
+                                <li class="flex items-start gap-2.5"><span class="text-red-500 font-bold">&#10003;</span> <span><strong>Cardiac Biomarkers:</strong> Rise and/or fall of cardiac troponin values, with at least one value above the 99th percentile upper reference limit. (Reperfusion must not wait for lab results!).</span></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-apple-white card-border p-6 shadow-sm border border-apple-borderSoft/60">
+                            <h3 class="font-display font-bold text-base text-apple-ink mb-4 pb-2 border-b border-apple-borderSoft">Classic Anterior STEMI Strip</h3>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed mb-4">Typical tombstoning pattern in lead V3 during an acute proximal LAD occlusion.</p>
+                            
+                            <div class="border border-red-100 rounded-xl overflow-hidden bg-[#fffaf5] flex justify-center py-4">
+                                <svg class="w-full max-w-md h-36" viewBox="0 0 300 120">
+                                    <defs>
+                                        <pattern id="ecg-red-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                                            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#fecaca" stroke-width="0.5"/>
+                                        </pattern>
+                                        <pattern id="ecg-red-grid-large" width="50" height="50" patternUnits="userSpaceOnUse">
+                                            <rect width="50" height="50" fill="url(#ecg-red-grid)"/>
+                                            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#fca5a5" stroke-width="1"/>
+                                        </pattern>
+                                    </defs>
+                                    <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                                    <!-- STEMI Wavelet -->
+                                    <path d="M 0 70 L 30 70 C 35 70 38 64 42 64 C 46 64 49 70 54 70 L 70 70 L 78 85 L 88 15 L 94 40 C 96 30 110 20 125 20 L 138 20 C 145 20 155 35 162 50 C 170 65 178 70 190 70 L 300 70" fill="none" stroke="#b91c1c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <text x="114" y="15" fill="#b91c1c" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">ST ELEVATION (TOMBSTONE)</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEMI Interactive Treatment Accordion -->
+            <div class="bg-apple-white py-24">
+                <div class="max-w-4xl mx-auto px-6 reveal">
+                    <h2 class="font-display text-[32px] font-extrabold tracking-tight text-apple-ink text-center mb-4">STEMI Emergency Protocols</h2>
+                    <p class="text-sm text-apple-graySecondary max-w-xl mx-auto text-center mb-12">"Time is Muscle". The primary objective is to physically restore coronary arterial patency within minutes of first medical contact.</p>
+                    
+                    <div class="space-y-4">
+                        <!-- Step 1: Immediate Meds -->
+                        <div class="border border-apple-borderSoft rounded-2xl overflow-hidden transition-all duration-300">
+                            <button onclick="toggleAccordion('stemi-1')" class="w-full flex items-center justify-between p-5 bg-apple-grayPale text-left">
+                                <div class="flex items-center space-x-4">
+                                    <span class="w-8 h-8 rounded-full bg-red-100 text-red-600 font-bold flex items-center justify-center text-xs shrink-0">1</span>
+                                    <div>
+                                        <h4 class="font-display font-bold text-[15px] text-apple-ink">Immediate Medical Therapy (MONA + Heparin)</h4>
+                                        <p class="text-xs text-apple-graySecondary mt-0.5">Initial pharmacological stabilization on arrival.</p>
+                                    </div>
+                                </div>
+                                <span id="icon-stemi-1" class="font-bold text-apple-ink">－</span>
+                            </button>
+                            <div id="panel-stemi-1" class="p-6 border-t border-apple-borderSoft space-y-4 text-xs text-apple-graySecondary leading-relaxed">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h5 class="font-bold text-apple-ink mb-2">Antiplatelet Loading (DAPT):</h5>
+                                        <ul class="space-y-2 list-disc list-inside">
+                                            <li><strong>Aspirin:</strong> 162-325 mg orally chewed immediately (non-enteric coated).</li>
+                                            <li><strong>P2Y12 Inhibitor:</strong> load immediately with <strong>Ticagrelor 180 mg</strong>, <strong>Prasugrel 60 mg</strong> (if no prior stroke/age < 75), or <strong>Clopidogrel 600 mg</strong>.</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-bold text-apple-ink mb-2">Anticoagulation:</h5>
+                                        <ul class="space-y-2 list-disc list-inside">
+                                            <li><strong>Unfractionated Heparin (UFH):</strong> 60 U/kg IV bolus (max 4000 U), followed by 12 U/kg/h infusion (max 1000 U/h) adjusted to aPTT.</li>
+                                            <li>Alternatively: <strong>Enoxaparin (Lovenox)</strong> or <strong>Bivalirudin</strong> (often preferred in PCI).</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="border-t border-apple-borderSoft/60 pt-4">
+                                    <h5 class="font-bold text-apple-ink mb-2">Symptom Management (MONA):</h5>
+                                    <ul class="space-y-2">
+                                        <li><strong>Oxygen:</strong> Supp. O2 only if arterial saturation <strong>SpO2 < 90%</strong> or patient is in respiratory distress. (Hyperoxia causes vasoconstriction!).</li>
+                                        <li><strong>Nitroglycerin:</strong> 0.4 mg SL every 5 mins (up to 3 doses) for ischemic pain. <em>Caution: strictly avoid in inferior STEMI with Right Ventricular involvement or SBP < 90 mmHg.</em></li>
+                                        <li><strong>Morphine:</strong> 2-4 mg IV slow push for refractory chest pain. (May slow P2Y12 absorption).</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Reperfusion -->
+                        <div class="border border-apple-borderSoft rounded-2xl overflow-hidden transition-all duration-300">
+                            <button onclick="toggleAccordion('stemi-2')" class="w-full flex items-center justify-between p-5 bg-apple-grayPale text-left">
+                                <div class="flex items-center space-x-4">
+                                    <span class="w-8 h-8 rounded-full bg-red-100 text-red-600 font-bold flex items-center justify-center text-xs shrink-0">2</span>
+                                    <div>
+                                        <h4 class="font-display font-bold text-[15px] text-apple-ink">Primary Reperfusion Pathway Selection</h4>
+                                        <p class="text-xs text-apple-graySecondary mt-0.5">Physical arterial recanalization: Mechanical PCI vs Pharmacological Fibrinolysis.</p>
+                                    </div>
+                                </div>
+                                <span id="icon-stemi-2" class="font-bold text-apple-ink">＋</span>
+                            </button>
+                            <div id="panel-stemi-2" class="hidden p-6 border-t border-apple-borderSoft space-y-4 text-xs text-apple-graySecondary leading-relaxed">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="border-l-4 border-amber-500 pl-4">
+                                        <h5 class="font-bold text-apple-ink mb-2 text-[13px]">Primary PCI (Preferred Gold Standard):</h5>
+                                        <p class="mb-2">Indicated if the patient is at a PCI-capable center, or can be transferred with first-medical-contact-to-balloon time <strong>&le; 120 minutes</strong>.</p>
+                                        <p class="font-semibold text-apple-ink">Target Timeline: Door-to-Balloon &le; 90 minutes (non-transfer) or &le; 120 minutes (transfer).</p>
+                                    </div>
+                                    <div class="border-l-4 border-red-500 pl-4">
+                                        <h5 class="font-bold text-apple-ink mb-2 text-[13px]">Fibrinolytic Therapy:</h5>
+                                        <p class="mb-2">If primary PCI cannot be completed within 120 minutes of first medical contact and there are no absolute contraindications.</p>
+                                        <p class="font-semibold text-apple-ink">Target Timeline: Door-to-Needle &le; 30 minutes from hospital arrival.</p>
+                                        <p class="mt-2">Preferred agent: Weight-adjusted <strong>Tenecteplase (TNK-tPA)</strong> as a single IV bolus. (Lower bleeding risk than Alteplase).</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Secondary Prevention -->
+                        <div class="border border-apple-borderSoft rounded-2xl overflow-hidden transition-all duration-300">
+                            <button onclick="toggleAccordion('stemi-3')" class="w-full flex items-center justify-between p-5 bg-apple-grayPale text-left">
+                                <div class="flex items-center space-x-4">
+                                    <span class="w-8 h-8 rounded-full bg-red-100 text-red-600 font-bold flex items-center justify-center text-xs shrink-0">3</span>
+                                    <div>
+                                        <h4 class="font-display font-bold text-[15px] text-apple-ink">Secondary Post-MI Pharmacotherapy</h4>
+                                        <p class="text-xs text-apple-graySecondary mt-0.5">Preventing adverse ventricular remodeling, arrhythmia, and stent thrombosis.</p>
+                                    </div>
+                                </div>
+                                <span id="icon-stemi-3" class="font-bold text-apple-ink">＋</span>
+                            </button>
+                            <div id="panel-stemi-3" class="hidden p-6 border-t border-apple-borderSoft space-y-4 text-xs text-apple-graySecondary leading-relaxed">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="space-y-3">
+                                        <div>
+                                            <h6 class="font-bold text-apple-ink">1. Dual Antiplatelet Therapy (DAPT):</h6>
+                                            <p>Aspirin 81 mg daily + P2Y12 inhibitor (Ticagrelor 90 mg BID or Prasugrel 10 mg daily) maintained for <strong>12 months</strong> post-coronary stent to prevent stent thrombosis.</p>
+                                        </div>
+                                        <div>
+                                            <h6 class="font-bold text-apple-ink">2. High-Intensity Statin:</h6>
+                                            <p>Initiated immediately and continued indefinitely. Target <strong>LDL-C &lt; 55 mg/dL</strong> using Atorvastatin 80 mg or Rosuvastatin 40 mg daily.</p>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <h6 class="font-bold text-apple-ink">3. Beta-Blockers:</h6>
+                                            <p>Oral beta-blocker (Metoprolol succinate, Carvedilol, or Bisoprolol) initiated within 24 hours of admission if no signs of HF, low-output states, or heart block. Continued for 3+ years.</p>
+                                        </div>
+                                        <div>
+                                            <h6 class="font-bold text-apple-ink">4. ACE Inhibitor / ARB:</h6>
+                                            <p>Oral ACE-i (Lisinopril, Ramipril) or ARB initiated within 24 hours in patients with an anterior STEMI, clinical heart failure, or LVEF &le; 40% to halt adverse cardiac remodeling.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="py-12 border-t border-apple-borderSoft text-center">
+                <button onclick="goToNext('nstemi')" class="bg-amber-500 text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-90 active:scale-95 transition-all shadow-md flex items-center gap-3 mx-auto">
+                    <span>Continue to NSTEMI & UA</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 4: NSTEMI & UA -->
+        <section id="nstemi" class="tab-content">
+            <div class="bg-apple-grayPale py-20 border-b border-apple-borderSoft/40">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                        <div>
+                            <span class="inline-block bg-amber-500/10 text-amber-600 font-mono text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wider mb-4">Non-ST-Elevation ACS</span>
+                            <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-6">NSTEMI & Unstable Angina</h2>
+                            <p class="text-[17px] text-apple-graySecondary mb-6 leading-relaxed">
+                                In NSTE-ACS, the coronary artery is only partially or transiently obstructed. The clinical differentiation rests entirely on cardiac enzymes: **NSTEMI** exhibits cellular death indicated by a rise in troponin levels, whereas **Unstable Angina** shows no biomarkers but exhibits unstable ischemic characteristics.
+                            </p>
+                            
+                            <h4 class="font-display font-bold text-base mb-4 text-apple-ink">Ischemic ECG Patterns in NSTE-ACS:</h4>
+                            <ul class="space-y-3.5 mb-8 text-sm text-apple-graySecondary">
+                                <li class="flex items-start gap-2.5"><span class="text-amber-500 font-bold">&#10003;</span> <span><strong>ST-Segment Depression:</strong> Horizontal or downsloping ST-segment depression &ge; 0.5 mm in at least two contiguous leads. Highly specific for subendocardial ischemia.</span></li>
+                                <li class="flex items-start gap-2.5"><span class="text-amber-500 font-bold">&#10003;</span> <span><strong>T-Wave Inversion:</strong> Symmetrical, deep T-wave inversion &ge; 1 mm in leads with prominent R-waves (R/S ratio > 1). Dynamic changes indicate high stenosis risk.</span></li>
+                                <li class="flex items-start gap-2.5"><span class="text-amber-500 font-bold">&#10003;</span> <span><strong>Transient ST-Elevation:</strong> Brief, self-limiting ST elevation resolving inside minutes (typically seen in coronary vasospasm or transient complete thrombosis).</span></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-apple-white card-border p-6 shadow-sm border border-apple-borderSoft/60">
+                            <h3 class="font-display font-bold text-base text-apple-ink mb-4 pb-2 border-b border-apple-borderSoft">Horizontal ST-Depression Strip</h3>
+                            <p class="text-xs text-apple-graySecondary leading-relaxed mb-4">Subendocardial ischemia in leads V4-V6 with flat horizontal ST depression.</p>
+                            
+                            <div class="border border-amber-100 rounded-xl overflow-hidden bg-[#fffaf5] flex justify-center py-4">
+                                <svg class="w-full max-w-md h-36" viewBox="0 0 300 120">
+                                    <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                                    <!-- ST Depression Wavelet -->
+                                    <path d="M 0 70 L 30 70 C 35 70 38 64 42 64 C 46 64 49 70 54 70 L 70 70 L 78 85 L 88 15 L 94 90 C 96 90 98 85 102 85 L 140 85 C 150 85 160 70 170 70 L 300 70" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <text x="120" y="105" fill="#d97706" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">ST DEPRESSION (HORIZONTAL)</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRACE SCORE RISK CALCULATOR -->
+            <div class="bg-apple-white py-20 border-b border-apple-borderSoft/40">
+                <div class="max-w-5xl mx-auto px-6 reveal">
+                    <div class="text-center max-w-2xl mx-auto mb-12">
+                        <span class="inline-block text-xs font-bold text-amber-500 uppercase tracking-wider mb-2 font-mono">Risk Stratification</span>
+                        <h3 class="font-display font-extrabold text-3xl text-apple-ink">GRACE Score Calculator</h3>
+                        <p class="text-xs text-apple-graySecondary leading-relaxed mt-2">
+                            The **Global Registry of Acute Cardiac Events (GRACE)** risk score is a validated tool to estimate in-hospital and 6-month mortality in patients presenting with NSTE-ACS. This directly dictates the timing of coronary angiography.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-4xl mx-auto">
+                        <!-- Input form -->
+                        <div class="lg:col-span-7 bg-apple-grayPale rounded-[24px] p-6 border border-apple-borderSoft flex flex-col justify-between">
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-apple-ink uppercase mb-1">Age</label>
+                                        <select id="grace-age" onchange="calculateGRACE()" class="w-full bg-apple-white border border-apple-borderSoft rounded-lg px-2.5 py-1.5 text-xs">
+                                            <option value="0">&lt;40 years</option>
+                                            <option value="18" selected>40-49 years</option>
+                                            <option value="36">50-59 years</option>
+                                            <option value="55">60-69 years</option>
+                                            <option value="73">70-79 years</option>
+                                            <option value="91">&ge;80 years</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-apple-ink uppercase mb-1">Heart Rate</label>
+                                        <select id="grace-hr" onchange="calculateGRACE()" class="w-full bg-apple-white border border-apple-borderSoft rounded-lg px-2.5 py-1.5 text-xs">
+                                            <option value="0">&lt;70 bpm</option>
+                                            <option value="7" selected>70-89 bpm</option>
+                                            <option value="13">90-109 bpm</option>
+                                            <option value="23">110-149 bpm</option>
+                                            <option value="36">&ge;150 bpm</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-apple-ink uppercase mb-1">Systolic BP (mmHg)</label>
+                                        <select id="grace-sbp" onchange="calculateGRACE()" class="w-full bg-apple-white border border-apple-borderSoft rounded-lg px-2.5 py-1.5 text-xs">
+                                            <option value="63">&lt;80</option>
+                                            <option value="58">80-99</option>
+                                            <option value="47">100-119</option>
+                                            <option value="37" selected>120-139</option>
+                                            <option value="26">140-159</option>
+                                            <option value="11">160-199</option>
+                                            <option value="0">&ge;200</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-apple-ink uppercase mb-1">Serum Creatinine (mg/dL)</label>
+                                        <select id="grace-creat" onchange="calculateGRACE()" class="w-full bg-apple-white border border-apple-borderSoft rounded-lg px-2.5 py-1.5 text-xs">
+                                            <option value="1">0.0 - 0.39</option>
+                                            <option value="3" selected>0.40 - 0.79</option>
+                                            <option value="7">0.80 - 1.19</option>
+                                            <option value="11">1.20 - 1.59</option>
+                                            <option value="15">1.60 - 1.99</option>
+                                            <option value="24">2.00 - 3.99</option>
+                                            <option value="35">&ge;4.00</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="border-t border-apple-borderSoft/60 pt-4 space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-semibold text-apple-ink">Killip Congestive Classification</span>
+                                        <select id="grace-killip" onchange="calculateGRACE()" class="bg-apple-white border border-apple-borderSoft rounded-lg px-2 py-1 text-xs">
+                                            <option value="0">Class I (No congestion)</option>
+                                            <option value="21">Class II (Rales/JVD)</option>
+                                            <option value="43">Class III (Pulmonary Edema)</option>
+                                            <option value="64">Class IV (Cardiogenic Shock)</option>
+                                        </select>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-semibold text-apple-ink">Cardiac Arrest on Admission</span>
+                                        <select id="grace-arrest" onchange="calculateGRACE()" class="bg-apple-white border border-apple-borderSoft rounded-lg px-2 py-1 text-xs">
+                                            <option value="0">No</option>
+                                            <option value="43">Yes</option>
+                                        </select>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-semibold text-apple-ink">ST-Segment Deviation on ECG</span>
+                                        <select id="grace-st" onchange="calculateGRACE()" class="bg-apple-white border border-apple-borderSoft rounded-lg px-2 py-1 text-xs">
+                                            <option value="0">No</option>
+                                            <option value="30" selected>Yes</option>
+                                        </select>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-semibold text-apple-ink">Elevated Myocardial Enzymes (Troponin)</span>
+                                        <select id="grace-troponin" onchange="calculateGRACE()" class="bg-apple-white border border-apple-borderSoft rounded-lg px-2 py-1 text-xs">
+                                            <option value="0">No</option>
+                                            <option value="15" selected>Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Output details -->
+                        <div class="lg:col-span-5 bg-apple-ink text-apple-white rounded-[24px] p-6 flex flex-col justify-between text-left">
+                            <div>
+                                <span class="text-[9px] font-mono text-apple-graySecondary uppercase block tracking-wider">STRATIFICATION CALCULATOR</span>
+                                <h4 class="font-display font-extrabold text-lg text-white mt-1 border-b border-white/10 pb-3">GRACE 2.0 Output</h4>
+                                
+                                <div class="mt-4 text-center">
+                                    <span class="text-[10px] font-mono text-apple-graySecondary uppercase block">Cumulative Points</span>
+                                    <span id="grace-score-num" class="text-5xl font-extrabold text-amber-400 font-display">120</span>
+                                    
+                                    <div id="grace-risk-badge" class="inline-block mt-3 px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 font-mono">
+                                        INTERMEDIATE RISK
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 border-t border-white/10 pt-4">
+                                <strong class="text-[10px] font-mono text-apple-graySecondary block uppercase tracking-wider mb-2">CLINICAL DISPOSITION:</strong>
+                                <p id="grace-rec-text" class="text-[11px] leading-relaxed text-apple-graySecondary">
+                                    Analyzing values...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NSTEMI Treatment Pathways -->
+            <div class="bg-apple-white py-20">
+                <div class="max-w-5xl mx-auto px-6 reveal">
+                    <h3 class="font-display font-extrabold text-3xl text-apple-ink text-center mb-4">Urgency-Guided Invasive Timelines</h3>
+                    <p class="text-sm text-apple-graySecondary max-w-xl mx-auto text-center mb-12">Unlike STEMI, NSTE-ACS timing is guided by clinical stability and the GRACE risk category.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-apple-grayPale p-6 rounded-2xl border border-apple-borderSoft/60 flex flex-col justify-between">
+                            <div>
+                                <span class="bg-red-500/10 text-red-600 text-[10px] font-mono font-bold px-2.5 py-1 rounded-full inline-block mb-4">Immediate Invasive</span>
+                                <h4 class="font-display font-bold text-[15px] text-apple-ink mb-2">Cath Lab Activation &lt; 2 Hours</h4>
+                                <p class="text-xs text-apple-graySecondary leading-relaxed mb-4">For patients with unstable signs regardless of enzymes:</p>
+                                <ul class="text-[11px] text-apple-graySecondary space-y-1.5 list-disc list-inside">
+                                    <li>Refractory, recurrent angina despite optimal medical therapy.</li>
+                                    <li>Hemodynamic instability, cardiogenic shock, or severe SBP &lt; 90.</li>
+                                    <li>Life-threatening cardiac arrhythmias (VF / VT).</li>
+                                    <li>Acute mechanical failure or acute heart failure.</li>
+                                </ul>
+                            </div>
+                            <div class="border-t border-apple-borderSoft pt-3 mt-4 text-[10px] font-mono text-red-500 font-bold uppercase">Emergent Mobilization Required</div>
+                        </div>
+                        <div class="bg-apple-grayPale p-6 rounded-2xl border border-apple-borderSoft/60 flex flex-col justify-between">
+                            <div>
+                                <span class="bg-amber-500/10 text-amber-600 text-[10px] font-mono font-bold px-2.5 py-1 rounded-full inline-block mb-4">Early Invasive</span>
+                                <h4 class="font-display font-bold text-[15px] text-apple-ink mb-2">Coronary Angiography &lt; 24 Hours</h4>
+                                <p class="text-xs text-apple-graySecondary leading-relaxed mb-4">For stable patients with high-risk elements:</p>
+                                <ul class="text-[11px] text-apple-graySecondary space-y-1.5 list-disc list-inside">
+                                    <li>GRACE score &gt; 140.</li>
+                                    <li>Dynamic, diagnostic ST-segment or T-wave displacements.</li>
+                                    <li>Temporal rise or fall in cardiac troponin values.</li>
+                                </ul>
+                            </div>
+                            <div class="border-t border-apple-borderSoft pt-3 mt-4 text-[10px] font-mono text-amber-600 font-bold uppercase">Urgent Direct Transfer</div>
+                        </div>
+                        <div class="bg-apple-grayPale p-6 rounded-2xl border border-apple-borderSoft/60 flex flex-col justify-between">
+                            <div>
+                                <span class="bg-blue-500/10 text-blue-600 text-[10px] font-mono font-bold px-2.5 py-1 rounded-full inline-block mb-4">Delayed Invasive</span>
+                                <h4 class="font-display font-bold text-[15px] text-apple-ink mb-2">Evaluation inside 24 - 72 Hours</h4>
+                                <p class="text-xs text-apple-graySecondary leading-relaxed mb-4">For stable patients with moderate-risk factors:</p>
+                                <ul class="text-[11px] text-apple-graySecondary space-y-1.5 list-disc list-inside">
+                                    <li>GRACE score between 109 and 140.</li>
+                                    <li>History of prior CABG, stroke, or PCI.</li>
+                                    <li>Co-morbidities like Diabetes Mellitus or chronic renal insufficiency.</li>
+                                </ul>
+                            </div>
+                            <div class="border-t border-apple-borderSoft pt-3 mt-4 text-[10px] font-mono text-blue-600 font-bold uppercase">Elective Angiography Scheme</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="py-12 border-t border-apple-borderSoft text-center">
+                <button onclick="goToNext('ste')" class="bg-amber-500 text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-90 active:scale-95 transition-all shadow-md flex items-center gap-3 mx-auto">
+                    <span>Continue to ST-Elevation Equivalents</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 5: ST EQUIVALENTS -->
+        <section id="ste" class="tab-content">
+            <div class="bg-apple-grayPale py-20 border-b border-apple-borderSoft/40">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="inline-block text-xs font-bold text-red-500 uppercase tracking-wider mb-2 font-mono">Critical Diagnostic Exceptions</span>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-6">ST-Elevation Equivalents</h2>
+                        <p class="text-[17px] text-apple-graySecondary leading-relaxed">
+                            These critical ECG patterns represent **acute, total coronary artery occlusion** without classic ST-segment elevation. Recognizing these "STEMI equivalents" is vital, as they demand emergent cardiac catheterization.
+                        </p>
+                    </div>
+                    
+                    <!-- CASCADE SYSTEM FOR ST EQUIVALENTS -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-6xl mx-auto mt-12">
+                        <!-- LEFT TABS -->
+                        <div class="lg:col-span-5 flex flex-col space-y-4">
+                            <div onclick="selectSTE(0)" id="ste-0" class="cascade-step cursor-pointer p-4 rounded-2xl border border-apple-borderSoft/60 bg-apple-white flex items-center space-x-4 selected">
+                                <span class="w-8 h-8 rounded-full bg-amber-500/10 text-amber-600 font-mono font-bold flex items-center justify-center shrink-0">1</span>
+                                <div class="text-left">
+                                    <h4 class="font-display font-bold text-sm text-apple-ink">de Winter T-Waves</h4>
+                                    <p class="text-[11px] text-apple-graySecondary mt-0.5">Proximal LAD occlusion with upsloping depression.</p>
+                                </div>
+                            </div>
+                            <div onclick="selectSTE(1)" id="ste-1" class="cascade-step cursor-pointer p-4 rounded-2xl border border-apple-borderSoft/60 bg-apple-white flex items-center space-x-4">
+                                <span class="w-8 h-8 rounded-full bg-amber-500/10 text-amber-600 font-mono font-bold flex items-center justify-center shrink-0">2</span>
+                                <div class="text-left">
+                                    <h4 class="font-display font-bold text-sm text-apple-ink">Wellens Syndrome</h4>
+                                    <p class="text-[11px] text-apple-graySecondary mt-0.5">Critical LAD stenosis; biphasic/deep T waves.</p>
+                                </div>
+                            </div>
+                            <div onclick="selectSTE(2)" id="ste-2" class="cascade-step cursor-pointer p-4 rounded-2xl border border-apple-borderSoft/60 bg-apple-white flex items-center space-x-4">
+                                <span class="w-8 h-8 rounded-full bg-amber-500/10 text-amber-600 font-mono font-bold flex items-center justify-center shrink-0">3</span>
+                                <div class="text-left">
+                                    <h4 class="font-display font-bold text-sm text-apple-ink">Sgarbossa Criteria</h4>
+                                    <p class="text-[11px] text-apple-graySecondary mt-0.5">STEMI diagnostic scoring in the presence of LBBB.</p>
+                                </div>
+                            </div>
+                            <div onclick="selectSTE(3)" id="ste-3" class="cascade-step cursor-pointer p-4 rounded-2xl border border-apple-borderSoft/60 bg-apple-white flex items-center space-x-4">
+                                <span class="w-8 h-8 rounded-full bg-amber-500/10 text-amber-600 font-mono font-bold flex items-center justify-center shrink-0">4</span>
+                                <div class="text-left">
+                                    <h4 class="font-display font-bold text-sm text-apple-ink">Posterior Wall MI</h4>
+                                    <p class="text-[11px] text-apple-graySecondary mt-0.5">Anterior ST depressions hiding posterior elevations.</p>
+                                </div>
+                            </div>
+                            <div onclick="selectSTE(4)" id="ste-4" class="cascade-step cursor-pointer p-4 rounded-2xl border border-apple-borderSoft/60 bg-apple-white flex items-center space-x-4">
+                                <span class="w-8 h-8 rounded-full bg-amber-500/10 text-amber-600 font-mono font-bold flex items-center justify-center shrink-0">5</span>
+                                <div class="text-left">
+                                    <h4 class="font-display font-bold text-sm text-apple-ink">aVR ST Elevation</h4>
+                                    <p class="text-[11px] text-apple-graySecondary mt-0.5">Left main occlusion or severe 3-vessel disease.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT DISPLAY PANEL -->
+                        <div class="lg:col-span-7 bg-apple-white border border-apple-borderSoft/80 rounded-[28px] p-6 flex flex-col justify-between text-left relative overflow-hidden shadow-sm">
+                            <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-amber-500/5 blur-[60px] pointer-events-none"></div>
+                            
+                            <div id="ste-display-content" class="min-h-[380px] flex flex-col justify-between">
+                                <!-- Dynamic cellular graphics / text rendered here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="py-12 border-t border-apple-borderSoft text-center bg-apple-white">
+                <button onclick="goToNext('redflag')" class="bg-amber-500 text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-90 active:scale-95 transition-all shadow-md flex items-center gap-3 mx-auto">
+                    <span>Continue to ECG Red Flags</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 6: RED FLAGS -->
+        <section id="redflag" class="tab-content">
+            <div class="bg-[rgba(5,5,8,0.98)] py-20 text-apple-white border-b border-apple-borderSoft/10">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="inline-block text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 font-mono">High Risk Mimics & Patterns</span>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-6">Red Flag ECG Gallery</h2>
+                        <p class="text-[17px] text-apple-graySecondary leading-relaxed">
+                            These highly dangerous ECG patterns are frequently overlooked or misclassified by junior clinicians, leading to tragic delays. Click on each card to reveal its danger profile and clinical management.
+                        </p>
+                    </div>
+                    
+                    <!-- FLIP CARDS GRID (6 Cards) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                        <!-- Card 1: Hyperacute T-waves -->
+                        <div class="fast-card" onclick="this.classList.toggle('flipped')">
+                            <div class="fast-card-inner">
+                                <div class="fast-card-front flex flex-col justify-between items-start text-left">
+                                    <div class="w-full flex justify-between items-center">
+                                        <span class="text-[10px] font-mono text-amber-600 font-bold uppercase">PATTERN 1</span>
+                                        <span class="px-2 py-0.5 rounded text-[8px] font-bold bg-amber-500/10 text-amber-600">HIGH RISK</span>
+                                    </div>
+                                    <h4 class="font-display font-extrabold text-base text-apple-ink mt-2">Hyperacute T-Waves</h4>
+                                    <p class="text-[11px] text-apple-graySecondary mt-1 leading-normal">
+                                        Broad, asymmetrical, tall T-waves appearing minutes after occlusion.
+                                    </p>
+                                    <span class="text-[9px] text-apple-graySecondary mt-4 font-mono font-semibold uppercase">CLICK TO REVEAL DETAILS</span>
+                                </div>
+                                <div class="fast-card-back flex flex-col justify-between items-start text-left">
+                                    <h5 class="font-bold text-xs uppercase tracking-wider">Danger Profile & Management</h5>
+                                    <p class="text-xs leading-normal mt-2">
+                                        The earliest stage of STEMI, preceding ST elevation. Easy to miss if not compared with prior baseline. 
+                                        <strong>Management:</strong> Repeat ECG in 10-15 minutes. Prepare for STEMI protocol activation.
+                                    </p>
+                                    <span class="text-[9px] text-white/60 font-mono uppercase">CLICK TO FLIP BACK</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Tombstone ST Elevation -->
+                        <div class="fast-card" onclick="this.classList.toggle('flipped')">
+                            <div class="fast-card-inner">
+                                <div class="fast-card-front flex flex-col justify-between items-start text-left">
+                                    <div class="w-full flex justify-between items-center">
+                                        <span class="text-[10px] font-mono text-red-600 font-bold uppercase">PATTERN 2</span>
+                                        <span class="px-2 py-0.5 rounded text-[8px] font-bold bg-red-500/10 text-red-600">CRITICAL</span>
+                                    </div>
+                                    <h4 class="font-display font-extrabold text-base text-apple-ink mt-2">Tombstone ST Elevation</h4>
+                                    <p class="text-[11px] text-apple-graySecondary mt-1 leading-normal">
+                                        Extreme ST elevation merging directly with the T-wave, obliterating QRS.
+                                    </p>
+                                    <span class="text-[9px] text-apple-graySecondary mt-4 font-mono font-semibold uppercase">CLICK TO REVEAL DETAILS</span>
+                                </div>
+                                <div class="fast-card-back flex flex-col justify-between items-start text-left">
+                                    <h5 class="font-bold text-xs uppercase tracking-wider">Danger Profile & Management</h5>
+                                    <p class="text-xs leading-normal mt-2">
+                                        Represents massive, transmural, proximal coronary artery occlusion. Predicts severe pump failure and cardiogenic shock.
+                                        <strong>Management:</strong> Emergent cath lab activation. High risk of ventricular fibrillation.
+                                    </p>
+                                    <span class="text-[9px] text-white/60 font-mono uppercase">CLICK TO FLIP BACK</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Right Ventricular Infarction -->
+                        <div class="fast-card" onclick="this.classList.toggle('flipped')">
+                            <div class="fast-card-inner">
+                                <div class="fast-card-front flex flex-col justify-between items-start text-left">
+                                    <div class="w-full flex justify-between items-center">
+                                        <span class="text-[10px] font-mono text-red-600 font-bold uppercase">PATTERN 3</span>
+                                        <span class="px-2 py-0.5 rounded text-[8px] font-bold bg-red-500/10 text-red-600">CRITICAL</span>
+                                    </div>
+                                    <h4 class="font-display font-extrabold text-base text-apple-ink mt-2">Right Ventricular MI</h4>
+                                    <p class="text-[11px] text-apple-graySecondary mt-1 leading-normal">
+                                        Inferior STEMI paired with ST elevation in leads V1, V3R, or V4R.
+                                    </p>
+                                    <span class="text-[9px] text-apple-graySecondary mt-4 font-mono font-semibold uppercase">CLICK TO REVEAL DETAILS</span>
+                                </div>
+                                <div class="fast-card-back flex flex-col justify-between items-start text-left">
+                                    <h5 class="font-bold text-xs uppercase tracking-wider">Danger Profile & Management</h5>
+                                    <p class="text-xs leading-normal mt-2">
+                                        Loss of RV contractility results in extreme preload dependence. 
+                                        <strong>WARNING: Nitroglycerin or Morphine is strictly contraindicated</strong> as they cause profound venous dilation and cardiovascular collapse. 
+                                        <strong>Management:</strong> IV fluids to maintain RV filling preload.
+                                    </p>
+                                    <span class="text-[9px] text-white/60 font-mono uppercase">CLICK TO FLIP BACK</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Reciprocal Changes -->
+                        <div class="fast-card" onclick="this.classList.toggle('flipped')">
+                            <div class="fast-card-inner">
+                                <div class="fast-card-front flex flex-col justify-between items-start text-left">
+                                    <div class="w-full flex justify-between items-center">
+                                        <span class="text-[10px] font-mono text-amber-600 font-bold uppercase">PATTERN 4</span>
+                                        <span class="px-2 py-0.5 rounded text-[8px] font-bold bg-amber-500/10 text-amber-600">VALIDATING</span>
+                                    </div>
+                                    <h4 class="font-display font-extrabold text-base text-apple-ink mt-2">Reciprocal ST Depression</h4>
+                                    <p class="text-[11px] text-apple-graySecondary mt-1 leading-normal">
+                                        ST depressions in leads anatomically opposite to the ST elevations.
+                                    </p>
+                                    <span class="text-[9px] text-apple-graySecondary mt-4 font-mono font-semibold uppercase">CLICK TO REVEAL DETAILS</span>
+                                </div>
+                                <div class="fast-card-back flex flex-col justify-between items-start text-left">
+                                    <h5 class="font-bold text-xs uppercase tracking-wider">Danger Profile & Management</h5>
+                                    <p class="text-xs leading-normal mt-2">
+                                        Confirming presence of reciprocal changes dramatically increases the specificity of STEMI, helping to rule out mimics like pericarditis or early repolarization.
+                                        <strong>Management:</strong> Proceed immediately with STEMI lab mobilization.
+                                    </p>
+                                    <span class="text-[9px] text-white/60 font-mono uppercase">CLICK TO FLIP BACK</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Brugada Mimic Pattern -->
+                        <div class="fast-card" onclick="this.classList.toggle('flipped')">
+                            <div class="fast-card-inner">
+                                <div class="fast-card-front flex flex-col justify-between items-start text-left">
+                                    <div class="w-full flex justify-between items-center">
+                                        <span class="text-[10px] font-mono text-gray-600 font-bold uppercase">PATTERN 5</span>
+                                        <span class="px-2 py-0.5 rounded text-[8px] font-bold bg-gray-500/10 text-gray-600">MIMIC</span>
+                                    </div>
+                                    <h4 class="font-display font-extrabold text-base text-apple-ink mt-2">Brugada Mimic (Type 1)</h4>
+                                    <p class="text-[11px] text-apple-graySecondary mt-1 leading-normal">
+                                        Coved-type ST elevation followed by a negative T-wave in leads V1-V2.
+                                    </p>
+                                    <span class="text-[9px] text-apple-graySecondary mt-4 font-mono font-semibold uppercase">CLICK TO REVEAL DETAILS</span>
+                                </div>
+                                <div class="fast-card-back flex flex-col justify-between items-start text-left">
+                                    <h5 class="font-bold text-xs uppercase tracking-wider">Danger Profile & Management</h5>
+                                    <p class="text-xs leading-normal mt-2">
+                                        A genetic channelopathy that mimics an acute septal STEMI but lacks biomarkers and typical chest pain. Giving fibrinolytics by mistake can be dangerous.
+                                        <strong>Management:</strong> Differentiate using clinical history (syncope, family history of SCD). Avoid unnecessary thrombolysis.
+                                    </p>
+                                    <span class="text-[9px] text-white/60 font-mono uppercase">CLICK TO FLIP BACK</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 6: New LBBB -->
+                        <div class="fast-card" onclick="this.classList.toggle('flipped')">
+                            <div class="fast-card-inner">
+                                <div class="fast-card-front flex flex-col justify-between items-start text-left">
+                                    <div class="w-full flex justify-between items-center">
+                                        <span class="text-[10px] font-mono text-red-600 font-bold uppercase">PATTERN 6</span>
+                                        <span class="px-2 py-0.5 rounded text-[8px] font-bold bg-red-500/10 text-red-600">CRITICAL</span>
+                                    </div>
+                                    <h4 class="font-display font-extrabold text-base text-apple-ink mt-2">New LBBB in Chest Pain</h4>
+                                    <p class="text-[11px] text-apple-graySecondary mt-1 leading-normal">
+                                        New Left Bundle Branch Block in the presence of acute ischemic chest symptoms.
+                                    </p>
+                                    <span class="text-[9px] text-apple-graySecondary mt-4 font-mono font-semibold uppercase">CLICK TO REVEAL DETAILS</span>
+                                </div>
+                                <div class="fast-card-back flex flex-col justify-between items-start text-left">
+                                    <h5 class="font-bold text-xs uppercase tracking-wider">Danger Profile & Management</h5>
+                                    <p class="text-xs leading-normal mt-2">
+                                        LBBB masks ST-elevation on standard ECGs. Guidelines stipulate a **new or presumably new LBBB** with acute chest pain must be managed as a STEMI equivalent.
+                                        <strong>Management:</strong> Emergent cath lab activation. Apply Sgarbossa criteria to confirm.
+                                    </p>
+                                    <span class="text-[9px] text-white/60 font-mono uppercase">CLICK TO FLIP BACK</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="py-12 border-t border-apple-borderSoft text-center bg-apple-white">
+                <button onclick="goToNext('quickref')" class="bg-amber-500 text-apple-white px-8 py-4 rounded-full font-semibold hover:opacity-90 active:scale-95 transition-all shadow-md flex items-center gap-3 mx-auto">
+                    <span>Continue to Quick Reference</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 7: QUICK REFERENCE -->
+        <section id="quickref" class="tab-content">
+            <!-- Side-by-Side Comparison Table -->
+            <div class="bg-apple-grayPale py-20 border-b border-apple-borderSoft/40">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <h3 class="font-display font-extrabold text-3xl text-apple-ink text-center mb-4">ACS Differential Comparison</h3>
+                    <p class="text-sm text-apple-graySecondary max-w-xl mx-auto text-center mb-12">Quick, side-by-side diagnostic summary of the entire ACS spectrum.</p>
+                    
+                    <div class="bg-apple-white card-border overflow-x-auto shadow-sm">
+                        <table class="w-full min-w-[800px] border-collapse text-left text-xs text-apple-graySecondary">
+                            <thead class="bg-apple-grayPale text-[10px] font-mono text-apple-ink uppercase border-b border-apple-borderSoft">
+                                <tr>
+                                    <th class="p-4 font-bold">Category</th>
+                                    <th class="p-4 font-bold">Lumen Status</th>
+                                    <th class="p-4 font-bold">Classic ECG Signature</th>
+                                    <th class="p-4 font-bold">Troponin Status</th>
+                                    <th class="p-4 font-bold">Intervention Urgency</th>
+                                    <th class="p-4 font-bold">Reperfusion Strategy</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-apple-borderSoft/60 leading-normal">
+                                <tr>
+                                    <td class="p-4 font-bold text-red-600">STEMI</td>
+                                    <td class="p-4">100% complete transmural occlusion</td>
+                                    <td class="p-4 font-mono">ST elevation &ge; 1 mm in &ge; 2 contiguous leads</td>
+                                    <td class="p-4 font-semibold text-apple-ink">Positive (elevated)</td>
+                                    <td class="p-4 text-red-600 font-bold">Immediate (&le; 90 min)</td>
+                                    <td class="p-4">Emergent PCI or Fibrinolysis</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 font-bold text-amber-600">STEMI Equivalent</td>
+                                    <td class="p-4">100% complete or severe proximal occlusion</td>
+                                    <td class="p-4 font-mono">de Winter, Wellens, Sgarbossa, posterior, aVR ST elevation</td>
+                                    <td class="p-4 font-semibold text-apple-ink">Positive (elevated)</td>
+                                    <td class="p-4 text-red-600 font-bold">Immediate (&le; 90-120 min)</td>
+                                    <td class="p-4">Emergent PCI (Cath lab activation)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 font-bold text-amber-500">NSTEMI</td>
+                                    <td class="p-4">Partial or intermittent occlusion</td>
+                                    <td class="p-4 font-mono">ST depression, T-wave inversion, dynamic changes</td>
+                                    <td class="p-4 font-semibold text-apple-ink">Positive (elevated)</td>
+                                    <td class="p-4">Urgent (&lt; 24h to 72h based on GRACE)</td>
+                                    <td class="p-4">Invasive strategy (Coronary Angiography)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 font-bold text-gray-500">Unstable Angina</td>
+                                    <td class="p-4">Significant partial narrowing</td>
+                                    <td class="p-4 font-mono">ST depression, T-wave inversion, or normal</td>
+                                    <td class="p-4 text-green-600 font-bold">Negative (normal)</td>
+                                    <td class="p-4">Deferred (ischemia-guided)</td>
+                                    <td class="p-4">Optimal medical therapy, stress test</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACS Management Algorithm Flowchart -->
+            <div class="bg-apple-white py-20 border-b border-apple-borderSoft/40">
+                <div class="max-w-5xl mx-auto px-6 reveal">
+                    <h3 class="font-display font-extrabold text-3xl text-apple-ink text-center mb-4">ACS Emergency Decision Tree</h3>
+                    <p class="text-sm text-apple-graySecondary max-w-xl mx-auto text-center mb-12">A clinical pathway flowchart starting from presentation to coronary intervention.</p>
+                    
+                    <div class="flex flex-col items-center space-y-6 max-w-3xl mx-auto text-xs font-semibold">
+                        <!-- Top box -->
+                        <div class="bg-apple-ink text-white p-4 rounded-xl border border-white/10 text-center w-64 shadow-md">
+                            <h4 class="font-display font-bold">Ischemic Chest Pain</h4>
+                            <p class="text-[10px] text-apple-graySecondary mt-1 font-mono uppercase">Acquire &amp; read 12-lead ECG in &lt;10 min</p>
+                        </div>
+                        
+                        <!-- Down Arrow -->
+                        <div class="w-0.5 h-6 bg-amber-500"></div>
+                        
+                        <!-- ECG splitting point -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 w-full">
+                            <!-- Left Branch: STEMI / Equivalents -->
+                            <div class="flex flex-col items-center space-y-4 border border-red-100 rounded-2xl p-5 bg-[#fffaf5]">
+                                <span class="bg-red-500 text-white font-mono text-[9px] font-bold px-2 py-0.5 rounded">PATHWAY A</span>
+                                <h4 class="font-display font-bold text-apple-ink">ST Elevation or ST Equivalent</h4>
+                                <p class="text-[11px] text-apple-graySecondary text-center leading-relaxed">Persistent J-point elevations meeting criteria, de Winter, Wellens, Sgarbossa, posterior MI, or new LBBB.</p>
+                                
+                                <div class="w-0.5 h-6 bg-red-400"></div>
+                                
+                                <div class="bg-red-600 text-white p-4 rounded-xl text-center w-full shadow-sm">
+                                    <h5 class="font-bold">Emergent Reperfusion</h5>
+                                    <p class="text-[10px] text-white/80 mt-1">PCI &lt; 90 min or Fibrinolytics &lt; 30 min</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Right Branch: NSTE-ACS -->
+                            <div class="flex flex-col items-center space-y-4 border border-amber-100 rounded-2xl p-5 bg-[#fefdfa]">
+                                <span class="bg-amber-500 text-white font-mono text-[9px] font-bold px-2 py-0.5 rounded">PATHWAY B</span>
+                                <h4 class="font-display font-bold text-apple-ink">ST Depression, T-wave Inversion, or Normal</h4>
+                                <p class="text-[11px] text-apple-graySecondary text-center leading-relaxed">No diagnostic elevations. Serial Troponins at 0h, 1h/2h, and clinical risk evaluation.</p>
+                                
+                                <div class="w-0.5 h-6 bg-amber-400"></div>
+                                
+                                <div class="grid grid-cols-2 gap-4 w-full">
+                                    <div class="bg-amber-500 text-white p-3 rounded-xl text-center shadow-xs">
+                                        <h5 class="font-bold text-[10px]">Positive Troponin</h5>
+                                        <p class="text-[8px] text-white/90 mt-0.5 font-mono">NSTEMI</p>
+                                    </div>
+                                    <div class="bg-gray-500 text-white p-3 rounded-xl text-center shadow-xs">
+                                        <h5 class="font-bold text-[10px]">Normal Troponin</h5>
+                                        <p class="text-[8px] text-white/90 mt-0.5 font-mono">UNSTABLE ANGINA</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="w-0.5 h-4 bg-amber-400"></div>
+                                
+                                <div class="bg-apple-ink text-white p-3 rounded-xl text-center w-full shadow-xs">
+                                    <h5 class="font-bold text-[11px]">GRACE Score Stratification</h5>
+                                    <p class="text-[9px] text-apple-graySecondary mt-0.5">High: &lt; 24h angiography | Low: ischemia guided</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drug Dosing Grid -->
+            <div class="bg-apple-grayPale py-20 border-b border-apple-borderSoft/40">
+                <div class="max-w-7xl mx-auto px-6 reveal">
+                    <h3 class="font-display font-extrabold text-3xl text-apple-ink text-center mb-4">Acute Coronary Pharmacopoeia</h3>
+                    <p class="text-sm text-apple-graySecondary max-w-xl mx-auto text-center mb-12">Emergency dosing, loading regimens, and absolute contraindications for critical ACS therapies.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Drug 1: Aspirin -->
+                        <div class="bg-apple-white p-5 rounded-2xl border border-apple-borderSoft/60 shadow-xs flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-display font-bold text-sm text-apple-ink">Aspirin (ASA)</h4>
+                                <p class="text-[10px] text-apple-graySecondary font-mono uppercase mt-0.5">Antiplatelet (COX Inhibitor)</p>
+                                <div class="border-t border-apple-borderSoft/40 my-3 pt-3 space-y-2 text-[11px] text-apple-graySecondary">
+                                    <p><strong>Loading:</strong> 162 - 325 mg chewed immediately (non-enteric).</p>
+                                    <p><strong>Maintenance:</strong> 81 mg daily orally.</p>
+                                    <p class="text-red-500"><strong>Contraindications:</strong> Severe active GI bleeding or anaphylaxis history.</p>
+                                </div>
+                            </div>
+                            <span class="text-[9px] text-apple-graySecondary font-mono uppercase border-t border-apple-borderSoft/40 pt-2 mt-4 block">First-line Essential</span>
+                        </div>
+
+                        <!-- Drug 2: Ticagrelor -->
+                        <div class="bg-apple-white p-5 rounded-2xl border border-apple-borderSoft/60 shadow-xs flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-display font-bold text-sm text-apple-ink">Ticagrelor (Brilinta)</h4>
+                                <p class="text-[10px] text-apple-graySecondary font-mono uppercase mt-0.5">ADP P2Y12 Receptor Antagonist</p>
+                                <div class="border-t border-apple-borderSoft/40 my-3 pt-3 space-y-2 text-[11px] text-apple-graySecondary">
+                                    <p><strong>Loading:</strong> 180 mg orally once.</p>
+                                    <p><strong>Maintenance:</strong> 90 mg BID orally for &ge; 12 months.</p>
+                                    <p class="text-red-500"><strong>Contraindications:</strong> Prior intracranial hemorrhage, active bleeding, severe hepatic impairment.</p>
+                                </div>
+                            </div>
+                            <span class="text-[9px] text-apple-graySecondary font-mono uppercase border-t border-apple-borderSoft/40 pt-2 mt-4 block">Preferred P2Y12</span>
+                        </div>
+
+                        <!-- Drug 3: Unfractionated Heparin -->
+                        <div class="bg-apple-white p-5 rounded-2xl border border-apple-borderSoft/60 shadow-xs flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-display font-bold text-sm text-apple-ink">Unfractionated Heparin</h4>
+                                <p class="text-[10px] text-apple-graySecondary font-mono uppercase mt-0.5">Antithrombin III Co-factor</p>
+                                <div class="border-t border-apple-borderSoft/40 my-3 pt-3 space-y-2 text-[11px] text-apple-graySecondary">
+                                    <p><strong>Dosing:</strong> 60 U/kg IV bolus (max 4000 U), then 12 U/kg/h infusion (max 1000 U/h) targeted to aPTT.</p>
+                                    <p class="text-red-500"><strong>Contraindications:</strong> Severe thrombocytopenia (HIT history), active major bleeding, SBP &gt; 180/110.</p>
+                                </div>
+                            </div>
+                            <span class="text-[9px] text-apple-graySecondary font-mono uppercase border-t border-apple-borderSoft/40 pt-2 mt-4 block">Reversible Anticoagulant</span>
+                        </div>
+
+                        <!-- Drug 4: Tenecteplase -->
+                        <div class="bg-apple-white p-5 rounded-2xl border border-apple-borderSoft/60 shadow-xs flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-display font-bold text-sm text-apple-ink">Tenecteplase (TNK-tPA)</h4>
+                                <p class="text-[10px] text-apple-graySecondary font-mono uppercase mt-0.5">Fibrin-Specific Thrombolytic</p>
+                                <div class="border-t border-apple-borderSoft/40 my-3 pt-3 space-y-2 text-[11px] text-apple-graySecondary">
+                                    <p><strong>Dosing:</strong> Single IV bolus over 5 seconds adjusted to weight (e.g. 30-50 mg).</p>
+                                    <p class="text-red-500"><strong>Contraindications:</strong> Prior ICH, ischemic stroke within 3 mo, aortic dissection, active bleeding, major trauma &lt; 3 wk.</p>
+                                </div>
+                            </div>
+                            <span class="text-[9px] text-apple-graySecondary font-mono uppercase border-t border-apple-borderSoft/40 pt-2 mt-4 block">Fibrinolytic of Choice</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="bg-apple-ink text-apple-white py-16 text-center text-xs">
+        <div class="max-w-7xl mx-auto px-6 reveal">
+            <span class="font-display font-bold text-base tracking-tight mb-2 block">MedGuide<span class="text-amber-500">.ACS</span></span>
+            <p class="text-apple-graySecondary max-w-md mx-auto mb-6 leading-relaxed">
+                Emergency cardiology reference guides under the guidelines of ACCF/AHA and ESC. For professional educational use only.
+            </p>
+            <div class="border-t border-white/5 pt-6 text-[10px] text-apple-graySecondary">
+                &copy; 2026 MedGuide Network. All rights reserved. Created in alignment with modern cardiology standards.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ═══════════════════════════════════════════════════════
+        // TAB SYSTEM
+        // ═══════════════════════════════════════════════════════
+        function switchTab(tabId, btnElement) {
+            // Update Tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-apple-ink', 'font-semibold');
+                btn.classList.add('text-apple-graySecondary', 'font-medium');
+            });
+            
+            if (btnElement) {
+                btnElement.classList.remove('text-apple-graySecondary', 'font-medium');
+                btnElement.classList.add('text-apple-ink', 'font-semibold');
+                
+                // Animate sliding indicator background
+                const indicator = document.getElementById('tab-active-pill');
+                indicator.style.width = `${btnElement.offsetWidth}px`;
+                indicator.style.transform = `translateX(${btnElement.offsetLeft - 4}px)`;
+            }
+
+            document.querySelectorAll('.tab-content').forEach(panel => {
+                panel.classList.remove('active');
+                if(panel.id === tabId) {
+                    panel.classList.add('active');
+                }
+            });
+            
+            setTimeout(() => { observeElements(); }, 60);
+        }
+
+        function goToNext(tabId) {
+            const btn = document.querySelector(`.tab-btn[data-target="${tabId}"]`);
+            switchTab(tabId, btn);
+            
+            setTimeout(() => {
+                const heroSection = document.getElementById('hero-section');
+                const globalNavHeight = 52; 
+                const heroBottomY = heroSection.getBoundingClientRect().bottom + window.pageYOffset;
+                const targetScrollPosition = heroBottomY - globalNavHeight;
+        
+                window.scrollTo({
+                    top: targetScrollPosition,
+                    behavior: 'smooth'
+                });
+            }, 60);
+        }
+
+        // Intersection Observer scroll reveals
+        function observeElements() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.08 });
+
+            document.querySelectorAll('.tab-content.active .reveal, header .reveal, footer .reveal').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // INTERACTIVE DATASTORES & RENDERING MODULES
+        // ═══════════════════════════════════════════════════════
+
+        // 1. Coronary Territories explorer
+        const territoryData = {
+            lad: {
+                title: "Left Anterior Descending (LAD) Artery Territory",
+                specs: "Supplies the anterior wall of the left ventricle, anterior interventricular septum, and apex. High mortality index; commonly known as the <strong>'Widowmaker'</strong>.",
+                deficits: [
+                    "<strong>Affected Leads:</strong> ST elevation or depression in Leads V1 - V4.",
+                    "<strong>Left Ventricular Deficits:</strong> High risk of severe anterior wall akinesia and subsequent congestive heart failure.",
+                    "<strong>Conduction Disturbances:</strong> Septal ischemia can injure bundle branches, resulting in sudden, new RBBB or LBBB.",
+                    "<strong>Clinical Risk Profile:</strong> Highest incidence of cardiogenic shock (Killip Class IV) and ventricular aneurysms."
+                ],
+                svgCode: `<svg class="w-full h-full" viewBox="0 0 256 96">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <path d="M 0 50 L 40 50 C 45 50 48 44 52 44 C 56 44 59 50 64 50 L 75 50 L 80 65 L 90 5 L 98 85 L 102 45 L 120 45 C 122 30 135 15 148 15 L 160 15 C 168 15 178 30 185 45 C 190 50 195 50 200 50 L 256 50" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="135" y="10" fill="#ef4444" font-family="'Space Mono', monospace" font-size="8" font-weight="bold" text-anchor="middle">ST ELEVATION (V1-V4)</text>
+                         </svg>`
+            },
+            rca: {
+                title: "Right Coronary Artery (RCA) Territory",
+                specs: "Supplies the inferior wall of the left ventricle, posterior interventricular septum, right ventricle, and pacemaking SA/AV nodes.",
+                deficits: [
+                    "<strong>Affected Leads:</strong> ST elevations in Leads II, III, and aVF (elevation in lead III usually exceeds II). Reciprocal depressions in high lateral leads I and aVL.",
+                    "<strong>Right Ventricular (RV) Infarction:</strong> Occurs in ~40% of inferior STEMIs. Characterized by severe preload dependence.",
+                    "<strong>Arrhythmias & AV Node block:</strong> Ischemia of node-supplying branches triggers profound sinus bradycardia or Mobitz II/Third-degree AV block.",
+                    "<strong>Vasoactive Danger:</strong> High risk of profound hypotension with Nitrates or Morphine due to sudden decrease in RV filling pressure."
+                ],
+                svgCode: `<svg class="w-full h-full" viewBox="0 0 256 96">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <path d="M 0 60 L 40 60 C 45 60 48 54 52 54 C 56 54 59 60 64 60 L 75 60 L 80 75 L 88 20 L 96 90 L 102 45 L 110 45 C 114 45 125 25 138 25 L 150 25 C 158 25 168 45 175 60 L 256 60" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="135" y="18" fill="#f59e0b" font-family="'Space Mono', monospace" font-size="8" font-weight="bold" text-anchor="middle">ST ELEVATION (II, III, aVF)</text>
+                         </svg>`
+            },
+            lcx: {
+                title: "Left Circumflex (LCx) Artery Territory",
+                specs: "Supplies the high lateral and posterolateral walls of the left ventricle, and the anterolateral papillary muscle.",
+                deficits: [
+                    "<strong>Affected Leads:</strong> ST elevation in high lateral leads I and aVL, or precordial lateral leads V5 and V6.",
+                    "<strong>Posterior Wall MI:</strong> Silent on standard ECG, presenting solely as reciprocal horizontal ST depression in leads V1 - V3. V7 - V9 posterior leads required to show ST elevation.",
+                    "<strong>Mitral Regurgitation:</strong> Papillary muscle ischemia or rupture triggers acute mitigation leakage, leading to acute pulmonary edema.",
+                    "<strong>Anatomical Variability:</strong> Dominates inferior wall supply in ~10% of left-dominant hearts."
+                ],
+                svgCode: `<svg class="w-full h-full" viewBox="0 0 256 96">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <path d="M 0 55 L 40 55 C 45 55 48 49 52 49 C 56 49 59 55 64 55 L 75 55 L 80 70 L 88 10 L 96 80 L 100 50 L 115 50 C 117 40 128 30 138 30 L 150 30 C 158 30 168 45 175 55 L 256 55" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="135" y="22" fill="#2563eb" font-family="'Space Mono', monospace" font-size="8" font-weight="bold" text-anchor="middle">ST ELEVATION (I, aVL, V5-V6)</text>
+                         </svg>`
+            }
+        };
+
+        let selectedTerritoryKey = 'lad';
+
+        function selectTerritory(key) {
+            selectedTerritoryKey = key;
+            document.querySelectorAll('.territory-pill').forEach(btn => {
+                if (btn.id === `btn-t-${key}`) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            updateTerritoryUI();
+        }
+
+        function updateTerritoryUI() {
+            const panel = document.getElementById('territory-display-panel');
+            const data = territoryData[selectedTerritoryKey];
+            const svgContainer = document.getElementById('territory-svg-container');
+
+            let bulletsHtml = '';
+            data.deficits.forEach(def => {
+                bulletsHtml += `<li class="flex items-start gap-2 text-xs text-apple-graySecondary leading-relaxed"><span class="text-amber-500 font-bold">&#10003;</span> <span>${def}</span></li>`;
+            });
+
+            panel.innerHTML = `
+                <div>
+                    <h4 class="font-display font-extrabold text-[17px] text-white mb-2">${data.title}</h4>
+                    <p class="text-xs text-apple-graySecondary italic leading-relaxed mb-4">${data.specs}</p>
+                    <div class="border-t border-white/5 pt-4 mt-2">
+                        <strong class="text-[11px] font-mono text-white block uppercase tracking-wider mb-2 font-bold">PRIMARY CLINICAL PATHOPHYSIOLOGY:</strong>
+                        <ul class="space-y-3">
+                            ${bulletsHtml}
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            svgContainer.innerHTML = data.svgCode;
+        }
+
+        // 2. ST Equivalents Cascade Explorer
+        const steData = [
+            {
+                title: "de Winter T-Waves",
+                specs: "Represents acute, complete proximal LAD occlusion (present in ~2% of acute anterior infarcts). Treated as an active STEMI.",
+                criteria: [
+                    "J-point depression > 1 mm in precordial leads V1 - V6.",
+                    "Upsloping ST segments transitioning into tall, prominent, symmetrical, peaked T-waves.",
+                    "ST elevation of 0.5 - 1.0 mm in lead aVR is frequently co-present."
+                ],
+                implications: "<strong>Emergency Activation:</strong> This is a STEMI-equivalent. Complete coronary occlusion is ongoing. Mobilize the catheterization lab immediately. Do not delay waiting for troponins.",
+                svgCode: `<svg class="w-full h-36" viewBox="0 0 300 120">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <path d="M 0 60 L 40 60 C 45 60 48 54 52 54 C 56 54 59 60 64 60 L 75 60 L 80 75 L 88 20 L 94 85 C 96 85 98 75 106 75 C 116 75 125 15 135 15 C 145 15 155 60 165 60 L 300 60" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="150" y="105" fill="#d97706" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">UPSLOPING ST DEPRESSION & PEAKED T-WAVE</text>
+                         </svg>`
+            },
+            {
+                title: "Wellens Syndrome",
+                specs: "Represents critical, high-grade stenosis of the proximal LAD (impending severe anterior wall STEMI).",
+                criteria: [
+                    "<strong>Type A (Biphasic):</strong> Biphasic T-waves (upward first, then downward) in leads V2 and V3 (seen in ~25% of cases).",
+                    "<strong>Type B (Inverted):</strong> Deep, highly symmetrical, inverted T-waves in leads V2 and V3 (seen in ~75% of cases).",
+                    "Precordial R-wave progression is preserved, with minimal (< 1mm) or absent ST elevation."
+                ],
+                implications: "<strong>CRITICAL WARNING: Strictly avoid cardiac stress testing!</strong> Physical stress will trigger acute complete occlusion, resulting in cardiogenic shock or death. Plan coronary angiography within 24 hours.",
+                svgCode: `<svg class="w-full h-36" viewBox="0 0 300 120">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <!-- Biphasic Wellens T-wave -->
+                            <path d="M 0 60 L 40 60 C 45 60 48 54 52 54 C 56 54 59 60 64 60 L 75 60 L 80 75 L 88 15 L 94 70 L 104 60 C 112 40 122 40 130 60 C 138 80 148 80 156 60 L 300 60" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="150" y="105" fill="#d97706" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">BIPHASIC T-WAVE (WELLENS TYPE A)</text>
+                         </svg>`
+            },
+            {
+                title: "Sgarbossa Criteria (STEMI in LBBB / Paced)",
+                specs: "Diagnostic tool to identify acute myocardial infarction in patients with a pre-existing Left Bundle Branch Block or ventricular paced rhythm, which normally mask ST elevations.",
+                criteria: [
+                    "<strong>Concordant ST Elevation:</strong> &ge; 1 mm elevation in leads with a positive QRS complex (Score: 5 points - highly specific).",
+                    "<strong>Concordant ST Depression:</strong> &ge; 1 mm depression in leads V1, V2, or V3 (Score: 3 points).",
+                    "<strong>Discordant ST Elevation (Modified):</strong> &ge; 1 mm elevation in leads with negative QRS, where ST/S-wave ratio &ge; 0.25 (Score: 2 points)."
+                ],
+                implications: "<strong>Scoring Significance:</strong> A Sgarbossa score <strong>&ge; 3 points</strong> has a specificity of 98% for acute MI. Immediately activate the catheterization lab for emergent PCI.",
+                svgCode: `<svg class="w-full h-36" viewBox="0 0 300 120">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <!-- Concordant ST elevation (QRS up, ST up) -->
+                            <path d="M 0 70 L 40 70 C 45 70 48 64 52 64 C 56 64 59 70 64 70 L 75 70 L 80 85 L 90 20 L 98 40 C 100 30 112 30 122 45 C 130 60 140 70 150 70 L 300 70" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="150" y="105" fill="#d97706" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">CONCORDANT ST ELEVATION (SGARBOSSA)</text>
+                         </svg>`
+            },
+            {
+                title: "Posterior Wall MI",
+                specs: "Complete occlusion of the Left Circumflex (LCx) or distal RCA. Hides from a standard 12-lead ECG because the posterior wall is not directly viewed.",
+                criteria: [
+                    "Horizontal ST-segment depression in leads V1, V2, and V3.",
+                    "Tall, broad R-waves in anterior leads (V2 R/S ratio > 1).",
+                    "Upright T-waves in V1 - V3.",
+                    "ST elevation &ge; 0.5 mm in posterior leads <strong>V7, V8, and V9</strong> (placed under left scapula)."
+                ],
+                implications: "<strong>Emergency Activation:</strong> ST depressions in V1-V3 are reciprocal changes representing direct posterior ST elevations. <strong>Treat as an acute STEMI</strong> and proceed to emergency angiography.",
+                svgCode: `<svg class="w-full h-36" viewBox="0 0 300 120">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <!-- Tall R wave and ST depression in V2 -->
+                            <path d="M 0 50 L 40 50 C 45 50 48 44 52 44 C 56 44 59 50 64 50 L 75 50 L 80 70 L 92 10 L 100 80 C 102 80 106 70 114 70 L 150 70 C 160 70 170 50 180 50 L 300 50" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="150" y="105" fill="#d97706" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">TALL R-WAVE & ST DEPRESSION (V1-V3 RECIPROCAL)</text>
+                         </svg>`
+            },
+            {
+                title: "aVR ST Elevation",
+                specs: "ECG signature indicating critical obstruction of the Left Main Coronary Artery (LMCA), proximal LAD, or severe three-vessel disease.",
+                criteria: [
+                    "ST-segment elevation &ge; 1.0 mm in lead aVR.",
+                    "Diffuse, prominent ST-segment depressions (&ge; 1.0 mm) across lateral and anterior leads (I, II, aVL, V4 - V6).",
+                    "Lead aVR elevation typically exceeds that of lead V1."
+                ],
+                implications: "<strong>CRITICAL DANGER: Impending hemodynamic collapse!</strong> Represents massive ischemic threat. Extremely high risk of cardiogenic shock and refractory ventricular fibrillation. Activate emergent PCI/CABG team.",
+                svgCode: `<svg class="w-full h-36" viewBox="0 0 300 120">
+                            <rect width="100%" height="100%" fill="url(#ecg-red-grid-large)"/>
+                            <!-- Elevated aVR strip -->
+                            <path d="M 0 50 L 40 50 C 45 50 48 44 52 44 C 56 44 59 50 64 50 L 75 50 L 80 65 L 88 15 L 94 40 C 96 30 108 20 122 20 L 135 20 C 142 20 152 35 158 50 L 300 50" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="150" y="105" fill="#d97706" font-family="'Space Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">ST ELEVATION IN LEAD aVR</text>
+                         </svg>`
+            }
+        ];
+
+        let selectedSTEIndex = 0;
+
+        function selectSTE(index) {
+            selectedSTEIndex = index;
+            document.querySelectorAll('#ste .cascade-step').forEach((el, idx) => {
+                if (idx === index) el.classList.add('selected');
+                else el.classList.remove('selected');
+            });
+            updateSTEUI();
+        }
+
+        function updateSTEUI() {
+            const displayPanel = document.getElementById('ste-display-content');
+            const data = steData[selectedSTEIndex];
+            
+            let criteriaHtml = '';
+            data.criteria.forEach(crit => {
+                criteriaHtml += `<li class="flex items-start gap-2 text-xs text-apple-graySecondary leading-relaxed"><span class="text-amber-500 font-bold">&#10003;</span> <span>${crit}</span></li>`;
+            });
+
+            displayPanel.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between border-b border-apple-borderSoft/40 pb-3 mb-2">
+                        <span class="inline-block px-3 py-1 rounded-full text-[9px] font-bold font-mono tracking-wider bg-amber-500/10 text-amber-600 uppercase">
+                            STEMI EQUIVALENT ${selectedSTEIndex + 1}
+                        </span>
+                        <span class="text-[9px] font-mono text-red-500 font-extrabold uppercase">EMERGENT PCI INDICATED</span>
+                    </div>
+                    <h3 class="font-display font-extrabold text-2xl text-apple-ink mt-2">${data.title}</h3>
+                    <p class="text-xs text-apple-graySecondary leading-relaxed italic">${data.specs}</p>
+                    
+                    <div class="border-t border-apple-borderSoft/40 pt-4">
+                        <strong class="text-[10px] font-mono text-apple-ink block uppercase tracking-wider mb-2 font-bold">SPECIFIC ECG DIAGNOSTIC CRITERIA:</strong>
+                        <ul class="space-y-2">
+                            ${criteriaHtml}
+                        </ul>
+                    </div>
+                    
+                    <div class="border-t border-apple-borderSoft/40 pt-4 mt-2">
+                        <strong class="text-[10px] font-mono text-red-500 block uppercase tracking-wider mb-1 font-bold">CLINICAL ACTION & PROTOCOL:</strong>
+                        <p class="text-xs text-apple-graySecondary leading-relaxed">${data.implications}</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 border-t border-apple-borderSoft/40 pt-4">
+                    <span class="text-[9px] font-mono text-apple-graySecondary uppercase block mb-2">CORRELATED ECG STRIP (SCHEMATIC)</span>
+                    <div class="border border-amber-100 rounded-xl overflow-hidden bg-[#fffaf5] flex justify-center py-2">
+                        ${data.svgCode}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // GRACE RISK SCORE CALCULATOR ALGORITHM
+        // ═══════════════════════════════════════════════════════
+        function calculateGRACE() {
+            const ageVal = parseInt(document.getElementById('grace-age').value);
+            const hrVal = parseInt(document.getElementById('grace-hr').value);
+            const sbpVal = parseInt(document.getElementById('grace-sbp').value);
+            const creatVal = parseInt(document.getElementById('grace-creat').value);
+            const killipVal = parseInt(document.getElementById('grace-killip').value);
+            const arrestVal = parseInt(document.getElementById('grace-arrest').value);
+            const stVal = parseInt(document.getElementById('grace-st').value);
+            const tropVal = parseInt(document.getElementById('grace-troponin').value);
+
+            const score = ageVal + hrVal + sbpVal + creatVal + killipVal + arrestVal + stVal + tropVal;
+            
+            const displayScore = document.getElementById('grace-score-num');
+            const badge = document.getElementById('grace-risk-badge');
+            const recText = document.getElementById('grace-rec-text');
+
+            displayScore.innerText = score;
+
+            if (score <= 108) {
+                badge.className = "inline-block mt-3 px-3 py-1 rounded-full text-[10px] font-bold bg-green-500/20 text-green-300 font-mono";
+                badge.innerText = "LOW RISK (MORTALITY < 1%)";
+                recText.innerHTML = "The patient falls into the low-risk category (In-hospital mortality risk &lt; 1%). An ischemia-guided conservative approach is recommended. Optimal pharmacological therapy can be managed, followed by non-invasive stress testing prior to hospital discharge.";
+            } else if (score > 108 && score <= 140) {
+                badge.className = "inline-block mt-3 px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 font-mono";
+                badge.innerText = "INTERMEDIATE RISK (MORTALITY 1-3%)";
+                recText.innerHTML = "Intermediate-risk category detected (Mortality risk 1-3%). Indicated for **Delayed Invasive Strategy**. Schedule coronary angiography and subsequent revascularization within <strong>24 to 72 hours</strong> of hospital admission.";
+            } else {
+                badge.className = "inline-block mt-3 px-3 py-1 rounded-full text-[10px] font-bold bg-red-500/20 text-red-300 font-mono";
+                badge.innerText = "HIGH RISK (MORTALITY > 3%)";
+                recText.innerHTML = "High-risk category detected (In-hospital mortality risk &gt; 3%). Demands an **Early Invasive Strategy**. Mobilize the cardiac catheterization lab team to perform angiography and intervention within <strong>24 hours</strong> of presentation.";
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // ACCORDION TOGGLE
+        // ═══════════════════════════════════════════════════════
+        function toggleAccordion(panelId) {
+            const panel = document.getElementById(`panel-${panelId}`);
+            const icon = document.getElementById(`icon-${panelId}`);
+            
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                icon.innerText = '－';
+            } else {
+                panel.classList.add('hidden');
+                icon.innerText = '＋';
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // INITIALIZATION
+        // ═══════════════════════════════════════════════════════
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set dynamic pill position initially
+            const activeBtn = document.querySelector('.tab-btn.relative');
+            const indicator = document.getElementById('tab-active-pill');
+            indicator.style.width = `${activeBtn.offsetWidth}px`;
+            indicator.style.transform = `translateX(${activeBtn.offsetLeft - 4}px)`;
+
+            observeElements(); // Start observers
+            updateTerritoryUI(); // Load LAD first
+            updateSTEUI(); // Load de Winter first
+            calculateGRACE(); // Run initial GRACE calculation
+
+            // Initialize Charts
+            const prevalenceCtx = document.getElementById('acsPrevalenceChart').getContext('2d');
+            new Chart(prevalenceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['NSTEMI', 'STEMI', 'Unstable Angina'],
+                    datasets: [{ 
+                        data: [40, 35, 25], 
+                        backgroundColor: ['#fbbf24', '#ef4444', '#6b7280'], 
+                        borderWidth: 0, 
+                        hoverOffset: 6 
+                    }]
+                },
+                options: {
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    cutout: '75%',
+                    plugins: {
+                        legend: { 
+                            position: 'bottom', 
+                            labels: { 
+                                font: { family: "'Inter', sans-serif", size: 12 }, 
+                                color: '#6e6e73', 
+                                usePointStyle: true, 
+                                padding: 16 
+                            } 
+                        },
+                        tooltip: { 
+                            backgroundColor: '#1d1d1f', 
+                            titleFont: { family: "'Inter', sans-serif", size: 12 }, 
+                            bodyFont: { family: "'Inter', sans-serif", size: 12 }, 
+                            padding: 10, 
+                            cornerRadius: 6 
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
