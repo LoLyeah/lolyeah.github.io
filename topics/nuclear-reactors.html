@@ -487,11 +487,6 @@ body.lang-en .id-only { display: none !important; }
   background: rgba(15, 15, 20, 0.8);
   transform: translateY(-2px);
 }
-.reactor-card.expanded {
-  border-color: var(--reactor);
-  grid-column: 1 / -1;
-  cursor: default;
-}
 
 .reactor-card-header {
   display: flex;
@@ -581,39 +576,6 @@ body.lang-en .id-only { display: none !important; }
   border: 1px solid rgba(251, 112, 133, 0.15);
   color: var(--danger);
 }
-
-/* ─── EXPANDED DETAIL ─── */
-.expanded-detail {
-  display: none;
-  margin-top: 1.2rem;
-  padding-top: 1.2rem;
-  border-top: 1px solid var(--border);
-  gap: 1.5rem;
-  grid-template-columns: 1fr 1fr;
-}
-.expanded-detail.show { display: grid; }
-
-.expanded-detail-left p {
-  color: var(--t2);
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-  line-height: 1.7;
-}
-
-.expanded-detail-right {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-.detail-spec {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-}
-.detail-spec-key { color: var(--t3); font-family: 'Geist Mono', monospace; font-size: 11px; }
-.detail-spec-val { color: var(--t1); font-family: 'Geist Mono', monospace; font-size: 11px; }
 
 /* ─── SVG DIAGRAM ─── */
 .svg-container {
@@ -877,7 +839,6 @@ body.lang-en .id-only { display: none !important; }
   .main { padding: 1.5rem 1.2rem 4rem; }
   .hero h1 { font-size: 2rem; }
   .reactor-grid { grid-template-columns: 1fr; }
-  .expanded-detail.show { grid-template-columns: 1fr; }
   .calc-row { grid-template-columns: 1fr; }
   .hero-stats { gap: 1.2rem; flex-wrap: wrap; }
 }
@@ -909,6 +870,297 @@ footer {
 }
 footer a { color: var(--t2); text-decoration: none; }
 footer a:hover { color: var(--reactor); }
+
+/* ─── REACTOR MODAL OVERLAY ─── */
+.reactor-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 2, 3, 0.92);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.reactor-modal.open {
+  display: flex;
+  opacity: 1;
+}
+.reactor-modal-card {
+  width: 100%;
+  max-width: 820px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: #060608;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(34, 211, 238, 0.08);
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+}
+.reactor-modal.open .reactor-modal-card {
+  transform: scale(1);
+  opacity: 1;
+}
+.reactor-modal-card::-webkit-scrollbar { width: 4px; }
+.reactor-modal-card::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.3); border-radius: 2px; }
+
+.rm-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.5rem 1.8rem;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.04) 0%, rgba(34, 211, 238, 0) 100%);
+}
+.rm-title-block { flex: 1; }
+.rm-category {
+  font-family: 'Geist Mono', monospace;
+  font-size: 9px;
+  color: var(--reactor);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.rm-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+.rm-close {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  color: var(--t2);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+.rm-close:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: rgba(251, 112, 133, 0.05);
+}
+.rm-body {
+  padding: 1.5rem 1.8rem 1.8rem;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 1.5rem;
+}
+.rm-diagram {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rm-diagram svg { max-width: 100%; height: auto; }
+.rm-content { display: flex; flex-direction: column; gap: 1rem; }
+.rm-desc {
+  color: var(--t2);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.rm-pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+.rm-pros-col, .rm-cons-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.rm-col-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.2rem;
+}
+.rm-pros-col .rm-col-label { color: var(--ok); }
+.rm-cons-col .rm-col-label { color: var(--danger); }
+.rm-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  margin-top: 0.3rem;
+}
+.rm-spec-tile {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+}
+.rm-spec-val {
+  font-family: 'Geist Mono', monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--reactor);
+  line-height: 1;
+}
+.rm-spec-lbl {
+  font-family: 'Geist Mono', monospace;
+  font-size: 8px;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.3rem;
+}
+.rm-cost-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  margin-top: 0.3rem;
+  padding: 0.8rem;
+  background: rgba(34, 211, 238, 0.03);
+  border: 1px solid rgba(34, 211, 238, 0.12);
+  border-radius: 8px;
+}
+.rm-cost-tile { text-align: center; }
+.rm-cost-val {
+  font-family: 'Geist Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--t1);
+}
+.rm-cost-lbl {
+  font-family: 'Geist Mono', monospace;
+  font-size: 8px;
+  color: var(--t3);
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+.rm-footer {
+  padding: 0.8rem 1.8rem 1.2rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.rm-footer-ref {
+  font-family: 'Geist Mono', monospace;
+  font-size: 9px;
+  color: var(--t3);
+}
+.rm-close-btn {
+  padding: 0.5rem 1.2rem;
+  background: rgba(34, 211, 238, 0.08);
+  border: 1px solid var(--reactor);
+  color: var(--reactor);
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rm-close-btn:hover { background: rgba(34, 211, 238, 0.15); }
+
+@media (max-width: 600px) {
+  .rm-body { grid-template-columns: 1fr; }
+  .rm-pros-cons { grid-template-columns: 1fr; }
+  .rm-specs-grid { grid-template-columns: repeat(2, 1fr); }
+  .rm-cost-strip { grid-template-columns: 1fr; gap: 0.4rem; }
+  .rm-header { padding: 1.2rem; }
+  .rm-body { padding: 1.2rem; }
+}
+
+/* ─── STAGGERED CARD ENTRANCE ─── */
+.reactor-card {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: cardIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 35ms);
+}
+@keyframes cardIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── HERO BADGE PULSE ─── */
+.hero-badge {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); }
+  50% { box-shadow: 0 0 12px 1px rgba(34, 211, 238, 0.3); }
+}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── CARD MOUSE GLOW ─── */
+.reactor-card {
+  position: relative;
+  overflow: hidden;
+}
+.reactor-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle 200px at var(--mx, -100px) var(--my, -100px), rgba(34, 211, 238, 0.08), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 0;
+}
+.reactor-card:hover::before { opacity: 1; }
+.reactor-card > * { position: relative; z-index: 1; }
+
+/* ─── FILTER CHIP PRESS ─── */
+.filter-chip:active { transform: scale(0.94); }
+.filter-chip { transition: all 0.2s, transform 0.1s; }
+
+/* ─── SCROLL TO TOP ─── */
+.scroll-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 40px;
+  height: 40px;
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid var(--reactor);
+  border-radius: 8px;
+  color: var(--reactor);
+  font-family: 'Geist Mono', monospace;
+  font-size: 9px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+.scroll-top.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.scroll-top:hover { transform: translateY(-3px); }
 </style>
 </head>
 <body class="lang-en">
@@ -940,19 +1192,19 @@ footer a:hover { color: var(--reactor); }
     </div>
 
     <div class="nav-section-label">Navigate</div>
-    <button class="nav-link active" data-section="explorer" onclick="scrollTo('explorer')"><span class="nav-dot"></span><span class="en-only">Reactor Explorer</span><span class="id-only">Penjelajah Reaktor</span></button>
-    <button class="nav-link" data-section="diagrams" onclick="scrollTo('diagrams')"><span class="nav-dot"></span><span class="en-only">SVG Diagrams</span><span class="id-only">Diagram SVG</span></button>
-    <button class="nav-link" data-section="lcoe" onclick="scrollTo('lcoe')"><span class="nav-dot"></span><span class="en-only">LCOE Calculator</span><span class="id-only">Kalkulator LCOE</span></button>
-    <button class="nav-link" data-section="efficiency" onclick="scrollTo('efficiency')"><span class="nav-dot"></span><span class="en-only">Efficiency</span><span class="id-only">Efisiensi</span></button>
-    <button class="nav-link" data-section="timeline" onclick="scrollTo('timeline')"><span class="nav-dot"></span><span class="en-only">Cost Timeline</span><span class="id-only">Garis Waktu Biaya</span></button>
-    <button class="nav-link" data-section="safety" onclick="scrollTo('safety')"><span class="nav-dot"></span><span class="en-only">Safety Map</span><span class="id-only">Peta Keamanan</span></button>
-    <button class="nav-link" data-section="references" onclick="scrollTo('references')"><span class="nav-dot"></span><span class="en-only">References</span><span class="id-only">Referensi</span></button>
+    <button class="nav-link active" data-section="explorer" onclick="scrollToSection('explorer')"><span class="nav-dot"></span><span class="en-only">Reactor Explorer</span><span class="id-only">Penjelajah Reaktor</span></button>
+    <button class="nav-link" data-section="diagrams" onclick="scrollToSection('diagrams')"><span class="nav-dot"></span><span class="en-only">SVG Diagrams</span><span class="id-only">Diagram SVG</span></button>
+    <button class="nav-link" data-section="lcoe" onclick="scrollToSection('lcoe')"><span class="nav-dot"></span><span class="en-only">LCOE Calculator</span><span class="id-only">Kalkulator LCOE</span></button>
+    <button class="nav-link" data-section="efficiency" onclick="scrollToSection('efficiency')"><span class="nav-dot"></span><span class="en-only">Efficiency</span><span class="id-only">Efisiensi</span></button>
+    <button class="nav-link" data-section="timeline" onclick="scrollToSection('timeline')"><span class="nav-dot"></span><span class="en-only">Cost Timeline</span><span class="id-only">Garis Waktu Biaya</span></button>
+    <button class="nav-link" data-section="safety" onclick="scrollToSection('safety')"><span class="nav-dot"></span><span class="en-only">Safety Map</span><span class="id-only">Peta Keamanan</span></button>
+    <button class="nav-link" data-section="references" onclick="scrollToSection('references')"><span class="nav-dot"></span><span class="en-only">References</span><span class="id-only">Referensi</span></button>
   </nav>
 
   <!-- MAIN -->
   <main class="main">
     <!-- HERO -->
-    <section class="hero">
+    <section class="hero reveal">
       <div class="hero-badge en-only">Nuclear Engineering &bull; Interactive Guide</div>
       <div class="hero-badge id-only">Teknik Nuklir &bull; Panduan Interaktif</div>
       <h1 class="en-only">Every <span>Nuclear Reactor</span> Type, Compared</h1>
@@ -967,7 +1219,7 @@ footer a:hover { color: var(--reactor); }
     </section>
 
     <!-- REACTOR EXPLORER -->
-    <section class="section" id="explorer">
+    <section class="section reveal" id="explorer">
       <h2 class="section-title en-only">Reactor Explorer</h2>
       <h2 class="section-title id-only">Penjelajah Reaktor</h2>
       <p class="section-subtitle en-only">Search, filter, and compare every nuclear reactor type. Click any card for detailed specs, pros/cons, and cost data.</p>
@@ -977,29 +1229,29 @@ footer a:hover { color: var(--reactor); }
         <input class="grid-search" type="text" id="gridSearch" placeholder="Search reactors..." data-en="Search reactors..." data-id="Cari reaktor..." oninput="renderGrid()">
       </div>
       <div class="filter-row" id="catFilters">
-        <button class="filter-chip active" data-cat="all" onclick="setCatFilter('all',this)">All</button>
+        <button class="filter-chip active" data-cat="all" onclick="setCatFilter('all',this)"><span class="en-only">All</span><span class="id-only">Semua</span></button>
         <button class="filter-chip" data-cat="gen" onclick="setCatFilter('gen',this)">Gen I-III+</button>
         <button class="filter-chip" data-cat="gen4" onclick="setCatFilter('gen4',this)">Gen IV</button>
         <button class="filter-chip" data-cat="smr" onclick="setCatFilter('smr',this)">SMRs</button>
-        <button class="filter-chip" data-cat="micro" onclick="setCatFilter('micro',this)">Micro</button>
-        <button class="filter-chip" data-cat="fusion" onclick="setCatFilter('fusion',this)">Fusion</button>
-        <button class="filter-chip" data-cat="research" onclick="setCatFilter('research',this)">Research</button>
+        <button class="filter-chip" data-cat="micro" onclick="setCatFilter('micro',this)"><span class="en-only">Micro</span><span class="id-only">Mikro</span></button>
+        <button class="filter-chip" data-cat="fusion" onclick="setCatFilter('fusion',this)"><span class="en-only">Fusion</span><span class="id-only">Fusi</span></button>
+        <button class="filter-chip" data-cat="research" onclick="setCatFilter('research',this)"><span class="en-only">Research</span><span class="id-only">Riset</span></button>
       </div>
       <div class="filter-row" id="coolantFilters">
-        <button class="filter-chip active" data-coolant="all" onclick="setCoolantFilter('all',this)">Any Coolant</button>
-        <button class="filter-chip" data-coolant="water" onclick="setCoolantFilter('water',this)">Light Water</button>
-        <button class="filter-chip" data-coolant="heavy-water" onclick="setCoolantFilter('heavy-water',this)">Heavy Water</button>
-        <button class="filter-chip" data-coolant="gas" onclick="setCoolantFilter('gas',this)">Gas</button>
-        <button class="filter-chip" data-coolant="sodium" onclick="setCoolantFilter('sodium',this)">Sodium</button>
-        <button class="filter-chip" data-coolant="lead" onclick="setCoolantFilter('lead',this)">Lead</button>
-        <button class="filter-chip" data-coolant="salt" onclick="setCoolantFilter('salt',this)">Salt</button>
-        <button class="filter-chip" data-coolant="plasma" onclick="setCoolantFilter('plasma',this)">Plasma</button>
+        <button class="filter-chip active" data-coolant="all" onclick="setCoolantFilter('all',this)"><span class="en-only">Any Coolant</span><span class="id-only">Semua Pendingin</span></button>
+        <button class="filter-chip" data-coolant="water" onclick="setCoolantFilter('water',this)"><span class="en-only">Light Water</span><span class="id-only">Air Ringan</span></button>
+        <button class="filter-chip" data-coolant="heavy-water" onclick="setCoolantFilter('heavy-water',this)"><span class="en-only">Heavy Water</span><span class="id-only">Air Berat</span></button>
+        <button class="filter-chip" data-coolant="gas" onclick="setCoolantFilter('gas',this)"><span class="en-only">Gas</span><span class="id-only">Gas</span></button>
+        <button class="filter-chip" data-coolant="sodium" onclick="setCoolantFilter('sodium',this)"><span class="en-only">Sodium</span><span class="id-only">Natrium</span></button>
+        <button class="filter-chip" data-coolant="lead" onclick="setCoolantFilter('lead',this)"><span class="en-only">Lead</span><span class="id-only">Timbal</span></button>
+        <button class="filter-chip" data-coolant="salt" onclick="setCoolantFilter('salt',this)"><span class="en-only">Salt</span><span class="id-only">Garam</span></button>
+        <button class="filter-chip" data-coolant="plasma" onclick="setCoolantFilter('plasma',this)"><span class="en-only">Plasma</span><span class="id-only">Plasma</span></button>
       </div>
       <div class="filter-row" id="spectrumFilters">
-        <button class="filter-chip active" data-spectrum="all" onclick="setSpectrumFilter('all',this)">Any Spectrum</button>
-        <button class="filter-chip" data-spectrum="thermal" onclick="setSpectrumFilter('thermal',this)">Thermal</button>
-        <button class="filter-chip" data-spectrum="epithermal" onclick="setSpectrumFilter('epithermal',this)">Epithermal</button>
-        <button class="filter-chip" data-spectrum="fast" onclick="setSpectrumFilter('fast',this)">Fast</button>
+        <button class="filter-chip active" data-spectrum="all" onclick="setSpectrumFilter('all',this)"><span class="en-only">Any Spectrum</span><span class="id-only">Semua Spektrum</span></button>
+        <button class="filter-chip" data-spectrum="thermal" onclick="setSpectrumFilter('thermal',this)"><span class="en-only">Thermal</span><span class="id-only">Termal</span></button>
+        <button class="filter-chip" data-spectrum="epithermal" onclick="setSpectrumFilter('epithermal',this)"><span class="en-only">Epithermal</span><span class="id-only">Epitermal</span></button>
+        <button class="filter-chip" data-spectrum="fast" onclick="setSpectrumFilter('fast',this)"><span class="en-only">Fast</span><span class="id-only">Cepat</span></button>
       </div>
 
       <div class="reactor-grid" id="reactorGrid"></div>
@@ -1007,7 +1259,7 @@ footer a:hover { color: var(--reactor); }
     </section>
 
     <!-- SVG DIAGRAMS -->
-    <section class="section" id="diagrams">
+    <section class="section reveal" id="diagrams">
       <h2 class="section-title en-only">Reactor SVG Diagrams</h2>
       <h2 class="section-title id-only">Diagram SVG Reaktor</h2>
       <p class="section-subtitle en-only">Cross-section schematics of each coolant family. Select a type to highlight.</p>
@@ -1025,7 +1277,7 @@ footer a:hover { color: var(--reactor); }
     </section>
 
     <!-- LCOE CALCULATOR -->
-    <section class="section" id="lcoe">
+    <section class="section reveal" id="lcoe">
       <h2 class="section-title en-only">LCOE Calculator</h2>
       <h2 class="section-title id-only">Kalkulator LCOE</h2>
       <p class="section-subtitle en-only">Compare Levelized Cost of Electricity across reactor types and other generation sources. Adjust inputs to match your scenario.</p>
@@ -1098,7 +1350,7 @@ footer a:hover { color: var(--reactor); }
     </section>
 
     <!-- THERMAL EFFICIENCY -->
-    <section class="section" id="efficiency">
+    <section class="section reveal" id="efficiency">
       <h2 class="section-title en-only">Thermal Efficiency Explorer</h2>
       <h2 class="section-title id-only">Penjelajah Efisiensi Termal</h2>
       <p class="section-subtitle en-only">See how reactor outlet temperature drives thermal efficiency. Move the slider to explore Carnot/Brayton/Rankine limits and where each reactor type lands.</p>
@@ -1126,7 +1378,7 @@ footer a:hover { color: var(--reactor); }
     </section>
 
     <!-- COST TIMELINE -->
-    <section class="section" id="timeline">
+    <section class="section reveal" id="timeline">
       <h2 class="section-title en-only">Build Cost Timeline</h2>
       <h2 class="section-title id-only">Garis Waktu Biaya Konstruksi</h2>
       <p class="section-subtitle en-only">Historical overnight construction costs and build durations for major nuclear projects worldwide.</p>
@@ -1142,7 +1394,7 @@ footer a:hover { color: var(--reactor); }
     </section>
 
     <!-- SAFETY MAP -->
-    <section class="section" id="safety">
+    <section class="section reveal" id="safety">
       <h2 class="section-title en-only">Defense-in-Depth Safety Map</h2>
       <h2 class="section-title id-only">Peta Keamanan Berlapis</h2>
       <p class="section-subtitle en-only">Explore the five layers of nuclear safety. Click a scenario to see which systems activate.</p>
@@ -1167,7 +1419,7 @@ footer a:hover { color: var(--reactor); }
     </section>
 
     <!-- REFERENCES -->
-    <section class="section" id="references">
+    <section class="section reveal" id="references">
       <h2 class="section-title en-only">References &amp; Data Sources</h2>
       <h2 class="section-title id-only">Referensi &amp; Sumber Data</h2>
       <p class="section-subtitle en-only">Data compiled from authoritative international sources.</p>
@@ -1194,6 +1446,44 @@ footer a:hover { color: var(--reactor); }
 </div>
 
 <div class="ttip" id="tooltip"></div>
+
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">UP</button>
+
+<div class="reactor-modal" id="reactorModal" onclick="if(event.target===this)closeReactorModal()">
+  <div class="reactor-modal-card" id="reactorModalCard">
+    <div class="rm-header">
+      <div class="rm-title-block">
+        <div class="rm-category" id="rmCategory"></div>
+        <div class="rm-name" id="rmName"></div>
+      </div>
+      <button class="rm-close" onclick="closeReactorModal()" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="rm-body">
+      <div class="rm-diagram" id="rmDiagram"></div>
+      <div class="rm-content">
+        <p class="rm-desc" id="rmDesc"></p>
+        <div class="rm-pros-cons">
+          <div class="rm-pros-col">
+            <div class="rm-col-label"><span class="en-only">Pros</span><span class="id-only">Kelebihan</span></div>
+            <div id="rmPros"></div>
+          </div>
+          <div class="rm-cons-col">
+            <div class="rm-col-label"><span class="en-only">Cons</span><span class="id-only">Kekurangan</span></div>
+            <div id="rmCons"></div>
+          </div>
+        </div>
+        <div class="rm-specs-grid" id="rmSpecs"></div>
+        <div class="rm-cost-strip" id="rmCost"></div>
+      </div>
+    </div>
+    <div class="rm-footer">
+      <span class="rm-footer-ref"><span class="en-only">Data sources listed in References section</span><span class="id-only">Sumber data tercantum di bagian Referensi</span></span>
+      <button class="rm-close-btn" onclick="closeReactorModal()"><span class="en-only">Close</span><span class="id-only">Tutup</span></button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ─── REACTOR DATA ───
@@ -1424,18 +1714,21 @@ let spectrumFilter = 'all';
 // ─── FILTER + GRID ───
 function setCatFilter(cat,btn) {
   catFilter = cat;
+  expandedId = null;
   document.querySelectorAll('#catFilters .filter-chip').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');
   renderGrid();
 }
 function setCoolantFilter(cool,btn) {
   coolantFilter = cool;
+  expandedId = null;
   document.querySelectorAll('#coolantFilters .filter-chip').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');
   renderGrid();
 }
 function setSpectrumFilter(spec,btn) {
   spectrumFilter = spec;
+  expandedId = null;
   document.querySelectorAll('#spectrumFilters .filter-chip').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');
   renderGrid();
@@ -1461,13 +1754,12 @@ function renderGrid() {
   if (filtered.length === 0) { grid.innerHTML = ''; noRes.classList.add('show'); return; }
   noRes.classList.remove('show');
 
-  grid.innerHTML = filtered.map(r => {
-    const isExpanded = expandedId === r.id;
+  grid.innerHTML = filtered.map((r, idx) => {
     const badgeClass = r.gen === 'gen' ? 'gen' : r.gen === 'research' ? 'research' : r.gen === 'fusion' ? 'fusion' : r.gen === 'smr' ? 'smr' : '';
     const coolantLabel = {water:'LWR', 'heavy-water':'HWR', gas:'Gas', sodium:'Na', lead:'Pb', salt:'Salt', plasma:'Plasma'}[r.coolant] || r.coolant;
     const specLabel = r.spectrum.charAt(0).toUpperCase() + r.spectrum.slice(1);
 
-    return `<div class="reactor-card${isExpanded?' expanded':''}" onclick="${isExpanded ? `expandedId=null;renderGrid()` : `expandedId=${r.id};renderGrid()`}">
+    return `<div class="reactor-card" style="--i:${idx}" onclick="openReactorModal(${r.id})">
       <div class="reactor-card-header">
         <div class="reactor-card-name">${r.name}</div>
         <span class="reactor-card-badge ${badgeClass}">${r.category}</span>
@@ -1486,38 +1778,64 @@ function renderGrid() {
         ${r.pros.slice(0,2).map(p => `<span class="pros-pill">+ ${p}</span>`).join('')}
         ${r.cons.slice(0,1).map(c => `<span class="cons-pill">− ${c}</span>`).join('')}
       </div>
-      ${isExpanded ? renderDetail(r) : ''}
     </div>`;
   }).join('');
+
+  attachCardMouseGlow();
 }
 
-function renderDetail(r) {
-  const doc = document.documentElement.lang === 'id';
-  const en = (e,i) => doc ? i : e;
-  return `<div class="expanded-detail show">
-    <div class="expanded-detail-left">
-      <p>${r.desc}</p>
-      <div class="reactor-card-pros">
-        ${r.pros.map(p => `<span class="pros-pill">+ ${p}</span>`).join('')}
-      </div>
-      <div style="height:0.5rem"></div>
-      <div class="reactor-card-pros">
-        ${r.cons.map(c => `<span class="cons-pill">− ${c}</span>`).join('')}
-      </div>
-      <div style="height:0.8rem"></div>
-      <div class="detail-spec"><span class="detail-spec-key">${en('CAPEX','CAPEX')}</span><span class="detail-spec-val">${r.capexNote || '$'+r.capex.toLocaleString()+'/kW'}</span></div>
-      <div class="detail-spec"><span class="detail-spec-key">${en('O&M','O&M')}</span><span class="detail-spec-val">$${r.om}/MWh</span></div>
-      <div class="detail-spec"><span class="detail-spec-key">${en('Fuel Cost','Biaya Bahan Bakar')}</span><span class="detail-spec-val">$${r.fuel}/MWh</span></div>
-    </div>
-    <div class="expanded-detail-right">
-      <div class="detail-spec"><span class="detail-spec-key">${en('Outlet Temp','Suhu Keluar')}</span><span class="detail-spec-val">${r.outletTemp}°C</span></div>
-      <div class="detail-spec"><span class="detail-spec-key">${en('Efficiency','Efisiensi')}</span><span class="detail-spec-val">${r.efficiency > 0 ? r.efficiency+'%':'N/A (research)'}</span></div>
-      <div class="detail-spec"><span class="detail-spec-key">${en('Power Density','Kepadatan Daya')}</span><span class="detail-spec-val">${r.pwrDensity} MW/m³</span></div>
-      <div class="detail-spec"><span class="detail-spec-key">${en('Build Time','Waktu Bangun')}</span><span class="detail-spec-val">${r.buildTime} ${en('years','tahun')}</span></div>
-      <div class="detail-spec"><span class="detail-spec-key">${en('Lifetime','Masa Pakai')}</span><span class="detail-spec-val">${r.lifetime} ${en('years','tahun')}</span></div>
-      <div class="detail-spec"><span class="detail-spec-key">TRL</span><span class="detail-spec-val">${r.trl}</span></div>
-    </div>
-  </div>`;
+// ─── REACTOR MODAL ───
+function openReactorModal(id) {
+  const r = REACTORS.find(x => x.id === id);
+  if (!r) return;
+  const isId = document.body.classList.contains('lang-id');
+  const en = (e,i) => isId ? i : e;
+
+  document.getElementById('rmCategory').textContent = r.category;
+  document.getElementById('rmName').textContent = r.name;
+  document.getElementById('rmDesc').textContent = r.desc;
+  document.getElementById('rmPros').innerHTML = r.pros.map(p => `<span class="pros-pill">+ ${p}</span>`).join('');
+  document.getElementById('rmCons').innerHTML = r.cons.map(c => `<span class="cons-pill">− ${c}</span>`).join('');
+
+  document.getElementById('rmDiagram').innerHTML = SVG_DIAGRAMS[r.coolant] || SVG_DIAGRAMS.water;
+
+  document.getElementById('rmSpecs').innerHTML = `
+    <div class="rm-spec-tile"><div class="rm-spec-val">${r.outletTemp}°C</div><div class="rm-spec-lbl">${en('Outlet Temp','Suhu Keluar')}</div></div>
+    <div class="rm-spec-tile"><div class="rm-spec-val">${r.efficiency > 0 ? r.efficiency+'%' : '—'}</div><div class="rm-spec-lbl">${en('Efficiency','Efisiensi')}</div></div>
+    <div class="rm-spec-tile"><div class="rm-spec-val">${r.pwrDensity}</div><div class="rm-spec-lbl">MW/m³</div></div>
+    <div class="rm-spec-tile"><div class="rm-spec-val">${r.buildTime}</div><div class="rm-spec-lbl">${en('Build Yrs','Thn Bangun')}</div></div>
+    <div class="rm-spec-tile"><div class="rm-spec-val">${r.lifetime}</div><div class="rm-spec-lbl">${en('Lifetime','Masa Pakai')}</div></div>
+    <div class="rm-spec-tile"><div class="rm-spec-val">TRL ${r.trl}</div><div class="rm-spec-lbl">${en('Readiness','Kesiapan')}</div></div>
+  `;
+
+  document.getElementById('rmCost').innerHTML = `
+    <div class="rm-cost-tile"><div class="rm-cost-val">$${r.capex.toLocaleString()}</div><div class="rm-cost-lbl">CAPEX $/kW</div></div>
+    <div class="rm-cost-tile"><div class="rm-cost-val">$${r.om}</div><div class="rm-cost-lbl">${en('O&M','O&M')} $/MWh</div></div>
+    <div class="rm-cost-tile"><div class="rm-cost-val">$${r.fuel}</div><div class="rm-cost-lbl">${en('Fuel','Bahan Bakar')} $/MWh</div></div>
+  `;
+
+  document.getElementById('reactorModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeReactorModal() {
+  document.getElementById('reactorModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeReactorModal();
+});
+
+// ─── CARD MOUSE GLOW ───
+function attachCardMouseGlow() {
+  document.querySelectorAll('.reactor-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+    });
+  });
 }
 
 // ─── SVG DIAGRAMS ───
@@ -1837,20 +2155,26 @@ function drawTimeline() {
   });
 
   svg.innerHTML = html;
+
+  // Attach mousemove to follow cursor while hovering bars
+  svg.addEventListener('mousemove', ev => {
+    const tip = document.getElementById('tooltip');
+    if (tip.classList.contains('show')) {
+      tip.style.left = (ev.clientX + 12) + 'px';
+      tip.style.top = (ev.clientY - 30) + 'px';
+    }
+  });
 }
 
 function showTimelineTip(name, cost, years, e) {
   const tip = document.getElementById('tooltip');
   tip.innerHTML = `<b>${name}</b><br>${cost}<br>${years}`;
   tip.classList.add('show');
-  document.onmousemove = function(ev) {
-    tip.style.left = (ev.clientX + 12) + 'px';
-    tip.style.top = (ev.clientY - 30) + 'px';
-  };
+  tip.style.left = (e.clientX + 12) + 'px';
+  tip.style.top = (e.clientY - 30) + 'px';
 }
 function hideTip() {
   document.getElementById('tooltip').classList.remove('show');
-  document.onmousemove = null;
 }
 
 // ─── SAFETY MAP ───
@@ -1938,7 +2262,7 @@ function setLang(lang) {
 }
 
 // ─── SIDEBAR NAV ───
-function scrollTo(sectionId) {
+function scrollToSection(sectionId) {
   const el = document.getElementById(sectionId);
   if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
   document.getElementById('sidebar').classList.remove('open');
@@ -1955,7 +2279,10 @@ document.getElementById('backdrop').addEventListener('click', function() {
   document.getElementById('backdrop').classList.remove('open');
 });
 
-// ─── SIDEBAR ACTIVE ON SCROLL ───
+// ─── SIDEBAR ACTIVE ON SCROLL + SCROLL-TOP BUTTON ───
+const scrollTopBtn = document.getElementById('scrollTop');
+scrollTopBtn.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
 document.addEventListener('scroll', function() {
   const sections = ['explorer','diagrams','lcoe','efficiency','timeline','safety','references'];
   let current = 'explorer';
@@ -1966,7 +2293,44 @@ document.addEventListener('scroll', function() {
   document.querySelectorAll('.nav-link').forEach(n => {
     n.classList.toggle('active', n.dataset.section === current);
   });
+  scrollTopBtn.classList.toggle('show', window.scrollY > 600);
 });
+
+// ─── SCROLL REVEAL (IntersectionObserver) ───
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// ─── HERO STAT COUNTERS ───
+function animateCounter(el, target, duration = 1200) {
+  const start = 0;
+  const startTime = performance.now();
+  const isFloat = !Number.isInteger(target);
+  function step(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const val = start + (target - start) * eased;
+    el.textContent = isFloat ? val.toFixed(1) : Math.round(val).toString();
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+const heroCounterObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const target = parseInt(e.target.dataset.target || e.target.textContent, 10);
+      if (!isNaN(target)) animateCounter(e.target, target);
+      heroCounterObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
 
 // ─── INIT ───
 renderGrid();
@@ -1974,7 +2338,16 @@ calcLCOE();
 updateEff();
 drawTimeline();
 drawSafety(SAFETY_LAYERS, 'normal');
-document.getElementById('hero-count').textContent = REACTORS.length;
+
+// Mark hero stat numbers for counter animation
+document.querySelectorAll('.hero-stat-number').forEach(el => {
+  const val = parseInt(el.textContent, 10);
+  if (!isNaN(val)) {
+    el.dataset.target = val;
+    el.textContent = '0';
+    heroCounterObs.observe(el);
+  }
+});
 </script>
 </body>
 </html>
