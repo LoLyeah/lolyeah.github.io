@@ -14,7 +14,7 @@ Designed with rich visual aesthetics, modern typography, glassmorphism, and resp
 - **Collapsible Developer Console**: A cinematic terminal detailing system status and developer credentials.
 - **Interactive Mouse-Tracking Glow**: Dynamic cards that respond to mouse coordinates for premium tactile feedback.
 
-### 📚 Extensive Interactive Directory (26+ Guides)
+### 📚 Extensive Interactive Directory (27+ Guides)
 The project hosts a wide array of specialized interactive tools across multiple domains:
 
 | Category | Interactive Guides |
@@ -23,6 +23,7 @@ The project hosts a wide array of specialized interactive tools across multiple 
 | **Clinical Medicine** | [Stroke Diagnostics & Rehabilitation](topics/stroke.html), [Diabetes Mellitus Care Guide](topics/diabetes-guide.html), [Upper Gastrointestinal Anatomy](topics/upper-gastro.html), [Scoliosis Treatment & Cobb Angle Guide](topics/scoliosis.html), [Medical Specialist Comparative scope](topics/specialist-compared.html) |
 | **Neurodiversity** | [ADHD Comprehensive Guide](topics/adhd.html), [Diet & Nutrition for ADHD](topics/adhd-diet-guide.html), [AuDHD Deep Clinical Analysis](topics/audhd-clinical-analysis.html) |
 | **Pharmacology & Science** | [Antibiotics Class Comparative Chart](topics/antibiotics.html), [Laxative Class Interactive Comparison](topics/laxative-comparison.html), [Radiation Dose Visual Comparison](topics/radcompare.html) |
+| **Nuclear Engineering & Energy** | [Nuclear Reactors Compendium: Operating, Gen IV, SMRs, Fusion & Research Reactors](topics/nuclear-reactors.html) |
 | **Simulators & Astronomy** | [Foodborne Disease Outbreak Simulator](topics/foodborne-outbreak.html), [Interactive Solar System Scale Model](topics/solar-system.html) |
 | **Economics & Analytics** | [2026 Economic Outlook Visualizer](topics/econ-outlook-2026.html), [Psychology of Emotional Suppression (Bottle Up)](topics/bottle-up.html) |
 | **Geopolitics & History** | [Alternative Nusantara Scenario Simulator](topics/what-if-nusantara.html), [Comparative Balkan-Indonesian Geopolitics](topics/balkan-indo.html), [Naval Ship Class Historical Directory](topics/ship-class.html) |
