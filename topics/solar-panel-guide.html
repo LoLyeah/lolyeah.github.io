@@ -47,8 +47,7 @@
     <!-- END ANTIGRAVITY SEO OPTIMIZATION -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title class="id-only">Panduan Panel Surya Mandiri Energi | LoLyeah</title>
-<title class="en-only">Solar Panel Independence Guide | LoLyeah</title>
+<title>Panduan Panel Surya Mandiri Energi | LoLyeah</title>
 
 <!-- Fonts: Instrument Serif + Geist + Geist Mono -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -104,7 +103,7 @@ body::before {
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
   pointer-events: none;
-  z-index: 1000;
+  z-index: 10;
 }
 
 /* ─── SCROLLBAR ─── */
@@ -307,13 +306,19 @@ body.lang-en .id-only { display: none !important; }
   text-align: center;
 }
 .backdrop {
-  display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 98;
+  background: rgba(3, 5, 8, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* ─── SECTIONS & CARDS ─── */
@@ -665,8 +670,8 @@ body.lang-en .id-only { display: none !important; }
   100% { left: 130%; }
 }
 @keyframes flow-pulse-backward {
-  0% { right: -30%; left: auto; }
-  100% { right: 130%; left: auto; }
+  0% { left: 130%; }
+  100% { left: -30%; }
 }
 
 /* ─── EQUIPMENT CATALOG OVERLAY (GEMMA 4 KERNELS STYLING) ─── */
@@ -695,21 +700,24 @@ body.lang-en .id-only { display: none !important; }
 
 /* Overlay window */
 .kx-overlay {
-  display: none;
+  visibility: hidden;
+  pointer-events: none;
   position: fixed;
   inset: 0;
   background: rgba(2, 2, 3, 0.9);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   z-index: 1000;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s;
 }
 .kx-overlay.open {
-  display: flex;
+  visibility: visible;
+  pointer-events: auto;
   opacity: 1;
 }
 .kx-window {
@@ -1345,6 +1353,12 @@ footer {
 }
 
 /* ─── RESPONSIVE STYLES ─── */
+@media (max-width: 1100px) {
+  .hero-title {
+    font-size: 3.8rem;
+  }
+}
+
 @media (max-width: 860px) {
   .layout {
     grid-template-columns: 1fr;
@@ -1367,10 +1381,10 @@ footer {
     display: flex;
   }
   .main {
-    padding: 2rem 1.5rem 4rem;
+    padding: 4rem 1.5rem 4rem;
   }
   .hero {
-    padding: 3rem 0;
+    padding: 2rem 0 3rem;
   }
   .hero-title {
     font-size: 3rem;
@@ -1393,7 +1407,11 @@ footer {
   .kx-sidebar {
     border-right: none;
     border-bottom: 1px solid var(--border);
-    height: 200px;
+    height: auto;
+    max-height: 140px;
+  }
+  .kx-sidebar-header {
+    padding: 0.8rem 1rem 0.5rem;
   }
   .kx-item-list {
     display: flex;
@@ -1859,8 +1877,10 @@ footer {
               </label>
             </div>
             <select class="calc-select" id="input-sys-type" onchange="runCalculator()">
-              <option value="offgrid">Off-Grid (100% Mandiri)</option>
-              <option value="hybrid" selected>Hybrid Grid-Tie (Sinergi PLN)</option>
+              <option value="offgrid" class="id-only">Off-Grid (100% Mandiri)</option>
+              <option value="offgrid" class="en-only">Off-Grid (100% Independent)</option>
+              <option value="hybrid" class="id-only" selected>Hybrid Grid-Tie (Sinergi PLN)</option>
+              <option value="hybrid" class="en-only" selected>Hybrid Grid-Tie (PLN Synergy)</option>
             </select>
           </div>
 
@@ -1870,7 +1890,7 @@ footer {
                 <span class="id-only">Konsumsi Listrik Harian</span>
                 <span class="en-only">Daily Electricity Use</span>
               </label>
-              <span class="calc-val-display"><span id="val-load">12</span> kWh / hari</span>
+              <span class="calc-val-display"><span id="val-load">12</span> <span class="id-only">kWh / hari</span><span class="en-only">kWh / day</span></span>
             </div>
             <input type="range" id="input-load" min="3" max="60" step="1" value="12" oninput="updateLoadDisplay(); runCalculator();">
           </div>
@@ -1894,9 +1914,12 @@ footer {
               </label>
             </div>
             <select class="calc-select" id="input-zone" onchange="runCalculator()">
-              <option value="4.0">Zona 1: Jawa, Bali, Sumatera (4.0 Jam Sun-Peak/hari)</option>
-              <option value="4.3" selected>Zona 2: Kalimantan, Sulawesi, Maluku (4.3 Jam/hari)</option>
-              <option value="4.8">Zona 3: NTT, NTB, Papua (4.8 Jam/hari)</option>
+              <option value="4.0" class="id-only">Zona 1: Jawa, Bali, Sumatera (4.0 Jam Sun-Peak/hari)</option>
+              <option value="4.0" class="en-only">Zone 1: Java, Bali, Sumatra (4.0 Sun-Peak Hours/day)</option>
+              <option value="4.3" class="id-only" selected>Zona 2: Kalimantan, Sulawesi, Maluku (4.3 Jam/hari)</option>
+              <option value="4.3" class="en-only" selected>Zone 2: Kalimantan, Sulawesi, Maluku (4.3 Hours/day)</option>
+              <option value="4.8" class="id-only">Zona 3: NTT, NTB, Papua (4.8 Jam/hari)</option>
+              <option value="4.8" class="en-only">Zone 3: NTT, NTB, Papua (4.8 Hours/day)</option>
             </select>
           </div>
 
@@ -1909,22 +1932,34 @@ footer {
             
             <div class="custom-grid">
               <div class="calc-group">
-                <label class="calc-label" for="cost-panel">Panel Surya (Rp / Wp)</label>
+                <label class="calc-label" for="cost-panel">
+                  <span class="id-only">Panel Surya (Rp / Wp)</span>
+                  <span class="en-only">Solar Panel (IDR / Wp)</span>
+                </label>
                 <input type="number" class="calc-input" id="cost-panel" value="7000" step="500" oninput="runCalculator()">
               </div>
               <div class="calc-group">
-                <label class="calc-label" for="cost-battery">Baterai LiFePO4 (Rp / Wh)</label>
+                <label class="calc-label" for="cost-battery">
+                  <span class="id-only">Baterai LiFePO4 (Rp / Wh)</span>
+                  <span class="en-only">LiFePO4 Battery (IDR / Wh)</span>
+                </label>
                 <input type="number" class="calc-input" id="cost-battery" value="4500" step="500" oninput="runCalculator()">
               </div>
             </div>
 
             <div class="custom-grid">
               <div class="calc-group">
-                <label class="calc-label" for="cost-inverter">Inverter per kW (Rp)</label>
+                <label class="calc-label" for="cost-inverter">
+                  <span class="id-only">Inverter per kW (Rp)</span>
+                  <span class="en-only">Inverter per kW (IDR)</span>
+                </label>
                 <input type="number" class="calc-input" id="cost-inverter" value="3500000" step="200000" oninput="runCalculator()">
               </div>
               <div class="calc-group">
-                <label class="calc-label" for="cost-install">Instalasi &amp; Aksesoris (Rp)</label>
+                <label class="calc-label" for="cost-install">
+                  <span class="id-only">Instalasi &amp; Aksesoris (Rp)</span>
+                  <span class="en-only">Installation &amp; Accessories (IDR)</span>
+                </label>
                 <input type="number" class="calc-input" id="cost-install" value="8000000" step="500000" oninput="runCalculator()">
               </div>
             </div>
@@ -2349,7 +2384,12 @@ footer {
 <script>
 // ─── LANGUAGE SYSTEM ───
 function setLang(lang, btn) {
-  document.body.className = 'lang-' + lang;
+  document.body.classList.remove('lang-id', 'lang-en');
+  document.body.classList.add('lang-' + lang);
+  
+  // Dynamic Title Update
+  const titleText = lang === 'en' ? 'Solar Panel Independence Guide | LoLyeah' : 'Panduan Panel Surya Mandiri Energi | LoLyeah';
+  document.title = titleText;
   
   // Sync lang toggle buttons
   document.querySelectorAll('.lang-toggle .lang-btn').forEach(b => {
@@ -2392,7 +2432,8 @@ const observerOptions = {
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      const id = entry.target.getAttribute('id');
+      let id = entry.target.getAttribute('id');
+      if (id === 'why-solar') id = 'intro';
       navLinks.forEach(link => {
         const href = link.getAttribute('href');
         link.classList.toggle('active', href === '#' + id);
@@ -2557,13 +2598,14 @@ function runCalculator() {
 
   // Update UI Elements
   document.getElementById('out-panel-cap').textContent = recommendedPanelCap.toFixed(2) + ' kWp';
-  document.getElementById('out-panel-qty').textContent = recommendedPanelsQty + ' Unit';
+  const unitText = document.body.classList.contains('lang-en') ? ' Units' : ' Unit';
+  document.getElementById('out-panel-qty').textContent = recommendedPanelsQty + unitText;
   document.getElementById('out-battery-cap').textContent = recommendedBatteryCap.toFixed(1) + ' kWh';
   
   document.getElementById('out-total-cost').textContent = 'Rp ' + Math.round(totalCost).toLocaleString('id-ID');
   document.getElementById('out-savings').textContent = 'Rp ' + Math.round(monthlySavings).toLocaleString('id-ID');
   
-  const paybackText = document.body.className === 'lang-en' ? paybackFormatted + ' Years' : paybackFormatted + ' Tahun';
+  const paybackText = document.body.classList.contains('lang-en') ? paybackFormatted + ' Years' : paybackFormatted + ' Tahun';
   document.getElementById('out-payback').textContent = paybackText;
 
   // Update payback progress bar: max 25 years
