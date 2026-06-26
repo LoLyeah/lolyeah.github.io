@@ -2656,10 +2656,26 @@
       if (speedRing) speedRing.style.strokeDashoffset = offset;
     });
 
-    // --- SCROLL TO TOP SHOW/HIDE ---
+    // --- SCROLL ACTIVE SECTIONS & SCROLL-TO-TOP BUTTON ---
     const scrollTopBtn = document.getElementById('scrollTopBtn');
+    const sections = ['hero', 'definition', 'classification', 'catalog', 'comparison', 'indonesia', 'indonesia-map', 'future', 'upcoming', 'references'];
+
     window.addEventListener('scroll', () => {
+      // Toggle scroll to top button
       scrollTopBtn.classList.toggle('show', window.scrollY > 400);
+
+      // Update active sidebar nav link based on scroll position
+      let current = 'hero';
+      sections.forEach(s => {
+        const el = document.getElementById(s);
+        if (el && el.getBoundingClientRect().top <= 250) {
+          current = s;
+        }
+      });
+
+      document.querySelectorAll('.nav-link').forEach(n => {
+        n.classList.toggle('active', n.dataset.section === current);
+      });
     });
 
     // --- INTERSECTION OBSERVER FOR FADE-IN REVEALS ---
