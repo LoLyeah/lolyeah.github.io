@@ -1052,15 +1052,15 @@
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 13px;
+            font-size: 11.5px;
         }
         .comp-table th {
             font-family: var(--font-mono);
-            font-size: 10px;
+            font-size: 9px;
             color: var(--t3);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 1rem 1.25rem;
+            letter-spacing: 0.05em;
+            padding: 0.8rem 0.6rem;
             border-bottom: 1px solid var(--border);
             cursor: pointer;
             user-select: none;
@@ -1075,10 +1075,11 @@
             border-bottom: 2px solid var(--hsr-amber);
         }
         .comp-table td {
-            padding: 1rem 1.25rem;
+            padding: 0.8rem 0.6rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
             color: var(--t2);
             line-height: 1.5;
+            text-align: justify;
         }
         .comp-table tr:hover td {
             color: var(--t1);
@@ -2254,12 +2255,12 @@
           <table class="comp-table" id="corridorTable">
             <thead>
               <tr>
-                <th onclick="sortCorridorTable(0)" style="width: 160px; min-width: 160px;"><span class="en-only">Corridor</span><span class="id-only">Koridor</span> <span class="sort-indicator">▲</span></th>
-                <th onclick="sortCorridorTable(1)" style="width: 90px; min-width: 90px;"><span class="en-only">Distance</span><span class="id-only">Jarak</span> <span class="sort-indicator">▲</span></th>
-                <th onclick="sortCorridorTable(2)" style="min-width: 250px;"><span class="en-only">Cities &amp; Regencies Served</span><span class="id-only">Kota &amp; Kabupaten Dilalui</span> <span class="sort-indicator">▲</span></th>
-                <th onclick="sortCorridorTable(3)" style="width: 165px; min-width: 165px;"><span class="en-only">Terrain Profile</span><span class="id-only">Profil Topografi</span> <span class="sort-indicator">▲</span></th>
-                <th onclick="sortCorridorTable(4)" style="width: 120px; min-width: 120px; white-space: nowrap;"><span class="en-only">Est. Travel Time</span><span class="id-only">Waktu Tempuh</span> <span class="sort-indicator">▲</span></th>
-                <th onclick="sortCorridorTable(5)" style="width: 160px; min-width: 160px;"><span class="en-only">Relative Cost</span><span class="id-only">Estimasi Biaya</span> <span class="sort-indicator">▲</span></th>
+                <th onclick="sortCorridorTable(0)"><span class="en-only">Corridor</span><span class="id-only">Koridor</span> <span class="sort-indicator">▲</span></th>
+                <th onclick="sortCorridorTable(1)" style="text-align: center; white-space: nowrap;"><span class="en-only">Distance</span><span class="id-only">Jarak</span> <span class="sort-indicator">▲</span></th>
+                <th onclick="sortCorridorTable(2)"><span class="en-only">Cities &amp; Regencies Served</span><span class="id-only">Kota &amp; Kabupaten Dilalui</span> <span class="sort-indicator">▲</span></th>
+                <th onclick="sortCorridorTable(3)"><span class="en-only">Terrain Profile</span><span class="id-only">Profil Topografi</span> <span class="sort-indicator">▲</span></th>
+                <th onclick="sortCorridorTable(4)" style="text-align: center; white-space: nowrap;"><span class="en-only">Est. Travel Time</span><span class="id-only">Waktu Tempuh</span> <span class="sort-indicator">▲</span></th>
+                <th onclick="sortCorridorTable(5)"><span class="en-only">Relative Cost</span><span class="id-only">Estimasi Biaya</span> <span class="sort-indicator">▲</span></th>
               </tr>
             </thead>
             <tbody id="corridorTableBody">
@@ -3079,13 +3080,14 @@
 
       // Render
       sorted.forEach(c => {
+        const distParts = c.dist.split(' ');
         const row = document.createElement('tr');
         row.innerHTML = `
           <td style="font-weight:600; color:var(--hsr-amber);">${isId ? c.nameId : c.nameEn}</td>
-          <td class="mono-td" style="white-space: nowrap;">${c.dist}</td>
+          <td class="mono-td" style="text-align: center; line-height: 1.2; white-space: nowrap;">${distParts[0]}<br><span style="font-size: 9px; color: var(--t3); font-weight: 500;">${distParts[1]}</span></td>
           <td>${isId ? c.citiesId : c.citiesEn}</td>
           <td>${isId ? c.terrainId : c.terrainEn}</td>
-          <td class="mono-td" style="color: var(--hsr-indigo); font-weight:500; white-space: nowrap;">${isId ? c.timeId : c.timeEn}</td>
+          <td class="mono-td" style="color: var(--hsr-indigo); font-weight:500; text-align: center; white-space: nowrap;">${isId ? c.timeId : c.timeEn}</td>
           <td>${isId ? c.costId : c.costEn}</td>
         `;
         tbody.appendChild(row);
