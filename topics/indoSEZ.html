@@ -462,6 +462,7 @@
             grid-template-columns: 1fr 340px;
             gap: 24px;
             margin-top: 20px;
+            align-items: start; /* prevent sidebar height from shifting the map */
         }
 
         .map-container {
@@ -475,20 +476,28 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 480px;
+            height: 480px; /* fixed height – never shifts */
+        }
+
+        .map-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: 480px; /* match map container height */
+            overflow: hidden;
         }
 
         .map-svg {
             width: 100%;
             height: auto;
-            max-height: 400px;
+            max-height: 420px;
             filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.4));
         }
 
         .map-island {
             fill: #111827;
-            stroke: #1f2937;
-            stroke-width: 1.5;
+            stroke: #2d3a4e;
+            stroke-width: 1;
             transition: var(--transition);
         }
 
@@ -538,12 +547,6 @@
                 stroke-width: 1px;
                 opacity: 0;
             }
-        }
-
-        .map-sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
         }
 
         .search-map-box {
@@ -607,7 +610,8 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             position: relative;
-            overflow: hidden;
+            overflow-y: auto; /* enable clean scroll for details */
+            max-height: calc(480px - 70px); /* fit inside sidebar height constraint */
             transition: var(--transition);
         }
 
@@ -2180,165 +2184,50 @@
             <div class="map-section-grid">
                 <!-- SVG MAP CONTAINER -->
                 <div class="map-container">
-                    <svg viewBox="0 0 1000 450" class="map-svg" id="indonesiaMap">
-                        <!-- Accurate simplified Indonesia island outlines -->
+                    <svg viewBox="0 0 1000 420" class="map-svg" id="indonesiaMap">
+                        <!--
+                          Coordinate system: X = (lon - 95) * 20 + 30,  Y = (6.5 - lat) * 22
+                          Coverage: ~95°E–141°E (lon), ~6.5°N–12°S (lat) → 1000×420 px
+                        -->
 
-                        <!-- Sumatra (NW to SE diagonal) -->
-                        <path class="map-island" d="
-                          M 32,88  C 40,82 52,78 62,80  L 80,76  C 94,72 108,74 118,80
-                          L 136,88  C 148,96 155,108 158,120  L 162,136
-                          C 165,150 162,165 155,175  L 145,188
-                          C 136,200 124,210 112,218  L 98,228
-                          C 84,238 70,246 60,256  L 48,268
-                          C 38,278 30,290 28,304  L 26,316
-                          C 24,328 26,342 32,352  L 38,360
-                          C 44,368 52,374 60,376  L 72,378
-                          C 82,380 92,378 100,374  L 106,370
-                          C 112,366 116,360 116,354  L 112,346
-                          C 108,338 100,332 92,328  L 86,322
-                          C 84,316 86,308 92,304  L 102,298
-                          C 112,292 124,290 134,292  L 148,296
-                          C 160,300 170,308 176,318  L 180,328
-                          C 182,338 180,350 174,358  L 168,366
-                          C 162,372 154,376 146,377  L 138,376
-                          C 130,375 124,371 120,365  Z
-                          M 98,360  C 104,356 112,356 118,360  L 122,366
-                          C 118,372 110,374 104,370  Z
-                        " />
+                        <!-- ═══ SUMATRA ═══ -->
+                        <path class="map-island" d="M 36,20 L 44,18 L 52,22 L 76,45 L 102,68 L 126,90 L 158,132 L 180,155 L 205,178 L 224,207 L 236,262 L 228,268 L 220,264 L 210,250 L 195,245 L 176,227 L 160,205 L 138,163 L 115,130 L 106,106 L 85,85 L 65,65 L 36,25 Z" />
+                        <!-- Bangka -->
+                        <path class="map-island" d="M 235,235 L 250,230 L 255,245 L 245,255 L 235,245 Z" />
+                        <!-- Belitung -->
+                        <path class="map-island" d="M 270,250 L 282,248 L 285,258 L 275,262 Z" />
 
-                        <!-- Java (elongated east-west strip) -->
-                        <path class="map-island" d="
-                          M 210,320  C 222,316 236,314 248,315  L 268,316
-                          C 284,317 298,320 310,325  L 326,330
-                          C 342,335 356,340 368,346  L 382,351
-                          C 396,356 410,360 424,362  L 440,364
-                          C 454,365 468,365 480,364  L 494,362
-                          C 506,360 518,356 528,350  L 538,344
-                          C 546,338 552,330 554,322  L 552,314
-                          C 550,308 544,302 538,298  L 530,295
-                          C 522,292 514,291 506,292  L 494,294
-                          C 480,296 466,300 454,306  L 440,310
-                          C 426,314 412,316 398,316  L 382,314
-                          C 368,312 354,308 342,302  L 330,296
-                          C 318,290 308,284 298,280  L 286,277
-                          C 274,274 262,274 250,276  L 238,280
-                          C 226,284 216,292 212,302  L 210,312  Z
-                        " />
+                        <!-- ═══ JAVA ═══ -->
+                        <path class="map-island" d="M 250,275 L 266,279 L 302,290 L 338,297 L 384,301 L 418,321 L 416,328 L 385,325 L 352,323 L 310,312 L 260,297 L 246,285 Z" />
+                        <!-- Madura -->
+                        <path class="map-island" d="M 388,298 L 416,300 L 415,306 L 387,304 Z" />
 
+                        <!-- ═══ BALI & NUSA TENGGARA ═══ -->
                         <!-- Bali -->
-                        <path class="map-island" d="
-                          M 562,318  C 568,314 576,312 584,313
-                          L 592,316  C 598,320 602,326 600,332
-                          L 596,338  C 590,344 582,346 574,344
-                          L 566,340  C 560,334 558,326 562,318  Z
-                        " />
-
+                        <path class="map-island" d="M 426,324 L 436,324 L 435,330 L 425,328 Z" />
                         <!-- Lombok -->
-                        <path class="map-island" d="
-                          M 604,318  C 610,314 618,314 624,318
-                          L 628,324  C 630,330 628,338 622,342
-                          L 614,344  C 608,342 604,336 604,330  Z
-                        " />
-
+                        <path class="map-island" d="M 444,328 L 454,328 L 452,336 L 442,334 Z" />
                         <!-- Sumbawa -->
-                        <path class="map-island" d="
-                          M 632,318  C 640,314 650,313 660,316
-                          L 674,322  C 684,328 690,336 688,344
-                          L 682,350  C 672,354 660,352 650,346
-                          L 638,338  C 630,330 628,322 632,318  Z
-                        " />
-
-                        <!-- Flores strip -->
-                        <path class="map-island" d="
-                          M 694,322  C 702,318 712,317 722,320
-                          L 738,326  C 750,332 760,340 766,350
-                          L 762,356  C 756,360 746,360 736,356
-                          L 720,348  C 706,340 696,330 694,322  Z
-                        " />
-
+                        <path class="map-island" d="M 462,330 L 485,326 L 495,332 L 480,338 L 460,336 Z" />
+                        <!-- Flores -->
+                        <path class="map-island" d="M 510,332 L 545,330 L 555,334 L 545,340 L 515,340 Z" />
                         <!-- Timor -->
-                        <path class="map-island" d="
-                          M 770,346  C 780,340 794,338 806,342
-                          L 820,348  C 830,354 838,364 836,372
-                          L 828,378  C 818,382 806,380 796,374
-                          L 780,364  C 770,356 766,350 770,346  Z
-                        " />
+                        <path class="map-island" d="M 575,342 L 605,336 L 615,342 L 595,356 L 575,350 Z" />
 
-                        <!-- Kalimantan (Borneo) -->
-                        <path class="map-island" d="
-                          M 312,110  C 328,100 346,94 364,92  L 388,90
-                          C 410,88 432,90 452,98  L 470,108
-                          C 488,118 502,132 512,148  L 518,164
-                          C 522,178 522,194 518,208  L 510,224
-                          C 500,240 486,252 470,260  L 454,268
-                          C 436,275 418,278 400,278  L 380,276
-                          C 360,274 340,268 322,258  L 306,246
-                          C 290,234 278,218 272,200  L 268,182
-                          C 264,164 266,146 274,130  L 284,118
-                          C 294,112 304,110 312,110  Z
-                        " />
+                        <!-- ═══ KALIMANTAN ═══ -->
+                        <path class="map-island" d="M 310,99 L 340,88 L 380,85 L 430,55 L 460,75 L 490,55 L 485,115 L 472,154 L 460,190 L 442,216 L 422,216 L 390,210 L 350,205 L 316,143 Z" />
 
-                        <!-- Sulawesi (K-shaped orchid) -->
-                        <!-- main southern body -->
-                        <path class="map-island" d="
-                          M 548,170  C 558,156 572,148 588,148  L 604,150
-                          C 616,154 626,162 630,172  L 630,186
-                          C 628,198 620,208 610,214  L 598,218
-                          C 590,220 582,218 576,212  L 572,204
-                          C 568,194 568,182 572,172  Z
-                        " />
-                        <!-- north-east arm -->
-                        <path class="map-island" d="
-                          M 610,150  C 620,142 632,136 644,134
-                          L 660,132  C 670,134 678,140 680,150
-                          L 676,162  C 670,172 658,178 646,178
-                          L 632,174  C 620,168 612,160 610,150  Z
-                        " />
-                        <!-- south-east arm -->
-                        <path class="map-island" d="
-                          M 598,220  C 604,228 608,238 606,248
-                          L 600,260  C 592,272 580,280 566,282
-                          L 552,280  C 540,276 534,264 538,252
-                          L 544,240  C 550,228 560,220 572,218
-                          L 586,218  Z
-                        " />
-                        <!-- south arm -->
-                        <path class="map-island" d="
-                          M 572,212  C 566,222 558,230 546,234
-                          L 532,236  C 520,234 512,224 514,212
-                          L 518,200  C 524,190 534,184 546,184
-                          L 558,186  C 568,190 574,200 572,212  Z
-                        " />
+                        <!-- ═══ SULAWESI ═══ -->
+                        <path class="map-island" d="M 526,163 L 535,145 L 590,132 L 628,110 L 624,120 L 595,140 L 555,160 L 586,165 L 605,160 L 586,175 L 550,180 L 580,231 L 570,236 L 542,195 L 536,215 L 518,255 L 510,250 L 520,185 L 514,175 Z" />
 
-                        <!-- Halmahera (north Maluku) -->
-                        <path class="map-island" d="
-                          M 710,112  C 716,104 726,100 736,102
-                          L 746,108  C 754,116 756,126 750,134
-                          L 740,140  C 728,144 716,138 712,126
-                          Z
-                          M 738,140  C 744,148 748,160 744,170
-                          L 736,176  C 726,178 716,170 716,160
-                          L 718,148  Z
-                        " />
+                        <!-- ═══ MALUKU ═══ -->
+                        <!-- Halmahera -->
+                        <path class="map-island" d="M 680,110 L 695,95 L 705,110 L 690,130 L 705,150 L 698,155 L 685,135 Z" />
+                        <!-- Seram -->
+                        <path class="map-island" d="M 695,210 L 725,208 L 726,214 L 696,216 Z" />
 
-                        <!-- Maluku / Seram -->
-                        <path class="map-island" d="
-                          M 724,188  C 732,182 744,180 754,184
-                          L 768,192  C 778,200 782,212 776,220
-                          L 766,226  C 754,230 740,226 732,216
-                          L 722,204  C 720,196 720,192 724,188  Z
-                        " />
-
-                        <!-- Papua (New Guinea western half) -->
-                        <path class="map-island" d="
-                          M 800,108  C 820,96 846,90 872,90  L 900,92
-                          C 924,96 946,106 960,122  L 968,138
-                          C 972,152 970,168 962,180  L 950,192
-                          C 936,204 918,210 900,214  L 878,218
-                          C 856,220 834,218 814,210  L 796,200
-                          C 780,190 768,175 764,158  L 762,140
-                          C 762,120 778,108 800,108  Z
-                        " />
+                        <!-- ═══ PAPUA ═══ -->
+                        <path class="map-island" d="M 756,163 L 775,148 L 812,156 L 818,185 L 830,205 L 944,198 L 946,330 L 868,270 L 805,210 L 776,215 Z" />
 
                         <!-- Zone Markers (rendered dynamically) -->
                         <g id="mapMarkersGroup"></g>
@@ -2687,7 +2576,7 @@
                 investment: 100.85,
                 employment: 41022,
                 anchorTenant: "PT Freeport Indonesia (Smelter)",
-                coords: { x: 505, y: 330 },
+                coords: { x: 382, y: 301 },
                 driver: {
                     en: "Copper & gold smelter integration, integrated deep-sea port, massive industrial ecosystem.",
                     id: "Integrasi smelter tembaga & emas, pelabuhan laut dalam terintegrasi, ekosistem industri masif."
@@ -2714,7 +2603,7 @@
                 investment: 90.12,
                 employment: 66614,
                 anchorTenant: "PT Kendal Industrial Park",
-                coords: { x: 435, y: 322 },
+                coords: { x: 334, y: 295 },
                 driver: {
                     en: "Top-ranked for job creation, electronics and automotive clusters, Singapore-backed joint venture.",
                     id: "Peringkat teratas penyerapan kerja, klaster elektronik dan otomotif, usaha patungan Singapura."
@@ -2741,7 +2630,7 @@
                 investment: 28.42,
                 employment: 18500,
                 anchorTenant: "PT Bintan Alumina Indonesia",
-                coords: { x: 255, y: 192 },
+                coords: { x: 220, y: 121 },
                 driver: {
                     en: "Major bauxite refining and alumina smelting supply chain, direct maritime route.",
                     id: "Rantai pasok pemurnian bauksit & peleburan alumina utama, rute maritim langsung."
@@ -2768,7 +2657,7 @@
                 investment: 24.24,
                 employment: 3246,
                 anchorTenant: "PT Evyap Sabun Indonesia",
-                coords: { x: 102, y: 158 },
+                coords: { x: 118, y: 75 },
                 driver: {
                     en: "Downstream palm oil processing, PT Evyap Sabun anchor investment, near Kuala Tanjung port.",
                     id: "Hilirisasi minyak sawit, investasi jangkar PT Evyap Sabun, dekat pelabuhan Kuala Tanjung."
@@ -2795,7 +2684,7 @@
                 investment: 18.20,
                 employment: 19010,
                 anchorTenant: "ITDC (MotoGP Circuit)",
-                coords: { x: 614, y: 336 },
+                coords: { x: 456, y: 339 },
                 driver: {
                     en: "Premier sports tourism, international MotoGP venue, hospitality infrastructure.",
                     id: "Wisata olahraga utama, sirkuit MotoGP internasional, infrastruktur perhotelan."
@@ -2822,7 +2711,7 @@
                 investment: 16.50,
                 employment: 6925,
                 anchorTenant: "Nongsa Digital Park",
-                coords: { x: 252, y: 183 },
+                coords: { x: 212, y: 114 },
                 driver: {
                     en: "Digital economy hub, undersea fiber cable landing, data center clusters.",
                     id: "Hub ekonomi digital, pendaratan kabel serat optik laut, klaster pusat data."
@@ -2849,7 +2738,7 @@
                 investment: 2.99,
                 employment: 2853,
                 anchorTenant: "Bali International Hospital",
-                coords: { x: 575, y: 325 },
+                coords: { x: 436, y: 334 },
                 driver: {
                     en: "Medical tourism vanguard, partnership with Mayo Clinic, premium wellness resorts.",
                     id: "Pelopor wisata medis, kemitraan Mayo Clinic, resor kesehatan premium."
@@ -2876,7 +2765,7 @@
                 investment: 5.55,
                 employment: 1200,
                 anchorTenant: "PT Tanjung Sauh Developer",
-                coords: { x: 258, y: 188 },
+                coords: { x: 218, y: 120 },
                 driver: {
                     en: "Emerging deep-sea transshipment port, located in the strategic Malacca Strait.",
                     id: "Pelabuhan transshipment laut dalam baru, terletak di Selat Malaka yang strategis."
@@ -2903,7 +2792,7 @@
                 investment: 4.87,
                 employment: 6102,
                 anchorTenant: "PT Kawasan Industri Terpadu Batang",
-                coords: { x: 420, y: 318 },
+                coords: { x: 326, y: 295 },
                 driver: {
                     en: "Large scale manufacturing plots, gas pipeline connectivity, state-backed logistics.",
                     id: "Petak manufaktur skala besar, konektivitas pipa gas, logistik yang didukung negara."
@@ -2930,7 +2819,7 @@
                 investment: 4.20,
                 employment: 3500,
                 anchorTenant: "Lion Air Group",
-                coords: { x: 244, y: 187 },
+                coords: { x: 206, y: 118 },
                 driver: {
                     en: "Premium aerospace engineering hub, hangar infrastructure, custom-free parts import.",
                     id: "Hub rekayasa dirgantara premium, infrastruktur hanggar, impor komponen bebas bea."
@@ -2957,7 +2846,7 @@
                 investment: 3.80,
                 employment: 2400,
                 anchorTenant: "MNC Lido City",
-                coords: { x: 355, y: 315 },
+                coords: { x: 266, y: 290 },
                 driver: {
                     en: "Integrated recreational theme park, close to Jakarta, film production studios.",
                     id: "Taman hiburan rekreasi terintegrasi, dekat Jakarta, studio produksi film."
@@ -2984,7 +2873,7 @@
                 investment: 2.50,
                 employment: 1800,
                 anchorTenant: "Singhasari Digital Hub",
-                coords: { x: 492, y: 335 },
+                coords: { x: 384, y: 317 },
                 driver: {
                     en: "Digital animation studios, educational collaborations, tech startup space.",
                     id: "Studio animasi digital, kolaborasi pendidikan, ruang rintisan teknologi."
@@ -3011,7 +2900,7 @@
                 investment: 2.20,
                 employment: 1100,
                 anchorTenant: "Kura Kura Bali Marina",
-                coords: { x: 578, y: 330 },
+                coords: { x: 432, y: 336 },
                 driver: {
                     en: "Offshore financial services center planning, premium marina developments.",
                     id: "Perencanaan pusat jasa keuangan lepas pantai, pengembangan marina premium."
@@ -3038,7 +2927,7 @@
                 investment: 2.10,
                 employment: 1450,
                 anchorTenant: "PT Palu Global Mandiri",
-                coords: { x: 590, y: 196 },
+                coords: { x: 526, y: 163 },
                 driver: {
                     en: "Nickel auxiliary processing, active pine resin and herbal exports.",
                     id: "Pemrosesan pendukung nikel, ekspor aktif getah pinus dan herbal."
@@ -3065,7 +2954,7 @@
                 investment: 1.85,
                 employment: 1600,
                 anchorTenant: "PT Futai Indonesia",
-                coords: { x: 630, y: 148 },
+                coords: { x: 634, y: 112 },
                 driver: {
                     en: "Pacific ocean fishery exports, coconut derivative refinery.",
                     id: "Ekspor perikanan Samudra Pasifik, kilang produk turunan kelapa."
@@ -3092,7 +2981,7 @@
                 investment: 1.70,
                 employment: 980,
                 anchorTenant: "PT Sorong Mandiri",
-                coords: { x: 800, y: 155 },
+                coords: { x: 756, y: 163 },
                 driver: {
                     en: "Eastern Indonesia logistics hub, timber processing, fishery logistics.",
                     id: "Hub logistik Indonesia Timur, pemrosesan kayu, logistik perikanan."
@@ -3119,7 +3008,7 @@
                 investment: 1.45,
                 employment: 850,
                 anchorTenant: "PT EAS",
-                coords: { x: 418, y: 240 },
+                coords: { x: 450, y: 218 },
                 driver: {
                     en: "Biodiesel production lines, coal logistics hubs, palm oil derivatives.",
                     id: "Jalur produksi biodiesel, hub logistik batubara, turunan sawit."
@@ -3146,7 +3035,7 @@
                 investment: 1.20,
                 employment: 620,
                 anchorTenant: "Monash University Indonesia",
-                coords: { x: 312, y: 312 },
+                coords: { x: 256, y: 282 },
                 driver: {
                     en: "International campus zones, advanced research centers, tech incubator sites.",
                     id: "Zona kampus internasional, pusat riset canggih, inkubator teknologi."
@@ -3173,7 +3062,7 @@
                 investment: 1.10,
                 employment: 540,
                 anchorTenant: "Apollo Hospitals Group",
-                coords: { x: 248, y: 193 },
+                coords: { x: 210, y: 124 },
                 driver: {
                     en: "International clinical collaboration projects, advanced therapeutics.",
                     id: "Proyek kolaborasi klinis internasional, terapi medis canggih."
@@ -3200,7 +3089,7 @@
                 investment: 0.95,
                 employment: 780,
                 anchorTenant: "PT Belitung Pantai Intan",
-                coords: { x: 185, y: 300 },
+                coords: { x: 284, y: 198 },
                 driver: {
                     en: "Access bottlenecks, lack of direct flight connectivity, slow hotel builds.",
                     id: "Hambatan akses, kurangnya rute penerbangan langsung, pembangunan hotel lambat."
@@ -3227,7 +3116,7 @@
                 investment: 0.82,
                 employment: 450,
                 anchorTenant: "Jababeka Morotai",
-                coords: { x: 718, y: 140 },
+                coords: { x: 696, y: 92 },
                 driver: {
                     en: "Extreme geographical isolation, logistics network gaps, flights limited to once a week.",
                     id: "Isolasi geografis ekstrem, hambatan logistik, penerbangan hanya sekali seminggu."
@@ -3254,7 +3143,7 @@
                 investment: 0.75,
                 employment: 600,
                 anchorTenant: "PT Perta Arun Gas",
-                coords: { x: 82, y: 106 },
+                coords: { x: 72, y: 29 },
                 driver: {
                     en: "Slow petrochemical reactivation, regional administrative disputes, low FDI.",
                     id: "Reaktivasi petrokimia lambat, sengketa birokrasi daerah, PMA rendah."
@@ -3281,7 +3170,7 @@
                 investment: 0.60,
                 employment: 520,
                 anchorTenant: "Banten West Java Tourism Dev",
-                coords: { x: 285, y: 308 },
+                coords: { x: 244, y: 286 },
                 driver: {
                     en: "Access bottlenecks, slow highway link construction, tsunami risk recovery.",
                     id: "Hambatan akses jalan tol yang lambat dibangun, pemulihan pasca tsunami."
@@ -3308,7 +3197,7 @@
                 investment: 0.45,
                 employment: 310,
                 anchorTenant: "PT Minahasa Permai",
-                coords: { x: 628, y: 140 },
+                coords: { x: 636, y: 104 },
                 driver: {
                     en: "Slow master plan approvals, weak developer execution, poor water access.",
                     id: "Persetujuan rencana induk lambat, eksekusi pengembang lemah, keterbatasan air bersih."
@@ -3335,7 +3224,7 @@
                 investment: 0.25,
                 employment: 210,
                 anchorTenant: "PT MBTK",
-                coords: { x: 480, y: 185 },
+                coords: { x: 482, y: 121 },
                 driver: {
                     en: "Severe logistical bottlenecks, poor utility grid integration, developer disputes.",
                     id: "Hambatan logistik berat, integrasi listrik daerah buruk, sengketa pengelola."
