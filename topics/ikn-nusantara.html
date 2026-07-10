@@ -1121,6 +1121,138 @@
         .blueprint-card.active .blueprint-expand {
             color: var(--text-muted);
         }
+
+        /* Major Investors Section */
+        .investor-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 32px;
+            margin-bottom: 40px;
+        }
+
+        .investor-tab {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .investor-tab.active, .investor-tab:hover {
+            background: rgba(52, 211, 153, 0.1);
+            border-color: var(--primary);
+            color: #ffffff;
+        }
+
+        .investor-panel {
+            display: none;
+        }
+
+        .investor-panel.active {
+            display: block;
+            animation: fadeInPanel 0.4s ease;
+        }
+
+        @keyframes fadeInPanel {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .investor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .investor-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .investor-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(52, 211, 153, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .investor-header-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            gap: 12px;
+        }
+
+        .investor-header-card h3 {
+            font-family: var(--font-display);
+            font-size: 16px;
+            color: #ffffff;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .investor-type {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            background: rgba(52, 211, 153, 0.15);
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .investor-type.foreign {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .investor-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .investor-detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-val {
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.4;
+        }
+
+        .detail-val.highlight {
+            color: var(--primary);
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 15px;
+        }
     </style>
 </head>
 <body>
@@ -1136,6 +1268,7 @@
                 <a href="#why" data-i18n="nav_why">Why IKN?</a>
                 <a href="#roadmap" data-i18n="nav_roadmap">Roadmap</a>
                 <a href="#dashboard" data-i18n="nav_dashboard">Progress</a>
+                <a href="#investors" data-i18n="nav_investors">Investors</a>
                 <a href="#developments" data-i18n="nav_developments">Developments</a>
                 <a href="#challenges" data-i18n="nav_challenges">Challenges</a>
                 <a href="#blueprint" data-i18n="nav_blueprint">Blueprint</a>
@@ -1596,6 +1729,208 @@
             </div>
         </section>
 
+        <!-- Major Investors Section -->
+        <section id="investors">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag" data-i18n="inv_tag">Capital Partners</span>
+                    <h2 data-i18n="inv_title">Major Domestic &amp; Foreign Investors</h2>
+                    <p class="section-desc" data-i18n="inv_desc">A breakdown of the private enterprise capital driving commercial ecosystems and public facilities in IKN Nusantara.</p>
+                </div>
+
+                <div class="investor-tabs">
+                    <button class="investor-tab active" onclick="switchInvestorTab('domestic')" data-i18n="inv_tab_domestic">Domestic Pioneers</button>
+                    <button class="investor-tab" onclick="switchInvestorTab('foreign')" data-i18n="inv_tab_foreign">Foreign Direct Investment (FDI)</button>
+                </div>
+
+                <!-- Domestic Investors Grid -->
+                <div id="investor-domestic-panel" class="investor-panel active">
+                    <div class="investor-grid">
+                        <!-- Domestic 1 -->
+                        <div class="investor-card">
+                            <div class="investor-header-card">
+                                <h3 data-i18n="inv_dom1_name">Konsorsium Nusantara</h3>
+                                <span class="investor-type" data-i18n="inv_type_consortium">Consortium</span>
+                            </div>
+                            <div class="investor-details">
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_leads">Leads:</span>
+                                    <span class="detail-val">Agung Sedayu Group (Aguan) &amp; Salim Group</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_sectors">Sectors:</span>
+                                    <span class="detail-val" data-i18n="inv_dom1_sectors">Swissôtel Nusantara, shopping malls, botanical parks</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_value">Commitment:</span>
+                                    <span class="detail-val highlight">Rp 20.0T+</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Domestic 2 -->
+                        <div class="investor-card">
+                            <div class="investor-header-card">
+                                <h3 data-i18n="inv_dom2_name">Pakuwon Nusantara</h3>
+                                <span class="investor-type" data-i18n="inv_type_corp">Corporate</span>
+                            </div>
+                            <div class="investor-details">
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_leads">Parent:</span>
+                                    <span class="detail-val">PT Pakuwon Jati Tbk</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_sectors">Sectors:</span>
+                                    <span class="detail-val" data-i18n="inv_dom2_sectors">Mixed-use commercial hub, retail shopping mall, 3 luxury hotels</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_value">Commitment:</span>
+                                    <span class="detail-val highlight">Rp 5.0T</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Domestic 3 -->
+                        <div class="investor-card">
+                            <div class="investor-header-card">
+                                <h3 data-i18n="inv_dom3_name">Ciputra Group</h3>
+                                <span class="investor-type" data-i18n="inv_type_corp">Corporate</span>
+                            </div>
+                            <div class="investor-details">
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_leads">Parent:</span>
+                                    <span class="detail-val">PT Ciputra Development Tbk</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_sectors">Sectors:</span>
+                                    <span class="detail-val" data-i18n="inv_dom3_sectors">Green townships, smart residential housing, golf course, theme parks</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_value">Commitment:</span>
+                                    <span class="detail-val highlight">Rp 3.5T</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Domestic 4 -->
+                        <div class="investor-card">
+                            <div class="investor-header-card">
+                                <h3 data-i18n="inv_dom4_name">Healthcare Pioneers</h3>
+                                <span class="investor-type" data-i18n="inv_type_healthcare">Medical</span>
+                            </div>
+                            <div class="investor-details">
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_leads">Firms:</span>
+                                    <span class="detail-val">Mayapada Group &amp; Hermina Tbk</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_sectors">Sectors:</span>
+                                    <span class="detail-val" data-i18n="inv_dom4_sectors">Mayapada Hospital Nusantara &amp; Hermina Hospital Nusantara (now operational)</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_value">Commitment:</span>
+                                    <span class="detail-val highlight">Rp 1.1T (Combined)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Foreign Investors Grid -->
+                <div id="investor-foreign-panel" class="investor-panel">
+                    <div class="investor-grid">
+                        <!-- Foreign 1 -->
+                        <div class="investor-card">
+                            <div class="investor-header-card">
+                                <h3 data-i18n="inv_for1_name">Delonix Group</h3>
+                                <span class="investor-type foreign">🇨🇳 China</span>
+                            </div>
+                            <div class="investor-details">
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_status">FDI Status:</span>
+                                    <span class="detail-val" data-i18n="inv_for1_status">First 100% pure foreign direct investor</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_sectors">Sectors:</span>
+                                    <span class="detail-val" data-i18n="inv_for1_sectors">Mixed-use commercial hub, lifestyle district, 200-room hotel</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_value">Value:</span>
+                                    <span class="detail-val highlight">Rp 500B</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Foreign 2 -->
+                        <div class="investor-card">
+                            <div class="investor-header-card">
+                                <h3 data-i18n="inv_for2_name">Ayedh Dejem Group</h3>
+                                <span class="investor-type foreign">🇦🇪 Dubai / UAE</span>
+                            </div>
+                            <div class="investor-details">
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_status">FDI Status:</span>
+                                    <span class="detail-val" data-i18n="inv_for2_status">Largest single UAE direct investment</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_sectors">Sectors:</span>
+                                    <span class="detail-val" data-i18n="inv_for2_sectors">Premium shopping centers, commercial high-rises, logistics hub</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_value">Value:</span>
+                                    <span class="detail-val highlight">Rp 4.1T</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Foreign 3 -->
+                        <div class="investor-card">
+                            <div class="investor-header-card">
+                                <h3 data-i18n="inv_for3_name">Magnum Estate</h3>
+                                <span class="investor-type foreign">🇷🇺 Russia</span>
+                            </div>
+                            <div class="investor-details">
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_status">FDI Status:</span>
+                                    <span class="detail-val" data-i18n="inv_for3_status">Private Russian real estate development</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_sectors">Sectors:</span>
+                                    <span class="detail-val" data-i18n="inv_for3_sectors">Magnum Resort Nusantara (luxury residences, business lounges)</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_value">Value:</span>
+                                    <span class="detail-val highlight">Rp 350B</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Foreign 4 -->
+                        <div class="investor-card">
+                            <div class="investor-header-card">
+                                <h3 data-i18n="inv_for4_name">Sembcorp Utilities</h3>
+                                <span class="investor-type foreign">🇸🇬 Singapore</span>
+                            </div>
+                            <div class="investor-details">
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_status">FDI Status:</span>
+                                    <span class="detail-val" data-i18n="inv_for4_status">State-backed utility partnership</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_sectors">Sectors:</span>
+                                    <span class="detail-val" data-i18n="inv_for4_sectors">50 MW Solar Power Plant (PLTS) in cooperation with PT PLN</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_value">Value:</span>
+                                    <span class="detail-val highlight">Rp 900B (Joint Venture)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Key Developments Section -->
         <section id="developments">
             <div class="container">
@@ -1964,6 +2299,7 @@
                 nav_why: "Why IKN?",
                 nav_roadmap: "Roadmap",
                 nav_dashboard: "Progress",
+                nav_investors: "Investors",
                 nav_developments: "Developments",
                 nav_challenges: "Challenges",
                 nav_blueprint: "Blueprint",
@@ -2175,13 +2511,46 @@
                 blue_p6_summary: "Smart building sensors, utility tunnels, and flood alerts.",
                 blue_p6_d1: "Multi-Utility Tunnels (MUT) keeping sewage, fiber, and power underground.",
                 blue_p6_d2: "Smart building automation to minimize heating, lighting, and water waste.",
-                blue_p6_d3: "Sensor-based environmental monitoring for fire, flood, and seismic safety."
+                blue_p6_d3: "Sensor-based environmental monitoring for fire, flood, and seismic safety.",
+                inv_tag: "Capital Partners",
+                inv_title: "Major Domestic & Foreign Investors",
+                inv_desc: "A breakdown of the private enterprise capital driving commercial ecosystems and public facilities in IKN Nusantara.",
+                inv_tab_domestic: "Domestic Pioneers",
+                inv_tab_foreign: "Foreign Direct Investment (FDI)",
+                inv_lbl_leads: "Leads:",
+                inv_lbl_sectors: "Sectors:",
+                inv_lbl_value: "Commitment:",
+                inv_lbl_status: "FDI Status:",
+                inv_type_consortium: "Consortium",
+                inv_type_corp: "Corporate",
+                inv_type_healthcare: "Medical",
+                inv_dom1_name: "Konsorsium Nusantara",
+                inv_dom1_sectors: "Swissôtel Nusantara, shopping malls, botanical parks",
+                inv_dom2_name: "Pakuwon Nusantara",
+                inv_dom2_sectors: "Mixed-use commercial hub, retail shopping mall, 3 luxury hotels",
+                inv_dom3_name: "Ciputra Group",
+                inv_dom3_sectors: "Green townships, smart residential housing, golf course, theme parks",
+                inv_dom4_name: "Healthcare Pioneers",
+                inv_dom4_sectors: "Mayapada Hospital Nusantara & Hermina Hospital Nusantara (now operational)",
+                inv_for1_name: "Delonix Group",
+                inv_for1_status: "First 100% pure foreign direct investor",
+                inv_for1_sectors: "Mixed-use commercial hub, lifestyle district, 200-room hotel",
+                inv_for2_name: "Ayedh Dejem Group",
+                inv_for2_status: "Largest single UAE direct investment",
+                inv_for2_sectors: "Premium shopping centers, commercial high-rises, logistics hub",
+                inv_for3_name: "Magnum Estate",
+                inv_for3_status: "Private Russian real estate development",
+                inv_for3_sectors: "Magnum Resort Nusantara (luxury residences, business lounges)",
+                inv_for4_name: "Sembcorp Utilities",
+                inv_for4_status: "State-backed utility partnership",
+                inv_for4_sectors: "50 MW Solar Power Plant (PLTS) in cooperation with PT PLN"
             },
             id: {
                 nav_home: "🏠 Beranda",
                 nav_why: "Mengapa IKN?",
                 nav_roadmap: "Peta Jalan",
                 nav_dashboard: "Progress",
+                nav_investors: "Investor",
                 nav_developments: "Perkembangan",
                 nav_challenges: "Tantangan",
                 nav_blueprint: "Cetak Biru",
@@ -2393,7 +2762,39 @@
                 blue_p6_summary: "Sensor bangunan cerdas, terowongan utilitas bawah tanah, dan deteksi bencana.",
                 blue_p6_d1: "Multi-Utility Tunnel (MUT) untuk mengamankan serat optik, air, dan listrik di bawah tanah.",
                 blue_p6_d2: "Otomatisasi gedung pintar (smart building) untuk meminimalkan pemborosan energi dan air.",
-                blue_p6_d3: "Pemantauan lingkungan berbasis sensor untuk keselamatan kebakaran, banjir, dan seismik."
+                blue_p6_d3: "Pemantauan lingkungan berbasis sensor untuk keselamatan kebakaran, banjir, dan seismik.",
+                inv_tag: "Mitra Finansial",
+                inv_title: "Investor Domestik & Asing Utama",
+                inv_desc: "Rincian modal perusahaan swasta yang mendorong ekosistem komersial dan fasilitas publik di IKN Nusantara.",
+                inv_tab_domestic: "Pelopor Domestik",
+                inv_tab_foreign: "Investasi Asing Langsung (FDI)",
+                inv_lbl_leads: "Inisiator:",
+                inv_lbl_sectors: "Sektor:",
+                inv_lbl_value: "Komitmen:",
+                inv_lbl_status: "Status FDI:",
+                inv_type_consortium: "Konsorsium",
+                inv_type_corp: "Korporat",
+                inv_type_healthcare: "Kesehatan",
+                inv_dom1_name: "Konsorsium Nusantara",
+                inv_dom1_sectors: "Swissôtel Nusantara, mal perbelanjaan, taman botani",
+                inv_dom2_name: "Pakuwon Nusantara",
+                inv_dom2_sectors: "Kawasan komersial terpadu, mal perbelanjaan ritel, 3 hotel mewah",
+                inv_dom3_name: "Ciputra Group",
+                inv_dom3_sectors: "Kota mandiri hijau, perumahan cerdas, lapangan golf, taman bermain",
+                inv_dom4_name: "Pelopor Kesehatan",
+                inv_dom4_sectors: "RS Mayapada Nusantara & RS Hermina Nusantara (sudah beroperasi)",
+                inv_for1_name: "Delonix Group",
+                inv_for1_status: "Investor asing langsung murni 100% pertama",
+                inv_for1_sectors: "Kawasan komersial terpadu, distrik gaya hidup, hotel 200 kamar",
+                inv_for2_name: "Ayedh Dejem Group",
+                inv_for2_status: "Investasi langsung UEA tunggal terbesar",
+                inv_for2_sectors: "Pusat perbelanjaan premium, gedung pencakar langit komersial, pusat logistik",
+                inv_for3_name: "Magnum Estate",
+                inv_for3_status: "Pembangunan real estat swasta Rusia",
+                inv_for3_sectors: "Magnum Resort Nusantara (hunian mewah, lounge bisnis)",
+                inv_for4_name: "Sembcorp Utilities",
+                inv_for4_status: "Kemitraan utilitas yang didukung negara",
+                inv_for4_sectors: "Pembangkit Listrik Tenaga Surya (PLTS) 50 MW bekerja sama dengan PT PLN"
             }
         };
 
@@ -2461,6 +2862,20 @@
             } else {
                 detail.style.maxHeight = '0px';
                 expandText.innerHTML = LANG === 'en' ? 'Click to expand details' : 'Klik untuk melihat rincian';
+            }
+        }
+
+        // --- INVESTOR TAB SWITCH ---
+        function switchInvestorTab(type) {
+            document.querySelectorAll('.investor-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.investor-panel').forEach(panel => panel.classList.remove('active'));
+            
+            if (type === 'domestic') {
+                document.querySelector('.investor-tab[onclick*="domestic"]').classList.add('active');
+                document.getElementById('investor-domestic-panel').classList.add('active');
+            } else {
+                document.querySelector('.investor-tab[onclick*="foreign"]').classList.add('active');
+                document.getElementById('investor-foreign-panel').classList.add('active');
             }
         }
 
