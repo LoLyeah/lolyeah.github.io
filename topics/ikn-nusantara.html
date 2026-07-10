@@ -1155,7 +1155,8 @@
                                             <span class="milestone-detail" data-i18n="t2_m1_desc">Building 16 legislative buildings (41.81ha) and 4 judicial buildings (15.15ha) for DPR, MPR, MA, and MK. Designs approved by President Prabowo.</span>
                                             <div class="milestone-progress"><div class="milestone-progress-fill" data-progress="35"></div></div>
                                         </div>
-                                               <li class="milestone-item">
+                                    </li>
+                                    <li class="milestone-item">
                                         <div class="milestone-check in-progress">⚡</div>
                                         <div class="milestone-info">
                                             <span class="milestone-text" data-i18n="t2_m2_title">Toll Roads &amp; Transit Infrastructure</span>
@@ -2009,6 +2010,12 @@
                     el.innerHTML = T[lang][key];
                 }
             });
+
+            // Recalculate heights for expanded timeline cards
+            document.querySelectorAll('.timeline-card.expanded').forEach(card => {
+                const content = card.querySelector('.timeline-content');
+                content.style.maxHeight = content.scrollHeight + 'px';
+            });
         }
 
         // --- TIMELINE EXPAND/COLLAPSE LOGIC ---
@@ -2020,9 +2027,9 @@
             card.classList.toggle('expanded');
             
             if (card.classList.contains('expanded')) {
-                content.style.maxHeight = content.scrollHeight + 'px';
-                // Trigger sub-milestones progress animation if this is active card
+                // Display progress bars first so scrollHeight calculation is accurate
                 animateProgressInCard(card);
+                content.style.maxHeight = content.scrollHeight + 'px';
             } else {
                 content.style.maxHeight = '0px';
             }
@@ -2143,8 +2150,8 @@
             // Set initial heights for expanded timeline cards
             document.querySelectorAll('.timeline-card.expanded').forEach(card => {
                 const content = card.querySelector('.timeline-content');
-                content.style.maxHeight = content.scrollHeight + 'px';
                 animateProgressInCard(card);
+                content.style.maxHeight = content.scrollHeight + 'px';
             });
 
             // Intersection Observer to trigger dashboard bar animations
