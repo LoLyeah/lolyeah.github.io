@@ -988,12 +988,111 @@
             .nav-links {
                 display: none;
             }
-            .why-grid, .dashboard-grid, .challenge-grid {
+            .why-grid, .dashboard-grid, .challenge-grid, .blueprint-grid {
                 grid-template-columns: 1fr;
             }
             .landuse-legends {
                 grid-template-columns: 1fr;
             }
+        }
+
+        /* Smart City Blueprint Section */
+        .blueprint-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .blueprint-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blueprint-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(52, 211, 153, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .blueprint-icon {
+            font-size: 32px;
+            background: rgba(52, 211, 153, 0.1);
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            color: var(--primary);
+        }
+
+        .blueprint-card h3 {
+            font-family: var(--font-display);
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .blueprint-summary {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .blueprint-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .blueprint-card.active .blueprint-detail {
+            max-height: 250px;
+            margin-top: 8px;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+        }
+
+        .blueprint-list {
+            padding-left: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            list-style: disc;
+        }
+
+        .blueprint-list li {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .blueprint-expand {
+            font-size: 11px;
+            font-family: var(--font-mono);
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: auto;
+            text-align: right;
+            transition: color 0.2s;
+        }
+
+        .blueprint-card:hover .blueprint-expand {
+            color: var(--primary);
+        }
+
+        .blueprint-card.active .blueprint-expand {
+            color: var(--text-muted);
         }
     </style>
 </head>
@@ -1011,6 +1110,7 @@
                 <a href="#dashboard" data-i18n="nav_dashboard">Progress</a>
                 <a href="#developments" data-i18n="nav_developments">Developments</a>
                 <a href="#challenges" data-i18n="nav_challenges">Challenges</a>
+                <a href="#blueprint" data-i18n="nav_blueprint">Blueprint</a>
                 <a href="#vision" data-i18n="nav_vision">Vision 2045</a>
                 <a href="#sources" data-i18n="nav_sources">Sources</a>
             </div>
@@ -1509,6 +1609,109 @@
             </div>
         </section>
 
+        <!-- Smart City Blueprint Section -->
+        <section id="blueprint">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag" data-i18n="blue_tag">Tech Foundation</span>
+                    <h2 data-i18n="blue_title">The Nusantara Smart City Blueprint</h2>
+                    <p class="section-desc" data-i18n="blue_desc">Exploring the six core pillars defined by the IKN Authority (OIKN) to drive Indonesia's digital urban transition.</p>
+                </div>
+
+                <div class="blueprint-grid">
+                    <!-- Pillar 1 -->
+                    <div class="blueprint-card" onclick="toggleBlueprintDetail(this)">
+                        <div class="blueprint-icon">🏛️</div>
+                        <h3 data-i18n="blue_p1_title">Smart Governance</h3>
+                        <p class="blueprint-summary" data-i18n="blue_p1_summary">Digital administrative networks, public services, and unified databases.</p>
+                        <div class="blueprint-detail">
+                            <ul class="blueprint-list">
+                                <li data-i18n="blue_p1_d1">Integrated single-window municipal service portal for residents and businesses.</li>
+                                <li data-i18n="blue_p1_d2">E-government cloud and shared digital systems for all public ministries.</li>
+                                <li data-i18n="blue_p1_d3">Real-time public feedback systems to encourage open municipal administration.</li>
+                            </ul>
+                        </div>
+                        <span class="blueprint-expand" data-i18n="blue_expand">Click to expand details</span>
+                    </div>
+
+                    <!-- Pillar 2 -->
+                    <div class="blueprint-card" onclick="toggleBlueprintDetail(this)">
+                        <div class="blueprint-icon">🚗</div>
+                        <h3 data-i18n="blue_p2_title">Smart Transportation &amp; Mobility</h3>
+                        <p class="blueprint-summary" data-i18n="blue_p2_summary">Electric vehicle ecosystems, smart signals, and public rapid transit.</p>
+                        <div class="blueprint-detail">
+                            <ul class="blueprint-list">
+                                <li data-i18n="blue_p2_d1">AI-driven traffic management using dynamic street sensor arrays.</li>
+                                <li data-i18n="blue_p2_d2">EV charging corridors (SPKLU) prioritizing carbon-free public vehicles.</li>
+                                <li data-i18n="blue_p2_d3">Real-time scheduling for public transit networks and electric shuttle feeders.</li>
+                            </ul>
+                        </div>
+                        <span class="blueprint-expand" data-i18n="blue_expand">Click to expand details</span>
+                    </div>
+
+                    <!-- Pillar 3 -->
+                    <div class="blueprint-card" onclick="toggleBlueprintDetail(this)">
+                        <div class="blueprint-icon">🏡</div>
+                        <h3 data-i18n="blue_p3_title">Smart Living</h3>
+                        <p class="blueprint-summary" data-i18n="blue_p3_summary">High-quality telemedicine, public security, and civic services.</p>
+                        <div class="blueprint-detail">
+                            <ul class="blueprint-list">
+                                <li data-i18n="blue_p3_d1">Telemedicine portals linking local hospitals to major national centers.</li>
+                                <li data-i18n="blue_p3_d2">Smart city emergency call systems integrated with rescue networks.</li>
+                                <li data-i18n="blue_p3_d3">Universal fiber internet and high-speed digital public facilities.</li>
+                            </ul>
+                        </div>
+                        <span class="blueprint-expand" data-i18n="blue_expand">Click to expand details</span>
+                    </div>
+
+                    <!-- Pillar 4 -->
+                    <div class="blueprint-card" onclick="toggleBlueprintDetail(this)">
+                        <div class="blueprint-icon">⚡</div>
+                        <h3 data-i18n="blue_p4_title">Smart Energy &amp; Resources</h3>
+                        <p class="blueprint-summary" data-i18n="blue_p4_summary">Renewable microgrids, water purifiers, and automatic recycling.</p>
+                        <div class="blueprint-detail">
+                            <ul class="blueprint-list">
+                                <li data-i18n="blue_p4_d1">50 MW Solar Power Plant (PLTS) combined with battery storage systems (BESS).</li>
+                                <li data-i18n="blue_p4_d2">Smart grid networks that auto-optimize municipal power load distribution.</li>
+                                <li data-i18n="blue_p4_d3">Intelligent water purification (IPAM) delivering drinking-grade tap water.</li>
+                            </ul>
+                        </div>
+                        <span class="blueprint-expand" data-i18n="blue_expand">Click to expand details</span>
+                    </div>
+
+                    <!-- Pillar 5 -->
+                    <div class="blueprint-card" onclick="toggleBlueprintDetail(this)">
+                        <div class="blueprint-icon">💼</div>
+                        <h3 data-i18n="blue_p5_title">Smart Industry &amp; HR</h3>
+                        <p class="blueprint-summary" data-i18n="blue_p5_summary">Tech incubators, digital training, and local academic partnerships.</p>
+                        <div class="blueprint-detail">
+                            <ul class="blueprint-list">
+                                <li data-i18n="blue_p5_d1">Dedicated startup incubation hubs located within Phase II developments.</li>
+                                <li data-i18n="blue_p5_d2">Digital talent programs in collaboration with first universities like Gunadarma.</li>
+                                <li data-i18n="blue_p5_d3">Eco-friendly commercial zoning for green-tech businesses and clean pharma.</li>
+                            </ul>
+                        </div>
+                        <span class="blueprint-expand" data-i18n="blue_expand">Click to expand details</span>
+                    </div>
+
+                    <!-- Pillar 6 -->
+                    <div class="blueprint-card" onclick="toggleBlueprintDetail(this)">
+                        <div class="blueprint-icon">🏢</div>
+                        <h3 data-i18n="blue_p6_title">Smart Infrastructure</h3>
+                        <p class="blueprint-summary" data-i18n="blue_p6_summary">Smart building sensors, utility tunnels, and flood alerts.</p>
+                        <div class="blueprint-detail">
+                            <ul class="blueprint-list">
+                                <li data-i18n="blue_p6_d1">Multi-Utility Tunnels (MUT) keeping sewage, fiber, and power underground.</li>
+                                <li data-i18n="blue_p6_d2">Smart building automation to minimize heating, lighting, and water waste.</li>
+                                <li data-i18n="blue_p6_d3">Sensor-based environmental monitoring for fire, flood, and seismic safety.</li>
+                            </ul>
+                        </div>
+                        <span class="blueprint-expand" data-i18n="blue_expand">Click to expand details</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Vision 2045: Smart Forest City -->
         <section id="vision">
             <div class="container">
@@ -1667,6 +1870,7 @@
                 nav_dashboard: "Progress",
                 nav_developments: "Developments",
                 nav_challenges: "Challenges",
+                nav_blueprint: "Blueprint",
                 nav_vision: "Vision 2045",
                 nav_sources: "Sources",
                 hero_badge: "Interactive Deep Dive · July 2026",
@@ -1825,7 +2029,41 @@
                 source_1: "Presidential Regulation (Perpres) No. 79 of 2025 on the Acceleration of Nusantara Capital City Development.",
                 source_2: "Indonesian Constitutional Court (MK) Decision on Judicial Review of the Capital City Status Transition (Mid-2026).",
                 source_3: "Official Masterplan and Phase-wise Milestones, Ibu Kota Nusantara Authority (OIKN).",
-                source_4: "Ministry of National Development Planning (Bappenas) Financial Feasibility Studies and PPP/KPBU Financing Frameworks."
+                source_4: "Ministry of National Development Planning (Bappenas) Financial Feasibility Studies and PPP/KPBU Financing Frameworks.",
+                blue_tag: "Tech Foundation",
+                blue_title: "The Nusantara Smart City Blueprint",
+                blue_desc: "Exploring the six core pillars defined by the IKN Authority (OIKN) to drive Indonesia's digital urban transition.",
+                blue_expand: "Click to expand details",
+                blue_p1_title: "Smart Governance",
+                blue_p1_summary: "Digital administrative networks, public services, and unified databases.",
+                blue_p1_d1: "Integrated single-window municipal service portal for residents and businesses.",
+                blue_p1_d2: "E-government cloud and shared digital systems for all public ministries.",
+                blue_p1_d3: "Real-time public feedback systems to encourage open municipal administration.",
+                blue_p2_title: "Smart Transportation & Mobility",
+                blue_p2_summary: "Electric vehicle ecosystems, smart signals, and public rapid transit.",
+                blue_p2_d1: "AI-driven traffic management using dynamic street sensor arrays.",
+                blue_p2_d2: "EV charging corridors (SPKLU) prioritizing carbon-free public vehicles.",
+                blue_p2_d3: "Real-time scheduling for public transit networks and electric shuttle feeders.",
+                blue_p3_title: "Smart Living",
+                blue_p3_summary: "High-quality telemedicine, public security, and civic services.",
+                blue_p3_d1: "Telemedicine portals linking local hospitals to major national centers.",
+                blue_p3_d2: "Smart city emergency call systems integrated with rescue networks.",
+                blue_p3_d3: "Universal fiber internet and high-speed digital public facilities.",
+                blue_p4_title: "Smart Energy & Resources",
+                blue_p4_summary: "Renewable microgrids, water purifiers, and automatic recycling.",
+                blue_p4_d1: "50 MW Solar Power Plant (PLTS) combined with battery storage systems (BESS).",
+                blue_p4_d2: "Smart grid networks that auto-optimize municipal power load distribution.",
+                blue_p4_d3: "Intelligent water purification (IPAM) delivering drinking-grade tap water.",
+                blue_p5_title: "Smart Industry & HR",
+                blue_p5_summary: "Tech incubators, digital training, and local academic partnerships.",
+                blue_p5_d1: "Dedicated startup incubation hubs located within Phase II developments.",
+                blue_p5_d2: "Digital talent programs in collaboration with first universities like Gunadarma.",
+                blue_p5_d3: "Eco-friendly commercial zoning for green-tech businesses and clean pharma.",
+                blue_p6_title: "Smart Infrastructure",
+                blue_p6_summary: "Smart building sensors, utility tunnels, and flood alerts.",
+                blue_p6_d1: "Multi-Utility Tunnels (MUT) keeping sewage, fiber, and power underground.",
+                blue_p6_d2: "Smart building automation to minimize heating, lighting, and water waste.",
+                blue_p6_d3: "Sensor-based environmental monitoring for fire, flood, and seismic safety."
             },
             id: {
                 nav_why: "Mengapa IKN?",
@@ -1833,6 +2071,7 @@
                 nav_dashboard: "Progress",
                 nav_developments: "Perkembangan",
                 nav_challenges: "Tantangan",
+                nav_blueprint: "Cetak Biru",
                 nav_vision: "Visi 2045",
                 nav_sources: "Sumber",
                 hero_badge: "Kajian Interaktif Mendalam · Juli 2026",
@@ -1991,7 +2230,41 @@
                 source_1: "Peraturan Presiden (Perpres) No. 79 Tahun 2025 tentang Percepatan Pembangunan Ibu Kota Nusantara.",
                 source_2: "Putusan Mahkamah Konstitusi (MK) atas Uji Materiil Transisi Status Ibu Kota Negara (Pertengahan 2026).",
                 source_3: "Rencana Induk Resmi dan Capaian Bertahap, Otorita Ibu Kota Nusantara (OIKN).",
-                source_4: "Kementerian Perencanaan Pembangunan Nasional (Bappenas) Studi Kelayakan Finansial dan Kerangka Pembiayaan Skema KPBU."
+                source_4: "Kementerian Perencanaan Pembangunan Nasional (Bappenas) Studi Kelayakan Finansial dan Kerangka Pembiayaan Skema KPBU.",
+                blue_tag: "Infrastruktur Teknologi",
+                blue_title: "Cetak Biru Kota Cerdas Nusantara",
+                blue_desc: "Menjelajahi enam pilar utama yang ditetapkan oleh Otorita IKN (OIKN) untuk mendorong transisi perkotaan digital Indonesia.",
+                blue_expand: "Klik untuk melihat rincian",
+                blue_p1_title: "Smart Governance",
+                blue_p1_summary: "Jaringan administrasi digital, pelayanan publik terintegrasi, dan basis data terpadu.",
+                blue_p1_d1: "Portal layanan kota satu pintu yang terintegrasi untuk warga dan pelaku usaha.",
+                blue_p1_d2: "Sistem awan pemerintah (government cloud) dan sistem digital bersama untuk kementerian.",
+                blue_p1_d3: "Sistem umpan balik publik real-time untuk mendukung tata kelola yang terbuka.",
+                blue_p2_title: "Smart Transportation & Mobility",
+                blue_p2_summary: "Ekosistem kendaraan listrik, lampu lalu lintas cerdas, dan transportasi umum cepat.",
+                blue_p2_d1: "AI-driven traffic management menggunakan dynamic street sensor arrays.",
+                blue_p2_d2: "EV charging corridors (SPKLU) yang memprioritaskan kendaraan umum ramah lingkungan.",
+                blue_p2_d3: "Penjadwalan real-time untuk jaringan transportasi umum dan kendaraan pengumpan listrik.",
+                blue_p3_title: "Smart Living",
+                blue_p3_summary: "Layanan telemedicine berkualitas tinggi, keamanan publik cerdas, dan fasilitas warga.",
+                blue_p3_d1: "Portal telemedicine yang menghubungkan rumah sakit IKN dengan pusat medis nasional.",
+                blue_p3_d2: "Sistem darurat kota terpadu yang terhubung langsung dengan jaringan penyelamat.",
+                blue_p3_d3: "Akses internet serat optik universal dan fasilitas publik digital berkecepatan tinggi.",
+                blue_p4_title: "Smart Energy & Resources",
+                blue_p4_summary: "Microgrid energi terbarukan, instalasi air bersih langsung minum, dan daur ulang pintar.",
+                blue_p4_d1: "Pembangkit Listrik Tenaga Surya (PLTS) 50 MW dengan Battery Energy Storage System (BESS).",
+                blue_p4_d2: "Jaringan pintar (smart grid) untuk optimasi otomatis distribusi daya listrik kota.",
+                blue_p4_d3: "Instalasi Pengolahan Air Minum (IPAM) yang menyalurkan air keran siap konsumsi.",
+                blue_p5_title: "Smart Industry & HR",
+                blue_p5_summary: "Inkubator teknologi, pelatihan keterampilan digital, dan kemitraan akademis lokal.",
+                blue_p5_d1: "Pusat inkubasi startup teknologi yang ditempatkan di kawasan pengembangan Tahap II.",
+                blue_p5_d2: "Program talenta digital bekerja sama dengan universitas pertama seperti Gunadarma.",
+                blue_p5_d3: "Zona komersial ramah lingkungan untuk bisnis teknologi hijau dan farmasi bersih.",
+                blue_p6_title: "Smart Infrastructure",
+                blue_p6_summary: "Sensor bangunan cerdas, terowongan utilitas bawah tanah, dan deteksi bencana.",
+                blue_p6_d1: "Multi-Utility Tunnel (MUT) untuk mengamankan serat optik, air, dan listrik di bawah tanah.",
+                blue_p6_d2: "Otomatisasi gedung pintar (smart building) untuk meminimalkan pemborosan energi dan air.",
+                blue_p6_d3: "Pemantauan lingkungan berbasis sensor untuk keselamatan kebakaran, banjir, dan seismik."
             }
         };
 
@@ -2016,6 +2289,18 @@
                 const content = card.querySelector('.timeline-content');
                 content.style.maxHeight = content.scrollHeight + 'px';
             });
+
+            // Re-apply correct text for blueprint expand buttons based on active state
+            document.querySelectorAll('.blueprint-card').forEach(card => {
+                const expandText = card.querySelector('.blueprint-expand');
+                if (expandText) {
+                    if (card.classList.contains('active')) {
+                        expandText.innerHTML = lang === 'en' ? 'Click to collapse details' : 'Klik untuk menutup rincian';
+                    } else {
+                        expandText.innerHTML = lang === 'en' ? 'Click to expand details' : 'Klik untuk melihat rincian';
+                    }
+                }
+            });
         }
 
         // --- TIMELINE EXPAND/COLLAPSE LOGIC ---
@@ -2032,6 +2317,21 @@
                 content.style.maxHeight = content.scrollHeight + 'px';
             } else {
                 content.style.maxHeight = '0px';
+            }
+        }
+
+        // --- SMART BLUEPRINT DETAIL TOGGLE ---
+        function toggleBlueprintDetail(card) {
+            card.classList.toggle('active');
+            const detail = card.querySelector('.blueprint-detail');
+            const expandText = card.querySelector('.blueprint-expand');
+            
+            if (card.classList.contains('active')) {
+                detail.style.maxHeight = detail.scrollHeight + 'px';
+                expandText.innerHTML = LANG === 'en' ? 'Click to collapse details' : 'Klik untuk menutup rincian';
+            } else {
+                detail.style.maxHeight = '0px';
+                expandText.innerHTML = LANG === 'en' ? 'Click to expand details' : 'Klik untuk melihat rincian';
             }
         }
 
