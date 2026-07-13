@@ -1662,10 +1662,91 @@
             .stat-card:last-child { border-bottom: 0; }
         }
 
+        /* Contrast guardrails: override legacy dark-theme declarations. */
+        html { color-scheme: light; }
+        h2, h3, h4, .dash-val, .landuse-leg-val { color: #102f26; }
+        td, .detail-val, .milestone-detail { color: #435f54; }
+        .timeline-header { background: #edf0e8; }
+        .timeline-header:hover { background: #e3e9df; }
+        .timeline-subtitle { color: #236d5a; }
+        .timeline-badge-status.completed {
+            background: #d8eee3;
+            border-color: #9acbb5;
+            color: #105b43;
+        }
+        .timeline-badge-status.upcoming {
+            background: #e4e8e1;
+            border-color: #c2cbc4;
+            color: #42594f;
+        }
+        .timeline-toggle-icon { color: #355d4f; }
+        .dash-val { color: #123d31; }
+        .vision-feat-card h4, .landuse-leg-val { color: #173c31; }
+        .vision-feat-card:hover { background: #eef2e9; }
+        .investor-tab:hover { background: #d8e5dc; color: #143b30; border-color: #7faf9b; }
+        .investor-tab.active:hover { background: #173d31; color: #fff; }
+        tr:hover td { background: #edf1e9; }
+        .blueprint-list li { color: #476158; }
+        .snapshot-card.accent .snapshot-value { color: #fff; }
+        .snapshot-card.accent .snapshot-kicker { color: #ffc28f; }
+        .snapshot-card:not(.accent) .snapshot-value { color: #123d31; }
+        .funding-legend, .legend-item, .dash-bar-label { color: #435f54; }
+
+        /* Motion system: expressive on entry, quiet during reading. */
+        @keyframes heroRise {
+            from { opacity: 0; transform: translateY(22px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes statSlide {
+            from { opacity: 0; transform: translateX(24px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes orbitDrift {
+            0%, 100% { transform: rotate(-12deg) scale(1); }
+            50% { transform: rotate(-8deg) scale(1.035); }
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { box-shadow: 0 0 0 5px rgba(69,167,118,.14); }
+            50% { box-shadow: 0 0 0 10px rgba(69,167,118,0); }
+        }
+
+        .hero-copy > * { animation: heroRise .7s cubic-bezier(.2,.75,.25,1) both; }
+        .hero-copy > :nth-child(2) { animation-delay: .08s; }
+        .hero-copy > :nth-child(3) { animation-delay: .16s; }
+        .hero-copy > :nth-child(4) { animation-delay: .24s; }
+        .hero-stats { animation: statSlide .75s .22s cubic-bezier(.2,.75,.25,1) both; }
+        .hero::before { animation: orbitDrift 14s ease-in-out infinite; }
+        .hero::after { animation: orbitDrift 18s 1.5s ease-in-out infinite reverse; }
+        .freshness::before { animation: statusPulse 2.4s ease-in-out infinite; }
+        .hero-cta, .timeline-card, .snapshot-card, .why-card, .dash-card,
+        .challenge-card, .blueprint-card, .investor-card, .vision-feat-card,
+        .source-list a {
+            transition: transform .28s ease, box-shadow .28s ease,
+                        border-color .28s ease, background-color .28s ease,
+                        color .28s ease;
+        }
+        .hero-cta:active, .investor-tab:active { transform: translateY(1px) scale(.985); }
+
+        .reveal-ready [data-reveal] {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+        .reveal-ready [data-reveal].is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity .62s cubic-bezier(.2,.75,.25,1),
+                        transform .62s cubic-bezier(.2,.75,.25,1);
+            transition-delay: calc(var(--reveal-order, 0) * 55ms);
+        }
+
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
             *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
             #firefly-canvas { display: none; }
+            .reveal-ready [data-reveal] { opacity: 1; transform: none; }
         }
     </style>
 </head>
@@ -3521,6 +3602,33 @@
                 });
             }, { rootMargin: '-28% 0px -62% 0px' });
             document.querySelectorAll('main section[id]').forEach(section => sectionObserver.observe(section));
+
+            // Reveal content as it enters the viewport, with a short card stagger.
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (!reduceMotion && 'IntersectionObserver' in window) {
+                const revealTargets = document.querySelectorAll(
+                    '.section-header, .snapshot-head, .snapshot-card, .snapshot-note, ' +
+                    '.why-card, .timeline-item, .dash-card, .investor-card, .dev-row, ' +
+                    '.challenge-card, .blueprint-card, .vision-feat-card, ' +
+                    '.landuse-container, .comparison-wrap, .source-list li'
+                );
+                revealTargets.forEach(target => {
+                    target.setAttribute('data-reveal', '');
+                    const siblings = target.parentElement ? [...target.parentElement.children] : [];
+                    target.style.setProperty('--reveal-order', Math.min(siblings.indexOf(target), 5));
+                });
+
+                const revealObserver = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting) return;
+                        entry.target.classList.add('is-visible');
+                        revealObserver.unobserve(entry.target);
+                    });
+                }, { threshold: 0.08, rootMargin: '0px 0px -7% 0px' });
+
+                revealTargets.forEach(target => revealObserver.observe(target));
+                requestAnimationFrame(() => document.body.classList.add('reveal-ready'));
+            }
 
             // Set initial heights for expanded timeline cards
             document.querySelectorAll('.timeline-card.expanded').forEach(card => {
