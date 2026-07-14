@@ -1585,6 +1585,7 @@
         .investor-tabs { background: #e4e9df; border: 0; padding: 5px; width: fit-content; border-radius: 14px; }
         .investor-tab { color: #60736b; border-radius: 10px; }
         .investor-tab.active { background: #173d31; color: white; }
+        .investor-note { margin: -28px 0 28px; color: #667a71; font-size: 12px; }
         .investor-header-card h3 { color: #17382e; }
         .investor-type.foreign { background: #edf0e9; color: #38544a; border-color: rgba(20,51,42,.14); }
 
@@ -1664,10 +1665,28 @@
 
         /* Contrast guardrails: override legacy dark-theme declarations. */
         html { color-scheme: light; }
+        html { scroll-padding-top: 108px; }
         h2, h3, h4, .dash-val, .landuse-leg-val { color: #102f26; }
+        .hero h1 {
+            color: #103d31;
+            background: none;
+            -webkit-background-clip: initial;
+            background-clip: initial;
+            -webkit-text-fill-color: currentColor;
+        }
         td, .detail-val, .milestone-detail { color: #435f54; }
         .timeline-header { background: #edf0e8; }
         .timeline-header:hover { background: #e3e9df; }
+        .timeline-item { scroll-margin-top: 108px; }
+        .timeline-card.expanded { overflow: visible; }
+        .timeline-card.expanded .timeline-header {
+            position: sticky;
+            top: 88px;
+            z-index: 5;
+            border: 1px solid var(--border);
+            border-radius: 18px 18px 0 0;
+            box-shadow: 0 10px 24px rgba(22, 56, 46, 0.09);
+        }
         .timeline-subtitle { color: #236d5a; }
         .timeline-badge-status.completed {
             background: #d8eee3;
@@ -1683,6 +1702,15 @@
         .dash-val { color: #123d31; }
         .vision-feat-card h4, .landuse-leg-val { color: #173c31; }
         .vision-feat-card:hover { background: #eef2e9; }
+        .challenge-card { border-top: 1px solid rgba(20, 51, 42, 0.13); }
+        .challenge-card::before {
+            left: 18px;
+            right: 18px;
+            width: auto;
+            height: 3px;
+            border-radius: 0 0 3px 3px;
+        }
+        .challenge-card:hover { border-color: rgba(185, 74, 59, 0.56); }
         .investor-tab:hover { background: #d8e5dc; color: #143b30; border-color: #7faf9b; }
         .investor-tab.active:hover { background: #173d31; color: #fff; }
         tr:hover td { background: #edf1e9; }
@@ -1691,6 +1719,12 @@
         .snapshot-card.accent .snapshot-kicker { color: #ffc28f; }
         .snapshot-card:not(.accent) .snapshot-value { color: #123d31; }
         .funding-legend, .legend-item, .dash-bar-label { color: #435f54; }
+
+        @media (max-width: 768px) {
+            html { scroll-padding-top: 82px; }
+            .timeline-item { scroll-margin-top: 82px; }
+            .timeline-card.expanded .timeline-header { top: 72px; }
+        }
 
         /* Motion system: expressive on entry, quiet during reading. */
         @keyframes heroRise {
@@ -2276,13 +2310,14 @@
                     <p class="section-desc" data-i18n="inv_desc">A breakdown of the private enterprise capital driving commercial ecosystems and public facilities in IKN Nusantara.</p>
                 </div>
 
-                <div class="investor-tabs">
-                    <button class="investor-tab active" onclick="switchInvestorTab('domestic')" data-i18n="inv_tab_domestic">Domestic Pioneers</button>
-                    <button class="investor-tab" onclick="switchInvestorTab('foreign')" data-i18n="inv_tab_foreign">Foreign Direct Investment (FDI)</button>
+                <div class="investor-tabs" role="tablist" aria-label="Investor groups">
+                    <button id="investor-domestic-tab" class="investor-tab active" type="button" role="tab" aria-selected="true" aria-controls="investor-domestic-panel" onclick="switchInvestorTab('domestic')" data-i18n="inv_tab_domestic">Domestic Pioneers · 6</button>
+                    <button id="investor-foreign-tab" class="investor-tab" type="button" role="tab" aria-selected="false" aria-controls="investor-foreign-panel" onclick="switchInvestorTab('foreign')" data-i18n="inv_tab_foreign">Foreign &amp; Joint Ventures · 6</button>
                 </div>
+                <p class="investor-note" data-i18n="inv_note">Values reflect public OIKN announcements; combined investment batches are labeled and are not attributed to one firm.</p>
 
                 <!-- Domestic Investors Grid -->
-                <div id="investor-domestic-panel" class="investor-panel active">
+                <div id="investor-domestic-panel" class="investor-panel active" role="tabpanel" aria-labelledby="investor-domestic-tab">
                     <div class="investor-grid">
                         <!-- Domestic 1 -->
                         <div class="investor-card">
@@ -2371,11 +2406,55 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Domestic 5 -->
+                        <div class="investor-card">
+                            <div class="investor-header-card">
+                                <h3 data-i18n="inv_dom5_name">Plataran Indonesia</h3>
+                                <span class="investor-type" data-i18n="inv_type_hospitality">Hospitality</span>
+                            </div>
+                            <div class="investor-details">
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_leads">Parent:</span>
+                                    <span class="detail-val">PT Plataran Boga Rasa</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_sectors">Sectors:</span>
+                                    <span class="detail-val" data-i18n="inv_dom5_sectors">Teras Hutan IKN, Indonesian dining, events, and ecotourism</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_value">Commitment:</span>
+                                    <span class="detail-val highlight">Rp 25B</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Domestic 6 -->
+                        <div class="investor-card">
+                            <div class="investor-header-card">
+                                <h3 data-i18n="inv_dom6_name">d’primahotel Nusantara</h3>
+                                <span class="investor-type" data-i18n="inv_type_hospitality">Hospitality</span>
+                            </div>
+                            <div class="investor-details">
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_leads">Parent:</span>
+                                    <span class="detail-val">PT Primahotel Manajemen Indonesia</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_sectors">Sectors:</span>
+                                    <span class="detail-val" data-i18n="inv_dom6_sectors">154-room hotel, meeting facilities, and restaurant on a 4,600 m² site</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_value">Commitment:</span>
+                                    <span class="detail-val highlight">Rp 100B</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Foreign Investors Grid -->
-                <div id="investor-foreign-panel" class="investor-panel">
+                <div id="investor-foreign-panel" class="investor-panel" role="tabpanel" aria-labelledby="investor-foreign-tab" hidden>
                     <div class="investor-grid">
                         <!-- Foreign 1 -->
                         <div class="investor-card">
@@ -2461,6 +2540,50 @@
                                 <div class="investor-detail-item">
                                     <span class="detail-label" data-i18n="inv_lbl_value">Value:</span>
                                     <span class="detail-val highlight">Rp 900B (Joint Venture)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Foreign 5 -->
+                        <div class="investor-card">
+                            <div class="investor-header-card">
+                                <h3 data-i18n="inv_for5_name">Australian Independent School</h3>
+                                <span class="investor-type foreign">🇦🇺 Australia</span>
+                            </div>
+                            <div class="investor-details">
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_status">Partnership:</span>
+                                    <span class="detail-val" data-i18n="inv_for5_status">International education partnership; groundbreaking completed</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_sectors">Sectors:</span>
+                                    <span class="detail-val" data-i18n="inv_for5_sectors">International campus for up to 750 students, ages 3 through grade 12</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_value">Value:</span>
+                                    <span class="detail-val highlight">Rp 150B</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Foreign 6 -->
+                        <div class="investor-card">
+                            <div class="investor-header-card">
+                                <h3 data-i18n="inv_for6_name">Citadel Group Indonesia</h3>
+                                <span class="investor-type foreign" data-i18n="inv_type_fdi">Foreign Investment</span>
+                            </div>
+                            <div class="investor-details">
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_status">FDI Status:</span>
+                                    <span class="detail-val" data-i18n="inv_for6_status">Land-use agreement signed; agreement addendum completed in 2026</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_sectors">Sectors:</span>
+                                    <span class="detail-val" data-i18n="inv_for6_sectors">Lifestyle center and supporting commercial facilities</span>
+                                </div>
+                                <div class="investor-detail-item">
+                                    <span class="detail-label" data-i18n="inv_lbl_batch">Investment batch:</span>
+                                    <span class="detail-val highlight">Rp 2.42T / 5 firms</span>
                                 </div>
                             </div>
                         </div>
@@ -2807,8 +2930,10 @@
                         <li><a href="https://ikn.go.id/en/posts/pembangunan-kompleks-legislatif-dan-yudikatif-ikn-terus-berjalan-ditargetkan-rampung-20272028" target="_blank" rel="noopener"><span data-i18n="source_5">OIKN — Legislative and judicial precinct delivery targets, April 2026.</span></a></li>
                         <li><a href="https://ikn.go.id/posts/menhut-raja-juli-antoni-tegaskan-dukungan-forest-city-rhl-ikn-capai-1805-hektare-dan-perhutanan-sosial-diperkuat" target="_blank" rel="noopener"><span data-i18n="source_6">OIKN — 1,805 hectares of land rehabilitation, March 2026.</span></a></li>
                         <li><a href="https://ikn.go.id/id/posts" target="_blank" rel="noopener"><span data-i18n="source_7">OIKN newsroom — latest public-service, education, environment, and procurement updates.</span></a></li>
+                        <li><a href="https://ikn.go.id/investasi-asing-swasta-dalam-groundbreaking-8-perkuat-komitmen-pembangunan-ibu-kota-nusantara" target="_blank" rel="noopener"><span data-i18n="source_8">OIKN — Groundbreaking VIII investor group, September 2024.</span></a></li>
+                        <li><a href="https://ikn.go.id/en/posts/5-investor-baru-total-investasi-rp-242-triliun-menandatangani-perjanjian-pemanfaatan-lahan-adp-otorita-ikn-di-city-hall" target="_blank" rel="noopener"><span data-i18n="source_9">OIKN — Citadel and four other land-use agreements, March 2025.</span></a></li>
                     </ul>
-                    <p class="source-meta" data-i18n="sources_note">Last editorial review: 10 July 2026. Official targets may change; linked sources are provided for verification.</p>
+                    <p class="source-meta" data-i18n="sources_note">Last editorial review: 14 July 2026. Official targets may change; linked sources are provided for verification.</p>
                 </div>
             </div>
         </section>
@@ -3027,7 +3152,9 @@
                 source_5: "OIKN — Legislative and judicial precinct delivery targets, April 2026.",
                 source_6: "OIKN — 1,805 hectares of land rehabilitation, March 2026.",
                 source_7: "OIKN newsroom — latest public-service, education, environment, and procurement updates.",
-                sources_note: "Last editorial review: 10 July 2026. Official targets may change; linked sources are provided for verification.",
+                source_8: "OIKN — Groundbreaking VIII investor group, September 2024.",
+                source_9: "OIKN — Citadel and four other land-use agreements, March 2025.",
+                sources_note: "Last editorial review: 14 July 2026. Official targets may change; linked sources are provided for verification.",
                 blue_tag: "Tech Foundation",
                 blue_title: "The Nusantara Smart City Blueprint",
                 blue_desc: "Exploring the six core pillars defined by the IKN Authority (OIKN) to drive Indonesia's digital urban transition.",
@@ -3065,15 +3192,19 @@
                 inv_tag: "Capital Partners",
                 inv_title: "Major Domestic & Foreign Investors",
                 inv_desc: "A breakdown of the private enterprise capital driving commercial ecosystems and public facilities in IKN Nusantara.",
-                inv_tab_domestic: "Domestic Pioneers",
-                inv_tab_foreign: "Foreign Direct Investment (FDI)",
+                inv_note: "Values reflect public OIKN announcements; combined investment batches are labeled and are not attributed to one firm.",
+                inv_tab_domestic: "Domestic Pioneers · 6",
+                inv_tab_foreign: "Foreign & Joint Ventures · 6",
                 inv_lbl_leads: "Leads:",
                 inv_lbl_sectors: "Sectors:",
                 inv_lbl_value: "Commitment:",
                 inv_lbl_status: "FDI Status:",
+                inv_lbl_batch: "Investment batch:",
                 inv_type_consortium: "Consortium",
                 inv_type_corp: "Corporate",
                 inv_type_healthcare: "Medical",
+                inv_type_hospitality: "Hospitality",
+                inv_type_fdi: "Foreign Investment",
                 inv_dom1_name: "Konsorsium Nusantara",
                 inv_dom1_sectors: "Swissôtel Nusantara, shopping malls, botanical parks",
                 inv_dom2_name: "Pakuwon Nusantara",
@@ -3082,6 +3213,10 @@
                 inv_dom3_sectors: "Green townships, smart residential housing, golf course, theme parks",
                 inv_dom4_name: "Healthcare Pioneers",
                 inv_dom4_sectors: "Mayapada Hospital Nusantara & Hermina Hospital Nusantara (now operational)",
+                inv_dom5_name: "Plataran Indonesia",
+                inv_dom5_sectors: "Teras Hutan IKN, Indonesian dining, events, and ecotourism",
+                inv_dom6_name: "d’primahotel Nusantara",
+                inv_dom6_sectors: "154-room hotel, meeting facilities, and restaurant on a 4,600 m² site",
                 inv_for1_name: "Delonix Group",
                 inv_for1_status: "First 100% pure foreign direct investor",
                 inv_for1_sectors: "Mixed-use commercial hub, lifestyle district, 200-room hotel",
@@ -3093,7 +3228,13 @@
                 inv_for3_sectors: "Magnum Resort Nusantara (luxury residences, business lounges)",
                 inv_for4_name: "Sembcorp Utilities",
                 inv_for4_status: "State-backed utility partnership",
-                inv_for4_sectors: "50 MW Solar Power Plant (PLTS) in cooperation with PT PLN"
+                inv_for4_sectors: "50 MW Solar Power Plant (PLTS) in cooperation with PT PLN",
+                inv_for5_name: "Australian Independent School",
+                inv_for5_status: "International education partnership; groundbreaking completed",
+                inv_for5_sectors: "International campus for up to 750 students, ages 3 through grade 12",
+                inv_for6_name: "Citadel Group Indonesia",
+                inv_for6_status: "Land-use agreement signed; agreement addendum completed in 2026",
+                inv_for6_sectors: "Lifestyle center and supporting commercial facilities"
             },
             id: {
                 skip_content: "Langsung ke konten",
@@ -3298,7 +3439,9 @@
                 source_5: "OIKN — target pembangunan kawasan legislatif dan yudikatif, April 2026.",
                 source_6: "OIKN — rehabilitasi lahan seluas 1.805 hektare, Maret 2026.",
                 source_7: "Ruang berita OIKN — perkembangan terbaru layanan publik, pendidikan, lingkungan, dan pengadaan.",
-                sources_note: "Tinjauan editorial terakhir: 10 Juli 2026. Target resmi dapat berubah; tautan sumber disediakan untuk verifikasi.",
+                source_8: "OIKN — kelompok investor Groundbreaking VIII, September 2024.",
+                source_9: "OIKN — perjanjian pemanfaatan lahan Citadel dan empat investor lain, Maret 2025.",
+                sources_note: "Tinjauan editorial terakhir: 14 Juli 2026. Target resmi dapat berubah; tautan sumber disediakan untuk verifikasi.",
                 blue_tag: "Infrastruktur Teknologi",
                 blue_title: "Cetak Biru Kota Cerdas Nusantara",
                 blue_desc: "Menjelajahi enam pilar utama yang ditetapkan oleh Otorita IKN (OIKN) untuk mendorong transisi perkotaan digital Indonesia.",
@@ -3336,15 +3479,19 @@
                 inv_tag: "Mitra Finansial",
                 inv_title: "Investor Domestik & Asing Utama",
                 inv_desc: "Rincian modal perusahaan swasta yang mendorong ekosistem komersial dan fasilitas publik di IKN Nusantara.",
-                inv_tab_domestic: "Pelopor Domestik",
-                inv_tab_foreign: "Investasi Asing Langsung (FDI)",
+                inv_note: "Nilai mengikuti pengumuman publik OIKN; kelompok investasi gabungan diberi label dan tidak diatribusikan kepada satu perusahaan.",
+                inv_tab_domestic: "Pelopor Domestik · 6",
+                inv_tab_foreign: "Asing & Usaha Patungan · 6",
                 inv_lbl_leads: "Inisiator:",
                 inv_lbl_sectors: "Sektor:",
                 inv_lbl_value: "Komitmen:",
                 inv_lbl_status: "Status FDI:",
+                inv_lbl_batch: "Kelompok investasi:",
                 inv_type_consortium: "Konsorsium",
                 inv_type_corp: "Korporat",
                 inv_type_healthcare: "Kesehatan",
+                inv_type_hospitality: "Hospitalitas",
+                inv_type_fdi: "Penanaman Modal Asing",
                 inv_dom1_name: "Konsorsium Nusantara",
                 inv_dom1_sectors: "Swissôtel Nusantara, mal perbelanjaan, taman botani",
                 inv_dom2_name: "Pakuwon Nusantara",
@@ -3353,6 +3500,10 @@
                 inv_dom3_sectors: "Kota mandiri hijau, perumahan cerdas, lapangan golf, taman bermain",
                 inv_dom4_name: "Pelopor Kesehatan",
                 inv_dom4_sectors: "RS Mayapada Nusantara & RS Hermina Nusantara (sudah beroperasi)",
+                inv_dom5_name: "Plataran Indonesia",
+                inv_dom5_sectors: "Teras Hutan IKN, kuliner Indonesia, acara, dan ekowisata",
+                inv_dom6_name: "d’primahotel Nusantara",
+                inv_dom6_sectors: "Hotel 154 kamar, fasilitas pertemuan, dan restoran di lahan 4.600 m²",
                 inv_for1_name: "Delonix Group",
                 inv_for1_status: "Investor asing langsung murni 100% pertama",
                 inv_for1_sectors: "Kawasan komersial terpadu, distrik gaya hidup, hotel 200 kamar",
@@ -3364,7 +3515,13 @@
                 inv_for3_sectors: "Magnum Resort Nusantara (hunian mewah, lounge bisnis)",
                 inv_for4_name: "Sembcorp Utilities",
                 inv_for4_status: "Kemitraan utilitas yang didukung negara",
-                inv_for4_sectors: "Pembangkit Listrik Tenaga Surya (PLTS) 50 MW bekerja sama dengan PT PLN"
+                inv_for4_sectors: "Pembangkit Listrik Tenaga Surya (PLTS) 50 MW bekerja sama dengan PT PLN",
+                inv_for5_name: "Australian Independent School",
+                inv_for5_status: "Kemitraan pendidikan internasional; peletakan batu pertama telah dilakukan",
+                inv_for5_sectors: "Kampus internasional untuk hingga 750 siswa, usia 3 tahun sampai kelas 12",
+                inv_for6_name: "Citadel Group Indonesia",
+                inv_for6_status: "Perjanjian pemanfaatan lahan ditandatangani; adendum selesai pada 2026",
+                inv_for6_sectors: "Pusat gaya hidup dan fasilitas komersial pendukung"
             }
         };
 
@@ -3442,14 +3599,26 @@
         // --- INVESTOR TAB SWITCH ---
         function switchInvestorTab(type) {
             document.querySelectorAll('.investor-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.investor-panel').forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.investor-tab').forEach(tab => tab.setAttribute('aria-selected', 'false'));
+            document.querySelectorAll('.investor-panel').forEach(panel => {
+                panel.classList.remove('active');
+                panel.hidden = true;
+            });
             
             if (type === 'domestic') {
-                document.querySelector('.investor-tab[onclick*="domestic"]').classList.add('active');
-                document.getElementById('investor-domestic-panel').classList.add('active');
+                const tab = document.getElementById('investor-domestic-tab');
+                const panel = document.getElementById('investor-domestic-panel');
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+                panel.hidden = false;
+                panel.classList.add('active');
             } else {
-                document.querySelector('.investor-tab[onclick*="foreign"]').classList.add('active');
-                document.getElementById('investor-foreign-panel').classList.add('active');
+                const tab = document.getElementById('investor-foreign-tab');
+                const panel = document.getElementById('investor-foreign-panel');
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+                panel.hidden = false;
+                panel.classList.add('active');
             }
         }
 
