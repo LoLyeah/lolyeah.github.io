@@ -37,6 +37,7 @@
     <title class="en-only">Indonesia 2026 Best Selling Cars Suspension Database | LoLyeah</title>
     <title class="id-only">Database Suspensi Mobil Terlaris Indonesia 2026 | LoLyeah</title>
 
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -46,257 +47,506 @@
             --bg: #030712;
             --panel-bg: rgba(17, 24, 39, 0.45);
             --sidebar-bg: rgba(3, 7, 18, 0.88);
+
             --cyan: #00d4ff;
-            --amber: #f59e0b;
             --rose: #f43f5e;
+            --rose-glow: rgba(244, 63, 94, 0.2);
+            --amber: #f59e0b;
             --emerald: #10b981;
             --purple: #a855f7;
+
             --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(244, 63, 94, 0.35);
+
             --t1: rgba(243, 244, 246, 0.95);
             --t2: rgba(156, 163, 175, 0.75);
             --t3: rgba(107, 114, 128, 0.55);
-            --font-sans: 'Geist', sans-serif;
+
+            --font-sans: 'Geist', -apple-system, sans-serif;
             --font-display: 'Instrument Serif', serif;
             --font-mono: 'Geist Mono', monospace;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--bg); color: var(--t1); font-family: var(--font-sans); line-height: 1.6; }
+        body {
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at 80% 20%, rgba(244, 63, 94, 0.08) 0%, rgba(3, 7, 18, 0) 60%),
+                               radial-gradient(circle at 20% 80%, rgba(245, 158, 11, 0.06) 0%, rgba(3, 7, 18, 0) 50%);
+            background-attachment: fixed;
+            color: var(--t1);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+        }
+
         .lang-id .en-only { display: none !important; }
         :not(.lang-id) .id-only { display: none !important; }
 
         .app-container { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
         @media (max-width: 1024px) { .app-container { grid-template-columns: 1fr; } }
 
-        .sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid var(--border); padding: 2rem 1.25rem; background: var(--sidebar-bg); backdrop-filter: blur(20px); }
-        .sidebar-logo .logo-tag { font-family: var(--font-mono); font-size: 10px; color: var(--rose); letter-spacing: 0.12em; text-transform: uppercase; }
+        /* Sidebar */
+        .sidebar {
+            position: sticky; top: 0; height: 100vh; overflow-y: auto;
+            border-right: 1px solid var(--border); padding: 2rem 1.25rem;
+            background: var(--sidebar-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 100;
+        }
+        .sidebar-logo .logo-tag {
+            font-family: var(--font-mono); font-size: 10px; color: var(--rose);
+            letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-bottom: 0.3rem;
+            text-shadow: 0 0 8px var(--rose-glow);
+        }
         .sidebar-logo h2 { font-family: var(--font-display); font-size: 1.75rem; font-weight: 400; color: var(--t1); }
-        .back-link { font-family: var(--font-mono); font-size: 11px; color: var(--t2); text-decoration: none; margin-top: 0.8rem; display: inline-flex; align-items: center; gap: 0.4rem; padding: 4px 10px; border-radius: 6px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); }
-        .lang-toggle { display: flex; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 20px; padding: 2px; margin: 1rem 0; }
-        .lang-btn { flex: 1; padding: 6px 0; text-align: center; font-family: var(--font-mono); font-size: 11px; color: var(--t3); border: none; background: transparent; cursor: pointer; border-radius: 18px; }
-        .lang-btn.active { background: rgba(255, 255, 255, 0.1); color: var(--t1); }
+        .back-link {
+            font-family: var(--font-mono); font-size: 11px; color: var(--t2); text-decoration: none;
+            margin-top: 0.8rem; display: inline-flex; align-items: center; gap: 0.4rem; padding: 4px 10px;
+            border-radius: 6px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); transition: all 0.2s;
+        }
+        .back-link:hover { color: var(--t1); border-color: var(--rose); background: rgba(244, 63, 94, 0.08); }
 
-        .main-content { padding: 3rem 4rem; max-width: 1300px; margin: 0 auto; width: 100%; }
+        .lang-toggle { display: flex; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 20px; padding: 2px; margin: 1rem 0; }
+        .lang-btn { flex: 1; padding: 6px 0; text-align: center; font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--t3); border: none; background: transparent; cursor: pointer; border-radius: 18px; transition: all 0.2s; }
+        .lang-btn.active { background: rgba(255, 255, 255, 0.1); color: var(--t1); border: 1px solid rgba(255, 255, 255, 0.1); }
+
+        .nav-group { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 1.5rem; }
+        .nav-group-title { font-family: var(--font-mono); font-size: 10px; color: var(--t3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; padding-left: 0.5rem; }
+        .nav-link { font-size: 13px; color: var(--t2); text-decoration: none; padding: 8px 12px; border-radius: 8px; transition: all 0.2s; border: 1px solid transparent; }
+        .nav-link:hover { color: var(--t1); background: rgba(255, 255, 255, 0.03); }
+
+        /* Main Content */
+        .main-content { padding: 3rem 4rem; max-width: 1350px; margin: 0 auto; width: 100%; }
         @media (max-width: 768px) { .main-content { padding: 1.5rem 1.25rem; } .sidebar { position: relative; height: auto; } }
 
-        .hero-title { font-family: var(--font-display); font-size: clamp(2.2rem, 4vw, 3.5rem); margin-bottom: 1rem; }
-        .hero-title span { background: linear-gradient(135deg, var(--rose), var(--amber)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero { padding-bottom: 3rem; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 4px 12px; border-radius: 20px; background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); font-family: var(--font-mono); font-size: 11px; color: var(--rose); margin-bottom: 1.25rem; }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 400; line-height: 1.1; margin-bottom: 1rem; }
+        .hero h1 span { font-style: italic; background: linear-gradient(135deg, var(--rose), var(--amber)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .stat-badge-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
-        .stat-pill { font-family: var(--font-mono); font-size: 11px; padding: 6px 14px; border-radius: 20px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); color: var(--cyan); }
+        .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+        .stat-card { background: var(--panel-bg); border: 1px solid var(--border); padding: 1.25rem; border-radius: 12px; backdrop-filter: blur(12px); }
+        .stat-val { font-family: var(--font-mono); font-size: 2rem; font-weight: 700; color: var(--rose); line-height: 1; margin-bottom: 0.4rem; }
+        .stat-lbl { font-size: 11px; color: var(--t2); text-transform: uppercase; letter-spacing: 0.05em; }
 
-        .car-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
-        .car-card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(16px); transition: all 0.2s; }
-        .car-card:hover { border-color: var(--cyan); transform: translateY(-3px); }
-        
-        .car-rank-badge { font-family: var(--font-mono); font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 0.5rem; text-transform: uppercase; }
+        /* Filter Controls */
+        .controls-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+        .search-box { position: relative; flex: 1; min-width: 250px; }
+        .search-box input {
+            width: 100%; background: rgba(17, 24, 39, 0.6); border: 1px solid var(--border); padding: 10px 14px 10px 38px;
+            border-radius: 10px; color: var(--t1); font-family: var(--font-sans); font-size: 13px; outline: none; transition: all 0.2s;
+        }
+        .search-box input:focus { border-color: var(--rose); box-shadow: 0 0 12px var(--rose-glow); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--t3); font-size: 14px; }
+
+        .filter-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); color: var(--t2);
+            font-family: var(--font-mono); font-size: 11px; padding: 6px 12px; border-radius: 20px; cursor: pointer; transition: all 0.2s;
+        }
+        .filter-btn:hover { color: var(--t1); background: rgba(255, 255, 255, 0.06); }
+        .filter-btn.active { background: var(--rose); color: #fff; border-color: var(--rose); font-weight: 600; }
+
+        /* Bento Grid Architecture */
+        .car-bento-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.5rem; margin-bottom: 3.5rem; }
+
+        .car-bento-card {
+            background: var(--panel-bg); border: 1px solid var(--border); border-radius: 20px;
+            padding: 1.75rem; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .car-bento-card:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5); }
+
+        .rank-tag { font-family: var(--font-mono); font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 0.5rem; text-transform: uppercase; }
         .rank-top { background: rgba(245, 158, 11, 0.2); color: var(--amber); border: 1px solid rgba(245, 158, 11, 0.3); }
         .rank-ev { background: rgba(168, 85, 247, 0.2); color: var(--purple); border: 1px solid rgba(168, 85, 247, 0.3); }
         .rank-commercial { background: rgba(16, 185, 129, 0.2); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
 
-        .car-card h3 { font-size: 1.3rem; color: var(--t1); margin-bottom: 0.25rem; }
-        .car-sales { font-family: var(--font-mono); font-size: 11px; color: var(--cyan); margin-bottom: 0.75rem; }
-        .spec-list { font-size: 12px; color: var(--t2); line-height: 1.65; }
-        .spec-list strong { color: var(--t1); }
+        .car-bento-card h3 { font-size: 1.4rem; font-weight: 600; color: var(--t1); margin-bottom: 0.2rem; }
+        .car-sub { font-family: var(--font-mono); font-size: 11px; color: var(--cyan); margin-bottom: 0.85rem; }
+
+        .linkage-box { background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 12px; }
+        .linkage-box div { margin-bottom: 0.3rem; }
+        .linkage-box strong { color: var(--t1); }
+
+        .road-note { font-size: 12px; color: var(--t2); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 0.85rem; }
+
+        /* Aftermarket Tuning Bento */
+        .tuning-section { background: linear-gradient(135deg, rgba(244, 63, 94, 0.1), rgba(17, 24, 39, 0.7)); border: 1px solid var(--rose); border-radius: 20px; padding: 2rem; margin-bottom: 3.5rem; }
+
+        /* Subpage Footer Switcher */
+        .subpage-footer-nav {
+            border-top: 1px solid var(--border); padding-top: 3rem; margin-top: 4rem;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+        }
+        @media (max-width: 640px) { .subpage-footer-nav { grid-template-columns: 1fr; } }
+        .switcher-card {
+            background: var(--panel-bg); border: 1px solid var(--border); padding: 1.5rem; border-radius: 16px;
+            text-decoration: none; transition: all 0.3s; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .switcher-card:hover { border-color: var(--cyan); transform: translateY(-3px); }
+        .switcher-lbl { font-family: var(--font-mono); font-size: 10px; color: var(--t3); text-transform: uppercase; }
+        .switcher-title { font-size: 1.2rem; font-weight: 600; color: var(--t1); margin-top: 0.4rem; }
     </style>
 </head>
 <body>
     <div class="app-container">
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo">
-                <span class="logo-tag">SUBPAGE // 03</span>
+                <span class="logo-tag">SUBPAGE MODULE 03</span>
                 <h2>IDN <span>Database</span></h2>
-                <a href="../car-suspension.html" class="back-link">← <span class="en-only">Main Compendium</span><span class="id-only">Kompendium Utama</span></a>
+                <a href="../car-suspension.html" class="back-link">← <span class="en-only">Back to Main Hub</span><span class="id-only">Kembali ke Hub Utama</span></a>
             </div>
+
             <div class="lang-toggle">
                 <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
                 <button class="lang-btn" data-lang="id" onclick="setLanguage('id')">ID</button>
             </div>
+
+            <nav class="nav-group">
+                <span class="nav-group-title"><span class="en-only">Navigation</span><span class="id-only">Navigasi</span></span>
+                <a href="#models" class="nav-link">🚗 15+ Top Market Models</a>
+                <a href="#aftermarket" class="nav-link">🛠️ Indonesian Road Tuning</a>
+            </nav>
+
+            <nav class="nav-group" style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+                <span class="nav-group-title" style="color:var(--cyan);"><span class="en-only">📂 Switch Subpages</span><span class="id-only">📂 Ganti Subpage</span></span>
+                <a href="active-tech.html" class="nav-link" style="color:var(--purple);">⚡ <span class="en-only">2024-26 Active Tech ↗</span><span class="id-only">Teknologi Aktif ↗</span></a>
+                <a href="ice-vs-ev.html" class="nav-link" style="color:var(--emerald);">🔋 <span class="en-only">ICE vs EV Dynamics ↗</span><span class="id-only">Dinamika ICE vs EV ↗</span></a>
+            </nav>
         </aside>
 
+        <!-- Main Content -->
         <main class="main-content">
-            <h1 class="hero-title">
-                <span class="en-only">Indonesia 2026 <span>Top Selling Cars</span> Suspension Database</span>
-                <span class="id-only">Database Suspensi <span>Mobil Terlaris</span> Indonesia 2026</span>
-            </h1>
-            <p style="color:var(--t2); font-size:1.1rem; margin-bottom:1.5rem;">
-                <span class="en-only">Technical suspension specifications and platform engineering analysis for the top-selling cars in Indonesia (based on official GAIKINDO 2025–2026 sales rankings).</span>
-                <span class="id-only">Spesifikasi teknis suspensi dan analisis sasis untuk mobil terlaris di Indonesia (berdasarkan data penjualan resmi GAIKINDO 2025–2026).</span>
-            </p>
+            <section class="hero">
+                <div class="hero-badge">🇮🇩 GAIKINDO 2025–2026 OFFICIAL SALES DATABASE</div>
+                <h1>
+                    <span class="en-only">Indonesia 2026 <span>Top Selling Cars</span> Suspension Guide</span>
+                    <span class="id-only">Panduan Suspensi <span>Mobil Terlaris</span> Indonesia 2026</span>
+                </h1>
+                <p style="color:var(--t2); font-size:1.15rem; max-width:850px;">
+                    <span class="en-only">Comprehensive technical suspension specifications and chassis architecture analysis for the top-selling cars in Indonesia (GAIKINDO 2025–2026 sales rankings).</span>
+                    <span class="id-only">Spesifikasi teknis suspensi dan analisis arsitektur sasis untuk mobil-mobil terlaris di Indonesia berdasarkan urutan penjualan resmi GAIKINDO 2025–2026.</span>
+                </p>
 
-            <div class="stat-badge-row">
-                <span class="stat-pill">📊 GAIKINDO 2025–2026 Official Data</span>
-                <span class="stat-pill">🚗 15+ Top Market Models Mapped</span>
-                <span class="stat-pill">🛠️ Front & Rear Linkage Specs</span>
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <div class="stat-val">15+</div>
+                        <div class="stat-lbl"><span class="en-only">Top Market Models Mapped</span><span class="id-only">Model Mobil Terpetakan</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val">61.1k</div>
+                        <div class="stat-lbl"><span class="en-only">Innova #1 Sales Benchmark</span><span class="id-only">Penjualan Innova Terlaris</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val">35%</div>
+                        <div class="stat-lbl"><span class="en-only">BYD NEV Market Dominance</span><span class="id-only">Pangsa Pasar EV BYD</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val">220 mm</div>
+                        <div class="stat-lbl"><span class="en-only">Avg SUV Flood Ground Clearance</span><span class="id-only">Ground Clearance Banjir</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Search & Filters -->
+            <div id="models" class="controls-row">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="carSearchInput" placeholder="Search model (e.g., Innova, Avanza, Ioniq, BYD, Fortuner)..." onkeyup="filterCars()">
+                </div>
+                <div class="filter-tags">
+                    <button class="filter-btn active" onclick="filterSeg('all', this)">All Categories</button>
+                    <button class="filter-btn" onclick="filterSeg('mpv', this)">MPV</button>
+                    <button class="filter-btn" onclick="filterSeg('suv', this)">SUV</button>
+                    <button class="filter-btn" onclick="filterSeg('ev', this)">EV</button>
+                    <button class="filter-btn" onclick="filterSeg('commercial', this)">Commercial / Pick-Up</button>
+                </div>
             </div>
 
-            <div class="car-grid">
+            <!-- Bento Card Grid -->
+            <div class="car-bento-grid" id="carBentoGrid">
+
                 <!-- 1. Innova Zenix & Reborn -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-top">🏆 #1 BEST SELLER (61,164 UNITS)</span>
-                    <h3>Toyota Kijang Innova (Zenix & Reborn)</h3>
-                    <div class="car-sales">Segment: Medium MPV // Monocoque TNGA-C (Zenix) & IMV Ladder (Reborn)</div>
-                    <div class="spec-list">
-                        <strong>Front:</strong> MacPherson Strut with Stabilizer (Zenix) / Double Wishbone (Reborn)<br>
-                        <strong>Rear:</strong> Torsion Beam Semi-Independent (Zenix) / 4-Link Rigid Axle with Lateral Rod (Reborn)<br>
-                        <strong>Indonesian Road Notes:</strong> The Zenix monocoque chassis revolutionized 7-seater toll road comfort, while the Reborn ladder frame remains undefeated for high-payload rural transport.
+                <div class="car-bento-card" data-cat="mpv">
+                    <div>
+                        <span class="rank-tag rank-top">🏆 #1 BEST SELLER (61,164 UNITS)</span>
+                        <h3>Toyota Kijang Innova</h3>
+                        <div class="car-sub">TNGA-C Monocoque (Zenix) & IMV Ladder Frame (Reborn)</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> MacPherson Strut (Zenix) / Double Wishbone (Reborn)</div>
+                            <div><strong>Rear:</strong> Torsion Beam (Zenix) / 4-Link Rigid Axle (Reborn)</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> TNGA-C Zenix monocoque chassis revolutionized 7-seater toll road ride comfort, while Reborn ladder frame remains undefeated for heavy rural payloads.
                     </div>
                 </div>
 
-                <!-- 2. Toyota Avanza & Veloz -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-top">🥇 #2 BEST SELLER (40,148 UNITS)</span>
-                    <h3>Toyota Avanza & Veloz (incl. Hybrid)</h3>
-                    <div class="car-sales">Segment: Low MPV // DNGA Front-Wheel Drive Monocoque</div>
-                    <div class="spec-list">
-                        <strong>Front:</strong> MacPherson Strut with Coil Spring & Stabilizer<br>
-                        <strong>Rear:</strong> Torsion Beam Semi-Independent<br>
-                        <strong>Indonesian Road Notes:</strong> Shifted from RWD rigid axle to FWD DNGA torsion beam, dramatically reducing unsprung mass and increasing rear cabin legroom for Indonesian families.
+                <!-- 2. Avanza & Veloz -->
+                <div class="car-bento-card" data-cat="mpv">
+                    <div>
+                        <span class="rank-tag rank-top">🥇 #2 BEST SELLER (40,148 UNITS)</span>
+                        <h3>Toyota Avanza & Veloz Hybrid</h3>
+                        <div class="car-sub">Low MPV // DNGA Front-Wheel Drive Monocoque</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> MacPherson Strut with Coil Spring & Stabilizer</div>
+                            <div><strong>Rear:</strong> Torsion Beam Semi-Independent</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> Shifted from RWD rigid axle to FWD DNGA torsion beam, dramatically reducing unsprung mass and increasing rear cabin legroom for Indonesian families.
                     </div>
                 </div>
 
-                <!-- 3. Daihatsu Sigra & Toyota Calya -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-top">🥈 TOP LCGC 7-SEATER (34,452 UNITS)</span>
-                    <h3>Daihatsu Sigra & Toyota Calya</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> MacPherson Strut with Coil Spring<br>
-                        <strong>Rear:</strong> Torsion Beam with Semi-Independent Trailing Arm<br>
-                        <strong>Indonesian Road Notes:</strong> Engineered with reinforced rear coil springs to prevent excessive rear sagging when carrying 7 passengers with luggage.
+                <!-- 3. Sigra & Calya -->
+                <div class="car-bento-card" data-cat="mpv">
+                    <div>
+                        <span class="rank-tag rank-top">🥈 TOP LCGC 7-SEATER (34,452 UNITS)</span>
+                        <h3>Daihatsu Sigra & Toyota Calya</h3>
+                        <div class="car-sub">LCGC 7-Seater // Front-Wheel Drive</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> MacPherson Strut with Coil Spring</div>
+                            <div><strong>Rear:</strong> Torsion Beam with Semi-Independent Trailing Arm</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> Engineered with reinforced rear coil springs to prevent excessive rear sagging when carrying 7 passengers with luggage.
                     </div>
                 </div>
 
-                <!-- 4. Honda Brio Satya & RS -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-top">🥉 TOP CITY HATCHBACK (33,233 UNITS)</span>
-                    <h3>Honda Brio (Satya & RS)</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> MacPherson Strut with Stabilizer<br>
-                        <strong>Rear:</strong> H-Shape Torsion Beam<br>
-                        <strong>Indonesian Road Notes:</strong> Stiff spring and damper tuning gives class-leading agile handling in city traffic, though slightly firm over rough potholes.
+                <!-- 4. Honda Brio -->
+                <div class="car-bento-card" data-cat="mpv">
+                    <div>
+                        <span class="rank-tag rank-top">🥉 TOP CITY HATCHBACK (33,233 UNITS)</span>
+                        <h3>Honda Brio (Satya & RS)</h3>
+                        <div class="car-sub">City Hatchback / LCGC</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> MacPherson Strut with Stabilizer Bar</div>
+                            <div><strong>Rear:</strong> H-Shape Torsion Beam</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> Stiff spring and damper tuning gives class-leading agile handling in city traffic, though slightly firm over rough potholes.
                     </div>
                 </div>
 
-                <!-- 5. Toyota Rush & Daihatsu Terios -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-top">🏅 TOP COMPACT SUV (16,024 UNITS H1)</span>
-                    <h3>Toyota Rush & Daihatsu Terios</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> MacPherson Strut with Stabilizer<br>
-                        <strong>Rear:</strong> 5-Link Rigid Axle with Coil Spring & Stabilizer Bar<br>
-                        <strong>Indonesian Road Notes:</strong> RWD 5-link rigid axle provides high ground clearance (220mm) and high payload stability for steep incline climbs in suburban regions.
+                <!-- 5. Toyota Rush & Terios -->
+                <div class="car-bento-card" data-cat="suv">
+                    <div>
+                        <span class="rank-tag rank-top">🏅 TOP COMPACT 7-SEAT SUV</span>
+                        <h3>Toyota Rush & Daihatsu Terios</h3>
+                        <div class="car-sub">Compact SUV // Rear-Wheel Drive</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> MacPherson Strut with Stabilizer</div>
+                            <div><strong>Rear:</strong> 5-Link Rigid Axle with Coil Spring & Stabilizer</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> RWD 5-link rigid axle provides high ground clearance (220mm) and high payload stability for steep incline climbs in suburban regions.
                     </div>
                 </div>
 
-                <!-- 6. Mitsubishi Xpander & Xpander Cross -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-top">⭐ COMFORT BENCHMARK LOW MPV</span>
-                    <h3>Mitsubishi Xpander & Xpander Cross</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> MacPherson Strut with High Performance Valve (Lancer Tuning)<br>
-                        <strong>Rear:</strong> Torsion Beam with Larger Diameter Rear Dampers<br>
-                        <strong>Indonesian Road Notes:</strong> Uses rear shock absorbers derived from the Pajero Sport, giving it top-tier ride isolation over gravel and damaged tarmac.
+                <!-- 6. Mitsubishi Xpander -->
+                <div class="car-bento-card" data-cat="mpv">
+                    <div>
+                        <span class="rank-tag rank-top">⭐ COMFORT BENCHMARK LOW MPV</span>
+                        <h3>Mitsubishi Xpander & Xpander Cross</h3>
+                        <div class="car-sub">Low MPV / Crossover</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> MacPherson Strut with Lancer High-Performance Valves</div>
+                            <div><strong>Rear:</strong> Torsion Beam with Large-Diameter Rear Dampers</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> Uses rear shock absorbers derived from the Pajero Sport, giving it top-tier ride isolation over gravel and damaged tarmac.
                     </div>
                 </div>
 
-                <!-- 7. Daihatsu Gran Max & Suzuki Carry Pick Up -->
-                <div class="car-rank-commercial car-card">
-                    <span class="car-rank-badge rank-commercial">🚚 #1 COMMERCIAL VEHICLE (40,761 UNITS)</span>
-                    <h3>Daihatsu Gran Max & Suzuki Carry Pick Up</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> MacPherson Strut (Gran Max) / MacPherson Strut with Heavy Coil (Carry)<br>
-                        <strong>Rear:</strong> Leaf Spring Rigid Axle (3 to 5 Leaf Pack)<br>
-                        <strong>Indonesian Road Notes:</strong> Heavy-duty leaf springs designed specifically for 1.5 to 2.0-ton commercial cargo payloads across Indonesian traditional markets.
+                <!-- 7. Gran Max & Carry -->
+                <div class="car-bento-card" data-cat="commercial">
+                    <div>
+                        <span class="rank-tag rank-commercial">🚚 #1 COMMERCIAL VEHICLE (40,761 UNITS)</span>
+                        <h3>Daihatsu Gran Max & Suzuki Carry</h3>
+                        <div class="car-sub">Light Commercial Pick-Up & Van</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> MacPherson Strut / Heavy-Duty Coil</div>
+                            <div><strong>Rear:</strong> Heavy-Duty Leaf Spring Rigid Axle (3-5 Leaf Pack)</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> Heavy-duty leaf springs designed specifically for 1.5 to 2.0-ton commercial cargo payloads across Indonesian traditional markets.
                     </div>
                 </div>
 
-                <!-- 8. BYD Atto 3, Dolphin & Atto 1 (Seagull) -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-ev">⚡ #1 BEST SELLING EV BRAND (44,342 UNITS)</span>
-                    <h3>BYD Atto 3, Dolphin & Atto 1 (Seagull)</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> MacPherson Strut with Hydraulic Bushings<br>
-                        <strong>Rear:</strong> Multi-Link Independent (Atto 3) / Torsion Beam (Dolphin & Atto 1)<br>
-                        <strong>Indonesian Road Notes:</strong> BYD dominated 35% of Indonesia's NEV market in 2025–2026. The Atto 3 multi-link rear handles 1.7-ton battery mass with plush damping.
+                <!-- 8. BYD Atto 3, Dolphin, Seagull -->
+                <div class="car-bento-card" data-cat="ev">
+                    <div>
+                        <span class="rank-tag rank-ev">⚡ #1 BEST SELLING EV BRAND</span>
+                        <h3>BYD Atto 3, Dolphin & Atto 1 (Seagull)</h3>
+                        <div class="car-sub">Battery Electric Vehicle (BEV)</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> MacPherson Strut with Hydro-Bushing</div>
+                            <div><strong>Rear:</strong> Multi-Link Independent (Atto 3) / Torsion Beam (Dolphin & Atto 1)</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> BYD dominated 35% of Indonesia's NEV market. The Atto 3 multi-link rear handles 1.7-ton battery mass with plush damping.
                     </div>
                 </div>
 
-                <!-- 9. BYD Seal Performance EV -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-ev">⚡ PERFORMANCE EV SEDAN</span>
-                    <h3>BYD Seal (e-Platform 3.0 & CTB)</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> Double Wishbone Independent<br>
-                        <strong>Rear:</strong> 5-Link Independent Multi-Link + DiSus-C Damping<br>
-                        <strong>Indonesian Road Notes:</strong> Cell-to-Body (CTB) battery integration paired with dynamic electronic dampers (DiSus-C) for maximum high-speed toll road stability.
+                <!-- 9. BYD Seal -->
+                <div class="car-bento-card" data-cat="ev">
+                    <div>
+                        <span class="rank-tag rank-ev">⚡ PERFORMANCE EV SEDAN</span>
+                        <h3>BYD Seal (e-Platform 3.0 & CTB)</h3>
+                        <div class="car-sub">Performance EV Sedan</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> Double Wishbone Independent</div>
+                            <div><strong>Rear:</strong> 5-Link Independent Multi-Link + DiSus-C Damping</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> Cell-to-Body (CTB) battery integration paired with dynamic electronic dampers (DiSus-C) for maximum high-speed toll road stability.
                     </div>
                 </div>
 
-                <!-- 10. Hyundai Ioniq 5 & Ioniq 6 -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-ev">⚡ LOCALLY ASSEMBLED EV (E-GMP)</span>
-                    <h3>Hyundai Ioniq 5 & Ioniq 6</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> MacPherson Strut with Hydro-Bushing<br>
-                        <strong>Rear:</strong> 5-Link Multi-Link with Integrated Drive Axle (IDA)<br>
-                        <strong>Indonesian Road Notes:</strong> Assembled in Cikarang. The Integrated Drive Axle combines wheel bearing and drive shaft into one unit to withstand 2.1-ton EV mass.
+                <!-- 10. Hyundai Ioniq 5 & 6 -->
+                <div class="car-bento-card" data-cat="ev">
+                    <div>
+                        <span class="rank-tag rank-ev">⚡ LOCALLY ASSEMBLED EV</span>
+                        <h3>Hyundai Ioniq 5 & Ioniq 6</h3>
+                        <div class="car-sub">E-GMP Dedicated EV Platform</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> MacPherson Strut with Hydro-Bushing</div>
+                            <div><strong>Rear:</strong> 5-Link Multi-Link with Integrated Drive Axle (IDA)</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> Assembled in Cikarang. The Integrated Drive Axle combines wheel bearing and drive shaft into one unit to withstand 2.1-ton EV mass.
                     </div>
                 </div>
 
-                <!-- 11. Wuling Air EV, Binguo EV & Cloud EV -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-ev">⚡ URBAN MICRO & COMPACT EV</span>
-                    <h3>Wuling Air EV, Binguo EV & Cloud EV</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> MacPherson Strut<br>
-                        <strong>Rear:</strong> 3-Link Coil Spring (Air EV) / Torsion Beam (Binguo & Cloud EV)<br>
-                        <strong>Indonesian Road Notes:</strong> Extremely nimble for narrow urban alleyways in Jakarta, Surabaya, and Bandung.
+                <!-- 11. Wuling Air EV & Binguo -->
+                <div class="car-bento-card" data-cat="ev">
+                    <div>
+                        <span class="rank-tag rank-ev">⚡ URBAN MICRO EV</span>
+                        <h3>Wuling Air EV, Binguo EV & Cloud EV</h3>
+                        <div class="car-sub">Urban Micro & Compact BEV</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> MacPherson Strut</div>
+                            <div><strong>Rear:</strong> 3-Link Coil Spring (Air EV) / Torsion Beam (Binguo)</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> Extremely nimble for narrow urban alleyways in Jakarta, Surabaya, and Bandung.
                     </div>
                 </div>
 
                 <!-- 12. Jaecoo J5 EV & Chery Omoda E5 -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-ev">⚡ RISING STAR EV (TOP 8 IN 2026)</span>
-                    <h3>Jaecoo J5 EV & Chery Omoda E5</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> MacPherson Strut with Stabilizer<br>
-                        <strong>Rear:</strong> Multi-Link Independent<br>
-                        <strong>Indonesian Road Notes:</strong> Jaecoo J5 surged into GAIKINDO top 8 sales in 2026 thanks to independent multi-link rear suspension tuning at an accessible price point.
+                <div class="car-bento-card" data-cat="ev">
+                    <div>
+                        <span class="rank-tag rank-ev">⚡ RISING STAR EV (TOP 8 IN 2026)</span>
+                        <h3>Jaecoo J5 EV & Chery Omoda E5</h3>
+                        <div class="car-sub">Compact Electric SUV</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> MacPherson Strut with Stabilizer</div>
+                            <div><strong>Rear:</strong> Multi-Link Independent</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> Jaecoo J5 surged into GAIKINDO top 8 sales in 2026 thanks to independent multi-link rear suspension tuning at an accessible price point.
                     </div>
                 </div>
 
                 <!-- 13. Honda HR-V & WR-V -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-top">🔥 POPULAR COMPACT CROSSOVER</span>
-                    <h3>Honda HR-V & WR-V</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> MacPherson Strut with Stabilizer<br>
-                        <strong>Rear:</strong> H-Shape Torsion Beam<br>
-                        <strong>Indonesian Road Notes:</strong> High ground clearance (220mm on WR-V) paired with stiff anti-roll bars prevents body roll during rapid lane changes.
+                <div class="car-bento-card" data-cat="suv">
+                    <div>
+                        <span class="rank-tag rank-top">🔥 POPULAR COMPACT CROSSOVER</span>
+                        <h3>Honda HR-V & WR-V</h3>
+                        <div class="car-sub">Compact Crossover SUV</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> MacPherson Strut with Stabilizer Bar</div>
+                            <div><strong>Rear:</strong> H-Shape Torsion Beam</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> High ground clearance (220mm on WR-V) paired with stiff anti-roll bars prevents body roll during rapid lane changes.
                     </div>
                 </div>
 
-                <!-- 14. Toyota Fortuner & Mitsubishi Pajero Sport -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-top">🏆 LADDER FRAME LADDER SUV BENCHMARK</span>
-                    <h3>Toyota Fortuner & Mitsubishi Pajero Sport</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> Double Wishbone with Coil Spring & Stabilizer<br>
-                        <strong>Rear:</strong> 4-Link Rigid Axle with Lateral Rod (Fortuner) / 3-Link Coil Spring (Pajero Sport)<br>
-                        <strong>Indonesian Road Notes:</strong> Iconic 7-seater ladder frame SUVs built to conquer tropical floods, deep mud, and long-distance intercity toll roads.
+                <!-- 14. Fortuner & Pajero Sport -->
+                <div class="car-bento-card" data-cat="suv">
+                    <div>
+                        <span class="rank-tag rank-top">🏆 LADDER FRAME SUV BENCHMARK</span>
+                        <h3>Toyota Fortuner & Mitsubishi Pajero Sport</h3>
+                        <div class="car-sub">Mid-Size Ladder Frame SUV</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> Double Wishbone with Coil Spring & Stabilizer</div>
+                            <div><strong>Rear:</strong> 4-Link Rigid Axle (Fortuner) / 3-Link Coil (Pajero Sport)</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> Iconic 7-seater ladder frame SUVs built to conquer tropical floods, deep mud, and long-distance intercity toll roads.
                     </div>
                 </div>
 
-                <!-- 15. Suzuki Jimny 3-Door & 5-Door -->
-                <div class="car-card">
-                    <span class="car-rank-badge rank-top">⛰️ LEGENDARY 4X4 OFF-ROADER</span>
-                    <h3>Suzuki Jimny 3-Door & 5-Door</h3>
-                    <div class="spec-list">
-                        <strong>Front:</strong> 3-Link Rigid Axle with Coil Spring<br>
-                        <strong>Rear:</strong> 3-Link Rigid Axle with Coil Spring<br>
-                        <strong>Indonesian Road Notes:</strong> Solid live axles front and rear deliver extreme axle articulation over rocks, mud, and steep volcanic trails in Java and Bali.
+                <!-- 15. Suzuki Jimny -->
+                <div class="car-bento-card" data-cat="suv">
+                    <div>
+                        <span class="rank-tag rank-top">⛰️ LEGENDARY 4X4 OFF-ROADER</span>
+                        <h3>Suzuki Jimny 3-Door & 5-Door</h3>
+                        <div class="car-sub">Compact 4x4 Off-Roader</div>
+                        <div class="linkage-box">
+                            <div><strong>Front:</strong> 3-Link Rigid Axle with Coil Spring</div>
+                            <div><strong>Rear:</strong> 3-Link Rigid Axle with Coil Spring</div>
+                        </div>
+                    </div>
+                    <div class="road-note">
+                        <strong>Indonesian Road Note:</strong> Solid live axles front and rear deliver extreme axle articulation over rocks, mud, and steep volcanic trails in Java and Bali.
                     </div>
                 </div>
+            </div>
+
+            <!-- AFTERMARKET TUNING SECTION -->
+            <div id="aftermarket" class="tuning-section">
+                <span class="card-tag-mono" style="color:var(--rose);">INDONESIAN ROAD TUNING & AFTERMARKET GUIDE</span>
+                <h3 style="font-size:1.6rem; color:var(--t1); margin-bottom:0.75rem;">Optimizing Suspensions for Indonesian Road Conditions</h3>
+                <p style="font-size:0.95rem; color:var(--t2); margin-bottom:1.25rem;">
+                    Indonesian roads present unique suspension challenges: deep potholes, uneven expansion joints on elevated toll roads, heavy 7-passenger cargo loads, and tropical flood waters. Popular aftermarket shock absorber and spring upgrades in Indonesia include:
+                </p>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1rem;">
+                    <div style="background:rgba(0, 0, 0, 0.4); border:1px solid rgba(255, 255, 255, 0.05); padding:1rem; border-radius:12px;">
+                        <div style="font-weight:700; color:var(--rose); margin-bottom:0.2rem;">Tein EnduraPro (H.B.O. Tech)</div>
+                        <div style="font-size:12px; color:var(--t2);">Features Hydraulic Bump Stoppers (H.B.O.) to prevent violent bottoming out when hitting severe potholes at speed. Highly popular for Innova Zenix and Avanza.</div>
+                    </div>
+                    <div style="background:rgba(0, 0, 0, 0.4); border:1px solid rgba(255, 255, 255, 0.05); padding:1rem; border-radius:12px;">
+                        <div style="font-weight:700; color:var(--amber); margin-bottom:0.2rem;">Bilstein B6 / B8 Yellow Dampers</div>
+                        <div style="font-size:12px; color:var(--t2);">German mono-tube gas dampers providing firm body control, reducing high-speed float on Trans-Java toll roads for Fortuner and Pajero Sport.</div>
+                    </div>
+                    <div style="background:rgba(0, 0, 0, 0.4); border:1px solid rgba(255, 255, 255, 0.05); padding:1rem; border-radius:12px;">
+                        <div style="font-weight:700; color:var(--emerald); margin-bottom:0.2rem;">Ironman 4x4 / Old Man Emu (OME)</div>
+                        <div style="font-size:12px; color:var(--t2);">Heavy-duty 2-inch lift springs and foam-cell shock absorbers built for Jimny, Hilux, and Fortuner off-road plantation routes.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subpage Footer Navigation -->
+            <div class="subpage-footer-nav">
+                <a href="active-tech.html" class="switcher-card" style="border-left:4px solid var(--purple);">
+                    <div>
+                        <div class="switcher-lbl">PREVIOUS SUBPAGE // MODULE 01</div>
+                        <div class="switcher-title">← 2024–2026 Active & Adaptive Suspension Tech</div>
+                    </div>
+                    <div style="font-size:12px; color:var(--t2); margin-top:0.5rem;">Porsche Active Ride, BYD DiSus, ClearMotion & 800V hydraulics.</div>
+                </a>
+                <a href="ice-vs-ev.html" class="switcher-card" style="border-left:4px solid var(--emerald);">
+                    <div>
+                        <div class="switcher-lbl">PREVIOUS SUBPAGE // MODULE 02</div>
+                        <div class="switcher-title">ICE vs EV Chassis & Suspension Dynamics →</div>
+                    </div>
+                    <div style="font-size:12px; color:var(--t2); margin-top:0.5rem;">Battery weight penalty, low center of gravity physics & NVH isolation.</div>
+                </a>
             </div>
         </main>
     </div>
@@ -310,6 +560,30 @@
         }
         const savedLang = localStorage.getItem('lolyeah_lang');
         if (savedLang) setLanguage(savedLang);
+
+        let currentSeg = 'all';
+        function filterSeg(seg, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentSeg = seg;
+            filterCars();
+        }
+
+        function filterCars() {
+            const q = document.getElementById('carSearchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.car-bento-card');
+            cards.forEach(card => {
+                const cat = card.dataset.cat;
+                const txt = card.innerText.toLowerCase();
+                const matchSeg = currentSeg === 'all' || cat === currentSeg;
+                const matchQ = txt.includes(q);
+                if (matchSeg && matchQ) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
     </script>
 </body>
 </html>

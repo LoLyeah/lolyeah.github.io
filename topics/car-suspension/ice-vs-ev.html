@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <!-- BEGIN ANTIGRAVITY SEO OPTIMIZATION -->
-    <meta name="description" content="A comprehensive analysis of ICE vs EV suspension engineering differences. Examines battery curb weight penalties, low center of gravity, instant torque anti-squat geometry, NVH isolation, and bushing wear rates.">
+    <meta name="description" content="A comprehensive engineering analysis of ICE vs EV suspension differences. Examines battery curb weight penalties, low center of gravity physics, instant torque anti-squat geometry, NVH subframe isolation, and bushing wear rates.">
     <meta name="keywords" content="EV suspension dynamics, ICE vs EV chassis, battery weight suspension, anti squat geometry EV, EV ride comfort, NVH hydraulic bushings, EV tire wear, skateboard EV chassis">
     <meta name="author" content="LoLyeah">
     <meta name="robots" content="index, follow">
@@ -37,6 +37,7 @@
     <title class="en-only">ICE vs EV Suspension Engineering | LoLyeah</title>
     <title class="id-only">Rekayasa Suspensi ICE vs EV | LoLyeah</title>
 
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -46,128 +47,281 @@
             --bg: #030712;
             --panel-bg: rgba(17, 24, 39, 0.45);
             --sidebar-bg: rgba(3, 7, 18, 0.88);
+
             --cyan: #00d4ff;
             --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.2);
             --amber: #f59e0b;
+            --purple: #a855f7;
             --rose: #f43f5e;
+
             --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(16, 185, 129, 0.35);
+
             --t1: rgba(243, 244, 246, 0.95);
             --t2: rgba(156, 163, 175, 0.75);
             --t3: rgba(107, 114, 128, 0.55);
-            --font-sans: 'Geist', sans-serif;
+
+            --font-sans: 'Geist', -apple-system, sans-serif;
             --font-display: 'Instrument Serif', serif;
             --font-mono: 'Geist Mono', monospace;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--bg); color: var(--t1); font-family: var(--font-sans); line-height: 1.6; }
+        body {
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.08) 0%, rgba(3, 7, 18, 0) 60%),
+                               radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.06) 0%, rgba(3, 7, 18, 0) 50%);
+            background-attachment: fixed;
+            color: var(--t1);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+        }
+
         .lang-id .en-only { display: none !important; }
         :not(.lang-id) .id-only { display: none !important; }
 
         .app-container { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
         @media (max-width: 1024px) { .app-container { grid-template-columns: 1fr; } }
 
-        .sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid var(--border); padding: 2rem 1.25rem; background: var(--sidebar-bg); backdrop-filter: blur(20px); }
-        .sidebar-logo .logo-tag { font-family: var(--font-mono); font-size: 10px; color: var(--emerald); letter-spacing: 0.12em; text-transform: uppercase; }
+        /* Sidebar */
+        .sidebar {
+            position: sticky; top: 0; height: 100vh; overflow-y: auto;
+            border-right: 1px solid var(--border); padding: 2rem 1.25rem;
+            background: var(--sidebar-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 100;
+        }
+        .sidebar-logo .logo-tag {
+            font-family: var(--font-mono); font-size: 10px; color: var(--emerald);
+            letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-bottom: 0.3rem;
+            text-shadow: 0 0 8px var(--emerald-glow);
+        }
         .sidebar-logo h2 { font-family: var(--font-display); font-size: 1.75rem; font-weight: 400; color: var(--t1); }
-        .back-link { font-family: var(--font-mono); font-size: 11px; color: var(--t2); text-decoration: none; margin-top: 0.8rem; display: inline-flex; align-items: center; gap: 0.4rem; padding: 4px 10px; border-radius: 6px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); }
-        .lang-toggle { display: flex; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 20px; padding: 2px; margin: 1rem 0; }
-        .lang-btn { flex: 1; padding: 6px 0; text-align: center; font-family: var(--font-mono); font-size: 11px; color: var(--t3); border: none; background: transparent; cursor: pointer; border-radius: 18px; }
-        .lang-btn.active { background: rgba(255, 255, 255, 0.1); color: var(--t1); }
+        .back-link {
+            font-family: var(--font-mono); font-size: 11px; color: var(--t2); text-decoration: none;
+            margin-top: 0.8rem; display: inline-flex; align-items: center; gap: 0.4rem; padding: 4px 10px;
+            border-radius: 6px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); transition: all 0.2s;
+        }
+        .back-link:hover { color: var(--t1); border-color: var(--emerald); background: rgba(16, 185, 129, 0.08); }
 
-        .main-content { padding: 3rem 4rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .lang-toggle { display: flex; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 20px; padding: 2px; margin: 1rem 0; }
+        .lang-btn { flex: 1; padding: 6px 0; text-align: center; font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--t3); border: none; background: transparent; cursor: pointer; border-radius: 18px; transition: all 0.2s; }
+        .lang-btn.active { background: rgba(255, 255, 255, 0.1); color: var(--t1); border: 1px solid rgba(255, 255, 255, 0.1); }
+
+        .nav-group { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 1.5rem; }
+        .nav-group-title { font-family: var(--font-mono); font-size: 10px; color: var(--t3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; padding-left: 0.5rem; }
+        .nav-link { font-size: 13px; color: var(--t2); text-decoration: none; padding: 8px 12px; border-radius: 8px; transition: all 0.2s; border: 1px solid transparent; }
+        .nav-link:hover { color: var(--t1); background: rgba(255, 255, 255, 0.03); }
+
+        /* Main Content */
+        .main-content { padding: 3rem 4rem; max-width: 1300px; margin: 0 auto; width: 100%; }
         @media (max-width: 768px) { .main-content { padding: 1.5rem 1.25rem; } .sidebar { position: relative; height: auto; } }
 
-        .hero-title { font-family: var(--font-display); font-size: clamp(2.2rem, 4vw, 3.5rem); margin-bottom: 1rem; }
-        .hero-title span { background: linear-gradient(135deg, var(--emerald), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .deep-card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; margin-bottom: 2rem; }
-        .deep-card h3 { font-family: var(--font-mono); font-size: 1.25rem; color: var(--emerald); margin-bottom: 0.75rem; }
-        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem; }
-        @media (max-width: 640px) { .compare-grid { grid-template-columns: 1fr; } }
-        .compare-box { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 12px; }
-        .compare-box h4 { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.5rem; }
+        .hero { padding-bottom: 3rem; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 4px 12px; border-radius: 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); font-family: var(--font-mono); font-size: 11px; color: var(--emerald); margin-bottom: 1.25rem; }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 400; line-height: 1.1; margin-bottom: 1rem; }
+        .hero h1 span { font-style: italic; background: linear-gradient(135deg, var(--emerald), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+        .stat-card { background: var(--panel-bg); border: 1px solid var(--border); padding: 1.25rem; border-radius: 12px; backdrop-filter: blur(12px); }
+        .stat-val { font-family: var(--font-mono); font-size: 2rem; font-weight: 700; color: var(--emerald); line-height: 1; margin-bottom: 0.4rem; }
+        .stat-lbl { font-size: 11px; color: var(--t2); text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* Bento Grid Architecture */
+        .bento-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; margin-bottom: 3.5rem; }
+        @media (max-width: 1024px) { .bento-grid { grid-template-columns: 1fr; } }
+
+        .bento-card {
+            background: var(--panel-bg); border: 1px solid var(--border); border-radius: 20px;
+            padding: 2rem; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden;
+        }
+        .bento-card:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5); }
+        .bento-col-12 { grid-column: span 12; }
+        .bento-col-8 { grid-column: span 8; }
+        .bento-col-4 { grid-column: span 4; }
+        .bento-col-6 { grid-column: span 6; }
+        @media (max-width: 1024px) { .bento-col-8, .bento-col-4, .bento-col-6 { grid-column: span 12; } }
+
+        .card-tag-mono { font-family: var(--font-mono); font-size: 10px; color: var(--emerald); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.5rem; display: block; }
+        .bento-card h3 { font-size: 1.6rem; font-weight: 600; color: var(--t1); margin-bottom: 0.75rem; }
+        .bento-card p { font-size: 0.95rem; color: var(--t2); line-height: 1.65; margin-bottom: 1.25rem; }
+
+        .compare-split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1.25rem; }
+        @media (max-width: 640px) { .compare-split { grid-template-columns: 1fr; } }
+        .split-box { background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 12px; }
+        .split-lbl { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.5rem; }
+
+        /* Subpage Footer Switcher */
+        .subpage-footer-nav {
+            border-top: 1px solid var(--border); padding-top: 3rem; margin-top: 4rem;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+        }
+        @media (max-width: 640px) { .subpage-footer-nav { grid-template-columns: 1fr; } }
+        .switcher-card {
+            background: var(--panel-bg); border: 1px solid var(--border); padding: 1.5rem; border-radius: 16px;
+            text-decoration: none; transition: all 0.3s; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .switcher-card:hover { border-color: var(--cyan); transform: translateY(-3px); }
+        .switcher-lbl { font-family: var(--font-mono); font-size: 10px; color: var(--t3); text-transform: uppercase; }
+        .switcher-title { font-size: 1.2rem; font-weight: 600; color: var(--t1); margin-top: 0.4rem; }
     </style>
 </head>
 <body>
     <div class="app-container">
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo">
-                <span class="logo-tag">SUBPAGE // 02</span>
+                <span class="logo-tag">SUBPAGE MODULE 02</span>
                 <h2>ICE vs EV <span>Physics</span></h2>
-                <a href="../car-suspension.html" class="back-link">← <span class="en-only">Main Compendium</span><span class="id-only">Kompendium Utama</span></a>
+                <a href="../car-suspension.html" class="back-link">← <span class="en-only">Back to Main Hub</span><span class="id-only">Kembali ke Hub Utama</span></a>
             </div>
+
             <div class="lang-toggle">
                 <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
                 <button class="lang-btn" data-lang="id" onclick="setLanguage('id')">ID</button>
             </div>
+
+            <nav class="nav-group">
+                <span class="nav-group-title"><span class="en-only">In-Depth Modules</span><span class="id-only">Modul Mendalam</span></span>
+                <a href="#mass" class="nav-link">⚖️ Mass & Low CG Physics</a>
+                <a href="#anti-squat" class="nav-link">⚡ Instant Torque Anti-Squat</a>
+                <a href="#nvh" class="nav-link">🤫 NVH & Hydraulic Bushings</a>
+                <a href="#durability" class="nav-link">🛞 Bushing Wear & Load Index</a>
+            </nav>
+
+            <nav class="nav-group" style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+                <span class="nav-group-title" style="color:var(--cyan);"><span class="en-only">📂 Switch Subpages</span><span class="id-only">📂 Ganti Subpage</span></span>
+                <a href="active-tech.html" class="nav-link" style="color:var(--purple);">⚡ <span class="en-only">2024-26 Active Tech ↗</span><span class="id-only">Teknologi Aktif ↗</span></a>
+                <a href="indonesia-guide.html" class="nav-link" style="color:var(--rose);">🇮🇩 <span class="en-only">Indonesia Database ↗</span><span class="id-only">Database Indonesia ↗</span></a>
+            </nav>
         </aside>
 
+        <!-- Main Content -->
         <main class="main-content">
-            <h1 class="hero-title">
-                <span class="en-only">ICE vs EV <span>Chassis & Suspension</span> Engineering</span>
-                <span class="id-only">Rekayasa <span>Sasis & Suspensi</span> ICE vs EV</span>
-            </h1>
-            <p style="color:var(--t2); font-size:1.1rem; margin-bottom:2.5rem;">
-                <span class="en-only">Why electric vehicles demand higher spring rates, specialized hydraulic bushings, aggressive anti-squat geometry, and active damping.</span>
-                <span class="id-only">Mengapa kendaraan listrik memerlukan konstanta pegas lebih tinggi, bushing hidrolik khusus, geometri anti-squat agresif, dan peredaman aktif.</span>
-            </p>
-
-            <!-- 1. Weight & CG -->
-            <div class="deep-card">
-                <h3>01. Battery Curb Weight & Skateboard Low Center of Gravity</h3>
-                <p>
-                    <span class="en-only">EV battery packs add 300 to 700 kg of additional mass compared to equivalent ICE vehicles. However, because the battery is mounted underneath the cabin floor between the axles, the Center of Gravity (CG) is significantly lower.</span>
-                    <span class="id-only">Baterai EV menambah massa 300 hingga 700 kg dibanding mobil ICE setara. Namun karena diletakkan di bawah lantai kabin di antara sumbu roda, Pusat Gravitasi (CG) jauh lebih rendah.</span>
+            <section class="hero">
+                <div class="hero-badge">🔋 CHASSIS ENGINEERING COMPARISON</div>
+                <h1>
+                    <span class="en-only">ICE vs EV <span>Chassis & Suspension</span> Engineering</span>
+                    <span class="id-only">Rekayasa <span>Sasis & Suspensi</span> ICE vs EV</span>
+                </h1>
+                <p style="color:var(--t2); font-size:1.15rem; max-width:850px;">
+                    <span class="en-only">A deep structural comparison explaining why electric vehicles require 45-60%+ anti-squat geometry, fluid-filled hydraulic control arm bushings, higher sprung:unsprung mass inertia management, and specialized high-load suspension components.</span>
+                    <span class="id-only">Komparasi struktur mendalam yang menjelaskan mengapa EV memerlukan geometri anti-squat 45-60%+, bushing hidrolik, dan manajemen massa tersangga khusus.</span>
                 </p>
-                <div class="compare-grid">
-                    <div class="compare-box">
-                        <h4>ICE Vehicles</h4>
-                        <p style="font-size:12px; color:var(--t2);">High CG due to heavy engine block over front axle. Roll moment is higher, requiring stiffer anti-roll bars to prevent body lean.</p>
+
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <div class="stat-val">+500 kg</div>
+                        <div class="stat-lbl"><span class="en-only">Average Battery Curb Mass</span><span class="id-only">Tambahan Massa Baterai EV</span></div>
                     </div>
-                    <div class="compare-box">
-                        <h4>EV Vehicles</h4>
-                        <p style="font-size:12px; color:var(--t2);">Extremely low CG reduces roll moment naturally, but high overall mass creates massive kinetic energy under hard cornering and braking.</p>
+                    <div class="stat-card">
+                        <div class="stat-val">>60%</div>
+                        <div class="stat-lbl"><span class="en-only">Anti-Squat Angle Required</span><span class="id-only">Geometri Anti-Squat EV</span></div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-val">10 dB</div>
+                        <div class="stat-lbl"><span class="en-only">More Noticeable Road Noise</span><span class="id-only">Sensitivitas Suara Jalan</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val">HL</div>
+                        <div class="stat-lbl"><span class="en-only">High Load Index Tire Specs</span><span class="id-only">Standar Ban High Load</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BENTO GRID CONTENT -->
+            <div class="bento-grid">
+                <!-- 1. Mass Distribution & CG -->
+                <div id="mass" class="bento-card bento-col-8">
+                    <span class="card-tag-mono">MODULE 01 // KINEMATICS & MASS DISTRIBUTION</span>
+                    <h3>Sprung Mass Inertia & Skateboard Low Center of Gravity</h3>
+                    <p>
+                        <span class="en-only">Lithium-ion battery packs add between 300 kg and 700 kg of extra curb weight to electric vehicles. However, because the battery pack is housed inside the floor structure between the front and rear axles, the Center of Gravity (CG) is significantly lower than in an ICE car with a high engine block.</span>
+                        <span class="id-only">Baterai litium-ion menambah massa 300 kg hingga 700 kg pada kendaraan listrik. Namun karena baterai dipasang di bawah lantai di antara sumbu roda, Pusat Gravitasi (CG) jauh lebih rendah dibanding mobil ICE.</span>
+                    </p>
+
+                    <div class="compare-split">
+                        <div class="split-box">
+                            <div class="split-lbl">ICE Architecture (High CG)</div>
+                            <p style="font-size:12px; color:var(--t2);">Concentrated high mass in the engine bay over the front axle. Higher body roll moment requires stiffer mechanical anti-roll bars to prevent lean during cornering.</p>
+                        </div>
+                        <div class="split-box">
+                            <div class="split-lbl">Skateboard EV Architecture (Low CG)</div>
+                            <p style="font-size:12px; color:var(--t2);">Very low CG reduces body roll naturally. The high sprung battery mass absorbs high-frequency road vibrations, yielding a floating ride quality over highway expansion joints.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Physics Formula Highlight -->
+                <div class="bento-card bento-col-4" style="background:linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(17, 24, 39, 0.6));">
+                    <span class="card-tag-mono">PHYSICS FORMULA</span>
+                    <h3 style="color:var(--emerald);">Kinetic Energy Formula</h3>
+                    <div style="font-family:var(--font-mono); font-size:1.3rem; color:var(--cyan); margin:0.75rem 0;">\(E_k = \frac{1}{2} m v^2\)</div>
+                    <p style="font-size:12px;">
+                        <span class="en-only">Because kinetic energy scales linearly with mass \(m\), a 2.2-ton EV generates 35% higher kinetic energy under braking and suspension bump compression than a 1.6-ton ICE car at the same speed.</span>
+                        <span class="id-only">Karena energi kinetik berbanding lurus dengan massa \(m\), EV seberat 2.2 ton menghasilkan energi kinetik 35% lebih besar saat pengereman.</span>
+                    </p>
+                </div>
+
+                <!-- 2. Instant Torque & Anti-Squat -->
+                <div id="anti-squat" class="bento-card bento-col-12">
+                    <span class="card-tag-mono">MODULE 02 // LAUNCH KINEMATICS</span>
+                    <h3>Instant Electric Motor Torque & Anti-Squat Linkage Geometry</h3>
+                    <p>
+                        <span class="en-only">Electric motors produce 100% of maximum rated torque instantaneously at 0 RPM. When a high-performance EV launches, longitudinal acceleration forces create an extreme rotational moment that attempts to compress the rear suspension springs (rear squat) and lift the front nose.</span>
+                        <span class="id-only">Motor listrik menghasilkan 100% torsi maksimum secara instan pada 0 RPM. Saat EV diluncurkan, gaya akselerasi menekan suspensi belakang (rear squat) dan mengangkat moncong depan.</span>
+                    </p>
+
+                    <div class="compare-split">
+                        <div class="split-box">
+                            <div class="split-lbl">ICE Anti-Squat Geometry (15% - 30%)</div>
+                            <p style="font-size:12px; color:var(--t2);">ICE engines build torque gradually along an RPM curve. Standard suspension link angles direct most launch force through springs and dampers.</p>
+                        </div>
+                        <div class="split-box" style="border-color:var(--emerald);">
+                            <div class="split-lbl" style="color:var(--emerald);">EV Anti-Squat Geometry (45% - 60%+)</div>
+                            <p style="font-size:12px; color:var(--t2);">EV control arm pivot axes are inclined aggressively so that longitudinal motor torque is converted directly into mechanical link tension, locking the rear suspension flat without compressing springs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. NVH & Isolation -->
+                <div id="nvh" class="bento-card bento-col-6">
+                    <span class="card-tag-mono">MODULE 03 // SILENT CABIN NVH</span>
+                    <h3>NVH & Hydraulic Control Arm Bushings</h3>
+                    <p>
+                        <span class="en-only">In combustion cars, engine rumbling noise masks road surface impacts. EVs have silent electric powertrains, making suspension mechanical thuds up to 10 dB more audible to occupants. EVs utilize fluid-filled hydraulic bushings in lower control arms to absorb harsh impact frequencies while maintaining precise steering alignment.</span>
+                        <span class="id-only">Pada mobil konvensional, suara mesin menyamarkan benturan jalan. EV sangat hening sehingga benturan mekanis suspensi terasa 10 dB lebih kencang. EV menggunakan bushing hidrolik berisi fluida untuk meredam getaran.</span>
+                    </p>
+                </div>
+
+                <!-- 4. Bushing Wear & Load Index -->
+                <div id="durability" class="bento-card bento-col-6">
+                    <span class="card-tag-mono">MODULE 04 // DURABILITY STANDARDS</span>
+                    <h3>High Load (HL) Tires & Bushing Wear Rates</h3>
+                    <p>
+                        <span class="en-only">The heavy curb mass of EVs combined with instant torque creates high shear stress on rubber bushings, ball joints, and tire treads. EVs require **High Load (HL)** index tires rated for higher inflation pressures (up to 44-50 psi) and reinforced control arm ball joints to prevent premature wear.</span>
+                        <span class="id-only">Massa EV yang berat dikombinasikan dengan torsi instan menciptakan gesekan tinggi pada bushing karet dan ban. EV memerlukan ban bertanda **High Load (HL)** dan ball joint yang diperkuat.</span>
+                    </p>
                 </div>
             </div>
 
-            <!-- 2. Instant Torque Anti-Squat -->
-            <div class="deep-card">
-                <h3>02. Instant Electric Torque & Anti-Squat Geometry</h3>
-                <p>
-                    <span class="en-only">Electric motors deliver 100% of maximum torque instantly at 0 RPM. Without anti-squat suspension geometry, aggressive acceleration forces the rear suspension to compress severely, causing rear tire scrub and nose lift.</span>
-                    <span class="id-only">Motor listrik memberikan 100% torsi maksimum secara instan pada 0 RPM. Tanpa geometri anti-squat, akselerasi agresif menekan suspensi belakang secara drastis.</span>
-                </p>
-                <div class="compare-grid">
-                    <div class="compare-box">
-                        <h4>Anti-Squat Angle</h4>
-                        <p style="font-size:12px; color:var(--t2);">ICE cars typically use 15-30% anti-squat. EVs require 45-60%+ anti-squat geometry on control arm pivot axes to keep the body flat under launch.</p>
+            <!-- Subpage Footer Navigation -->
+            <div class="subpage-footer-nav">
+                <a href="active-tech.html" class="switcher-card" style="border-left:4px solid var(--purple);">
+                    <div>
+                        <div class="switcher-lbl">PREVIOUS SUBPAGE // MODULE 01</div>
+                        <div class="switcher-title">← 2024–2026 Active & Adaptive Suspension Tech</div>
                     </div>
-                    <div class="compare-box">
-                        <h4>Regenerative Load Transfer</h4>
-                        <p style="font-size:12px; color:var(--t2);">One-pedal regenerative braking shifts load rapidly to the front axle, requiring high front anti-dive geometry.</p>
+                    <div style="font-size:12px; color:var(--t2); margin-top:0.5rem;">Porsche Active Ride, BYD DiSus, ClearMotion & 800V hydraulics.</div>
+                </a>
+                <a href="indonesia-guide.html" class="switcher-card" style="border-left:4px solid var(--rose);">
+                    <div>
+                        <div class="switcher-lbl">NEXT SUBPAGE // MODULE 03</div>
+                        <div class="switcher-title">Indonesia Vehicle Suspension Database →</div>
                     </div>
-                </div>
-            </div>
-
-            <!-- 3. NVH & Isolation -->
-            <div class="deep-card">
-                <h3>03. Noise, Vibration, Harshness (NVH) without Engine Masking</h3>
-                <p>
-                    <span class="en-only">In ICE cars, engine noise masks suspension thuds and road impact noise. EVs are completely silent, making mechanical suspension noise up to 10 dB more noticeable to cabin occupants.</span>
-                    <span class="id-only">Pada mobil ICE, suara mesin menyamarkan benturan suspensi. EV sangat hening sehingga suara mekanis suspensi terasa hingga 10 dB lebih keras di kabin.</span>
-                </p>
-                <div class="compare-grid">
-                    <div class="compare-box">
-                        <h4>Hydraulic Bushings</h4>
-                        <p style="font-size:12px; color:var(--t2);">EVs heavily utilize fluid-filled hydraulic control arm bushings to absorb high-frequency road vibrations without sacrificing steering response.</p>
-                    </div>
-                    <div class="compare-box">
-                        <h4>Acoustic Subframes</h4>
-                        <p style="font-size:12px; color:var(--t2);">Subframes are mounted to the unibody chassis via dual-isolated rubber/silicone mounts to prevent road noise transmission.</p>
-                    </div>
-                </div>
+                    <div style="font-size:12px; color:var(--t2); margin-top:0.5rem;">Innova Zenix, Fortuner, Ioniq 5, Jimny, BYD Seal & road tuning.</div>
+                </a>
             </div>
         </main>
     </div>
