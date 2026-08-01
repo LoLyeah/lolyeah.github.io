@@ -55,9 +55,9 @@ When building complex, high-density compendiums or guides that require multiple 
 
 ## 🎨 UI, UX & Modern Design Trends
 
-- **Flexible UI/UX**: Specific layouts, dynamic widgets, and visual motifs are flexible to encourage topic-specific flair, creative freedom, and tailored user interaction.
-- **State-of-the-Art Aesthetics (2026 Trends)**:
-  - **Liquid Glass & Dynamic Depth**: Glassmorphism with adaptive backdrop-blur (`backdrop-filter: blur(12px)` to `blur(20px)`), subtle translucent noise/textures, and soft ambient glowing borders (`rgba(255,255,255,0.08)` to accent glows).
+- **Creative Freedom & Non-Strict Design System**: Specific layouts, visual motifs, dynamic widgets, and 2026 design trends are **NOT strict or rigid constraints**. Agents and developers are encouraged to exercise creative freedom and adapt the aesthetic, color palette, UI structure, and interaction design to fit the specific needs, domain, and tone of each individual topic.
+- **State-of-the-Art Visual Inspiration (2026 Trends)**:
+  - **Liquid Glass & Dynamic Depth**: Optional glassmorphism with adaptive backdrop-blur (`backdrop-filter: blur(12px)` to `blur(20px)`), translucent noise/textures, and soft ambient glowing borders (`rgba(255,255,255,0.08)` to accent glows).
   - **Bento Grid Architecture**: Modular, clean, bento-box-inspired grid layouts for organizing complex data, metric cards, and interactive features effortlessly.
   - **Dark-First Curated Palette**: Deep obsidian/midnight canvas (`#030712` / `#0a0a0a`) paired with vibrant HSL/HEX accent nodes (`--cyan`: `#00d4ff`, `--emerald`: `#10b981`, `--amber`: `#f59e0b`, `--purple`: `#a855f7`).
   - **Refined Typography Contrast**: Editorial serif or modern display headers (`Instrument Serif`, `Outfit`, `Playfair Display`) paired with crisp sans-serif body text (`Geist`, `Plus Jakarta Sans`, `Inter`) and monospace code/metrics (`Geist Mono`, `JetBrains Mono`).
