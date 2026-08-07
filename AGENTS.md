@@ -207,6 +207,18 @@ All interactive guides and compendiums should provide dual-language support:
 
 ---
 
+## 🧭 Interactive Page Lessons
+
+- **Subpages MUST be functional bilingual pages**: add EN/ID controls, persist language preference, update `<html lang>`, expose active state with `aria-pressed`, and translate meaningful visible content. Never add language buttons without translation behavior.
+- **Nested markup MUST survive language changes**: prefer `data-en`/`data-id` or keyed translation nodes. If translating text nodes, preserve nested heading spans, links, labels, and other inline markup when toggling repeatedly.
+- **Fixed navigation MUST not cover anchors**: use `scroll-padding-top` or `scroll-margin-top`, and offset custom `scrollTo()` calls by measured fixed-nav height. Test every section link, including hero buttons and `#crossings`, `#context`, `#tool`, and `#sources` targets.
+- **Uneven grid panels MUST align to content**: calculator and dashboard grids containing panels of different heights should use `align-items: start`; do not let a long explanation card stretch short control panels into large empty regions.
+- **Decision tools MUST explain outputs**: show input contribution, scoring formula, threshold, recommendation rationale, and intervention/design logic. Keep explanations synchronized with language toggle and live input changes. Label illustrative policy logic as non-engineering guidance.
+- **Homepage topic numbering MUST remain gapless**: `.feature-icon` numbers control descending newest-first sorting in `index.html`; renumber all cards together when adding or removing topics, then verify no missing or duplicate numbers.
+- **Before publishing UI changes**, run `git diff --check`, verify all anchor targets and subpage back-links, test EN/ID toggling and mobile layout, then inspect `git status` before commit/push.
+
+---
+
 ## 🔍 SEO & Metadata Standards
 
 Every HTML page created or updated MUST contain the standardized **Antigravity SEO Header Block** inside `<head>`:
