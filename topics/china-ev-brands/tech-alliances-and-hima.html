@@ -523,14 +523,16 @@
             .bigtech-grid { grid-template-columns: 1fr; }
         }
     </style>
+    <link rel="stylesheet" href="/assets/china-ev-brands.css">
 </head>
 <body class="lang-en">
+    <a class="skip-link" href="#main-content">Skip to content</a>
 
     <nav class="site-nav">
         <div class="container nav-content">
             <div class="nav-left">
                 <a href="../china-ev-brands.html" class="brand-link">
-                    <span class="brand-dot"></span>
+                    <img class="site-logo" src="/assets/logo.png" alt="LoLyeah">
                     LoLyeah
                 </a>
                 <a href="../china-ev-brands.html" class="back-hub">
@@ -544,7 +546,7 @@
         </div>
     </nav>
 
-    <main class="container">
+    <main class="container" id="main-content">
         <!-- Header -->
         <header class="page-header">
             <div class="breadcrumb">
@@ -588,7 +590,7 @@
 
             <div class="realms-grid">
                 <!-- Realm 1: AITO -->
-                <div class="realm-card">
+                <div class="realm-card reveal-item">
                     <div class="realm-card-header">
                         <div class="realm-emblem">问</div>
                         <span class="realm-target">LUXURY SUV PILLAR</span>
@@ -609,7 +611,7 @@
                 </div>
 
                 <!-- Realm 2: Luxeed -->
-                <div class="realm-card">
+                <div class="realm-card reveal-item">
                     <div class="realm-card-header">
                         <div class="realm-emblem">智</div>
                         <span class="realm-target">DYNAMIC COUPE & SUV</span>
@@ -630,7 +632,7 @@
                 </div>
 
                 <!-- Realm 3: Stelato -->
-                <div class="realm-card">
+                <div class="realm-card reveal-item">
                     <div class="realm-card-header">
                         <div class="realm-emblem">享</div>
                         <span class="realm-target">EXECUTIVE LUXURY</span>
@@ -651,7 +653,7 @@
                 </div>
 
                 <!-- Realm 4: Maextro -->
-                <div class="realm-card">
+                <div class="realm-card reveal-item">
                     <div class="realm-card-header">
                         <div class="realm-emblem">尊</div>
                         <span class="realm-target">ULTRA-LUXURY HYPER</span>
@@ -672,7 +674,7 @@
                 </div>
 
                 <!-- Realm 5: Shangjie -->
-                <div class="realm-card">
+                <div class="realm-card reveal-item">
                     <div class="realm-card-header">
                         <div class="realm-emblem">尚</div>
                         <span class="realm-target">MAINSTREAM ACCESSIBLE</span>
@@ -717,7 +719,7 @@
         <!-- Big Tech Ecosystems: Xiaomi & Baidu -->
         <section class="bigtech-grid">
             <!-- Xiaomi Auto -->
-            <div class="bigtech-card" style="--tech-accent: #f97316;">
+            <div class="bigtech-card reveal-item" style="--tech-accent: #f97316;">
                 <h3 class="en-only">Xiaomi Auto: The Smartphone-to-Car Miracle</h3>
                 <h3 class="id-only">Xiaomi Auto: Sinergi Ekosistem Ponsel ke Mobil Listrik</h3>
                 <p class="en-only">
@@ -734,7 +736,7 @@
             </div>
 
             <!-- Baidu & CATL -->
-            <div class="bigtech-card" style="--tech-accent: #06b6d4;">
+            <div class="bigtech-card reveal-item" style="--tech-accent: #06b6d4;">
                 <h3 class="en-only">Baidu Apollo, JiYue & CATL Ecosystem</h3>
                 <h3 class="id-only">Baidu Apollo, JiYue & Peran Kunci Baterai CATL</h3>
                 <p class="en-only">
@@ -787,6 +789,62 @@
             const saved = localStorage.getItem('lolyeah_lang') || 'en';
             setLanguage(saved);
         })();
+    </script>
+
+    <script data-china-ev-repair>
+      (function () {
+        var valid = ['en', 'id'];
+        var requested = localStorage.getItem('lolyeah_lang') || 'en';
+        var initial = valid.indexOf(requested) >= 0 ? requested : 'en';
+        window.setLanguage = function (lang) {
+          var next = valid.indexOf(lang) >= 0 ? lang : 'en';
+          document.body.classList.toggle('lang-en', next === 'en');
+          document.body.classList.toggle('lang-id', next === 'id');
+          document.documentElement.lang = next;
+          ['en', 'id'].forEach(function (code) {
+            var button = document.getElementById('btn-' + code);
+            if (button) {
+              button.classList.toggle('active', code === next);
+              button.setAttribute('aria-pressed', String(code === next));
+            }
+          });
+          localStorage.setItem('lolyeah_lang', next);
+        };
+        setLanguage(initial);
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduce && 'IntersectionObserver' in window) {
+          document.body.classList.add('js-motion');
+          var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+            });
+          }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
+          document.querySelectorAll('.reveal-item').forEach(function (el) { observer.observe(el); });
+        }
+        function normaliseMarks() {
+          var root = '/assets/ev-logos/';
+          var official = {
+            'zeekr': 'zeekr.svg', 'geely': 'geely.svg', 'byd': 'byd.svg', 'sgmw': 'wuling.svg', 'wuling': 'wuling.svg',
+            'mg': 'mg.svg', 'chery': 'chery.svg', 'gac aion': 'aion.svg', 'aion': 'aion.svg', 'xiaomi': 'xiaomi.svg',
+            'nio': 'nio.svg', 'xpeng': 'xpeng.svg', 'leapmotor': 'leapmotor.svg', 'li auto': 'li.svg', 'huawei': 'huawei.svg',
+            'lepas': 'lepas.svg', 'jetour': 'jetour.svg', 'great wall': 'gwm.svg', 'gwm': 'gwm.svg'
+          };
+          var fallback = { 'lynk & co': 'L&Co', 'global affiliates': 'GLOBAL', 'riddara': 'RADAR', 'denza': 'DENZA', 'fang cheng bao': 'FCB', 'yangwang': 'YANGWANG', 'linghui': 'LINGHUI', 'im motors': 'IM', 'roewe': 'SAIC', 'exeed': 'EXEED', 'icar': 'iCAR', 'deepal': 'DEEPAL', 'avatr': 'AVATR', 'nevo': 'NEVO', 'kaicene': 'KC', 'ora': 'ORA', 'wey': 'WEY', 'poer': 'POER', 'hyptec': 'HYPTEC', 'stelato': 'STELATO', 'arcfox': 'ARCFOX', 'baic off-road': 'BJ', 'hongqi': 'HONGQI' };
+          document.querySelectorAll('.brand-logo-badge, .brand-cell-logo, .oem-logo-badge').forEach(function (box) {
+            var scope = box.closest('.brand-unit-card, tr, .oem-card');
+            var heading = scope && scope.querySelector('.brand-name-box h4, .brand-cell-info strong, .oem-header-info h3');
+            var label = heading ? heading.textContent.trim() : '';
+            var lower = label.toLowerCase();
+            var key = Object.keys(official).sort(function (a, b) { return b.length - a.length; }).find(function (name) { return lower.indexOf(name) >= 0; });
+            var fallbackKey = Object.keys(fallback).sort(function (a, b) { return b.length - a.length; }).find(function (name) { return lower.indexOf(name) >= 0; });
+            if (key) box.innerHTML = '<img class="official-logo" src="' + root + official[key] + '" alt="' + label.replace(/"/g, '') + ' official logo">';
+            else if (fallbackKey) box.innerHTML = '<span class="official-logo-fallback">' + fallback[fallbackKey] + '</span>';
+          });
+        }
+        normaliseMarks();
+        var search = document.getElementById('brand-search');
+        if (search) { search.setAttribute('aria-label', 'Search brands, parent groups, or models'); }
+      }());
     </script>
 </body>
 </html>
