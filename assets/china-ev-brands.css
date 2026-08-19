@@ -139,9 +139,9 @@ button { color: inherit; }
 .search-input::placeholder { color: var(--faint); }
 .search-input:focus { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(8,123,112,.12); }
 .stats-badge { padding: .55rem .75rem; color: var(--muted); background: var(--surface-soft); border: 1px solid var(--line); }
-.filter-groups { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
-.filter-label { color: var(--muted); font-family: var(--font-mono); font-size: .68rem; font-weight: 700; text-transform: uppercase; }
-.filter-btn { min-height: 38px; padding: .5rem .75rem; border: 1px solid var(--line); border-radius: var(--radius-pill); background: #fff; color: var(--ink-soft); font-size: .75rem; font-weight: 700; cursor: pointer; transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease); }
+.filter-groups { display: grid; grid-template-columns: max-content repeat(4, minmax(0, 1fr)); align-items: center; gap: .5rem; min-width: 0; }
+.filter-label { color: var(--muted); font-family: var(--font-mono); font-size: .68rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+.filter-btn { width: 100%; min-width: 0; min-height: 42px; padding: .5rem .65rem; border: 1px solid var(--line); border-radius: var(--radius-pill); background: #fff; color: var(--ink-soft); font-size: .75rem; font-weight: 700; line-height: 1.25; text-align: center; white-space: normal; overflow-wrap: anywhere; cursor: pointer; transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease); }
 .filter-btn:hover, .filter-btn.active { border-color: var(--teal); background: var(--teal); color: #fff; }
 .groups-container, .holding-grid, .oem-grid, .showcase-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
 .groups-container { display: flex; flex-direction: column; gap: 1.4rem; }
@@ -335,7 +335,8 @@ body.js-motion .reveal-item.is-visible { opacity: 1; transform: translateY(0); t
   .container { width: calc(100% - 1.25rem); }
   .hero, .page-header { padding-top: 2.5rem; }
   .hero::after { display: none; }
-  .hero-title, .page-title { font-size: clamp(2.15rem, 13vw, 3.4rem); letter-spacing: -.06em; }
+  .hero-title { font-size: clamp(1.9rem, 10vw, 2.8rem) !important; line-height: 1.08 !important; letter-spacing: -.045em !important; }
+  .page-title { font-size: clamp(1.7rem, 8vw, 2.2rem) !important; line-height: 1.08 !important; letter-spacing: -.045em !important; }
   .metric-grid, .stats-strip, .dir-grid, .segment-grid, .policy-grid, .brands-subgrid, .showcase-grid, .realms-grid, .tree-grid { grid-template-columns: 1fr; }
   .group-main-info { align-items: flex-start; }
   .group-header, .holding-card-header { align-items: flex-start; flex-direction: column; }
@@ -346,15 +347,17 @@ body.js-motion .reveal-item.is-visible { opacity: 1; transform: translateY(0); t
   .brand-unit-header { align-items: flex-start; }
   .brand-tier-pill { max-width: 43%; white-space: normal; text-align: right; }
   .search-and-stats { align-items: stretch; flex-direction: column; }
+  .filter-label { align-self: flex-start; }
+  .filter-btn { overflow-wrap: anywhere; }
   .search-box { flex-basis: auto; max-width: none; }
-  .filter-groups { align-items: stretch; flex-direction: column; }
-  .filter-btn { width: 100%; text-align: left; }
+  .filter-groups { display: flex; align-items: stretch; flex-direction: column; gap: .55rem; }
+  .filter-btn { width: 100%; min-height: 44px; text-align: left; }
   .tech-stack-banner { grid-template-columns: 1fr; }
-  .nav-left { flex: 1; }
+  .nav-left { flex: 1; min-width: 0; }
   .brand-link { font-size: 1rem; }
   .brand-dot, .site-logo { width: 31px; height: 31px; flex-basis: 31px; }
-  .back-hub { max-width: 44px; overflow: hidden; white-space: nowrap; }
-  .back-hub:first-letter { font-size: 1.2rem; }
+  .back-hub { max-width: 44px; overflow: hidden; white-space: nowrap; font-size: 0; justify-content: center; }
+  .back-hub::first-letter { font-size: 1.2rem; }
   .lang-choice { min-width: 38px; padding-inline: .5rem; }
   .site-footer { padding-top: 2.2rem; }
   .footer-content { align-items: flex-start; flex-direction: column; }
@@ -384,6 +387,12 @@ body.lang-en .filter-label.en-only { display: inline-flex !important; }
    variables. These declarations keep the shared light editorial system
    readable on every hub and subpage. */
 body { color: var(--ink) !important; background-color: var(--paper) !important; }
+.hero-title { font-size: clamp(2.35rem, 4.6vw, 4.4rem) !important; line-height: 1.02 !important; }
+.page-title { font-size: clamp(2.15rem, 4.1vw, 3.65rem) !important; line-height: 1.08 !important; }
+.metric-card:hover, .subpage-card:hover, .group-block:hover, .brand-unit-card:hover, .holding-card:hover, .oem-card:hover, .realm-card:hover, .hero-car-card:hover { background: var(--surface) !important; color: var(--ink) !important; border-color: var(--line-strong) !important; }
+.metric-card:hover .metric-val, .metric-card:hover .metric-lbl, .metric-card:hover .metric-sub, .subpage-card:hover h3, .subpage-card:hover p, .group-block:hover *, .brand-unit-card:hover *, .holding-card:hover *, .oem-card:hover *, .realm-card:hover *, .hero-car-card:hover * { text-shadow: none !important; }
+.metric-card:hover .metric-val, .metric-card:hover .metric-lbl, .subpage-card:hover h3, .group-block:hover h2, .group-block:hover h3, .brand-unit-card:hover h4, .holding-card:hover h3, .oem-card:hover h3, .realm-card:hover h3, .hero-car-card:hover h3 { color: var(--ink) !important; }
+.metric-card:hover .metric-sub, .subpage-card:hover p, .group-block:hover p, .brand-unit-card:hover p, .holding-card:hover .brand-focus, .oem-card:hover p, .realm-card:hover p, .hero-car-card:hover p, .hero-car-card:hover li { color: var(--ink-soft) !important; }
 .brand-link, .brand-link:visited { color: var(--ink) !important; }
 .back-hub { color: var(--ink-soft) !important; background: rgba(255,255,255,.72) !important; }
 .lang-choice { color: var(--muted) !important; }
@@ -439,10 +448,18 @@ body.js-motion .reveal-item, body.js-motion .reveal-item.is-visible { opacity: 1
   .brand-tier-pill { max-width: 48%; color: var(--muted) !important; }
   .hero-title, .page-title { color: var(--ink) !important; }
 }
+
+/* Narrow filter controls remain readable and contained at tablet widths. */
+@media (max-width: 1100px) and (min-width: 561px) {
+  .filter-groups { grid-template-columns: max-content repeat(2, minmax(0, 1fr)); }
+  .filter-label { grid-column: 1 / -1; }
+  .filter-btn { min-height: 44px; }
+}
 @media (max-width: 390px) {
   .container { width: calc(100% - 1rem); }
   .hero, .page-header { padding-top: 2rem; padding-bottom: 1.5rem; }
-  .hero-title, .page-title { font-size: 1.85rem !important; line-height: 1.08 !important; letter-spacing: -.045em !important; }
+  .hero-title { font-size: 1.7rem !important; line-height: 1.08 !important; letter-spacing: -.045em !important; }
+  .page-title { font-size: 1.55rem !important; line-height: 1.1 !important; letter-spacing: -.04em !important; }
   .page-title { max-width: 100%; }
   .hero-desc, .page-lead { font-size: .92rem !important; line-height: 1.6 !important; }
   .hero-car-card, .oem-card, .bigtech-card, .tech-card, .realm-card { padding: 1rem !important; gap: .8rem !important; }
@@ -461,3 +478,27 @@ body.js-motion .reveal-item, body.js-motion .reveal-item.is-visible { opacity: 1
   .back-hub { max-width: 42px !important; padding-inline: .55rem !important; }
   .lang-choice { min-width: 34px !important; padding-inline: .4rem !important; }
 }
+
+/* Compact subpage navigation and headings on narrow phones. */
+@media (max-width: 560px) {
+  .page-header { padding-top: 1.7rem !important; padding-bottom: 1.4rem !important; }
+  .page-title { font-size: clamp(1.7rem, 8vw, 2.2rem) !important; line-height: 1.08 !important; }
+  .page-lead { margin-bottom: 1.5rem !important; }
+  .filter-toolbar { padding: .8rem !important; }
+}
+
+@media (max-width: 560px) {
+  .back-hub { width: 42px !important; max-width: 42px !important; min-width: 42px !important; justify-content: center !important; padding-inline: .35rem !important; overflow: hidden !important; font-size: 0 !important; white-space: nowrap !important; }
+  .back-hub span { display: none !important; }
+  .back-hub::before { content: "←"; display: block; color: var(--ink-soft); font-size: 1.2rem; line-height: 1; }
+}
+
+@media (max-width: 390px) {
+  .hero-title { font-size: 1.7rem !important; }
+  .page-title { font-size: 1.55rem !important; }
+}
+
+/* The hub's launchpad controls use the same contained treatment as the
+   holding-page filters, without allowing long category labels to escape. */
+.filter-toolbar .filter-groups { width: 100%; }
+.filter-toolbar .filter-btn { max-width: 100%; }
