@@ -29,28 +29,43 @@
 
   // 2. Reading progress bar
   var progressBar = document.getElementById('reading-progress');
-  function updateReadingProgress() {
-    if (!progressBar) return;
-    var totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-    var progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
-    progressBar.style.width = Math.min(Math.max(progress, 0), 100) + '%';
-  }
   if (progressBar) {
+    progressBar.style.position = 'fixed';
+    progressBar.style.top = '0';
+    progressBar.style.left = '0';
+    progressBar.style.height = '3px';
+    progressBar.style.zIndex = '2100';
+    progressBar.style.pointerEvents = 'none';
+
+    function updateReadingProgress() {
+      var totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
+      progressBar.style.width = Math.min(Math.max(progress, 0), 100) + '%';
+    }
     window.addEventListener('scroll', updateReadingProgress, { passive: true });
     updateReadingProgress();
   }
 
-  // 3. Ambient Particle Canvas Animation
+  // 3. Ambient Particle Canvas Animation (Fixed background overlay)
   var canvas = document.getElementById('ev-canvas');
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (canvas && !reduceMotion) {
+    // Strictly enforce fixed positioning on canvas so it never alters document flow
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '0';
+    canvas.style.opacity = '0.38';
+
     var ctx = canvas.getContext('2d');
     var particles = [];
     var animationFrameId = null;
     var isTabVisible = !document.hidden;
 
-    // Color palette matching editorial brand identity
     var palette = [
       'rgba(8, 123, 112, ',   // Teal
       'rgba(201, 65, 50, ',   // Coral / Red Accent
@@ -86,17 +101,14 @@
       this.x += this.speedX;
       this.y += this.speedY;
 
-      // Wrap horizontal
       if (this.x < 0) this.x = canvas.width;
       if (this.x > canvas.width) this.x = 0;
 
-      // Wrap vertical
       if (this.y < -10) {
         this.y = canvas.height + 10;
         this.x = Math.random() * canvas.width;
       }
 
-      // Gentle pulsing
       this.alpha += this.pulseSpeed * this.pulseDirection;
       if (this.alpha >= this.baseAlpha * 1.5) {
         this.pulseDirection = -1;
@@ -149,7 +161,12 @@
   }
 
   // 4. Scroll Reveal Motion System
-  if (!reduceMotion && 'IntersectionObserver' in window) {
+  function initScrollReveal() {
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      document.body.classList.remove('reveal-ready');
+      return;
+    }
+
     var revealSelector = [
       '.section-heading-wrap',
       '.directory-banner',
@@ -196,7 +213,7 @@
           revealObserver.unobserve(entry.target);
         }
       });
-    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+    }, { rootMargin: '0px 0px -4% 0px', threshold: 0.02 });
 
     revealTargets.forEach(function (target) {
       revealObserver.observe(target);
@@ -205,39 +222,47 @@
     requestAnimationFrame(function () {
       document.body.classList.add('reveal-ready');
     });
+
+    // Safety fallback: ensure any element not triggered after 2s is revealed
+    setTimeout(function () {
+      document.querySelectorAll('[data-reveal]:not(.is-visible)').forEach(function (el) {
+        el.classList.add('is-visible');
+      });
+    }, 2000);
   }
 
   // 5. Market Share Bar & Progress Animator
-  if ('IntersectionObserver' in window && !reduceMotion) {
+  function initShareBars() {
+    if (!('IntersectionObserver' in window) || reduceMotion) return;
     var shareBars = document.querySelectorAll('.share-bar-fill');
-    if (shareBars.length > 0) {
-      shareBars.forEach(function (bar) {
-        var originalWidth = bar.style.width || bar.getAttribute('data-width');
-        if (originalWidth) {
-          bar.setAttribute('data-target-width', originalWidth);
-          bar.style.width = '0%';
+    if (shareBars.length === 0) return;
+
+    shareBars.forEach(function (bar) {
+      var originalWidth = bar.style.width || bar.getAttribute('data-width');
+      if (originalWidth) {
+        bar.setAttribute('data-target-width', originalWidth);
+        bar.style.width = '0%';
+      }
+    });
+
+    var barObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var fills = entry.target.querySelectorAll('.share-bar-fill');
+          fills.forEach(function (f) {
+            var targetWidth = f.getAttribute('data-target-width');
+            if (targetWidth) {
+              f.style.width = targetWidth;
+            }
+          });
+          barObserver.unobserve(entry.target);
         }
       });
+    }, { rootMargin: '0px 0px -4% 0px', threshold: 0.05 });
 
-      var barObserver = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            var fills = entry.target.querySelectorAll('.share-bar-fill');
-            fills.forEach(function (f) {
-              var targetWidth = f.getAttribute('data-target-width');
-              if (targetWidth) {
-                f.style.width = targetWidth;
-              }
-            });
-            barObserver.unobserve(entry.target);
-          }
-        });
-      }, { rootMargin: '0px 0px -5% 0px', threshold: 0.1 });
-
-      document.querySelectorAll('.table-responsive, .sales-table, .licensing-table-wrap, .group-block').forEach(function (container) {
-        barObserver.observe(container);
-      });
-    }
+    document.querySelectorAll('.table-responsive, .sales-table, .licensing-table-wrap, .group-block').forEach(function (container) {
+      barObserver.observe(container);
+    });
   }
 
   // 6. Normalise Brand Marks & Fallbacks
@@ -277,14 +302,19 @@
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', normaliseMarks);
-  } else {
+  function onReady() {
+    initScrollReveal();
+    initShareBars();
     normaliseMarks();
+    var search = document.getElementById('brand-search');
+    if (search) {
+      search.setAttribute('aria-label', 'Search brands, parent groups, or models');
+    }
   }
 
-  var search = document.getElementById('brand-search');
-  if (search) {
-    search.setAttribute('aria-label', 'Search brands, parent groups, or models');
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', onReady);
+  } else {
+    onReady();
   }
 })();
