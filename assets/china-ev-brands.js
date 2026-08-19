@@ -302,10 +302,61 @@
     });
   }
 
+  // 7. Subpages Dropdown Menu Controller
+  function initSubpageDropdown() {
+    var dropdownWraps = document.querySelectorAll('.subpage-dropdown-wrap');
+    if (!dropdownWraps.length) return;
+
+    dropdownWraps.forEach(function (wrap) {
+      var btn = wrap.querySelector('.subpage-dropdown-btn');
+      var menu = wrap.querySelector('.subpage-dropdown-menu');
+      if (!btn || !menu) return;
+
+      function openMenu() {
+        wrap.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeMenu() {
+        wrap.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+
+      function toggleMenu(e) {
+        e.stopPropagation();
+        if (wrap.classList.contains('is-open')) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      }
+
+      btn.addEventListener('click', toggleMenu);
+
+      wrap.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          closeMenu();
+          btn.focus();
+        }
+      });
+    });
+
+    document.addEventListener('click', function (e) {
+      dropdownWraps.forEach(function (wrap) {
+        if (!wrap.contains(e.target)) {
+          wrap.classList.remove('is-open');
+          var btn = wrap.querySelector('.subpage-dropdown-btn');
+          if (btn) btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+  }
+
   function onReady() {
     initScrollReveal();
     initShareBars();
     normaliseMarks();
+    initSubpageDropdown();
     var search = document.getElementById('brand-search');
     if (search) {
       search.setAttribute('aria-label', 'Search brands, parent groups, or models');
