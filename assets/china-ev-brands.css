@@ -808,6 +808,201 @@ body { color: var(--ink) !important; background-color: var(--paper) !important; 
 
 /* ── Top Subpage Ribbon (Horizontal Scroll Strip) ── */
 .subpage-ribbon-wrap {
+.tech-pillars-section, .tech-grid, .tech-card, .bigtech-grid, .bigtech-card { min-width: 0 !important; }
+  .highlights-list { font-size: .68rem !important; }
+  .card-top-meta { gap: .45rem !important; }
+  .brand-parent-tag, .status-badge { font-size: .56rem !important; padding: .28rem .42rem !important; }
+  .showcase-grid, .bigtech-grid, .oem-grid, .realms-grid, .tech-grid { grid-template-columns: 1fr !important; gap: .8rem !important; }
+  .nav-content { gap: .35rem !important; }
+  .brand-link { font-size: .92rem !important; }
+  .back-hub { max-width: 42px !important; padding-inline: .55rem !important; }
+  .lang-choice { min-width: 34px !important; padding-inline: .4rem !important; }
+}
+
+/* Compact subpage navigation and headings on narrow phones. */
+@media (max-width: 560px) {
+  .page-header { padding-top: 1.7rem !important; padding-bottom: 1.4rem !important; }
+  .page-title { font-size: clamp(1.7rem, 8vw, 2.2rem) !important; line-height: 1.08 !important; }
+  .page-lead { margin-bottom: 1.5rem !important; }
+  .filter-toolbar { padding: .8rem !important; }
+}
+
+@media (max-width: 560px) {
+  .back-hub { width: 42px !important; max-width: 42px !important; min-width: 42px !important; justify-content: center !important; padding-inline: .35rem !important; overflow: hidden !important; font-size: 0 !important; white-space: nowrap !important; }
+  .back-hub span { display: none !important; }
+  .back-hub::before { content: "←"; display: block; color: var(--ink-soft); font-size: 1.2rem; line-height: 1; }
+}
+
+@media (max-width: 390px) {
+  .hero-title { font-size: 1.7rem !important; }
+  .page-title { font-size: 1.55rem !important; }
+}
+
+/* The hub's launchpad controls use the same contained treatment as the
+   holding-page filters, without allowing long category labels to escape. */
+.filter-toolbar .filter-groups { width: 100%; }
+.filter-toolbar .filter-btn { max-width: 100%; }
+
+.group-wordmark { background: #fff !important; color: #b91c1c !important; }
+.group-wordmark span { display: block; font-family: var(--font-display); font-size: 1.15rem; font-weight: 900; letter-spacing: -.04em; }
+
+/* ── Subpages Navigation & Dropdown Suite ── */
+.subpage-dropdown-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.subpage-dropdown-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .42rem;
+  min-height: 38px;
+  padding: .42rem .75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, .75);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: .78rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform .25s var(--ease), border-color .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
+}
+
+.subpage-dropdown-btn:hover,
+.subpage-dropdown-wrap.is-open .subpage-dropdown-btn {
+  border-color: var(--teal);
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(8, 123, 112, .12);
+  transform: translateY(-1px);
+}
+
+.subpage-dropdown-btn svg.icon-grid {
+  color: var(--teal);
+  flex-shrink: 0;
+}
+
+.subpage-dropdown-btn svg.icon-chevron {
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: transform .25s var(--ease);
+}
+
+.subpage-dropdown-wrap.is-open .subpage-dropdown-btn svg.icon-chevron {
+  transform: rotate(180deg);
+}
+
+.subpage-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(340px, 90vw);
+  background: var(--surface, #fffdf9);
+  border: 1px solid var(--line-strong, #bdc9c2);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md, 0 18px 42px rgba(26, 45, 46, .14));
+  padding: .6rem;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  z-index: 1100;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.98);
+  transform-origin: top right;
+  transition: opacity .22s var(--ease), transform .22s var(--ease), visibility .22s;
+  pointer-events: none;
+}
+
+.subpage-dropdown-wrap.is-open .subpage-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.subpage-menu-heading {
+  padding: .35rem .6rem .45rem;
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: .2rem;
+}
+
+.subpage-menu-link {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .5rem .6rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  color: var(--ink);
+  transition: background .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
+}
+
+.subpage-menu-link:hover {
+  background: var(--surface-soft, #edf2ee);
+  border-color: var(--line);
+  transform: translateX(2px);
+}
+
+.subpage-menu-link.active {
+  background: var(--teal-soft, #dceee9);
+  border-color: #bfded6;
+}
+
+.subpage-menu-badge {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 28px;
+  border-radius: 7px;
+  background: var(--surface-soft, #edf2ee);
+  border: 1px solid var(--line);
+  color: var(--teal);
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  font-weight: 800;
+}
+
+.subpage-menu-link.active .subpage-menu-badge {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
+}
+
+.subpage-menu-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.subpage-menu-title {
+  display: block;
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.subpage-menu-desc {
+  display: block;
+  font-size: .65rem;
+  color: var(--muted);
+  margin-top: .15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Top Subpage Ribbon (Horizontal Scroll Strip) ── */
+.subpage-ribbon-wrap {
   margin-bottom: 2rem;
   position: relative;
   z-index: 2;
@@ -883,4 +1078,51 @@ body { color: var(--ink) !important; background-color: var(--paper) !important; 
 @media (max-width: 480px) {
   .subpage-dropdown-btn { padding-inline: .5rem; }
   .subpage-dropdown-menu { right: -50px; width: min(290px, 94vw); }
+}
+
+/* ── Indonesia Subpage & Sales Table Enhancements ── */
+.sales-table-section { margin-bottom: 3.5rem; }
+.sales-table { width: 100%; border-collapse: collapse; color: var(--ink-soft) !important; font-size: .8rem; }
+.sales-table th { background: var(--surface-soft) !important; color: var(--muted) !important; font-family: var(--font-mono) !important; font-size: .65rem !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: .04em !important; padding: .85rem 1rem !important; border-bottom: 1px solid var(--line-strong) !important; text-align: left; }
+.sales-table td { padding: .9rem 1rem !important; border-bottom: 1px solid var(--line) !important; color: var(--ink-soft) !important; vertical-align: middle !important; font-size: .82rem !important; }
+.sales-table tbody tr:hover td { background: #f7faf7 !important; }
+.sales-table strong, .sales-table .model-name strong { color: var(--ink) !important; font-weight: 700 !important; }
+.sales-table .rank-num { font-family: var(--font-mono) !important; font-weight: 800 !important; color: var(--teal) !important; font-size: .85rem !important; }
+.sales-table .share-bar-container { width: 75px; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: .45rem; }
+.sales-table .share-bar-fill { height: 100%; background: var(--teal) !important; border-radius: 3px; }
+
+/* Phenomenon Spotlights */
+.phenomenon-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-bottom: 3.5rem; }
+.phenomenon-card { background: #fff !important; border: 1px solid var(--line) !important; border-radius: var(--radius-lg) !important; padding: 1.75rem !important; display: flex !important; flex-direction: column !important; gap: 1rem !important; box-shadow: var(--shadow-sm) !important; color: var(--ink) !important; }
+.phenomenon-card.spotlight { border-color: #bfded6 !important; background: linear-gradient(135deg, rgba(8, 123, 112, 0.05) 0%, #ffffff 100%) !important; }
+.phenomenon-card h3 { font-family: var(--font-display) !important; font-size: 1.35rem !important; font-weight: 800 !important; color: var(--ink) !important; line-height: 1.25 !important; margin: 0 !important; }
+.phenomenon-card p { font-size: .88rem !important; color: var(--ink-soft) !important; line-height: 1.7 !important; margin: 0 !important; }
+.spec-list { background: var(--surface-soft) !important; border: 1px solid var(--line) !important; border-radius: var(--radius-sm) !important; padding: .85rem 1rem !important; display: flex !important; flex-direction: column !important; gap: .45rem !important; margin-top: auto !important; }
+.spec-item { display: flex !important; justify-content: space-between !important; align-items: center !important; font-size: .8rem !important; border-bottom: 1px solid var(--line) !important; padding-bottom: .35rem !important; }
+.spec-item:last-child { border-bottom: none !important; padding-bottom: 0 !important; }
+.spec-item .label { color: var(--muted) !important; font-size: .78rem !important; }
+.spec-item .val { font-weight: 700 !important; color: var(--ink) !important; font-family: var(--font-mono) !important; font-size: .8rem !important; }
+
+/* OEM Grid */
+.oem-section { margin-bottom: 3.5rem; }
+.oem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem; }
+.oem-card { background: #fff !important; border: 1px solid var(--line) !important; border-radius: var(--radius-lg) !important; padding: 1.6rem !important; display: flex !important; flex-direction: column !important; gap: 1.15rem !important; box-shadow: var(--shadow-sm) !important; transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s var(--ease) !important; }
+.oem-card:hover { transform: translateY(-4px) !important; box-shadow: var(--shadow-md) !important; border-color: var(--line-strong) !important; }
+.oem-card-header { display: flex !important; align-items: center !important; justify-content: space-between !important; border-bottom: 1px solid var(--line) !important; padding-bottom: .85rem !important; gap: .75rem !important; }
+.oem-plant-info { background: var(--surface-soft) !important; border: 1px solid var(--line) !important; border-radius: var(--radius-sm) !important; padding: .75rem .9rem !important; font-size: .8rem !important; display: flex !important; flex-direction: column !important; gap: .3rem !important; }
+.oem-plant-info .row { display: flex !important; justify-content: space-between !important; align-items: center !important; }
+.oem-plant-info .label { color: var(--muted) !important; font-size: .75rem !important; }
+.oem-plant-info .val { font-weight: 700 !important; color: var(--ink) !important; font-family: var(--font-mono) !important; font-size: .78rem !important; }
+.model-tag { font-size: .75rem !important; background: var(--surface-soft) !important; color: var(--ink) !important; border: 1px solid var(--line) !important; padding: .25rem .55rem !important; border-radius: var(--radius-sm) !important; font-weight: 600 !important; }
+.model-tag.bestseller { border-color: #bfded6 !important; color: var(--teal) !important; background: var(--teal-soft) !important; font-weight: 700 !important; }
+.oem-desc { font-size: .85rem !important; color: var(--ink-soft) !important; line-height: 1.65 !important; margin: 0 !important; }
+
+/* Policy Grid */
+.policy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-bottom: 3.5rem; }
+.policy-card { background: #fff !important; border: 1px solid var(--line) !important; border-radius: var(--radius-md) !important; padding: 1.4rem !important; display: flex !important; flex-direction: column !important; gap: .65rem !important; box-shadow: var(--shadow-sm) !important; }
+.policy-card h4 { font-family: var(--font-display) !important; font-size: 1.1rem !important; font-weight: 700 !important; color: var(--ink) !important; margin: 0 !important; }
+.policy-card p { font-size: .84rem !important; color: var(--ink-soft) !important; line-height: 1.65 !important; margin: 0 !important; }
+
+@media (max-width: 900px) {
+  .phenomenon-grid { grid-template-columns: 1fr !important; }
 }
