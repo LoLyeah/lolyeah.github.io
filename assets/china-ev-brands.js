@@ -271,12 +271,17 @@
     var official = {
       'zeekr': 'zeekr.svg', 'geely': 'geely.svg', 'byd': 'byd.svg', 'sgmw': 'wuling.svg', 'wuling': 'wuling.svg',
       'mg': 'mg.svg', 'chery': 'chery.svg', 'gac aion': 'aion.svg', 'aion': 'aion.svg', 'xiaomi': 'xiaomi.svg',
-      'nio': 'nio.svg', 'xpeng': 'xpeng.svg', 'leapmotor': 'leapmotor.svg', 'li auto': 'li.svg', 'huawei': 'huawei.svg',
+      'nio': 'nio.svg', 'xpeng': 'xpeng.svg', 'leapmotor': 'leapmotor.svg', 'li auto': 'li.svg', 'li': 'li.svg', 'huawei': 'huawei.svg',
       'lepas': 'lepas.svg', 'jetour': 'jetour.svg', 'great wall': 'gwm.svg', 'gwm': 'gwm.svg', 'ora': 'ora.svg',
       'wey': 'wey.svg', 'polestar': 'polestar.svg', 'smart': 'smart.svg', 'volvo': 'volvo.svg', 'proton': 'proton.svg',
       'deepal': 'deepal.svg', 'aito': 'aito.svg', 'baic': 'baic.svg', 'changan': 'changan.svg', 'dongfeng': 'dongfeng.svg',
       'faw': 'faw.svg', 'saic': 'saic.svg', 'trumpchi': 'trumpchi.svg', 'lynkco': 'lynkco.svg', 'lynk & co': 'lynkco.svg',
-      'hima': 'hima.svg', 'im': 'im.svg', 'icar': 'icar.svg', 'linghui': 'linghui.svg', 'new-forces': 'new-forces.svg'
+      'hima': 'hima.svg', 'im': 'im.svg', 'icar': 'icar.svg', 'linghui': 'linghui.svg', 'new-forces': 'new-forces.svg',
+      'avatr': 'avatr.svg', 'nevo': 'nevo.svg', 'fangchengbao': 'fangchengbao.svg', 'fang cheng bao': 'fangchengbao.svg',
+      'denza': 'denza.svg', 'yangwang': 'yangwang.svg', 'exeed': 'exeed.png', 'hyptec': 'hyptec.png', 'radar': 'radar.png',
+      'riddara': 'radar.png', 'lotus': 'lotus.svg', 'hongqi': 'hongqi.png', 'jac': 'jac.png', 'maxus': 'maxus.png',
+      'omoda': 'omoda.png', 'jaecoo': 'jaecoo.svg', 'luxeed': 'luxeed.svg', 'stelato': 'stelato.svg', 'maextro': 'maextro.svg',
+      'shangjie': 'shangjie.svg', 'seres': 'seres.png', 'haval': 'haval.png'
     };
     var fallback = {
       'lynk & co': 'L&Co', 'global affiliates': 'GLOBAL', 'riddara': 'RADAR', 'denza': 'DENZA',
