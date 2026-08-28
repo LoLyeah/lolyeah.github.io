@@ -272,7 +272,7 @@ button { color: inherit; }
 .realms-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 1.2rem; margin-bottom: 1.35rem; }
 .realm-card { transition: transform .28s var(--ease), box-shadow .28s var(--ease); }
 .realm-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-.realm-emblem { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid #d5c8df; border-radius: 12px; background: #f0eaf4; color: var(--violet); font-family: var(--font-cn); font-size: 1.15rem; font-weight: 800; }
+.realm-emblem { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 12px; background: #fff !important; color: var(--ink); box-shadow: var(--shadow-sm); }
 .partner-sub { margin-top: .2rem; color: var(--muted); font-size: .68rem; }
 .realm-models-box { margin-top: auto; color: var(--ink-soft); font-size: .72rem; }
 .realm-models-box strong { display: block; margin-bottom: .25rem; color: var(--ink); }
@@ -316,8 +316,135 @@ table.sales-table tr:hover td, table.licensing-table tr:hover td { background: #
 .subnav-footer-strip { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin: 0 0 3.5rem; padding: 1.1rem 1.25rem; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface-soft); }
 .subnav-footer-strip strong { display: block; color: var(--ink) !important; font-family: var(--font-display); }
 .subnav-footer-strip span { color: var(--muted) !important; }
-.subnav-pill { display: inline-flex; align-items: center; min-height: 38px; padding: .45rem .7rem; border: 1px solid var(--line); border-radius: var(--radius-pill); background: #fff; color: var(--teal); font-size: .72rem; font-weight: 800; transition: transform .25s var(--ease), background .25s var(--ease), color .25s var(--ease); }
-.subnav-pill:hover { transform: translateY(-2px); background: var(--teal); color: #fff; }
+
+/* ── Suite Navigation Pills Bar ── */
+.suite-pills-nav {
+  width: 100%;
+  margin: 0 0 2.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  padding: .35rem .15rem .65rem;
+}
+
+.suite-pills-track {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .65rem;
+  min-width: max-content;
+}
+
+.suite-pill, .subnav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  min-height: 42px;
+  padding: .45rem .95rem .45rem .55rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: #fff;
+  color: var(--ink-soft);
+  font-family: var(--font-sans);
+  font-size: .78rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(22, 35, 45, .03);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform .28s var(--ease),
+    background .28s var(--ease),
+    border-color .28s var(--ease),
+    color .28s var(--ease),
+    box-shadow .28s var(--ease);
+}
+
+.suite-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 24px;
+  padding: 0 .4rem;
+  border-radius: var(--radius-pill);
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+  transition:
+    background .28s var(--ease),
+    color .28s var(--ease),
+    transform .28s var(--ease);
+}
+
+.suite-pill:hover, .subnav-pill:hover {
+  transform: translateY(-2px);
+  border-color: var(--teal);
+  background: #fff;
+  color: var(--teal);
+  box-shadow: 0 6px 18px rgba(8, 123, 112, .12);
+}
+
+.suite-pill:hover .suite-pill-badge {
+  background: var(--teal-soft);
+  color: var(--teal);
+  transform: scale(1.05);
+}
+
+.suite-pill:active, .subnav-pill:active {
+  transform: translateY(0) scale(.98);
+  box-shadow: 0 2px 6px rgba(8, 123, 112, .08);
+}
+
+.suite-pill:focus-visible, .subnav-pill:focus-visible {
+  outline: 3px solid rgba(8, 123, 112, .45);
+  outline-offset: 2px;
+}
+
+.suite-pill.active, .subnav-pill.active {
+  background: var(--teal) !important;
+  color: #fff !important;
+  border-color: var(--teal) !important;
+  box-shadow: 0 6px 20px rgba(8, 123, 112, .32);
+  cursor: default;
+}
+
+.suite-pill.active .suite-pill-badge {
+  background: rgba(255, 255, 255, .24);
+  color: #fff;
+}
+
+.suite-pill.active:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(8, 123, 112, .38);
+}
+
+@keyframes suitePillEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.suite-pills-nav .suite-pill {
+  animation: suitePillEntrance .45s var(--ease) backwards;
+}
+
+.suite-pills-nav .suite-pill:nth-child(1) { animation-delay: .03s; }
+.suite-pills-nav .suite-pill:nth-child(2) { animation-delay: .06s; }
+.suite-pills-nav .suite-pill:nth-child(3) { animation-delay: .09s; }
+.suite-pills-nav .suite-pill:nth-child(4) { animation-delay: .12s; }
+.suite-pills-nav .suite-pill:nth-child(5) { animation-delay: .15s; }
+.suite-pills-nav .suite-pill:nth-child(6) { animation-delay: .18s; }
 .site-footer { margin-top: 3rem; padding: 3rem 0 2rem; border-top: 1px solid var(--line-strong); background: #e9eee9; }
 .footer-content { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; color: var(--muted); font-size: .78rem; }
 .footer-logo { color: var(--ink); font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; }
@@ -440,6 +567,7 @@ table.sales-table tr:hover td, table.licensing-table tr:hover td { background: #
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
   #ev-canvas { display: none !important; }
   .reveal-ready [data-reveal] {
@@ -453,6 +581,8 @@ table.sales-table tr:hover td, table.licensing-table tr:hover td { background: #
   .share-bar-fill {
     transition: none !important;
   }
+  body.js-motion .reveal-item, body.js-motion .reveal-item.is-visible { opacity: 1; transform: none; }
+  .suite-pill, .subnav-pill, .suite-pill-badge { animation: none !important; transition: none !important; transform: none !important; }
 }
 
 @media (max-width: 1050px) {
@@ -570,9 +700,9 @@ body { color: var(--ink) !important; background-color: var(--paper) !important; 
 .bigtech-card:hover .points-list li strong { color: var(--ink) !important; }
 .brand-inline-logo { width: 22px; height: 22px; flex: 0 0 22px; object-fit: contain; padding: 2px; border-radius: 5px; background: #fff; vertical-align: middle; }
 .brand-inline-wordmark { display: inline-grid; place-items: center; min-width: 42px; min-height: 22px; padding: 2px 5px; border-radius: 5px; background: #fff; color: var(--ink); font-family: var(--font-mono); font-size: .52rem; font-weight: 800; line-height: 1; vertical-align: middle; }
-.realm-emblem { width: 46px !important; height: 46px !important; display: grid !important; place-items: center !important; border: 1px solid var(--line) !important; border-radius: 12px !important; background: #0f172a !important; overflow: hidden !important; flex: 0 0 46px !important; }
-.realm-emblem img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
-.realm-wordmark { display: grid; place-items: center; width: 100%; height: 100%; color: #fff; font-family: var(--font-mono); font-size: .58rem; font-weight: 800; text-align: center; line-height: 1; }
+.realm-emblem { width: 46px !important; height: 46px !important; display: grid !important; place-items: center !important; border: 1px solid var(--line) !important; border-radius: 12px !important; background: #fff !important; overflow: hidden !important; flex: 0 0 46px !important; }
+.realm-emblem img, .realm-emblem .official-logo { width: 80% !important; height: 80% !important; max-width: 80% !important; max-height: 80% !important; object-fit: contain !important; }
+.realm-wordmark { display: grid; place-items: center; width: 100%; height: 100%; color: var(--ink) !important; font-family: var(--font-display); font-size: .68rem; font-weight: 900; letter-spacing: -.03em; text-align: center; line-height: 1; }
 .bigtech-card .points-list li strong { color: var(--ink) !important; }
 .hero-car-card .card-top-meta { flex-wrap: wrap; }
 .brand-parent-tag, .status-badge { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
