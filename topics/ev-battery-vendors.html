@@ -530,10 +530,19 @@
         /* ── SECTION COMMONS ────────────────────────────────── */
         section.reveal {
             border-top: 1px solid var(--border);
-            padding-top: 3.5rem;
+            padding-top: 3.75rem;
             margin-bottom: 3.5rem;
             scroll-margin-top: 92px;
             width: 100%;
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        section.reveal.in-view {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .section-header {
@@ -573,7 +582,7 @@
         .tier-framework-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 1.25rem;
+            gap: 1.35rem;
             width: 100%;
         }
 
@@ -581,15 +590,17 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 1.65rem;
+            padding: clamp(1.4rem, 2.5vw, 1.85rem);
             box-shadow: 0 4px 14px rgba(38, 46, 39, 0.04);
-            transition: all 0.25s;
+            transition: transform 0.28s var(--ease-spring), box-shadow 0.28s ease, border-color 0.28s ease, background-color 0.28s ease;
             min-width: 0;
         }
 
         .tier-framework-card:hover {
             background: var(--bg-card-hover);
             border-color: var(--border-hov);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(23, 59, 59, 0.08);
         }
 
         .tier-header-badge {
@@ -603,9 +614,9 @@
             letter-spacing: 0.06em;
         }
 
-        .badge-t1-fw { background: #e2eee9; color: var(--emerald); border: 1px solid #bad7ce; }
-        .badge-t2-fw { background: #fdf3e2; color: var(--amber); border: 1px solid #edd5b0; }
-        .badge-t3-fw { background: #fbebee; color: var(--rose); border: 1px solid #f4c2c7; }
+        .badge-t1-fw { background: #dff0e9; color: #0d5f54; border: 1px solid #afd7c9; }
+        .badge-t2-fw { background: #fdf1de; color: #875106; border: 1px solid #ead0a3; }
+        .badge-t3-fw { background: #fae7eb; color: #912732; border: 1px solid #f0b5be; }
 
         .tier-framework-title {
             font-family: var(--font-display);
@@ -650,11 +661,12 @@
             background: #fffdf8;
             font-size: 13.5px;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         .table-filter:focus {
             border-color: var(--terracotta);
+            box-shadow: 0 0 0 3px rgba(200, 95, 62, 0.15);
         }
 
         .table-scroll-hint {
@@ -687,23 +699,28 @@
         }
 
         .data-table th {
-            background: #e9e2d7;
-            color: var(--text-secondary);
+            background: #ede6da;
+            color: var(--text-primary);
             font-family: var(--font-mono);
-            font-size: 11px;
+            font-size: 11.5px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border);
+            padding: 15px 18px;
+            border-bottom: 2px solid var(--border);
             white-space: nowrap;
         }
 
         .data-table td {
-            padding: 14px 16px;
+            padding: 14px 18px;
             border-bottom: 1px solid #ece4d7;
             vertical-align: top;
             line-height: 1.55;
+            color: #243b37;
+        }
+
+        .data-table tbody tr {
+            transition: background-color 0.18s ease;
         }
 
         .data-table tbody tr:nth-child(even) td {
@@ -711,7 +728,7 @@
         }
 
         .data-table tbody tr:hover td {
-            background: #fff4e8;
+            background: #fbf0e4;
         }
 
         .vendor-name {
@@ -725,7 +742,7 @@
         .tier23-grid, .policy-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1.25rem;
+            gap: 1.35rem;
             align-items: start;
             width: 100%;
         }
@@ -734,9 +751,17 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 1.75rem;
+            padding: clamp(1.4rem, 2.5vw, 1.85rem);
             box-shadow: 0 4px 14px rgba(38, 46, 39, 0.04);
+            transition: transform 0.28s var(--ease-spring), box-shadow 0.28s ease, border-color 0.28s ease, background-color 0.28s ease;
             min-width: 0;
+        }
+
+        .tier23-card:hover, .policy-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-hov);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(23, 59, 59, 0.08);
         }
 
         .tier23-title, .policy-title {
@@ -784,7 +809,7 @@
         .charts-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1.25rem;
+            gap: 1.35rem;
             margin-bottom: 2rem;
             width: 100%;
         }
@@ -793,13 +818,20 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 1.25rem;
+            padding: 1.35rem;
             height: 380px;
             position: relative;
             box-shadow: 0 4px 14px rgba(38, 46, 39, 0.04);
             min-width: 0;
             width: 100%;
             overflow: hidden;
+            transition: transform 0.28s var(--ease-spring), box-shadow 0.28s ease, border-color 0.28s ease;
+        }
+
+        .chart-card:hover {
+            border-color: var(--border-hov);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(23, 59, 59, 0.08);
         }
 
         .chart-card canvas {
@@ -810,43 +842,102 @@
         /* ── SIMULATOR ──────────────────────────────────────── */
         .sim-grid {
             display: grid;
-            grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-            gap: 1.25rem;
+            grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
+            gap: 1.5rem;
             align-items: stretch;
             width: 100%;
         }
 
         .sim-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: clamp(1.25rem, 2.5vw, 1.85rem);
-            box-shadow: 0 4px 14px rgba(38, 46, 39, 0.04);
+            padding: clamp(1.5rem, 3vw, 2.25rem);
+            box-shadow: 0 4px 18px rgba(38, 46, 39, 0.05);
             min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .sim-card:first-child {
-            background: #eef4f0;
-            border-color: #c9dcd3;
+        .sim-card-inputs {
+            background: #ffffff;
+            border: 1px solid #d4ded9;
         }
 
-        .sim-card:nth-child(2) {
-            background: var(--text-primary);
-            border-color: var(--text-primary);
-            color: #fffdf8;
+        .sim-card-outputs {
+            background: #102624;
+            border: 1px solid #1c3c38;
+            color: #ffffff;
+            box-shadow: 0 8px 30px rgba(16, 38, 36, 0.28);
         }
 
-        .sim-card:nth-child(2) h3 {
-            color: #fffdf8;
+        .sim-controls-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 1px solid #ede7dc;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .sim-inputs-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .sim-inputs-badge {
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #0d5f54;
+            background: #dff0e9;
+            border: 1px solid #afd7c9;
+            padding: 3px 9px;
+            border-radius: 4px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .sim-outputs-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .sim-outputs-header h3 {
+            color: #ffffff;
             font-family: var(--font-display);
             font-size: 1.35rem;
-            margin-bottom: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0;
+            line-height: 1.2;
+        }
+
+        .sim-status-badge {
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #34d399;
+            background: rgba(52, 211, 153, 0.14);
+            border: 1px solid rgba(52, 211, 153, 0.35);
+            padding: 3px 9px;
+            border-radius: 4px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
         .control-group {
             margin-bottom: 1.25rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(23, 59, 59, 0.12);
+            padding-bottom: 1.15rem;
+            border-bottom: 1px solid #efe8dc;
         }
 
         .control-group:last-child {
@@ -859,97 +950,220 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #173b3b;
+            margin-bottom: 0.65rem;
             gap: 0.5rem;
             flex-wrap: wrap;
         }
 
-        .control-val {
+        .control-val-pill {
             font-family: var(--font-mono);
-            color: var(--terracotta);
+            color: #9c3b1d;
+            background: #faede7;
+            border: 1px solid #f2c7b8;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
+            padding: 2px 9px;
+            border-radius: 4px;
+            letter-spacing: 0.02em;
+            transition: transform 0.2s ease, background-color 0.2s ease;
         }
 
         .select-filter {
             width: 100%;
             min-height: 44px;
-            padding: 0.6rem 0.85rem;
-            border: 1px solid #b9c9c2;
+            padding: 0.65rem 0.95rem;
+            border: 1.5px solid #cbded6;
             border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            background: #fffdf8;
+            color: #173b3b;
+            background: #ffffff;
             font-size: 13.5px;
+            font-weight: 600;
             font-family: var(--font-main);
             outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .select-filter:focus {
+            border-color: var(--terracotta);
+            box-shadow: 0 0 0 3px rgba(200, 95, 62, 0.16);
         }
 
         .range-slider {
+            -webkit-appearance: none;
+            appearance: none;
             width: 100%;
-            height: 6px;
-            background: #d1ded8;
-            border-radius: 4px;
+            height: 8px;
+            background: #dbe5e1;
+            border-radius: 99px;
             outline: none;
-            accent-color: var(--terracotta);
             cursor: pointer;
-            margin-top: 0.4rem;
+            margin-top: 0.5rem;
+            transition: background 0.15s ease;
         }
 
-        .sim-output-box {
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--terracotta);
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(200, 95, 62, 0.45);
+            cursor: grab;
+            transition: transform 0.15s var(--ease-spring), box-shadow 0.15s ease, background 0.15s ease;
+        }
+
+        .range-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--terracotta);
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(200, 95, 62, 0.45);
+            cursor: grab;
+            transition: transform 0.15s var(--ease-spring), box-shadow 0.15s ease, background 0.15s ease;
+        }
+
+        .range-slider:hover::-webkit-slider-thumb {
+            transform: scale(1.18);
+            box-shadow: 0 4px 12px rgba(200, 95, 62, 0.6);
+        }
+
+        .range-slider:active::-webkit-slider-thumb {
+            cursor: grabbing;
+            transform: scale(1.25);
+            background: #b54c2d;
+        }
+
+        .range-slider:focus-visible {
+            outline: 2px solid var(--terracotta);
+            outline-offset: 4px;
+        }
+
+        .sim-output-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            border-radius: var(--radius-sm);
-            overflow: hidden;
+            gap: 0.9rem;
             width: 100%;
         }
 
-        .out-item {
-            padding: 1.15rem;
-            border-right: 1px solid rgba(255, 255, 255, 0.12);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(255, 255, 255, 0.04);
+        .out-tile {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-md);
+            padding: 1.1rem 1.25rem;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             min-width: 0;
+            transition: transform 0.25s var(--ease-spring), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .out-item:nth-child(2n) {
-            border-right: none;
+        .out-tile:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.24);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
         }
 
-        .out-item:nth-last-child(-n+2):not([style*="span 2"]) {
-            border-bottom: none;
+        .out-tile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.35rem;
+            gap: 0.5rem;
         }
 
         .out-label {
+            font-family: var(--font-mono);
             font-size: 11px;
-            color: #b2c5bf;
-            margin-bottom: 0.35rem;
+            font-weight: 700;
+            color: #c3ded6;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
             line-height: 1.35;
+        }
+
+        .out-icon {
+            font-size: 14px;
+            opacity: 0.75;
         }
 
         .out-val {
             font-family: var(--font-display);
-            font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+            font-size: clamp(1.45rem, 2.2vw, 1.95rem);
             font-weight: 700;
-            color: #fffdf8;
             line-height: 1.1;
+            margin: 0.2rem 0;
+            letter-spacing: -0.02em;
+            display: inline-block;
+            transition: transform 0.2s var(--ease-spring), color 0.2s ease;
+        }
+
+        @keyframes valPopAnim {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .out-val.val-pop {
+            animation: valPopAnim 0.25s var(--ease-spring);
+        }
+
+        .val-range { color: #ff9d76; }
+        .val-weight { color: #ffffff; }
+        .val-charge { color: #34d399; }
+        .val-cost { color: #fde047; }
+        .val-soh { color: #c4b5fd; }
+
+        .out-caption {
+            font-size: 11px;
+            color: #8fa8a0;
+            line-height: 1.35;
+            margin-top: 0.25rem;
+        }
+
+        .out-tile-span2 {
+            grid-column: span 2;
+        }
+
+        .soh-bar-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.95rem;
+            margin: 0.35rem 0 0.15rem;
+        }
+
+        .soh-bar-track {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .soh-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #818cf8, #c4b5fd);
+            border-radius: 99px;
+            transition: width 0.4s var(--ease-spring);
         }
 
         /* ── FOOTER & TO TOP ────────────────────────────────── */
         footer {
             border-top: 1px solid var(--border);
-            padding: 3rem 0;
+            padding: 3.5rem 0;
             color: #aec3bc;
             background: var(--text-primary);
             font-size: 13.5px;
             text-align: center;
             width: 100%;
+            margin-top: 4rem;
         }
 
         .footer-links {
@@ -989,9 +1203,14 @@
             opacity: 0;
             pointer-events: none;
             transform: translateY(8px);
-            transition: opacity 0.25s, transform 0.25s;
+            transition: opacity 0.25s, transform 0.25s var(--ease-spring), background-color 0.2s, box-shadow 0.2s;
             font-size: 16px;
             font-weight: 700;
+        }
+
+        .to-top:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(200, 95, 62, 0.4);
         }
 
         .to-top.visible {
@@ -1120,7 +1339,7 @@
                 font-size: clamp(1.65rem, 7.5vw, 2.25rem);
             }
 
-            .tier-framework-card, .tier23-card, .policy-card {
+            .tier-framework-card, .tier23-card, .policy-card, .sim-card {
                 padding: 1.25rem;
             }
 
@@ -1129,16 +1348,20 @@
                 padding: 0.85rem;
             }
 
-            .sim-output-box {
-                grid-template-columns: 1fr 1fr;
+            .sim-output-grid {
+                grid-template-columns: 1fr;
             }
 
-            .out-item {
-                padding: 0.9rem;
+            .out-tile-span2 {
+                grid-column: span 1;
+            }
+
+            .out-tile {
+                padding: 0.95rem 1rem;
             }
 
             .out-val {
-                font-size: 1.35rem;
+                font-size: 1.45rem;
             }
 
             .table-tools {
@@ -1161,6 +1384,10 @@
             *, *::before, *::after {
                 animation: none !important;
                 transition-duration: 0.01ms !important;
+            }
+            section.reveal {
+                opacity: 1 !important;
+                transform: none !important;
             }
         }
     </style>
@@ -1420,31 +1647,31 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong style="color:var(--terracotta);">Cathode (CAM)</strong></td>
+                            <td><strong style="color:#a84323;">Cathode (CAM)</strong></td>
                             <td>~40–50%</td>
                             <td>Hunan Yuneng (#1 LFP, 1.14M tons), Hubei Wanrun, Dynanonic, EcoPro BM (High-Ni), LG Chem, POSCO Future M</td>
-                            <td><strong style="color:var(--amber);">~75%–80%</strong></td>
+                            <td><strong style="color:#8a5308;">~75%–80%</strong></td>
                             <td>LMFP voltage elevation (3.7V); Single-crystal High-Ni (≥80%). Risk: Chinese pCAM precursor refining dominance.</td>
                         </tr>
                         <tr>
-                            <td><strong style="color:var(--emerald);">Anode (AAM)</strong></td>
+                            <td><strong style="color:#0f6d63;">Anode (AAM)</strong></td>
                             <td>~10–15%</td>
                             <td>BTR New Material (#1 overall), Shanghai Putailai (Jiangxi Zichen), Ningbo Shanshan, POSCO Future M, Resonac</td>
-                            <td><strong style="color:var(--rose);">90%–96%</strong></td>
+                            <td><strong style="color:#932a35;">90%–96%</strong></td>
                             <td>Graphitization efficiency (2,800°C); Silicon-carbon fast charge. Risk: Chinese graphite export controls.</td>
                         </tr>
                         <tr>
-                            <td><strong style="color:var(--blue);">Separator</strong></td>
+                            <td><strong style="color:#1d556e;">Separator</strong></td>
                             <td>~8–10%</td>
                             <td>Semcorp (Yunnan Energy, &gt;30% share), Senior Tech Material, Asahi Kasei (Celgard), SKIET, Toray</td>
-                            <td><strong style="color:var(--amber);">~80%–85%</strong></td>
+                            <td><strong style="color:#8a5308;">~80%–85%</strong></td>
                             <td>Sub-7µm wet PE; Boehmite ceramic thermal shutdown coatings (&gt;180°C). Risk: High capex & specialized machinery.</td>
                         </tr>
                         <tr>
-                            <td><strong style="color:var(--purple);">Electrolyte & Salts</strong></td>
+                            <td><strong style="color:#594470;">Electrolyte & Salts</strong></td>
                             <td>~10–15%</td>
                             <td>Guangzhou Tinci (&gt;30% share), Shenzhen Capchem, Guotai Huarong, DFD (LiPF6 salt), Mitsubishi Chem</td>
-                            <td><strong style="color:var(--amber);">~80%–85%</strong></td>
+                            <td><strong style="color:#8a5308;">~80%–85%</strong></td>
                             <td>Custom SEI additives (VC/FEC); LiFSI high-voltage salt. Risk: HF reactivity, 3–6 mo shelf life, Chinese salt monopoly.</td>
                         </tr>
                     </tbody>
@@ -1541,11 +1768,16 @@
             </div>
 
             <div class="sim-grid">
-                <div class="sim-card">
+                <div class="sim-card sim-card-inputs">
+                    <div class="sim-controls-header">
+                        <h3 class="sim-inputs-title" data-i18n="simInputsTitle">Pack Configuration Inputs</h3>
+                        <span class="sim-inputs-badge" data-i18n="simInputsBadge">Active Simulation</span>
+                    </div>
+
                     <div class="control-group">
                         <div class="control-label">
                             <span data-i18n="simChem">Cell Chemistry:</span>
-                            <span class="control-val" id="val-chem-display">LFP (Lithium Iron Phosphate)</span>
+                            <span class="control-val-pill" id="val-chem-display">LFP (Lithium Iron Phosphate)</span>
                         </div>
                         <select id="sim-chem-select" class="select-filter" onchange="calcSim()">
                             <option value="LFP">LFP (CATL Shenxing / BYD Blade)</option>
@@ -1558,7 +1790,7 @@
                     <div class="control-group">
                         <div class="control-label">
                             <span data-i18n="simCap">Usable Pack Capacity:</span>
-                            <span class="control-val" id="val-cap">65 kWh</span>
+                            <span class="control-val-pill" id="val-cap">65 kWh</span>
                         </div>
                         <input type="range" min="30" max="130" value="65" class="range-slider" id="slider-cap" oninput="calcSim()">
                     </div>
@@ -1566,7 +1798,7 @@
                     <div class="control-group">
                         <div class="control-label">
                             <span data-i18n="simEff">EV Efficiency:</span>
-                            <span class="control-val" id="val-eff">165 Wh/km</span>
+                            <span class="control-val-pill" id="val-eff">165 Wh/km</span>
                         </div>
                         <input type="range" min="120" max="240" value="165" class="range-slider" id="slider-eff" oninput="calcSim()">
                     </div>
@@ -1574,39 +1806,67 @@
                     <div class="control-group">
                         <div class="control-label">
                             <span data-i18n="simCharger">Fast Charger Output:</span>
-                            <span class="control-val" id="val-charger">150 kW</span>
+                            <span class="control-val-pill" id="val-charger">150 kW</span>
                         </div>
                         <input type="range" min="50" max="480" value="150" class="range-slider" id="slider-charger" oninput="calcSim()">
                     </div>
                 </div>
 
-                <div class="sim-card">
-                    <h3 data-i18n="simOutHeader">Estimated Pack Performance</h3>
+                <div class="sim-card sim-card-outputs">
+                    <div class="sim-outputs-header">
+                        <h3 data-i18n="simOutHeader">Estimated Pack Performance</h3>
+                        <span class="sim-status-badge" data-i18n="simModelStatus">Live 2026 Model</span>
+                    </div>
 
-                    <div class="sim-output-box">
-                        <div class="out-item">
-                            <span class="out-label" data-i18n="outRange">Estimated Driving Range</span>
-                            <span class="out-val" id="out-range" style="color:var(--terracotta)">394 km</span>
+                    <div class="sim-output-grid">
+                        <div class="out-tile out-tile-range">
+                            <div class="out-tile-header">
+                                <span class="out-label" data-i18n="outRange">Estimated Driving Range</span>
+                                <span class="out-icon" aria-hidden="true">⚡</span>
+                            </div>
+                            <span class="out-val val-range" id="out-range">394 km</span>
+                            <span class="out-caption" data-i18n="outRangeCap">Estimated on combined WLTP cycle</span>
                         </div>
 
-                        <div class="out-item">
-                            <span class="out-label" data-i18n="outWeight">Estimated Pack Weight</span>
-                            <span class="out-val" id="out-weight">457 kg</span>
+                        <div class="out-tile out-tile-weight">
+                            <div class="out-tile-header">
+                                <span class="out-label" data-i18n="outWeight">Estimated Pack Weight</span>
+                                <span class="out-icon" aria-hidden="true">⚖️</span>
+                            </div>
+                            <span class="out-val val-weight" id="out-weight">457 kg</span>
+                            <span class="out-caption" data-i18n="outWeightCap">Cell-to-pack (CTP 3.0) multiplier: 1.30</span>
                         </div>
 
-                        <div class="out-item">
-                            <span class="out-label" data-i18n="outChargeTime">10% to 80% Fast Charge</span>
-                            <span class="out-val" id="out-chg-time" style="color:var(--emerald)">21 min</span>
+                        <div class="out-tile out-tile-chg">
+                            <div class="out-tile-header">
+                                <span class="out-label" data-i18n="outChargeTime">10% to 80% Fast Charge</span>
+                                <span class="out-icon" aria-hidden="true">⏱️</span>
+                            </div>
+                            <span class="out-val val-charge" id="out-chg-time">21 min</span>
+                            <span class="out-caption" data-i18n="outChargeCap">C-rate & pack voltage curve limited</span>
                         </div>
 
-                        <div class="out-item">
-                            <span class="out-label" data-i18n="outCost">Estimated Cell Pack Cost</span>
-                            <span class="out-val" id="out-cost">$4,875</span>
+                        <div class="out-tile out-tile-cost">
+                            <div class="out-tile-header">
+                                <span class="out-label" data-i18n="outCost">Estimated Cell Pack Cost</span>
+                                <span class="out-icon" aria-hidden="true">🏷️</span>
+                            </div>
+                            <span class="out-val val-cost" id="out-cost">$4,875</span>
+                            <span class="out-caption" data-i18n="outCostCap">2026 spot pack-level benchmark</span>
                         </div>
 
-                        <div class="out-item" style="grid-column: span 2">
-                            <span class="out-label" data-i18n="outSoh">10-Year SOH (State of Health) Retention</span>
-                            <span class="out-val" id="out-soh" style="color:var(--purple)">91.0%</span>
+                        <div class="out-tile out-tile-soh out-tile-span2">
+                            <div class="out-tile-header">
+                                <span class="out-label" data-i18n="outSoh">10-Year SOH Retention</span>
+                                <span class="out-icon" aria-hidden="true">🔋</span>
+                            </div>
+                            <div class="soh-bar-wrapper">
+                                <div class="soh-bar-track">
+                                    <div class="soh-bar-fill" id="soh-fill" style="width: 91.0%"></div>
+                                </div>
+                                <span class="out-val val-soh" id="out-soh">91.0%</span>
+                            </div>
+                            <span class="out-caption" data-i18n="outSohCap">Estimated after 1,500–3,000 thermal cycles</span>
                         </div>
                     </div>
                 </div>
@@ -1812,16 +2072,24 @@
                 simTag: "Interactive Tool",
                 simTitle: "Battery Pack Specs & Range Estimator",
                 simDesc: "Adjust chemistry parameters and pack capacity to simulate weight, fast-charge times, pack cost, and 10-year State of Health (SOH) retention.",
+                simInputsTitle: "Pack Configuration Inputs",
+                simInputsBadge: "Active Simulation",
                 simChem: "Cell Chemistry:",
                 simCap: "Usable Pack Capacity:",
                 simEff: "EV Efficiency:",
                 simCharger: "Fast Charger Output:",
                 simOutHeader: "Estimated Pack Performance",
+                simModelStatus: "Live 2026 Model",
                 outRange: "Estimated Driving Range",
+                outRangeCap: "Estimated on combined WLTP cycle",
                 outWeight: "Estimated Pack Weight",
+                outWeightCap: "Cell-to-pack (CTP 3.0) multiplier: 1.30",
                 outChargeTime: "10% to 80% Fast Charge",
+                outChargeCap: "C-rate & pack voltage curve limited",
                 outCost: "Estimated Cell Pack Cost",
-                outSoh: "10-Year SOH (State of Health) Retention"
+                outCostCap: "2026 spot pack-level benchmark",
+                outSoh: "10-Year SOH Retention",
+                outSohCap: "Estimated after 1,500–3,000 thermal cycles"
             },
             id: {
                 navTier1: "Produsen Sel Tier 1",
@@ -1886,16 +2154,24 @@
                 simTag: "Alat Interaktif",
                 simTitle: "Estimator Performa & Jangkauan Paket Baterai",
                 simDesc: "Sesuaikan parameter kimia dan kapasitas paket untuk mensimulasikan bobot, waktu pengisian cepat, biaya baterai, dan retensi SOH (Kesehatan Baterai) 10 tahun.",
+                simInputsTitle: "Parameter Konfigurasi Paket",
+                simInputsBadge: "Simulasi Aktif",
                 simChem: "Kimia Sel Baterai:",
                 simCap: "Kapasitas Paket Terpakai:",
                 simEff: "Efisiensi Mobil EV:",
                 simCharger: "Daya Charger Fast Charging:",
                 simOutHeader: "Estimasi Performa Paket Baterai",
+                simModelStatus: "Model Langsung 2026",
                 outRange: "Estimasi Jarak Tempuh",
+                outRangeCap: "Estimasi siklus kombinasi WLTP",
                 outWeight: "Estimasi Bobot Paket Baterai",
+                outWeightCap: "Pengali Cell-to-pack (CTP 3.0): 1.30",
                 outChargeTime: "Fast Charge 10% ke 80%",
+                outChargeCap: "Dibatasi kurva C-rate & voltase paket",
                 outCost: "Estimasi Biaya Paket Sel",
-                outSoh: "Retensi SOH (Kesehatan Baterai) 10 Tahun"
+                outCostCap: "Benchmark harga sel spot 2026",
+                outSoh: "Retensi SOH 10 Tahun",
+                outSohCap: "Estimasi setelah 1.500–3.000 siklus termal"
             }
         };
 
@@ -1941,34 +2217,62 @@
             calcSim();
         }
 
-        function calcSim() {
-            const chem = document.getElementById("sim-chem-select").value;
-            const cap = parseFloat(document.getElementById("slider-cap").value);
-            const eff = parseFloat(document.getElementById("slider-eff").value);
-            const charger = parseFloat(document.getElementById("slider-charger").value);
+        function updateSliderTrack(slider) {
+            if (!slider) return;
+            const min = parseFloat(slider.min) || 0;
+            const max = parseFloat(slider.max) || 100;
+            const val = parseFloat(slider.value) || 0;
+            const pct = Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100));
+            slider.style.background = `linear-gradient(to right, #c85f3e 0%, #c85f3e ${pct}%, #dbe5e1 ${pct}%, #dbe5e1 100%)`;
+        }
 
-            document.getElementById("val-cap").innerText = cap + " kWh";
-            document.getElementById("val-eff").innerText = eff + " Wh/km";
-            document.getElementById("val-charger").innerText = charger + " kW";
+        function calcSim() {
+            const chemSelect = document.getElementById("sim-chem-select");
+            if (!chemSelect) return;
+            const chem = chemSelect.value;
+            const sliderCap = document.getElementById("slider-cap");
+            const sliderEff = document.getElementById("slider-eff");
+            const sliderCharger = document.getElementById("slider-charger");
+
+            const cap = parseFloat(sliderCap ? sliderCap.value : 65);
+            const eff = parseFloat(sliderEff ? sliderEff.value : 165);
+            const charger = parseFloat(sliderCharger ? sliderCharger.value : 150);
+
+            updateSliderTrack(sliderCap);
+            updateSliderTrack(sliderEff);
+            updateSliderTrack(sliderCharger);
+
+            const valCap = document.getElementById("val-cap");
+            const valEff = document.getElementById("val-eff");
+            const valCharger = document.getElementById("val-charger");
+            if (valCap) valCap.innerText = cap + " kWh";
+            if (valEff) valEff.innerText = eff + " Wh/km";
+            if (valCharger) valCharger.innerText = charger + " kW";
+
+            const curLang = document.documentElement.lang || 'en';
 
             let densityWhKg = 185;
             let costPerKwh = 75;
             let sohRetention = 91.0;
             let maxAcceptableKw = 260;
+            let chemLabel = "LFP (Lithium Iron Phosphate)";
 
             if (chem === "LFP") {
                 densityWhKg = 185; costPerKwh = 75; sohRetention = 91.0; maxAcceptableKw = 260;
-                document.getElementById("val-chem-display").innerText = "LFP (Lithium Iron Phosphate)";
+                chemLabel = curLang === 'id' ? "LFP (Litium Besi Fosfat)" : "LFP (Lithium Iron Phosphate)";
             } else if (chem === "NMC811") {
                 densityWhKg = 270; costPerKwh = 105; sohRetention = 84.5; maxAcceptableKw = 350;
-                document.getElementById("val-chem-display").innerText = "NMC 811 / NCMA (High Nickel)";
+                chemLabel = curLang === 'id' ? "NMC 811 / NCMA (Nikel Tinggi)" : "NMC 811 / NCMA (High Nickel)";
             } else if (chem === "NA") {
                 densityWhKg = 150; costPerKwh = 55; sohRetention = 92.5; maxAcceptableKw = 150;
-                document.getElementById("val-chem-display").innerText = "Sodium-Ion (Na-Ion)";
+                chemLabel = curLang === 'id' ? "Sodium-Ion (Na-Ion)" : "Sodium-Ion (Na-Ion)";
             } else if (chem === "SSB") {
                 densityWhKg = 420; costPerKwh = 160; sohRetention = 95.0; maxAcceptableKw = 450;
-                document.getElementById("val-chem-display").innerText = "Solid-State Battery";
+                chemLabel = curLang === 'id' ? "Solid-State Baterai (ASSB)" : "Solid-State Battery (ASSB)";
             }
+
+            const valChem = document.getElementById("val-chem-display");
+            if (valChem) valChem.innerText = chemLabel;
 
             const rangeKm = Math.round((cap * 1000) / eff);
             const cellWeightKg = (cap * 1000) / densityWhKg;
@@ -1979,11 +2283,26 @@
             const minutesNeeded = Math.max(8, Math.round(hoursNeeded * 60));
             const totalCost = Math.round(cap * costPerKwh);
 
-            document.getElementById("out-range").innerText = rangeKm + " km";
-            document.getElementById("out-weight").innerText = packWeightKg + " kg";
-            document.getElementById("out-chg-time").innerText = minutesNeeded + " min";
-            document.getElementById("out-cost").innerText = "$" + totalCost.toLocaleString();
-            document.getElementById("out-soh").innerText = sohRetention.toFixed(1) + "%";
+            const outRange = document.getElementById("out-range");
+            const outWeight = document.getElementById("out-weight");
+            const outChg = document.getElementById("out-chg-time");
+            const outCost = document.getElementById("out-cost");
+            const outSoh = document.getElementById("out-soh");
+            const sohFill = document.getElementById("soh-fill");
+
+            if (outRange) outRange.innerText = rangeKm + " km";
+            if (outWeight) outWeight.innerText = packWeightKg + " kg";
+            if (outChg) outChg.innerText = minutesNeeded + " min";
+            if (outCost) outCost.innerText = "$" + totalCost.toLocaleString();
+            if (outSoh) outSoh.innerText = sohRetention.toFixed(1) + "%";
+            if (sohFill) sohFill.style.width = Math.min(100, sohRetention) + "%";
+
+            // Smooth value pop animation
+            document.querySelectorAll('.out-val').forEach(el => {
+                el.classList.remove('val-pop');
+                void el.offsetWidth;
+                el.classList.add('val-pop');
+            });
         }
 
         let chartInstance1, chartInstance2;
@@ -2065,7 +2384,27 @@
             const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
             const prog = document.getElementById('reading-progress');
             if (prog) prog.style.width = scrolled + '%';
-            document.getElementById('to-top')?.classList.toggle('visible', winScroll > 600);
+            document.getElementById('to-top')?.classList.toggle('visible', winScroll > 500);
+        }
+
+        function initScrollObserver() {
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('in-view');
+                        }
+                    });
+                }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+                document.querySelectorAll('section.reveal').forEach(sec => {
+                    observer.observe(sec);
+                });
+            } else {
+                document.querySelectorAll('section.reveal').forEach(sec => {
+                    sec.classList.add('in-view');
+                });
+            }
         }
 
         window.addEventListener('scroll', updateScrollUi, { passive: true });
@@ -2097,6 +2436,7 @@
             renderTier1Table();
             calcSim();
             initCharts();
+            initScrollObserver();
             const savedLang = localStorage.getItem('lang') || 'en';
             setLang(savedLang);
         });

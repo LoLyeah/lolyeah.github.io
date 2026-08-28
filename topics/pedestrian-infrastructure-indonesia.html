@@ -37,33 +37,1071 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
     <style>
-        :root { --ink:#142b2b; --muted:#5b716f; --paper:#f5f1e9; --card:#fffdf8; --line:#d8d8cc; --teal:#087f73; --orange:#e65e35; --navy:#172d3c; --yellow:#f0bd54; --shadow:0 18px 55px rgba(20,43,43,.09); }
-        * { box-sizing:border-box; margin:0; padding:0; }
-        html { scroll-behavior:smooth; scroll-padding-top:105px; }
-        body { min-width:320px; overflow-x:hidden; color:var(--ink); background:radial-gradient(circle at 90% 0%,#dcece3 0,transparent 30rem),linear-gradient(90deg,rgba(20,43,43,.025) 1px,transparent 1px),linear-gradient(rgba(20,43,43,.025) 1px,transparent 1px),var(--paper); background-size:auto,32px 32px,32px 32px,auto; font:16px/1.65 Manrope,sans-serif; }
-        a { color:inherit; } button,input,select { font:inherit; } .wrap { width:min(1160px,calc(100% - 40px)); margin:auto; } .mono { font:11px 'DM Mono',monospace; letter-spacing:.08em; text-transform:uppercase; } .skip { position:fixed; top:-60px; left:15px; z-index:20; padding:8px 14px; color:white; background:var(--navy); } .skip:focus { top:15px; }
-        #progress { position:fixed; inset:0 auto auto 0; z-index:30; width:0; height:4px; background:linear-gradient(90deg,var(--orange),var(--teal)); }
-        nav { position:fixed; top:16px; left:18px; right:18px; z-index:15; display:flex; align-items:center; justify-content:space-between; gap:18px; max-width:1320px; margin:auto; padding:10px 15px; border:1px solid #cdd5cd; border-radius:16px; background:rgba(255,253,248,.9); backdrop-filter:blur(17px); box-shadow:0 12px 35px rgba(20,43,43,.08); }
-        .brand { display:flex; align-items:center; gap:9px; font-weight:800; text-decoration:none; letter-spacing:-.04em; } .brand b { display:grid; place-items:center; width:32px; height:32px; border-radius:10px; color:white; background:linear-gradient(135deg,var(--teal),var(--orange)); } .nav-right,.nav-links,.lang { display:flex; align-items:center; } .nav-right { gap:13px; } .nav-links { gap:4px; list-style:none; } .nav-links a { padding:7px 9px; border-radius:8px; color:var(--muted); font-size:11px; font-weight:800; text-decoration:none; } .nav-links a:hover,.nav-links a.active { color:var(--ink); background:#e8efea; } .lang { overflow:hidden; border:1px solid var(--line); border-radius:9px; } .lang button { padding:6px 9px; border:0; color:var(--muted); background:transparent; cursor:pointer; font:10px 'DM Mono'; } .lang button.active { color:white; background:var(--ink); }
-        header { position:relative; padding:155px 0 90px; overflow:hidden; } header:after { content:''; position:absolute; right:-100px; top:115px; width:430px; height:430px; border:1px solid rgba(8,127,115,.2); border-radius:50%; box-shadow:0 0 0 70px rgba(8,127,115,.04),0 0 0 140px rgba(230,94,53,.035); } .hero { position:relative; z-index:1; display:grid; grid-template-columns:1.25fr .75fr; gap:55px; align-items:end; } .eyebrow,.tag { display:inline-flex; align-items:center; gap:8px; color:var(--teal); } .eyebrow { padding:7px 12px; border:1px solid #acd0c6; border-radius:999px; background:#edf7f0; } .eyebrow:before { content:''; width:7px; height:7px; border-radius:50%; background:var(--orange); } h1 { max-width:820px; margin:24px 0 20px; font:700 clamp(48px,7.7vw,99px)/.92 'Playfair Display',serif; letter-spacing:-.07em; } h1 span { color:var(--teal); } .hero-copy>p { max-width:700px; color:var(--muted); font-size:18px; } .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:27px; } .btn { display:inline-flex; align-items:center; min-height:47px; padding:0 17px; border-radius:11px; color:white; background:var(--ink); font-weight:800; text-decoration:none; } .btn.alt { color:var(--ink); border:1px solid var(--line); background:rgba(255,255,255,.6); }
-        .signal { overflow:hidden; border-radius:21px; color:white; background:var(--navy); box-shadow:var(--shadow); } .signal-head { padding:22px; border-bottom:1px solid rgba(255,255,255,.13); } .signal-head strong { display:block; margin-top:5px; font-size:20px; line-height:1.25; } .signal-head small,.signal-stat span { color:#a8c4bd; } .signal-grid { display:grid; grid-template-columns:1fr 1fr; } .signal-stat { padding:20px; border-right:1px solid rgba(255,255,255,.1); border-bottom:1px solid rgba(255,255,255,.1); } .signal-stat strong { display:block; font-size:28px; } .signal-stat span { display:block; margin-top:4px; font-size:10px; line-height:1.35; }
-        section { padding:83px 0; border-top:1px solid var(--line); scroll-margin-top:105px; } section:nth-of-type(even) { background:rgba(255,255,255,.42); } .tag:before { content:''; width:24px; height:2px; background:var(--orange); } h2 { max-width:820px; margin:13px 0 14px; font:700 clamp(36px,5vw,62px)/1 'Playfair Display',serif; letter-spacing:-.055em; } .intro { max-width:750px; margin-bottom:38px; color:var(--muted); font-size:17px; }
-        .grid4,.grid3 { display:grid; gap:14px; } .grid4 { grid-template-columns:repeat(4,1fr); } .grid3 { grid-template-columns:repeat(3,1fr); } .card { min-height:190px; padding:23px; border:1px solid var(--line); border-radius:18px; background:var(--card); box-shadow:0 8px 28px rgba(20,43,43,.04); } .card.accent { color:white; border-color:var(--teal); background:var(--teal); } .card small { color:var(--teal); } .card.accent small,.card.accent p { color:#c8e7df; } .card strong { display:block; margin:20px 0 8px; font-size:28px; line-height:1.05; letter-spacing:-.05em; } .card p { color:var(--muted); font-size:13px; } .card h3 { margin:17px 0 7px; font-size:20px; line-height:1.25; } .card h3+p { color:var(--muted); font-size:14px; }
-        .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:16px; background:var(--card); } table { width:100%; min-width:760px; border-collapse:collapse; text-align:left; } th,td { padding:17px 18px; border-bottom:1px solid var(--line); vertical-align:top; } th { color:white; background:var(--navy); font-size:13px; } td { color:var(--muted); font-size:13px; } td:first-child { width:18%; color:var(--ink); font-weight:800; } tr:last-child td { border-bottom:0; }
-        .calculator { display:grid; grid-template-columns:1fr 1fr; gap:18px; } .panel { padding:27px; border:1px solid var(--line); border-radius:20px; background:var(--card); } .panel.dark { color:white; background:var(--navy); } .fields { display:grid; grid-template-columns:1fr 1fr; gap:15px; } label { display:block; color:var(--muted); font-size:12px; font-weight:800; } label.full { grid-column:1/-1; } select,input[type=range] { width:100%; margin-top:7px; } select { padding:11px; border:1px solid var(--line); border-radius:10px; color:var(--ink); background:#fafbf7; } input[type=range] { accent-color:var(--orange); } .output-label { color:#a8c4bd; } .recommendation { margin:12px 0 26px; color:#f5c86b; font:700 clamp(29px,4vw,49px)/1.02 'Playfair Display',serif; } .score-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; overflow:hidden; border-radius:12px; background:rgba(255,255,255,.14); } .score { padding:15px; background:rgba(255,255,255,.05); } .score span { display:block; color:#a8c4bd; font-size:10px; } .score b { display:block; margin-top:4px; font-size:21px; } .note { margin-top:16px; padding:14px 16px; border-left:4px solid var(--yellow); border-radius:0 10px 10px 0; color:var(--muted); background:#fff8e4; font-size:13px; }
-        .sources { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; } .source { padding:17px; border:1px solid var(--line); border-radius:13px; background:var(--card); text-decoration:none; font-weight:800; } .source small { display:block; margin-top:5px; color:var(--muted); font-weight:500; } footer { display:flex; justify-content:space-between; gap:20px; padding:32px 0; color:var(--muted); font-size:12px; } footer a { font-weight:800; }
-        .subpages { margin:0 auto 35px; padding:20px; border:1px solid #b8d3c8; border-radius:18px; background:linear-gradient(105deg,#e9f5ed,#fff8eb); } .subpages-head { display:flex; justify-content:space-between; gap:15px; align-items:baseline; margin-bottom:13px; } .subpages-head strong { font:700 22px 'Playfair Display',serif; } .subpages-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; } .subpage-link { display:block; padding:13px 14px; border:1px solid rgba(8,127,115,.18); border-radius:11px; background:rgba(255,255,255,.7); text-decoration:none; } .subpage-link b { display:block; font-size:13px; } .subpage-link small { display:block; margin-top:4px; color:var(--muted); font-size:11px; }
-        [data-reveal] { opacity:0; transform:translateY(18px); transition:opacity .65s ease,transform .65s cubic-bezier(.16,1,.3,1); } [data-reveal].visible { opacity:1; transform:none; } @media (prefers-reduced-motion:reduce) { *,*:before,*:after { scroll-behavior:auto!important; animation:none!important; transition:none!important; } [data-reveal] { opacity:1; transform:none; } }
-        @media (max-width:850px) { .hero,.calculator { grid-template-columns:1fr; } .grid4 { grid-template-columns:1fr 1fr; } .grid3,.sources { grid-template-columns:1fr; } .nav-links { display:none; } header { padding-top:125px; } }
-        @media (max-width:520px) { .wrap { width:min(100% - 28px,1160px); } nav { left:9px; right:9px; } .grid4,.fields { grid-template-columns:1fr; } .hero-copy>p { font-size:16px; } h1 { font-size:50px; } section { padding:63px 0; } footer { flex-direction:column; } }
-        .decision-explanation { margin-top:18px; padding:18px; border:1px solid rgba(255,255,255,.14); border-radius:14px; color:#d8e8e2; background:rgba(255,255,255,.045); font-size:13px; line-height:1.55; }
-        .decision-explanation h3 { margin:0 0 10px; color:#f5c86b; font-size:15px; }
-        .decision-explanation p { margin:0 0 10px; }
-        .decision-explanation ul { display:grid; gap:8px; margin:0; padding-left:18px; }
-        .decision-explanation li::marker { color:#f5c86b; }
-        .decision-explanation strong { color:#fff; }
-        @media (max-width:520px) { .decision-explanation { padding:15px; font-size:12px; } }
-        .calculator { align-items:start; }
+        :root {
+            --ink: #142b2b;
+            --muted: #5b716f;
+            --paper: #f5f1e9;
+            --card: #fffdf8;
+            --card-hover: #fff9f0;
+            --line: #d8d8cc;
+            --line-hover: #b8c7c2;
+            --teal: #087f73;
+            --teal-soft: rgba(8, 127, 115, 0.12);
+            --orange: #e65e35;
+            --orange-soft: rgba(230, 94, 53, 0.12);
+            --navy: #172d3c;
+            --yellow: #f0bd54;
+            --shadow: 0 18px 55px rgba(20, 43, 43, 0.09);
+            --shadow-hover: 0 24px 60px rgba(20, 43, 43, 0.14);
+            --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 105px;
+        }
+
+        body {
+            min-width: 320px;
+            overflow-x: hidden;
+            color: var(--ink);
+            background: radial-gradient(circle at 90% 0%, #dcece3 0, transparent 30rem),
+                        linear-gradient(90deg, rgba(20, 43, 43, 0.025) 1px, transparent 1px),
+                        linear-gradient(rgba(20, 43, 43, 0.025) 1px, transparent 1px),
+                        var(--paper);
+            background-size: auto, 32px 32px, 32px 32px, auto;
+            font: 16px/1.65 Manrope, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        button, input, select {
+            font: inherit;
+        }
+
+        .wrap {
+            width: min(1160px, calc(100% - 40px));
+            margin: auto;
+        }
+
+        .mono {
+            font: 11px 'DM Mono', monospace;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .skip {
+            position: fixed;
+            top: -60px;
+            left: 15px;
+            z-index: 20;
+            padding: 8px 14px;
+            color: white;
+            background: var(--navy);
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: top 0.2s ease;
+        }
+
+        .skip:focus {
+            top: 15px;
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--orange);
+            outline-offset: 3px;
+        }
+
+        #progress {
+            position: fixed;
+            inset: 0 auto auto 0;
+            z-index: 30;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--orange), var(--teal));
+            transition: width 0.1s ease-out;
+        }
+
+        /* ── NAVBAR ─────────────────────────────────────────── */
+        nav {
+            position: fixed;
+            top: 16px;
+            left: 18px;
+            right: 18px;
+            z-index: 15;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            max-width: 1320px;
+            margin: auto;
+            padding: 10px 18px;
+            border: 1px solid #cdd5cd;
+            border-radius: 16px;
+            background: rgba(255, 253, 248, 0.92);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 12px 35px rgba(20, 43, 43, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            text-decoration: none;
+            letter-spacing: -0.04em;
+            color: var(--ink);
+        }
+
+        .brand b {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            color: white;
+            background: linear-gradient(135deg, var(--teal), var(--orange));
+            box-shadow: 0 4px 12px rgba(8, 127, 115, 0.25);
+            transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease;
+        }
+
+        .brand:hover b {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 6px 16px rgba(230, 94, 53, 0.35);
+        }
+
+        .nav-right, .nav-links, .lang {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-right {
+            gap: 14px;
+        }
+
+        .nav-links {
+            gap: 4px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            padding: 7px 12px;
+            border-radius: 8px;
+            color: var(--muted);
+            font-size: 11.5px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s var(--ease-spring);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--ink);
+            background: #e4eee7;
+            transform: translateY(-1px);
+        }
+
+        .lang {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 2px;
+            gap: 2px;
+        }
+
+        .lang button {
+            padding: 5px 10px;
+            border: 0;
+            border-radius: 7px;
+            color: var(--muted);
+            background: transparent;
+            cursor: pointer;
+            font: 10.5px 'DM Mono', monospace;
+            font-weight: 700;
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .lang button:hover:not(.active) {
+            color: var(--ink);
+            background: rgba(8, 127, 115, 0.08);
+        }
+
+        .lang button.active {
+            color: white;
+            background: var(--ink);
+            box-shadow: 0 2px 6px rgba(20, 43, 43, 0.2);
+        }
+
+        /* ── HEADER & HERO ──────────────────────────────────── */
+        header {
+            position: relative;
+            padding: 155px 0 90px;
+            overflow: hidden;
+        }
+
+        header:after {
+            content: '';
+            position: absolute;
+            right: -100px;
+            top: 115px;
+            width: 430px;
+            height: 430px;
+            border: 1px solid rgba(8, 127, 115, 0.2);
+            border-radius: 50%;
+            box-shadow: 0 0 0 70px rgba(8, 127, 115, 0.04), 0 0 0 140px rgba(230, 94, 53, 0.035);
+            animation: ambientPulse 12s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes ambientPulse {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.85;
+            }
+            50% {
+                transform: scale(1.06) rotate(3deg);
+                opacity: 1;
+            }
+        }
+
+        .hero {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1.25fr 0.75fr;
+            gap: 55px;
+            align-items: end;
+        }
+
+        .eyebrow, .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--teal);
+        }
+
+        .eyebrow {
+            padding: 7px 14px;
+            border: 1px solid #acd0c6;
+            border-radius: 999px;
+            background: #edf7f0;
+            transition: transform 0.25s var(--ease-spring), box-shadow 0.25s ease;
+        }
+
+        .eyebrow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(8, 127, 115, 0.12);
+        }
+
+        .eyebrow:before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--orange);
+            box-shadow: 0 0 8px rgba(230, 94, 53, 0.6);
+            animation: dotGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes dotGlow {
+            0%, 100% { transform: scale(1); opacity: 0.85; }
+            50% { transform: scale(1.3); opacity: 1; }
+        }
+
+        h1 {
+            max-width: 820px;
+            margin: 24px 0 20px;
+            font: 700 clamp(48px, 7.7vw, 99px)/0.92 'Playfair Display', serif;
+            letter-spacing: -0.07em;
+            color: var(--ink);
+        }
+
+        h1 span {
+            color: var(--teal);
+            display: inline-block;
+        }
+
+        .hero-copy > p {
+            max-width: 700px;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.65;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 20px;
+            border-radius: 12px;
+            color: white;
+            background: var(--ink);
+            font-weight: 800;
+            text-decoration: none;
+            transition: transform 0.22s var(--ease-spring), box-shadow 0.22s ease, background-color 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 4px 14px rgba(20, 43, 43, 0.12);
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(20, 43, 43, 0.22);
+            background: #0d1e1e;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(20, 43, 43, 0.15);
+        }
+
+        .btn.alt {
+            color: var(--ink);
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.75);
+            box-shadow: 0 4px 14px rgba(20, 43, 43, 0.04);
+        }
+
+        .btn.alt:hover {
+            border-color: var(--teal);
+            background: #ffffff;
+            color: var(--teal);
+            box-shadow: 0 8px 22px rgba(8, 127, 115, 0.12);
+        }
+
+        .signal {
+            overflow: hidden;
+            border-radius: 22px;
+            color: white;
+            background: var(--navy);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .signal:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(255, 255, 255, 0.16);
+        }
+
+        .signal-head {
+            padding: 22px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+        }
+
+        .signal-head strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 20px;
+            line-height: 1.25;
+            color: #ffffff;
+        }
+
+        .signal-head small, .signal-stat span {
+            color: #a8c4bd;
+        }
+
+        .signal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .signal-stat {
+            padding: 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background-color 0.2s ease;
+        }
+
+        .signal-stat:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .signal-stat strong {
+            display: block;
+            font-size: 28px;
+            color: #ffffff;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .signal-stat:hover strong {
+            color: #f5c86b;
+            transform: scale(1.05);
+        }
+
+        .signal-stat span {
+            display: block;
+            margin-top: 4px;
+            font-size: 10.5px;
+            line-height: 1.35;
+        }
+
+        /* ── SECTIONS ───────────────────────────────────────── */
+        section {
+            padding: 83px 0;
+            border-top: 1px solid var(--line);
+            scroll-margin-top: 105px;
+        }
+
+        section:nth-of-type(even) {
+            background: rgba(255, 255, 255, 0.42);
+        }
+
+        .tag:before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: var(--orange);
+        }
+
+        h2 {
+            max-width: 820px;
+            margin: 13px 0 14px;
+            font: 700 clamp(36px, 5vw, 62px)/1 'Playfair Display', serif;
+            letter-spacing: -0.055em;
+        }
+
+        .intro {
+            max-width: 750px;
+            margin-bottom: 38px;
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.65;
+        }
+
+        /* ── GRIDS & CARDS ──────────────────────────────────── */
+        .grid4, .grid3 {
+            display: grid;
+            gap: 16px;
+        }
+
+        .grid4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .grid3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .card {
+            min-height: 190px;
+            padding: 24px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: var(--card);
+            box-shadow: 0 8px 24px rgba(20, 43, 43, 0.04);
+            transition: transform 0.28s var(--ease-spring), box-shadow 0.28s ease, border-color 0.25s ease, background-color 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            background: var(--card-hover);
+            border-color: #b2c9c2;
+            box-shadow: 0 14px 34px rgba(20, 43, 43, 0.08);
+        }
+
+        .card.accent {
+            color: white;
+            border-color: var(--teal);
+            background: var(--teal);
+            box-shadow: 0 10px 30px rgba(8, 127, 115, 0.2);
+        }
+
+        .card.accent:hover {
+            background: #066d63;
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(8, 127, 115, 0.3);
+        }
+
+        .card small {
+            color: var(--teal);
+        }
+
+        .card.accent small, .card.accent p {
+            color: #c8e7df;
+        }
+
+        .card strong {
+            display: block;
+            margin: 20px 0 8px;
+            font-size: 28px;
+            line-height: 1.05;
+            letter-spacing: -0.05em;
+        }
+
+        .card p {
+            color: var(--muted);
+            font-size: 13.5px;
+            line-height: 1.55;
+        }
+
+        .card h3 {
+            margin: 17px 0 7px;
+            font-size: 20px;
+            line-height: 1.25;
+        }
+
+        .card h3 + p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* ── TABLE WRAPPER ──────────────────────────────────── */
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--card);
+            box-shadow: 0 8px 28px rgba(20, 43, 43, 0.04);
+            transition: box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .table-wrap:hover {
+            border-color: #c2cfcb;
+            box-shadow: 0 12px 32px rgba(20, 43, 43, 0.07);
+        }
+
+        table {
+            width: 100%;
+            min-width: 760px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 17px 18px;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+        }
+
+        th {
+            color: white;
+            background: var(--navy);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        td {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        td:first-child {
+            width: 18%;
+            color: var(--ink);
+            font-weight: 800;
+        }
+
+        tbody tr {
+            transition: background-color 0.18s ease;
+        }
+
+        tbody tr:hover {
+            background: #fbf7ec;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        /* ── DECISION TOOL CALCULATOR ───────────────────────── */
+        .calculator {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .panel {
+            padding: 28px;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            background: var(--card);
+            box-shadow: 0 8px 28px rgba(20, 43, 43, 0.04);
+            transition: transform 0.28s var(--ease-spring), box-shadow 0.28s ease, border-color 0.28s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .panel:hover {
+            border-color: #b5c7c1;
+            box-shadow: 0 14px 36px rgba(20, 43, 43, 0.08);
+        }
+
+        .panel.dark {
+            color: white;
+            background: var(--navy);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+        }
+
+        .panel.dark:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        label {
+            display: block;
+            color: var(--muted);
+            font-size: 12.5px;
+            font-weight: 800;
+        }
+
+        label.full {
+            grid-column: 1 / -1;
+        }
+
+        select, input[type=range] {
+            width: 100%;
+            margin-top: 7px;
+        }
+
+        select {
+            padding: 11px 13px;
+            border: 1.5px solid var(--line);
+            border-radius: 10px;
+            color: var(--ink);
+            background: #fafbf7;
+            cursor: pointer;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(8, 127, 115, 0.15);
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 7px;
+            border-radius: 99px;
+            background: #dbe5e1;
+            outline: none;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.15s ease;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--orange);
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(230, 94, 53, 0.45);
+            cursor: grab;
+            transition: transform 0.15s var(--ease-spring), box-shadow 0.15s ease, background 0.15s ease;
+        }
+
+        input[type=range]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--orange);
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(230, 94, 53, 0.45);
+            cursor: grab;
+            transition: transform 0.15s var(--ease-spring), box-shadow 0.15s ease, background 0.15s ease;
+        }
+
+        input[type=range]:hover::-webkit-slider-thumb {
+            transform: scale(1.2);
+            box-shadow: 0 4px 14px rgba(230, 94, 53, 0.65);
+        }
+
+        input[type=range]:active::-webkit-slider-thumb {
+            cursor: grabbing;
+            transform: scale(1.28);
+            background: #c94b25;
+        }
+
+        output {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: #edf5f1;
+            color: var(--teal);
+            font: 11px 'DM Mono', monospace;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            transition: transform 0.2s var(--ease-spring), background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .output-label {
+            color: #a8c4bd;
+        }
+
+        @keyframes recPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        .recommendation {
+            margin: 12px 0 24px;
+            color: #f5c86b;
+            font: 700 clamp(29px, 4vw, 48px)/1.05 'Playfair Display', serif;
+            letter-spacing: -0.03em;
+            display: block;
+            transition: transform 0.25s var(--ease-spring), color 0.25s ease;
+        }
+
+        .recommendation.val-pop {
+            animation: recPop 0.28s var(--ease-spring);
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            overflow: hidden;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .score {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: background-color 0.2s ease;
+        }
+
+        .score:hover {
+            background: rgba(255, 255, 255, 0.09);
+        }
+
+        .score span {
+            display: block;
+            color: #a8c4bd;
+            font-size: 10.5px;
+            font-weight: 600;
+        }
+
+        .score b {
+            display: block;
+            margin-top: 4px;
+            font-size: 21px;
+            color: #ffffff;
+            transition: transform 0.2s var(--ease-spring), color 0.2s ease;
+        }
+
+        .score b.val-pop {
+            animation: recPop 0.25s var(--ease-spring);
+        }
+
+        .note {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-left: 4px solid var(--yellow);
+            border-radius: 0 10px 10px 0;
+            color: var(--muted);
+            background: #fff8e4;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .decision-explanation {
+            margin-top: 18px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 14px;
+            color: #d8e8e2;
+            background: rgba(255, 255, 255, 0.045);
+            font-size: 13px;
+            line-height: 1.55;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .decision-explanation:hover {
+            border-color: rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.065);
+        }
+
+        .decision-explanation h3 {
+            margin: 0 0 10px;
+            color: #f5c86b;
+            font-size: 15px;
+        }
+
+        .decision-explanation p {
+            margin: 0 0 10px;
+        }
+
+        .decision-explanation ul {
+            display: grid;
+            gap: 8px;
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .decision-explanation li::marker {
+            color: #f5c86b;
+        }
+
+        .decision-explanation strong {
+            color: #fff;
+        }
+
+        /* ── SOURCES & SUBPAGES ─────────────────────────────── */
+        .sources {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .source {
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: var(--card);
+            text-decoration: none;
+            font-weight: 800;
+            transition: transform 0.25s var(--ease-spring), border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            box-shadow: 0 4px 14px rgba(20, 43, 43, 0.03);
+            display: block;
+        }
+
+        .source:hover {
+            transform: translateY(-3px);
+            border-color: var(--teal);
+            background: #ffffff;
+            box-shadow: 0 10px 24px rgba(8, 127, 115, 0.1);
+        }
+
+        .source small {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted);
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .subpages {
+            margin: 0 auto 40px;
+            padding: 24px;
+            border: 1px solid #b8d3c8;
+            border-radius: 20px;
+            background: linear-gradient(105deg, #eaf6ee, #fff8eb);
+            box-shadow: 0 6px 20px rgba(8, 127, 115, 0.05);
+            transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease;
+        }
+
+        .subpages:hover {
+            box-shadow: 0 10px 30px rgba(8, 127, 115, 0.1);
+        }
+
+        .subpages-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            align-items: baseline;
+            margin-bottom: 15px;
+        }
+
+        .subpages-head strong {
+            font: 700 22px 'Playfair Display', serif;
+        }
+
+        .subpages-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .subpage-link {
+            display: block;
+            padding: 14px 16px;
+            border: 1px solid rgba(8, 127, 115, 0.18);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.82);
+            text-decoration: none;
+            transition: transform 0.25s var(--ease-spring), background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 8px rgba(20, 43, 43, 0.03);
+        }
+
+        .subpage-link:hover {
+            transform: translateY(-3px);
+            background: #ffffff;
+            border-color: var(--teal);
+            box-shadow: 0 8px 20px rgba(8, 127, 115, 0.12);
+        }
+
+        .subpage-link b {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13.5px;
+            color: var(--ink);
+            transition: color 0.2s ease;
+        }
+
+        .subpage-link:hover b {
+            color: var(--teal);
+        }
+
+        .subpage-link b:after {
+            content: '→';
+            font-weight: 800;
+            transition: transform 0.2s var(--ease-spring);
+        }
+
+        .subpage-link:hover b:after {
+            transform: translateX(4px);
+        }
+
+        .subpage-link small {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 11.5px;
+        }
+
+        /* ── FOOTER ─────────────────────────────────────────── */
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 36px 0;
+            color: var(--muted);
+            font-size: 12px;
+            border-top: 1px solid var(--line);
+        }
+
+        footer a {
+            font-weight: 800;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        footer a:hover {
+            color: var(--teal);
+            text-decoration: underline;
+        }
+
+        /* ── SCROLL REVEAL & STAGGER ────────────────────────── */
+        [data-reveal] {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        [data-reveal].visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        .grid4 [data-reveal]:nth-child(1) { transition-delay: 0.04s; }
+        .grid4 [data-reveal]:nth-child(2) { transition-delay: 0.10s; }
+        .grid4 [data-reveal]:nth-child(3) { transition-delay: 0.16s; }
+        .grid4 [data-reveal]:nth-child(4) { transition-delay: 0.22s; }
+
+        .subpages-grid [data-reveal]:nth-child(1) { transition-delay: 0.05s; }
+        .subpages-grid [data-reveal]:nth-child(2) { transition-delay: 0.12s; }
+        .subpages-grid [data-reveal]:nth-child(3) { transition-delay: 0.19s; }
+
+        .sources [data-reveal]:nth-child(1) { transition-delay: 0.05s; }
+        .sources [data-reveal]:nth-child(2) { transition-delay: 0.12s; }
+        .sources [data-reveal]:nth-child(3) { transition-delay: 0.19s; }
+
+        /* ── RESPONSIVE & REDUCED MOTION ────────────────────── */
+        @media (max-width: 850px) {
+            .hero, .calculator {
+                grid-template-columns: 1fr;
+            }
+            .grid4 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .grid3, .sources, .subpages-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+            }
+            header {
+                padding-top: 125px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .wrap {
+                width: min(100% - 28px, 1160px);
+            }
+            nav {
+                left: 9px;
+                right: 9px;
+            }
+            .grid4, .fields {
+                grid-template-columns: 1fr;
+            }
+            .hero-copy > p {
+                font-size: 16px;
+            }
+            h1 {
+                font-size: 50px;
+            }
+            section {
+                padding: 63px 0;
+            }
+            footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .decision-explanation {
+                padding: 15px;
+                font-size: 12px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *:before, *:after {
+                scroll-behavior: auto !important;
+                animation: none !important;
+                transition-duration: 0.01ms !important;
+            }
+            [data-reveal] {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            header:after, .eyebrow:before {
+                animation: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -71,19 +1109,192 @@
     <nav><a class="brand" href="../index.html"><b>↕</b><span>LoLyeah / Urbanism</span></a><div class="nav-right"><ul class="nav-links"><li><a href="#crossings">Crossings</a></li><li><a href="#context">Context</a></li><li><a href="#tool">Decision tool</a></li><li><a href="#sources">Sources</a></li></ul><div class="lang"><button id="en" class="active" aria-pressed="true">EN</button><button id="id" aria-pressed="false">ID</button></div></div></nav>
     <header><div class="wrap hero"><div class="hero-copy"><span class="eyebrow mono" data-en="JAKARTA / STREET-LEVEL POLICY" data-id="JAKARTA / KEBIJAKAN RUANG JALAN">JAKARTA / STREET-LEVEL POLICY</span><h1 data-en="Who gets the street? <span>People first.</span>" data-id="Siapa mendapat ruang jalan? <span>Manusia dulu.</span>">Who gets the street? <span>People first.</span></h1><p data-en="A practical deep dive into JPO overpasses, at-grade crossings, policy transfer, and the Indonesian PWK debate. Good pedestrian policy is not a copy-paste exercise: it is a fit between speed, access, enforcement, transit, and street life." data-id="Pendalaman praktis tentang JPO, penyeberangan sebidang, transfer kebijakan, dan diskursus PWK Indonesia. Kebijakan pejalan kaki yang baik bukan salin-tempel: harus sesuai dengan kecepatan, akses, penegakan, transit, dan kehidupan jalan.">A practical deep dive into JPO overpasses, at-grade crossings, policy transfer, and the Indonesian PWK debate. Good pedestrian policy is not a copy-paste exercise: it is a fit between speed, access, enforcement, transit, and street life.</p><div class="actions"><a class="btn" href="#tool" data-en="Test a crossing scenario" data-id="Uji skenario penyeberangan">Test a crossing scenario</a><a class="btn alt" href="#crossings" data-en="See the comparison" data-id="Lihat perbandingan">See the comparison</a></div></div><aside class="signal"><div class="signal-head"><small class="mono" data-en="CORE THESIS" data-id="TESIS UTAMA">CORE THESIS</small><strong data-en="The best crossing is contextual, not ideological." data-id="Penyeberangan terbaik bersifat kontekstual, bukan ideologis.">The best crossing is contextual, not ideological.</strong></div><div class="signal-grid"><div class="signal-stat"><strong>1968</strong><span data-en="JPO era begins in Jakarta" data-id="Awal era JPO di Jakarta">JPO era begins in Jakarta</span></div><div class="signal-stat"><strong>3</strong><span data-en="models compared" data-id="model dibandingkan">models compared</span></div><div class="signal-stat"><strong>PWK</strong><span data-en="planning meets public life" data-id="perencanaan bertemu kehidupan publik">planning meets public life</span></div><div class="signal-stat"><strong>ETLE</strong><span data-en="enforcement changes feasibility" data-id="penegakan mengubah kelayakan">enforcement changes feasibility</span></div></div></aside></div></header>
     <main id="main">
-        <div class="wrap subpages" aria-labelledby="subpages-title"><div class="subpages-head"><strong id="subpages-title" data-en="Explore this compendium" data-id="Jelajahi kompendium ini">Explore this compendium</strong><span class="mono" data-en="3 deep dives" data-id="3 pendalaman">3 deep dives</span></div><div class="subpages-grid"><a class="subpage-link" href="pedestrian-infrastructure-indonesia/jakarta-case-studies.html"><b data-en="Jakarta case studies" data-id="Studi kasus Jakarta">Jakarta case studies</b><small data-en="Bundaran HI, CSW-ASEAN, Kebayoran Lama, Sudirman" data-id="Bundaran HI, CSW-ASEAN, Kebayoran Lama, Sudirman">Bundaran HI, CSW-ASEAN, Kebayoran Lama, Sudirman</small></a><a class="subpage-link" href="pedestrian-infrastructure-indonesia/regional-models.html"><b data-en="Southeast Asian models" data-id="Model Asia Tenggara">Southeast Asian models</b><small data-en="Singapore, Bangkok, Kuala Lumpur, Jakarta" data-id="Singapura, Bangkok, Kuala Lumpur, Jakarta">Singapore, Bangkok, Kuala Lumpur, Jakarta</small></a><a class="subpage-link" href="pedestrian-infrastructure-indonesia/pwk-context.html"><b data-en="PWK and contextual design" data-id="PWK dan desain kontekstual">PWK and contextual design</b><small data-en="Epistemic friction, climate, motorisation, informal mobility" data-id="Gesekan epistemik, iklim, motorisasi, mobilitas informal">Epistemic friction, climate, motorisation, informal mobility</small></a></div></div>
+        <div class="wrap subpages" data-reveal aria-labelledby="subpages-title"><div class="subpages-head"><strong id="subpages-title" data-en="Explore this compendium" data-id="Jelajahi kompendium ini">Explore this compendium</strong><span class="mono" data-en="3 deep dives" data-id="3 pendalaman">3 deep dives</span></div><div class="subpages-grid"><a class="subpage-link" data-reveal href="pedestrian-infrastructure-indonesia/jakarta-case-studies.html"><b data-en="Jakarta case studies" data-id="Studi kasus Jakarta">Jakarta case studies</b><small data-en="Bundaran HI, CSW-ASEAN, Kebayoran Lama, Sudirman" data-id="Bundaran HI, CSW-ASEAN, Kebayoran Lama, Sudirman">Bundaran HI, CSW-ASEAN, Kebayoran Lama, Sudirman</small></a><a class="subpage-link" data-reveal href="pedestrian-infrastructure-indonesia/regional-models.html"><b data-en="Southeast Asian models" data-id="Model Asia Tenggara">Southeast Asian models</b><small data-en="Singapore, Bangkok, Kuala Lumpur, Jakarta" data-id="Singapura, Bangkok, Kuala Lumpur, Jakarta">Singapore, Bangkok, Kuala Lumpur, Jakarta</small></a><a class="subpage-link" data-reveal href="pedestrian-infrastructure-indonesia/pwk-context.html"><b data-en="PWK and contextual design" data-id="PWK dan desain kontekstual">PWK and contextual design</b><small data-en="Epistemic friction, climate, motorisation, informal mobility" data-id="Gesekan epistemik, iklim, motorisasi, mobilitas informal">Epistemic friction, climate, motorisation, informal mobility</small></a></div></div>
         <section id="crossings"><div class="wrap"><span class="tag mono" data-en="01 / THE SHIFT" data-id="01 / PERGESERAN">01 / THE SHIFT</span><h2 data-en="From moving cars to moving people." data-id="Dari melancarkan mobil menuju melancarkan manusia.">From moving cars to moving people.</h2><p class="intro" data-en="Jakarta's Sudirman-Thamrin revitalisation, Bundaran HI pelican crossing, and SCBD pedestrian networks signal a gradual move away from vehicle-only priorities. The conflict is visible at every kerb: driver delay versus direct, dignified access." data-id="Revitalisasi Sudirman-Thamrin, pelican crossing Bundaran HI, dan jaringan pejalan kaki SCBD menandai pergeseran bertahap dari prioritas kendaraan. Konflik terlihat di setiap trotoar: waktu tunggu pengemudi versus akses langsung yang layak.">Jakarta's Sudirman-Thamrin revitalisation, Bundaran HI pelican crossing, and SCBD pedestrian networks signal a gradual move away from vehicle-only priorities. The conflict is visible at every kerb: driver delay versus direct, dignified access.</p><div class="grid4"><article class="card accent" data-reveal><small class="mono">01 / JPO</small><strong data-en="Separate" data-id="Pisahkan">Separate</strong><p data-en="Keeps pedestrians away from vehicles, but stairs and broken lifts can turn safety into exclusion." data-id="Menjauhkan pejalan kaki dari kendaraan, tetapi tangga dan lift rusak dapat mengubah keselamatan menjadi eksklusi.">Keeps pedestrians away from vehicles, but stairs and broken lifts can turn safety into exclusion.</p></article><article class="card" data-reveal><small class="mono">02 / PELICAN</small><strong data-en="Connect" data-id="Hubungkan">Connect</strong><p data-en="At-grade signalised crossings are direct and universally legible, but depend on compliance and signal maintenance." data-id="Penyeberangan bersinyal langsung dan mudah dipahami semua orang, tetapi bergantung pada kepatuhan dan pemeliharaan sinyal.">At-grade signalised crossings are direct and universally legible, but depend on compliance and signal maintenance.</p></article><article class="card" data-reveal><small class="mono">03 / CONTEXT</small><strong data-en="Adapt" data-id="Sesuaikan">Adapt</strong><p data-en="Tactile paving, ramps, speed tables, greenery, and PKL management make the street work as a system." data-id="Guiding block, ramp, speed table, kanopi hijau, dan pengelolaan PKL membuat jalan bekerja sebagai sistem.">Tactile paving, ramps, speed tables, greenery, and PKL management make the street work as a system.</p></article><article class="card" data-reveal><small class="mono">04 / PWK</small><strong data-en="Translate" data-id="Terjemahkan">Translate</strong><p data-en="Indonesian research covers Kampung Kota, participation, and informal transport. Its public-policy translation remains the gap." data-id="Riset Indonesia mencakup Kampung Kota, partisipasi, dan transportasi informal. Penerjemahan ke kebijakan publik masih menjadi celah.">Indonesian research covers Kampung Kota, participation, and informal transport. Its public-policy translation remains the gap.</p></article></div></div></section>
-        <section id="context"><div class="wrap"><span class="tag mono" data-en="02 / COMPARISON" data-id="02 / PERBANDINGAN">02 / COMPARISON</span><h2 data-en="Three models. One street-level test." data-id="Tiga model. Satu pengujian di tingkat jalan.">Three models. One street-level test.</h2><p class="intro" data-en="Neither every JPO nor every zebra crossing is automatically good. Compare goals, equity, maintenance, enforcement, aesthetics, and fit with Indonesian modal patterns before choosing." data-id="Tidak semua JPO atau zebra crossing otomatis baik. Bandingkan tujuan, kesetaraan, pemeliharaan, penegakan, estetika, dan kesesuaian dengan pola moda Indonesia sebelum memilih.">Neither every JPO nor every zebra crossing is automatically good. Compare goals, equity, maintenance, enforcement, aesthetics, and fit with Indonesian modal patterns before choosing.</p><div class="table-wrap" data-reveal><table><thead><tr><th data-en="Dimension" data-id="Dimensi">Dimension</th><th data-en="Traditional JPO" data-id="JPO Tradisional">Traditional JPO</th><th data-en="At-grade / Pelican" data-id="Sebidang / Pelican">At-grade / Pelican</th><th data-en="Integrated Indonesian adaptation" data-id="Adaptasi Indonesia terintegrasi">Integrated Indonesian adaptation</th></tr></thead><tbody><tr><td data-en="Primary goal" data-id="Tujuan utama">Primary goal</td><td data-en="Maximise vehicle throughput; minimise stops." data-id="Maksimalkan arus kendaraan; minimalkan berhenti.">Maximise vehicle throughput; minimise stops.</td><td data-en="Direct connectivity and equity." data-id="Konektivitas langsung dan kesetaraan.">Direct connectivity and equity.</td><td data-en="Balance safety, transit access, and local activity." data-id="Menyeimbangkan keselamatan, akses transit, dan aktivitas lokal.">Balance safety, transit access, and local activity.</td></tr><tr><td data-en="Accessibility" data-id="Aksesibilitas">Accessibility</td><td data-en="Low when stairs dominate or lifts fail." data-id="Rendah ketika tangga dominan atau lift rusak.">Low when stairs dominate or lifts fail.</td><td data-en="High at street level for all demographics." data-id="Tinggi di tingkat jalan untuk semua kelompok.">High at street level for all demographics.</td><td data-en="High with tactile paving, ramps, and clear paths." data-id="Tinggi dengan guiding block, ramp, dan jalur jelas.">High with tactile paving, ramps, and clear paths.</td></tr><tr><td data-en="Cost and upkeep" data-id="Biaya dan pemeliharaan">Cost and upkeep</td><td data-en="High capital and ongoing bridge, lift, and lighting costs." data-id="Biaya modal dan pemeliharaan jembatan, lift, dan lampu tinggi.">High capital and ongoing bridge, lift, and lighting costs.</td><td data-en="Lower capital; needs reliable markings and signals." data-id="Modal lebih rendah; membutuhkan marka dan sinyal andal.">Lower capital; needs reliable markings and signals.</td><td data-en="Moderate; needs coordination across Bina Marga, Dishub, and Satpol PP." data-id="Sedang; membutuhkan koordinasi Bina Marga, Dishub, dan Satpol PP.">Moderate; needs coordination across Bina Marga, Dishub, and Satpol PP.</td></tr><tr><td data-en="Safety lever" data-id="Pengungkit keselamatan">Safety lever</td><td data-en="Physical separation, with possible night-time security risks." data-id="Pemisahan fisik, dengan potensi risiko keamanan malam hari.">Physical separation, with possible night-time security risks.</td><td data-en="Compliance, signals, traffic calming, and ETLE." data-id="Kepatuhan, sinyal, traffic calming, dan ETLE.">Compliance, signals, traffic calming, and ETLE.</td><td data-en="Raised crossings, speed tables, enforcement, and public education." data-id="Raised crossing, speed table, penegakan, dan edukasi publik.">Raised crossings, speed tables, enforcement, and public education.</td></tr><tr><td data-en="Local fit" data-id="Kesesuaian lokal">Local fit</td><td data-en="Driver-friendly, but can block sightlines and street life." data-id="Nyaman bagi pengemudi, tetapi dapat menghalangi pandangan dan kehidupan jalan.">Driver-friendly, but can block sightlines and street life.</td><td data-en="Human-friendly, but may face pushback about macet." data-id="Ramah manusia, tetapi dapat ditolak karena kekhawatiran macet.">Human-friendly, but may face pushback about macet.</td><td data-en="Acknowledges motorcycles, tropical weather, transit, and PKL." data-id="Mengakui motor, iklim tropis, transit, dan PKL.">Acknowledges motorcycles, tropical weather, transit, and PKL.</td></tr></tbody></table></div></div></section>
+        <section id="context"><div class="wrap"><span class="tag mono" data-en="02 / COMPARISON" data-id="02 / PERBANDINGAN">02 / COMPARISON</span><h2 data-en="Three models. One street-level test." data-id="Tiga model. Satu pengujian di tingkat jalan.">Three models. One street-level test.</h2><p class="intro" data-en="Neither every JPO nor every zebra crossing is automatically good. Compare goals, equity, maintenance, enforcement, aesthetics, and fit with Indonesian modal patterns before choosing." data-id="Tidak semua JPO atau zebra crossing otomatis baik. Bandingkan tujuan, kesetaraan, pemeliharaan, penegakan, estetika, dan kesesuaian dengan pola moda Indonesia sebelum memilih.">Neither every JPO nor every zebra crossing is automatically good. Compare goals, equity, maintenance, enforcement, aesthetics, and fit with Indonesian modal patterns before choosing.</p><div class="table-wrap" data-reveal><table><thead><tr><th data-en="Dimension" data-id="Dimensi">Dimension</th><th data-en="Traditional JPO" data-id="JPO Tradisional">Traditional JPO</th><th data-en="At-grade / Pelican" data-id="Sebidang / Pelican">At-grade / Pelican</th><th data-en="Integrated Indonesian adaptation" data-id="Adaptasi Indonesia terintegrasi">Integrated Indonesian adaptation</th></tr></thead><tbody><tr><td data-en="Primary goal" data-id="Tujuan utama">Primary goal</td><td data-en="Maximise vehicle throughput; minimise stops." data-id="Maksimalkan arus kendaraan; minimalkan berhenti.">Maximise vehicle throughput; minimise stops.</td><td data-en="Direct connectivity and equity." data-id="Konektivitas langsung dan kesetaraan.">Direct connectivity and equity.</td><td data-en="Balance safety, transit access, and local activity." data-id="Menyeimbangkan keselamatan, akses transit, dan aktivitas lokal.">Balance safety, transit access, and local activity.</td></tr><tr><td data-en="Accessibility" data-id="Aksesibilitas">Accessibility</td><td data-en="Low when stairs dominate or lifts fail." data-id="Rendah ketika tangga dominan atau lift rusak.">Low when stairs dominate or lifts fail.</td><td data-en="High at street level for all demographics." data-id="Tinggi di tingkat jalan untuk semua kelompok.">High at street level for all demographics.</td><td data-en="High with tactile paving, ramps, and clear paths." data-id="Tinggi dengan guiding block, ramp, dan jalur jelas.">High with tactile paving, ramps, and clear paths.</td></tr><tr><td data-en="Cost and upkeep" data-id="Biaya dan pemeliharaan">Cost and upkeep</td><td data-en="High capital and ongoing bridge, lift, and lighting costs." data-id="Biaya modal dan pemeliharaan jembatan, lift, dan lampu tinggi.">High capital and ongoing bridge, lift, and lighting costs.</td><td data-en="Lower capital; needs reliable markings and signals." data-id="Modal lebih rendah; membutuhkan marka dan sinyal andal.">Lower capital; needs reliable markings and signals.</td><td data-en="Moderate; needs coordination across Bina Marga, Dishub, and Satpol PP." data-id="Sedang; membutuhkan koordinasi Bina Marga, Dishub, dan Satpol PP.">Moderate; needs coordination across Bina Marga, Dishub, and Satpol PP.</td></tr><tr><td data-en="Safety lever" data-id="Pengungkit keselamatan">Safety lever</td><td data-en="Physical separation, with possible night-time security risks." data-id="Pemisahan fisik, dengan potensi risiko keamanan malam hari.">Physical separation, with possible night-time security risks.</td><td data-en="Compliance, signals, traffic calming, and ETLE." data-id="Kepatuhan, sinyal, traffic calming, dan ETLE.">Compliance, signals, traffic calming, dan ETLE.</td><td data-en="Raised crossings, speed tables, enforcement, and public education." data-id="Raised crossing, speed table, penegakan, dan edukasi publik.">Raised crossings, speed tables, enforcement, and public education.</td></tr><tr><td data-en="Local fit" data-id="Kesesuaian lokal">Local fit</td><td data-en="Driver-friendly, but can block sightlines and street life." data-id="Nyaman bagi pengemudi, tetapi dapat menghalangi pandangan dan kehidupan jalan.">Driver-friendly, but can block sightlines and street life.</td><td data-en="Human-friendly, but may face pushback about macet." data-id="Ramah manusia, tetapi dapat ditolak karena kekhawatiran macet.">Human-friendly, but may face pushback about macet.</td><td data-en="Acknowledges motorcycles, tropical weather, transit, and PKL." data-id="Mengakui motor, iklim tropis, transit, dan PKL.">Acknowledges motorcycles, tropical weather, transit, dan PKL.</td></tr></tbody></table></div></div></section>
         <section id="tool"><div class="wrap"><span class="tag mono" data-en="03 / DECISION TOOL" data-id="03 / ALAT KEPUTUSAN">03 / DECISION TOOL</span><h2 data-en="Choose by risk, not by fashion." data-id="Pilih berdasarkan risiko, bukan tren.">Choose by risk, not by fashion.</h2><p class="intro" data-en="This is an illustrative policy screen, not a traffic-engineering warrant. Increase context risk when speed, road width, or weak compliance make street-level crossing unsafe; increase access priority when vulnerable users and transit demand dominate." data-id="Ini adalah layar kebijakan ilustratif, bukan dasar teknis rekayasa lalu lintas. Naikkan risiko konteks ketika kecepatan, lebar jalan, atau kepatuhan rendah membuat penyeberangan sebidang berbahaya; naikkan prioritas akses ketika pengguna rentan dan permintaan transit dominan.">This is an illustrative policy screen, not a traffic-engineering warrant. Increase context risk when speed, road width, or weak compliance make street-level crossing unsafe; increase access priority when vulnerable users and transit demand dominate.</p><div class="calculator" data-reveal><div class="panel"><div class="fields"><label><span data-en="Road speed" data-id="Kecepatan jalan">Road speed</span><select id="speed"><option value="1">Under 40 km/h</option><option value="2" selected>40-60 km/h</option><option value="3">Over 60 km/h</option></select></label><label><span data-en="Road width" data-id="Lebar jalan">Road width</span><select id="width"><option value="1">2-4 lanes</option><option value="2" selected>5-6 lanes</option><option value="3">7+ lanes / expressway</option></select></label><label><span data-en="Driver compliance" data-id="Kepatuhan pengemudi">Driver compliance</span><input id="compliance" type="range" min="1" max="3" value="2"><output id="complianceOut">Medium</output></label><label><span data-en="Vulnerable users / transit" data-id="Pengguna rentan / transit">Vulnerable users / transit</span><input id="access" type="range" min="1" max="3" value="3"><output id="accessOut">High</output></label><label class="full"><span data-en="Informal activity / PKL intensity" data-id="Intensitas aktivitas informal / PKL">Informal activity / PKL intensity</span><input id="street" type="range" min="1" max="3" value="2"><output id="streetOut">Medium</output></label></div><div class="note" data-en="Policy sequence: calm speeds and enforce yielding before labelling at-grade crossings unsafe." data-id="Urutan kebijakan: tenangkan kecepatan dan tegakkan kewajiban berhenti sebelum menyebut penyeberangan sebidang tidak aman.">Policy sequence: calm speeds and enforce yielding before labelling at-grade crossings unsafe.</div></div><div class="panel dark"><span class="mono output-label" data-en="ILLUSTRATIVE RECOMMENDATION" data-id="REKOMENDASI ILUSTRATIF">ILLUSTRATIVE RECOMMENDATION</span><div class="recommendation" id="recommendation">Contextual hybrid</div><div class="score-grid"><div class="score"><span data-en="Risk score" data-id="Skor risiko">Risk score</span><b id="risk">5 / 9</b></div><div class="score"><span data-en="Access priority" data-id="Prioritas akses">Access priority</span><b id="priority">3 / 3</b></div><div class="score"><span data-en="First intervention" data-id="Intervensi pertama">First intervention</span><b id="intervention">Speed table</b></div><div class="score"><span data-en="Design note" data-id="Catatan desain">Design note</span><b id="design">Ramps + tactile</b></div></div></div></div></div></section>
-        <section id="sources"><div class="wrap"><span class="tag mono" data-en="04 / SOURCES & LIMITS" data-id="04 / SUMBER & BATASAN">04 / SOURCES & LIMITS</span><h2 data-en="Useful argument, incomplete dataset." data-id="Argumen berguna, dataset belum lengkap.">Useful argument, incomplete dataset.</h2><p class="intro" data-en="The supplied synthesis draws on public reporting and planning discourse. It flags three limits: published compliance comparisons are thin, intersection-level traffic simulations are not generally public, and social-media views do not represent every commuter." data-id="Sintesis yang diberikan bersumber dari pemberitaan publik dan diskursus perencanaan. Tiga batasan perlu dicatat: perbandingan kepatuhan yang terbit masih tipis, simulasi lalu lintas tingkat simpang umumnya tidak terbuka, dan pandangan media sosial tidak mewakili semua komuter.">The supplied synthesis draws on public reporting and planning discourse. It flags three limits: published compliance comparisons are thin, intersection-level traffic simulations are not generally public, and social-media views do not represent every commuter.</p><div class="sources"><a class="source" href="https://itdp-indonesia.org/" target="_blank" rel="noopener">ITDP Indonesia<small data-en="Walking, transit, and street design advocacy" data-id="Advokasi pejalan kaki, transit, dan desain jalan">Walking, transit, and street design advocacy</small></a><a class="source" href="https://smartcity.jakarta.go.id/" target="_blank" rel="noopener">Jakarta Smart City<small data-en="Pelican crossings and smart enforcement context" data-id="Konteks pelican crossing dan penegakan cerdas">Pelican crossings and smart enforcement context</small></a><a class="source" href="https://itb.ac.id/" target="_blank" rel="noopener">ITB / JPWK<small data-en="Regional and city planning research ecosystem" data-id="Ekosistem riset perencanaan wilayah dan kota">Regional and city planning research ecosystem</small></a></div><div class="note" data-en="Source note: claims in this guide are a synthesis of the supplied report, not a new empirical traffic study. Verify current designs, regulations, and local crash data before implementation." data-id="Catatan sumber: klaim dalam panduan ini merupakan sintesis laporan yang diberikan, bukan studi lalu lintas empiris baru. Verifikasi desain, aturan, dan data kecelakaan lokal sebelum penerapan.">Source note: claims in this guide are a synthesis of the supplied report, not a new empirical traffic study. Verify current designs, regulations, and local crash data before implementation.</div></div></section>
+        <section id="sources"><div class="wrap"><span class="tag mono" data-en="04 / SOURCES & LIMITS" data-id="04 / SUMBER & BATASAN">04 / SOURCES & LIMITS</span><h2 data-en="Useful argument, incomplete dataset." data-id="Argumen berguna, dataset belum lengkap.">Useful argument, incomplete dataset.</h2><p class="intro" data-en="The supplied synthesis draws on public reporting and planning discourse. It flags three limits: published compliance comparisons are thin, intersection-level traffic simulations are not generally public, and social-media views do not represent every commuter." data-id="Sintesis yang diberikan bersumber dari pemberitaan publik dan diskursus perencanaan. Tiga batasan perlu dicatat: perbandingan kepatuhan yang terbit masih tipis, simulasi lalu lintas tingkat simpang umumnya tidak terbuka, dan pandangan media sosial tidak mewakili semua komuter.">The supplied synthesis draws on public reporting and planning discourse. It flags three limits: published compliance comparisons are thin, intersection-level traffic simulations are not generally public, and social-media views do not represent every commuter.</p><div class="sources"><a class="source" data-reveal href="https://itdp-indonesia.org/" target="_blank" rel="noopener">ITDP Indonesia<small data-en="Walking, transit, and street design advocacy" data-id="Advokasi pejalan kaki, transit, dan desain jalan">Walking, transit, and street design advocacy</small></a><a class="source" data-reveal href="https://smartcity.jakarta.go.id/" target="_blank" rel="noopener">Jakarta Smart City<small data-en="Pelican crossings and smart enforcement context" data-id="Konteks pelican crossing dan penegakan cerdas">Pelican crossings and smart enforcement context</small></a><a class="source" data-reveal href="https://itb.ac.id/" target="_blank" rel="noopener">ITB / JPWK<small data-en="Regional and city planning research ecosystem" data-id="Ekosistem riset perencanaan wilayah dan kota">Regional and city planning research ecosystem</small></a></div><div class="note" data-en="Source note: claims in this guide are a synthesis of the supplied report, not a new empirical traffic study. Verify current designs, regulations, and local crash data before implementation." data-id="Catatan sumber: klaim dalam panduan ini merupakan sintesis laporan yang diberikan, bukan studi lalu lintas empiris baru. Verifikasi desain, aturan, dan data kecelakaan lokal sebelum penerapan.">Source note: claims in this guide are a synthesis of the supplied report, not a new empirical traffic study. Verify current designs, regulations, and local crash data before implementation.</div></div></section>
     </main>
     <footer class="wrap"><p class="mono">PEDESTRIAN INFRASTRUCTURE // INDONESIA // 2026</p><a href="../index.html" data-en="Back to Guides" data-id="Kembali ke Panduan">Back to Guides</a></footer>
     <script>
-        let currentLang='en';
-        function setLang(lang){currentLang=lang;document.documentElement.lang=lang;document.querySelectorAll('[data-en][data-id]').forEach(el=>el.innerHTML=el.dataset[lang]);['en','id'].forEach(code=>{const active=code===lang;document.getElementById(code).classList.toggle('active',active);document.getElementById(code).setAttribute('aria-pressed',String(active));});updateTool();}
-        const labels={en:{low:'Low',medium:'Medium',high:'High',hybrid:'Contextual hybrid',jpo:'Universal-access JPO',pelican:'At-grade pelican crossing',calm:'Speed table + enforcement',ramps:'Ramps + tactile',safe:'JPO only on high-speed corridor'},id:{low:'Rendah',medium:'Sedang',high:'Tinggi',hybrid:'Hibrida kontekstual',jpo:'JPO akses universal',pelican:'Pelican sebidang',calm:'Speed table + penegakan',ramps:'Ramp + guiding block',safe:'JPO hanya di koridor cepat'}};
-         function updateTool(){const l=labels[currentLang],speed=+document.getElementById('speed').value,width=+document.getElementById('width').value,compliance=+document.getElementById('compliance').value,access=+document.getElementById('access').value,street=+document.getElementById('street').value;const risk=speed+width+(4-compliance),priority=access,riskText=risk>=8?l.jpo:risk>=6?l.hybrid:l.pelican,intervention=risk>=7?l.safe:(compliance<3?l.calm:l.ramps),design=access>=3?l.ramps:(street>=3?'PKL + canopy':'Clear sightlines'),names=['',l.low,l.medium,l.high],explanation=document.getElementById('decision-explanation')||(()=>{const el=document.createElement('div');el.id='decision-explanation';el.className='decision-explanation';document.getElementById('design').closest('.panel').appendChild(el);return el;})();document.getElementById('recommendation').textContent=riskText;document.getElementById('risk').textContent=`${risk} / 9`;document.getElementById('priority').textContent=`${priority} / 3`;document.getElementById('intervention').textContent=intervention;document.getElementById('design').textContent=design;document.getElementById('complianceOut').textContent=names[compliance];document.getElementById('accessOut').textContent=names[access];document.getElementById('streetOut').textContent=names[street];const text=currentLang==='id'?{title:'Mengapa alat memberi hasil ini',summary:`Rekomendasi <strong>${riskText}</strong> muncul karena skor risiko konteks <strong>${risk}/9</strong> melewati aturan ambang alat, sementara prioritas akses berada di <strong>${priority}/3</strong>. Ini adalah penjelasan kebijakan ilustratif, bukan keputusan rekayasa lalu lintas.`,items:[`<strong>Kecepatan:</strong> nilai ${speed}/3 menambah ${speed} poin risiko. Kecepatan lebih tinggi memberi pengemudi waktu lebih sedikit untuk bereaksi dan meningkatkan konsekuensi konflik.`,`<strong>Lebar jalan:</strong> nilai ${width}/3 menambah ${width} poin risiko. Lebih banyak lajur berarti jarak menyeberang lebih panjang dan lebih banyak lajur yang harus benar-benar berhenti.`,`<strong>Kepatuhan:</strong> tingkat <strong>${names[compliance]}</strong> memberi ${4-compliance} poin risiko. Kepatuhan rendah menaikkan risiko karena marka atau sinyal lebih mungkin diabaikan.`,`<strong>Akses:</strong> prioritas <strong>${names[access]}</strong> menghasilkan ${priority}/3. Nilai ini tidak mengurangi risiko; ini menunjukkan seberapa kuat kebutuhan akan akses langsung, terutama bagi pengguna rentan dan koneksi transit.`,`<strong>Kondisi tepi jalan:</strong> tingkat <strong>${names[street]}</strong> mengarahkan desain ke <strong>${design}</strong>, supaya solusi mengelola PKL, kanopi, ramp, atau jarak pandang sesuai konteks.`],rule:`Aturan alat: skor 8–9 memilih JPO akses universal; skor 6–7 memilih hibrida kontekstual; skor 3–5 memilih pelican sebidang. Intervensi <strong>${intervention}</strong> dipilih karena ${risk>=7?'risiko konteks tinggi membutuhkan pemisahan dari lalu lintas cepat.':compliance<3?'kepatuhan belum cukup kuat untuk mengandalkan penyeberangan tanpa pengendalian tambahan.':'risiko tidak cukup tinggi untuk membenarkan pemisahan penuh, sehingga akses langsung tetap diprioritaskan.'}`}:{title:'Why this tool produced this result',summary:`The <strong>${riskText}</strong> recommendation follows from a context-risk score of <strong>${risk}/9</strong> and an access priority of <strong>${priority}/3</strong>. This is an illustrative policy explanation, not a traffic-engineering warrant.`,items:[`<strong>Road speed:</strong> value ${speed}/3 adds ${speed} risk points. Higher speeds leave drivers less reaction time and increase the consequence of a conflict.`,`<strong>Road width:</strong> value ${width}/3 adds ${width} risk points. More lanes mean a longer crossing and more lanes that must actually stop.`,`<strong>Driver compliance:</strong> <strong>${names[compliance]}</strong> adds ${4-compliance} risk points. Lower compliance raises risk because markings or signals are more likely to be ignored.`,`<strong>Access priority:</strong> <strong>${names[access]}</strong> produces ${priority}/3. It does not reduce risk; it shows how strongly direct access is needed, especially for vulnerable users and transit connections.`,`<strong>Street-edge conditions:</strong> <strong>${names[street]}</strong> points the design toward <strong>${design}</strong>, so PKL, shade, ramps, or sightlines are handled according to local conditions.`],rule:`Tool rule: scores 8–9 choose a universal-access JPO; scores 6–7 choose a contextual hybrid; scores 3–5 choose an at-grade pelican crossing. <strong>${intervention}</strong> is selected because ${risk>=7?'high context risk requires separation from fast traffic.':compliance<3?'compliance is not strong enough to rely on an uncontrolled crossing.':'risk is not high enough to justify full separation, so direct access remains the priority.'}`};explanation.innerHTML=`<h3>${text.title}</h3><p>${text.summary}</p><ul>${text.items.map(item=>`<li>${item}</li>`).join('')}</ul><p style="margin-top:12px"><strong>${text.rule}</strong></p>`;}
-        document.addEventListener('DOMContentLoaded',()=>{document.getElementById('en').onclick=()=>setLang('en');document.getElementById('id').onclick=()=>setLang('id');document.querySelectorAll('#tool select,#tool input').forEach(el=>el.addEventListener('input',updateTool));const progress=document.getElementById('progress');const update=()=>{const max=document.documentElement.scrollHeight-innerHeight;progress.style.width=`${max>0?scrollY/max*100:0}%`;};addEventListener('scroll',update,{passive:true});update();const links=[...document.querySelectorAll('.nav-links a')];const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)links.forEach(link=>link.classList.toggle('active',link.hash===`#${e.target.id}`));}),{rootMargin:'-25% 0px -65% 0px'});document.querySelectorAll('main section').forEach(s=>observer.observe(s));const reveal=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');reveal.unobserve(e.target);}}),{threshold:.1});document.querySelectorAll('[data-reveal]').forEach(el=>reveal.observe(el));updateTool();});
+        let currentLang = 'en';
+        function setLang(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-en][data-id]').forEach(el => {
+                el.innerHTML = el.dataset[lang];
+            });
+            ['en', 'id'].forEach(code => {
+                const active = code === lang;
+                const btn = document.getElementById(code);
+                if (btn) {
+                    btn.classList.toggle('active', active);
+                    btn.setAttribute('aria-pressed', String(active));
+                }
+            });
+            updateTool();
+        }
+
+        const labels = {
+            en: {
+                low: 'Low',
+                medium: 'Medium',
+                high: 'High',
+                hybrid: 'Contextual hybrid',
+                jpo: 'Universal-access JPO',
+                pelican: 'At-grade pelican crossing',
+                calm: 'Speed table + enforcement',
+                ramps: 'Ramps + tactile',
+                safe: 'JPO only on high-speed corridor'
+            },
+            id: {
+                low: 'Rendah',
+                medium: 'Sedang',
+                high: 'Tinggi',
+                hybrid: 'Hibrida kontekstual',
+                jpo: 'JPO akses universal',
+                pelican: 'Pelican sebidang',
+                calm: 'Speed table + penegakan',
+                ramps: 'Ramp + guiding block',
+                safe: 'JPO hanya di koridor cepat'
+            }
+        };
+
+        function updateSliderTrack(slider) {
+            if (!slider) return;
+            const min = parseFloat(slider.min) || 1;
+            const max = parseFloat(slider.max) || 3;
+            const val = parseFloat(slider.value) || 2;
+            const pct = Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100));
+            slider.style.background = `linear-gradient(to right, #e65e35 0%, #e65e35 ${pct}%, #dbe5e1 ${pct}%, #dbe5e1 100%)`;
+        }
+
+        function updateTool() {
+            const l = labels[currentLang];
+            const speedEl = document.getElementById('speed');
+            const widthEl = document.getElementById('width');
+            const compEl = document.getElementById('compliance');
+            const accEl = document.getElementById('access');
+            const streetEl = document.getElementById('street');
+
+            const speed = +(speedEl ? speedEl.value : 2);
+            const width = +(widthEl ? widthEl.value : 2);
+            const compliance = +(compEl ? compEl.value : 2);
+            const access = +(accEl ? accEl.value : 3);
+            const street = +(streetEl ? streetEl.value : 2);
+
+            updateSliderTrack(compEl);
+            updateSliderTrack(accEl);
+            updateSliderTrack(streetEl);
+
+            const risk = speed + width + (4 - compliance);
+            const priority = access;
+            const riskText = risk >= 8 ? l.jpo : (risk >= 6 ? l.hybrid : l.pelican);
+            const intervention = risk >= 7 ? l.safe : (compliance < 3 ? l.calm : l.ramps);
+            const design = access >= 3 ? l.ramps : (street >= 3 ? (currentLang === 'id' ? 'PKL + kanopi' : 'PKL + canopy') : (currentLang === 'id' ? 'Jarak pandang jelas' : 'Clear sightlines'));
+            const names = ['', l.low, l.medium, l.high];
+
+            const recEl = document.getElementById('recommendation');
+            const riskEl = document.getElementById('risk');
+            const priorityEl = document.getElementById('priority');
+            const intEl = document.getElementById('intervention');
+            const desEl = document.getElementById('design');
+
+            if (recEl) recEl.textContent = riskText;
+            if (riskEl) riskEl.textContent = `${risk} / 9`;
+            if (priorityEl) priorityEl.textContent = `${priority} / 3`;
+            if (intEl) intEl.textContent = intervention;
+            if (desEl) desEl.textContent = design;
+
+            const compOut = document.getElementById('complianceOut');
+            const accOut = document.getElementById('accessOut');
+            const streetOut = document.getElementById('streetOut');
+            if (compOut) compOut.textContent = names[compliance];
+            if (accOut) accOut.textContent = names[access];
+            if (streetOut) streetOut.textContent = names[street];
+
+            // Animate output values on change
+            [recEl, riskEl, priorityEl, intEl, desEl].forEach(el => {
+                if (el) {
+                    el.classList.remove('val-pop');
+                    void el.offsetWidth;
+                    el.classList.add('val-pop');
+                }
+            });
+
+            const explanation = document.getElementById('decision-explanation') || (() => {
+                const el = document.createElement('div');
+                el.id = 'decision-explanation';
+                el.className = 'decision-explanation';
+                const parentPanel = desEl ? desEl.closest('.panel') : document.querySelector('.panel.dark');
+                if (parentPanel) parentPanel.appendChild(el);
+                return el;
+            })();
+
+            const text = currentLang === 'id' ? {
+                title: 'Mengapa alat memberi hasil ini',
+                summary: `Rekomendasi <strong>${riskText}</strong> muncul karena skor risiko konteks <strong>${risk}/9</strong> melewati aturan ambang alat, sementara prioritas akses berada di <strong>${priority}/3</strong>. Ini adalah penjelasan kebijakan ilustratif, bukan keputusan rekayasa lalu lintas.`,
+                items: [
+                    `<strong>Kecepatan:</strong> nilai ${speed}/3 menambah ${speed} poin risiko. Kecepatan lebih tinggi memberi pengemudi waktu lebih sedikit untuk bereaksi dan meningkatkan konsekuensi konflik.`,
+                    `<strong>Lebar jalan:</strong> nilai ${width}/3 menambah ${width} poin risiko. Lebih banyak lajur berarti jarak menyeberang lebih panjang dan lebih banyak lajur yang harus benar-benar berhenti.`,
+                    `<strong>Kepatuhan:</strong> tingkat <strong>${names[compliance]}</strong> memberi ${4-compliance} poin risiko. Kepatuhan rendah menaikkan risiko karena marka atau sinyal lebih mungkin diabaikan.`,
+                    `<strong>Akses:</strong> prioritas <strong>${names[access]}</strong> menghasilkan ${priority}/3. Nilai ini tidak mengurangi risiko; ini menunjukkan seberapa kuat kebutuhan akan akses langsung, terutama bagi pengguna rentan dan koneksi transit.`,
+                    `<strong>Kondisi tepi jalan:</strong> tingkat <strong>${names[street]}</strong> mengarahkan desain ke <strong>${design}</strong>, supaya solusi mengelola PKL, kanopi, ramp, atau jarak pandang sesuai konteks.`
+                ],
+                rule: `Aturan alat: skor 8–9 memilih JPO akses universal; skor 6–7 memilih hibrida kontekstual; skor 3–5 memilih pelican sebidang. Intervensi <strong>${intervention}</strong> dipilih karena ${risk >= 7 ? 'risiko konteks tinggi membutuhkan pemisahan dari lalu lintas cepat.' : (compliance < 3 ? 'kepatuhan belum cukup kuat untuk mengandalkan penyeberangan tanpa pengendalian tambahan.' : 'risiko tidak cukup tinggi untuk membenarkan pemisahan penuh, sehingga akses langsung tetap diprioritaskan.')}`
+            } : {
+                title: 'Why this tool produced this result',
+                summary: `The <strong>${riskText}</strong> recommendation follows from a context-risk score of <strong>${risk}/9</strong> and an access priority of <strong>${priority}/3</strong>. This is an illustrative policy explanation, not a traffic-engineering warrant.`,
+                items: [
+                    `<strong>Road speed:</strong> value ${speed}/3 adds ${speed} risk points. Higher speeds leave drivers less reaction time and increase the consequence of a conflict.`,
+                    `<strong>Road width:</strong> value ${width}/3 adds ${width} risk points. More lanes mean a longer crossing and more lanes that must actually stop.`,
+                    `<strong>Driver compliance:</strong> <strong>${names[compliance]}</strong> adds ${4-compliance} risk points. Lower compliance raises risk because markings or signals are more likely to be ignored.`,
+                    `<strong>Access priority:</strong> <strong>${names[access]}</strong> produces ${priority}/3. It does not reduce risk; it shows how strongly direct access is needed, especially for vulnerable users and transit connections.`,
+                    `<strong>Street-edge conditions:</strong> <strong>${names[street]}</strong> points the design toward <strong>${design}</strong>, so PKL, shade, ramps, or sightlines are handled according to local conditions.`
+                ],
+                rule: `Tool rule: scores 8–9 choose a universal-access JPO; scores 6–7 choose a contextual hybrid; scores 3–5 choose an at-grade pelican crossing. <strong>${intervention}</strong> is selected because ${risk >= 7 ? 'high context risk requires separation from fast traffic.' : (compliance < 3 ? 'compliance is not strong enough to rely on an uncontrolled crossing.' : 'risk is not high enough to justify full separation, so direct access remains the priority.')}`
+            };
+
+            if (explanation) {
+                explanation.innerHTML = `<h3>${text.title}</h3><p>${text.summary}</p><ul>${text.items.map(item => `<li>${item}</li>`).join('')}</ul><p style="margin-top:12px"><strong>${text.rule}</strong></p>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('en').onclick = () => setLang('en');
+            document.getElementById('id').onclick = () => setLang('id');
+            document.querySelectorAll('#tool select, #tool input').forEach(el => el.addEventListener('input', updateTool));
+
+            const progress = document.getElementById('progress');
+            const updateScrollProg = () => {
+                const max = document.documentElement.scrollHeight - innerHeight;
+                if (progress) progress.style.width = `${max > 0 ? (scrollY / max) * 100 : 0}%`;
+            };
+            addEventListener('scroll', updateScrollProg, { passive: true });
+            updateScrollProg();
+
+            const links = [...document.querySelectorAll('.nav-links a')];
+            const navObserver = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        links.forEach(link => link.classList.toggle('active', link.hash === `#${e.target.id}`));
+                    }
+                });
+            }, { rootMargin: '-25% 0px -65% 0px' });
+            document.querySelectorAll('main section').forEach(s => navObserver.observe(s));
+
+            const revealObserver = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('visible');
+                        revealObserver.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.08 });
+            document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+
+            updateTool();
+        });
     </script>
     <script>
         (() => {
@@ -93,7 +1304,7 @@
                 const target = document.querySelector(link.getAttribute('href'));
                 if (!target) return;
                 event.preventDefault();
-                const offset = nav.getBoundingClientRect().height + 24;
+                const offset = nav ? nav.getBoundingClientRect().height + 24 : 80;
                 const top = target.getBoundingClientRect().top + window.scrollY - offset;
                 window.scrollTo({ top, behavior: 'smooth' });
                 history.pushState(null, '', link.getAttribute('href'));
