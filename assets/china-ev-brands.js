@@ -273,7 +273,7 @@
       'mg': 'mg.svg', 'chery': 'chery.svg', 'gac aion': 'aion.svg', 'aion': 'aion.svg', 'xiaomi': 'xiaomi.svg',
       'nio': 'nio.svg', 'xpeng': 'xpeng.svg', 'leapmotor': 'leapmotor.svg', 'li auto': 'li.svg', 'li': 'li.svg', 'huawei': 'huawei.svg',
       'lepas': 'lepas.svg', 'jetour': 'jetour.svg', 'great wall': 'gwm.svg', 'gwm': 'gwm.svg', 'ora': 'ora.svg',
-      'wey': 'wey.svg', 'polestar': 'polestar.svg', 'smart': 'smart.svg', 'volvo': 'volvo.svg', 'proton': 'proton.svg',
+      'wey': 'wey.svg', 'polestar': 'polestar.svg', 'smart': 'smart.svg', 'volvo': 'volvo.svg', 'proton': 'proton.png',
       'deepal': 'deepal.svg', 'aito': 'aito.png', 'baic': 'baic.svg', 'changan': 'changan.svg', 'dongfeng': 'dongfeng.svg',
       'faw': 'faw.svg', 'saic': 'saic.svg', 'trumpchi': 'trumpchi.svg', 'lynkco': 'lynkco.svg', 'lynk & co': 'lynkco.svg',
       'hima': 'hima.svg', 'im': 'im.svg', 'icar': 'icar.svg', 'linghui': 'linghui.svg', 'new-forces': 'new-forces.svg',
