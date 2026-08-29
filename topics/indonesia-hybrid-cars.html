@@ -2665,26 +2665,51 @@
 
     <!-- Interactive Script -->
     <script>
-        // Language Toggle Logic
+        // 1. STATE & PROFILES DEFINITION (Must be declared first)
+        const profiles = {
+            heavy: { ice: 9.0, mhev: 10.0, hev: 21.0, phev_ev_pct: 0.9, phev_hev_kml: 19.0 },
+            mixed: { ice: 12.5, mhev: 13.8, hev: 24.5, phev_ev_pct: 0.85, phev_hev_kml: 22.0 },
+            highway: { ice: 16.5, mhev: 17.5, hev: 19.5, phev_ev_pct: 0.5, phev_hev_kml: 18.0 }
+        };
+
+        let tcoState = {
+            traffic: 'heavy',
+            dailyKm: 40,
+            fuelPrice: 12500,
+            fuelName: 'RON 92'
+        };
+
+        let simState = {
+            running: false,
+            seconds: 0,
+            temp: 24.0,
+            interval: null,
+            mode: 'mhev'
+        };
+
+        // 2. HELPER FUNCTIONS
+        function formatRupiah(amount) {
+            return 'Rp ' + Math.round(amount).toLocaleString('id-ID');
+        }
+
+        // 3. LANGUAGE TOGGLE LOGIC
         function setLanguage(lang) {
             document.body.classList.remove('lang-id', 'lang-en');
             document.body.classList.add('lang-' + lang);
             document.documentElement.lang = lang;
-            localStorage.setItem('lolyeah_lang_pref', lang);
+            try {
+                localStorage.setItem('lolyeah_lang_pref', lang);
+            } catch(e) {}
 
-            document.getElementById('btn-lang-id').classList.toggle('active', lang === 'id');
-            document.getElementById('btn-lang-en').classList.toggle('active', lang === 'en');
+            const btnId = document.getElementById('btn-lang-id');
+            const btnEn = document.getElementById('btn-lang-en');
+            if (btnId) btnId.classList.toggle('active', lang === 'id');
+            if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+
             calculateTCO();
         }
 
-        // Initialize language
-        (function() {
-            const saved = localStorage.getItem('lolyeah_lang_pref') || 'id';
-            setLanguage(saved);
-        })();
-
-        // Flow Tab Switcher
-        // Flow Tab Switcher
+        // 4. FLOW TAB SWITCHER
         function switchFlow(type, btn) {
             document.querySelectorAll('.flow-tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.flow-display-stage').forEach(stage => stage.classList.remove('active'));
@@ -2694,15 +2719,7 @@
             if (target) target.classList.add('active');
         }
 
-        // Tropical A/C Simulator Logic
-        let simState = {
-            running: false,
-            seconds: 0,
-            temp: 24.0,
-            interval: null,
-            mode: 'mhev'
-        };
-
+        // 5. TROPICAL A/C SIMULATOR LOGIC
         function setSimMode(mode, btn) {
             resetAcSimulation();
             simState.mode = mode;
@@ -2858,26 +2875,13 @@
             });
         }
 
-        // FAQ Accordion
+        // 6. FAQ ACCORDION
         function toggleFaqCard(btn) {
             const card = btn.closest('.faq-card');
             if (card) card.classList.toggle('active');
         }
 
-        // TCO Calculator Engine
-        let tcoState = {
-            traffic: 'heavy',
-            dailyKm: 40,
-            fuelPrice: 12500,
-            fuelName: 'RON 92'
-        };
-
-        const profiles = {
-            heavy: { ice: 9.0, mhev: 10.0, hev: 21.0, phev_ev_pct: 0.9, phev_hev_kml: 19.0 },
-            mixed: { ice: 12.5, mhev: 13.8, hev: 24.5, phev_ev_pct: 0.85, phev_hev_kml: 22.0 },
-            highway: { ice: 16.5, mhev: 17.5, hev: 19.5, phev_ev_pct: 0.5, phev_hev_kml: 18.0 }
-        };
-
+        // 7. TCO CALCULATOR ENGINE
         function setTrafficProfile(type) {
             tcoState.traffic = type;
             document.querySelectorAll('.traffic-choice-card').forEach(c => c.classList.remove('active'));
@@ -2901,13 +2905,11 @@
             calculateTCO();
         }
 
-        function formatRupiah(amount) {
-            return 'Rp ' + Math.round(amount).toLocaleString('id-ID');
-        }
-
         function calculateTCO() {
+            if (!tcoState || !profiles) return;
             const annualKm = tcoState.dailyKm * 365;
             const p = profiles[tcoState.traffic];
+            if (!p) return;
             const price = tcoState.fuelPrice;
             const plnRate = 1699;
 
@@ -2994,7 +2996,14 @@
             }
         }
 
-        calculateTCO();
+        // 8. INITIALIZATION (Runs after all definitions)
+        (function() {
+            let saved = 'id';
+            try {
+                saved = localStorage.getItem('lolyeah_lang_pref') || 'id';
+            } catch(e) {}
+            setLanguage(saved);
+        })();
     </script>
 </body>
 </html>
