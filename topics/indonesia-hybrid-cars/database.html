@@ -58,18 +58,20 @@
 
     <style>
         :root {
-            --bg: #070a12;
-            --bg-subtle: #0d1322;
-            --surface-1: #121a2d;
-            --surface-2: #18233c;
-            --surface-hover: #1e2c4b;
-            --border: rgba(255, 255, 255, 0.08);
-            --border-strong: rgba(255, 255, 255, 0.16);
-            --border-accent: rgba(6, 182, 212, 0.4);
+            --bg: #05070d;
+            --bg-subtle: #090e1a;
+            --surface-1: rgba(14, 22, 40, 0.75);
+            --surface-2: rgba(20, 31, 56, 0.65);
+            --surface-hover: rgba(28, 44, 78, 0.85);
+            --glass-bg: rgba(12, 19, 36, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-hover: rgba(6, 182, 212, 0.4);
 
             --cyan: #06b6d4;
+            --cyan-glow: rgba(6, 182, 212, 0.35);
             --cyan-soft: rgba(6, 182, 212, 0.12);
             --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.35);
             --emerald-soft: rgba(16, 185, 129, 0.12);
             --amber: #f59e0b;
             --amber-soft: rgba(245, 158, 11, 0.12);
@@ -77,8 +79,6 @@
             --rose-soft: rgba(244, 63, 94, 0.12);
             --purple: #8b5cf6;
             --purple-soft: rgba(139, 92, 246, 0.12);
-            --blue: #3b82f6;
-            --blue-soft: rgba(59, 130, 246, 0.12);
 
             --text-1: #f8fafc;
             --text-2: #94a3b8;
@@ -90,9 +90,11 @@
 
             --radius-sm: 8px;
             --radius-md: 14px;
-            --radius-lg: 20px;
+            --radius-lg: 22px;
+            --radius-xl: 30px;
             --radius-full: 9999px;
-            --transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            --spring: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-smooth: all 0.3s var(--spring);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -106,10 +108,39 @@
             line-height: 1.65;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(ellipse at 85% 5%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 15% 45%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
-            background-attachment: fixed;
+            position: relative;
+        }
+
+        /* Ambient Orbs */
+        .ambient-aurora {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .aurora-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.3;
+            animation: orbFloat 24s ease-in-out infinite alternate;
+        }
+        .orb-db-1 { top: -5%; right: 10%; width: 550px; height: 550px; background: radial-gradient(circle, #06b6d4 0%, transparent 70%); }
+        .orb-db-2 { top: 45%; left: -10%; width: 550px; height: 550px; background: radial-gradient(circle, #8b5cf6 0%, transparent 70%); animation-delay: -9s; }
+        .tech-grid-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 1;
+        }
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, -30px) scale(1.08); }
+            100% { transform: translate(-30px, 50px) scale(0.95); }
         }
 
         body.lang-id .en-only { display: none !important; }
@@ -118,6 +149,8 @@
         .container {
             width: min(1380px, calc(100% - 2.5rem));
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
 
         a { color: inherit; text-decoration: none; }
@@ -127,10 +160,11 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(7, 10, 18, 0.88);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-            padding: 0.85rem 0;
+            background: rgba(5, 7, 13, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 0.9rem 0;
         }
         .nav-inner {
             display: flex;
@@ -138,33 +172,38 @@
             justify-content: space-between;
             gap: 1rem;
         }
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 1.25rem;
-        }
         .back-link {
             font-size: 0.875rem;
             color: var(--cyan);
-            font-weight: 600;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.4rem;
             transition: var(--transition-smooth);
+            background: rgba(6, 182, 212, 0.1);
+            padding: 0.4rem 0.9rem;
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(6, 182, 212, 0.3);
         }
-        .back-link:hover { color: #fff; transform: translateX(-2px); }
+        .back-link:hover {
+            color: #fff;
+            background: var(--cyan);
+            color: #000;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 16px rgba(6, 182, 212, 0.4);
+        }
 
         .lang-switch {
             display: inline-flex;
-            background: var(--surface-1);
-            border: 1px solid var(--border-strong);
+            background: rgba(14, 22, 40, 0.8);
+            border: 1px solid var(--glass-border);
             border-radius: var(--radius-full);
             padding: 3px;
         }
         .lang-btn {
             background: transparent;
             border: none;
-            color: var(--text-2);
+            color: var(--text-3);
             font-family: var(--font-mono);
             font-size: 0.75rem;
             font-weight: 700;
@@ -176,42 +215,65 @@
         .lang-btn.active {
             background: var(--cyan);
             color: #000;
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
         }
 
         /* Database Header */
         .db-header {
-            padding: 3.5rem 0 2rem;
-            border-bottom: 1px solid var(--border);
+            padding: clamp(3rem, 5vw, 4.5rem) 0 2rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .db-tagline {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--cyan);
+            background: rgba(6, 182, 212, 0.12);
+            padding: 0.35rem 0.85rem;
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            margin-bottom: 1.25rem;
         }
         .db-title {
             font-family: var(--font-display);
-            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-            font-weight: 800;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 900;
             margin-bottom: 0.75rem;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #ffffff 40%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .db-subtitle {
             color: var(--text-2);
-            font-size: 1.05rem;
-            max-width: 860px;
-            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            max-width: 880px;
+            margin-bottom: 2.25rem;
+            line-height: 1.7;
         }
 
         /* Metrics Bar */
         .metrics-bar {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            padding: 1.25rem;
-            background: var(--surface-1);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2.25rem;
         }
         .metric-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.2rem;
+            background: var(--surface-1);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            transition: var(--transition-smooth);
+        }
+        .metric-item:hover {
+            border-color: var(--glass-border-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
         }
         .metric-label {
             font-size: 0.75rem;
@@ -219,34 +281,33 @@
             font-family: var(--font-mono);
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            display: block;
+            margin-bottom: 0.25rem;
         }
         .metric-val {
             font-family: var(--font-display);
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.65rem;
+            font-weight: 800;
             color: #fff;
         }
-        .metric-val.val-cyan { color: var(--cyan); }
-        .metric-val.val-emerald { color: var(--emerald); }
-        .metric-val.val-purple { color: var(--purple); }
-        .metric-val.val-rose { color: var(--rose); }
 
         /* Standard Legends Banner */
         .standards-legend {
-            background: rgba(6, 182, 212, 0.05);
-            border: 1px solid rgba(6, 182, 212, 0.2);
+            background: rgba(14, 22, 40, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(6, 182, 212, 0.25);
             border-radius: var(--radius-md);
-            padding: 1rem 1.25rem;
-            margin-bottom: 2rem;
+            padding: 1.1rem 1.4rem;
+            margin-bottom: 2.25rem;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 1.25rem;
-            font-size: 0.825rem;
+            gap: 1rem 1.5rem;
+            font-size: 0.85rem;
         }
         .legend-title {
             font-family: var(--font-mono);
-            font-weight: 700;
+            font-weight: 800;
             color: var(--cyan);
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -256,110 +317,102 @@
             align-items: center;
             gap: 0.35rem;
             font-family: var(--font-mono);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-sm);
             font-weight: 700;
             font-size: 0.75rem;
         }
-        .tag-wltc { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .tag-cltc { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
-        .tag-nedc { background: rgba(244, 63, 94, 0.15); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.3); }
-        .tag-riil { background: rgba(6, 182, 212, 0.15); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.3); }
+        .tag-wltc { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.35); }
+        .tag-cltc { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.35); }
+        .tag-nedc { background: rgba(244, 63, 94, 0.15); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.35); }
+        .tag-riil { background: rgba(6, 182, 212, 0.15); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.35); }
 
-        /* Filter Controls */
+        /* Multi-Filter Section */
         .filter-section {
-            background: var(--surface-1);
-            border: 1px solid var(--border-strong);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            margin-bottom: 2.5rem;
+            background: linear-gradient(145deg, rgba(14, 22, 40, 0.85) 0%, rgba(9, 14, 26, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border-hover);
+            border-radius: var(--radius-xl);
+            padding: clamp(1.5rem, 3vw, 2.25rem);
+            margin-bottom: 3rem;
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
-        }
-        .search-row {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
+            gap: 1.5rem;
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.4);
         }
         .search-input-wrap {
-            flex-grow: 1;
             position: relative;
+            width: 100%;
         }
         .search-input {
             width: 100%;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 0.85rem 1rem 0.85rem 2.75rem;
+            background: #060913;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.25rem 1rem 3.25rem;
             color: #fff;
-            font-size: 0.95rem;
+            font-size: 1rem;
             outline: none;
             transition: var(--transition-smooth);
         }
         .search-input:focus {
             border-color: var(--cyan);
-            box-shadow: 0 0 16px rgba(6, 182, 212, 0.2);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
         }
-        .search-icon {
+        .search-icon-fixed {
             position: absolute;
-            left: 1rem;
+            left: 1.25rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-3);
+            font-size: 1.2rem;
             pointer-events: none;
         }
-        .filter-pills-group {
+
+        .filter-row {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
             align-items: center;
         }
-        .filter-label {
+        .filter-lbl {
             font-family: var(--font-mono);
             font-size: 0.75rem;
             color: var(--text-3);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
             margin-right: 0.5rem;
+            font-weight: 700;
         }
-        .filter-btn {
+        .filter-chip {
             background: var(--surface-2);
-            border: 1px solid var(--border);
+            border: 1px solid var(--glass-border);
             color: var(--text-2);
-            padding: 0.4rem 0.85rem;
+            padding: 0.45rem 1rem;
             border-radius: var(--radius-full);
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.825rem;
+            font-weight: 700;
             cursor: pointer;
             transition: var(--transition-smooth);
         }
-        .filter-btn:hover {
+        .filter-chip:hover {
             border-color: var(--cyan);
-            color: var(--text-1);
+            color: #fff;
+            transform: translateY(-1px);
         }
-        .filter-btn.active {
-            background: var(--cyan);
+        .filter-chip.active {
+            background: linear-gradient(135deg, #06b6d4 0%, #38bdf8 100%);
             color: #000;
             border-color: var(--cyan);
+            box-shadow: 0 4px 16px rgba(6, 182, 212, 0.4);
         }
 
-        /* Results Counter */
-        .results-meta-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            font-size: 0.875rem;
-            color: var(--text-2);
-        }
-
-        /* Models Grid */
+        /* Models Grid & Cards (Modern Spotlight Effect) */
         .models-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-            gap: 1.75rem;
-            margin-bottom: 4rem;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2rem;
+            margin-bottom: 5rem;
         }
         @media (max-width: 480px) {
             .models-grid { grid-template-columns: 1fr; }
@@ -367,282 +420,258 @@
 
         .car-card {
             background: var(--surface-1);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 1.75rem;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
             display: flex;
             flex-direction: column;
             position: relative;
+            overflow: hidden;
             transition: var(--transition-smooth);
         }
-        .car-card:hover {
-            border-color: var(--border-strong);
-            background: var(--surface-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        .car-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--car-accent, var(--cyan));
+            opacity: 0.4;
+            transition: opacity 0.3s ease, height 0.3s ease;
         }
-        .car-card-header {
+        .car-card:hover {
+            border-color: var(--glass-border-hover);
+            background: var(--surface-hover);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+        }
+        .car-card:hover::before { opacity: 1; height: 4px; }
+
+        .car-card.type-HEV { --car-accent: var(--cyan); }
+        .car-card.type-PHEV { --car-accent: var(--purple); }
+        .car-card.type-EREV { --car-accent: var(--emerald); }
+        .car-card.type-MHEV { --car-accent: var(--rose); }
+
+        .car-card-head {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 0.75rem;
+            gap: 1rem;
             margin-bottom: 0.75rem;
         }
-        .car-brand {
+        .car-brand-name {
             font-family: var(--font-mono);
             font-size: 0.75rem;
             font-weight: 700;
-            letter-spacing: 0.06em;
             color: var(--text-3);
             text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
-        .car-model-name {
+        .car-title {
             font-family: var(--font-display);
-            font-size: 1.35rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: #fff;
             line-height: 1.25;
-            margin-top: 0.15rem;
+            margin-top: 0.2rem;
         }
-        .car-price {
+        .car-price-badge {
             font-family: var(--font-mono);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: var(--emerald);
-            background: var(--emerald-soft);
-            padding: 0.3rem 0.65rem;
+            background: rgba(16, 185, 129, 0.12);
+            padding: 0.35rem 0.75rem;
             border-radius: var(--radius-sm);
-            border: 1px solid rgba(16, 185, 129, 0.25);
+            border: 1px solid rgba(16, 185, 129, 0.3);
             white-space: nowrap;
         }
-        .car-type-badge {
+
+        .car-type-pill {
             display: inline-flex;
             align-items: center;
             gap: 0.35rem;
             font-family: var(--font-mono);
             font-size: 0.75rem;
             font-weight: 700;
-            padding: 0.2rem 0.6rem;
+            padding: 0.25rem 0.7rem;
             border-radius: var(--radius-full);
             margin-bottom: 1.25rem;
             align-self: flex-start;
         }
+        .pill-HEV { background: var(--cyan-soft); color: var(--cyan); border: 1px solid rgba(6, 182, 212, 0.3); }
+        .pill-PHEV { background: var(--purple-soft); color: var(--purple); border: 1px solid rgba(139, 92, 246, 0.3); }
+        .pill-EREV { background: var(--emerald-soft); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .pill-MHEV { background: var(--rose-soft); color: var(--rose); border: 1px solid rgba(244, 63, 94, 0.3); }
 
-        /* Range Box (Key Focus) */
-        .range-box {
-            background: var(--bg-subtle);
-            border: 1px solid var(--border-strong);
+        /* Range Box in Cards */
+        .card-range-box {
+            background: #060913;
+            border: 1px solid var(--glass-border);
             border-radius: var(--radius-md);
-            padding: 1rem;
+            padding: 1.15rem;
             margin-bottom: 1.25rem;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
+            gap: 1rem;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
         }
-        .range-stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.2rem;
-        }
-        .range-stat-label {
+        .r-entry { display: flex; flex-direction: column; gap: 0.25rem; }
+        .r-head {
             font-size: 0.7rem;
             color: var(--text-3);
             font-family: var(--font-mono);
             text-transform: uppercase;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }
-        .range-stat-val {
+        .r-val {
             font-family: var(--font-mono);
             font-size: 0.95rem;
             font-weight: 700;
             color: #fff;
         }
-        .range-stat-val.val-pure-ev { color: var(--cyan); }
-        .range-stat-val.val-zero-ev { color: var(--rose); font-size: 0.85rem; }
 
-        /* Specs Key-Value Table */
-        .car-specs-grid {
+        /* Spec Key Values */
+        .card-spec-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.75rem 1rem;
-            font-size: 0.825rem;
+            gap: 0.85rem 1rem;
+            font-size: 0.85rem;
             margin-bottom: 1.25rem;
-            border-top: 1px solid var(--border);
-            padding-top: 1rem;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 1.15rem;
             flex-grow: 1;
         }
-        .car-spec-entry {
-            display: flex;
-            flex-direction: column;
-            gap: 0.15rem;
-        }
-        .car-spec-name {
-            color: var(--text-3);
-            font-size: 0.725rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-        .car-spec-data {
-            color: var(--text-1);
-            font-family: var(--font-mono);
-            font-weight: 600;
-        }
+        .c-spec-row { display: flex; flex-direction: column; gap: 0.15rem; }
+        .c-spec-k { font-size: 0.725rem; color: var(--text-3); text-transform: uppercase; font-family: var(--font-mono); }
+        .c-spec-v { font-family: var(--font-mono); font-weight: 600; color: #fff; }
 
-        /* Card Footer Actions */
-        .car-card-footer {
+        .card-foot {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid var(--border);
+            border-top: 1px solid var(--glass-border);
             padding-top: 1rem;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
-        .compare-checkbox-label {
+        .compare-chk-label {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
             color: var(--text-2);
             cursor: pointer;
+            font-weight: 600;
             user-select: none;
+            transition: color 0.2s ease;
         }
-        .compare-checkbox-label:hover { color: var(--cyan); }
-        .compare-checkbox-label input {
+        .compare-chk-label:hover { color: var(--cyan); }
+        .compare-chk-label input {
             accent-color: var(--cyan);
+            width: 16px;
+            height: 16px;
             cursor: pointer;
         }
-        .car-origin-tag {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--text-3);
-        }
 
-        /* ── Comparison Floating Bar & Modal ── */
-        .comparison-bar-floating {
+        /* Floating Comparison Dock */
+        .compare-floating-dock {
             position: fixed;
-            bottom: 20px;
+            bottom: 24px;
             left: 50%;
-            transform: translateX(-50%) translateY(120px);
-            background: rgba(18, 26, 45, 0.95);
-            backdrop-filter: blur(20px);
+            transform: translateX(-50%) translateY(140px);
+            background: rgba(14, 22, 40, 0.92);
+            backdrop-filter: blur(24px);
             border: 1px solid var(--cyan);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(6, 182, 212, 0.25);
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(6, 182, 212, 0.35);
             border-radius: var(--radius-full);
-            padding: 0.75rem 1.5rem;
+            padding: 0.85rem 1.75rem;
             display: flex;
             align-items: center;
             gap: 1.5rem;
             z-index: 200;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.4s var(--spring);
         }
-        .comparison-bar-floating.visible {
+        .compare-floating-dock.active {
             transform: translateX(-50%) translateY(0);
         }
-        .compare-slots {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-            color: #fff;
-        }
-        .compare-slot-tag {
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            padding: 0.25rem 0.75rem;
-            border-radius: var(--radius-full);
-            font-size: 0.8rem;
-            font-family: var(--font-mono);
-        }
-        .compare-cta-btn {
-            background: var(--cyan);
+        .dock-cta-btn {
+            background: linear-gradient(135deg, #06b6d4 0%, #38bdf8 100%);
             color: #000;
             border: none;
-            font-weight: 700;
-            font-size: 0.85rem;
-            padding: 0.5rem 1.25rem;
+            font-family: var(--font-sans);
+            font-weight: 800;
+            font-size: 0.875rem;
+            padding: 0.6rem 1.4rem;
             border-radius: var(--radius-full);
             cursor: pointer;
+            box-shadow: 0 4px 16px rgba(6, 182, 212, 0.4);
             transition: var(--transition-smooth);
         }
-        .compare-cta-btn:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
-        }
-        .compare-clear-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-3);
-            cursor: pointer;
-            font-size: 0.8rem;
-            text-decoration: underline;
-        }
+        .dock-cta-btn:hover { transform: scale(1.05); }
 
-        /* Comparison Modal */
-        .modal-overlay {
+        /* Modal Overlay */
+        .modal-glass-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(14px);
             z-index: 300;
             display: none;
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
         }
-        .modal-overlay.open { display: flex; }
-        .modal-card {
-            background: var(--surface-1);
-            border: 1px solid var(--border-strong);
-            border-radius: var(--radius-lg);
-            width: min(1080px, 100%);
+        .modal-glass-overlay.open { display: flex; animation: heroFadeUp 0.3s ease; }
+        .modal-glass-card {
+            background: rgba(14, 22, 40, 0.95);
+            border: 1px solid var(--glass-border-hover);
+            border-radius: var(--radius-xl);
+            width: min(1120px, 100%);
             max-height: 88vh;
             overflow-y: auto;
-            padding: 2rem;
-            position: relative;
+            padding: 2.25rem;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7);
         }
-        .modal-header {
+        .modal-head-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.75rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--glass-border);
         }
-        .modal-close-btn {
+        .modal-close-icon {
             background: var(--surface-2);
-            border: 1px solid var(--border);
+            border: 1px solid var(--glass-border);
             color: #fff;
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             font-size: 1.2rem;
+            transition: var(--transition-smooth);
         }
-        .compare-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.875rem;
+        .modal-close-icon:hover {
+            background: var(--rose);
+            color: #fff;
+            transform: rotate(90deg);
         }
-        .compare-table th, .compare-table td {
-            padding: 0.9rem 1rem;
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-        }
-        .compare-table th {
-            background: var(--surface-2);
-            color: var(--text-2);
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-        }
-        .compare-table td strong { color: #fff; font-family: var(--font-mono); }
     </style>
 </head>
 <body class="lang-id">
+
+    <!-- Aurora Background -->
+    <div class="ambient-aurora" aria-hidden="true">
+        <div class="aurora-orb orb-db-1"></div>
+        <div class="aurora-orb orb-db-2"></div>
+    </div>
+    <div class="tech-grid-overlay" aria-hidden="true"></div>
 
     <!-- Sticky Navigation -->
     <nav class="site-nav" aria-label="Database Navigation">
@@ -663,38 +692,42 @@
         </div>
     </nav>
 
+    <!-- Header Section -->
     <header class="db-header">
         <div class="container">
+            <div class="db-tagline">
+                <span>⚡ DATABASE RESMI INDONESIA (GAIKINDO 2026)</span>
+            </div>
             <h1 class="db-title">
                 <span class="id-only">Katalog &amp; Database Mobil Hybrid Indonesia</span>
                 <span class="en-only">Indonesia Hybrid Cars Catalog &amp; Database</span>
             </h1>
             <p class="db-subtitle">
-                <span class="id-only">Direktori terstruktur 40+ model mobil hybrid resmi di Indonesia (Toyota, Honda, Nissan, Hyundai, GWM, BYD, Wuling, Suzuki, dkk) lengkap dengan kapasitas baterai (kWh), output mesin, estimasi range (WLTC/CLTC/NEDC/Uji Riil), dan komparator head-to-head.</span>
-                <span class="en-only">Structured directory of 40+ officially sold hybrid models in Indonesia (Toyota, Honda, Nissan, Hyundai, GWM, BYD, Wuling, Suzuki, etc.) with battery specs (kWh), powertrain outputs, range ratings (WLTC/CLTC/NEDC/Real ID), and head-to-head comparison tool.</span>
+                <span class="id-only">Eksplorasi spesifikasi baterai traksi (kWh), mesin bensin, motor listrik, estimasi range EV &amp; total (dengan standar WLTC/CLTC/NEDC/Uji Riil ID), serta fitur komparator head-to-head untuk 40+ model mobil hybrid di Indonesia.</span>
+                <span class="en-only">Explore traction battery capacities (kWh), combustion engines, electric motors, range ratings (WLTC/CLTC/NEDC/Real ID), and side-by-side comparison tool for 40+ hybrid cars in Indonesia.</span>
             </p>
 
-            <!-- Metrics Counter Bar -->
+            <!-- Metrics Bar -->
             <div class="metrics-bar">
                 <div class="metric-item">
-                    <span class="metric-label">Total Model Terdaftar</span>
-                    <span class="metric-val val-cyan" id="stat-total-count">40+</span>
+                    <span class="metric-label">Total Model</span>
+                    <span class="metric-val" style="color: var(--cyan);" id="metric-tot">40+ Model</span>
                 </div>
                 <div class="metric-item">
                     <span class="metric-label">Full Hybrid (HEV)</span>
-                    <span class="metric-val val-emerald">18 Model</span>
+                    <span class="metric-val" style="color: var(--cyan);">18 Model</span>
                 </div>
                 <div class="metric-item">
                     <span class="metric-label">Plug-in Hybrid (PHEV)</span>
-                    <span class="metric-val val-purple">14 Model</span>
+                    <span class="metric-val" style="color: var(--purple);">14 Model</span>
                 </div>
                 <div class="metric-item">
                     <span class="metric-label">Series / EREV</span>
-                    <span class="metric-val" style="color: #38bdf8;">3 Model</span>
+                    <span class="metric-val" style="color: var(--emerald);">3 Model</span>
                 </div>
                 <div class="metric-item">
                     <span class="metric-label">Mild Hybrid (MHEV)</span>
-                    <span class="metric-val val-rose">5 Model</span>
+                    <span class="metric-val" style="color: var(--rose);">5 Model</span>
                 </div>
             </div>
 
@@ -710,95 +743,84 @@
     </header>
 
     <main class="container">
-        <!-- Interactive Multi-Filter Section -->
+        <!-- Multi-Filter Component -->
         <section class="filter-section" aria-label="Filters">
-            <!-- Search Row -->
-            <div class="search-row">
-                <div class="search-input-wrap">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" class="search-input" id="db-search" placeholder="Cari berdasarkan model, brand (Toyota, BYD, Honda...), mesin, atau harga..." oninput="applyFilters()">
-                </div>
+            <div class="search-input-wrap">
+                <span class="search-icon-fixed">🔍</span>
+                <input type="text" class="search-input" id="db-search" placeholder="Cari model, brand (Toyota, BYD, Honda...), mesin, atau harga..." oninput="applyDbFilters()">
             </div>
 
-            <!-- Filter Pills Group: Hybrid Type -->
-            <div class="filter-pills-group">
-                <span class="filter-label">Tipe Powertrain:</span>
-                <button class="filter-btn active" data-filter-type="all" onclick="setTypeFilter('all')">Semua Tipe</button>
-                <button class="filter-btn" data-filter-type="HEV" onclick="setTypeFilter('HEV')">Full Hybrid (HEV)</button>
-                <button class="filter-btn" data-filter-type="PHEV" onclick="setTypeFilter('PHEV')">Plug-in (PHEV)</button>
-                <button class="filter-btn" data-filter-type="EREV" onclick="setTypeFilter('EREV')">Series / EREV</button>
-                <button class="filter-btn" data-filter-type="MHEV" onclick="setTypeFilter('MHEV')">Mild Hybrid (MHEV)</button>
+            <div class="filter-row">
+                <span class="filter-lbl">Tipe Hybrid:</span>
+                <button class="filter-chip active" data-type="all" onclick="filterType('all')">Semua Tipe</button>
+                <button class="filter-chip" data-type="HEV" onclick="filterType('HEV')">Full Hybrid (HEV)</button>
+                <button class="filter-chip" data-type="PHEV" onclick="filterType('PHEV')">Plug-in (PHEV)</button>
+                <button class="filter-chip" data-type="EREV" onclick="filterType('EREV')">Series / EREV</button>
+                <button class="filter-chip" data-type="MHEV" onclick="filterType('MHEV')">Mild Hybrid (MHEV)</button>
             </div>
 
-            <!-- Filter Pills Group: Price Range -->
-            <div class="filter-pills-group">
-                <span class="filter-label">Rentang Harga:</span>
-                <button class="filter-btn active" data-filter-price="all" onclick="setPriceFilter('all')">Semua Harga</button>
-                <button class="filter-btn" data-filter-price="under400" onclick="setPriceFilter('under400')">&lt; Rp 400 Juta</button>
-                <button class="filter-btn" data-filter-price="400to600" onclick="setPriceFilter('400to600')">Rp 400 – 600 Juta</button>
-                <button class="filter-btn" data-filter-price="600to1000" onclick="setPriceFilter('600to1000')">Rp 600 Jt – 1 Miliar</button>
-                <button class="filter-btn" data-filter-price="over1000" onclick="setPriceFilter('over1000')">&gt; Rp 1 Miliar</button>
+            <div class="filter-row">
+                <span class="filter-lbl">Rentang Harga:</span>
+                <button class="filter-chip active" data-price="all" onclick="filterPrice('all')">Semua Harga</button>
+                <button class="filter-chip" data-price="under400" onclick="filterPrice('under400')">&lt; Rp 400 Juta</button>
+                <button class="filter-chip" data-price="400to600" onclick="filterPrice('400to600')">Rp 400 – 600 Juta</button>
+                <button class="filter-chip" data-price="600to1000" onclick="filterPrice('600to1000')">Rp 600 Jt – 1 Miliar</button>
+                <button class="filter-chip" data-price="over1000" onclick="filterPrice('over1000')">&gt; Rp 1 Miliar</button>
             </div>
 
-            <!-- Filter Pills Group: Origin -->
-            <div class="filter-pills-group">
-                <span class="filter-label">Asal Pabrikan:</span>
-                <button class="filter-btn active" data-filter-origin="all" onclick="setOriginFilter('all')">Semua Asal</button>
-                <button class="filter-btn" data-filter-origin="Japan" onclick="setOriginFilter('Japan')">Jepang (Toyota/Honda/Nissan/Suzuki/Lexus)</button>
-                <button class="filter-btn" data-filter-origin="China" onclick="setOriginFilter('China')">Tiongkok (BYD/GWM/Wuling/Chery/MG)</button>
-                <button class="filter-btn" data-filter-origin="Korea" onclick="setOriginFilter('Korea')">Korea (Hyundai)</button>
-                <button class="filter-btn" data-filter-origin="Europe" onclick="setOriginFilter('Europe')">Eropa (Volvo/BMW/Porsche)</button>
+            <div class="filter-row">
+                <span class="filter-lbl">Negara Asal:</span>
+                <button class="filter-chip active" data-origin="all" onclick="filterOrigin('all')">Semua Asal</button>
+                <button class="filter-chip" data-origin="Japan" onclick="filterOrigin('Japan')">Jepang (Toyota/Honda/Nissan/Suzuki/Lexus)</button>
+                <button class="filter-chip" data-origin="China" onclick="filterOrigin('China')">Tiongkok (BYD/GWM/Wuling/Chery/MG)</button>
+                <button class="filter-chip" data-origin="Korea" onclick="filterOrigin('Korea')">Korea (Hyundai)</button>
+                <button class="filter-chip" data-origin="Europe" onclick="filterOrigin('Europe')">Eropa (Volvo/BMW/Porsche)</button>
             </div>
         </section>
 
-        <!-- Meta Results Row -->
-        <div class="results-meta-row">
-            <div>
-                Menampilkan <strong id="displayed-count" style="color: var(--cyan);">0</strong> dari <strong id="total-db-count">0</strong> mobil hybrid
-            </div>
-            <div style="font-size: 0.8rem; color: var(--text-3);">
-                Tip: Centang kotak "Bandingkan" pada kartu untuk melihat komparasi spesifikasi langsung.
-            </div>
+        <!-- Results Counter Bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.75rem; font-size: 0.9rem; color: var(--text-2);">
+            <div>Menampilkan <strong id="cars-shown-count" style="color: var(--cyan);">0</strong> dari <strong id="cars-total-count">0</strong> mobil hybrid</div>
+            <div style="font-size: 0.8rem; color: var(--text-3);">Centang "Bandingkan" pada kartu untuk komparasi langsung.</div>
         </div>
 
-        <!-- Dynamic Cars Grid -->
-        <div class="models-grid" id="cars-grid">
-            <!-- Rendered by JavaScript -->
+        <!-- Models Cards Grid -->
+        <div class="models-grid" id="cars-container">
+            <!-- Dynamic Injection -->
         </div>
     </main>
 
-    <!-- Floating Comparison Bar -->
-    <div class="comparison-bar-floating" id="compare-bar">
-        <div class="compare-slots">
-            <span>Bandingkan (<strong id="compare-count">0</strong>/3):</span>
-            <div id="compare-pills" style="display: flex; gap: 0.4rem;"></div>
+    <!-- Floating Comparison Dock -->
+    <div class="compare-floating-dock" id="compare-dock">
+        <div style="display: flex; align-items: center; gap: 0.6rem; color: #fff; font-size: 0.875rem;">
+            <span>Bandingkan (<strong id="dock-counter">0</strong>/3):</span>
+            <div id="dock-chips" style="display: flex; gap: 0.4rem;"></div>
         </div>
-        <button class="compare-cta-btn" onclick="openCompareModal()">Bandingkan Sekarang</button>
-        <button class="compare-clear-btn" onclick="clearComparison()">Reset</button>
+        <button class="dock-cta-btn" onclick="showCompareModal()">Bandingkan Spesifikasi</button>
+        <button style="background: transparent; border: none; color: var(--text-3); font-size: 0.8rem; cursor: pointer; text-decoration: underline;" onclick="resetCompareList()">Reset</button>
     </div>
 
-    <!-- Comparison Modal -->
-    <div class="modal-overlay" id="compare-modal" onclick="closeCompareModalOnOverlay(event)">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 style="font-family: var(--font-display); font-size: 1.4rem;">Komparasi Head-to-Head Spesifikasi Mobil Hybrid</h3>
-                <button class="modal-close-btn" onclick="closeCompareModal()">✕</button>
+    <!-- Compare Modal -->
+    <div class="modal-glass-overlay" id="compare-modal" onclick="closeModalOnBackdrop(event)">
+        <div class="modal-glass-card">
+            <div class="modal-head-bar">
+                <h3 style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: #fff;">Komparasi Head-to-Head Spesifikasi Mobil Hybrid</h3>
+                <button class="modal-close-icon" onclick="closeCompareModal()">✕</button>
             </div>
             <div style="overflow-x: auto;">
-                <table class="compare-table" id="compare-table-body">
+                <table class="rich-data-table" id="compare-modal-table">
                     <!-- Populated dynamically -->
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- Database Script -->
+    <!-- Script Data -->
     <script>
-        // Database of Hybrid Cars in Indonesia
-        const hybridCarsDB = [
+        const hybridCars = [
             // TOYOTA
             {
-                id: 'toyota-zenix-hev',
+                id: 'zenix-hev',
                 brand: 'Toyota',
                 model: 'Kijang Innova Zenix Hybrid',
                 origin: 'Japan',
@@ -812,15 +834,15 @@
                 motorPower: '83 kW (113 PS) / 206 Nm',
                 combinedPower: '186 PS',
                 transmission: 'e-CVT (Electric Continuous Variable)',
-                pureEvRange: '1 – 3 km (EV Mode Macet)',
+                pureEvRange: '1 – 3 km (EV Silent Creep)',
                 pureEvStandard: 'Uji Riil ID',
-                totalRange: '1.050+ km',
+                totalRange: '1.050+ km (Tangki 52L)',
                 rangeStandard: 'WLTC (21.3 km/L)',
-                realKml: '20.5 – 24.0 km/L (Dalkot Macet)',
-                desc: 'Mobil hybrid terlaris no. 1 di Indonesia. Sangat senyap di kemacetan dan AC tetap dingin beku.'
+                realKml: '20.5 – 24.0 km/L (Macet Dalkot)',
+                desc: 'Mobil hybrid terlaris no. 1 di Indonesia. Berbasis TNGA-C dengan kabin senyap dan kompresor AC elektrik mandiri.'
             },
             {
-                id: 'toyota-yaris-cross-hev',
+                id: 'yaris-cross-hev',
                 brand: 'Toyota',
                 model: 'All New Yaris Cross Hybrid',
                 origin: 'Japan',
@@ -839,10 +861,10 @@
                 totalRange: '950+ km',
                 rangeStandard: 'WLTC (30.3 km/L)',
                 realKml: '24.0 – 29.5 km/L (Sangat Irit)',
-                desc: 'Compact SUV hybrid dengan konsumsi BBM paling irit di kelasnya berkat baterai lithium kompak.'
+                desc: 'Compact crossover hybrid dengan konsumsi BBM paling irit di kelasnya berkat baterai lithium kompak.'
             },
             {
-                id: 'toyota-corolla-cross-hev',
+                id: 'corolla-cross-hev',
                 brand: 'Toyota',
                 model: 'Corolla Cross Hybrid GR Sport',
                 origin: 'Japan',
@@ -861,10 +883,10 @@
                 totalRange: '880+ km',
                 rangeStandard: 'NEDC (23.3 km/L)',
                 realKml: '18.5 – 22.0 km/L',
-                desc: 'Crossover nyaman berbasis TNGA-C dengan handling stabil dan paket Toyota Safety Sense.'
+                desc: 'Crossover nyaman dengan handling stabil dan paket Toyota Safety Sense lengkap.'
             },
             {
-                id: 'toyota-corolla-altis-hev',
+                id: 'corolla-altis-hev',
                 brand: 'Toyota',
                 model: 'Corolla Altis Hybrid',
                 origin: 'Japan',
@@ -883,10 +905,10 @@
                 totalRange: '900+ km',
                 rangeStandard: 'WLTC (22.5 km/L)',
                 realKml: '20.0 – 23.5 km/L',
-                desc: 'Sedan medium elegan dengan kenyamanan suspensi double wishbone belakang.'
+                desc: 'Sedan medium elegan dengan kenyamanan suspensi independen double wishbone.'
             },
             {
-                id: 'toyota-camry-hev',
+                id: 'camry-hev',
                 brand: 'Toyota',
                 model: 'All New Camry Hybrid',
                 origin: 'Japan',
@@ -908,7 +930,7 @@
                 desc: 'Sedan eksekutif flagship dengan efisiensi termal mesin 41% tertinggi di kelasnya.'
             },
             {
-                id: 'toyota-alphard-hev',
+                id: 'alphard-hev',
                 brand: 'Toyota',
                 model: 'All New Alphard Hybrid',
                 origin: 'Japan',
@@ -917,7 +939,7 @@
                 priceCat: 'over1000',
                 engine: '2.5L Dynamic Force A25A-FXS',
                 displacement: '2.487 cc',
-                batteryCap: '1.6 kWh (Ni-MH / Li-ion)',
+                batteryCap: '1.6 kWh (Bipolar NiMH)',
                 batteryType: 'Bipolar NiMH',
                 motorPower: '134 kW (182 PS) / 270 Nm',
                 combinedPower: '250 PS',
@@ -930,7 +952,7 @@
                 desc: 'Luxury MPV paling prestisius di Indonesia dengan kabin super senyap.'
             },
             {
-                id: 'toyota-vellfire-hev',
+                id: 'vellfire-hev',
                 brand: 'Toyota',
                 model: 'All New Vellfire Hybrid VIP',
                 origin: 'Japan',
@@ -952,7 +974,7 @@
                 desc: 'Kembaran Alphard bernuansa sporty executive lounge dengan jok captain seat elektrik.'
             },
             {
-                id: 'toyota-rav4-phev',
+                id: 'rav4-phev',
                 brand: 'Toyota',
                 model: 'RAV4 GR Sport PHEV',
                 origin: 'Japan',
@@ -970,13 +992,13 @@
                 pureEvStandard: 'WLTC',
                 totalRange: '1.000+ km',
                 rangeStandard: 'WLTC (22.2 km/L)',
-                realKml: 'Pure EV Harian + 18.0 km/L (BBM)',
+                realKml: 'Pure EV Harian + 18.0 km/L',
                 desc: 'PHEV bertenaga monster 306 HP dengan kemampuan melaju 65 km tanpa setetes bensin.'
             },
 
             // HONDA
             {
-                id: 'honda-crv-ehev',
+                id: 'crv-ehev',
                 brand: 'Honda',
                 model: 'All New CR-V RS e:HEV',
                 origin: 'Japan',
@@ -998,7 +1020,7 @@
                 desc: 'Arsitektur 2-Motor i-MMD: bekerja sebagai seri di kecepatan rendah, dan direct clutch di jalan tol.'
             },
             {
-                id: 'honda-accord-ehev',
+                id: 'accord-ehev',
                 brand: 'Honda',
                 model: 'All New Accord RS e:HEV',
                 origin: 'Japan',
@@ -1017,10 +1039,10 @@
                 totalRange: '1.000+ km',
                 rangeStandard: 'WLTC (22.2 km/L)',
                 realKml: '20.0 – 23.0 km/L',
-                desc: 'Sedan eksekutif berteknologi Google Built-in, EV Switch mode, dan Honda SENSING canggih.'
+                desc: 'Sedan eksekutif dengan Google Built-in, EV Switch mode, dan Honda SENSING canggih.'
             },
             {
-                id: 'honda-stepwgn-ehev',
+                id: 'stepwgn-ehev',
                 brand: 'Honda',
                 model: 'Step WGN e:HEV (RS)',
                 origin: 'Japan',
@@ -1042,9 +1064,9 @@
                 desc: 'Boxy MPV keluarga pintu geser dengan fleksibilitas kabin luar biasa dan efisiensi e:HEV.'
             },
 
-            // NISSAN (e-POWER SERIES)
+            // NISSAN
             {
-                id: 'nissan-serena-epower',
+                id: 'serena-epower',
                 brand: 'Nissan',
                 model: 'All New Serena e-POWER (C28)',
                 origin: 'Japan',
@@ -1066,7 +1088,7 @@
                 desc: 'MPV 7-seater keluarga dengan penggerak 100% motor listrik dan ProPILOT 2.0.'
             },
             {
-                id: 'nissan-kicks-epower',
+                id: 'kicks-epower',
                 brand: 'Nissan',
                 model: 'Kicks e-POWER (Gen 2)',
                 origin: 'Japan',
@@ -1085,12 +1107,12 @@
                 totalRange: '850+ km',
                 rangeStandard: 'WLTC (22.0 km/L)',
                 realKml: '19.5 – 24.0 km/L',
-                desc: 'Pionir mobil Series Hybrid di Indonesia dengan fitur One-Pedal e-Pedal Step yang sangat praktis.'
+                desc: 'Pionir Series Hybrid di Indonesia dengan fitur One-Pedal e-Pedal Step yang sangat praktis.'
             },
 
             // HYUNDAI
             {
-                id: 'hyundai-santafe-hev',
+                id: 'santafe-hev',
                 brand: 'Hyundai',
                 model: 'All New Santa Fe Hybrid (HEV)',
                 origin: 'Korea',
@@ -1112,7 +1134,7 @@
                 desc: 'SUV boxy futuristik berdesain gagah dengan transmisi otomatis 6-speed konvensional yang responsif.'
             },
             {
-                id: 'hyundai-tucson-hev',
+                id: 'tucson-hev',
                 brand: 'Hyundai',
                 model: 'All New Tucson Hybrid (HEV)',
                 origin: 'Korea',
@@ -1134,9 +1156,9 @@
                 desc: 'C-Segment SUV berkarakter dinamis dengan grille parametric hidden lights dan tenaga turbo bertenaga.'
             },
 
-            // GWM (GREAT WALL MOTOR)
+            // GWM
             {
-                id: 'gwm-haval-h6-hev',
+                id: 'haval-h6-hev',
                 brand: 'GWM',
                 model: 'Haval H6 HEV',
                 origin: 'China',
@@ -1158,7 +1180,7 @@
                 desc: 'SUV dengan torsi monster 530 Nm dan transmisi 2-speed DHT cerdas.'
             },
             {
-                id: 'gwm-haval-jolion-hev',
+                id: 'haval-jolion-hev',
                 brand: 'GWM',
                 model: 'Haval Jolion HEV (CKD Wanaherang)',
                 origin: 'China',
@@ -1180,7 +1202,7 @@
                 desc: 'Dirakit lokal (CKD) di Wanaherang Bogor dengan harga sangat kompetitif di segmen compact SUV.'
             },
             {
-                id: 'gwm-tank-500-hev',
+                id: 'tank-500-hev',
                 brand: 'GWM',
                 model: 'Tank 500 HEV 4x4',
                 origin: 'China',
@@ -1202,7 +1224,7 @@
                 desc: 'Luxury 4x4 ladder frame SUV sekelas Land Cruiser dengan interior ultra mewah berlapis Nappa leather.'
             },
             {
-                id: 'gwm-tank-300-hev',
+                id: 'tank-300-hev',
                 brand: 'GWM',
                 model: 'Tank 300 HEV 4x4',
                 origin: 'China',
@@ -1224,7 +1246,7 @@
                 desc: 'Offroader sejati berpenampilan retro dengan 3 differential lock dan sasis baja tangguh.'
             },
             {
-                id: 'gwm-tank-500-hi4t',
+                id: 'tank-500-hi4t',
                 brand: 'GWM',
                 model: 'Tank 500 Hi4-T (PHEV Super Offroad)',
                 origin: 'China',
@@ -1242,13 +1264,13 @@
                 pureEvStandard: 'WLTC',
                 totalRange: '790+ km',
                 rangeStandard: 'WLTC (11.5 km/L)',
-                realKml: 'Pure EV 100 km + 11.0 km/L (BBM)',
+                realKml: 'Pure EV 100 km + 11.0 km/L',
                 desc: 'Super Hybrid Offroad PHEV dengan baterai 37.1 kWh, fast charging 50 kW, dan V2L discharge.'
             },
 
             // BYD & DENZA
             {
-                id: 'byd-sealion-6-dmi',
+                id: 'byd-sealion-6',
                 brand: 'BYD',
                 model: 'BYD Sealion 6 DM-i (Super Hybrid PHEV)',
                 origin: 'China',
@@ -1266,11 +1288,11 @@
                 pureEvStandard: 'NEDC',
                 totalRange: '1.100+ km',
                 rangeStandard: 'NEDC (21.7 km/L)',
-                realKml: 'Pure EV 80 km + 21.0 km/L (BBM)',
+                realKml: 'Pure EV 80 km + 21.0 km/L',
                 desc: 'PHEV terlaris global dengan Blade Battery anti-terbakar, colokan AC/DC, dan jarak tempuh > 1.100 km.'
             },
             {
-                id: 'denza-d9-dmi',
+                id: 'denza-d9',
                 brand: 'BYD',
                 model: 'Denza D9 DM-i (Luxury MPV PHEV)',
                 origin: 'China',
@@ -1288,13 +1310,13 @@
                 pureEvStandard: 'NEDC',
                 totalRange: '1.040+ km',
                 rangeStandard: 'NEDC (16.5 km/L)',
-                realKml: 'Pure EV 150 km + 15.0 km/L (BBM)',
+                realKml: 'Pure EV 150 km + 15.0 km/L',
                 desc: 'Penantang kuat Alphard dengan baterai raksasa 40 kWh, fast charging 166 kW, dan kulkas kabin aktif.'
             },
 
             // WULING & MG
             {
-                id: 'wuling-almaz-hybrid',
+                id: 'almaz-hybrid',
                 brand: 'Wuling',
                 model: 'Almaz Hybrid',
                 origin: 'China',
@@ -1316,7 +1338,7 @@
                 desc: 'SUV 7-seater keluarga dengan panoramic sunroof luas dan perintah suara bahasa Indonesia Wuling WIND.'
             },
             {
-                id: 'mg-vs-hev',
+                id: 'mg-vs',
                 brand: 'MG',
                 model: 'MG VS HEV',
                 origin: 'China',
@@ -1340,7 +1362,7 @@
 
             // CHERY & JAECOO
             {
-                id: 'chery-tiggo8-pro-phev',
+                id: 'tiggo-8-phev',
                 brand: 'Chery',
                 model: 'Tiggo 8 Pro e+ (PHEV)',
                 origin: 'China',
@@ -1386,7 +1408,7 @@
 
             // MITSUBISHI
             {
-                id: 'mitsubishi-outlander-phev',
+                id: 'outlander-phev',
                 brand: 'Mitsubishi',
                 model: 'Outlander PHEV',
                 origin: 'Japan',
@@ -1410,7 +1432,7 @@
 
             // LEXUS
             {
-                id: 'lexus-lbx-hev',
+                id: 'lexus-lbx',
                 brand: 'Lexus',
                 model: 'Lexus LBX (Luxury Compact)',
                 origin: 'Japan',
@@ -1454,7 +1476,7 @@
                 desc: 'Sedan eksekutif ultra tenang dengan Mark Levinson 17-speaker audio system dan suspensi adaptif.'
             },
             {
-                id: 'lexus-rx450h-phev',
+                id: 'lexus-rx450h',
                 brand: 'Lexus',
                 model: 'Lexus RX 450h+ (PHEV Luxury)',
                 origin: 'Japan',
@@ -1478,7 +1500,7 @@
             {
                 id: 'lexus-lm350h',
                 brand: 'Lexus',
-                model: 'Lexus LM 350h (4-Seater / 7-Seater)',
+                model: 'Lexus LM 350h (VIP Lounge)',
                 origin: 'Japan',
                 type: 'HEV',
                 priceRange: 'Rp 2.200.000.000 – 2.700.000.000',
@@ -1498,9 +1520,9 @@
                 desc: 'Kasta tertinggi MPV mewah dunia dengan partisi kaca privasi dan layar bioskop 48 inci di baris kedua.'
             },
 
-            // SUZUKI (MHEV - MILD HYBRID)
+            // SUZUKI
             {
-                id: 'suzuki-ertiga-hybrid',
+                id: 'ertiga-hybrid',
                 brand: 'Suzuki',
                 model: 'All New Ertiga Cruise Hybrid (MHEV)',
                 origin: 'Japan',
@@ -1522,9 +1544,9 @@
                 desc: 'LMPV keluarga dengan sistem Smart Hybrid (SHVS). Hanya berfungsi untuk auto start-stop dan bantuan torsi awal.'
             },
             {
-                id: 'suzuki-xl7-hybrid',
+                id: 'xl7-hybrid',
                 brand: 'Suzuki',
-                model: 'New XL7 Hybrid (MHEV)',
+                model: 'New XL7 Hybrid Alpha (MHEV)',
                 origin: 'Japan',
                 type: 'MHEV',
                 priceRange: 'Rp 294.900.000 – 304.900.000',
@@ -1544,7 +1566,7 @@
                 desc: 'Crossover 7-seater berbasis Ertiga. Penghematan bensin sangat marjinal di kemacetan stop-and-go.'
             },
             {
-                id: 'suzuki-grand-vitara-mhev',
+                id: 'grand-vitara-mhev',
                 brand: 'Suzuki',
                 model: 'Grand Vitara Smart Hybrid (MHEV)',
                 origin: 'Japan',
@@ -1568,7 +1590,7 @@
 
             // EUROPEAN LUXURY PHEV
             {
-                id: 'volvo-xc90-recharge',
+                id: 'volvo-xc90-phev',
                 brand: 'Volvo',
                 model: 'Volvo XC90 Recharge PHEV',
                 origin: 'Europe',
@@ -1590,7 +1612,7 @@
                 desc: 'SUV Swedia 7-seater paling aman di dunia dengan Bowers & Wilkins sound system dan emisi ultra rendah.'
             },
             {
-                id: 'bmw-330e-phev',
+                id: 'bmw-330e',
                 brand: 'BMW',
                 model: 'BMW 330e M Sport (PHEV)',
                 origin: 'Europe',
@@ -1612,7 +1634,7 @@
                 desc: 'Sports sedan legendaris dengan akselerasi 0-100 km/jam dalam 5.8 detik dan fitur XtraBoost instan.'
             },
             {
-                id: 'porsche-cayenne-ehybrid',
+                id: 'porsche-cayenne',
                 brand: 'Porsche',
                 model: 'Porsche Cayenne E-Hybrid',
                 origin: 'Europe',
@@ -1626,7 +1648,7 @@
                 motorPower: '130 kW (176 PS) / 460 Nm',
                 combinedPower: '470 PS / 650 Nm',
                 transmission: '8-Speed Tiptronic S AWD',
-                pureEvRange: '90 km (WLTC EAER City) / 74 km (WLTC)',
+                pureEvRange: '90 km (WLTC City) / 74 km (WLTC)',
                 pureEvStandard: 'WLTC',
                 totalRange: '850+ km',
                 rangeStandard: 'WLTC (13.5 km/L)',
@@ -1635,15 +1657,14 @@
             }
         ];
 
-        // State
-        let currentFilters = {
+        let dbFilters = {
             search: '',
             type: 'all',
             price: 'all',
             origin: 'all'
         };
 
-        let selectedForCompare = [];
+        let dockSelection = [];
 
         function setDbLanguage(lang) {
             document.body.classList.remove('lang-id', 'lang-en');
@@ -1653,251 +1674,236 @@
 
             document.getElementById('btn-lang-id').classList.toggle('active', lang === 'id');
             document.getElementById('btn-lang-en').classList.toggle('active', lang === 'en');
-            renderCards();
+            renderDbCars();
         }
 
-        // Initialize language
         (function() {
             const saved = localStorage.getItem('lolyeah_lang_pref') || 'id';
             setDbLanguage(saved);
         })();
 
-        function setTypeFilter(type) {
-            currentFilters.type = type;
-            document.querySelectorAll('[data-filter-type]').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`[data-filter-type="${type}"]`).classList.add('active');
-            applyFilters();
+        function filterType(t) {
+            dbFilters.type = t;
+            document.querySelectorAll('[data-type]').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-type="${t}"]`).classList.add('active');
+            renderDbCars();
         }
 
-        function setPriceFilter(price) {
-            currentFilters.price = price;
-            document.querySelectorAll('[data-filter-price]').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`[data-filter-price="${price}"]`).classList.add('active');
-            applyFilters();
+        function filterPrice(p) {
+            dbFilters.price = p;
+            document.querySelectorAll('[data-price]').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-price="${p}"]`).classList.add('active');
+            renderDbCars();
         }
 
-        function setOriginFilter(origin) {
-            currentFilters.origin = origin;
-            document.querySelectorAll('[data-filter-origin]').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`[data-filter-origin="${origin}"]`).classList.add('active');
-            applyFilters();
+        function filterOrigin(o) {
+            dbFilters.origin = o;
+            document.querySelectorAll('[data-origin]').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-origin="${o}"]`).classList.add('active');
+            renderDbCars();
         }
 
-        function applyFilters() {
-            currentFilters.search = document.getElementById('db-search').value.toLowerCase().trim();
-            renderCards();
+        function applyDbFilters() {
+            dbFilters.search = document.getElementById('db-search').value.toLowerCase().trim();
+            renderDbCars();
         }
 
-        function renderCards() {
-            const grid = document.getElementById('cars-grid');
-            const search = currentFilters.search;
-            const typeF = currentFilters.type;
-            const priceF = currentFilters.price;
-            const originF = currentFilters.origin;
+        function renderDbCars() {
+            const container = document.getElementById('cars-container');
+            const s = dbFilters.search;
+            const t = dbFilters.type;
+            const p = dbFilters.price;
+            const o = dbFilters.origin;
 
-            const filtered = hybridCarsDB.filter(car => {
-                // Search match
-                if (search) {
-                    const textContent = (car.brand + ' ' + car.model + ' ' + car.engine + ' ' + car.type + ' ' + car.priceRange).toLowerCase();
-                    if (!textContent.includes(search)) return false;
+            const filtered = hybridCars.filter(car => {
+                if (s) {
+                    const blob = (car.brand + ' ' + car.model + ' ' + car.engine + ' ' + car.priceRange + ' ' + car.type).toLowerCase();
+                    if (!blob.includes(s)) return false;
                 }
-
-                // Type filter
-                if (typeF !== 'all' && car.type !== typeF) return false;
-
-                // Price filter
-                if (priceF !== 'all' && car.priceCat !== priceF) return false;
-
-                // Origin filter
-                if (originF !== 'all' && car.origin !== originF) return false;
-
+                if (t !== 'all' && car.type !== t) return false;
+                if (p !== 'all' && car.priceCat !== p) return false;
+                if (o !== 'all' && car.origin !== o) return false;
                 return true;
             });
 
-            document.getElementById('displayed-count').textContent = filtered.length;
-            document.getElementById('total-db-count').textContent = hybridCarsDB.length;
-            document.getElementById('stat-total-count').textContent = hybridCarsDB.length + ' Model';
+            document.getElementById('cars-shown-count').textContent = filtered.length;
+            document.getElementById('cars-total-count').textContent = hybridCars.length;
 
             if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--text-3);">
-                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔍</div>
-                        <h3 style="color: #fff; font-family: var(--font-display); font-size: 1.25rem;">Tidak Ada Mobil yang Cocok</h3>
-                        <p style="font-size: 0.9rem;">Coba sesuaikan filter atau kata kunci pencarian Anda.</p>
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 4.5rem 1rem; color: var(--text-3);">
+                        <div style="font-size: 3rem; margin-bottom: 0.75rem;">🔍</div>
+                        <h3 style="color: #fff; font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 0.4rem;">Tidak Ada Mobil yang Cocok</h3>
+                        <p>Sesuaikan filter atau cari dengan kata kunci lain (misal: "Toyota", "PHEV", "Zenix").</p>
                     </div>
                 `;
                 return;
             }
 
-            const html = filtered.map(car => {
-                const isSelected = selectedForCompare.includes(car.id);
-                
-                // Badges
-                let typeBadgeClass = 'badge-hev';
-                let typeLabel = 'Full Hybrid (HEV)';
-                if (car.type === 'MHEV') { typeBadgeClass = 'badge-mhev'; typeLabel = 'Mild Hybrid (MHEV)'; }
-                else if (car.type === 'EREV') { typeBadgeClass = 'badge-erev'; typeLabel = 'Series / EREV'; }
-                else if (car.type === 'PHEV') { typeBadgeClass = 'badge-phev'; typeLabel = 'Plug-in (PHEV)'; }
+            container.innerHTML = filtered.map(car => {
+                const isSelected = dockSelection.includes(car.id);
 
-                // Range standard tag class
-                let stdTagClass = 'tag-riil';
-                if (car.rangeStandard.includes('WLTC') || car.rangeStandard.includes('WLTP')) stdTagClass = 'tag-wltc';
-                else if (car.rangeStandard.includes('CLTC')) stdTagClass = 'tag-cltc';
-                else if (car.rangeStandard.includes('NEDC')) stdTagClass = 'tag-nedc';
+                let evBadgeStyle = 'tag-riil';
+                if (car.pureEvStandard.includes('WLTC')) evBadgeStyle = 'tag-wltc';
+                else if (car.pureEvStandard.includes('NEDC')) evBadgeStyle = 'tag-nedc';
 
-                let pureEvClass = 'val-pure-ev';
-                if (car.type === 'MHEV') pureEvClass = 'val-zero-ev';
+                let totalBadgeStyle = 'tag-riil';
+                if (car.rangeStandard.includes('WLTC')) totalBadgeStyle = 'tag-wltc';
+                else if (car.rangeStandard.includes('CLTC')) totalBadgeStyle = 'tag-cltc';
+                else if (car.rangeStandard.includes('NEDC')) totalBadgeStyle = 'tag-nedc';
+
+                let pureEvColor = 'var(--cyan)';
+                if (car.type === 'MHEV') pureEvColor = 'var(--rose)';
 
                 return `
-                    <article class="car-card" id="card-${car.id}">
-                        <div class="car-card-header">
+                    <article class="car-card type-${car.type}">
+                        <div class="car-card-head">
                             <div>
-                                <div class="car-brand">${car.brand}</div>
-                                <h3 class="car-model-name">${car.model}</h3>
+                                <span class="car-brand-name">${car.brand}</span>
+                                <h3 class="car-title">${car.model}</h3>
                             </div>
-                            <div class="car-price">${car.priceRange}</div>
+                            <span class="car-price-badge">${car.priceRange}</span>
                         </div>
 
-                        <span class="car-type-badge ${typeBadgeClass}">${typeLabel}</span>
+                        <span class="car-type-pill pill-${car.type}">
+                            ${car.type === 'HEV' ? 'Full Hybrid (HEV)' : (car.type === 'PHEV' ? 'Plug-in (PHEV)' : (car.type === 'EREV' ? 'Series / EREV' : 'Mild Hybrid (MHEV)'))}
+                        </span>
 
-                        <!-- Key Range Estimation Box with Explicit Standard Badge -->
-                        <div class="range-box">
-                            <div class="range-stat-item">
-                                <div class="range-stat-label">
-                                    <span>Jarak EV Murni</span>
-                                    <span class="legend-tag ${car.pureEvStandard.includes('WLTC') ? 'tag-wltc' : (car.pureEvStandard.includes('NEDC') ? 'tag-nedc' : 'tag-riil')}" style="padding: 1px 4px; font-size: 0.65rem;">${car.pureEvStandard}</span>
+                        <div class="card-range-box">
+                            <div class="r-entry">
+                                <div class="r-head">
+                                    <span>Pure EV Range</span>
+                                    <span class="legend-tag ${evBadgeStyle}" style="font-size: 0.65rem; padding: 1px 4px;">${car.pureEvStandard}</span>
                                 </div>
-                                <div class="range-stat-val ${pureEvClass}">${car.pureEvRange}</div>
+                                <div class="r-val" style="color: ${pureEvColor}; font-size: 0.9rem;">${car.pureEvRange}</div>
                             </div>
-                            <div class="range-stat-item">
-                                <div class="range-stat-label">
+                            <div class="r-entry">
+                                <div class="r-head">
                                     <span>Jangkauan Total</span>
-                                    <span class="legend-tag ${stdTagClass}" style="padding: 1px 4px; font-size: 0.65rem;">${car.rangeStandard.split(' ')[0]}</span>
+                                    <span class="legend-tag ${totalBadgeStyle}" style="font-size: 0.65rem; padding: 1px 4px;">${car.rangeStandard.split(' ')[0]}</span>
                                 </div>
-                                <div class="range-stat-val">${car.totalRange}</div>
+                                <div class="r-val" style="font-size: 0.9rem;">${car.totalRange}</div>
                             </div>
                         </div>
 
-                        <!-- Technical Specs -->
-                        <div class="car-specs-grid">
-                            <div class="car-spec-entry">
-                                <span class="car-spec-name">Mesin Bensin (ICE)</span>
-                                <span class="car-spec-data">${car.engine} (${car.displacement})</span>
+                        <div class="card-spec-grid">
+                            <div class="c-spec-row">
+                                <span class="c-spec-k">Mesin Bensin (ICE)</span>
+                                <span class="c-spec-v">${car.engine}</span>
                             </div>
-                            <div class="car-spec-entry">
-                                <span class="car-spec-name">Baterai Traksi</span>
-                                <span class="car-spec-data" style="color: var(--cyan);">${car.batteryCap}</span>
+                            <div class="c-spec-row">
+                                <span class="c-spec-k">Baterai Traksi</span>
+                                <span class="c-spec-v" style="color: var(--cyan);">${car.batteryCap}</span>
                             </div>
-                            <div class="car-spec-entry">
-                                <span class="car-spec-name">Tenaga Motor Listrik</span>
-                                <span class="car-spec-data">${car.motorPower}</span>
+                            <div class="c-spec-row">
+                                <span class="c-spec-k">Motor Listrik</span>
+                                <span class="c-spec-v">${car.motorPower}</span>
                             </div>
-                            <div class="car-spec-entry">
-                                <span class="car-spec-name">Total Tenaga Gabungan</span>
-                                <span class="car-spec-data" style="color: var(--emerald);">${car.combinedPower}</span>
+                            <div class="c-spec-row">
+                                <span class="c-spec-k">Tenaga Gabungan</span>
+                                <span class="c-spec-v" style="color: var(--emerald);">${car.combinedPower}</span>
                             </div>
-                            <div class="car-spec-entry">
-                                <span class="car-spec-name">Transmisi</span>
-                                <span class="car-spec-data">${car.transmission}</span>
+                            <div class="c-spec-row">
+                                <span class="c-spec-k">Transmisi</span>
+                                <span class="c-spec-v">${car.transmission}</span>
                             </div>
-                            <div class="car-spec-entry">
-                                <span class="car-spec-name">Konsumsi BBM Riil</span>
-                                <span class="car-spec-data" style="color: var(--amber);">${car.realKml}</span>
+                            <div class="c-spec-row">
+                                <span class="c-spec-k">Konsumsi BBM Riil</span>
+                                <span class="c-spec-v" style="color: var(--amber);">${car.realKml}</span>
                             </div>
                         </div>
 
-                        <div style="font-size: 0.825rem; color: var(--text-2); margin-bottom: 1rem; line-height: 1.5;">
+                        <p style="font-size: 0.85rem; color: var(--text-2); margin-bottom: 1.25rem; line-height: 1.6;">
                             ${car.desc}
-                        </div>
+                        </p>
 
-                        <!-- Card Footer -->
-                        <div class="car-card-footer">
-                            <label class="compare-checkbox-label">
-                                <input type="checkbox" onchange="toggleCompare('${car.id}', this.checked)" ${isSelected ? 'checked' : ''}>
+                        <div class="card-foot">
+                            <label class="compare-chk-label">
+                                <input type="checkbox" onchange="toggleDockCar('${car.id}', this.checked)" ${isSelected ? 'checked' : ''}>
                                 <span>Bandingkan</span>
                             </label>
-                            <span class="car-origin-tag">Asal: ${car.origin === 'Japan' ? '🇯🇵 Jepang' : (car.origin === 'China' ? '🇨🇳 Tiongkok' : (car.origin === 'Korea' ? '🇰🇷 Korea' : '🇪🇺 Eropa'))}</span>
+                            <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-3);">
+                                Asal: ${car.origin === 'Japan' ? '🇯🇵 Jepang' : (car.origin === 'China' ? '🇨🇳 Tiongkok' : (car.origin === 'Korea' ? '🇰🇷 Korea' : '🇪🇺 Eropa'))}
+                            </span>
                         </div>
                     </article>
                 `;
             }).join('');
-
-            grid.innerHTML = html;
         }
 
-        // Comparison Logic
-        function toggleCompare(carId, checked) {
-            if (checked) {
-                if (selectedForCompare.length >= 3) {
+        // Comparison Dock
+        function toggleDockCar(id, isChecked) {
+            if (isChecked) {
+                if (dockSelection.length >= 3) {
                     alert('Maksimal membandingkan 3 mobil sekaligus.');
-                    renderCards();
+                    renderDbCars();
                     return;
                 }
-                if (!selectedForCompare.includes(carId)) selectedForCompare.push(carId);
+                if (!dockSelection.includes(id)) dockSelection.push(id);
             } else {
-                selectedForCompare = selectedForCompare.filter(id => id !== carId);
+                dockSelection = dockSelection.filter(x => x !== id);
             }
-            updateCompareBar();
+            updateDock();
         }
 
-        function updateCompareBar() {
-            const bar = document.getElementById('compare-bar');
-            const countEl = document.getElementById('compare-count');
-            const pillsWrap = document.getElementById('compare-pills');
+        function updateDock() {
+            const dock = document.getElementById('compare-dock');
+            const counter = document.getElementById('dock-counter');
+            const chips = document.getElementById('dock-chips');
 
-            countEl.textContent = selectedForCompare.length;
+            counter.textContent = dockSelection.length;
 
-            if (selectedForCompare.length > 0) {
-                bar.classList.add('visible');
-                pillsWrap.innerHTML = selectedForCompare.map(id => {
-                    const car = hybridCarsDB.find(c => c.id === id);
-                    return `<span class="compare-slot-tag">${car ? car.model : id}</span>`;
+            if (dockSelection.length > 0) {
+                dock.classList.add('active');
+                chips.innerHTML = dockSelection.map(id => {
+                    const c = hybridCars.find(x => x.id === id);
+                    return `<span style="background: rgba(6,182,212,0.2); border: 1px solid rgba(6,182,212,0.4); padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-family: var(--font-mono); color: #fff;">${c ? c.model : id}</span>`;
                 }).join('');
             } else {
-                bar.classList.remove('visible');
-                pillsWrap.innerHTML = '';
+                dock.classList.remove('active');
+                chips.innerHTML = '';
             }
         }
 
-        function clearComparison() {
-            selectedForCompare = [];
-            updateCompareBar();
-            renderCards();
+        function resetCompareList() {
+            dockSelection = [];
+            updateDock();
+            renderDbCars();
         }
 
-        function openCompareModal() {
-            if (selectedForCompare.length === 0) return;
+        function showCompareModal() {
+            if (dockSelection.length === 0) return;
             const modal = document.getElementById('compare-modal');
-            const table = document.getElementById('compare-table-body');
+            const table = document.getElementById('compare-modal-table');
 
-            const cars = selectedForCompare.map(id => hybridCarsDB.find(c => c.id === id)).filter(Boolean);
+            const cars = dockSelection.map(id => hybridCars.find(x => x.id === id)).filter(Boolean);
 
-            let headerHtml = '<tr><th>Parameter Spesifikasi</th>' + cars.map(c => `<th style="color: #fff; font-size: 0.95rem; font-family: var(--font-display);">${c.brand} ${c.model}</th>`).join('') + '</tr>';
+            let headHtml = '<tr><th>Parameter Spesifikasi</th>' + cars.map(c => `<th style="color: #fff; font-size: 1rem; font-family: var(--font-display);">${c.brand} ${c.model}</th>`).join('') + '</tr>';
 
-            const rows = [
-                { label: 'Tipe Hybrid', key: 'type' },
-                { label: 'Rentang Harga OTR', key: 'priceRange' },
-                { label: 'Kapasitas Baterai', key: 'batteryCap' },
-                { label: 'Tipe Kimia Baterai', key: 'batteryType' },
-                { label: 'Jarak Pure EV Murni', key: 'pureEvRange' },
-                { label: 'Standar Uji EV', key: 'pureEvStandard' },
-                { label: 'Jangkauan Total', key: 'totalRange' },
-                { label: 'Standar Uji Total', key: 'rangeStandard' },
-                { label: 'Mesin Bensin (ICE)', key: 'engine' },
-                { label: 'Tenaga Motor Listrik', key: 'motorPower' },
-                { label: 'Tenaga Gabungan', key: 'combinedPower' },
-                { label: 'Transmisi', key: 'transmission' },
-                { label: 'Konsumsi BBM Riil', key: 'realKml' }
+            const keys = [
+                { label: 'Tipe Hybrid', k: 'type' },
+                { label: 'Harga OTR', k: 'priceRange' },
+                { label: 'Kapasitas Baterai', k: 'batteryCap' },
+                { label: 'Tipe Baterai', k: 'batteryType' },
+                { label: 'Jarak Pure EV Murni', k: 'pureEvRange' },
+                { label: 'Standar Uji EV', k: 'pureEvStandard' },
+                { label: 'Jangkauan Total', k: 'totalRange' },
+                { label: 'Standar Uji Total', k: 'rangeStandard' },
+                { label: 'Mesin Bensin (ICE)', k: 'engine' },
+                { label: 'Motor Listrik', k: 'motorPower' },
+                { label: 'Tenaga Gabungan', k: 'combinedPower' },
+                { label: 'Transmisi', k: 'transmission' },
+                { label: 'Konsumsi BBM Riil', k: 'realKml' }
             ];
 
-            let bodyHtml = rows.map(r => {
+            let bodyHtml = keys.map(row => {
                 return `<tr>
-                    <td style="color: var(--text-3); font-weight: 600;">${r.label}</td>
-                    ${cars.map(c => `<td><strong>${c[r.key]}</strong></td>`).join('')}
+                    <td style="color: var(--text-3); font-weight: 700; font-family: var(--font-mono); font-size: 0.8rem;">${row.label}</td>
+                    ${cars.map(c => `<td style="color: #fff; font-family: var(--font-mono); font-weight: 600;">${c[row.k]}</td>`).join('')}
                 </tr>`;
             }).join('');
 
-            table.innerHTML = `<thead>${headerHtml}</thead><tbody>${bodyHtml}</tbody>`;
+            table.innerHTML = `<thead>${headHtml}</thead><tbody>${bodyHtml}</tbody>`;
             modal.classList.add('open');
         }
 
@@ -1905,12 +1911,11 @@
             document.getElementById('compare-modal').classList.remove('open');
         }
 
-        function closeCompareModalOnOverlay(e) {
+        function closeModalOnBackdrop(e) {
             if (e.target.id === 'compare-modal') closeCompareModal();
         }
 
-        // Initial render
-        renderCards();
+        renderDbCars();
     </script>
 </body>
 </html>
