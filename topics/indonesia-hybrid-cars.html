@@ -550,21 +550,23 @@
         /* ── Architecture Cards (4 Grid) ── */
         .arch-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 3rem;
+            margin-bottom: 3.5rem;
         }
         .arch-card {
             background: var(--surface-1);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-xl);
-            padding: 2rem;
+            padding: 1.75rem;
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: hidden;
             transition: var(--transition-smooth);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
         }
         .arch-card::before {
             content: '';
@@ -574,76 +576,128 @@
             right: 0;
             height: 3px;
             background: var(--card-accent, var(--cyan));
-            opacity: 0.4;
+            opacity: 0.6;
             transition: opacity 0.3s ease, height 0.3s ease;
         }
         .arch-card:hover {
             border-color: var(--glass-border-hover);
             background: var(--surface-hover);
-            transform: translateY(-5px);
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5), 0 0 20px rgba(6, 182, 212, 0.15);
         }
         .arch-card:hover::before { opacity: 1; height: 4px; }
 
         .arch-card.mhev-card { --card-accent: var(--rose); border-color: rgba(244, 63, 94, 0.25); }
-        .arch-card.hev-card { --card-accent: var(--cyan); }
-        .arch-card.erev-card { --card-accent: var(--emerald); }
-        .arch-card.phev-card { --card-accent: var(--purple); }
+        .arch-card.hev-card { --card-accent: var(--cyan); border-color: rgba(6, 182, 212, 0.25); }
+        .arch-card.erev-card { --card-accent: var(--emerald); border-color: rgba(16, 185, 129, 0.25); }
+        .arch-card.phev-card { --card-accent: var(--purple); border-color: rgba(139, 92, 246, 0.25); }
 
         .arch-card-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.25rem;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
         }
-        .arch-badge {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 0.3rem 0.75rem;
-            border-radius: var(--radius-full);
+        .arch-badge-pill {
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.4rem;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 0.35rem 0.8rem;
+            border-radius: var(--radius-full);
+            white-space: nowrap;
         }
-        .badge-mhev { background: var(--rose-soft); color: var(--rose); border: 1px solid rgba(244, 63, 94, 0.3); }
-        .badge-hev { background: var(--cyan-soft); color: var(--cyan); border: 1px solid rgba(6, 182, 212, 0.3); }
-        .badge-erev { background: var(--emerald-soft); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
-        .badge-phev { background: var(--purple-soft); color: var(--purple); border: 1px solid rgba(139, 92, 246, 0.3); }
+        .badge-mhev { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35); }
+        .badge-hev { background: rgba(6, 182, 212, 0.15); color: #38bdf8; border: 1px solid rgba(6, 182, 212, 0.35); }
+        .badge-erev { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); }
+        .badge-phev { background: rgba(139, 92, 246, 0.15); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.35); }
+
+        .arch-card-tag {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--text-3);
+            white-space: nowrap;
+        }
 
         .arch-card-title {
             font-family: var(--font-display);
-            font-size: 1.35rem;
+            font-size: 1.3rem;
             font-weight: 800;
-            margin-bottom: 0.75rem;
             color: #fff;
+            line-height: 1.25;
+            margin-bottom: 0.35rem;
         }
+        .arch-card-sub {
+            font-size: 0.825rem;
+            color: var(--text-3);
+            font-family: var(--font-mono);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Hero EV Mode Stat Strip Inside Card */
+        .arch-hero-stat {
+            background: #060913;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.15rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.6);
+        }
+        .arch-stat-lbl {
+            font-size: 0.725rem;
+            color: var(--text-3);
+            text-transform: uppercase;
+            font-family: var(--font-mono);
+            letter-spacing: 0.04em;
+        }
+        .arch-stat-val {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
         .arch-card-desc {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text-2);
             line-height: 1.65;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
             flex-grow: 1;
         }
+
         .arch-specs-list {
             list-style: none;
             border-top: 1px solid var(--glass-border);
-            padding-top: 1.25rem;
+            padding-top: 1rem;
             display: flex;
             flex-direction: column;
-            gap: 0.65rem;
-            font-size: 0.875rem;
+            gap: 0.55rem;
+            font-size: 0.825rem;
         }
         .arch-specs-list li {
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: var(--text-3);
+            gap: 0.5rem;
+        }
+        .arch-specs-list li span {
+            white-space: nowrap;
         }
         .arch-specs-list li strong {
             color: var(--text-1);
             font-family: var(--font-mono);
             font-weight: 600;
+            text-align: right;
+            font-size: 0.8rem;
         }
 
         /* ── ANIMATED INTERACTIVE POWER FLOW DIAGRAM (WOW EFFECT) ── */
@@ -792,58 +846,202 @@
             line-height: 1.2;
         }
 
-        /* Tropical Heat & AC Simulation Widget */
+        /* Tropical Heat & AC Simulation Widget (Pro Upgrade) */
         .tropical-sim-container {
-            background: var(--surface-1);
-            border: 1px solid rgba(244, 63, 94, 0.3);
-            border-radius: var(--radius-lg);
-            padding: 1.75rem;
-            margin-bottom: 3rem;
+            background: linear-gradient(145deg, rgba(14, 22, 40, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%);
+            border: 1px solid rgba(244, 63, 94, 0.35);
+            border-radius: var(--radius-xl);
+            padding: clamp(1.5rem, 3vw, 2.25rem);
+            margin-bottom: 3.5rem;
             display: grid;
-            grid-template-columns: 1fr 1.2fr;
+            grid-template-columns: 1.1fr 1.3fr;
             gap: 2rem;
-            align-items: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(244, 63, 94, 0.15);
         }
-        @media (max-width: 860px) {
+        @media (max-width: 900px) {
             .tropical-sim-container { grid-template-columns: 1fr; }
         }
-        .thermometer-dial {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            background: #060913;
+
+        .sim-instrument-cluster {
+            background: #040711;
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
             padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+        .sim-hud-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-3);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 0.75rem;
+        }
+        .sim-main-gauge {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
         }
         .temp-reading {
             font-family: var(--font-display);
-            font-size: 3.2rem;
+            font-size: 3.5rem;
             font-weight: 900;
-            color: var(--rose);
             line-height: 1;
-            margin: 0.5rem 0;
-            text-shadow: 0 0 25px rgba(244, 63, 94, 0.5);
-            transition: color 0.3s ease;
+            color: var(--cyan);
+            text-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+            transition: color 0.3s ease, text-shadow 0.3s ease;
         }
-        .sim-btn-play {
-            background: var(--rose);
+        .sim-temp-bar-wrap {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            position: relative;
+        }
+        .sim-temp-bar-fill {
+            height: 100%;
+            width: 25%;
+            background: linear-gradient(90deg, #06b6d4 0%, #f59e0b 50%, #f43f5e 100%);
+            border-radius: var(--radius-full);
+            transition: width 0.3s ease;
+        }
+
+        .sim-status-box {
+            background: rgba(14, 22, 40, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 0.85rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .sim-status-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+        }
+        .sim-status-k { color: var(--text-3); font-family: var(--font-mono); }
+        .sim-status-v { font-family: var(--font-mono); font-weight: 700; color: #fff; }
+
+        .sim-btn-group {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 0.65rem;
+            margin-top: 0.5rem;
+        }
+        .sim-btn-start {
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
             color: #fff;
             border: none;
             font-family: var(--font-sans);
             font-size: 0.875rem;
-            font-weight: 700;
-            padding: 0.65rem 1.5rem;
+            font-weight: 800;
+            padding: 0.8rem 1.25rem;
             border-radius: var(--radius-full);
             cursor: pointer;
-            box-shadow: 0 4px 16px rgba(244, 63, 94, 0.4);
+            box-shadow: 0 4px 20px rgba(244, 63, 94, 0.45);
             transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+        .sim-btn-start:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 28px rgba(244, 63, 94, 0.65);
+        }
+        .sim-btn-reset {
+            background: var(--surface-2);
+            border: 1px solid var(--glass-border);
+            color: var(--text-2);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        .sim-btn-reset:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+
+        .sim-mode-toggle-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+        .sim-mode-chip {
+            background: var(--surface-2);
+            border: 1px solid var(--glass-border);
+            color: var(--text-2);
+            padding: 0.4rem 0.9rem;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        .sim-mode-chip.active {
+            background: var(--rose-soft);
+            border-color: var(--rose);
+            color: var(--rose);
+            box-shadow: 0 0 16px rgba(244, 63, 94, 0.3);
+        }
+        .sim-mode-chip.active.chip-hev {
+            background: var(--cyan-soft);
+            border-color: var(--cyan);
+            color: var(--cyan);
+            box-shadow: 0 0 16px rgba(6, 182, 212, 0.3);
+        }
+
+        /* Timeline steps */
+        .sim-steps-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
             margin-top: 1rem;
         }
-        .sim-btn-play:hover {
-            transform: scale(1.04);
-            box-shadow: 0 6px 24px rgba(244, 63, 94, 0.6);
+        .sim-step-item {
+            background: var(--surface-2);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-3);
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            transition: var(--transition-smooth);
+        }
+        .sim-step-item.active {
+            border-color: var(--rose);
+            background: rgba(244, 63, 94, 0.15);
+            color: #fff;
+            transform: translateX(4px);
+        }
+        .sim-step-badge {
+            font-family: var(--font-mono);
+            font-size: 0.725rem;
+            font-weight: 800;
+            padding: 0.2rem 0.5rem;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.08);
+            white-space: nowrap;
+        }
+        .sim-step-item.active .sim-step-badge {
+            background: var(--rose);
+            color: #fff;
         }
 
         .mhev-6pillars-grid {
@@ -1415,18 +1613,23 @@
                     <!-- MHEV -->
                     <div class="arch-card mhev-card">
                         <div class="arch-card-header">
-                            <span class="arch-badge badge-mhev">MHEV (Mild Hybrid)</span>
-                            <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--rose);">Micro Battery</span>
+                            <span class="arch-badge-pill badge-mhev">MHEV · Mild Hybrid</span>
+                            <span class="arch-card-tag">12V / 48V</span>
                         </div>
-                        <h3 class="arch-card-title">12V / 48V Integrated Starter Generator</h3>
+                        <h3 class="arch-card-title">Mild Hybrid (ISG)</h3>
+                        <span class="arch-card-sub">Belt-Driven Starter Generator</span>
+                        <div class="arch-hero-stat">
+                            <span class="arch-stat-lbl">Pure EV Mode:</span>
+                            <span class="arch-stat-val" style="color: var(--rose);">0% (Tidak Ada)</span>
+                        </div>
                         <p class="arch-card-desc">
-                            <span class="id-only">Menggunakan motor starter/generator kecil (ISG/BSG) terhubung sabuk ke kruk as dengan baterai lithium mikro (~0.1 kWh). <strong>Sama sekali TIDAK BISA menggerakkan roda hanya dengan listrik</strong>. Hanya membantu idle start-stop dan sedikit torsi saat injak pedal awal.</span>
-                            <span class="en-only">Uses a belt-driven starter/generator linked to the crankshaft and a micro lithium battery (~0.1 kWh). <strong>CANNOT drive the wheels on electric power alone</strong>. Only assists idle start-stop and brief takeoff torque.</span>
+                            <span class="id-only">Menggunakan dinamo starter/generator kecil (ISG) terhubung sabuk ke kruk as dengan baterai mikro (~0.1 kWh). <strong>Mesin bensin WAJIB menyala terus saat mobil melaju</strong>. Hanya membantu start-stop dan torsi sesaat.</span>
+                            <span class="en-only">Uses a small starter/generator (ISG) connected via belt to the crankshaft with a micro battery (~0.1 kWh). <strong>The gas engine MUST run continuously while moving</strong>. Only assists start-stop and brief torque.</span>
                         </p>
                         <ul class="arch-specs-list">
                             <li><span>Motor Traksi:</span><strong>0 kW (Hanya ISG 2–10 kW)</strong></li>
-                            <li><span>Kapasitas Baterai:</span><strong>0.07 – 0.5 kWh (Mikro)</strong></li>
-                            <li><span>Pure EV Drive:</span><strong style="color: var(--rose);">0% (Tidak Ada)</strong></li>
+                            <li><span>Kapasitas Baterai:</span><strong>0.07 – 0.12 kWh</strong></li>
+                            <li><span>Konsumsi BBM Dalkot:</span><strong style="color: var(--rose);">11 – 13 km/L</strong></li>
                             <li><span>Model di Indonesia:</span><strong>Suzuki Ertiga, XL7, Grand Vitara</strong></li>
                         </ul>
                     </div>
@@ -1434,18 +1637,23 @@
                     <!-- HEV -->
                     <div class="arch-card hev-card">
                         <div class="arch-card-header">
-                            <span class="arch-badge badge-hev">HEV (Full Hybrid)</span>
-                            <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan);">Self-Charging</span>
+                            <span class="arch-badge-pill badge-hev">HEV · Full Hybrid</span>
+                            <span class="arch-card-tag">Self-Charging</span>
                         </div>
-                        <h3 class="arch-card-title">Power-Split &amp; Dual-Motor Series-Parallel</h3>
+                        <h3 class="arch-card-title">Full Hybrid (e-CVT)</h3>
+                        <span class="arch-card-sub">Power-Split &amp; Dual-Motor Series-Parallel</span>
+                        <div class="arch-hero-stat">
+                            <span class="arch-stat-lbl">Pure EV Mode:</span>
+                            <span class="arch-stat-val" style="color: var(--cyan);">100% Senyap di Macet</span>
+                        </div>
                         <p class="arch-card-desc">
-                            <span class="id-only">Memiliki motor listrik traksi besar (50–150 kW), inverter tegangan tinggi (200V–650V), dan baterai traksi 1.0–2.0 kWh. <strong>Dapat berjalan 100% listrik senyap</strong> pada kecepatan rendah dan kemacetan, serta mengisi ulang baterai otomatis via pengereman regeneratif.</span>
-                            <span class="en-only">Features high-voltage inverters (200V–650V), high-output traction motors (50–150 kW), and 1.0–2.0 kWh batteries. <strong>Propels wheels in 100% silent EV mode</strong> in traffic, self-charging automatically.</span>
+                            <span class="id-only">Memiliki motor traksi besar (50–150 kW) dan inverter 200V–650V. <strong>Dapat berjalan 100% listrik senyap</strong> pada kemacetan dalkot, serta mengisi ulang baterai otomatis via pengereman regeneratif.</span>
+                            <span class="en-only">Features a large traction motor (50–150 kW) and 200V–650V inverters. <strong>Drives in 100% silent EV mode</strong> in urban traffic, self-charging automatically via regen braking.</span>
                         </p>
                         <ul class="arch-specs-list">
-                            <li><span>Motor Traksi:</span><strong>50 – 150+ kW (Bertenaga Besar)</strong></li>
+                            <li><span>Motor Traksi:</span><strong>50 – 150+ kW (Kuat)</strong></li>
                             <li><span>Kapasitas Baterai:</span><strong>1.0 – 2.1 kWh</strong></li>
-                            <li><span>Pure EV Drive:</span><strong style="color: var(--cyan);">Ya (Macet / Stop-and-Go)</strong></li>
+                            <li><span>Konsumsi BBM Dalkot:</span><strong style="color: var(--cyan);">20 – 28 km/L</strong></li>
                             <li><span>Model di Indonesia:</span><strong>Innova Zenix, Yaris Cross, CR-V e:HEV</strong></li>
                         </ul>
                     </div>
@@ -1453,18 +1661,23 @@
                     <!-- EREV -->
                     <div class="arch-card erev-card">
                         <div class="arch-card-header">
-                            <span class="arch-badge badge-erev">EREV (Series Hybrid)</span>
-                            <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--emerald);">100% EV Motor</span>
+                            <span class="arch-badge-pill badge-erev">EREV · Series Hybrid</span>
+                            <span class="arch-card-tag">Nissan e-POWER</span>
                         </div>
-                        <h3 class="arch-card-title">100% Motor Listrik + Genset Bensin Onboard</h3>
+                        <h3 class="arch-card-title">Series Hybrid (EREV)</h3>
+                        <span class="arch-card-sub">100% Electric Motor Drive + Onboard Genset</span>
+                        <div class="arch-hero-stat">
+                            <span class="arch-stat-lbl">Penggerak Roda:</span>
+                            <span class="arch-stat-val" style="color: var(--emerald);">100% Motor Listrik</span>
+                        </div>
                         <p class="arch-card-desc">
-                            <span class="id-only">Roda mobil <strong>100% digerakkan oleh motor listrik</strong>. Mesin bensin sama sekali tidak terhubung ke as roda; fungsinya murni sebagai genset penghasil listrik ke inverter/baterai. Sensasi berkendara instan, halus, dan senyap tanpa perlu colok kabel charger.</span>
-                            <span class="en-only">Wheels are <strong>100% driven by electric motors</strong>. The gas engine has zero mechanical connection to the wheels, acting purely as an onboard generator. Delivers instant, silent, linear EV drive with zero plug-in hassle.</span>
+                            <span class="id-only">Roda mobil <strong>100% digerakkan oleh motor listrik</strong>. Mesin bensin hanya berfungsi murni sebagai genset penghasil listrik ke inverter. Sensasi berkendara instan, halus, dan senyap tanpa colok charger.</span>
+                            <span class="en-only">Wheels are <strong>100% driven by electric motors</strong>. The combustion engine serves purely as an onboard generator. Delivers instant, silent, linear EV drive with zero plug-in hassle.</span>
                         </p>
                         <ul class="arch-specs-list">
                             <li><span>Motor Penggerak:</span><strong>100 – 200+ kW (100% Roda)</strong></li>
-                            <li><span>Kapasitas Baterai:</span><strong>1.7 – 40+ kWh</strong></li>
-                            <li><span>Sensasi Berkendara:</span><strong style="color: var(--emerald);">100% Mobil Listrik Murni</strong></li>
+                            <li><span>Kapasitas Baterai:</span><strong>1.7 – 2.1 kWh</strong></li>
+                            <li><span>Konsumsi BBM Dalkot:</span><strong style="color: var(--emerald);">18 – 23 km/L</strong></li>
                             <li><span>Model di Indonesia:</span><strong>Nissan Serena e-POWER C28, Kicks</strong></li>
                         </ul>
                     </div>
@@ -1472,18 +1685,23 @@
                     <!-- PHEV -->
                     <div class="arch-card phev-card">
                         <div class="arch-card-header">
-                            <span class="arch-badge badge-phev">PHEV (Plug-in Hybrid)</span>
-                            <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--purple);">AC/DC Fast Charge</span>
+                            <span class="arch-badge-pill badge-phev">PHEV · Super Hybrid</span>
+                            <span class="arch-card-tag">AC/DC Fast Charge</span>
                         </div>
-                        <h3 class="arch-card-title">Baterai Besar + Colokan Charger AC/DC</h3>
+                        <h3 class="arch-card-title">Plug-in Hybrid (PHEV)</h3>
+                        <span class="arch-card-sub">Dual Motor + Big Battery + Charger Port</span>
+                        <div class="arch-hero-stat">
+                            <span class="arch-stat-lbl">Jarak Pure EV:</span>
+                            <span class="arch-stat-val" style="color: var(--purple);">50 – 190 km (Bisa SPKLU)</span>
+                        </div>
                         <p class="arch-card-desc">
-                            <span class="id-only">Menggabungkan baterai traksi besar (15–40 kWh) dengan colokan charger eksternal dan mesin bensin bertenaga. Bisa melaju sebagai <strong>mobil listrik murni 50–190 km</strong> untuk harian, serta menjelajah >1.000 km tanpa range anxiety saat keluar kota.</span>
-                            <span class="en-only">Combines large traction batteries (15–40 kWh) with AC/DC charging ports and combustion engines. Operates as a <strong>pure electric car for 50–190 km</strong> daily, with >1,000 km long-haul capability.</span>
+                            <span class="id-only">Baterai traksi besar (15–40 kWh) dengan colokan charger AC/DC. Beroperasi sebagai <strong>mobil listrik murni 50–190 km</strong> harian (0 L bensin), serta menjelajah &gt;1.100 km saat keluar kota.</span>
+                            <span class="en-only">Large traction batteries (15–40 kWh) with AC/DC charging. Runs as a <strong>pure EV for 50–190 km</strong> daily (zero gas), and cruises &gt;1,100 km on road trips.</span>
                         </p>
                         <ul class="arch-specs-list">
-                            <li><span>Motor Listrik:</span><strong>120 – 300+ kW</strong></li>
-                            <li><span>Kapasitas Baterai:</span><strong>15 – 40+ kWh (Bisa SPKLU)</strong></li>
-                            <li><span>Jarak EV Murni:</span><strong style="color: var(--purple);">50 – 190 km (CLTC/WLTC)</strong></li>
+                            <li><span>Motor Traksi:</span><strong>120 – 300+ kW</strong></li>
+                            <li><span>Kapasitas Baterai:</span><strong>15 – 40+ kWh</strong></li>
+                            <li><span>Total Jarak Tempuh:</span><strong style="color: var(--purple);">&gt; 1.100 – 1.400 km</strong></li>
                             <li><span>Model di Indonesia:</span><strong>BYD Sealion 6, Denza D9, Tank Hi4-T</strong></li>
                         </ul>
                     </div>
@@ -1492,10 +1710,10 @@
                 <!-- ── LIVE ANIMATED POWER FLOW DIAGRAM ── -->
                 <div id="flow-diagram" class="power-flow-suite">
                     <div class="flow-nav-tabs">
-                        <button class="flow-tab-btn active" onclick="switchFlow('hev')">⚡ Toyota THS II / Honda e:HEV (Full Hybrid)</button>
-                        <button class="flow-tab-btn" onclick="switchFlow('erev')">🔋 Nissan e-POWER (Series / EREV)</button>
-                        <button class="flow-tab-btn" onclick="switchFlow('phev')">🔌 BYD DM-i / Tank Hi4-T (PHEV Super Hybrid)</button>
-                        <button class="flow-tab-btn" onclick="switchFlow('mhev')">⚠️ Suzuki SHVS (Mild Hybrid)</button>
+                        <button class="flow-tab-btn active" onclick="switchFlow('hev', this)">⚡ Toyota THS II / Honda e:HEV (Full Hybrid)</button>
+                        <button class="flow-tab-btn" onclick="switchFlow('erev', this)">🔋 Nissan e-POWER (Series / EREV)</button>
+                        <button class="flow-tab-btn" onclick="switchFlow('phev', this)">🔌 BYD DM-i / Tank Hi4-T (PHEV Super Hybrid)</button>
+                        <button class="flow-tab-btn" onclick="switchFlow('mhev', this)">⚠️ Suzuki SHVS (Mild Hybrid)</button>
                     </div>
 
                     <!-- Panel HEV -->
@@ -1700,26 +1918,79 @@
 
                 <!-- Tropical Heat & AC Simulator Interactive Widget -->
                 <div class="tropical-sim-container">
-                    <div class="thermometer-dial">
-                        <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-3); text-transform: uppercase;">Simulasi Suhu Kabin MHEV di Lampu Merah</span>
-                        <div class="temp-reading" id="sim-temp-display">24.0°C</div>
-                        <span style="font-size: 0.85rem; color: var(--text-2);" id="sim-ac-status">Kompresor AC: Hidup (Mesin Menyala)</span>
-                        <button class="sim-btn-play" id="btn-sim-ac" onclick="startAcSimulation()">
-                            <span class="id-only">▶ Tes Idle Stop di Panas 34°C</span>
-                            <span class="en-only">▶ Test Idle Stop in 34°C Heat</span>
-                        </button>
+                    <div class="sim-instrument-cluster">
+                        <div class="sim-hud-top">
+                            <span id="sim-mode-label">Suzuki SHVS (12V MHEV)</span>
+                            <span>PANAS TROPIS 34.0°C</span>
+                        </div>
+
+                        <div class="sim-main-gauge">
+                            <div class="temp-reading" id="sim-temp-display">24.0°C</div>
+                            <div style="font-family: var(--font-mono); font-size: 1rem; color: var(--text-3);" id="sim-timer-display">00s</div>
+                        </div>
+
+                        <div class="sim-temp-bar-wrap">
+                            <div class="sim-temp-bar-fill" id="sim-temp-bar"></div>
+                        </div>
+
+                        <div class="sim-status-box">
+                            <div class="sim-status-row">
+                                <span class="sim-status-k">Kompresor AC:</span>
+                                <span class="sim-status-v" id="sim-comp-status" style="color: #fff;">HIDUP (Mesin Berputar)</span>
+                            </div>
+                            <div class="sim-status-row">
+                                <span class="sim-status-k">Status Mesin:</span>
+                                <span class="sim-status-v" id="sim-engine-status" style="color: #fff;">MENYALA NORMAL</span>
+                            </div>
+                            <div class="sim-status-row">
+                                <span class="sim-status-k">Tipe Kompresor:</span>
+                                <span class="sim-status-v" id="sim-compressor-type" style="font-size: 0.75rem; color: var(--text-2);">Mekanis Belt-Driven (Tali Kipas Kruk As)</span>
+                            </div>
+                        </div>
+
+                        <div class="sim-btn-group">
+                            <button class="sim-btn-start" id="btn-sim-start" onclick="startAcSimulation()">
+                                <span>▶ Mulai Tes Lampu Merah</span>
+                            </button>
+                            <button class="sim-btn-reset" onclick="resetAcSimulation()">
+                                <span>🔄 Reset</span>
+                            </button>
+                        </div>
                     </div>
+
                     <div>
-                        <h4 style="font-family: var(--font-display); font-size: 1.35rem; color: #fff; margin-bottom: 0.75rem;">
-                            <span class="id-only">Dilema Kompresor AC Belt-Driven di Iklim Panas Tropis (34°C)</span>
-                            <span class="en-only">The Belt-Driven A/C Compressor Trap in Tropical Heat</span>
+                        <div class="sim-mode-toggle-row">
+                            <button class="sim-mode-chip active" onclick="setSimMode('mhev', this)">⚠️ Uji Mild Hybrid (MHEV)</button>
+                            <button class="sim-mode-chip chip-hev" onclick="setSimMode('hev', this)">⚡ Uji Full Hybrid (HEV e-CVT)</button>
+                        </div>
+
+                        <h4 style="font-family: var(--font-display); font-size: 1.35rem; color: #fff; margin-bottom: 0.5rem;">
+                            <span class="id-only">Dilema Kompresor AC Belt-Driven di Lampu Merah Tropis</span>
+                            <span class="en-only">The Belt-Driven A/C Compressor Trap at Tropical Red Lights</span>
                         </h4>
-                        <p style="color: var(--text-2); font-size: 0.95rem; line-height: 1.7; margin-bottom: 1rem;">
-                            <span class="id-only">Mobil Mild Hybrid (seperti Suzuki Ertiga/XL7/Grand Vitara) masih menggunakan kompresor AC mekanis yang diputar tali kipas kruk as. Saat fitur <em>Auto Stop-Start</em> mematikan mesin di lampu merah, kompresor AC ikut mati total dan hanya menghembuskan angin biasa. Dalam waktu 15–25 detik, kabin mobil berubah menjadi gerah, sehingga sensor suhu kabin memaksa mesin bensin menyala kembali. Efisiensi <em>idle stop</em> di siang hari Indonesia praktis lenyap!</span>
-                            <span class="en-only">Mild hybrids still rely on mechanical crankshaft belt-driven A/C compressors. When <em>Auto Stop-Start</em> cuts the engine at red lights, the A/C compressor halts, blowing warm humid air. Within 15–25 seconds, cabin heat forces the ECU to reignite the gas engine, wiping out idle fuel savings!</span>
+                        <p style="color: var(--text-2); font-size: 0.925rem; line-height: 1.65; margin-bottom: 0.75rem;">
+                            <span class="id-only">Mobil Mild Hybrid (MHEV) masih menggunakan kompresor AC mekanis yang diputar sabuk mesin. Saat <em>Auto Start-Stop</em> mematikan mesin, kompresor AC mati total. Di suhu 34°C Jakarta, kabin gerah memaksa mesin bensin menyala kembali dalam 18 detik!</span>
+                            <span class="en-only">Mild hybrids rely on mechanical crankshaft belt compressors. When <em>Auto Start-Stop</em> shuts the engine, A/C halts. In 34°C tropical heat, cabin warming forces the ECU to reignite the engine within 18 seconds!</span>
                         </p>
-                        <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--cyan);">
-                            Bandingkan dengan Full Hybrid (Zenix/Yaris Cross): Menggunakan kompresor AC elektrik bertegangan tinggi independen; kabin tetap sedingin kulkas walau mesin bensin mati 30 menit!
+
+                        <!-- Step Timeline Feed -->
+                        <div class="sim-steps-timeline">
+                            <div class="sim-step-item" id="sim-step-1">
+                                <span class="sim-step-badge">00s</span>
+                                <div><strong>Lampu Merah:</strong> Mesin bensin mati. Kompresor AC mekanis berhenti berputar.</div>
+                            </div>
+                            <div class="sim-step-item" id="sim-step-2">
+                                <span class="sim-step-badge">06s</span>
+                                <div><strong>Evaporator Panas:</strong> Freon habis mengembang, hembusan AC berubah jadi angin lembap hangat.</div>
+                            </div>
+                            <div class="sim-step-item" id="sim-step-3">
+                                <span class="sim-step-badge">12s</span>
+                                <div><strong>Kabin Gerah:</strong> Suhu kabin melonjak menembus 28.5°C, penumpang mulai merasa gerah.</div>
+                            </div>
+                            <div class="sim-step-item" id="sim-step-4">
+                                <span class="sim-step-badge">18s</span>
+                                <div><strong>ECU Restart Paksa:</strong> Sensor kabin memerintahkan mesin menyala kembali. Penghematan idle-stop hangus!</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1800,55 +2071,202 @@
                 </div>
 
                 <!-- Empirical Data Comparison Table -->
-                <div class="table-responsive-wrapper">
+                <div class="table-responsive-wrapper" style="margin-top: 2rem;">
                     <table class="rich-data-table">
                         <thead>
                             <tr>
-                                <th>Powertrain</th>
-                                <th>Kapasitas Baterai</th>
-                                <th>Status Mesin Saat Macet DKI (0–20 km/jam)</th>
-                                <th>Konsumsi BBM Kemacetan Riil</th>
-                                <th>Efisiensi Finansial</th>
+                                <th>
+                                    <span class="id-only">Tipe Powertrain &amp; Contoh Model</span>
+                                    <span class="en-only">Powertrain &amp; Sample Models</span>
+                                </th>
+                                <th>
+                                    <span class="id-only">Baterai Traksi &amp; Tegangan</span>
+                                    <span class="en-only">Traction Battery &amp; Voltage</span>
+                                </th>
+                                <th>
+                                    <span class="id-only">Status Mesin di Macet (0–20 km/h)</span>
+                                    <span class="en-only">Engine in Crawling Traffic (0–20 km/h)</span>
+                                </th>
+                                <th>
+                                    <span class="id-only">Bisa Jalan Tanpa Bensin? (Pure EV)</span>
+                                    <span class="en-only">Pure EV Driving Capability</span>
+                                </th>
+                                <th>
+                                    <span class="id-only">Konsumsi BBM Macet Riil</span>
+                                    <span class="en-only">Real-World Urban Fuel Economy</span>
+                                </th>
+                                <th>
+                                    <span class="id-only">Penghematan Biaya BBM vs ICE</span>
+                                    <span class="en-only">Fuel Cost Savings vs ICE</span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Bensin Konvensional (ICE)</strong></td>
-                                <td>Aki 12V Lead-Acid (0 kWh)</td>
-                                <td>Menyala Terus (Idling boros BBM)</td>
-                                <td><span style="color: #ef4444; font-family: var(--font-mono); font-weight: 700;">8.5 – 10.0 km/L</span></td>
-                                <td>Baseline (0%)</td>
+                                <td>
+                                    <strong>Bensin Konvensional (ICE)</strong><br>
+                                    <small style="color: var(--text-3);">Avanza, Xpander, Stargazer</small>
+                                </td>
+                                <td>
+                                    <span class="id-only">Hanya Aki Starter 12V (~0.5 kWh, 0% Traksi)</span>
+                                    <span class="en-only">12V Starter Battery Only (~0.5 kWh, 0% Traction)</span>
+                                </td>
+                                <td>
+                                    <span style="color: #ef4444;">
+                                        <span class="id-only">Menyala Terus (Bakar BBM saat Idling)</span>
+                                        <span class="en-only">Continuous Run (High Idling Waste)</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="color: #ef4444;">
+                                        <span class="id-only">❌ Tidak Bisa (0 km)</span>
+                                        <span class="en-only">❌ None (0 km)</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="color: #ef4444; font-family: var(--font-mono); font-weight: 700;">8.5 – 10.0 km/L</span><br>
+                                    <small style="color: var(--text-3); font-family: var(--font-mono);">10.0–11.8 L/100km</small>
+                                </td>
+                                <td>
+                                    <span class="id-only">0% (Tolok Ukur / Baseline)</span>
+                                    <span class="en-only">0% (Baseline Reference)</span>
+                                </td>
                             </tr>
                             <tr>
-                                <td><strong>Mild Hybrid (MHEV 12V/48V)</strong></td>
-                                <td>0.07 – 0.12 kWh (Mikro)</td>
-                                <td>Wajib Menyala Saat Mobil Merayap</td>
-                                <td><span style="color: #f59e0b; font-family: var(--font-mono); font-weight: 700;">9.5 – 11.5 km/L</span></td>
-                                <td><strong style="color: var(--rose);">+5% – 10% (Sangat Tipis)</strong></td>
+                                <td>
+                                    <strong>Mild Hybrid (MHEV 12V/48V)</strong><br>
+                                    <small style="color: var(--text-3);">Ertiga Hybrid, XL7 Hybrid, Grand Vitara</small>
+                                </td>
+                                <td>
+                                    <span style="font-family: var(--font-mono); color: var(--rose);">0.07 – 0.12 kWh</span><br>
+                                    <small style="color: var(--text-3);">12V / 48V ISG Mikro</small>
+                                </td>
+                                <td>
+                                    <span style="color: #f59e0b;">
+                                        <span class="id-only">Wajib Menyala saat Merayap (Hanya mati ≤18s saat diam)</span>
+                                        <span class="en-only">Must Run While Crawling (Shuts off ≤18s only when stopped)</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="color: var(--rose);">
+                                        <span class="id-only">❌ Tidak Bisa (0% EV Mode)</span>
+                                        <span class="en-only">❌ None (0% EV Capability)</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="color: #f59e0b; font-family: var(--font-mono); font-weight: 700;">9.5 – 11.5 km/L</span><br>
+                                    <small style="color: var(--text-3); font-family: var(--font-mono);">8.7–10.5 L/100km</small>
+                                </td>
+                                <td>
+                                    <strong style="color: var(--rose);">
+                                        <span class="id-only">Hemat ~5% – 10% (Sangat Marjinal)</span>
+                                        <span class="en-only">~5% – 10% Savings (Marginal)</span>
+                                    </strong>
+                                </td>
                             </tr>
                             <tr>
-                                <td><strong>Full Hybrid (HEV e-CVT)</strong></td>
-                                <td>1.0 – 2.0 kWh (High Voltage)</td>
-                                <td><strong>MATI TOTAL 60%–80% Waktu</strong></td>
-                                <td><span style="color: var(--cyan); font-family: var(--font-mono); font-weight: 700;">20.0 – 26.5 km/L</span></td>
-                                <td><strong style="color: var(--cyan);">+110% – 150% (2x Lebih Hemat!)</strong></td>
+                                <td>
+                                    <strong style="color: var(--cyan);">Full Hybrid (HEV e-CVT)</strong><br>
+                                    <small style="color: var(--text-3);">Innova Zenix HEV, Yaris Cross HEV, CR-V e:HEV</small>
+                                </td>
+                                <td>
+                                    <span style="font-family: var(--font-mono); color: var(--cyan);">1.1 – 1.8 kWh</span><br>
+                                    <small style="color: var(--text-3);">200V–350V High Voltage</small>
+                                </td>
+                                <td>
+                                    <span style="color: var(--cyan); font-weight: 700;">
+                                        <span class="id-only">Mati Total 60%–80% Waktu (Melaju Motor Listrik)</span>
+                                        <span class="en-only">Engine Off 60%–80% of Time (Creeps on EV Motor)</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="color: var(--cyan); font-weight: 700;">
+                                        <span class="id-only">✅ Ya (1–3 km di Kemacetan)</span>
+                                        <span class="en-only">✅ Yes (1–3 km in Traffic)</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="color: var(--cyan); font-family: var(--font-mono); font-weight: 700;">20.0 – 26.5 km/L</span><br>
+                                    <small style="color: var(--text-3); font-family: var(--font-mono);">3.8–5.0 L/100km</small>
+                                </td>
+                                <td>
+                                    <strong style="color: var(--cyan);">
+                                        <span class="id-only">Hemat 50% – 60% Biaya BBM (2x Lebih Irit)</span>
+                                        <span class="en-only">50% – 60% Fuel Cost Reduction (2x Mileage)</span>
+                                    </strong>
+                                </td>
                             </tr>
                             <tr>
-                                <td><strong>Series Hybrid (EREV e-POWER)</strong></td>
-                                <td>1.7 – 2.1 kWh</td>
-                                <td>Mesin Mati / Menyala di RPM Irit Saja</td>
-                                <td><span style="color: var(--emerald); font-family: var(--font-mono); font-weight: 700;">18.5 – 23.0 km/L</span></td>
-                                <td><strong style="color: var(--emerald);">+95% – 130% Lebih Hemat</strong></td>
+                                <td>
+                                    <strong style="color: var(--emerald);">Series Hybrid (EREV e-POWER)</strong><br>
+                                    <small style="color: var(--text-3);">Nissan Kicks e-POWER, Serena e-POWER C28</small>
+                                </td>
+                                <td>
+                                    <span style="font-family: var(--font-mono); color: var(--emerald);">1.8 – 2.1 kWh</span><br>
+                                    <small style="color: var(--text-3);">High Voltage Lithium</small>
+                                </td>
+                                <td>
+                                    <span style="color: var(--emerald);">
+                                        <span class="id-only">Mesin Mati / Menyala di RPM Efisien Generator</span>
+                                        <span class="en-only">Engine Off / Runs at Steady Generator RPM</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="color: var(--emerald); font-weight: 700;">
+                                        <span class="id-only">✅ 100% Penggerak Roda Motor Listrik</span>
+                                        <span class="en-only">✅ 100% Electric Motor Drive</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="color: var(--emerald); font-family: var(--font-mono); font-weight: 700;">18.5 – 23.0 km/L</span><br>
+                                    <small style="color: var(--text-3); font-family: var(--font-mono);">4.3–5.4 L/100km</small>
+                                </td>
+                                <td>
+                                    <strong style="color: var(--emerald);">
+                                        <span class="id-only">Hemat 45% – 55% Biaya BBM</span>
+                                        <span class="en-only">45% – 55% Fuel Cost Reduction</span>
+                                    </strong>
+                                </td>
                             </tr>
                             <tr>
-                                <td><strong>Plug-in Hybrid (PHEV Super)</strong></td>
-                                <td>15 – 40 kWh (Bisa Colok SPKLU)</td>
-                                <td><strong>100% Mati (Pure EV Driving)</strong></td>
-                                <td><span style="color: var(--purple); font-family: var(--font-mono); font-weight: 700;">0 L Bensin (Pure EV 50–150 km)</span></td>
-                                <td><strong style="color: var(--purple);">Hemat 100% Bensin Harian</strong></td>
+                                <td>
+                                    <strong style="color: var(--purple);">Plug-in Hybrid (PHEV Super)</strong><br>
+                                    <small style="color: var(--text-3);">BYD Sealion 6 DM-i, Tank Hi4-T, Haval H6 PHEV</small>
+                                </td>
+                                <td>
+                                    <span style="font-family: var(--font-mono); color: var(--purple);">18.3 – 37.1 kWh</span><br>
+                                    <small style="color: var(--text-3);">AC 7kW &amp; DC Fast Charge</small>
+                                </td>
+                                <td>
+                                    <span style="color: var(--purple); font-weight: 700;">
+                                        <span class="id-only">Mesin Bensin 100% Mati Selama Baterai Ada</span>
+                                        <span class="en-only">Engine 100% Off While Battery Charged</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="color: var(--purple); font-weight: 700;">
+                                        <span class="id-only">✅ Ya (50 – 190 km Sekali Cas)</span>
+                                        <span class="en-only">✅ Yes (50 – 190 km per Full Charge)</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="color: var(--purple); font-family: var(--font-mono); font-weight: 700;">0 L BBM (Mode EV)</span><br>
+                                    <small style="color: var(--text-3); font-family: var(--font-mono);">~18–22 km/L saat Baterai Habis</small>
+                                </td>
+                                <td>
+                                    <strong style="color: var(--purple);">
+                                        <span class="id-only">Hemat 75% – 85% (Jika Rutin Cas Listrik Rumah)</span>
+                                        <span class="en-only">75% – 85% Savings (With Home AC Charging)</span>
+                                    </strong>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <div style="font-family: var(--font-mono); font-size: 0.775rem; color: var(--text-3); margin-top: 0.85rem; line-height: 1.6;">
+                    <span class="id-only">💡 <em>Catatan Metrik Finansial:</em> Penghematan dihitung dari pengurangan total konsumsi liter bensin terhadap mobil bensin konvensional pada jarak tempuh identik (misal: efisiensi naik dari 10 km/L ke 20 km/L berarti pemakaian BBM turun 50%, sehingga menghemat 50% biaya bensin tahunan).</span>
+                    <span class="en-only">💡 <em>Financial Metric Note:</em> Fuel cost savings are calculated from the reduction in total liters consumed compared to a baseline ICE car over identical mileage (e.g., jumping from 10 km/L to 20 km/L cuts gasoline consumption by 50%, saving 50% on annual fuel expenditure).</span>
                 </div>
             </div>
         </section>
@@ -2016,9 +2434,9 @@
                                 <span class="en-only">Fuel Price Preset</span>
                             </div>
                             <div class="fuel-btn-row">
-                                <button class="f-select-btn active" id="f-btn-92" onclick="changeFuelPrice(12500, 'RON 92')">RON 92<br><small>Rp 12.500/L</small></button>
-                                <button class="f-select-btn" id="f-btn-95" onclick="changeFuelPrice(14500, 'RON 95/98')">RON 95/98<br><small>Rp 14.500/L</small></button>
-                                <button class="f-select-btn" id="f-btn-phev" onclick="changeFuelPrice(12500, 'RON 92 + PLN')">PLN Listrik<br><small>Rp 1.699/kWh</small></button>
+                                <button class="f-select-btn active" id="f-btn-92" onclick="changeFuelPrice(12500, 'RON 92', this)">RON 92<br><small>Rp 12.500/L</small></button>
+                                <button class="f-select-btn" id="f-btn-95" onclick="changeFuelPrice(14500, 'RON 95/98', this)">RON 95/98<br><small>Rp 14.500/L</small></button>
+                                <button class="f-select-btn" id="f-btn-phev" onclick="changeFuelPrice(12500, 'RON 92 + PLN', this)">PLN Listrik<br><small>Rp 1.699/kWh</small></button>
                             </div>
                         </div>
                     </div>
@@ -2266,52 +2684,184 @@
         })();
 
         // Flow Tab Switcher
-        function switchFlow(type) {
-            document.querySelectorAll('.flow-tab-btn').forEach(btn => btn.classList.remove('active'));
+        // Flow Tab Switcher
+        function switchFlow(type, btn) {
+            document.querySelectorAll('.flow-tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.flow-display-stage').forEach(stage => stage.classList.remove('active'));
 
-            event.currentTarget.classList.add('active');
+            if (btn) btn.classList.add('active');
             const target = document.getElementById('stage-' + type);
             if (target) target.classList.add('active');
         }
 
-        // Tropical A/C Simulator
-        let simInterval = null;
+        // Tropical A/C Simulator Logic
+        let simState = {
+            running: false,
+            seconds: 0,
+            temp: 24.0,
+            interval: null,
+            mode: 'mhev'
+        };
+
+        function setSimMode(mode, btn) {
+            resetAcSimulation();
+            simState.mode = mode;
+            document.querySelectorAll('.sim-mode-chip').forEach(c => c.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const isHev = (mode === 'hev');
+            const modeLbl = document.getElementById('sim-mode-label');
+            const compType = document.getElementById('sim-compressor-type');
+            if (modeLbl) modeLbl.textContent = isHev ? 'Toyota THS II / Honda e:HEV' : 'Suzuki SHVS (12V MHEV)';
+            if (compType) compType.textContent = isHev ? 'Elektrik Tegangan Tinggi (High-Volt DC)' : 'Mekanis Belt-Driven (Tali Kipas Kruk As)';
+        }
+
         function startAcSimulation() {
+            if (simState.running) return;
+            simState.running = true;
+
+            const startBtn = document.getElementById('btn-sim-start');
+            if (startBtn) {
+                startBtn.innerHTML = '<span>⏱ Simulasi Berjalan...</span>';
+                startBtn.style.opacity = '0.75';
+            }
+
             const tempEl = document.getElementById('sim-temp-display');
-            const statusEl = document.getElementById('sim-ac-status');
-            const btn = document.getElementById('btn-sim-ac');
+            const timerEl = document.getElementById('sim-timer-display');
+            const barEl = document.getElementById('sim-temp-bar');
+            const compStatusEl = document.getElementById('sim-comp-status');
+            const engineStatusEl = document.getElementById('sim-engine-status');
 
-            if (simInterval) clearInterval(simInterval);
+            if (compStatusEl) {
+                compStatusEl.textContent = (simState.mode === 'hev') ? 'HIDUP (Bertenaga Baterai 200V)' : 'MATI TOTAL (Belt Diam)';
+                compStatusEl.style.color = (simState.mode === 'hev') ? '#10b981' : '#f43f5e';
+            }
+            if (engineStatusEl) {
+                engineStatusEl.textContent = 'MATI (Auto Idle Stop)';
+                engineStatusEl.style.color = '#38bdf8';
+            }
 
-            btn.disabled = true;
-            btn.textContent = '⏱ Auto Start-Stop Aktif...';
-            statusEl.textContent = 'Kompresor AC MATI (Hanya Blower Panas)';
-            statusEl.style.color = '#f43f5e';
+            simState.interval = setInterval(() => {
+                simState.seconds++;
+                const s = simState.seconds;
+                if (timerEl) timerEl.textContent = (s < 10 ? '0' + s : s) + 's';
 
-            let curTemp = 24.0;
-            let seconds = 0;
+                if (simState.mode === 'mhev') {
+                    simState.temp += 0.45;
+                    if (simState.temp > 32.2) simState.temp = 32.2;
+                    if (tempEl) tempEl.textContent = simState.temp.toFixed(1) + '°C';
 
-            simInterval = setInterval(() => {
-                seconds++;
-                curTemp += 0.45;
-                tempEl.textContent = curTemp.toFixed(1) + '°C';
+                    const pct = Math.min(100, Math.max(25, ((simState.temp - 20) / (34 - 20)) * 100));
+                    if (barEl) barEl.style.width = pct + '%';
 
-                if (curTemp >= 31.5) {
-                    clearInterval(simInterval);
-                    tempEl.textContent = '32.2°C';
-                    statusEl.textContent = '❌ KABIN GERAH! ECU Memaksa Mesin Bensin Menyala (18 Detik Saja)';
-                    statusEl.style.color = '#ef4444';
-                    btn.disabled = false;
-                    btn.textContent = '🔄 Ulangi Tes Idle Stop';
+                    if (tempEl) {
+                        if (simState.temp > 28.0) {
+                            tempEl.style.color = '#f59e0b';
+                            tempEl.style.textShadow = '0 0 30px rgba(245, 158, 11, 0.6)';
+                        }
+                        if (simState.temp > 30.5) {
+                            tempEl.style.color = '#f43f5e';
+                            tempEl.style.textShadow = '0 0 30px rgba(244, 63, 94, 0.7)';
+                        }
+                    }
+
+                    const st1 = document.getElementById('sim-step-1');
+                    const st2 = document.getElementById('sim-step-2');
+                    const st3 = document.getElementById('sim-step-3');
+                    const st4 = document.getElementById('sim-step-4');
+
+                    if (st1) st1.classList.toggle('active', s >= 1 && s < 6);
+                    if (st2) st2.classList.toggle('active', s >= 6 && s < 12);
+                    if (st3) st3.classList.toggle('active', s >= 12 && s < 18);
+
+                    if (s >= 18) {
+                        clearInterval(simState.interval);
+                        simState.running = false;
+                        if (st4) st4.classList.add('active');
+                        if (compStatusEl) {
+                            compStatusEl.textContent = 'MENYALA KEMBALI (Dipaksa ECU)';
+                            compStatusEl.style.color = '#f59e0b';
+                        }
+                        if (engineStatusEl) {
+                            engineStatusEl.textContent = 'MENYALA PAKSA (Bensin Terbakar)';
+                            engineStatusEl.style.color = '#ef4444';
+                        }
+                        if (startBtn) {
+                            startBtn.innerHTML = '<span>🔄 Tes Ulang (Selesai)</span>';
+                            startBtn.style.opacity = '1';
+                        }
+                    }
+                } else {
+                    if (tempEl) {
+                        tempEl.textContent = '24.0°C';
+                        tempEl.style.color = '#06b6d4';
+                    }
+                    if (barEl) barEl.style.width = '25%';
+                    if (compStatusEl) {
+                        compStatusEl.textContent = 'HIDUP STABIL (Kabin Dingin Beku)';
+                        compStatusEl.style.color = '#10b981';
+                    }
+                    if (engineStatusEl) {
+                        engineStatusEl.textContent = 'MATI TOTAL (Nol Bensin)';
+                        engineStatusEl.style.color = '#10b981';
+                    }
+
+                    if (s >= 18) {
+                        clearInterval(simState.interval);
+                        simState.running = false;
+                        if (startBtn) {
+                            startBtn.innerHTML = '<span>✓ Selesai: Kabin Tetap 24°C</span>';
+                            startBtn.style.opacity = '1';
+                        }
+                    }
                 }
-            }, 200);
+            }, 300);
+        }
+
+        function resetAcSimulation() {
+            if (simState.interval) clearInterval(simState.interval);
+            simState.running = false;
+            simState.seconds = 0;
+            simState.temp = 24.0;
+
+            const tempEl = document.getElementById('sim-temp-display');
+            const timerEl = document.getElementById('sim-timer-display');
+            const barEl = document.getElementById('sim-temp-bar');
+            const compStatusEl = document.getElementById('sim-comp-status');
+            const engineStatusEl = document.getElementById('sim-engine-status');
+            const startBtn = document.getElementById('btn-sim-start');
+
+            if (tempEl) {
+                tempEl.textContent = '24.0°C';
+                tempEl.style.color = '#06b6d4';
+                tempEl.style.textShadow = '0 0 30px rgba(6, 182, 212, 0.5)';
+            }
+            if (timerEl) timerEl.textContent = '00s';
+            if (barEl) barEl.style.width = '25%';
+
+            if (compStatusEl) {
+                compStatusEl.textContent = 'HIDUP (Mesin Berputar)';
+                compStatusEl.style.color = '#fff';
+            }
+            if (engineStatusEl) {
+                engineStatusEl.textContent = 'MENYALA NORMAL';
+                engineStatusEl.style.color = '#fff';
+            }
+            if (startBtn) {
+                startBtn.innerHTML = '<span>▶ Mulai Tes Lampu Merah</span>';
+                startBtn.style.opacity = '1';
+            }
+
+            ['sim-step-1', 'sim-step-2', 'sim-step-3', 'sim-step-4'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
         }
 
         // FAQ Accordion
         function toggleFaqCard(btn) {
             const card = btn.closest('.faq-card');
-            card.classList.toggle('active');
+            if (card) card.classList.toggle('active');
         }
 
         // TCO Calculator Engine
@@ -2331,21 +2881,23 @@
         function setTrafficProfile(type) {
             tcoState.traffic = type;
             document.querySelectorAll('.traffic-choice-card').forEach(c => c.classList.remove('active'));
-            document.getElementById('t-card-' + type).classList.add('active');
+            const activeCard = document.getElementById('t-card-' + type);
+            if (activeCard) activeCard.classList.add('active');
             calculateTCO();
         }
 
         function changeDailyKm(val) {
             tcoState.dailyKm = parseInt(val, 10);
-            document.getElementById('lbl-daily-km').textContent = val + ' km / hari';
+            const kmLbl = document.getElementById('lbl-daily-km');
+            if (kmLbl) kmLbl.textContent = val + ' km / hari';
             calculateTCO();
         }
 
-        function changeFuelPrice(price, name) {
+        function changeFuelPrice(price, name, btn) {
             tcoState.fuelPrice = price;
             tcoState.fuelName = name;
             document.querySelectorAll('.f-select-btn').forEach(b => b.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            if (btn) btn.classList.add('active');
             calculateTCO();
         }
 
@@ -2357,7 +2909,7 @@
             const annualKm = tcoState.dailyKm * 365;
             const p = profiles[tcoState.traffic];
             const price = tcoState.fuelPrice;
-            const plnRate = 1699; // PLN per kWh
+            const plnRate = 1699;
 
             // ICE
             const litersIce = annualKm / p.ice;
@@ -2380,17 +2932,29 @@
             const costPhev = costPhevElec + costPhevGas;
 
             // Render Numbers
-            document.getElementById('res-total-annual-km').textContent = annualKm.toLocaleString('id-ID') + ' km / thn';
-            document.getElementById('cost-disp-ice').textContent = formatRupiah(costIce);
-            document.getElementById('cost-disp-mhev').textContent = formatRupiah(costMhev);
-            document.getElementById('cost-disp-hev').textContent = formatRupiah(costHev);
-            document.getElementById('cost-disp-phev').textContent = formatRupiah(costPhev);
+            const resKm = document.getElementById('res-total-annual-km');
+            if (resKm) resKm.textContent = annualKm.toLocaleString('id-ID') + ' km / thn';
+
+            const costIceEl = document.getElementById('cost-disp-ice');
+            const costMhevEl = document.getElementById('cost-disp-mhev');
+            const costHevEl = document.getElementById('cost-disp-hev');
+            const costPhevEl = document.getElementById('cost-disp-phev');
+
+            if (costIceEl) costIceEl.textContent = formatRupiah(costIce);
+            if (costMhevEl) costMhevEl.textContent = formatRupiah(costMhev);
+            if (costHevEl) costHevEl.textContent = formatRupiah(costHev);
+            if (costPhevEl) costPhevEl.textContent = formatRupiah(costPhev);
 
             // Bar widths relative to ICE
-            document.getElementById('bar-fill-ice').style.width = '100%';
-            document.getElementById('bar-fill-mhev').style.width = Math.min(100, Math.max(12, (costMhev / costIce) * 100)) + '%';
-            document.getElementById('bar-fill-hev').style.width = Math.min(100, Math.max(12, (costHev / costIce) * 100)) + '%';
-            document.getElementById('bar-fill-phev').style.width = Math.min(100, Math.max(12, (costPhev / costIce) * 100)) + '%';
+            const barIce = document.getElementById('bar-fill-ice');
+            const barMhev = document.getElementById('bar-fill-mhev');
+            const barHev = document.getElementById('bar-fill-hev');
+            const barPhev = document.getElementById('bar-fill-phev');
+
+            if (barIce) barIce.style.width = '100%';
+            if (barMhev) barMhev.style.width = Math.min(100, Math.max(12, (costMhev / costIce) * 100)) + '%';
+            if (barHev) barHev.style.width = Math.min(100, Math.max(12, (costHev / costIce) * 100)) + '%';
+            if (barPhev) barPhev.style.width = Math.min(100, Math.max(12, (costPhev / costIce) * 100)) + '%';
 
             // Sub labels
             const saveMhev = costIce - costMhev;
@@ -2400,23 +2964,33 @@
             const savePhev = costIce - costPhev;
             const pctPhev = Math.round((savePhev / costIce) * 100);
 
+            const subIce = document.getElementById('sub-disp-ice');
+            const subMhev = document.getElementById('sub-disp-mhev');
+            const subHev = document.getElementById('sub-disp-hev');
+            const subPhev = document.getElementById('sub-disp-phev');
+            const verdictEl = document.getElementById('calc-verdict-banner');
+
             const isId = document.body.classList.contains('lang-id');
             if (isId) {
-                document.getElementById('sub-disp-ice').textContent = `Konsumsi: ${p.ice.toFixed(1)} km/L (${Math.round(litersIce)} L/thn)`;
-                document.getElementById('sub-disp-mhev').textContent = `Hemat ${formatRupiah(saveMhev)}/thn (${pctMhev}%) · ${p.mhev.toFixed(1)} km/L`;
-                document.getElementById('sub-disp-hev').textContent = `Hemat ${formatRupiah(saveHev)}/thn (${pctHev}%) · ${p.hev.toFixed(1)} km/L`;
-                document.getElementById('sub-disp-phev').textContent = `Hemat ${formatRupiah(savePhev)}/thn (${pctPhev}%) · Pure EV + Gas`;
+                if (subIce) subIce.textContent = `Konsumsi: ${p.ice.toFixed(1)} km/L (${Math.round(litersIce)} L/thn)`;
+                if (subMhev) subMhev.textContent = `Hemat ${formatRupiah(saveMhev)}/thn (${pctMhev}%) · ${p.mhev.toFixed(1)} km/L`;
+                if (subHev) subHev.textContent = `Hemat ${formatRupiah(saveHev)}/thn (${pctHev}%) · ${p.hev.toFixed(1)} km/L`;
+                if (subPhev) subPhev.textContent = `Hemat ${formatRupiah(savePhev)}/thn (${pctPhev}%) · Pure EV + Gas`;
 
-                document.getElementById('calc-verdict-banner').innerHTML =
-                    `<strong>Kesimpulan Finansial Riil:</strong> Pada jarak <strong>${tcoState.dailyKm} km/hari</strong> di rute <strong>${tcoState.traffic === 'heavy' ? 'Macet DKI' : (tcoState.traffic === 'mixed' ? 'Urban Campur' : 'Tol Luar Kota')}</strong>, memilih <strong>Full Hybrid (HEV)</strong> menghemat <strong>${formatRupiah(saveHev)} per tahun</strong> (atau <strong>${formatRupiah(saveHev * 5)}</strong> dalam 5 tahun!). Sebaliknya, <strong>Mild Hybrid (MHEV)</strong> hanya menghemat ${formatRupiah(saveMhev)} per tahun (${pctMhev}%), membuktikan efisiensinya sangat marjinal di dunia nyata.`;
+                if (verdictEl) {
+                    verdictEl.innerHTML =
+                        `<strong>Kesimpulan Finansial Riil:</strong> Pada jarak <strong>${tcoState.dailyKm} km/hari</strong> di rute <strong>${tcoState.traffic === 'heavy' ? 'Macet DKI' : (tcoState.traffic === 'mixed' ? 'Urban Campur' : 'Tol Luar Kota')}</strong>, memilih <strong>Full Hybrid (HEV)</strong> menghemat <strong>${formatRupiah(saveHev)} per tahun</strong> (atau <strong>${formatRupiah(saveHev * 5)}</strong> dalam 5 tahun!). Sebaliknya, <strong>Mild Hybrid (MHEV)</strong> hanya menghemat ${formatRupiah(saveMhev)} per tahun (${pctMhev}%), membuktikan efisiensinya sangat marjinal di dunia nyata.`;
+                }
             } else {
-                document.getElementById('sub-disp-ice').textContent = `Economy: ${p.ice.toFixed(1)} km/L (${Math.round(litersIce)} L/yr)`;
-                document.getElementById('sub-disp-mhev').textContent = `Saves ${formatRupiah(saveMhev)}/yr (${pctMhev}%) · ${p.mhev.toFixed(1)} km/L`;
-                document.getElementById('sub-disp-hev').textContent = `Saves ${formatRupiah(saveHev)}/yr (${pctHev}%) · ${p.hev.toFixed(1)} km/L`;
-                document.getElementById('sub-disp-phev').textContent = `Saves ${formatRupiah(savePhev)}/yr (${pctPhev}%) · Pure EV + Gas`;
+                if (subIce) subIce.textContent = `Economy: ${p.ice.toFixed(1)} km/L (${Math.round(litersIce)} L/yr)`;
+                if (subMhev) subMhev.textContent = `Saves ${formatRupiah(saveMhev)}/yr (${pctMhev}%) · ${p.mhev.toFixed(1)} km/L`;
+                if (subHev) subHev.textContent = `Saves ${formatRupiah(saveHev)}/yr (${pctHev}%) · ${p.hev.toFixed(1)} km/L`;
+                if (subPhev) subPhev.textContent = `Saves ${formatRupiah(savePhev)}/yr (${pctPhev}%) · Pure EV + Gas`;
 
-                document.getElementById('calc-verdict-banner').innerHTML =
-                    `<strong>Empirical Financial Verdict:</strong> On a <strong>${tcoState.dailyKm} km/day</strong> commute in <strong>${tcoState.traffic}</strong> conditions, choosing a <strong>Full Hybrid (HEV)</strong> saves <strong>${formatRupiah(saveHev)} per year</strong> (or <strong>${formatRupiah(saveHev * 5)}</strong> in 5 years!). Conversely, <strong>Mild Hybrid (MHEV)</strong> saves merely ${formatRupiah(saveMhev)} per year (${pctMhev}%), proving its real-world benefit is negligible.`;
+                if (verdictEl) {
+                    verdictEl.innerHTML =
+                        `<strong>Empirical Financial Verdict:</strong> On a <strong>${tcoState.dailyKm} km/day</strong> commute in <strong>${tcoState.traffic}</strong> conditions, choosing a <strong>Full Hybrid (HEV)</strong> saves <strong>${formatRupiah(saveHev)} per year</strong> (or <strong>${formatRupiah(saveHev * 5)}</strong> in 5 years!). Conversely, <strong>Mild Hybrid (MHEV)</strong> saves merely ${formatRupiah(saveMhev)} per year (${pctMhev}%), proving its real-world benefit is negligible.`;
+                }
             }
         }
 
