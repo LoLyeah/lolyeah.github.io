@@ -2402,22 +2402,22 @@
                             <div class="traffic-cards-grid">
                                 <div class="traffic-choice-card active" id="t-card-heavy" onclick="setTrafficProfile('heavy')">
                                     <h5>Macet DKI</h5>
-                                    <small>Avg 12 km/h</small>
+                                    <small>Kecepatan Rata-rata 12 km/jam</small>
                                 </div>
                                 <div class="traffic-choice-card" id="t-card-mixed" onclick="setTrafficProfile('mixed')">
                                     <h5>Urban Campur</h5>
-                                    <small>Avg 25 km/h</small>
+                                    <small>Kecepatan Rata-rata 25 km/jam</small>
                                 </div>
                                 <div class="traffic-choice-card" id="t-card-highway" onclick="setTrafficProfile('highway')">
                                     <h5>Tol / Luar Kota</h5>
-                                    <small>Avg 75 km/h</small>
+                                    <small>Kecepatan Rata-rata 75 km/jam</small>
                                 </div>
                             </div>
                         </div>
 
                         <div class="calc-group">
                             <div class="calc-lbl">
-                                <span><span class="id-only">Jarak Tempuh Harian</span><span class="en-only">Daily Distance</span></span>
+                                <span><span class="id-only">Jarak Tempuh Harian (PP Kantor)</span><span class="en-only">Daily Commute Distance (Round-Trip)</span></span>
                                 <span class="calc-badge-val" id="lbl-daily-km">40 km / hari</span>
                             </div>
                             <input type="range" min="10" max="120" step="5" value="40" class="neon-slider" id="slider-daily-km" oninput="changeDailyKm(this.value)">
@@ -2980,8 +2980,9 @@
                 if (subPhev) subPhev.textContent = `Hemat ${formatRupiah(savePhev)}/thn (${pctPhev}%) · Pure EV + Gas`;
 
                 if (verdictEl) {
+                    const trafficNameId = tcoState.traffic === 'heavy' ? 'Macet Padat DKI (Kec. Rata-rata 12 km/jam)' : (tcoState.traffic === 'mixed' ? 'Urban Campur (Kec. Rata-rata 25 km/jam)' : 'Tol Luar Kota (Kec. Rata-rata 75 km/jam)');
                     verdictEl.innerHTML =
-                        `<strong>Kesimpulan Finansial Riil:</strong> Pada jarak <strong>${tcoState.dailyKm} km/hari</strong> di rute <strong>${tcoState.traffic === 'heavy' ? 'Macet DKI' : (tcoState.traffic === 'mixed' ? 'Urban Campur' : 'Tol Luar Kota')}</strong>, memilih <strong>Full Hybrid (HEV)</strong> menghemat <strong>${formatRupiah(saveHev)} per tahun</strong> (atau <strong>${formatRupiah(saveHev * 5)}</strong> dalam 5 tahun!). Sebaliknya, <strong>Mild Hybrid (MHEV)</strong> hanya menghemat ${formatRupiah(saveMhev)} per tahun (${pctMhev}%), membuktikan efisiensinya sangat marjinal di dunia nyata.`;
+                        `<strong>Kesimpulan Finansial Riil:</strong> Pada jarak komuter <strong>${tcoState.dailyKm} km per hari</strong> (${annualKm.toLocaleString('id-ID')} km/tahun) dengan profil lalu lintas <strong>${trafficNameId}</strong>, memilih <strong>Full Hybrid (HEV)</strong> menghemat <strong>${formatRupiah(saveHev)} per tahun</strong> (atau <strong>${formatRupiah(saveHev * 5)}</strong> dalam 5 tahun!). Sebaliknya, <strong>Mild Hybrid (MHEV)</strong> hanya menghemat ${formatRupiah(saveMhev)} per tahun (${pctMhev}%), membuktikan efisiensinya sangat marjinal di dunia nyata.`;
                 }
             } else {
                 if (subIce) subIce.textContent = `Economy: ${p.ice.toFixed(1)} km/L (${Math.round(litersIce)} L/yr)`;
@@ -2990,8 +2991,9 @@
                 if (subPhev) subPhev.textContent = `Saves ${formatRupiah(savePhev)}/yr (${pctPhev}%) · Pure EV + Gas`;
 
                 if (verdictEl) {
+                    const trafficNameEn = tcoState.traffic === 'heavy' ? 'Heavy Gridlock (Avg Speed 12 km/h)' : (tcoState.traffic === 'mixed' ? 'Mixed Urban (Avg Speed 25 km/h)' : 'Highway Cruising (Avg Speed 75 km/h)');
                     verdictEl.innerHTML =
-                        `<strong>Empirical Financial Verdict:</strong> On a <strong>${tcoState.dailyKm} km/day</strong> commute in <strong>${tcoState.traffic}</strong> conditions, choosing a <strong>Full Hybrid (HEV)</strong> saves <strong>${formatRupiah(saveHev)} per year</strong> (or <strong>${formatRupiah(saveHev * 5)}</strong> in 5 years!). Conversely, <strong>Mild Hybrid (MHEV)</strong> saves merely ${formatRupiah(saveMhev)} per year (${pctMhev}%), proving its real-world benefit is negligible.`;
+                        `<strong>Empirical Financial Verdict:</strong> On a <strong>${tcoState.dailyKm} km/day</strong> commute (${annualKm.toLocaleString('en-US')} km/yr) under <strong>${trafficNameEn}</strong> traffic, choosing a <strong>Full Hybrid (HEV)</strong> saves <strong>${formatRupiah(saveHev)} per year</strong> (or <strong>${formatRupiah(saveHev * 5)}</strong> in 5 years!). Conversely, <strong>Mild Hybrid (MHEV)</strong> saves merely ${formatRupiah(saveMhev)} per year (${pctMhev}%), proving its real-world benefit is negligible.`;
                 }
             }
         }
