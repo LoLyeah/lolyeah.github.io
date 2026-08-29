@@ -28,7 +28,7 @@ The site should feel like a curated digital publication: calm, intentional, legi
 - Start with a topic thesis and audience: what should a visitor understand or decide in the first minute?
 - Use a small, deliberate design system: one background family, one surface hierarchy, one primary accent, one supporting accent, and semantic status colors only where necessary.
 - Prefer subtle depth: restrained shadows, hairline borders, tonal surfaces, and occasional gradients. Glass, noise, scanlines, excessive glow, and animated backgrounds are optional accents—not defaults.
-- Every decorative effect must preserve contrast, performance, and the information hierarchy. Content wins over atmosphere.
+- Every decorative effect must preserve contrast, performance, and the information hierarchy. 
 - Make sure there's animation and transition, should be classy and modern.
 
 ### Page composition
