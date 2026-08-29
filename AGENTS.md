@@ -71,7 +71,7 @@ Widget requirements:
 6. Keep explanatory copy synchronized with live values and the EN/ID language switch. Do not update only a headline while leaving stale labels, units, formulas, or caveats.
 7. Make the tool usable without a pointer: keyboard operation, visible focus, semantic labels, live-result announcements where appropriate, and no interaction that depends on hover.
 8. Keep the static fallback meaningful. If JavaScript or a third-party chart library fails, the user should still see the model, assumptions, key findings, and source links.
-9. Do not load a library for a small chart or calculation that can be implemented with native HTML/CSS/vanilla JavaScript. External dependencies must be justified and resilient to CDN failure.
+9. External dependencies must be justified and resilient to CDN failure. If you need advanced features that wasn't possible with native, external dependencies and CDN is justified.
 
 ## 4. Accessibility, responsive behavior, and motion
 
