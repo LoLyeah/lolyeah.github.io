@@ -27,11 +27,9 @@ The site should feel like a curated digital publication: calm, intentional, legi
 
 - Start with a topic thesis and audience: what should a visitor understand or decide in the first minute?
 - Use a small, deliberate design system: one background family, one surface hierarchy, one primary accent, one supporting accent, and semantic status colors only where necessary.
-- Prefer editorial composition over decoration: strong type scale, generous whitespace, aligned columns, considered dividers, and a clear reading rhythm.
-- Use display typography sparingly. Pair one expressive heading face with a highly readable body face; use monospace only for data, labels, dates, units, and code.
 - Prefer subtle depth: restrained shadows, hairline borders, tonal surfaces, and occasional gradients. Glass, noise, scanlines, excessive glow, and animated backgrounds are optional accents—not defaults.
-- Avoid visual clichés that make unrelated pages look the same: mandatory bento grids, neon cyan dashboards, oversized all-caps headings, perpetual scanlines, and indiscriminate glassmorphism.
 - Every decorative effect must preserve contrast, performance, and the information hierarchy. Content wins over atmosphere.
+- Make sure there's animation and transition, should be classy and modern.
 
 ### Page composition
 
@@ -39,7 +37,7 @@ The site should feel like a curated digital publication: calm, intentional, legi
 - Keep dense compendiums dense, but make them navigable with a compact table of contents, section labels, progressive disclosure, and meaningful summaries.
 - Establish a visual anchor that belongs to the topic: a route, timeline, map, evidence card, clinical pathway, scenario dial, material palette, or other explanatory motif.
 - Use consistent spacing tokens and component variants instead of page-specific one-off nudges. Avoid stacking override blocks; consolidate the final rule for each component.
-- Design at 320px, 768px, and desktop widths. No accidental horizontal overflow. Horizontal scrolling is acceptable only for genuinely wide content such as tables or timelines, with an obvious cue and preserved headers.
+- Design at mobile widths, 320px, 768px, and desktop widths. No accidental horizontal overflow. Horizontal scrolling is acceptable only for genuinely wide content such as tables or timelines, with an obvious cue and preserved headers.
 - Respect `prefers-color-scheme` only when the page supports both themes intentionally; do not pretend a dark theme is a light theme by simply inverting colors.
 
 ### Interaction quality
@@ -51,7 +49,7 @@ The site should feel like a curated digital publication: calm, intentional, legi
 - Make state visible: selected filters, active tabs, current language, units, assumptions, and whether values are illustrative or sourced.
 - Never add a “widget” merely because a page needs something interactive. If interaction does not improve comprehension, comparison, exploration, or decision-making, use a static explanation instead.
 
-## 3. Topic-context interactive widgets
+## 3. Topic-context interactive widgets (OPTIONAL)
 
 Interactive tools must be derived from the topic model, not copied from a generic calculator template. Before building one, write a short “widget contract” in the page code/comments or accompanying content:
 
@@ -81,7 +79,7 @@ Widget requirements:
 - Responsive layouts must reflow at narrow widths without forcing two-dimensional scrolling except for content that genuinely requires it. Follow WCAG 2.2 reflow expectations and test zoom/text enlargement where practical.
 - Use `scroll-padding-top` or `scroll-margin-top` for fixed navigation. Verify every section link, hero CTA, modal close path, and subpage back-link.
 - Motion should clarify state or spatial relationships. Prefer opacity/transform transitions that do not cause layout shift; avoid auto-playing motion that competes with reading.
-- Always provide a `@media (prefers-reduced-motion: reduce)` fallback that removes non-essential animation, parallax, bobbing, scanlines, and staggered reveals. Do not require CSS scroll-driven animation or View Transitions for core functionality; use progressive enhancement.
+- Always provide a `@media (prefers-reduced-motion: reduce)` fallback that removes non-essential animation, parallax, bobbing, scanlines, and staggered reveals.
 - A modal, drawer, menu, or popover needs keyboard escape, focus behavior, an accessible name, and an obvious close path. On mobile, do not leave a desktop-only nav that overflows.
 
 ## 5. Bilingual EN / ID behavior
