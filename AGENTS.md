@@ -26,10 +26,11 @@ The site should feel like a curated digital publication: calm, intentional, legi
 ### Visual principles
 
 - Start with a topic thesis and audience: what should a visitor understand or decide in the first minute?
-- Use a small, deliberate design system: one background family, one surface hierarchy, one primary accent, one supporting accent, and semantic status colors only where necessary.
+- Each topic use a small, deliberate design system: one background family, one surface hierarchy, one primary accent, one supporting accent, and semantic status colors only where necessary.
 - Prefer subtle depth: restrained shadows, hairline borders, tonal surfaces, and occasional gradients. Glass, noise, scanlines, excessive glow, and animated backgrounds are optional accents—not defaults.
 - Every decorative effect must preserve contrast, performance, and the information hierarchy. 
 - Make sure there's animation and transition, should be classy and modern.
+- You don't need to force dark mode if the topic isn't suited for it. The vibes should be modern and professional.
 
 ### Page composition
 
@@ -120,7 +121,8 @@ Before calling a UI change complete:
 5. Serve the repository with `python3 -m http.server 8000` and request each modified route, confirming HTTP 200.
 6. Exercise the actual page at desktop and mobile widths. Inspect the initial viewport and every redesigned surface below the fold.
 7. Test keyboard navigation, focus visibility, reduced motion, language switching, filters, calculators, charts, modals, menus, and browser Back when those features exist.
-8. Report visual/interaction verification separately from static verification. If a browser cannot start, say so; static checks are not visual QA.
+8. Use agentic browser if possible.
+9. Report visual/interaction verification separately from static verification. If a browser cannot start, say so; static checks are not visual QA.
 
 Useful local checks:
 

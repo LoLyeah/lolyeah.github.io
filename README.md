@@ -1,84 +1,59 @@
-# LoLyeah Interactive Guides 🌐
+<p align="center">
+  <img src="assets/logo.png" alt="LoLyeah Logo" width="120" />
+</p>
 
-Welcome to **LoLyeah Interactive Guides** (`lolyeah.github.io`), a premium repository of highly interactive, responsive, and visually stunning web-based simulators, clinical guides, and educational tools. 
+# LoLyeah Compendium
 
-Designed with rich visual aesthetics, modern typography, glassmorphism, and responsive layouts, this static site delivers deep, evidence-based insights across medicine, neurodiversity, science, and economics.
+A curated collection of zero-dependency, static interactive guides, clinical simulators, and policy visualizers hosted on GitHub Pages.
 
----
-
-## Key Highlights & Features
-
-### 🖥️ Cinematic Homepage
-- **Dual-Theme Engine**: Smooth transitions between curated Light and Dark HSL color palettes.
-- **Glassmorphic Interactive Search**: Responsive instant-filtering of all guides, complete with a keyboard shortcut (`/`) focus state and micro-animations.
-- **Collapsible Developer Console**: A cinematic terminal detailing system status and developer credentials.
-- **Interactive Mouse-Tracking Glow**: Dynamic cards that respond to mouse coordinates for premium tactile feedback.
-
-### 📚 Extensive Interactive Directory (27+ Guides)
-The project hosts a wide array of specialized interactive tools across multiple domains:
-
-| Category | Interactive Guides |
-| :--- | :--- |
-| **Cardiology & Emergency** | [STEMI (Heart Attack) Diagnostics](topics/stemi.html), [Acute Coronary Syndrome (ACS) Diagnostics](topics/acs-diagnostics.html) |
-| **Clinical Medicine** | [Stroke Diagnostics & Rehabilitation](topics/stroke.html), [Diabetes Mellitus Care Guide](topics/diabetes-guide.html), [Upper Gastrointestinal Anatomy](topics/upper-gastro.html), [Scoliosis Treatment & Cobb Angle Guide](topics/scoliosis.html), [Medical Specialist Comparative scope](topics/specialist-compared.html) |
-| **Neurodiversity** | [ADHD Comprehensive Guide](topics/adhd.html), [Diet & Nutrition for ADHD](topics/adhd-diet-guide.html), [AuDHD Deep Clinical Analysis](topics/audhd-clinical-analysis.html) |
-| **Pharmacology & Science** | [Antibiotics Class Comparative Chart](topics/antibiotics.html), [Laxative Class Interactive Comparison](topics/laxative-comparison.html), [Radiation Dose Visual Comparison](topics/radcompare.html) |
-| **Nuclear Engineering & Energy** | [Nuclear Reactors Compendium: Operating, Gen IV, SMRs, Fusion & Research Reactors](topics/nuclear-reactors.html) |
-| **Simulators & Astronomy** | [Foodborne Disease Outbreak Simulator](topics/foodborne-outbreak.html), [Interactive Solar System Scale Model](topics/solar-system.html) |
-| **Economics & Analytics** | [2026 Economic Outlook Visualizer](topics/econ-outlook-2026.html), [Psychology of Emotional Suppression (Bottle Up)](topics/bottle-up.html) |
-| **Geopolitics & History** | [Alternative Nusantara Scenario Simulator](topics/what-if-nusantara.html), [Comparative Balkan-Indonesian Geopolitics](topics/balkan-indo.html), [Naval Ship Class Historical Directory](topics/ship-class.html) |
+**Live Site**: [lolyeah.github.io](https://lolyeah.github.io/)
 
 ---
 
-## Technology Stack
+## Overview
 
-- **Core Structure**: Semantic HTML5 (incorporating `<nav>`, `<main>`, `<article>`, and `<footer>` tags).
-- **Styling**: Vanilla CSS3 custom variables with premium web typography (Outfit, Plus Jakarta Sans, Playfair Display, and JetBrains Mono) sourced from Google Fonts.
-- **Interactivity**: Lightweight, native vanilla ES6 JavaScript (handling search, translation dictionaries, tab routing, and responsive layouts) without heavy third-party framework overhead.
-- **Graphics**: Inline responsive SVGs, custom data visualizations, and visual-rich interactive grids.
+This repository houses standalone, accessible web applications and visual compendiums across multiple disciplines:
 
----
+- **Clinical Medicine & Healthcare**: Interactive diagnostic pathways, cardiology (STEMI/ACS), neurodiversity guides (ADHD/AuDHD), pharmacology charts, and anatomical references.
+- **Automotive & Energy**: Deep-dive visual directories on EV battery vendors, Chinese EV ecosystems, Indonesian hybrid market analysis, and nuclear reactor architectures.
+- **Economics, Policy & Infrastructure**: Visual analyses of middle-income trap dynamics, Special Economic Zones (SEZ), high-speed rail corridors, and regional development models.
+- **Science & Systems**: Physical scale models, radiation dosage comparators, and epidemiological outbreak simulators.
 
-## Built-in SEO & Discoverability
+## Architecture
 
-The site is fully optimized for modern SEO crawler indexing and social media preview rendering:
-- **Canonical Linking**: Explicit `<link rel="canonical">` elements on every page to prevent duplicate search indexing.
-- **Open Graph (OG) & Twitter Cards**: Configured preview tags for beautiful shared cards on Twitter/X, Discord, Slack, and LinkedIn.
-- **Schema.org Structured Data**: Integrated JSON-LD schemas (`MedicalWebPage` and `WebPage`) to enable rich snippet displays.
-- **Robots & Sitemap**: Contains a standardized `robots.txt` and a complete `sitemap.xml` mapping all production directories.
+- **Stack**: Semantic HTML5, modern CSS3 (custom properties, container queries, CSS grid), and vanilla ES6 JavaScript.
+- **Zero Dependencies**: Pure static assets with no runtime frameworks or build steps required.
+- **Bilingual**: Selected guides provide synchronized English and Indonesian (EN/ID) localizations.
+- **SEO & Metadata**: Complete Schema.org JSON-LD structured data, Open Graph tags, canonical links, and sitemap generation.
 
-### Repeating SEO Optimizations
-If you add or update any guide in the future, you can instantly refresh the metadata and sitemap for the entire website using the Python automation script:
-```bash
-python3 .system_generated/scratch/seo_optimizer.py
-```
+## Local Development
 
----
+Serve the repository with any static file server:
 
-## Local Development & Hosting
-
-Since the project is built completely on static web standards, it has zero dependencies and can be run locally on any system:
-
-### 1. Python Live Server (Recommended)
-Navigate to the repository directory and run:
 ```bash
 # Python 3
 python3 -m http.server 8000
 ```
-Then visit `http://localhost:8000` in your web browser.
 
-### 2. Node.js (npx)
-```bash
-npx serve .
+Open `http://localhost:8000` in any modern web browser.
+
+## Repository Structure
+
+```
+.
+├── index.html         # Homepage discovery hub and search index
+├── assets/            # Shared brand assets, stylesheets, and icons
+├── topics/            # Topic hub pages and specialized subdirectories
+│   ├── <topic>.html   # Topic landing page
+│   └── <topic>/       # Subpages and interactive drill-downs
+├── AGENTS.md          # Design standards, architecture rules, and QA checklist
+└── sitemap.xml        # Search engine index map
 ```
 
-### 3. VS Code
-Simply open the repository in Visual Studio Code and use the **Live Server** extension.
+## Contributing & Guidelines
 
----
+Consult [AGENTS.md](AGENTS.md) for design system standards, widget contracts, accessibility requirements, and publishing rules.
 
-## Author & Credits
+## Author
 
-Created and maintained by **LoLyeah** (Rizqihan).
-- GitHub: [@LoLyeah](https://github.com/LoLyeah)
-- Live Site: [lolyeah.github.io](https://lolyeah.github.io/)
+Created and maintained by [LoLyeah](https://github.com/LoLyeah).
