@@ -459,6 +459,37 @@
         </div>
     </div>
 
+    <!-- Floating Bottom Compare Action Dock -->
+    <div id="floating-compare-dock" class="fixed bottom-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none transition-all duration-300 transform translate-y-28 opacity-0">
+        <div class="pointer-events-auto bg-slate-950/90 text-white backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-2xl p-2.5 sm:px-5 sm:py-3 flex items-center gap-3 sm:gap-5 max-w-xl w-full justify-between">
+            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div id="dock-car-thumbnails" class="flex -space-x-2 overflow-hidden items-center">
+                    <!-- Thumbnails dynamically rendered -->
+                </div>
+                <div class="truncate text-xs sm:text-sm">
+                    <span class="font-bold text-white block truncate" id="dock-selected-text">2 Mobil Terpilih</span>
+                    <span class="text-[10px] text-slate-400 block truncate id-only">Maksimal 3 mobil</span>
+                    <span class="text-[10px] text-slate-400 block truncate en-only">Max 3 cars</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+                <button type="button" onclick="clearComparison()" class="text-xs text-slate-400 hover:text-white px-2 py-1.5 rounded-lg hover:bg-slate-800/80 transition-colors id-only">
+                    Batal
+                </button>
+                <button type="button" onclick="clearComparison()" class="text-xs text-slate-400 hover:text-white px-2 py-1.5 rounded-lg hover:bg-slate-800/80 transition-colors en-only">
+                    Clear
+                </button>
+                <button type="button" onclick="openCompareDrawer()" class="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-slate-950 font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-lg transition-all">
+                    <i data-lucide="scale" class="w-4 h-4 text-slate-950"></i>
+                    <span class="id-only">Bandingkan</span>
+                    <span class="en-only">Compare</span>
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- COMPARISON DRAWER / MODAL -->
     <div id="compare-drawer" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all">
         <div class="bg-white w-full max-w-5xl rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col overflow-hidden" onclick="event.stopPropagation()">
@@ -4363,14 +4394,44 @@
             renderDatabase();
         }
 
-        function updateCompareBadge() {
+                function updateCompareBadge() {
             const badge = document.getElementById('compare-badge');
+            const floatingDock = document.getElementById('floating-compare-dock');
+            const dockThumbs = document.getElementById('dock-car-thumbnails');
+            const dockText = document.getElementById('dock-selected-text');
+            const isId = document.body.classList.contains('lang-id');
+
             if (selectedCars.length > 0) {
+                // Header badge
                 badge.textContent = selectedCars.length;
                 badge.classList.remove('hidden');
+
+                // Floating dock
+                floatingDock.classList.remove('translate-y-28', 'opacity-0', 'pointer-events-none');
+                floatingDock.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+
+                // Update text
+                dockText.textContent = isId
+                    ? `${selectedCars.length} Mobil Terpilih`
+                    : `${selectedCars.length} Car${selectedCars.length > 1 ? 's' : ''} Selected`;
+
+                // Update thumbnails
+                const selectedCarObjs = selectedCars.map(id => CAR_DATABASE.find(c => c.id === id)).filter(Boolean);
+                dockThumbs.innerHTML = selectedCarObjs.map(c => `
+                    <div class="relative w-8 h-8 rounded-full ring-2 ring-slate-800 overflow-hidden bg-slate-800 shrink-0 group">
+                        <img src="${c.image}" class="w-full h-full object-cover" alt="${c.model}">
+                        <button type="button" onclick="event.stopPropagation(); toggleCompare('${c.id}')" class="absolute inset-0 bg-red-600/80 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-[10px] font-bold">✕</button>
+                    </div>
+                `).join('');
             } else {
+                // Header badge
                 badge.classList.add('hidden');
+
+                // Floating dock
+                floatingDock.classList.add('translate-y-28', 'opacity-0', 'pointer-events-none');
+                floatingDock.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
             }
+            lucide.createIcons();
         }
 
         function openCompareDrawer() {
