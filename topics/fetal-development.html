@@ -321,7 +321,7 @@
                 <!-- Left Text Column -->
                 <div class="lg:col-span-7 space-y-6">
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-womb-100/80 dark:bg-womb-950/80 border border-womb-300 dark:border-womb-800/80 text-womb-700 dark:text-womb-300 text-xs font-semibold tracking-wide">
-                        <span class="w-2 h-2 rounded-full bg-womb-500 animate-ping"></span>
+                        <span class="w-2 h-2 rounded-full bg-womb-500 animate-pulse"></span>
                         <span data-en="4D Simulator, Ultrasound Calipers & Real-Time CTG" data-id="Simulator 4D, Kaliper USG & CTG Real-Time">4D Simulator, Ultrasound Calipers & Real-Time CTG</span>
                     </div>
 
@@ -1305,6 +1305,12 @@
 
             container.className = `relative z-10 w-64 sm:w-80 h-64 sm:h-80 flex items-center justify-center ${bodyJolt} pointer-events-none`;
 
+            let heartX = week < 12 ? 74 : 88;
+            let heartY = week < 12 ? 96 : 104;
+            let heartR = week < 12 ? 2.5 : 4.5;
+            let heartColor = isUltrasoundMode ? '#ffffff' : '#f43f5e';
+            let heartHalo = isUltrasoundMode ? 'rgba(255,255,255,0.2)' : 'rgba(244,63,94,0.25)';
+
             container.innerHTML = `
                 <svg viewBox="0 0 200 200" class="w-full h-full filter drop-shadow-[0_0_20px_rgba(253,131,106,0.6)]" style="transform: scale(${scaleFactor}); transition: transform 0.4s ease;">
                     <ellipse cx="100" cy="100" rx="90" ry="85" fill="none" stroke="rgba(253, 131, 106, 0.4)" stroke-width="1.5" stroke-dasharray="4 2" />
@@ -1316,7 +1322,13 @@
                     <path d="M 60 85 C 45 110, 50 145, 80 155 C 105 162, 120 145, 115 125" fill="${isUltrasoundMode ? '#cbd5e1' : '#fca590'}" opacity="0.95" />
                     <ellipse cx="90" cy="105" rx="${week < 12 ? 14 : 20}" ry="${week < 12 ? 16 : 24}" fill="${isUltrasoundMode ? '#94a3b8' : '#fb927c'}" class="${chestClass}" />
                     <path d="M 85 95 Q ${behavior === 'thumb' ? '98 75, 96 72' : '105 90, 100 80'}" fill="none" stroke="${isUltrasoundMode ? '#e2e8f0' : '#fca590'}" stroke-width="${week < 12 ? 5 : 8}" stroke-linecap="round" />
-                    <circle cx="86" cy="102" r="${week < 12 ? 3 : 5}" fill="#ef4444" class="animate-heart" />
+
+                    <!-- Fetal Cardiac Ventricular Chamber Activity -->
+                    <g transform="translate(${heartX}, ${heartY})">
+                        <circle cx="0" cy="0" r="${heartR + 2.5}" fill="${heartHalo}" class="animate-pulse" />
+                        <circle cx="0" cy="0" r="${heartR}" fill="${heartColor}" class="animate-heart" />
+                    </g>
+
                     ${week >= 28 && behavior === 'blink' ?
                         `<ellipse cx="96" cy="68" rx="3" ry="3" fill="#ffffff" /><circle cx="96" cy="68" r="1.5" fill="#1e1b4b" />` :
                         `<path d="M 94 68 Q 98 70, 102 68" fill="none" stroke="${isUltrasoundMode ? '#334155' : '#991b1b'}" stroke-width="2" stroke-linecap="round" />`
@@ -1665,10 +1677,17 @@
                         <circle cx="85" cy="70" r="30" fill="#fca590" />
                         <path d="M 60 85 C 45 110, 50 145, 80 155 C 105 162, 120 145, 115 125" fill="#fca590" opacity="0.95" />
                         <ellipse cx="90" cy="105" rx="20" ry="24" fill="#fb927c" class="animate-breathing" />
+
                         <!-- Arm positioned right at mouth for thumb sucking -->
                         <path d="M 80 98 Q 98 88, 96 74" fill="none" stroke="#fca590" stroke-width="9" stroke-linecap="round" />
                         <circle cx="96" cy="72" r="4.5" fill="#fb927c" class="animate-suck" />
-                        <circle cx="86" cy="102" r="5" fill="#ef4444" class="animate-heart" />
+
+                        <!-- Cardiac Chamber -->
+                        <g transform="translate(88, 104)">
+                            <circle cx="0" cy="0" r="6" fill="rgba(244,63,94,0.25)" class="animate-pulse" />
+                            <circle cx="0" cy="0" r="4" fill="#f43f5e" class="animate-heart" />
+                        </g>
+
                         <path d="M 94 68 Q 98 70, 102 68" fill="none" stroke="#991b1b" stroke-width="2" stroke-linecap="round" />
                         <path d="M 90 145 Q 115 150, 110 120" fill="none" stroke="#fca590" stroke-width="9" stroke-linecap="round" />
                     </svg>
@@ -1687,7 +1706,14 @@
                         <path d="M 60 85 C 45 110, 50 145, 80 155 C 105 162, 120 145, 115 125" fill="#fca590" opacity="0.95" />
                         <ellipse cx="90" cy="105" rx="22" ry="26" fill="#f87171" class="animate-pulse" />
                         <path d="M 85 95 Q 100 85, 96 75" fill="none" stroke="#fca590" stroke-width="8" stroke-linecap="round" />
-                        <circle cx="86" cy="102" r="6" fill="#dc2626" class="animate-ping" />
+
+                        <!-- Diaphragmatic Spasm Indicator & Heart -->
+                        <ellipse cx="88" cy="116" rx="14" ry="4" fill="rgba(245,158,11,0.35)" class="animate-pulse" />
+                        <g transform="translate(88, 104)">
+                            <circle cx="0" cy="0" r="6" fill="rgba(244,63,94,0.25)" class="animate-pulse" />
+                            <circle cx="0" cy="0" r="4" fill="#f43f5e" class="animate-heart" />
+                        </g>
+
                         <path d="M 94 68 Q 98 67, 102 69" fill="none" stroke="#991b1b" stroke-width="2.5" stroke-linecap="round" />
                         <path d="M 90 145 Q 115 150, 110 120" fill="none" stroke="#fca590" stroke-width="9" stroke-linecap="round" />
                     </svg>
@@ -1703,16 +1729,21 @@
                         <path d="M 98 120 C 115 135, 130 115, 145 140 C 160 165, 175 145, 185 170" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 3" opacity="0.6" />
 
                         <!-- Glowing brain synaptogenesis aura -->
-                        <circle cx="85" cy="70" r="32" fill="#a855f7" opacity="0.25" class="animate-pulse" />
+                        <circle cx="85" cy="70" r="32" fill="#a855f7" opacity="0.2" class="animate-pulse" />
                         <circle cx="85" cy="70" r="30" fill="#fca590" />
                         <path d="M 60 85 C 45 110, 50 145, 80 155 C 105 162, 120 145, 115 125" fill="#fca590" opacity="0.95" />
                         <ellipse cx="90" cy="105" rx="20" ry="24" fill="#fb927c" class="animate-breathing" />
                         <path d="M 85 95 Q 100 85, 96 75" fill="none" stroke="#fca590" stroke-width="8" stroke-linecap="round" />
-                        <circle cx="86" cy="102" r="5" fill="#ef4444" class="animate-heart" />
+
+                        <!-- Cardiac Chamber -->
+                        <g transform="translate(88, 104)">
+                            <circle cx="0" cy="0" r="6" fill="rgba(244,63,94,0.25)" class="animate-pulse" />
+                            <circle cx="0" cy="0" r="4" fill="#f43f5e" class="animate-heart" />
+                        </g>
 
                         <!-- REM Rapid Saccade Eye -->
-                        <ellipse cx="97" cy="68" rx="4" ry="4" fill="#ffffff" class="animate-pulse" />
-                        <circle cx="97" cy="68" r="2" fill="#38bdf8" class="animate-ping" />
+                        <ellipse cx="97" cy="68" rx="3.5" ry="2.5" fill="#ffffff" />
+                        <circle cx="97" cy="68" r="1.5" fill="#0284c7" class="animate-pulse" />
 
                         <path d="M 90 145 Q 115 150, 110 120" fill="none" stroke="#fca590" stroke-width="9" stroke-linecap="round" />
                     </svg>
