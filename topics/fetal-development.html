@@ -798,41 +798,67 @@
                             </button>
                         </div>
 
-                        <div class="space-y-4">
-                            <!-- Channel 1: Heartbeat -->
-                            <div class="space-y-1.5">
-                                <div class="flex justify-between text-xs">
-                                    <span class="font-semibold text-stone-800 dark:text-stone-200 flex items-center gap-1.5">
-                                        <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-500"></i>
-                                        <span data-en="Maternal Heartbeat (60–75 BPM, Low-Pass Bass)" data-id="Detak Jantung Ibu (60–75 BPM, Bass Rendah)">Maternal Heartbeat (60–75 BPM, Low-Pass Bass)</span>
-                                    </span>
-                                    <span class="font-mono font-bold text-stone-600 dark:text-stone-300" id="val-vol-heartbeat">70%</span>
+                        <!-- Interactive Sound Layer On/Off Toggle Matrix -->
+                        <div class="space-y-3">
+                            <!-- Preset Shortcuts -->
+                            <div class="flex items-center justify-between text-xs pb-1">
+                                <span class="font-mono text-stone-500 dark:text-stone-400 font-bold uppercase tracking-wider" data-en="Sound Layers" data-id="Lapisan Suara">Sound Layers</span>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="setAudioPreset('all')" class="px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-stone-800 text-[11px] font-bold text-stone-700 dark:text-stone-300 hover:bg-womb-100 dark:hover:bg-womb-950 transition-all border border-stone-200 dark:border-stone-700" data-en="Full Womb" data-id="Semua">Full Womb</button>
+                                    <button onclick="setAudioPreset('heart')" class="px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-stone-800 text-[11px] font-bold text-stone-700 dark:text-stone-300 hover:bg-womb-100 dark:hover:bg-womb-950 transition-all border border-stone-200 dark:border-stone-700" data-en="Heart Only" data-id="Detak Saja">Heart Only</button>
+                                    <button onclick="setAudioPreset('bruit')" class="px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-stone-800 text-[11px] font-bold text-stone-700 dark:text-stone-300 hover:bg-womb-100 dark:hover:bg-womb-950 transition-all border border-stone-200 dark:border-stone-700" data-en="Bruit Only" data-id="Desiran Saja">Bruit Only</button>
                                 </div>
-                                <input type="range" id="vol-heartbeat" min="0" max="100" value="70" oninput="updateAudioChannel('heartbeat', this.value)" class="w-full h-2 bg-stone-200 dark:bg-stone-800 rounded-lg appearance-none cursor-pointer">
                             </div>
 
-                            <!-- Channel 2: Uterine Blood Flow (Bruit) -->
-                            <div class="space-y-1.5">
-                                <div class="flex justify-between text-xs">
-                                    <span class="font-semibold text-stone-800 dark:text-stone-200 flex items-center gap-1.5">
-                                        <i data-lucide="waves" class="w-3.5 h-3.5 text-womb-500"></i>
-                                        <span data-en="Aorta Bloodflow Rush / Uterine Bruit (75 dB)" data-id="Desir Aliran Darah Aorta (75 dB)">Aorta Bloodflow Rush / Uterine Bruit (75 dB)</span>
-                                    </span>
-                                    <span class="font-mono font-bold text-stone-600 dark:text-stone-300" id="val-vol-bruit">65%</span>
+                            <!-- Channel 1: Heartbeat Toggle -->
+                            <div class="p-3 rounded-2xl bg-stone-100/80 dark:bg-stone-900/80 border border-stone-200/80 dark:border-stone-800/80 flex items-center justify-between transition-all hover:border-womb-300 dark:hover:border-womb-800">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-rose-500/10 dark:bg-rose-950 flex items-center justify-center text-rose-500">
+                                        <i data-lucide="heart" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-stone-800 dark:text-stone-200" data-en="Maternal Heartbeat" data-id="Detak Jantung Ibu">Maternal Heartbeat</div>
+                                        <div class="text-[10px] font-mono text-stone-500 dark:text-stone-400">60–75 BPM • Low-Pass Bass (65 Hz)</div>
+                                    </div>
                                 </div>
-                                <input type="range" id="vol-bruit" min="0" max="100" value="65" oninput="updateAudioChannel('bruit', this.value)" class="w-full h-2 bg-stone-200 dark:bg-stone-800 rounded-lg appearance-none cursor-pointer">
+                                <button id="toggle-layer-heartbeat" onclick="toggleAudioLayer('heartbeat')" class="px-3 py-1.5 rounded-xl bg-rose-500 text-white font-bold text-xs shadow-md shadow-rose-500/25 flex items-center gap-1.5 transition-all active:scale-95">
+                                    <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                                    <span id="label-layer-heartbeat" data-en="ACTIVE" data-id="AKTIF">ACTIVE</span>
+                                </button>
                             </div>
 
-                            <!-- Channel 3: Filtered Voice -->
-                            <div class="space-y-1.5">
-                                <div class="flex justify-between text-xs">
-                                    <span class="font-semibold text-stone-800 dark:text-stone-200 flex items-center gap-1.5">
-                                        <i data-lucide="music" class="w-3.5 h-3.5 text-cyan-500"></i>
-                                        <span data-en="Maternal Voice & Melody (800 Hz Low-Pass Tissue Filter)" data-id="Suara Ibu & Melodi (Filter Jaringan 800 Hz)">Maternal Voice & Melody (800 Hz Low-Pass Tissue Filter)</span>
-                                    </span>
-                                    <span class="font-mono font-bold text-stone-600 dark:text-stone-300" id="val-vol-voice">50%</span>
+                            <!-- Channel 2: Uterine Blood Flow (Bruit) Toggle -->
+                            <div class="p-3 rounded-2xl bg-stone-100/80 dark:bg-stone-900/80 border border-stone-200/80 dark:border-stone-800/80 flex items-center justify-between transition-all hover:border-womb-300 dark:hover:border-womb-800">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-womb-500/10 dark:bg-womb-950 flex items-center justify-center text-womb-500">
+                                        <i data-lucide="waves" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-stone-800 dark:text-stone-200" data-en="Aortic Rush (Uterine Bruit)" data-id="Desir Aorta (Uterine Bruit)">Aortic Rush (Uterine Bruit)</div>
+                                        <div class="text-[10px] font-mono text-stone-500 dark:text-stone-400">75 dB Blood Flow Rush • 280 Hz Low-Pass</div>
+                                    </div>
                                 </div>
-                                <input type="range" id="vol-voice" min="0" max="100" value="50" oninput="updateAudioChannel('voice', this.value)" class="w-full h-2 bg-stone-200 dark:bg-stone-800 rounded-lg appearance-none cursor-pointer">
+                                <button id="toggle-layer-bruit" onclick="toggleAudioLayer('bruit')" class="px-3 py-1.5 rounded-xl bg-womb-500 text-white font-bold text-xs shadow-md shadow-womb-500/25 flex items-center gap-1.5 transition-all active:scale-95">
+                                    <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                                    <span id="label-layer-bruit" data-en="ACTIVE" data-id="AKTIF">ACTIVE</span>
+                                </button>
+                            </div>
+
+                            <!-- Channel 3: Filtered Voice Toggle -->
+                            <div class="p-3 rounded-2xl bg-stone-100/80 dark:bg-stone-900/80 border border-stone-200/80 dark:border-stone-800/80 flex items-center justify-between transition-all hover:border-womb-300 dark:hover:border-womb-800">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-cyan-500/10 dark:bg-cyan-950 flex items-center justify-center text-cyan-500">
+                                        <i data-lucide="music" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-stone-800 dark:text-stone-200" data-en="Maternal Voice & Speech" data-id="Suara & Percakapan Ibu">Maternal Voice & Speech</div>
+                                        <div class="text-[10px] font-mono text-stone-500 dark:text-stone-400">Filtered Speech Intonation • 800 Hz Tissue Cutoff</div>
+                                    </div>
+                                </div>
+                                <button id="toggle-layer-voice" onclick="toggleAudioLayer('voice')" class="px-3 py-1.5 rounded-xl bg-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-500/25 flex items-center gap-1.5 transition-all active:scale-95">
+                                    <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                                    <span id="label-layer-voice" data-en="ACTIVE" data-id="AKTIF">ACTIVE</span>
+                                </button>
                             </div>
                         </div>
 
@@ -2077,6 +2103,73 @@
             lucide.createIcons();
         }
 
+        const audioLayers = {
+            heartbeat: true,
+            bruit: true,
+            voice: true
+        };
+
+        function toggleAudioLayer(layer) {
+            audioLayers[layer] = !audioLayers[layer];
+            updateLayerButtonUI(layer);
+
+            if (!isAudioPlaying) {
+                toggleWombSoundscape();
+            } else {
+                applyLayerGain(layer);
+            }
+        }
+
+        function applyLayerGain(layer) {
+            if (layer === 'heartbeat' && heartbeatGain) {
+                heartbeatGain.gain.setValueAtTime(audioLayers.heartbeat ? 0.7 : 0.0001, audioCtx ? audioCtx.currentTime : 0);
+            } else if (layer === 'bruit' && bruitGain) {
+                bruitGain.gain.setValueAtTime(audioLayers.bruit ? 0.65 : 0.0001, audioCtx ? audioCtx.currentTime : 0);
+            }
+        }
+
+        function updateLayerButtonUI(layer) {
+            const btn = document.getElementById(`toggle-layer-${layer}`);
+            const label = document.getElementById(`label-layer-${layer}`);
+            if (!btn || !label) return;
+
+            const isActive = audioLayers[layer];
+            const colorMap = {
+                heartbeat: { active: "bg-rose-500 shadow-rose-500/25", dot: "bg-white" },
+                bruit: { active: "bg-womb-500 shadow-womb-500/25", dot: "bg-white" },
+                voice: { active: "bg-cyan-500 shadow-cyan-500/25", dot: "bg-white" }
+            };
+
+            if (isActive) {
+                btn.className = `px-3 py-1.5 rounded-xl ${colorMap[layer].active} text-white font-bold text-xs shadow-md flex items-center gap-1.5 transition-all active:scale-95`;
+                btn.innerHTML = `<span class="w-2 h-2 rounded-full ${colorMap[layer].dot} animate-pulse"></span><span id="label-layer-${layer}">${currentLang === 'en' ? "ACTIVE" : "AKTIF"}</span>`;
+            } else {
+                btn.className = "px-3 py-1.5 rounded-xl bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-400 font-semibold text-xs border border-stone-300 dark:border-stone-700 flex items-center gap-1.5 transition-all active:scale-95";
+                btn.innerHTML = `<span class="w-2 h-2 rounded-full bg-stone-400"></span><span id="label-layer-${layer}">${currentLang === 'en' ? "MUTED" : "SENYAP"}</span>`;
+            }
+        }
+
+        function setAudioPreset(preset) {
+            if (preset === 'all') {
+                audioLayers.heartbeat = true;
+                audioLayers.bruit = true;
+                audioLayers.voice = true;
+            } else if (preset === 'heart') {
+                audioLayers.heartbeat = true;
+                audioLayers.bruit = false;
+                audioLayers.voice = false;
+            } else if (preset === 'bruit') {
+                audioLayers.heartbeat = false;
+                audioLayers.bruit = true;
+                audioLayers.voice = false;
+            }
+            ['heartbeat', 'bruit', 'voice'].forEach(l => {
+                updateLayerButtonUI(l);
+                applyLayerGain(l);
+            });
+            if (!isAudioPlaying) toggleWombSoundscape();
+        }
+
         function startSynthesizer() {
             analyserNode = audioCtx.createAnalyser();
             analyserNode.fftSize = 256;
@@ -2097,7 +2190,7 @@
             bruitFilter.frequency.value = 280;
 
             bruitGain = audioCtx.createGain();
-            bruitGain.gain.value = 0.65;
+            bruitGain.gain.value = audioLayers.bruit ? 0.65 : 0.0001;
 
             whiteNoise.connect(bruitFilter);
             bruitFilter.connect(bruitGain);
@@ -2105,7 +2198,7 @@
             whiteNoise.start();
 
             heartbeatGain = audioCtx.createGain();
-            heartbeatGain.gain.value = 0.7;
+            heartbeatGain.gain.value = audioLayers.heartbeat ? 0.7 : 0.0001;
             heartbeatGain.connect(analyserNode);
 
             analyserNode.connect(audioCtx.destination);
@@ -2117,7 +2210,7 @@
         }
 
         function playHeartbeatThump() {
-            if (!audioCtx) return;
+            if (!audioCtx || !heartbeatGain || !audioLayers.heartbeat) return;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'sine';
@@ -2173,19 +2266,6 @@
         function stopSynthesizer() {
             if (heartbeatInterval) clearInterval(heartbeatInterval);
             if (audioCtx) { audioCtx.close(); audioCtx = null; }
-        }
-
-        function updateAudioChannel(channel, val) {
-            const frac = val / 100;
-            if (channel === 'heartbeat') {
-                document.getElementById('val-vol-heartbeat').textContent = `${val}%`;
-                if (heartbeatGain) heartbeatGain.gain.value = frac;
-            } else if (channel === 'bruit') {
-                document.getElementById('val-vol-bruit').textContent = `${val}%`;
-                if (bruitGain) bruitGain.gain.value = frac;
-            } else if (channel === 'voice') {
-                document.getElementById('val-vol-voice').textContent = `${val}%`;
-            }
         }
 
         // --- 9. Light Filtration Simulator ---
