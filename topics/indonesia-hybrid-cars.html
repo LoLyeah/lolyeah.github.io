@@ -681,7 +681,9 @@
                 </div>
 
                 <!-- SECTION: INTERACTIVE CHASSIS ANATOMY HOTSPOT STUDIO -->
-                <div id="anatomy-explorer" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-soft">
+                <div id="anatomy-explorer" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft mb-16">
+
+                    <!-- Section Header -->
                     <div class="max-w-3xl mb-8">
                         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-sky-800 text-xs font-mono font-bold uppercase tracking-wider mb-2 border border-sky-200">
                             <i data-lucide="crosshair" class="w-3.5 h-3.5 text-sky-600"></i>
@@ -692,65 +694,207 @@
                             <span class="en-only">Interactive Hybrid Chassis &amp; Component Anatomy Cutaway</span>
                         </h3>
                         <p class="text-sm text-slate-600 leading-relaxed">
-                            <span class="id-only">Klik titik pin interaktif pada sasis untuk membedah fungsi rekayasa, tegangan kerja, sistem pendinginan, dan jadwal perawatan komponen di Indonesia.</span>
-                            <span class="en-only">Click on the chassis hotspot pins to inspect engineering roles, operating voltages, cooling systems, and maintenance requirements.</span>
+                            <span class="id-only">Klik titik pin pada diagram atau pilih tombol komponen di bawah untuk membedah fungsi rekayasa, tegangan kerja, sistem pendinginan, dan jadwal perawatan di Indonesia.</span>
+                            <span class="en-only">Click on the chassis hotspot pins or select component buttons below to inspect engineering roles, operating voltages, cooling loops, and maintenance intervals in Indonesia.</span>
                         </p>
                     </div>
 
                     <!-- Cutaway Interactive Stage -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
 
-                        <!-- Visual Chassis Graphic with Pins -->
-                        <div class="lg:col-span-7 bg-slate-950 rounded-2xl p-6 text-white border border-slate-800 relative min-h-[340px] flex items-center justify-center overflow-hidden shadow-xl">
-                            <!-- Background Blueprint Grid -->
-                            <div class="absolute inset-0 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:16px_16px] opacity-30 pointer-events-none"></div>
+                        <!-- Visual Chassis Cutaway Graphic -->
+                        <div class="lg:col-span-7 bg-[#0b1329] rounded-2xl p-5 text-white border border-slate-800 relative flex flex-col justify-between overflow-hidden shadow-xl min-h-[380px]">
+                            <!-- Blueprint Grid & Laser Measurements -->
+                            <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none"></div>
 
-                            <div class="relative w-full max-w-[500px] aspect-[16/9] border border-slate-800 rounded-2xl bg-slate-900/90 p-4 flex flex-col justify-between">
-                                <!-- Background Chassis Outline Labels -->
-                                <div class="text-[10px] font-mono text-slate-400 flex justify-between uppercase">
-                                    <span>[FRONT AXLE - ENGINE BAY]</span>
-                                    <span>[REAR AXLE - LUGGAGE]</span>
+                            <!-- Header Blueprint HUD -->
+                            <div class="relative z-10 flex items-center justify-between text-[10px] font-mono text-slate-400 border-b border-slate-800/80 pb-2 mb-2">
+                                <div class="flex items-center gap-1.5 text-sky-400 font-bold">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <span>[CHASSIS CUTAWAY ARCHITECTURE]</span>
                                 </div>
-
-                                <!-- Vector Car Silhouette Wireframe -->
-                                <div class="relative w-full h-40 my-auto flex items-center justify-center">
-                                    <svg viewBox="0 0 460 140" class="w-full h-full opacity-40">
-                                        <!-- Car Body Silhouette Outline -->
-                                        <path d="M 20 110 C 20 80, 50 60, 90 60 L 140 60 L 190 25 L 320 25 L 390 65 L 440 80 C 450 85, 455 95, 455 110 L 20 110 Z" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4"/>
-                                        <!-- Wheel Wells -->
-                                        <circle cx="80" cy="110" r="22" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
-                                        <circle cx="380" cy="110" r="22" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
-                                        <!-- Floorboard Battery Bay -->
-                                        <rect x="150" y="85" width="180" height="24" rx="4" fill="#1e293b" stroke="#a855f7" stroke-width="1.5"/>
-                                        <text x="240" y="101" fill="#c084fc" font-size="9" text-anchor="middle" font-family="Space Mono">HV BATTERY TRAY</text>
-                                    </svg>
-
-                                    <!-- Hotspot Button Pins -->
-                                    <div class="absolute inset-0">
-                                        <!-- Pin 1: ICE Engine -->
-                                        <button type="button" onclick="selectAnatomy('ice', this)" class="anatomy-pin absolute top-6 left-16 w-8 h-8 rounded-full bg-amber-500 text-white font-mono font-bold text-xs flex items-center justify-center shadow-lg border-2 border-white ring-4 ring-white/20 transition-all hover:scale-110 pulse-pin" title="Mesin Bensin Atkinson">1</button>
-
-                                        <!-- Pin 2: Transaxle e-CVT / MG1+MG2 -->
-                                        <button type="button" onclick="selectAnatomy('transaxle', this)" class="anatomy-pin absolute top-18 left-32 w-8 h-8 rounded-full bg-sky-500 text-white font-mono font-bold text-xs flex items-center justify-center shadow-lg border-2 border-white transition-all hover:scale-110" title="Transmisi e-CVT">2</button>
-
-                                        <!-- Pin 3: Inverter / PCU -->
-                                        <button type="button" onclick="selectAnatomy('inverter', this)" class="anatomy-pin absolute top-4 left-44 w-8 h-8 rounded-full bg-indigo-500 text-white font-mono font-bold text-xs flex items-center justify-center shadow-lg border-2 border-white transition-all hover:scale-110" title="Power Control Unit (PCU)">3</button>
-
-                                        <!-- Pin 4: Electric A/C Compressor -->
-                                        <button type="button" onclick="selectAnatomy('ac_comp', this)" class="anatomy-pin absolute bottom-3 left-22 w-8 h-8 rounded-full bg-emerald-500 text-white font-mono font-bold text-xs flex items-center justify-center shadow-lg border-2 border-white transition-all hover:scale-110" title="Kompresor AC Elektrik HV">4</button>
-
-                                        <!-- Pin 5: Traction Battery Pack -->
-                                        <button type="button" onclick="selectAnatomy('battery', this)" class="anatomy-pin absolute top-14 right-28 w-8 h-8 rounded-full bg-purple-500 text-white font-mono font-bold text-xs flex items-center justify-center shadow-lg border-2 border-white transition-all hover:scale-110" title="Baterai Traksi Tegangan Tinggi">5</button>
-
-                                        <!-- Pin 6: ISG 12V Mild Hybrid -->
-                                        <button type="button" onclick="selectAnatomy('isg', this)" class="anatomy-pin absolute top-4 left-4 w-8 h-8 rounded-full bg-rose-500 text-white font-mono font-bold text-xs flex items-center justify-center shadow-lg border-2 border-white transition-all hover:scale-110" title="ISG Mild Hybrid">6</button>
-                                    </div>
+                                <div class="text-slate-500">
+                                    <span>SCALE: 1:18</span> · <span>TNGA / e:HEV DUAL-MOTOR</span>
                                 </div>
+                            </div>
 
-                                <div class="text-[11px] font-mono text-slate-400 text-center flex items-center justify-center gap-1">
-                                    <span>Klik nomor pin untuk membedah spesifikasi komponen</span>
-                                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                                </div>
+                            <!-- Interactive SVG Diagram -->
+                            <div class="relative w-full aspect-[21/10] my-auto flex items-center justify-center">
+                                <svg viewBox="0 0 700 280" class="w-full h-full select-none" id="chassis-anatomy-svg">
+                                    <defs>
+                                        <!-- Gradients for Components -->
+                                        <linearGradient id="iceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.9"/>
+                                            <stop offset="100%" stop-color="#b45309" stop-opacity="0.9"/>
+                                        </linearGradient>
+                                        <linearGradient id="transGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.9"/>
+                                            <stop offset="100%" stop-color="#0284c7" stop-opacity="0.9"/>
+                                        </linearGradient>
+                                        <linearGradient id="pcuGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#818cf8" stop-opacity="0.9"/>
+                                            <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.9"/>
+                                        </linearGradient>
+                                        <linearGradient id="acGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#34d399" stop-opacity="0.9"/>
+                                            <stop offset="100%" stop-color="#059669" stop-opacity="0.9"/>
+                                        </linearGradient>
+                                        <linearGradient id="battGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#c084fc" stop-opacity="0.9"/>
+                                            <stop offset="100%" stop-color="#7e22ce" stop-opacity="0.9"/>
+                                        </linearGradient>
+                                        <linearGradient id="isgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#fb7185" stop-opacity="0.9"/>
+                                            <stop offset="100%" stop-color="#e11d48" stop-opacity="0.9"/>
+                                        </linearGradient>
+                                    </defs>
+
+                                    <!-- Ground & Reference Lines -->
+                                    <line x1="20" y1="240" x2="680" y2="240" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+                                    <!-- Aerodynamic Vehicle Outer Silhouette (Modern Crossover/SUV) -->
+                                    <path d="M 40 215 C 40 160, 80 125, 140 125 L 210 125 L 285 55 C 310 35, 470 35, 520 70 L 610 135 C 645 145, 660 180, 660 215 L 40 215 Z" fill="#0f172a" fill-opacity="0.75" stroke="#334155" stroke-width="2"/>
+
+                                    <!-- Glass Greenhouse & Pillars -->
+                                    <path d="M 295 120 L 290 65 C 310 50, 460 50, 505 78 L 585 130 Z" fill="#1e293b" fill-opacity="0.6" stroke="#475569" stroke-width="1.5"/>
+                                    <!-- B-Pillar -->
+                                    <line x1="420" y1="52" x2="420" y2="128" stroke="#334155" stroke-width="2.5"/>
+
+                                    <!-- Wheels & Brakes -->
+                                    <!-- Front Wheel Assembly -->
+                                    <g id="front-wheel">
+                                        <circle cx="150" cy="215" r="38" fill="#090d16" stroke="#475569" stroke-width="4"/>
+                                        <circle cx="150" cy="215" r="28" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+                                        <circle cx="150" cy="215" r="18" fill="#334155" stroke="#94a3b8" stroke-width="1.5"/>
+                                        <!-- Brake Caliper -->
+                                        <rect x="132" y="185" width="8" height="18" rx="2" fill="#ef4444"/>
+                                    </g>
+                                    <!-- Rear Wheel Assembly -->
+                                    <g id="rear-wheel">
+                                        <circle cx="550" cy="215" r="38" fill="#090d16" stroke="#475569" stroke-width="4"/>
+                                        <circle cx="550" cy="215" r="28" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+                                        <circle cx="550" cy="215" r="18" fill="#334155" stroke="#94a3b8" stroke-width="1.5"/>
+                                        <!-- Brake Caliper -->
+                                        <rect x="532" y="185" width="8" height="18" rx="2" fill="#ef4444"/>
+                                    </g>
+
+                                    <!-- High-Voltage Orange Shielded Cables Flowing to Battery & Inverter -->
+                                    <path d="M 205 110 C 235 110, 255 185, 305 185 L 475 185" fill="none" stroke="#f97316" stroke-width="3.5" stroke-linecap="round"/>
+                                    <path d="M 190 120 L 130 180" fill="none" stroke="#f97316" stroke-width="2.5" stroke-linecap="round"/>
+
+                                    <!-- INTERNAL ENGINE & POWERTRAIN HARDWARE (CUTAWAY) -->
+
+                                    <!-- [1] Mesin Bensin Atkinson (ICE Block) -->
+                                    <g id="comp-ice" class="cursor-pointer transition-all hover:opacity-90" onclick="selectAnatomy('ice')">
+                                        <rect x="75" y="130" width="65" height="52" rx="8" fill="url(#iceGrad)" stroke="#fef08a" stroke-width="1.5"/>
+                                        <!-- 4 Cylinder Pistons Indication -->
+                                        <rect x="83" y="138" width="10" height="20" rx="2" fill="#78350f" opacity="0.6"/>
+                                        <rect x="96" y="138" width="10" height="20" rx="2" fill="#78350f" opacity="0.6"/>
+                                        <rect x="109" y="138" width="10" height="20" rx="2" fill="#78350f" opacity="0.6"/>
+                                        <rect x="122" y="138" width="10" height="20" rx="2" fill="#78350f" opacity="0.6"/>
+                                        <text x="107" y="174" fill="#ffffff" font-size="8" font-family="Space Mono" font-weight="bold" text-anchor="middle">ICE 2.0L</text>
+                                    </g>
+
+                                    <!-- [2] Transaxle e-CVT (MG1 + MG2 Power Split) -->
+                                    <g id="comp-transaxle" class="cursor-pointer transition-all hover:opacity-90" onclick="selectAnatomy('transaxle')">
+                                        <rect x="145" y="135" width="58" height="48" rx="8" fill="url(#transGrad)" stroke="#bae6fd" stroke-width="1.5"/>
+                                        <!-- Planetary Motor Coils -->
+                                        <circle cx="163" cy="155" r="11" fill="#0369a1" stroke="#38bdf8" stroke-width="1.5"/>
+                                        <circle cx="185" cy="155" r="11" fill="#0369a1" stroke="#38bdf8" stroke-width="1.5"/>
+                                        <text x="174" y="176" fill="#ffffff" font-size="8" font-family="Space Mono" font-weight="bold" text-anchor="middle">e-CVT MG</text>
+                                    </g>
+
+                                    <!-- [3] PCU Inverter (Power Control Unit 650V) -->
+                                    <g id="comp-inverter" class="cursor-pointer transition-all hover:opacity-90" onclick="selectAnatomy('inverter')">
+                                        <rect x="135" y="85" width="70" height="38" rx="6" fill="url(#pcuGrad)" stroke="#c7d2fe" stroke-width="1.5"/>
+                                        <path d="M 160 95 L 155 105 L 165 105 L 160 115" fill="none" stroke="#fef08a" stroke-width="2" stroke-linejoin="round"/>
+                                        <text x="178" y="107" fill="#ffffff" font-size="8" font-family="Space Mono" font-weight="bold">PCU 650V</text>
+                                    </g>
+
+                                    <!-- [4] Kompresor AC Elektrik HV Independen -->
+                                    <g id="comp-ac_comp" class="cursor-pointer transition-all hover:opacity-90" onclick="selectAnatomy('ac_comp')">
+                                        <rect x="95" y="185" width="40" height="28" rx="6" fill="url(#acGrad)" stroke="#a7f3d0" stroke-width="1.5"/>
+                                        <text x="115" y="202" fill="#ffffff" font-size="7" font-family="Space Mono" font-weight="bold" text-anchor="middle">HV A/C</text>
+                                    </g>
+
+                                    <!-- [5] Baterai Traksi HV Pack (Underfloor / Rear Seat Tray) -->
+                                    <g id="comp-battery" class="cursor-pointer transition-all hover:opacity-90" onclick="selectAnatomy('battery')">
+                                        <rect x="305" y="170" width="180" height="34" rx="6" fill="url(#battGrad)" stroke="#e9d5ff" stroke-width="1.5"/>
+                                        <!-- Battery Cell Array Modules -->
+                                        <rect x="315" y="176" width="22" height="22" rx="3" fill="#581c87" stroke="#c084fc" stroke-width="1"/>
+                                        <rect x="343" y="176" width="22" height="22" rx="3" fill="#581c87" stroke="#c084fc" stroke-width="1"/>
+                                        <rect x="371" y="176" width="22" height="22" rx="3" fill="#581c87" stroke="#c084fc" stroke-width="1"/>
+                                        <rect x="399" y="176" width="22" height="22" rx="3" fill="#581c87" stroke="#c084fc" stroke-width="1"/>
+                                        <rect x="427" y="176" width="22" height="22" rx="3" fill="#581c87" stroke="#c084fc" stroke-width="1"/>
+                                        <rect x="455" y="176" width="22" height="22" rx="3" fill="#581c87" stroke="#c084fc" stroke-width="1"/>
+                                        <text x="395" y="162" fill="#c084fc" font-size="8.5" font-family="Space Mono" font-weight="bold" text-anchor="middle">HV TRACTION BATTERY PACK (Ni-MH / LFP)</text>
+                                    </g>
+
+                                    <!-- [6] ISG Starter Generator Mild Hybrid -->
+                                    <g id="comp-isg" class="cursor-pointer transition-all hover:opacity-90" onclick="selectAnatomy('isg')">
+                                        <rect x="48" y="142" width="24" height="26" rx="4" fill="url(#isgGrad)" stroke="#fecdd3" stroke-width="1"/>
+                                        <text x="60" y="158" fill="#ffffff" font-size="6" font-family="Space Mono" font-weight="bold" text-anchor="middle">ISG</text>
+                                    </g>
+
+                                    <!-- INTERACTIVE HOTSPOT PIN OVERLAYS -->
+                                    <!-- Pin 1: Mesin Bensin Atkinson (x=107, y=115) -->
+                                    <g class="hotspot-group cursor-pointer" onclick="selectAnatomy('ice')">
+                                        <circle cx="107" cy="115" r="14" fill="#f59e0b" stroke="#ffffff" stroke-width="2.5" class="pulse-pin"/>
+                                        <text x="107" y="119" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">1</text>
+                                    </g>
+
+                                    <!-- Pin 2: Transaxle e-CVT (x=174, y=130) -->
+                                    <g class="hotspot-group cursor-pointer" onclick="selectAnatomy('transaxle')">
+                                        <circle cx="174" cy="130" r="14" fill="#0ea5e9" stroke="#ffffff" stroke-width="2.5"/>
+                                        <text x="174" y="134" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">2</text>
+                                    </g>
+
+                                    <!-- Pin 3: PCU Inverter (x=170, y=75) -->
+                                    <g class="hotspot-group cursor-pointer" onclick="selectAnatomy('inverter')">
+                                        <circle cx="170" cy="75" r="14" fill="#6366f1" stroke="#ffffff" stroke-width="2.5"/>
+                                        <text x="170" y="79" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">3</text>
+                                    </g>
+
+                                    <!-- Pin 4: AC Compressor (x=115, y=215) -->
+                                    <g class="hotspot-group cursor-pointer" onclick="selectAnatomy('ac_comp')">
+                                        <circle cx="115" cy="215" r="14" fill="#10b981" stroke="#ffffff" stroke-width="2.5"/>
+                                        <text x="115" y="219" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">4</text>
+                                    </g>
+
+                                    <!-- Pin 5: HV Battery Pack (x=395, y=187) -->
+                                    <g class="hotspot-group cursor-pointer" onclick="selectAnatomy('battery')">
+                                        <circle cx="395" cy="187" r="14" fill="#a855f7" stroke="#ffffff" stroke-width="2.5"/>
+                                        <text x="395" y="191" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">5</text>
+                                    </g>
+
+                                    <!-- Pin 6: ISG Mild Hybrid (x=60, y=125) -->
+                                    <g class="hotspot-group cursor-pointer" onclick="selectAnatomy('isg')">
+                                        <circle cx="60" cy="125" r="13" fill="#f43f5e" stroke="#ffffff" stroke-width="2"/>
+                                        <text x="60" y="129" fill="#ffffff" font-size="9" font-family="Space Mono" font-weight="bold" text-anchor="middle">6</text>
+                                    </g>
+                                </svg>
+                            </div>
+
+                            <!-- Component Quick-Select Pills Bar -->
+                            <div class="relative z-10 grid grid-cols-3 sm:grid-cols-6 gap-1.5 pt-3 border-t border-slate-800/80">
+                                <button type="button" onclick="selectAnatomy('ice')" class="anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/50 hover:bg-amber-500/30 truncate" data-key="ice">
+                                    [1] ICE Mesin
+                                </button>
+                                <button type="button" onclick="selectAnatomy('transaxle')" class="anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 truncate" data-key="transaxle">
+                                    [2] e-CVT
+                                </button>
+                                <button type="button" onclick="selectAnatomy('inverter')" class="anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 truncate" data-key="inverter">
+                                    [3] Inverter PCU
+                                </button>
+                                <button type="button" onclick="selectAnatomy('ac_comp')" class="anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 truncate" data-key="ac_comp">
+                                    [4] AC Elektrik
+                                </button>
+                                <button type="button" onclick="selectAnatomy('battery')" class="anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 truncate" data-key="battery">
+                                    [5] Baterai HV
+                                </button>
+                                <button type="button" onclick="selectAnatomy('isg')" class="anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 truncate" data-key="isg">
+                                    [6] Dinamo ISG
+                                </button>
                             </div>
                         </div>
 
@@ -2409,9 +2553,11 @@
             }
         };
 
-        function selectAnatomy(key, btn) {
+        function selectAnatomy(key) {
             const d = anatomyData[key];
             if (!d) return;
+
+            // Update text elements
             document.getElementById('anat-badge').textContent = d.badge;
             document.getElementById('anat-title').textContent = d.title;
             document.getElementById('anat-desc').textContent = d.desc;
@@ -2419,8 +2565,50 @@
             document.getElementById('anat-cooling').textContent = d.cooling;
             document.getElementById('anat-maint').textContent = d.maint;
 
-            document.querySelectorAll('.anatomy-pin').forEach(p => p.classList.remove('ring-4', 'ring-white'));
-            if (btn) btn.classList.add('ring-4', 'ring-white');
+            // Update badge color
+            const badgeEl = document.getElementById('anat-badge');
+            const colors = {
+                ice: 'bg-amber-100 text-amber-800 border-amber-300',
+                transaxle: 'bg-sky-100 text-sky-800 border-sky-300',
+                inverter: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+                ac_comp: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+                battery: 'bg-purple-100 text-purple-800 border-purple-300',
+                isg: 'bg-rose-100 text-rose-800 border-rose-300'
+            };
+            badgeEl.className = `px-2.5 py-0.5 rounded text-[11px] font-mono font-bold border inline-block ${colors[key] || 'bg-slate-100 text-slate-800'}`;
+
+            // Update tabs active state
+            document.querySelectorAll('.anat-tab').forEach(tab => {
+                const k = tab.getAttribute('data-key');
+                if (k === key) {
+                    const tabActiveStyles = {
+                        ice: 'bg-amber-500/20 text-amber-300 border-amber-500/60',
+                        transaxle: 'bg-sky-500/20 text-sky-300 border-sky-500/60',
+                        inverter: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/60',
+                        ac_comp: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/60',
+                        battery: 'bg-purple-500/20 text-purple-300 border-purple-500/60',
+                        isg: 'bg-rose-500/20 text-rose-300 border-rose-500/60'
+                    };
+                    tab.className = `anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all border truncate ${tabActiveStyles[k] || 'bg-sky-600 text-white'}`;
+                } else {
+                    tab.className = "anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-400 border border-slate-700/80 hover:bg-slate-700 hover:text-slate-200 truncate";
+                }
+            });
+
+            // SVG component pulse highlight
+            ['ice', 'transaxle', 'inverter', 'ac_comp', 'battery', 'isg'].forEach(c => {
+                const el = document.getElementById(`comp-${c}`);
+                if (el) {
+                    if (c === key) {
+                        el.style.filter = 'drop-shadow(0 0 8px rgba(255,255,255,0.8))';
+                        el.style.transform = 'scale(1.03)';
+                        el.style.transformOrigin = 'center';
+                    } else {
+                        el.style.filter = 'none';
+                        el.style.transform = 'scale(1)';
+                    }
+                }
+            });
         }
 
         // 4. TAX & INCENTIVE CALCULATOR LOGIC (PP 74/2021 & PERMENDAGRI 6/2023)
