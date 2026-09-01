@@ -1828,22 +1828,51 @@
                             </div>
                         </div>
 
-                        <!-- Q4: Budget Range -->
+                        <!-- Q4: Budget Range (4 Modern Segments) -->
                         <div>
-                            <div class="text-xs font-mono font-bold uppercase text-indigo-600 mb-2">Pertanyaan 4 dari 4</div>
-                            <h4 class="font-display font-bold text-lg text-slate-900 mb-3">Rentang alokasi anggaran pembelian mobil Anda?</h4>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                <button type="button" class="quiz-opt p-4 rounded-xl border border-slate-200 bg-white text-left hover:border-indigo-400 transition-all" onclick="selectQuiz(4, 'under400', this)">
-                                    <div class="font-bold text-sm text-slate-900">&lt; Rp 400 Juta</div>
-                                    <div class="text-xs text-slate-500 mt-1">Segmen Entry / Compact.</div>
+                            <div class="text-xs font-bold uppercase text-indigo-600 mb-2">
+                                <span class="id-only">Pertanyaan 4 dari 4</span>
+                                <span class="en-only">Question 4 of 4</span>
+                            </div>
+                            <h4 class="font-display font-bold text-lg text-slate-900 mb-3">
+                                <span class="id-only">Rentang alokasi anggaran pembelian mobil Anda?</span>
+                                <span class="en-only">What is your targeted vehicle budget range?</span>
+                            </h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                                <!-- Option 1: < 250 Jt -->
+                                <button type="button" class="quiz-opt p-4 rounded-xl border border-slate-200 bg-white text-left hover:border-indigo-400 transition-all flex flex-col justify-between" onclick="selectQuiz(4, 'under250', this)">
+                                    <div class="font-bold text-sm text-slate-900">&lt; Rp 250 Juta</div>
+                                    <div class="text-xs text-slate-500 mt-1">
+                                        <span class="id-only">Urban Entry EV / LCGC Kompak</span>
+                                        <span class="en-only">Urban Entry EV / Compact</span>
+                                    </div>
                                 </button>
-                                <button type="button" class="quiz-opt p-4 rounded-xl border border-slate-200 bg-white text-left hover:border-indigo-400 transition-all" onclick="selectQuiz(4, '400to700', this)">
-                                    <div class="font-bold text-sm text-slate-900">Rp 400 – 700 Juta</div>
-                                    <div class="text-xs text-slate-500 mt-1">Segmen Medium MPV / SUV.</div>
+
+                                <!-- Option 2: 250 - 400 Jt -->
+                                <button type="button" class="quiz-opt p-4 rounded-xl border border-slate-200 bg-white text-left hover:border-indigo-400 transition-all flex flex-col justify-between" onclick="selectQuiz(4, '250to400', this)">
+                                    <div class="font-bold text-sm text-slate-900">Rp 250 – 400 Juta</div>
+                                    <div class="text-xs text-slate-500 mt-1">
+                                        <span class="id-only">Compact EV &amp; Entry Hybrid</span>
+                                        <span class="en-only">Compact EV &amp; Entry Hybrid</span>
+                                    </div>
                                 </button>
-                                <button type="button" class="quiz-opt p-4 rounded-xl border border-slate-200 bg-white text-left hover:border-indigo-400 transition-all" onclick="selectQuiz(4, 'over700', this)">
-                                    <div class="font-bold text-sm text-slate-900">&gt; Rp 700 Juta</div>
-                                    <div class="text-xs text-slate-500 mt-1">Segmen Premium / Flagship.</div>
+
+                                <!-- Option 3: 400 - 800 Jt -->
+                                <button type="button" class="quiz-opt p-4 rounded-xl border border-slate-200 bg-white text-left hover:border-indigo-400 transition-all flex flex-col justify-between" onclick="selectQuiz(4, '400to800', this)">
+                                    <div class="font-bold text-sm text-slate-900">Rp 400 – 800 Juta</div>
+                                    <div class="text-xs text-slate-500 mt-1">
+                                        <span class="id-only">Family HEV / Long-Range EV</span>
+                                        <span class="en-only">Family HEV / Long-Range EV</span>
+                                    </div>
+                                </button>
+
+                                <!-- Option 4: > 800 Jt -->
+                                <button type="button" class="quiz-opt p-4 rounded-xl border border-slate-200 bg-white text-left hover:border-indigo-400 transition-all flex flex-col justify-between" onclick="selectQuiz(4, 'over800', this)">
+                                    <div class="font-bold text-sm text-slate-900">&gt; Rp 800 Juta</div>
+                                    <div class="text-xs text-slate-500 mt-1">
+                                        <span class="id-only">Flagship PHEV &amp; Luxury HEV</span>
+                                        <span class="en-only">Flagship PHEV &amp; Luxury HEV</span>
+                                    </div>
                                 </button>
                             </div>
                         </div>
@@ -3509,29 +3538,110 @@
             const resDesc = document.getElementById('quiz-rec-desc');
             const resModels = document.getElementById('quiz-rec-models');
 
+            if (!resBox) return;
             resBox.classList.remove('hidden');
 
+            const isId = !document.body.classList.contains('lang-en');
             const hasHomeCharge = (quizAnswers[1] === 'home_charge');
             const isShort = (quizAnswers[2] === 'short');
             const rareTrip = (quizAnswers[3] === 'rare_trip');
-            const budgetUnder400 = (quizAnswers[4] === 'under400');
+            const budget = quizAnswers[4];
 
-            if (hasHomeCharge && (isShort || rareTrip)) {
-                resTitle.textContent = "Listrik Baterai Murni (BEV) atau Super Hybrid (PHEV)";
-                resDesc.innerHTML = "Karena garasi Anda siap dengan daya listrik PLN, Anda dapat menikmati biaya energi termurah (~Rp 250/km) dengan mobil listrik murni atau Plug-in Hybrid. Anda bebas aturan Ganjil-Genap (BEV) dan 100% bebas bensin dalam aktivitas harian.";
-                resModels.textContent = "BYD Seal / Atto 3, BYD Sealion 6 DM-i, Hyundai Ioniq 5, Denza D9 DM-i, Wuling Cloud EV.";
-            } else if (hasHomeCharge && !rareTrip) {
-                resTitle.textContent = "Plug-in Hybrid (PHEV Super Hybrid)";
-                resDesc.innerHTML = "Pilihan paling fleksibel: 100% mobil listrik tanpa bensin saat hari kerja di perkotaan, dan langsung tancap gas tanpa batas &gt;1.200 km saat liburan luar kota tanpa perlu mengantre di SPKLU jalan tol.";
-                resModels.textContent = "BYD Sealion 6 DM-i, GWM Tank 500 Hi4-T, Denza D9, Chery Tiggo 8 Pro e+.";
-            } else if (budgetUnder400) {
-                resTitle.textContent = "Full Hybrid Terjangkau (HEV) — Wuling / MG / Suzuki";
-                resDesc.innerHTML = "Dengan anggaran di bawah Rp 400 Juta dan tanpa colokan mobil listrik, prioritaskan Full Hybrid sejati seperti MG VS HEV atau pertimbangkan kenyamanan akomodasi 7-seater seperti Suzuki XL7 jika kabin luas menjadi prioritas utama.";
-                resModels.textContent = "MG VS HEV (Rp 389 Jt), Wuling Almaz Hybrid, Suzuki XL7 Hybrid Alpha.";
-            } else {
-                resTitle.textContent = "Full Hybrid (HEV) — Rekomendasi No. 1 Terbaik di Indonesia";
-                resDesc.innerHTML = "Pilihan paling praktis dan rasional di Indonesia: Tanpa perlu colok kabel charger, efisiensi bensin 2x lipat (20–28 km/L), kabin tetap dingin beku saat macet total, dan nilai jual kembali serta jaringan bengkel sangat kuat.";
-                resModels.textContent = "Toyota Kijang Innova Zenix Hybrid, Yaris Cross Hybrid, Honda CR-V RS e:HEV, GWM Haval Jolion HEV.";
+            // 1. Budget < 250 Juta
+            if (budget === 'under250') {
+                if (hasHomeCharge) {
+                    resTitle.textContent = isId ?
+                        "Urban Entry BEV (Mobil Listrik Perkotaan Super Hemat)" :
+                        "Urban Entry BEV (Ultra-Efficient City Electric Vehicle)";
+                    resDesc.innerHTML = isId ?
+                        "Dengan fasilitas garasi rumah dan anggaran &lt; Rp 250 Juta, mobil listrik kompak perkotaan adalah pilihan paling hemat biaya energi (~Rp 200/km) serta <strong>100% bebas aturan Ganjil-Genap</strong> untuk mobilitas harian di perkotaan." :
+                        "With home charging available and a budget under IDR 250M, compact urban BEVs deliver the lowest energy running costs (~IDR 200/km) and total exemption from odd-even municipal road restrictions.";
+                    resModels.textContent = "Wuling Air ev Lite / Standard (Rp 190–243 Jt), DFSK Seres E1 (Rp 189 Jt), VinFast VF 3 (Rp 215 Jt).";
+                } else {
+                    resTitle.textContent = isId ?
+                        "Mobil Bensin Ekonomis / LCGC 7-Seater Terjangkau" :
+                        "Affordable Economical ICE / 7-Seater MPV";
+                    resDesc.innerHTML = isId ?
+                        "Pada anggaran &lt; Rp 250 Juta tanpa akses colokan listrik mandiri, prioritaskan mobil bensin kompak atau LCGC 7-penumpang dengan konsumsi BBM efisien dan biaya servis serta suku cadang yang sangat terjangkau." :
+                        "Under IDR 250M without home charging facilities, prioritize fuel-efficient compact gasoline cars or 7-seater MPVs with low maintenance and extensive parts availability.";
+                    resModels.textContent = "Daihatsu Sigra 1.2, Toyota Calya 1.2, Suzuki S-Presso (20+ km/L).";
+                }
+            }
+            // 2. Budget 250 - 400 Juta
+            else if (budget === '250to400') {
+                if (hasHomeCharge && (isShort || rareTrip)) {
+                    resTitle.textContent = isId ?
+                        "Modern Compact BEV (Mobil Listrik Murni 300–450 km)" :
+                        "Modern Compact BEV (300–450 km Pure EV)";
+                    resDesc.innerHTML = isId ?
+                        "Di rentang Rp 250–400 Juta dengan colokan rumah, mobil listrik generasi terbaru menawarkan kabin lapang, fitur ADAS modern, baterai LFP tahan lama, dan biaya operasional nyaris nol tanpa bensin." :
+                        "Between IDR 250–400M with home charging, the latest generation of compact EVs provides spacious interiors, modern ADAS, durable LFP batteries, and near-zero running costs.";
+                    resModels.textContent = "BYD Dolphin Dynamic (Rp 365 Jt), Wuling Cloud EV (Rp 398 Jt), Wuling BinguoEV 410km (Rp 372 Jt), MG 4 EV CKD (Rp 395 Jt), Neta V-II (Rp 299 Jt).";
+                } else {
+                    resTitle.textContent = isId ?
+                        "Full Hybrid Terjangkau (HEV) atau Family 7-Seater Hybrid" :
+                        "Affordable Full Hybrid (HEV) or 7-Seater Family Hybrid";
+                    resDesc.innerHTML = isId ?
+                        "Pilihan terbaik untuk mobilitas tanpa pusing colokan: Nikmati <strong>Full Hybrid sejati</strong> paling terjangkau di Indonesia atau akomodasi 7-penumpang luas untuk keluarga dengan efisiensi BBM prima." :
+                        "Best choice without charging hassles: Enjoy the most affordable genuine Full Hybrid in Indonesia or versatile 7-seater family accommodation with proven fuel savings.";
+                    resModels.textContent = "MG VS HEV (Rp 389 Jt — Full Hybrid 177 PS), Suzuki XL7 Hybrid Alpha (Rp 294–304 Jt), Suzuki Ertiga Hybrid Cruise (Rp 288 Jt).";
+                }
+            }
+            // 3. Budget 400 - 800 Juta
+            else if (budget === '400to800') {
+                if (hasHomeCharge && rareTrip) {
+                    resTitle.textContent = isId ?
+                        "Long-Range Flagship BEV (Mobil Listrik Performa Tinggi)" :
+                        "Long-Range Flagship BEV (High-Performance Electric Vehicle)";
+                    resDesc.innerHTML = isId ?
+                        "Dengan garasi siap charger dan anggaran Rp 400–800 Juta, Anda bisa menikmati sedan/SUV listrik bertenaga buas dengan jangkauan 500–650 km sekali cas, teknologi Blade Battery LFP, dan bebas Ganjil-Genap 100%." :
+                        "With home charging and an IDR 400–800M budget, experience exhilarating electric performance with 500–650 km single-charge range, durable Blade LFP packs, and complete odd-even exemption.";
+                    resModels.textContent = "BYD Seal Premium/Performance (Rp 629–719 Jt), BYD Atto 3 Superior (Rp 515 Jt), Hyundai Ioniq 5 (Rp 782 Jt), Chery Omoda E5 (Rp 488 Jt).";
+                } else if (hasHomeCharge && !rareTrip) {
+                    resTitle.textContent = isId ?
+                        "Super Hybrid (PHEV) / Series Hybrid (EREV)" :
+                        "Super Hybrid (PHEV) / Series Hybrid (EREV)";
+                    resDesc.innerHTML = isId ?
+                        "Kombinasi paling fleksibel: 100% mobil listrik tanpa bensin saat komuter harian berkat baterai besar, dan saat turing luar kota dapat langsung melaju &gt;1.100 km tanpa takut antrean SPKLU tol." :
+                        "The most versatile combination: 100% pure electric zero-gasoline daily commuting, paired with effortless &gt;1,100 km cross-province road trips without waiting in highway charging queues.";
+                    resModels.textContent = "BYD Sealion 6 DM-i (PHEV), Nissan Serena e-POWER C28 (Rp 635 Jt — EREV), Chery Tiggo 8 Pro e+ PHEV.";
+                } else {
+                    resTitle.textContent = isId ?
+                        "Full Hybrid (HEV) — Pilihan No. 1 Paling Rasional di Indonesia" :
+                        "Full Hybrid (HEV) — #1 Most Rational Choice in Indonesia";
+                    resDesc.innerHTML = isId ?
+                        "Raja mobil keluarga Indonesia: <strong>Tanpa perlu colok charger</strong>, konsumsi bensin 2x lebih irit (20–26 km/L), AC tetap dingin beku saat macet total, nilai jual kembali kuat, dan jaringan servis tersebar di seluruh Indonesia." :
+                        "The undisputed family favorite in Indonesia: <strong>No plug required</strong>, 2x fuel economy (20–26 km/L), sub-zero cabin AC during gridlocks, solid resale value, and nation-wide service network.";
+                    resModels.textContent = "Toyota Kijang Innova Zenix Hybrid (Rp 477–630 Jt), Toyota Yaris Cross Hybrid (Rp 440–454 Jt), Honda CR-V RS e:HEV, GWM Haval Jolion HEV (Rp 405 Jt).";
+                }
+            }
+            // 4. Budget > 800 Juta
+            else if (budget === 'over800') {
+                if (hasHomeCharge && !rareTrip) {
+                    resTitle.textContent = isId ?
+                        "Flagship Luxury Super Hybrid (PHEV / Hi4-T)" :
+                        "Flagship Luxury Super Hybrid (PHEV / Hi4-T)";
+                    resDesc.innerHTML = isId ?
+                        "Kemewahan eksekutif First-Class dengan performa instan: Rasakan keheningan motor listrik di perkotaan dan kebebasan jelajah tanpa batas antar-provinsi dengan suspensi kelas atas." :
+                        "First-Class executive luxury with instantaneous powertrain response: Enjoy silent EV cruising in urban centers alongside boundless cross-province grand touring capability.";
+                    resModels.textContent = "Denza D9 DM-i (Rp 1.1 M — Luxury MPV), GWM Tank 500 Hi4-T (Rp 1.19 M — Luxury 4x4 PHEV), Toyota RAV4 GR Sport PHEV (Rp 1.15 M).";
+                } else if (hasHomeCharge && rareTrip) {
+                    resTitle.textContent = isId ?
+                        "Flagship Luxury BEV (Mobil Listrik Premium Tertinggi)" :
+                        "Flagship Luxury BEV (Ultra-Premium Electric Vehicle)";
+                    resDesc.innerHTML = isId ?
+                        "Puncak kemewahan dan teknologi kendaraan listrik: Kabin ultra-lapang, akselerasi super-car, dan kenyamanan suspensi udara kelas dunia." :
+                        "The pinnacle of electric mobility luxury: Ultra-spacious lounge cabins, supercar-tier acceleration, and world-class air-suspension ride quality.";
+                    resModels.textContent = "Kia EV9 GT-Line (Rp 1.97 M), BMW i4 / iX1 / iX, Hyundai Ioniq 6, Zeekr 009 Flagship MPV, Porsche Taycan.";
+                } else {
+                    resTitle.textContent = isId ?
+                        "Flagship Luxury Full Hybrid (HEV Executive)" :
+                        "Flagship Luxury Full Hybrid (HEV Executive)";
+                    resDesc.innerHTML = isId ?
+                        "Kemewahan eksekutif tertinggi tanpa kompromi infrastruktur pengisian daya: Efisiensi tinggi, kenyamanan suspensi kelas VIP, dan nilai prestise tak tertandingi." :
+                        "Ultimate executive prestige without charging constraints: High thermal efficiency, VIP-tier acoustic comfort, and unmatched reliability.";
+                    resModels.textContent = "Toyota Alphard 2.5 HEV (Rp 1.68–1.71 M), Toyota Vellfire HEV (Rp 1.84 M), Lexus LM 350h / LM 500h (Rp 2.1–2.7 M), Lexus RX 350h / 500h F-Sport, All-New Hyundai Santa Fe 1.6T Hybrid (Rp 786–869 Jt).";
+                }
             }
 
             resBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
