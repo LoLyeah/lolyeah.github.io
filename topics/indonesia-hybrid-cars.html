@@ -175,13 +175,9 @@
             animation: sparkPulse 0.8s infinite ease-in-out;
         }
 
-        /* Hotspot Pulse */
-        @keyframes hotspotPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.75; }
-        }
+        /* Hotspot Pins Glow */
         .pulse-pin {
-            animation: hotspotPulse 2s infinite ease-in-out;
+            filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.7));
         }
 
         /* Smooth Scroll Behavior */
@@ -664,34 +660,46 @@
                                 <div class="text-[11px] font-mono font-bold uppercase text-slate-400 tracking-wider">Live Powertrain Telemetry HUD:</div>
 
                                 <div class="grid grid-cols-2 gap-2.5 text-xs font-mono">
-                                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs">
-                                        <span class="text-[10px] text-slate-400 uppercase block mb-0.5">Mesin Bensin (ICE)</span>
-                                        <strong class="text-xs font-bold block truncate" id="tele-ice-status">MATI (0 RPM)</strong>
-                                        <div class="w-full bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
+                                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs flex flex-col justify-between">
+                                        <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Mesin Bensin (ICE)</span>
+                                        <div class="my-1">
+                                            <strong class="text-xs font-bold block leading-tight" id="tele-ice-status">MATI TOTAL</strong>
+                                            <span class="text-[10px] text-slate-500 font-mono block mt-0.5" id="tele-ice-sub">0 L BBM · Standby</span>
+                                        </div>
+                                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                                             <div class="bg-amber-500 h-full transition-all duration-500" id="tele-ice-bar" style="width: 0%;"></div>
                                         </div>
                                     </div>
 
-                                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs">
-                                        <span class="text-[10px] text-slate-400 uppercase block mb-0.5">Motor Listrik EV</span>
-                                        <strong class="text-xs font-bold text-emerald-700 block truncate" id="tele-motor-status">AKTIF (EV Mode)</strong>
-                                        <div class="w-full bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
+                                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs flex flex-col justify-between">
+                                        <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Motor Listrik EV</span>
+                                        <div class="my-1">
+                                            <strong class="text-xs font-bold text-emerald-700 block leading-tight" id="tele-motor-status">AKTIF (EV Mode)</strong>
+                                            <span class="text-[10px] text-slate-500 font-mono block mt-0.5" id="tele-motor-sub">+45 kW Traksi</span>
+                                        </div>
+                                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                                             <div class="bg-emerald-500 h-full transition-all duration-500" id="tele-motor-bar" style="width: 45%;"></div>
                                         </div>
                                     </div>
 
-                                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs">
-                                        <span class="text-[10px] text-slate-400 uppercase block mb-0.5">Baterai Traksi</span>
-                                        <strong class="text-xs font-bold text-sky-700 block truncate" id="tele-battery-status">Discharge 200V</strong>
-                                        <div class="w-full bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
+                                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs flex flex-col justify-between">
+                                        <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Baterai Traksi</span>
+                                        <div class="my-1">
+                                            <strong class="text-xs font-bold text-sky-700 block leading-tight" id="tele-battery-status">DISCHARGE</strong>
+                                            <span class="text-[10px] text-slate-500 font-mono block mt-0.5" id="tele-battery-sub">-8.5 kW · 207.2V</span>
+                                        </div>
+                                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                                             <div class="bg-sky-500 h-full transition-all duration-500" id="tele-battery-bar" style="width: 65%;"></div>
                                         </div>
                                     </div>
 
-                                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs">
-                                        <span class="text-[10px] text-slate-400 uppercase block mb-0.5">AC Kabin (24°C)</span>
-                                        <strong class="text-xs font-bold text-teal-700 block truncate" id="tele-ac-status">DINGIN BEKU (HV)</strong>
-                                        <div class="w-full bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
+                                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs flex flex-col justify-between">
+                                        <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">AC Kabin (24°C)</span>
+                                        <div class="my-1">
+                                            <strong class="text-xs font-bold text-teal-700 block leading-tight" id="tele-ac-status">DINGIN BEKU</strong>
+                                            <span class="text-[10px] text-slate-500 font-mono block mt-0.5" id="tele-ac-sub">HV Elektrik 200V</span>
+                                        </div>
+                                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                                             <div class="bg-teal-500 h-full transition-all duration-500" id="tele-ac-bar" style="width: 100%;"></div>
                                         </div>
                                     </div>
@@ -860,62 +868,62 @@
                                     </g>
 
                                     <!-- INTERACTIVE HOTSPOT PIN OVERLAYS -->
-                                    <!-- Pin 1: Mesin Bensin Atkinson (x=107, y=115) -->
-                                    <g class="hotspot-group cursor-pointer" onclick="selectAnatomy('ice')">
-                                        <circle cx="107" cy="115" r="14" fill="#f59e0b" stroke="#ffffff" stroke-width="2.5" class="pulse-pin"/>
-                                        <text x="107" y="119" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">1</text>
+                                    <!-- Pin 1: Mesin Bensin Atkinson -->
+                                    <g class="hotspot-group cursor-pointer group" onclick="selectAnatomy('ice')">
+                                        <circle cx="107" cy="155" r="13" fill="#f59e0b" stroke="#ffffff" stroke-width="2.5"/>
+                                        <text x="107" y="159" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">1</text>
                                     </g>
 
-                                    <!-- Pin 2: Transaxle e-CVT (x=174, y=130) -->
-                                    <g class="hotspot-group cursor-pointer" onclick="selectAnatomy('transaxle')">
-                                        <circle cx="174" cy="130" r="14" fill="#0ea5e9" stroke="#ffffff" stroke-width="2.5"/>
-                                        <text x="174" y="134" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">2</text>
+                                    <!-- Pin 2: Transaxle e-CVT -->
+                                    <g class="hotspot-group cursor-pointer group" onclick="selectAnatomy('transaxle')">
+                                        <circle cx="174" cy="155" r="13" fill="#0ea5e9" stroke="#ffffff" stroke-width="2.5"/>
+                                        <text x="174" y="159" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">2</text>
                                     </g>
 
-                                    <!-- Pin 3: PCU Inverter (x=170, y=75) -->
-                                    <g class="hotspot-group cursor-pointer" onclick="selectAnatomy('inverter')">
-                                        <circle cx="170" cy="75" r="14" fill="#6366f1" stroke="#ffffff" stroke-width="2.5"/>
-                                        <text x="170" y="79" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">3</text>
+                                    <!-- Pin 3: PCU Inverter -->
+                                    <g class="hotspot-group cursor-pointer group" onclick="selectAnatomy('inverter')">
+                                        <circle cx="170" cy="104" r="13" fill="#6366f1" stroke="#ffffff" stroke-width="2.5"/>
+                                        <text x="170" y="108" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">3</text>
                                     </g>
 
-                                    <!-- Pin 4: AC Compressor (x=115, y=215) -->
-                                    <g class="hotspot-group cursor-pointer" onclick="selectAnatomy('ac_comp')">
-                                        <circle cx="115" cy="215" r="14" fill="#10b981" stroke="#ffffff" stroke-width="2.5"/>
-                                        <text x="115" y="219" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">4</text>
+                                    <!-- Pin 4: AC Compressor -->
+                                    <g class="hotspot-group cursor-pointer group" onclick="selectAnatomy('ac_comp')">
+                                        <circle cx="115" cy="199" r="13" fill="#10b981" stroke="#ffffff" stroke-width="2.5"/>
+                                        <text x="115" y="203" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">4</text>
                                     </g>
 
-                                    <!-- Pin 5: HV Battery Pack (x=395, y=187) -->
-                                    <g class="hotspot-group cursor-pointer" onclick="selectAnatomy('battery')">
-                                        <circle cx="395" cy="187" r="14" fill="#a855f7" stroke="#ffffff" stroke-width="2.5"/>
+                                    <!-- Pin 5: HV Battery Pack -->
+                                    <g class="hotspot-group cursor-pointer group" onclick="selectAnatomy('battery')">
+                                        <circle cx="395" cy="187" r="13" fill="#a855f7" stroke="#ffffff" stroke-width="2.5"/>
                                         <text x="395" y="191" fill="#ffffff" font-size="10" font-family="Space Mono" font-weight="bold" text-anchor="middle">5</text>
                                     </g>
 
-                                    <!-- Pin 6: ISG Mild Hybrid (x=60, y=125) -->
-                                    <g class="hotspot-group cursor-pointer" onclick="selectAnatomy('isg')">
-                                        <circle cx="60" cy="125" r="13" fill="#f43f5e" stroke="#ffffff" stroke-width="2"/>
-                                        <text x="60" y="129" fill="#ffffff" font-size="9" font-family="Space Mono" font-weight="bold" text-anchor="middle">6</text>
+                                    <!-- Pin 6: ISG Mild Hybrid -->
+                                    <g class="hotspot-group cursor-pointer group" onclick="selectAnatomy('isg')">
+                                        <circle cx="60" cy="155" r="12" fill="#f43f5e" stroke="#ffffff" stroke-width="2"/>
+                                        <text x="60" y="159" fill="#ffffff" font-size="9" font-family="Space Mono" font-weight="bold" text-anchor="middle">6</text>
                                     </g>
                                 </svg>
                             </div>
 
                             <!-- Component Quick-Select Pills Bar -->
                             <div class="relative z-10 grid grid-cols-3 sm:grid-cols-6 gap-1.5 pt-3 border-t border-slate-800/80">
-                                <button type="button" onclick="selectAnatomy('ice')" class="anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/50 hover:bg-amber-500/30 truncate" data-key="ice">
-                                    [1] ICE Mesin
+                                <button type="button" onclick="selectAnatomy('ice')" class="anat-tab px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-mono font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/50 hover:bg-amber-500/30 text-center" data-key="ice">
+                                    [1] Mesin ICE
                                 </button>
-                                <button type="button" onclick="selectAnatomy('transaxle')" class="anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 truncate" data-key="transaxle">
+                                <button type="button" onclick="selectAnatomy('transaxle')" class="anat-tab px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 text-center" data-key="transaxle">
                                     [2] e-CVT
                                 </button>
-                                <button type="button" onclick="selectAnatomy('inverter')" class="anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 truncate" data-key="inverter">
+                                <button type="button" onclick="selectAnatomy('inverter')" class="anat-tab px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 text-center" data-key="inverter">
                                     [3] Inverter PCU
                                 </button>
-                                <button type="button" onclick="selectAnatomy('ac_comp')" class="anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 truncate" data-key="ac_comp">
-                                    [4] AC Elektrik
+                                <button type="button" onclick="selectAnatomy('ac_comp')" class="anat-tab px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 text-center" data-key="ac_comp">
+                                    [4] Kompresor AC
                                 </button>
-                                <button type="button" onclick="selectAnatomy('battery')" class="anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 truncate" data-key="battery">
+                                <button type="button" onclick="selectAnatomy('battery')" class="anat-tab px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 text-center" data-key="battery">
                                     [5] Baterai HV
                                 </button>
-                                <button type="button" onclick="selectAnatomy('isg')" class="anat-tab px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 truncate" data-key="isg">
+                                <button type="button" onclick="selectAnatomy('isg')" class="anat-tab px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-mono font-bold transition-all bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 text-center" data-key="isg">
                                     [6] Dinamo ISG
                                 </button>
                             </div>
@@ -1962,18 +1970,26 @@
                     heading_en: 'Urban Traffic (EV Silent Creep)',
                     desc_id: 'Kecepatan 0–30 km/jam di kemacetan kota: Mesin bensin <strong>MATI TOTAL (0 L BBM)</strong>. Roda sepenuhnya digerakkan oleh motor listrik dari baterai traksi tegangan tinggi (200V). Kabin tetap dingin berkat kompresor AC elektrik independen.',
                     desc_en: 'Speeds 0–30 km/h in traffic: Gasoline engine is <strong>COMPLETELY OFF (0 L Fuel)</strong>. Wheels are driven 100% electrically by the high-voltage (200V) battery. Cabin stays frosty cold via independent electric A/C compressor.',
-                    ice_id: 'MATI (0 RPM / 0 L BBM)',
-                    ice_en: 'OFF (0 RPM / 0 L FUEL)',
+                    ice_id: 'MATI TOTAL',
+                    ice_sub_id: '0 L BBM · 0 RPM',
+                    ice_en: 'OFF TOTAL',
+                    ice_sub_en: '0 L Fuel · 0 RPM',
                     iceColor: 'text-slate-500',
                     iceBar: 0,
-                    motor_id: 'AKTIF (EV Traction 100%)',
-                    motor_en: 'ACTIVE (EV Traction 100%)',
+                    motor_id: 'EV TRAKSI 100%',
+                    motor_sub_id: '+45 kW Traksi Roda',
+                    motor_en: 'EV TRACTION 100%',
+                    motor_sub_en: '+45 kW Wheel Drive',
                     motorBar: 45,
-                    battery_id: 'Discharge 207.2V (-8.5 kW)',
-                    battery_en: 'Discharge 207.2V (-8.5 kW)',
+                    battery_id: 'DISCHARGE',
+                    battery_sub_id: '-8.5 kW (207.2V)',
+                    battery_en: 'DISCHARGE',
+                    battery_sub_en: '-8.5 kW (207.2V)',
                     batteryBar: 60,
-                    ac_id: 'DINGIN BEKU (HV 200V)',
-                    ac_en: 'FROSTY COLD (HV 200V)',
+                    ac_id: 'DINGIN BEKU',
+                    ac_sub_id: 'HV Elektrik 200V',
+                    ac_en: 'FROSTY COLD',
+                    ac_sub_en: 'HV Electric 200V',
                     acBar: 100
                 },
                 accel: {
@@ -1982,18 +1998,26 @@
                     heading_en: 'Full Acceleration / Hill Climb (Dual Power Boost)',
                     desc_id: 'Saat pedal gas diinjak penuh (Kickdown), mesin bensin Atkinson Cycle menyala seketika dan bersinergi dengan torsi instan motor listrik melalui transmisi e-CVT Power-Split. Menghasilkan tenaga gabungan masif tanpa jeda turbo lag.',
                     desc_en: 'Under wide-open throttle (Kickdown), the Atkinson ICE fires instantaneously and couples with electric torque through the e-CVT planetary split for massive instantaneous pull with zero lag.',
-                    ice_id: 'MENYALA MAKSIMAL (4.600 RPM)',
-                    ice_en: 'PEAK RPM (4,600 RPM)',
+                    ice_id: 'MENYALA PENUH',
+                    ice_sub_id: '4.600 RPM · Boost',
+                    ice_en: 'PEAK ENGAGED',
+                    ice_sub_en: '4,600 RPM · Boost',
                     iceColor: 'text-amber-600',
                     iceBar: 90,
-                    motor_id: 'BOOST PENUH (+83 kW / 206 Nm)',
-                    motor_en: 'FULL BOOST (+83 kW / 206 Nm)',
+                    motor_id: 'BOOST PENUH',
+                    motor_sub_id: '+83 kW · 206 Nm',
+                    motor_en: 'FULL BOOST',
+                    motor_sub_en: '+83 kW · 206 Nm',
                     motorBar: 95,
-                    battery_id: 'High Discharge (-45.0 kW)',
-                    battery_en: 'High Discharge (-45.0 kW)',
+                    battery_id: 'HIGH DISCHARGE',
+                    battery_sub_id: '-45.0 kW Maksimal',
+                    battery_en: 'HIGH DISCHARGE',
+                    battery_sub_en: '-45.0 kW Peak',
                     batteryBar: 90,
-                    ac_id: 'DINGIN STABIL (HV Elektrik)',
-                    ac_en: 'STABLE COOLING (HV Electric)',
+                    ac_id: 'DINGIN STABIL',
+                    ac_sub_id: 'Kompresor Inverter',
+                    ac_en: 'STEADY COOLING',
+                    ac_sub_en: 'Inverter Compressor',
                     acBar: 100
                 },
                 highway: {
@@ -2002,18 +2026,26 @@
                     heading_en: 'Highway Cruising (Peak 41% Thermal Efficiency)',
                     desc_id: 'Pada kecepatan 90–110 km/jam, mesin bensin beroperasi pada titik efisiensi termal tertinggi (41%). Sebagian tenaga mekanis langsung memutar roda depan dan sebagian memutar generator MG1 untuk mengisi baterai.',
                     desc_en: 'At 90–110 km/h highway speeds, the engine sits in its sweet spot 41% thermal efficiency. Mechanical power drives front wheels directly while excess spins generator MG1 to recharge battery.',
-                    ice_id: 'STEADY SWEETSPOT (1.850 RPM)',
-                    ice_en: 'STEADY SWEETSPOT (1,850 RPM)',
+                    ice_id: 'SWEETSPOT CRUISE',
+                    ice_sub_id: '1.850 RPM (41% Ef)',
+                    ice_en: 'SWEETSPOT CRUISE',
+                    ice_sub_en: '1,850 RPM (41% Eff)',
                     iceColor: 'text-emerald-700',
                     iceBar: 40,
-                    motor_id: 'Torsi Bantuan Halus (+15 kW)',
-                    motor_en: 'Smooth Torque Assist (+15 kW)',
+                    motor_id: 'TORSI BANTUAN',
+                    motor_sub_id: '+15 kW Halus',
+                    motor_en: 'TORQUE ASSIST',
+                    motor_sub_en: '+15 kW Smooth',
                     motorBar: 25,
-                    battery_id: 'Float / Recharging (+12.0 kW)',
-                    battery_en: 'Float / Recharging (+12.0 kW)',
+                    battery_id: 'CHARGING / FLOAT',
+                    battery_sub_id: '+12.0 kW Genset',
+                    battery_en: 'CHARGING / FLOAT',
+                    battery_sub_en: '+12.0 kW Genset',
                     batteryBar: 75,
-                    ac_id: 'DINGIN BEKU (HV Elektrik)',
-                    ac_en: 'FROSTY COLD (HV Electric)',
+                    ac_id: 'DINGIN BEKU',
+                    ac_sub_id: 'HV Elektrik 200V',
+                    ac_en: 'FROSTY COLD',
+                    ac_sub_en: 'HV Electric 200V',
                     acBar: 100
                 },
                 regen: {
@@ -2022,18 +2054,26 @@
                     heading_en: 'Deceleration & Regenerative Braking Harvest',
                     desc_id: 'Saat pedal gas dilepas atau rem diinjak, motor traksi MG2 seketika berubah fungsi menjadi generator kinetik raksasa. Energi gerak roda dipanen dan dipompa kembali ke baterai traksi tanpa mengauskan kampas rem.',
                     desc_en: 'When lifting throttle or tapping brakes, traction motor MG2 turns into a kinetic generator. Kinetic energy is harvested directly back into the battery with zero brake pad wear.',
-                    ice_id: 'MATI TOTAL (0 RPM / 0 L BBM)',
-                    ice_en: 'COMPLETELY OFF (0 RPM / 0 L FUEL)',
+                    ice_id: 'MATI TOTAL',
+                    ice_sub_id: '0 L BBM · Standby',
+                    ice_en: 'OFF TOTAL',
+                    ice_sub_en: '0 L Fuel · Standby',
                     iceColor: 'text-slate-500',
                     iceBar: 0,
-                    motor_id: 'REGEN GENERATOR (-35 kW)',
-                    motor_en: 'REGEN GENERATOR (-35 kW)',
+                    motor_id: 'REGEN GENERATOR',
+                    motor_sub_id: '-35 kW Panen Energi',
+                    motor_en: 'REGEN GENERATOR',
+                    motor_sub_en: '-35 kW Energy Harvest',
                     motorBar: 70,
-                    battery_id: 'MENGISI CEPAT (+35.0 kW Inbound)',
-                    battery_en: 'FAST RECHARGE (+35.0 kW Inbound)',
+                    battery_id: 'FAST RECHARGE',
+                    battery_sub_id: '+35.0 kW Inbound',
+                    battery_en: 'FAST RECHARGE',
+                    battery_sub_en: '+35.0 kW Inbound',
                     batteryBar: 85,
-                    ac_id: 'DINGIN BEKU (Baterai HV)',
-                    ac_en: 'FROSTY COLD (HV Battery)',
+                    ac_id: 'DINGIN BEKU',
+                    ac_sub_id: 'HV Elektrik 200V',
+                    ac_en: 'FROSTY COLD',
+                    ac_sub_en: 'HV Electric 200V',
                     acBar: 100
                 }
             },
@@ -2045,18 +2085,26 @@
                     heading_en: 'Urban Traffic (100% Electric Motor Drive)',
                     desc_id: 'Roda mobil 100% diputar oleh motor listrik 163 PS. Di kecepatan rendah, mesin 1.4L mati total dan mobil meluncur senyap dari baterai lithium. Jika baterai turun ke batas 40%, mesin menyala halus sebagai genset onboard.',
                     desc_en: 'Wheels are 100% propelled by electric motor (163 PS). In slow traffic, the gasoline engine stays silent. When battery reaches 40% buffer, engine runs smoothly purely as an onboard generator.',
-                    ice_id: 'MATI (0 RPM / Siaga Genset)',
-                    ice_en: 'OFF (0 RPM / Standby Genset)',
+                    ice_id: 'MATI / STANDBY',
+                    ice_sub_id: '0 RPM · Siaga Genset',
+                    ice_en: 'OFF / STANDBY',
+                    ice_sub_en: '0 RPM · Genset Ready',
                     iceColor: 'text-slate-500',
                     iceBar: 0,
-                    motor_id: '100% PENGGERAK RODA (EV)',
-                    motor_en: '100% WHEEL DRIVE (EV)',
+                    motor_id: 'EV TRAKSI 100%',
+                    motor_sub_id: '+40 kW Roda Depan',
+                    motor_en: 'EV TRACTION 100%',
+                    motor_sub_en: '+40 kW Front Wheels',
                     motorBar: 40,
-                    battery_id: 'Discharge ke Inverter (-12 kW)',
-                    battery_en: 'Discharge to Inverter (-12 kW)',
+                    battery_id: 'DISCHARGE',
+                    battery_sub_id: '-12 kW ke Inverter',
+                    battery_en: 'DISCHARGE',
+                    battery_sub_en: '-12 kW to Inverter',
                     batteryBar: 55,
-                    ac_id: 'DINGIN BEKU (Kompresor Elektrik)',
-                    ac_en: 'FROSTY COLD (Electric Compressor)',
+                    ac_id: 'DINGIN BEKU',
+                    ac_sub_id: 'Kompresor Elektrik',
+                    ac_en: 'FROSTY COLD',
+                    ac_sub_en: 'Electric Compressor',
                     acBar: 100
                 },
                 accel: {
@@ -2065,18 +2113,26 @@
                     heading_en: 'Full Sprint (Optimum Genset + Battery Discharge)',
                     desc_id: 'Mesin bensin 3-silinder berputar pada RPM generator optimal untuk menyuplai arus listrik maksimal ke inverter dan motor traksi, menyemburkan torsi instan 315 Nm tanpa perpindahan gigi transmisi.',
                     desc_en: 'The 3-cylinder engine ramps up to peak generator RPM, feeding maximum current into inverter and traction motor for an instantaneous 315 Nm thrust without gear shifts.',
-                    ice_id: 'GENSET FULL RPM (Pembangkit Listrik)',
-                    ice_en: 'GENSET PEAK RPM (Power Generation)',
+                    ice_id: 'GENSET FULL RPM',
+                    ice_sub_id: 'Pembangkit Listrik',
+                    ice_en: 'GENSET PEAK RPM',
+                    ice_sub_en: 'Power Generation',
                     iceColor: 'text-amber-600',
                     iceBar: 85,
-                    motor_id: 'TORSI PENUH (315 Nm Instan)',
-                    motor_en: 'PEAK TORQUE (315 Nm Instant)',
+                    motor_id: 'TORSI PENUH',
+                    motor_sub_id: '315 Nm Instan',
+                    motor_en: 'PEAK TORQUE',
+                    motor_sub_en: '315 Nm Instant',
                     motorBar: 100,
-                    battery_id: 'Peak Current Discharge (-40 kW)',
-                    battery_en: 'Peak Current Discharge (-40 kW)',
+                    battery_id: 'PEAK DISCHARGE',
+                    battery_sub_id: '-40.0 kW Arus Tinggi',
+                    battery_en: 'PEAK DISCHARGE',
+                    battery_sub_en: '-40.0 kW High Current',
                     batteryBar: 95,
                     ac_id: 'DINGIN STABIL',
-                    ac_en: 'STABLE COOLING',
+                    ac_sub_id: 'Kompresor Inverter',
+                    ac_en: 'STEADY COOLING',
+                    ac_sub_en: 'Inverter Compressor',
                     acBar: 100
                 },
                 highway: {
@@ -2085,18 +2141,26 @@
                     heading_en: 'Highway Cruising (Steady Generator Mode)',
                     desc_id: 'Mesin bensin memutar generator stabil untuk mencukupi kebutuhan listrik motor penggerak roda. Tidak ada sambungan mekanis (kopling/gigi) antara mesin bensin dan as roda mobil.',
                     desc_en: 'Engine spins generator at optimal constant RPM to supply traction motor. There is zero mechanical link (clutch/gears) between combustion engine and wheels.',
-                    ice_id: 'GENSET STEADY RPM (Listrik Stabil)',
-                    ice_en: 'GENSET STEADY RPM (Stable Output)',
+                    ice_id: 'GENSET STEADY',
+                    ice_sub_id: 'RPM Konstan Optimal',
+                    ice_en: 'GENSET STEADY',
+                    ice_sub_en: 'Optimal Constant RPM',
                     iceColor: 'text-emerald-700',
                     iceBar: 45,
-                    motor_id: '100% Menggerakkan Roda',
-                    motor_en: '100% Driving Wheels',
+                    motor_id: '100% PENGGERAK',
+                    motor_sub_id: 'Motor Traksi 163 PS',
+                    motor_en: '100% PROPULSION',
+                    motor_sub_en: '163 PS Traction Motor',
                     motorBar: 50,
-                    battery_id: 'Buffer SoC Terjaga (60%)',
-                    battery_en: 'SoC Buffer Maintained (60%)',
+                    battery_id: 'BUFFER TERJAGA',
+                    battery_sub_id: 'SoC Stabil (60%)',
+                    battery_en: 'BUFFER STABLE',
+                    battery_sub_en: 'Stable SoC (60%)',
                     batteryBar: 60,
                     ac_id: 'DINGIN BEKU',
+                    ac_sub_id: 'Kompresor Elektrik',
                     ac_en: 'FROSTY COLD',
+                    ac_sub_en: 'Electric Compressor',
                     acBar: 100
                 },
                 regen: {
@@ -2105,18 +2169,26 @@
                     heading_en: 'One-Pedal e-Pedal Deceleration',
                     desc_id: 'Deselerasi kuat otomatis saat mengangkat pedal gas (One-Pedal Drive). Motor listrik menyerap energi pengereman untuk mengisi baterai secara agresif dan menghentikan laju kendaraan dengan mulus.',
                     desc_en: 'Strong intuitive deceleration upon releasing accelerator pedal (One-Pedal Drive). Motor captures kinetic braking energy aggressively into battery.',
-                    ice_id: 'MATI TOTAL (0 RPM)',
-                    ice_en: 'COMPLETELY OFF (0 RPM)',
+                    ice_id: 'MATI TOTAL',
+                    ice_sub_id: '0 RPM · 0 L BBM',
+                    ice_en: 'OFF TOTAL',
+                    ice_sub_en: '0 RPM · 0 L Fuel',
                     iceColor: 'text-slate-500',
                     iceBar: 0,
-                    motor_id: 'ONE-PEDAL REGEN (-40 kW)',
-                    motor_en: 'ONE-PEDAL REGEN (-40 kW)',
+                    motor_id: 'ONE-PEDAL REGEN',
+                    motor_sub_id: '-40 kW Pengereman',
+                    motor_en: 'ONE-PEDAL REGEN',
+                    motor_sub_en: '-40 kW Deceleration',
                     motorBar: 80,
-                    battery_id: 'MENGISI CEPAT (+40 kW Inbound)',
-                    battery_en: 'FAST RECHARGE (+40 kW Inbound)',
+                    battery_id: 'MENGISI CEPAT',
+                    battery_sub_id: '+40.0 kW Inbound',
+                    battery_en: 'FAST RECHARGE',
+                    battery_sub_en: '+40.0 kW Inbound',
                     batteryBar: 90,
                     ac_id: 'DINGIN BEKU',
+                    ac_sub_id: 'Kompresor Elektrik',
                     ac_en: 'FROSTY COLD',
+                    ac_sub_en: 'Electric Compressor',
                     acBar: 100
                 }
             },
@@ -2128,18 +2200,26 @@
                     heading_en: 'Urban Traffic (100% Zero-Gasoline Pure EV)',
                     desc_id: 'Baterai Blade 18–40 kWh memungkinkan mobil beroperasi 100% sebagai mobil listrik murni tanpa meminum setetes bensin pun (0 L BBM) sejauh 50–190 km di dalam kota Jakarta.',
                     desc_en: 'Blade battery (18–40 kWh) allows 100% pure electric driving with zero fuel consumption (0 L Fuel) for 50–190 km across city commutes.',
-                    ice_id: 'MATI TOTAL (Nol Bensin / 0 Emisi)',
-                    ice_en: 'OFF (Zero Fuel / Zero Emission)',
+                    ice_id: 'MATI TOTAL',
+                    ice_sub_id: 'Nol BBM / 0 Emisi',
+                    ice_en: 'OFF TOTAL',
+                    ice_sub_en: 'Zero Fuel / 0 Emission',
                     iceColor: 'text-slate-500',
                     iceBar: 0,
-                    motor_id: 'AKTIF 100% (Motor Listrik EHS)',
-                    motor_en: 'ACTIVE 100% (EHS Traction Motor)',
+                    motor_id: 'EV TRAKSI 100%',
+                    motor_sub_id: 'Motor Listrik EHS',
+                    motor_en: 'EV TRACTION 100%',
+                    motor_sub_en: 'EHS Electric Motor',
                     motorBar: 50,
-                    battery_id: 'Blade LFP Discharge (-15 kW)',
-                    battery_en: 'Blade LFP Discharge (-15 kW)',
+                    battery_id: 'BLADE DISCHARGE',
+                    battery_sub_id: '-15 kW LFP Arus',
+                    battery_en: 'BLADE DISCHARGE',
+                    battery_sub_en: '-15 kW LFP Current',
                     batteryBar: 70,
-                    ac_id: 'DINGIN BEKU (AC Elektrik 100%)',
-                    ac_en: 'FROSTY COLD (100% Electric A/C)',
+                    ac_id: 'DINGIN BEKU',
+                    ac_sub_id: 'AC Elektrik 100%',
+                    ac_en: 'FROSTY COLD',
+                    ac_sub_en: '100% Electric A/C',
                     acBar: 100
                 },
                 accel: {
@@ -2148,18 +2228,26 @@
                     heading_en: 'Maximum Acceleration (Turbo ICE + Dual Motor AWD)',
                     desc_id: 'Kombinasi mesin 1.5T dan motor traksi ganda menyemburkan daya gabungan masif 218–408 PS ke 4 roda (AWD), melesatkan SUV besar dari 0 ke 100 km/jam dalam hitungan 5–7 detik.',
                     desc_en: '1.5T turbo engine pairs with dual traction motors delivering 218–408 PS across all 4 wheels (AWD), propelling large SUVs 0-100 km/h in 5–7 seconds.',
-                    ice_id: 'MENYALA TURBO BOOST (Maksimal)',
-                    ice_en: 'TURBO BOOST ACTIVE (Peak Power)',
+                    ice_id: 'TURBO BOOST ON',
+                    ice_sub_id: 'Daya Mesin 1.5T',
+                    ice_en: 'TURBO BOOST ON',
+                    ice_sub_en: '1.5T Engine Output',
                     iceColor: 'text-purple-600',
                     iceBar: 95,
-                    motor_id: 'DUAL MOTOR TORSI TINGGI (+145 kW)',
-                    motor_en: 'DUAL MOTOR HIGH TORQUE (+145 kW)',
+                    motor_id: 'DUAL MOTOR AWD',
+                    motor_sub_id: '+145 kW Torsi Tinggi',
+                    motor_en: 'DUAL MOTOR AWD',
+                    motor_sub_en: '+145 kW High Torque',
                     motorBar: 100,
-                    battery_id: 'High Current Discharge (-65 kW)',
-                    battery_en: 'High Current Discharge (-65 kW)',
+                    battery_id: 'HIGH DISCHARGE',
+                    battery_sub_id: '-65.0 kW Arus Arus',
+                    battery_en: 'HIGH DISCHARGE',
+                    battery_sub_en: '-65.0 kW Peak Flow',
                     batteryBar: 95,
                     ac_id: 'DINGIN STABIL',
-                    ac_en: 'STABLE COOLING',
+                    ac_sub_id: 'Kompresor Inverter',
+                    ac_en: 'STEADY COOLING',
+                    ac_sub_en: 'Inverter Compressor',
                     acBar: 100
                 },
                 highway: {
@@ -2168,18 +2256,26 @@
                     heading_en: 'Highway Direct Drive (>1,200 km Total Range)',
                     desc_id: 'Saat melaju kencang di jalan tol (>80 km/h), kopling langsung (Direct Clutch) mengunci mesin bensin langsung ke as roda pada rasio tertinggi, didukung motor listrik saat menanjak.',
                     desc_en: 'At sustained highway speeds (>80 km/h), direct clutch locks the gasoline engine directly to front axles for maximum thermal efficiency with electric assist.',
-                    ice_id: 'DIRECT CLUTCH ENGAGED (Terkunci Roda)',
-                    ice_en: 'DIRECT CLUTCH ENGAGED (Axle Locked)',
+                    ice_id: 'DIRECT CLUTCH',
+                    ice_sub_id: 'Terkunci Langsung As',
+                    ice_en: 'DIRECT CLUTCH',
+                    ice_sub_en: 'Direct Axle Lock',
                     iceColor: 'text-emerald-700',
                     iceBar: 50,
-                    motor_id: 'Bantuan Torsi Halus (+20 kW)',
-                    motor_en: 'Smooth Torque Assist (+20 kW)',
+                    motor_id: 'TORSI BANTUAN',
+                    motor_sub_id: '+20 kW Halus',
+                    motor_en: 'TORQUE ASSIST',
+                    motor_sub_en: '+20 kW Smooth',
                     motorBar: 30,
-                    battery_id: 'Buffer SoC Terjaga (70%)',
-                    battery_en: 'SoC Buffer Maintained (70%)',
+                    battery_id: 'BUFFER TERJAGA',
+                    battery_sub_id: 'SoC Stabil (70%)',
+                    battery_en: 'BUFFER STABLE',
+                    battery_sub_en: 'Stable SoC (70%)',
                     batteryBar: 70,
                     ac_id: 'DINGIN BEKU',
+                    ac_sub_id: 'AC Elektrik 100%',
                     ac_en: 'FROSTY COLD',
+                    ac_sub_en: '100% Electric A/C',
                     acBar: 100
                 },
                 regen: {
@@ -2188,18 +2284,26 @@
                     heading_en: 'High-Rate Recuperation Harvest',
                     desc_id: 'Pengereman menangkap kembali arus listrik besar hingga 60 kW ke dalam baterai LFP/Ternary kapasitas besar, siap digunakan kembali saat memasuki area perkotaan padat.',
                     desc_en: 'Recuperation channels up to 60 kW back into large LFP battery pack, ready for silent zero-emission urban motoring.',
-                    ice_id: 'MATI TOTAL (0 RPM)',
-                    ice_en: 'COMPLETELY OFF (0 RPM)',
+                    ice_id: 'MATI TOTAL',
+                    ice_sub_id: '0 RPM · 0 L BBM',
+                    ice_en: 'OFF TOTAL',
+                    ice_sub_en: '0 RPM · 0 L Fuel',
                     iceColor: 'text-slate-500',
                     iceBar: 0,
-                    motor_id: 'HIGH-RATE REGEN (-60 kW)',
-                    motor_en: 'HIGH-RATE REGEN (-60 kW)',
+                    motor_id: 'HIGH REGEN',
+                    motor_sub_id: '-60 kW Pengisian',
+                    motor_en: 'HIGH REGEN',
+                    motor_sub_en: '-60 kW Recuperation',
                     motorBar: 85,
-                    battery_id: 'MENGISI CEPAT (+60 kW Inbound)',
-                    battery_en: 'FAST RECHARGE (+60 kW Inbound)',
+                    battery_id: 'MENGISI CEPAT',
+                    battery_sub_id: '+60.0 kW Inbound',
+                    battery_en: 'FAST RECHARGE',
+                    battery_sub_en: '+60.0 kW Inbound',
                     batteryBar: 90,
                     ac_id: 'DINGIN BEKU',
+                    ac_sub_id: 'AC Elektrik 100%',
                     ac_en: 'FROSTY COLD',
+                    ac_sub_en: '100% Electric A/C',
                     acBar: 100
                 }
             },
@@ -2211,18 +2315,26 @@
                     heading_en: 'Urban Traffic (Engine Must Stay Running)',
                     desc_id: 'Setiap kali mobil merayap atau bergerak 1 meter di kemacetan, <strong>mesin bensin WAJIB menyala dan membakar BBM</strong>. Motor ISG (2 kW) hanya sabuk alternator kecil dan tidak sanggup memutar roda tanpa mesin bensin.',
                     desc_en: 'Every time the car creeps 1 meter forward in traffic, <strong>the gasoline engine MUST restart and burn fuel</strong>. The 2 kW ISG is only a belt alternator and cannot propel wheels independently.',
-                    ice_id: 'MENYALA TERUS (Bakar Bensin saat Bergerak)',
-                    ice_en: 'RUNNING (Burns Fuel to Move)',
+                    ice_id: 'MENYALA TERUS',
+                    ice_sub_id: 'Bakar BBM Merayap',
+                    ice_en: 'RUNNING ALWAYS',
+                    ice_sub_en: 'Burns Fuel to Move',
                     iceColor: 'text-rose-600',
                     iceBar: 35,
-                    motor_id: '0 kW ke Roda (ISG Diam)',
-                    motor_en: '0 kW to Wheels (ISG Idle)',
+                    motor_id: '0 kW KE RODA',
+                    motor_sub_id: 'ISG Sabuk Diam',
+                    motor_en: '0 kW TO WHEELS',
+                    motor_sub_en: 'ISG Belt Idle',
                     motorBar: 0,
-                    battery_id: 'Mikro Baterai (12V 10Ah)',
-                    battery_en: 'Micro-Battery (12V 10Ah)',
+                    battery_id: 'MIKRO BATERAI',
+                    battery_sub_id: '12V 10Ah Lithium',
+                    battery_en: 'MICRO-BATTERY',
+                    battery_sub_en: '12V 10Ah Lithium',
                     batteryBar: 20,
-                    ac_id: 'GERAH / ANGIN SAJA saat Idle Stop',
-                    ac_en: 'WARM / FAN ONLY at Idle Stop',
+                    ac_id: 'ANGIN SAJA',
+                    ac_sub_id: 'Gerah saat Idle Stop',
+                    ac_en: 'FAN ONLY',
+                    ac_sub_en: 'Warm at Idle Stop',
                     acBar: 25
                 },
                 accel: {
@@ -2231,18 +2343,26 @@
                     heading_en: 'Transient Torque Assist (Accessory Belt ISG)',
                     desc_id: 'ISG memberi dorongan torsi sangat kecil (~50 Nm selama 5-10 detik) melalui sabuk tali kipas kruk as. Baterai mikro 0.12 kWh langsung terkuras habis dalam sekejap.',
                     desc_en: 'ISG delivers minor transient torque (~50 Nm for 5-10s) via crankshaft belt. The 0.12 kWh micro-battery depletes in seconds under load.',
-                    ice_id: 'MENYALA PENUH (Sumber Penggerak 95%)',
-                    ice_en: 'FULL THROTTLE (95% Propulsion)',
+                    ice_id: 'MENYALA PENUH',
+                    ice_sub_id: 'Sumber Utama 95%',
+                    ice_en: 'FULL THROTTLE',
+                    ice_sub_en: '95% Propulsion',
                     iceColor: 'text-rose-600',
                     iceBar: 90,
-                    motor_id: 'ISG Assist Sabuk (Hanya ~3 HP)',
-                    motor_en: 'Belt ISG Assist (Only ~3 HP)',
+                    motor_id: 'ISG ASSIST SABUK',
+                    motor_sub_id: 'Hanya ~3 HP Sesaat',
+                    motor_en: 'BELT ISG ASSIST',
+                    motor_sub_en: 'Only ~3 HP Transient',
                     motorBar: 15,
-                    battery_id: 'TERKURAS HABIS (<10 Detik)',
-                    battery_en: 'DEPLETED (<10 Seconds)',
+                    battery_id: 'TERKURAS HABIS',
+                    battery_sub_id: 'Habis dlm <10 Detik',
+                    battery_en: 'DEPLETED FAST',
+                    battery_sub_en: 'Drained <10 Seconds',
                     batteryBar: 90,
-                    ac_id: 'HIDUP (Mesin Berputar)',
-                    ac_en: 'RUNNING (Engine Spinning)',
+                    ac_id: 'HIDUP',
+                    ac_sub_id: 'Kompresor Sabuk',
+                    ac_en: 'RUNNING',
+                    ac_sub_en: 'Belt Compressor',
                     acBar: 75
                 },
                 highway: {
@@ -2251,18 +2371,26 @@
                     heading_en: 'Highway Cruising (Identical to Standard ICE)',
                     desc_id: '100% tenaga berasal dari mesin bensin K15B konvensional melalui girboks otomatis 4AT/6AT biasa. Sistem hybrid tidak memberikan efisiensi tambahan di jalan tol.',
                     desc_en: '100% power comes directly from conventional combustion engine through a standard 4AT/6AT gearbox. Hybrid system provides zero additional efficiency at highway speeds.',
-                    ice_id: '100% SUMBER PENGGERAK UTAMA',
-                    ice_en: '100% PRIMARY PROPULSION',
+                    ice_id: '100% SUMBER UTAMA',
+                    ice_sub_id: 'Mesin Bensin Biasa',
+                    ice_en: '100% PRIMARY',
+                    ice_sub_en: 'Standard Combustion',
                     iceColor: 'text-slate-800',
                     iceBar: 60,
-                    motor_id: 'Tidak Berfungsi (0 kW ke Roda)',
-                    motor_en: 'Inactive (0 kW to Wheels)',
+                    motor_id: 'TIDAK BERFUNGSI',
+                    motor_sub_id: '0 kW ke Roda',
+                    motor_en: 'INACTIVE',
+                    motor_sub_en: '0 kW to Wheels',
                     motorBar: 0,
-                    battery_id: 'Standby / Idle',
-                    battery_en: 'Standby / Idle',
+                    battery_id: 'STANDBY / IDLE',
+                    battery_sub_id: 'Tidak Berperan',
+                    battery_en: 'STANDBY / IDLE',
+                    battery_sub_en: 'No Contribution',
                     batteryBar: 30,
-                    ac_id: 'HIDUP (Belt Compressor)',
-                    ac_en: 'RUNNING (Belt Compressor)',
+                    ac_id: 'HIDUP',
+                    ac_sub_id: 'Kompresor Sabuk',
+                    ac_en: 'RUNNING',
+                    ac_sub_en: 'Belt Compressor',
                     acBar: 100
                 },
                 regen: {
@@ -2271,18 +2399,26 @@
                     heading_en: 'Micro-Recuperation (12V Battery Recharge)',
                     desc_id: 'Saat deselerasi, ISG memanen sedikit energi untuk mengisi baterai mikro 10Ah agar siap menghidupkan mesin kembali saat lampu merah.',
                     desc_en: 'During braking, ISG harvests small energy to recharge the 10Ah micro-battery for restart capability at stoplights.',
-                    ice_id: 'Engine Braking Ringan (RPM Drop)',
-                    ice_en: 'Mild Engine Braking (RPM Drop)',
+                    ice_id: 'ENGINE BRAKING',
+                    ice_sub_id: 'RPM Drop Ringan',
+                    ice_en: 'ENGINE BRAKING',
+                    ice_sub_en: 'Mild RPM Drop',
                     iceColor: 'text-slate-600',
                     iceBar: 15,
-                    motor_id: 'ISG Alternator Charge (+2 kW)',
-                    motor_en: 'ISG Alternator Charge (+2 kW)',
+                    motor_id: 'ISG ALTERNATOR',
+                    motor_sub_id: '+2 kW Pengisian',
+                    motor_en: 'ISG ALTERNATOR',
+                    motor_sub_en: '+2 kW Alternator',
                     motorBar: 10,
-                    battery_id: 'Mengisi Baterai Mikro 12V',
-                    battery_en: 'Recharging 12V Micro-Battery',
+                    battery_id: 'PENGISIAN MIKRO',
+                    battery_sub_id: 'Aki / Baterai 12V',
+                    battery_en: 'MICRO RECHARGE',
+                    battery_sub_en: '12V Battery Pack',
                     batteryBar: 40,
                     ac_id: 'HIDUP',
+                    ac_sub_id: 'Kompresor Sabuk',
                     ac_en: 'RUNNING',
+                    ac_sub_en: 'Belt Compressor',
                     acBar: 100
                 }
             }
@@ -2569,18 +2705,32 @@
             document.getElementById('flow-state-heading').innerHTML = lang === 'en' ? data.heading_en : data.heading_id;
             document.getElementById('flow-state-desc').innerHTML = lang === 'en' ? data.desc_en : data.desc_id;
 
-            // Telemetry Gauges
-            document.getElementById('tele-ice-status').textContent = lang === 'en' ? data.ice_en : data.ice_id;
-            document.getElementById('tele-ice-status').className = 'text-xs font-bold block truncate ' + data.iceColor;
+            // Telemetry Gauges (Dual-Level Cockpit Metric)
+            const iceStat = document.getElementById('tele-ice-status');
+            const iceSub = document.getElementById('tele-ice-sub');
+            if (iceStat) {
+                iceStat.textContent = lang === 'en' ? data.ice_en : data.ice_id;
+                iceStat.className = 'text-xs font-bold block leading-tight ' + data.iceColor;
+            }
+            if (iceSub) iceSub.textContent = lang === 'en' ? data.ice_sub_en : data.ice_sub_id;
             document.getElementById('tele-ice-bar').style.width = data.iceBar + '%';
 
-            document.getElementById('tele-motor-status').textContent = lang === 'en' ? data.motor_en : data.motor_id;
+            const motorStat = document.getElementById('tele-motor-status');
+            const motorSub = document.getElementById('tele-motor-sub');
+            if (motorStat) motorStat.textContent = lang === 'en' ? data.motor_en : data.motor_id;
+            if (motorSub) motorSub.textContent = lang === 'en' ? data.motor_sub_en : data.motor_sub_id;
             document.getElementById('tele-motor-bar').style.width = data.motorBar + '%';
 
-            document.getElementById('tele-battery-status').textContent = lang === 'en' ? data.battery_en : data.battery_id;
+            const battStat = document.getElementById('tele-battery-status');
+            const battSub = document.getElementById('tele-battery-sub');
+            if (battStat) battStat.textContent = lang === 'en' ? data.battery_en : data.battery_id;
+            if (battSub) battSub.textContent = lang === 'en' ? data.battery_sub_en : data.battery_sub_id;
             document.getElementById('tele-battery-bar').style.width = data.batteryBar + '%';
 
-            document.getElementById('tele-ac-status').textContent = lang === 'en' ? data.ac_en : data.ac_id;
+            const acStat = document.getElementById('tele-ac-status');
+            const acSub = document.getElementById('tele-ac-sub');
+            if (acStat) acStat.textContent = lang === 'en' ? data.ac_en : data.ac_id;
+            if (acSub) acSub.textContent = lang === 'en' ? data.ac_sub_en : data.ac_sub_id;
             document.getElementById('tele-ac-bar').style.width = data.acBar + '%';
 
             const renderFunc = {
