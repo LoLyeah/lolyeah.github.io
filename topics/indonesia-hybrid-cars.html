@@ -572,23 +572,33 @@
                     </div>
 
                     <!-- Driving Condition Road Scenario Bar -->
-                    <div class="mb-6 flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <span class="text-slate-500 font-sans font-bold text-xs mr-1 uppercase">
+                    <div class="mb-6 flex flex-col sm:flex-row sm:items-center gap-2.5 text-xs font-mono">
+                        <span class="text-slate-500 font-sans font-bold text-xs uppercase shrink-0">
                             <span class="id-only">Skenario Jalan:</span>
-                            <span class="en-only">Scenario:</span>
+                            <span class="en-only">Road Scenario:</span>
                         </span>
-                        <button type="button" class="cond-btn px-3 py-1.5 rounded-xl bg-sky-100 text-sky-800 border border-sky-300 font-bold shadow-2xs transition-all" onclick="setDrivingCondition('traffic', this)">
-                            🚦 Kemacetan Dalkot (0–30 km/h)
-                        </button>
-                        <button type="button" class="cond-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200/80 font-medium transition-all" onclick="setDrivingCondition('accel', this)">
-                            🚀 Akselerasi Kuat (Kickdown 80 km/h)
-                        </button>
-                        <button type="button" class="cond-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200/80 font-medium transition-all" onclick="setDrivingCondition('highway', this)">
-                            🛣️ Cruising Jalan Tol (90–110 km/h)
-                        </button>
-                        <button type="button" class="cond-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200/80 font-medium transition-all" onclick="setDrivingCondition('regen', this)">
-                            🛑 Deselerasi &amp; Pengereman Regen
-                        </button>
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 flex-1 w-full">
+                            <button type="button" class="cond-btn px-3 py-2 rounded-xl bg-sky-100 text-sky-800 border border-sky-300 font-bold shadow-2xs transition-all flex items-center justify-center gap-1.5 text-center truncate" onclick="setDrivingCondition('traffic', this)">
+                                <span>🚦</span>
+                                <span class="id-only truncate">Macet (0–30 km/h)</span>
+                                <span class="en-only truncate">Traffic (0–30 km/h)</span>
+                            </button>
+                            <button type="button" class="cond-btn px-3 py-2 rounded-xl bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200/80 font-bold transition-all flex items-center justify-center gap-1.5 text-center truncate" onclick="setDrivingCondition('accel', this)">
+                                <span>🚀</span>
+                                <span class="id-only truncate">Akselerasi Kuat</span>
+                                <span class="en-only truncate">Full Sprint</span>
+                            </button>
+                            <button type="button" class="cond-btn px-3 py-2 rounded-xl bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200/80 font-bold transition-all flex items-center justify-center gap-1.5 text-center truncate" onclick="setDrivingCondition('highway', this)">
+                                <span>🛣️</span>
+                                <span class="id-only truncate">Tol (90–110 km/h)</span>
+                                <span class="en-only truncate">Highway Cruise</span>
+                            </button>
+                            <button type="button" class="cond-btn px-3 py-2 rounded-xl bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200/80 font-bold transition-all flex items-center justify-center gap-1.5 text-center truncate" onclick="setDrivingCondition('regen', this)">
+                                <span>🛑</span>
+                                <span class="id-only truncate">Pengereman Regen</span>
+                                <span class="en-only truncate">Regen Braking</span>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Main Simulator Stage (Graphic Canvas + HUD Telemetry) -->
@@ -1915,7 +1925,15 @@
                     btnId.className = "px-2.5 py-1 rounded-md font-bold text-slate-500 hover:text-slate-900 transition-all";
                 }
             }
-            updateTcoSimulation();
+
+            // Real-time refresh of all interactive widgets
+            updateFlowUi();
+            selectAnatomy(currentAnatomyKey);
+            calculateTaxes();
+            const qBox = document.getElementById('quiz-result-box');
+            if (qBox && !qBox.classList.contains('hidden')) {
+                evaluateQuiz();
+            }
         }
 
         // 2. POWERTRAIN FLOW SIMULATOR LOGIC
@@ -1924,255 +1942,335 @@
 
         const flowData = {
             hev: {
-                name: 'Toyota THS II / Honda e:HEV (Full Hybrid)',
+                name: 'Toyota THS II / Honda e:HEV (HEV)',
                 traffic: {
                     badge: 'MODE: EV SILENT CREEP',
-                    heading: 'Kemacetan Dalkot (EV Silent Creep)',
-                    desc: 'Kecepatan 0–30 km/jam di kemacetan kota: Mesin bensin <strong>MATI TOTAL (0 L BBM)</strong>. Roda sepenuhnya digerakkan oleh motor listrik dari baterai traksi tegangan tinggi (200V). Kabin tetap dingin berkat kompresor AC elektrik independen.',
-                    ice: 'MATI (0 RPM / 0 L BBM)',
+                    heading_id: 'Kemacetan Dalkot (EV Silent Creep)',
+                    heading_en: 'Urban Traffic (EV Silent Creep)',
+                    desc_id: 'Kecepatan 0–30 km/jam di kemacetan kota: Mesin bensin <strong>MATI TOTAL (0 L BBM)</strong>. Roda sepenuhnya digerakkan oleh motor listrik dari baterai traksi tegangan tinggi (200V). Kabin tetap dingin berkat kompresor AC elektrik independen.',
+                    desc_en: 'Speeds 0–30 km/h in traffic: Gasoline engine is <strong>COMPLETELY OFF (0 L Fuel)</strong>. Wheels are driven 100% electrically by the high-voltage (200V) battery. Cabin stays frosty cold via independent electric A/C compressor.',
+                    ice_id: 'MATI (0 RPM / 0 L BBM)',
+                    ice_en: 'OFF (0 RPM / 0 L FUEL)',
                     iceColor: 'text-slate-500',
                     iceBar: 0,
-                    motor: 'AKTIF (EV Traction 100%)',
+                    motor_id: 'AKTIF (EV Traction 100%)',
+                    motor_en: 'ACTIVE (EV Traction 100%)',
                     motorBar: 45,
-                    battery: 'Discharge 207.2V (-8.5 kW)',
+                    battery_id: 'Discharge 207.2V (-8.5 kW)',
+                    battery_en: 'Discharge 207.2V (-8.5 kW)',
                     batteryBar: 60,
-                    ac: 'DINGIN BEKU (HV 200V)',
-                    acBar: 100,
-                    svg: renderHevSvg('traffic')
+                    ac_id: 'DINGIN BEKU (HV 200V)',
+                    ac_en: 'FROSTY COLD (HV 200V)',
+                    acBar: 100
                 },
                 accel: {
                     badge: 'MODE: DUAL POWER SPRINT',
-                    heading: 'Akselerasi Penuh / Menanjak (Dual Power Boost)',
-                    desc: 'Saat pedal gas diinjak penuh (Kickdown), mesin bensin Atkinson Cycle menyala seketika dan bersinergi dengan torsi instan motor listrik melalui transmisi e-CVT Power-Split. Menghasilkan tenaga gabungan masif tanpa jeda turbo lag.',
-                    ice: 'MENYALA MAKSIMAL (4.600 RPM)',
+                    heading_id: 'Akselerasi Penuh / Menanjak (Dual Power Boost)',
+                    heading_en: 'Full Acceleration / Hill Climb (Dual Power Boost)',
+                    desc_id: 'Saat pedal gas diinjak penuh (Kickdown), mesin bensin Atkinson Cycle menyala seketika dan bersinergi dengan torsi instan motor listrik melalui transmisi e-CVT Power-Split. Menghasilkan tenaga gabungan masif tanpa jeda turbo lag.',
+                    desc_en: 'Under wide-open throttle (Kickdown), the Atkinson ICE fires instantaneously and couples with electric torque through the e-CVT planetary split for massive instantaneous pull with zero lag.',
+                    ice_id: 'MENYALA MAKSIMAL (4.600 RPM)',
+                    ice_en: 'PEAK RPM (4,600 RPM)',
                     iceColor: 'text-amber-600',
                     iceBar: 90,
-                    motor: 'BOOST PENUH (+83 kW / 206 Nm)',
+                    motor_id: 'BOOST PENUH (+83 kW / 206 Nm)',
+                    motor_en: 'FULL BOOST (+83 kW / 206 Nm)',
                     motorBar: 95,
-                    battery: 'High Discharge (-45.0 kW)',
+                    battery_id: 'High Discharge (-45.0 kW)',
+                    battery_en: 'High Discharge (-45.0 kW)',
                     batteryBar: 90,
-                    ac: 'DINGIN STABIL (HV Elektrik)',
-                    acBar: 100,
-                    svg: renderHevSvg('accel')
+                    ac_id: 'DINGIN STABIL (HV Elektrik)',
+                    ac_en: 'STABLE COOLING (HV Electric)',
+                    acBar: 100
                 },
                 highway: {
                     badge: 'MODE: OPTIMAL CRUISE',
-                    heading: 'Jelajah Tol Luar Kota (Thermal Efficiency 41%)',
-                    desc: 'Pada kecepatan 90–110 km/jam, mesin bensin beroperasi pada titik efisiensi termal tertinggi (41%). Sebagian tenaga mekanis langsung memutar roda depan dan sebagian memutar generator MG1 untuk mengisi baterai.',
-                    ice: 'STEADY SWEETSPOT (1.850 RPM)',
+                    heading_id: 'Jelajah Tol Luar Kota (Thermal Efficiency 41%)',
+                    heading_en: 'Highway Cruising (Peak 41% Thermal Efficiency)',
+                    desc_id: 'Pada kecepatan 90–110 km/jam, mesin bensin beroperasi pada titik efisiensi termal tertinggi (41%). Sebagian tenaga mekanis langsung memutar roda depan dan sebagian memutar generator MG1 untuk mengisi baterai.',
+                    desc_en: 'At 90–110 km/h highway speeds, the engine sits in its sweet spot 41% thermal efficiency. Mechanical power drives front wheels directly while excess spins generator MG1 to recharge battery.',
+                    ice_id: 'STEADY SWEETSPOT (1.850 RPM)',
+                    ice_en: 'STEADY SWEETSPOT (1,850 RPM)',
                     iceColor: 'text-emerald-700',
                     iceBar: 40,
-                    motor: 'Torsi Bantuan Halus (+15 kW)',
+                    motor_id: 'Torsi Bantuan Halus (+15 kW)',
+                    motor_en: 'Smooth Torque Assist (+15 kW)',
                     motorBar: 25,
-                    battery: 'Float / Recharging (+12.0 kW)',
+                    battery_id: 'Float / Recharging (+12.0 kW)',
+                    battery_en: 'Float / Recharging (+12.0 kW)',
                     batteryBar: 75,
-                    ac: 'DINGIN BEKU (HV Elektrik)',
-                    acBar: 100,
-                    svg: renderHevSvg('highway')
+                    ac_id: 'DINGIN BEKU (HV Elektrik)',
+                    ac_en: 'FROSTY COLD (HV Electric)',
+                    acBar: 100
                 },
                 regen: {
                     badge: 'MODE: REGEN HARVEST',
-                    heading: 'Deselerasi & Pengereman Regeneratif',
-                    desc: 'Saat pedal gas dilepas atau rem diinjak, motor traksi MG2 seketika berubah fungsi menjadi generator kinetik raksasa. Energi gerak roda dipanen dan dipompa kembali ke baterai traksi tanpa mengauskan kampas rem.',
-                    ice: 'MATI TOTAL (0 RPM / 0 L BBM)',
+                    heading_id: 'Deselerasi & Pengereman Regeneratif',
+                    heading_en: 'Deceleration & Regenerative Braking Harvest',
+                    desc_id: 'Saat pedal gas dilepas atau rem diinjak, motor traksi MG2 seketika berubah fungsi menjadi generator kinetik raksasa. Energi gerak roda dipanen dan dipompa kembali ke baterai traksi tanpa mengauskan kampas rem.',
+                    desc_en: 'When lifting throttle or tapping brakes, traction motor MG2 turns into a kinetic generator. Kinetic energy is harvested directly back into the battery with zero brake pad wear.',
+                    ice_id: 'MATI TOTAL (0 RPM / 0 L BBM)',
+                    ice_en: 'COMPLETELY OFF (0 RPM / 0 L FUEL)',
                     iceColor: 'text-slate-500',
                     iceBar: 0,
-                    motor: 'REGEN GENERATOR (-35 kW)',
+                    motor_id: 'REGEN GENERATOR (-35 kW)',
+                    motor_en: 'REGEN GENERATOR (-35 kW)',
                     motorBar: 70,
-                    battery: 'MENGISI CEPAT (+35.0 kW Inbound)',
+                    battery_id: 'MENGISI CEPAT (+35.0 kW Inbound)',
+                    battery_en: 'FAST RECHARGE (+35.0 kW Inbound)',
                     batteryBar: 85,
-                    ac: 'DINGIN BEKU (Baterai HV)',
-                    acBar: 100,
-                    svg: renderHevSvg('regen')
+                    ac_id: 'DINGIN BEKU (Baterai HV)',
+                    ac_en: 'FROSTY COLD (HV Battery)',
+                    acBar: 100
                 }
             },
             erev: {
-                name: 'Nissan e-POWER (Series Hybrid / EREV)',
+                name: 'Nissan e-POWER (EREV / Series Hybrid)',
                 traffic: {
                     badge: 'MODE: PURE EV DRIVE',
-                    heading: 'Kemacetan Dalkot (Penggerak 100% Motor Listrik)',
-                    desc: 'Roda mobil 100% diputar oleh motor listrik 163 PS. Di kecepatan rendah, mesin 1.4L mati total dan mobil meluncur senyap dari baterai lithium. Jika baterai turun ke batas 40%, mesin menyala halus sebagai genset onboard.',
-                    ice: 'MATI (0 RPM / Siaga Genset)',
+                    heading_id: 'Kemacetan Dalkot (Penggerak 100% Motor Listrik)',
+                    heading_en: 'Urban Traffic (100% Electric Motor Drive)',
+                    desc_id: 'Roda mobil 100% diputar oleh motor listrik 163 PS. Di kecepatan rendah, mesin 1.4L mati total dan mobil meluncur senyap dari baterai lithium. Jika baterai turun ke batas 40%, mesin menyala halus sebagai genset onboard.',
+                    desc_en: 'Wheels are 100% propelled by electric motor (163 PS). In slow traffic, the gasoline engine stays silent. When battery reaches 40% buffer, engine runs smoothly purely as an onboard generator.',
+                    ice_id: 'MATI (0 RPM / Siaga Genset)',
+                    ice_en: 'OFF (0 RPM / Standby Genset)',
                     iceColor: 'text-slate-500',
                     iceBar: 0,
-                    motor: '100% PENGGERAK RODA (EV)',
+                    motor_id: '100% PENGGERAK RODA (EV)',
+                    motor_en: '100% WHEEL DRIVE (EV)',
                     motorBar: 40,
-                    battery: 'Discharge ke Inverter (-12 kW)',
+                    battery_id: 'Discharge ke Inverter (-12 kW)',
+                    battery_en: 'Discharge to Inverter (-12 kW)',
                     batteryBar: 55,
-                    ac: 'DINGIN BEKU (Kompresor Elektrik)',
-                    acBar: 100,
-                    svg: renderErevSvg('traffic')
+                    ac_id: 'DINGIN BEKU (Kompresor Elektrik)',
+                    ac_en: 'FROSTY COLD (Electric Compressor)',
+                    acBar: 100
                 },
                 accel: {
                     badge: 'MODE: GENSET BOOST SPRINT',
-                    heading: 'Akselerasi Penuh (Genset Optimal + Baterai)',
-                    desc: 'Mesin bensin 3-silinder berputar pada RPM generator optimal untuk menyuplai arus listrik maksimal ke inverter dan motor traksi, menyemburkan torsi instan 315 Nm tanpa perpindahan gigi transmisi.',
-                    ice: 'GENSET FULL RPM (Pembangkit Listrik)',
+                    heading_id: 'Akselerasi Penuh (Genset Optimal + Baterai)',
+                    heading_en: 'Full Sprint (Optimum Genset + Battery Discharge)',
+                    desc_id: 'Mesin bensin 3-silinder berputar pada RPM generator optimal untuk menyuplai arus listrik maksimal ke inverter dan motor traksi, menyemburkan torsi instan 315 Nm tanpa perpindahan gigi transmisi.',
+                    desc_en: 'The 3-cylinder engine ramps up to peak generator RPM, feeding maximum current into inverter and traction motor for an instantaneous 315 Nm thrust without gear shifts.',
+                    ice_id: 'GENSET FULL RPM (Pembangkit Listrik)',
+                    ice_en: 'GENSET PEAK RPM (Power Generation)',
                     iceColor: 'text-amber-600',
                     iceBar: 85,
-                    motor: 'TORSI PENUH (315 Nm Instan)',
+                    motor_id: 'TORSI PENUH (315 Nm Instan)',
+                    motor_en: 'PEAK TORQUE (315 Nm Instant)',
                     motorBar: 100,
-                    battery: 'Peak Current Discharge (-40 kW)',
+                    battery_id: 'Peak Current Discharge (-40 kW)',
+                    battery_en: 'Peak Current Discharge (-40 kW)',
                     batteryBar: 95,
-                    ac: 'DINGIN STABIL',
-                    acBar: 100,
-                    svg: renderErevSvg('accel')
+                    ac_id: 'DINGIN STABIL',
+                    ac_en: 'STABLE COOLING',
+                    acBar: 100
                 },
                 highway: {
                     badge: 'MODE: HIGHWAY GENSET',
-                    heading: 'Jelajah Tol Luar Kota (Genset Generator)',
-                    desc: 'Mesin bensin memutar generator stabil untuk mencukupi kebutuhan listrik motor penggerak roda. Tidak ada sambungan mekanis (kopling/gigi) antara mesin bensin dan as roda mobil.',
-                    ice: 'GENSET STEADY RPM (Listrik Stabil)',
+                    heading_id: 'Jelajah Tol Luar Kota (Genset Generator)',
+                    heading_en: 'Highway Cruising (Steady Generator Mode)',
+                    desc_id: 'Mesin bensin memutar generator stabil untuk mencukupi kebutuhan listrik motor penggerak roda. Tidak ada sambungan mekanis (kopling/gigi) antara mesin bensin dan as roda mobil.',
+                    desc_en: 'Engine spins generator at optimal constant RPM to supply traction motor. There is zero mechanical link (clutch/gears) between combustion engine and wheels.',
+                    ice_id: 'GENSET STEADY RPM (Listrik Stabil)',
+                    ice_en: 'GENSET STEADY RPM (Stable Output)',
                     iceColor: 'text-emerald-700',
                     iceBar: 45,
-                    motor: '100% Menggerakkan Roda',
+                    motor_id: '100% Menggerakkan Roda',
+                    motor_en: '100% Driving Wheels',
                     motorBar: 50,
-                    battery: 'Buffer SoC Terjaga (60%)',
+                    battery_id: 'Buffer SoC Terjaga (60%)',
+                    battery_en: 'SoC Buffer Maintained (60%)',
                     batteryBar: 60,
-                    ac: 'DINGIN BEKU',
-                    acBar: 100,
-                    svg: renderErevSvg('highway')
+                    ac_id: 'DINGIN BEKU',
+                    ac_en: 'FROSTY COLD',
+                    acBar: 100
                 },
                 regen: {
                     badge: 'MODE: ONE-PEDAL REGEN',
-                    heading: 'Deselerasi One-Pedal e-Pedal Step',
-                    desc: 'Deselerasi kuat otomatis saat mengangkat pedal gas (One-Pedal Drive). Motor listrik menyerap energi pengereman untuk mengisi baterai secara agresif dan menghentikan laju kendaraan dengan mulus.',
-                    ice: 'MATI TOTAL (0 RPM)',
+                    heading_id: 'Deselerasi One-Pedal e-Pedal Step',
+                    heading_en: 'One-Pedal e-Pedal Deceleration',
+                    desc_id: 'Deselerasi kuat otomatis saat mengangkat pedal gas (One-Pedal Drive). Motor listrik menyerap energi pengereman untuk mengisi baterai secara agresif dan menghentikan laju kendaraan dengan mulus.',
+                    desc_en: 'Strong intuitive deceleration upon releasing accelerator pedal (One-Pedal Drive). Motor captures kinetic braking energy aggressively into battery.',
+                    ice_id: 'MATI TOTAL (0 RPM)',
+                    ice_en: 'COMPLETELY OFF (0 RPM)',
                     iceColor: 'text-slate-500',
                     iceBar: 0,
-                    motor: 'ONE-PEDAL REGEN (-40 kW)',
+                    motor_id: 'ONE-PEDAL REGEN (-40 kW)',
+                    motor_en: 'ONE-PEDAL REGEN (-40 kW)',
                     motorBar: 80,
-                    battery: 'MENGISI CEPAT (+40 kW Inbound)',
+                    battery_id: 'MENGISI CEPAT (+40 kW Inbound)',
+                    battery_en: 'FAST RECHARGE (+40 kW Inbound)',
                     batteryBar: 90,
-                    ac: 'DINGIN BEKU',
-                    acBar: 100,
-                    svg: renderErevSvg('regen')
+                    ac_id: 'DINGIN BEKU',
+                    ac_en: 'FROSTY COLD',
+                    acBar: 100
                 }
             },
             phev: {
-                name: 'BYD DM-i / Tank Hi4-T (Super Hybrid PHEV)',
+                name: 'BYD DM-i / Tank Hi4-T (PHEV Super Hybrid)',
                 traffic: {
                     badge: 'MODE: ZERO GASOLINE EV',
-                    heading: 'Kemacetan Dalkot (100% Pure EV Mode Tanpa Bensin)',
-                    desc: 'Baterai Blade 18–40 kWh memungkinkan mobil beroperasi 100% sebagai mobil listrik murni tanpa meminum setetes bensin pun (0 L BBM) sejauh 50–190 km di dalam kota Jakarta.',
-                    ice: 'MATI TOTAL (Nol Bensin / 0 Emisi)',
+                    heading_id: 'Kemacetan Dalkot (100% Pure EV Mode Tanpa Bensin)',
+                    heading_en: 'Urban Traffic (100% Zero-Gasoline Pure EV)',
+                    desc_id: 'Baterai Blade 18–40 kWh memungkinkan mobil beroperasi 100% sebagai mobil listrik murni tanpa meminum setetes bensin pun (0 L BBM) sejauh 50–190 km di dalam kota Jakarta.',
+                    desc_en: 'Blade battery (18–40 kWh) allows 100% pure electric driving with zero fuel consumption (0 L Fuel) for 50–190 km across city commutes.',
+                    ice_id: 'MATI TOTAL (Nol Bensin / 0 Emisi)',
+                    ice_en: 'OFF (Zero Fuel / Zero Emission)',
                     iceColor: 'text-slate-500',
                     iceBar: 0,
-                    motor: 'AKTIF 100% (Motor Listrik EHS)',
+                    motor_id: 'AKTIF 100% (Motor Listrik EHS)',
+                    motor_en: 'ACTIVE 100% (EHS Traction Motor)',
                     motorBar: 50,
-                    battery: 'Blade LFP Discharge (-15 kW)',
+                    battery_id: 'Blade LFP Discharge (-15 kW)',
+                    battery_en: 'Blade LFP Discharge (-15 kW)',
                     batteryBar: 70,
-                    ac: 'DINGIN BEKU (AC Elektrik 100%)',
-                    acBar: 100,
-                    svg: renderPhevSvg('traffic')
+                    ac_id: 'DINGIN BEKU (AC Elektrik 100%)',
+                    ac_en: 'FROSTY COLD (100% Electric A/C)',
+                    acBar: 100
                 },
                 accel: {
                     badge: 'MODE: DUAL MOTOR AWD BOOST',
-                    heading: 'Akselerasi Maksimal (Mesin Turbo + Dual Motor AWD)',
-                    desc: 'Kombinasi mesin 1.5T dan motor traksi ganda menyemburkan daya gabungan masif 218–408 PS ke 4 roda (AWD), melesatkan SUV besar dari 0 ke 100 km/jam dalam hitungan 5–7 detik.',
-                    ice: 'MENYALA TURBO BOOST (Maksimal)',
+                    heading_id: 'Akselerasi Maksimal (Mesin Turbo + Dual Motor AWD)',
+                    heading_en: 'Maximum Acceleration (Turbo ICE + Dual Motor AWD)',
+                    desc_id: 'Kombinasi mesin 1.5T dan motor traksi ganda menyemburkan daya gabungan masif 218–408 PS ke 4 roda (AWD), melesatkan SUV besar dari 0 ke 100 km/jam dalam hitungan 5–7 detik.',
+                    desc_en: '1.5T turbo engine pairs with dual traction motors delivering 218–408 PS across all 4 wheels (AWD), propelling large SUVs 0-100 km/h in 5–7 seconds.',
+                    ice_id: 'MENYALA TURBO BOOST (Maksimal)',
+                    ice_en: 'TURBO BOOST ACTIVE (Peak Power)',
                     iceColor: 'text-purple-600',
                     iceBar: 95,
-                    motor: 'DUAL MOTOR TORSI TINGGI (+145 kW)',
+                    motor_id: 'DUAL MOTOR TORSI TINGGI (+145 kW)',
+                    motor_en: 'DUAL MOTOR HIGH TORQUE (+145 kW)',
                     motorBar: 100,
-                    battery: 'High Current Discharge (-65 kW)',
+                    battery_id: 'High Current Discharge (-65 kW)',
+                    battery_en: 'High Current Discharge (-65 kW)',
                     batteryBar: 95,
-                    ac: 'DINGIN STABIL',
-                    acBar: 100,
-                    svg: renderPhevSvg('accel')
+                    ac_id: 'DINGIN STABIL',
+                    ac_en: 'STABLE COOLING',
+                    acBar: 100
                 },
                 highway: {
                     badge: 'MODE: DIRECT DRIVE LOCKUP',
-                    heading: 'Jelajah Jarak Jauh Tol (>1.200 km Range)',
-                    desc: 'Saat melaju kencang di jalan tol (>80 km/h), kopling langsung (Direct Clutch) mengunci mesin bensin langsung ke as roda pada rasio tertinggi, didukung motor listrik saat menanjak.',
-                    ice: 'DIRECT CLUTCH ENGAGED (Terkunci Roda)',
+                    heading_id: 'Jelajah Jarak Jauh Tol (>1.200 km Range)',
+                    heading_en: 'Highway Direct Drive (>1,200 km Total Range)',
+                    desc_id: 'Saat melaju kencang di jalan tol (>80 km/h), kopling langsung (Direct Clutch) mengunci mesin bensin langsung ke as roda pada rasio tertinggi, didukung motor listrik saat menanjak.',
+                    desc_en: 'At sustained highway speeds (>80 km/h), direct clutch locks the gasoline engine directly to front axles for maximum thermal efficiency with electric assist.',
+                    ice_id: 'DIRECT CLUTCH ENGAGED (Terkunci Roda)',
+                    ice_en: 'DIRECT CLUTCH ENGAGED (Axle Locked)',
                     iceColor: 'text-emerald-700',
                     iceBar: 50,
-                    motor: 'Bantuan Torsi Halus (+20 kW)',
+                    motor_id: 'Bantuan Torsi Halus (+20 kW)',
+                    motor_en: 'Smooth Torque Assist (+20 kW)',
                     motorBar: 30,
-                    battery: 'Buffer SoC Terjaga (70%)',
+                    battery_id: 'Buffer SoC Terjaga (70%)',
+                    battery_en: 'SoC Buffer Maintained (70%)',
                     batteryBar: 70,
-                    ac: 'DINGIN BEKU',
-                    acBar: 100,
-                    svg: renderPhevSvg('highway')
+                    ac_id: 'DINGIN BEKU',
+                    ac_en: 'FROSTY COLD',
+                    acBar: 100
                 },
                 regen: {
                     badge: 'MODE: ULTRA HIGH REGEN',
-                    heading: 'Regenerasi Energi Cepat (High-Rate Harvest)',
-                    desc: 'Pengereman menangkap kembali arus listrik besar hingga 60 kW ke dalam baterai LFP/Ternary kapasitas besar, siap digunakan kembali saat memasuki area perkotaan padat.',
-                    ice: 'MATI TOTAL (0 RPM)',
+                    heading_id: 'Regenerasi Energi Cepat (High-Rate Harvest)',
+                    heading_en: 'High-Rate Recuperation Harvest',
+                    desc_id: 'Pengereman menangkap kembali arus listrik besar hingga 60 kW ke dalam baterai LFP/Ternary kapasitas besar, siap digunakan kembali saat memasuki area perkotaan padat.',
+                    desc_en: 'Recuperation channels up to 60 kW back into large LFP battery pack, ready for silent zero-emission urban motoring.',
+                    ice_id: 'MATI TOTAL (0 RPM)',
+                    ice_en: 'COMPLETELY OFF (0 RPM)',
                     iceColor: 'text-slate-500',
                     iceBar: 0,
-                    motor: 'HIGH-RATE REGEN (-60 kW)',
+                    motor_id: 'HIGH-RATE REGEN (-60 kW)',
+                    motor_en: 'HIGH-RATE REGEN (-60 kW)',
                     motorBar: 85,
-                    battery: 'MENGISI CEPAT (+60 kW Inbound)',
+                    battery_id: 'MENGISI CEPAT (+60 kW Inbound)',
+                    battery_en: 'FAST RECHARGE (+60 kW Inbound)',
                     batteryBar: 90,
-                    ac: 'DINGIN BEKU',
-                    acBar: 100,
-                    svg: renderPhevSvg('regen')
+                    ac_id: 'DINGIN BEKU',
+                    ac_en: 'FROSTY COLD',
+                    acBar: 100
                 }
             },
             mhev: {
-                name: 'Suzuki SHVS (Mild Hybrid 12V/48V)',
+                name: 'Suzuki SHVS (MHEV 12V/48V)',
                 traffic: {
                     badge: 'MODE: ENGINE DEPENDENT CREEP',
-                    heading: 'Kemacetan Dalkot (Mesin Bensin Wajib Menyala Terus)',
-                    desc: 'Setiap kali mobil merayap atau bergerak 1 meter di kemacetan, <strong>mesin bensin WAJIB menyala dan membakar BBM</strong>. Motor ISG (2 kW) hanya sabuk alternator kecil dan tidak sanggup memutar roda tanpa mesin bensin.',
-                    ice: 'MENYALA TERUS (Bakar Bensin saat Bergerak)',
+                    heading_id: 'Kemacetan Dalkot (Mesin Bensin Wajib Menyala Terus)',
+                    heading_en: 'Urban Traffic (Engine Must Stay Running)',
+                    desc_id: 'Setiap kali mobil merayap atau bergerak 1 meter di kemacetan, <strong>mesin bensin WAJIB menyala dan membakar BBM</strong>. Motor ISG (2 kW) hanya sabuk alternator kecil dan tidak sanggup memutar roda tanpa mesin bensin.',
+                    desc_en: 'Every time the car creeps 1 meter forward in traffic, <strong>the gasoline engine MUST restart and burn fuel</strong>. The 2 kW ISG is only a belt alternator and cannot propel wheels independently.',
+                    ice_id: 'MENYALA TERUS (Bakar Bensin saat Bergerak)',
+                    ice_en: 'RUNNING (Burns Fuel to Move)',
                     iceColor: 'text-rose-600',
                     iceBar: 35,
-                    motor: '0 kW ke Roda (ISG Diam)',
+                    motor_id: '0 kW ke Roda (ISG Diam)',
+                    motor_en: '0 kW to Wheels (ISG Idle)',
                     motorBar: 0,
-                    battery: 'Mikro Baterai (12V 10Ah)',
+                    battery_id: 'Mikro Baterai (12V 10Ah)',
+                    battery_en: 'Micro-Battery (12V 10Ah)',
                     batteryBar: 20,
-                    ac: 'GERAH / ANGIN SAJA saat Idle Stop',
-                    acBar: 25,
-                    svg: renderMhevSvg('traffic')
+                    ac_id: 'GERAH / ANGIN SAJA saat Idle Stop',
+                    ac_en: 'WARM / FAN ONLY at Idle Stop',
+                    acBar: 25
                 },
                 accel: {
                     badge: 'MODE: MICRO BELT ASSIST',
-                    heading: 'Bantuan Torsi Sesaat (ISG Assist Sabuk Tali Kipas)',
-                    desc: 'ISG memberi dorongan torsi sangat kecil (~50 Nm selama 5-10 detik) melalui sabuk tali kipas kruk as. Baterai mikro 0.12 kWh langsung terkuras habis dalam sekejap.',
-                    ice: 'MENYALA PENUH (Sumber Penggerak 95%)',
+                    heading_id: 'Bantuan Torsi Sesaat (ISG Assist Sabuk Tali Kipas)',
+                    heading_en: 'Transient Torque Assist (Accessory Belt ISG)',
+                    desc_id: 'ISG memberi dorongan torsi sangat kecil (~50 Nm selama 5-10 detik) melalui sabuk tali kipas kruk as. Baterai mikro 0.12 kWh langsung terkuras habis dalam sekejap.',
+                    desc_en: 'ISG delivers minor transient torque (~50 Nm for 5-10s) via crankshaft belt. The 0.12 kWh micro-battery depletes in seconds under load.',
+                    ice_id: 'MENYALA PENUH (Sumber Penggerak 95%)',
+                    ice_en: 'FULL THROTTLE (95% Propulsion)',
                     iceColor: 'text-rose-600',
                     iceBar: 90,
-                    motor: 'ISG Assist Sabuk (Hanya ~3 HP)',
+                    motor_id: 'ISG Assist Sabuk (Hanya ~3 HP)',
+                    motor_en: 'Belt ISG Assist (Only ~3 HP)',
                     motorBar: 15,
-                    battery: 'TERKURAS HABIS (<10 Detik)',
+                    battery_id: 'TERKURAS HABIS (<10 Detik)',
+                    battery_en: 'DEPLETED (<10 Seconds)',
                     batteryBar: 90,
-                    ac: 'HIDUP (Mesin Berputar)',
-                    acBar: 75,
-                    svg: renderMhevSvg('accel')
+                    ac_id: 'HIDUP (Mesin Berputar)',
+                    ac_en: 'RUNNING (Engine Spinning)',
+                    acBar: 75
                 },
                 highway: {
                     badge: 'MODE: 100% ICE CRUISE',
-                    heading: 'Cruising Jalan Tol (Persis Mobil Bensin Biasa)',
-                    desc: '100% tenaga berasal dari mesin bensin K15B konvensional melalui girboks otomatis 4AT/6AT biasa. Sistem hybrid tidak memberikan efisiensi tambahan di jalan tol.',
-                    ice: '100% SUMBER PENGGERAK UTAMA',
+                    heading_id: 'Cruising Jalan Tol (Persis Mobil Bensin Biasa)',
+                    heading_en: 'Highway Cruising (Identical to Standard ICE)',
+                    desc_id: '100% tenaga berasal dari mesin bensin K15B konvensional melalui girboks otomatis 4AT/6AT biasa. Sistem hybrid tidak memberikan efisiensi tambahan di jalan tol.',
+                    desc_en: '100% power comes directly from conventional combustion engine through a standard 4AT/6AT gearbox. Hybrid system provides zero additional efficiency at highway speeds.',
+                    ice_id: '100% SUMBER PENGGERAK UTAMA',
+                    ice_en: '100% PRIMARY PROPULSION',
                     iceColor: 'text-slate-800',
                     iceBar: 60,
-                    motor: 'Tidak Berfungsi (0 kW ke Roda)',
+                    motor_id: 'Tidak Berfungsi (0 kW ke Roda)',
+                    motor_en: 'Inactive (0 kW to Wheels)',
                     motorBar: 0,
-                    battery: 'Standby / Idle',
+                    battery_id: 'Standby / Idle',
+                    battery_en: 'Standby / Idle',
                     batteryBar: 30,
-                    ac: 'HIDUP (Belt Compressor)',
-                    acBar: 100,
-                    svg: renderMhevSvg('highway')
+                    ac_id: 'HIDUP (Belt Compressor)',
+                    ac_en: 'RUNNING (Belt Compressor)',
+                    acBar: 100
                 },
                 regen: {
                     badge: 'MODE: MICRO ALTERNATOR CHARGE',
-                    heading: 'Regenerasi Mikro (Pengisian Aki / Baterai Kecil)',
-                    desc: 'Saat deselerasi, ISG memanen sedikit energi untuk mengisi baterai mikro 10Ah agar siap menghidupkan mesin kembali saat lampu merah.',
-                    ice: 'Engine Braking Ringan (RPM Drop)',
+                    heading_id: 'Regenerasi Mikro (Pengisian Aki / Baterai Kecil)',
+                    heading_en: 'Micro-Recuperation (12V Battery Recharge)',
+                    desc_id: 'Saat deselerasi, ISG memanen sedikit energi untuk mengisi baterai mikro 10Ah agar siap menghidupkan mesin kembali saat lampu merah.',
+                    desc_en: 'During braking, ISG harvests small energy to recharge the 10Ah micro-battery for restart capability at stoplights.',
+                    ice_id: 'Engine Braking Ringan (RPM Drop)',
+                    ice_en: 'Mild Engine Braking (RPM Drop)',
                     iceColor: 'text-slate-600',
                     iceBar: 15,
-                    motor: 'ISG Alternator Charge (+2 kW)',
+                    motor_id: 'ISG Alternator Charge (+2 kW)',
+                    motor_en: 'ISG Alternator Charge (+2 kW)',
                     motorBar: 10,
-                    battery: 'Mengisi Baterai Mikro 12V',
+                    battery_id: 'Mengisi Baterai Mikro 12V',
+                    battery_en: 'Recharging 12V Micro-Battery',
                     batteryBar: 40,
-                    ac: 'HIDUP',
-                    acBar: 100,
-                    svg: renderMhevSvg('regen')
+                    ac_id: 'HIDUP',
+                    ac_en: 'RUNNING',
+                    acBar: 100
                 }
             }
         };
@@ -2189,15 +2287,6 @@
                         <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.25"/>
                         <stop offset="100%" stop-color="#b45309" stop-opacity="0.1"/>
                     </linearGradient>
-                    <linearGradient id="grad-bat" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.25"/>
-                        <stop offset="100%" stop-color="#0369a1" stop-opacity="0.1"/>
-                    </linearGradient>
-                    <linearGradient id="grad-pcu" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#6366f1" stop-opacity="0.3"/>
-                        <stop offset="100%" stop-color="#4338ca" stop-opacity="0.1"/>
-                    </linearGradient>
-                    <linearGradient id="grad-wheels" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/>
                         <stop offset="100%" stop-color="#047857" stop-opacity="0.1"/>
                     </linearGradient>
