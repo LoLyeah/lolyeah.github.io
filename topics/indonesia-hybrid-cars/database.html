@@ -61,8 +61,8 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js CDN (Explicit UMD browser bundle) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
     <!-- Tailwind Configuration -->
     <script>
@@ -2021,8 +2021,16 @@
         }
 
         function renderRadarChart(cars) {
-            const ctx = document.getElementById('compareRadarChart').getContext('2d');
+            const canvas = document.getElementById('compareRadarChart');
+            if (!canvas) return;
+
+            if (typeof Chart === 'undefined') {
+                setTimeout(() => renderRadarChart(cars), 150);
+                return;
+            }
+
             if (radarChartInstance) radarChartInstance.destroy();
+            const ctx = canvas.getContext('2d');
 
             const colors = [
                 { border: 'rgb(14, 165, 233)', bg: 'rgba(14, 165, 233, 0.2)' },
