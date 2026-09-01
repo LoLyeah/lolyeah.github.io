@@ -1300,7 +1300,7 @@
         function renderFetalSVG(week, behavior = 'normal') {
             const container = document.getElementById('fetal-stage-visual');
             let scaleFactor = 0.5 + (week / 40) * 0.7;
-            let chestClass = behavior === 'breathe' ? 'animate-breathing' : '';
+            let chestClass = (behavior === 'breathe' || behavior === 'rem') ? 'animate-breathing' : '';
             let bodyJolt = behavior === 'hiccup' ? 'animate-hiccup' : 'animate-float';
 
             container.className = `relative z-10 w-64 sm:w-80 h-64 sm:h-80 flex items-center justify-center ${bodyJolt} pointer-events-none`;
@@ -1318,10 +1318,46 @@
                     <path d="M 98 120 C 115 135, 130 115, 145 140 C 160 165, 175 145, 185 170" fill="none" stroke="#f45536" stroke-width="4" stroke-linecap="round" opacity="0.8" />
                     <path d="M 98 120 C 115 135, 130 115, 145 140 C 160 165, 175 145, 185 170" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 3" opacity="0.7" />
 
+                    <!-- Behavior Effect: Maternal Voice Sound Waves -->
+                    ${behavior === 'voice' ? `
+                        <path d="M 125 35 A 45 45 0 0 1 125 105" fill="none" stroke="#10b981" stroke-width="2.5" stroke-dasharray="5 3" class="animate-pulse" />
+                        <path d="M 138 25 A 65 65 0 0 1 138 115" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="6 4" class="animate-pulse" />
+                    ` : ''}
+
+                    <!-- Behavior Effect: Light Transmittance Cone -->
+                    ${behavior === 'blink' ? `
+                        <polygon points="70,0 130,0 115,70 65,70" fill="rgba(251,191,36,0.18)" class="animate-pulse" />
+                    ` : ''}
+
+                    <!-- Behavior Effect: REM Synaptogenesis Neural Aura -->
+                    ${behavior === 'rem' ? `
+                        <circle cx="85" cy="70" r="33" fill="#a855f7" opacity="0.3" class="animate-pulse" />
+                    ` : ''}
+
                     <circle cx="85" cy="70" r="${week < 12 ? 18 : 28}" fill="${isUltrasoundMode ? '#e2e8f0' : '#fca590'}" />
                     <path d="M 60 85 C 45 110, 50 145, 80 155 C 105 162, 120 145, 115 125" fill="${isUltrasoundMode ? '#cbd5e1' : '#fca590'}" opacity="0.95" />
                     <ellipse cx="90" cy="105" rx="${week < 12 ? 14 : 20}" ry="${week < 12 ? 16 : 24}" fill="${isUltrasoundMode ? '#94a3b8' : '#fb927c'}" class="${chestClass}" />
-                    <path d="M 85 95 Q ${behavior === 'thumb' ? '98 75, 96 72' : '105 90, 100 80'}" fill="none" stroke="${isUltrasoundMode ? '#e2e8f0' : '#fca590'}" stroke-width="${week < 12 ? 5 : 8}" stroke-linecap="round" />
+
+                    <!-- Arm & Sucking Position -->
+                    <path d="M 85 95 Q ${behavior === 'thumb' ? '98 88, 96 74' : '105 90, 100 80'}" fill="none" stroke="${isUltrasoundMode ? '#e2e8f0' : '#fca590'}" stroke-width="${week < 12 ? 5 : 8}" stroke-linecap="round" />
+                    ${behavior === 'thumb' ? `<circle cx="96" cy="72" r="4.5" fill="#fb927c" class="animate-suck" />` : ''}
+
+                    <!-- Behavior Effect: Breathing Amniotic Current Bubbles -->
+                    ${behavior === 'breathe' ? `
+                        <circle cx="97" cy="74" r="2.5" fill="#38bdf8" class="animate-ping" />
+                        <circle cx="103" cy="71" r="3.5" fill="#38bdf8" opacity="0.6" class="animate-pulse" />
+                    ` : ''}
+
+                    <!-- Behavior Effect: Amniotic Fluid Swallowing Flow -->
+                    ${behavior === 'swallow' ? `
+                        <path d="M 96 74 Q 92 88, 88 112" fill="none" stroke="#38bdf8" stroke-width="3" stroke-dasharray="3 3" class="animate-pulse" />
+                        <circle cx="86" cy="112" r="5" fill="#0284c7" opacity="0.8" class="animate-pulse" />
+                    ` : ''}
+
+                    <!-- Behavior Effect: Diaphragm Hiccup Spasm Wave -->
+                    ${behavior === 'hiccup' ? `
+                        <ellipse cx="88" cy="116" rx="16" ry="5" fill="rgba(245,158,11,0.5)" class="animate-pulse" />
+                    ` : ''}
 
                     <!-- Fetal Cardiac Ventricular Chamber Activity -->
                     <g transform="translate(${heartX}, ${heartY})">
@@ -1329,11 +1365,17 @@
                         <circle cx="0" cy="0" r="${heartR}" fill="${heartColor}" class="animate-heart" />
                     </g>
 
-                    ${week >= 28 && behavior === 'blink' ?
-                        `<ellipse cx="96" cy="68" rx="3" ry="3" fill="#ffffff" /><circle cx="96" cy="68" r="1.5" fill="#1e1b4b" />` :
+                    <!-- Eyes: Blink, REM, or Rest -->
+                    ${behavior === 'blink' ?
+                        `<ellipse cx="96" cy="68" rx="4" ry="3.5" fill="#ffffff" /><circle cx="96" cy="68" r="2" fill="#0284c7" class="animate-pulse" />` :
+                        behavior === 'rem' ?
+                        `<ellipse cx="96" cy="68" rx="3.5" ry="2.5" fill="#ffffff" /><circle cx="96" cy="68" r="1.5" fill="#38bdf8" class="animate-pulse" />` :
                         `<path d="M 94 68 Q 98 70, 102 68" fill="none" stroke="${isUltrasoundMode ? '#334155' : '#991b1b'}" stroke-width="2" stroke-linecap="round" />`
                     }
+
+                    <!-- Leg & Kick Position -->
                     <path d="M 90 145 Q ${behavior === 'kick' ? '135 160, 140 120' : '115 150, 110 120'}" fill="none" stroke="${isUltrasoundMode ? '#e2e8f0' : '#fca590'}" stroke-width="${week < 12 ? 6 : 9}" stroke-linecap="round" />
+                    ${behavior === 'kick' ? `<path d="M 144 116 Q 154 112, 148 128" fill="none" stroke="#ec4899" stroke-width="3" stroke-linecap="round" class="animate-pulse" />` : ''}
                 </svg>
             `;
         }
@@ -1601,49 +1643,58 @@
 
         setInterval(updateCTG, 50);
 
-        // --- 6. 4D Behavior Trigger Actions with Button Highlights ---
+        let behaviorResetTimer = null;
+
+        // --- 6. 4D Behavior Trigger Actions with High-Contrast Button Highlights ---
         function triggerBehavior(type) {
             const hudBehavior = document.getElementById('hud-active-behavior');
             const hudReflex = document.getElementById('hud-reflex-status');
+            const hudFhr = document.getElementById('hud-fhr');
 
-            // Reset all 8 behavior buttons
+            if (behaviorResetTimer) clearTimeout(behaviorResetTimer);
+
+            // Reset all 8 behavior buttons to default state
             const behaviorTypes = ['breathe', 'thumb', 'hiccup', 'swallow', 'blink', 'voice', 'rem', 'kick'];
             behaviorTypes.forEach(b => {
                 const btn = document.getElementById(`behavior-btn-${b}`);
-                if (btn) btn.className = "p-2.5 rounded-xl bg-stone-100 dark:bg-stone-900 hover:bg-womb-100 dark:hover:bg-womb-950/80 border border-stone-200 dark:border-stone-800 text-left transition-all group flex flex-col gap-1";
+                if (btn) btn.className = "p-2.5 rounded-xl bg-stone-100 dark:bg-stone-900 hover:bg-womb-100 dark:hover:bg-womb-950/80 border border-stone-200 dark:border-stone-800 text-left transition-all group flex flex-col gap-1 text-stone-800 dark:text-stone-200";
             });
 
-            // Highlight Active Triggered Button
+            // Highlight Active Triggered Button with vibrant high-contrast styling
             const activeBtn = document.getElementById(`behavior-btn-${type}`);
             if (activeBtn) {
-                activeBtn.className = "p-2.5 rounded-xl bg-womb-500/10 dark:bg-womb-950 border-2 border-womb-500 text-left transition-all group flex flex-col gap-1 ring-2 ring-womb-500/30 scale-[1.02] shadow-md";
+                activeBtn.className = "p-2.5 rounded-xl bg-gradient-to-br from-womb-500 to-rose-600 text-white font-bold shadow-lg shadow-womb-500/30 border-2 border-womb-600 text-left transition-all scale-[1.03] flex flex-col gap-1 ring-2 ring-womb-400";
             }
 
             renderFetalSVG(currentWeek, type);
             if (type === 'kick' || type === 'thumb') triggerCTGMovement();
 
             const descriptions = {
-                breathe: { en: "Active: Practicing Diaphragmatic Respiration", id: "Aktif: Latihan Bernapas Diafragma" },
-                thumb: { en: "Active: Thumb Sucking & Sucking Reflex", id: "Aktif: Mengisap Jempol & Refleks Hisap" },
-                hiccup: { en: "Active: Diaphragmatic Hiccup Spasms", id: "Aktif: Cegukan Diafragma Ritmis" },
-                swallow: { en: "Active: Swallowing Amniotic Fluid (~600 mL/day)", id: "Aktif: Menelan Cairan Ketuban (~600 mL/hari)" },
-                blink: { en: "Active: Blink-Startle Response to Light", id: "Aktif: Respons Kedipan terhadap Cahaya" },
-                voice: { en: "Active: Maternal Voice Deceleration (125 BPM)", id: "Aktif: Relaksasi Suara Ibu (125 BPM)" },
-                rem: { en: "Active: REM Dreaming & Rapid Eye Movements", id: "Aktif: Fase Tidur Mimpi REM" },
-                kick: { en: "Active: Full Extension Kick & Somersault", id: "Aktif: Tendangan Ekstensi Kuat" }
+                breathe: { en: "Active: Practicing Diaphragmatic Respiration (~40 breaths/min)", id: "Aktif: Latihan Bernapas Diafragma (~40 napas/menit)", fhr: "140 BPM" },
+                thumb: { en: "Active: Thumb Sucking & Sucking-Rooting Reflex", id: "Aktif: Mengisap Jempol & Refleks Mencari", fhr: "138 BPM" },
+                hiccup: { en: "Active: Diaphragmatic Spasms & Phrenic Twitch", id: "Aktif: Cegukan Diafragma & Kejang Frenikus", fhr: "144 BPM" },
+                swallow: { en: "Active: Ingesting Amniotic Fluid (~600 mL/day)", id: "Aktif: Menelan Cairan Ketuban (~600 mL/hari)", fhr: "139 BPM" },
+                blink: { en: "Active: Blink-Startle Response to Light Photons", id: "Aktif: Respons Kedipan terhadap Foton Cahaya", fhr: "142 BPM" },
+                voice: { en: "Active: Maternal Voice Deceleration & Calming", id: "Aktif: Relaksasi & Perlambatan Suara Ibu", fhr: "128 BPM" },
+                rem: { en: "Active: REM Dreaming & Rapid Eye Movements", id: "Aktif: Fase Tidur Mimpi REM & Konsolidasi Otak", fhr: "140 BPM" },
+                kick: { en: "Active: Full Extension Kick & Somersault (15x15 Accel)", id: "Aktif: Tendangan Ekstensi Kuat (Akselerasi 15x15)", fhr: "155 BPM" }
             };
 
-            hudBehavior.textContent = descriptions[type][currentLang];
+            const actionData = descriptions[type];
+            hudBehavior.textContent = actionData[currentLang];
             hudReflex.textContent = "Reflex: Triggered";
+            hudFhr.textContent = `FHR: ${actionData.fhr}`;
 
-            setTimeout(() => {
+            behaviorResetTimer = setTimeout(() => {
                 renderFetalSVG(currentWeek, 'normal');
                 hudBehavior.textContent = currentLang === 'en' ? "Active Behavior: Normal Rest & Tonic Muscle Tonus" : "Perilaku Aktif: Istirahat Normal & Tonus Otot";
                 hudReflex.textContent = "Reflex: Active";
+                const baseFhr = fetalData[currentWeek] ? fetalData[currentWeek].fhr : 140;
+                hudFhr.textContent = `FHR: ${baseFhr} BPM`;
                 if (activeBtn) {
-                    activeBtn.className = "p-2.5 rounded-xl bg-stone-100 dark:bg-stone-900 hover:bg-womb-100 dark:hover:bg-womb-950/80 border border-stone-200 dark:border-stone-800 text-left transition-all group flex flex-col gap-1";
+                    activeBtn.className = "p-2.5 rounded-xl bg-stone-100 dark:bg-stone-900 hover:bg-womb-100 dark:hover:bg-womb-950/80 border border-stone-200 dark:border-stone-800 text-left transition-all group flex flex-col gap-1 text-stone-800 dark:text-stone-200";
                 }
-            }, 5000);
+            }, 6000);
         }
 
         // --- 7. Hero Visual Showcase Interactive Behavior Renderer ---
