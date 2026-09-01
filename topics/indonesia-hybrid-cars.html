@@ -1198,14 +1198,17 @@
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
 
                     <!-- Controls Card -->
-                    <div class="lg:col-span-5 bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-soft space-y-6">
+                    <div class="lg:col-span-5 bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-soft flex flex-col justify-between space-y-6">
 
                         <!-- Battery Architecture Selector -->
                         <div>
-                            <label class="block text-xs font-mono font-bold uppercase text-slate-500 mb-2">Tipe Baterai &amp; Sistem Pendingin</label>
+                            <label class="block text-xs font-mono font-bold uppercase text-slate-500 mb-2.5">
+                                <span class="id-only">Tipe Baterai &amp; Sistem Pendingin</span>
+                                <span class="en-only">Battery Chemistry &amp; Thermal Loop</span>
+                            </label>
                             <div class="space-y-2">
                                 <button type="button" class="bat-type-btn w-full p-3 rounded-xl border border-sky-500 bg-sky-50 text-sky-900 text-left text-xs font-mono font-bold transition-all shadow-xs" onclick="setBatteryType('toyota_nimh', this)">
                                     Toyota Ni-MH / Li-ion (Zenix/Yaris)<br>
@@ -1223,13 +1226,16 @@
                         </div>
 
                         <!-- Vehicle Age Slider -->
-                        <div>
+                        <div class="pt-2">
                             <div class="flex justify-between items-center mb-2">
-                                <label class="text-xs font-mono font-bold uppercase text-slate-500">Usia Kendaraan (Tahun)</label>
+                                <label class="text-xs font-mono font-bold uppercase text-slate-500">
+                                    <span class="id-only">Usia Kendaraan (Tahun)</span>
+                                    <span class="en-only">Vehicle Age (Years)</span>
+                                </label>
                                 <span class="text-xs font-mono font-bold text-sky-600 bg-sky-50 px-2 py-0.5 rounded border border-sky-200" id="bat-age-disp">5 Tahun</span>
                             </div>
                             <input type="range" min="1" max="15" step="1" value="5" class="w-full accent-sky-600 cursor-pointer" oninput="updateBatteryAge(this.value)">
-                            <div class="flex justify-between text-[11px] font-mono text-slate-400 mt-1">
+                            <div class="flex justify-between text-[11px] font-mono text-slate-400 mt-1.5">
                                 <span>1 Tahun</span>
                                 <span>8 Tahun (Garansi)</span>
                                 <span>15 Tahun</span>
@@ -1238,32 +1244,56 @@
 
                     </div>
 
-                    <!-- Output Gauge & Telemetry Card -->
-                    <div class="lg:col-span-7 bg-slate-900 text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-xl flex flex-col justify-between space-y-6">
+                    <!-- Output Gauge & Telemetry Card (Locked Stable Layout) -->
+                    <div class="lg:col-span-7 bg-slate-900 text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-xl flex flex-col justify-between space-y-5 min-h-[380px]">
 
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 min-h-[60px]">
                             <div>
-                                <h4 class="font-display font-bold text-lg text-white" id="bat-res-title">Toyota Ni-MH / Lithium (TNGA Hybrid)</h4>
-                                <div class="text-xs text-slate-400 font-mono mt-0.5">Kondisi Tropis 33°C · Penggunaan Harian Jakarta</div>
+                                <h4 class="font-display font-bold text-lg text-white tracking-tight" id="bat-res-title">Toyota THS II (Ni-MH / Li-ion)</h4>
+                                <div class="text-xs text-slate-400 font-mono mt-0.5">
+                                    <span class="id-only">Kondisi Tropis 33°C · Harian Jakarta</span>
+                                    <span class="en-only">Tropical 33°C · Jakarta Daily Commute</span>
+                                </div>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" id="bat-warranty-badge">GARANSI AKTIF (Thn ke-5)</span>
+                            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold shrink-0 self-start sm:self-auto bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" id="bat-warranty-badge">GARANSI AKTIF (Thn ke-5)</span>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-                            <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 text-center">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+                            <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 text-center flex flex-col justify-center">
                                 <div class="text-xs font-mono text-slate-400 uppercase mb-1">State of Health (SOH)</div>
-                                <div class="text-4xl font-mono font-black text-emerald-400" id="bat-soh-val">91.5%</div>
-                                <div class="text-[11px] text-slate-400 mt-1">Kapasitas Penyimpanan Prima</div>
+                                <div class="text-4xl font-mono font-black text-emerald-400 my-1" id="bat-soh-val">91.5%</div>
+                                <div class="text-[11px] text-slate-400">
+                                    <span class="id-only">Kapasitas Penyimpanan Prima</span>
+                                    <span class="en-only">Prime Storage Capacity</span>
+                                </div>
                             </div>
 
-                            <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-2 text-xs font-mono">
-                                <div class="flex justify-between"><span class="text-slate-400">Garansi APM:</span><strong class="text-sky-300" id="bat-warranty-text">8 Tahun / 160.000 km</strong></div>
-                                <div class="flex justify-between"><span class="text-slate-400">Filter Blower:</span><strong class="text-amber-400" id="bat-filter-text">Bersihkan per 20.000 km</strong></div>
-                                <div class="flex justify-between"><span class="text-slate-400">Biaya Penggantian:</span><strong class="text-slate-300" id="bat-replace-cost">Rp 30–35 Juta (HEV)</strong></div>
+                            <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-2.5 text-xs font-mono">
+                                <div class="flex items-center justify-between gap-2 border-b border-slate-800/60 pb-1.5">
+                                    <span class="text-slate-400 shrink-0">
+                                        <span class="id-only">Garansi APM:</span>
+                                        <span class="en-only">Warranty:</span>
+                                    </span>
+                                    <strong class="text-sky-300 text-right truncate" id="bat-warranty-text">8 Thn / 160.000 km</strong>
+                                </div>
+                                <div class="flex items-center justify-between gap-2 border-b border-slate-800/60 pb-1.5">
+                                    <span class="text-slate-400 shrink-0">
+                                        <span class="id-only">Sistem Filter:</span>
+                                        <span class="en-only">Filter System:</span>
+                                    </span>
+                                    <strong class="text-amber-400 text-right truncate" id="bat-filter-text">Filter Jok per 20.000 km</strong>
+                                </div>
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-slate-400 shrink-0">
+                                        <span class="id-only">Biaya Ganti:</span>
+                                        <span class="en-only">Replace Cost:</span>
+                                    </span>
+                                    <strong class="text-slate-300 text-right truncate" id="bat-replace-cost">Rp 30–35 Juta (HEV)</strong>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 text-xs text-slate-300 leading-relaxed font-sans" id="bat-advice-box">
+                        <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 text-xs text-slate-300 leading-relaxed font-sans min-h-[72px] flex items-center" id="bat-advice-box">
                             <!-- Populated via JS -->
                         </div>
 
@@ -2979,31 +3009,46 @@
 
         const batteryProfiles = {
             toyota_nimh: {
-                title: 'Toyota Ni-MH / Lithium (TNGA Hybrid)',
+                title_id: 'Toyota THS II (Ni-MH / Li-ion)',
+                title_en: 'Toyota THS II (Ni-MH / Li-ion)',
                 baseDegradation: 1.7, // % per year
                 warrantyYears: 8,
-                warrantyText: '8 Tahun / 160.000 km',
-                filterText: 'Bersihkan Filter Blower Jok per 20.000 km',
-                replaceCost: 'Rp 30–35 Juta (HEV)',
-                advice: 'Toyota menggunakan Battery Management System (BMS) yang membatasi pengisian baterai pada rentang aman 40%–80%. Pastikan kisi saringan udara di bawah jok belakang tidak tertutup karpet atau barang bawaan.'
+                warrantyText_id: '8 Thn / 160.000 km',
+                warrantyText_en: '8 Yrs / 160,000 km',
+                filterText_id: 'Filter Blower Jok per 20.000 km',
+                filterText_en: 'Seat Blower Filter per 20k km',
+                replaceCost_id: 'Rp 30–35 Juta (HEV)',
+                replaceCost_en: 'IDR 30–35M (HEV)',
+                advice_id: 'Toyota BMS membatasi pengisian baterai pada rentang aman 40%–80%. Pastikan kisi saringan udara di bawah jok belakang tidak tertutup karpet atau barang.',
+                advice_en: 'Toyota BMS limits charge buffer within 40%–80% safe zone. Ensure under-seat cooling intake vent is kept clean and free from luggage obstructions.'
             },
             byd_blade: {
-                title: 'BYD Blade Battery LFP (Sealion 6 / Denza D9)',
+                title_id: 'BYD Blade LFP (Super Hybrid)',
+                title_en: 'BYD Blade LFP (Super Hybrid)',
                 baseDegradation: 0.9, // % per year (Ultra durable LFP)
                 warrantyYears: 8,
-                warrantyText: '8 Tahun / 150.000 km (Garansi Baterai Seumur Hidup T&C)',
-                filterText: 'Active Liquid Thermal Management',
-                replaceCost: 'Rp 45–65 Juta (PHEV Pack 18-40 kWh)',
-                advice: 'Struktur Blade Battery LFP memiliki ketahanan termal hingga 500°C dan usia pakai hingga 3.000+ siklus pengisian. Manajemen suhu cairan aktif menjaganya tetap prima di cuaca terik 35°C.'
+                warrantyText_id: '8 Thn / 150.000 km (T&C APM)',
+                warrantyText_en: '8 Yrs / 150,000 km (OEM T&C)',
+                filterText_id: 'Liquid Thermal Management Aktif',
+                filterText_en: 'Active Liquid Cooling Loop',
+                replaceCost_id: 'Rp 45–65 Juta (Pack 18-40 kWh)',
+                replaceCost_en: 'IDR 45–65M (Pack 18-40 kWh)',
+                advice_id: 'Struktur Blade Battery LFP memiliki ketahanan termal 500°C dan 3.000+ siklus. Manajemen pendingin cairan aktif menjaganya tetap prima di cuaca terik 35°C.',
+                advice_en: 'Blade LFP structure withstands 500°C thermal thresholds with 3,000+ lifecycle. Active liquid cooling ensures peak efficiency in 35°C tropical heat.'
             },
             suzuki_mhev: {
-                title: 'Suzuki 12V Micro-Lithium (Ertiga / XL7)',
+                title_id: 'Suzuki SHVS (12V Micro Lithium)',
+                title_en: 'Suzuki SHVS (12V Micro Lithium)',
                 baseDegradation: 3.5, // % per year (Small battery high cycle count)
                 warrantyYears: 8,
-                warrantyText: '8 Tahun / 160.000 km',
-                filterText: 'Passive Air Kolong Jok Penumpang',
-                replaceCost: 'Rp 5.5–12 Juta (Mikro 12V 10Ah)',
-                advice: 'Karena kapasitasnya sangat kecil (hanya 0.12 kWh), baterai ini mengalami siklus pengisian dan pengosongan penuh berkali-kali setiap menit berkendara.'
+                warrantyText_id: '8 Thn / 160.000 km',
+                warrantyText_en: '8 Yrs / 160,000 km',
+                filterText_id: 'Pendingin Pasif Kolong Jok',
+                filterText_en: 'Passive Air Under-Seat',
+                replaceCost_id: 'Rp 5.5–12 Juta (Mikro 12V 10Ah)',
+                replaceCost_en: 'IDR 5.5–12M (Micro 12V 10Ah)',
+                advice_id: 'Karena kapasitasnya kecil (0.12 kWh), baterai mikro ini mengalami siklus penuh berulang-ulang setiap menit di tengah kemacetan stop-and-go.',
+                advice_en: 'Due to miniature 0.12 kWh capacity, this micro-pack undergoes frequent full charge/discharge cycling every few minutes in stop-and-go traffic.'
             }
         };
 
@@ -3018,29 +3063,33 @@
 
         function updateBatteryAge(val) {
             batteryState.age = parseInt(val, 10);
-            document.getElementById('bat-age-disp').textContent = val + ' Tahun';
+            const lang = document.body.classList.contains('lang-en') ? 'en' : 'id';
+            document.getElementById('bat-age-disp').textContent = val + (lang === 'en' ? ' Years' : ' Tahun');
             updateBatteryHealth();
         }
 
         function updateBatteryHealth() {
+            const lang = document.body.classList.contains('lang-en') ? 'en' : 'id';
             const p = batteryProfiles[batteryState.type];
             const age = batteryState.age;
             const soh = Math.max(65.0, (100.0 - (age * p.baseDegradation))).toFixed(1);
 
-            document.getElementById('bat-res-title').textContent = p.title;
+            document.getElementById('bat-res-title').textContent = lang === 'en' ? p.title_en : p.title_id;
             document.getElementById('bat-soh-val').textContent = soh + '%';
-            document.getElementById('bat-warranty-text').textContent = p.warrantyText;
-            document.getElementById('bat-filter-text').textContent = p.filterText;
-            document.getElementById('bat-replace-cost').textContent = p.replaceCost;
-            document.getElementById('bat-advice-box').innerHTML = p.advice;
+            document.getElementById('bat-warranty-text').textContent = lang === 'en' ? p.warrantyText_en : p.warrantyText_id;
+            document.getElementById('bat-filter-text').textContent = lang === 'en' ? p.filterText_en : p.filterText_id;
+            document.getElementById('bat-replace-cost').textContent = lang === 'en' ? p.replaceCost_en : p.replaceCost_id;
+            document.getElementById('bat-advice-box').textContent = lang === 'en' ? p.advice_en : p.advice_id;
 
             const wBadge = document.getElementById('bat-warranty-badge');
-            if (age <= p.warrantyYears) {
-                wBadge.className = 'px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
-                wBadge.textContent = `GARANSI RESMI AKTIF (Tahun ke-${age})`;
-            } else {
-                wBadge.className = 'px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30';
-                wBadge.textContent = `DI LUAR GARANSI PABRIKAN (Tahun ke-${age})`;
+            if (wBadge) {
+                if (age <= p.warrantyYears) {
+                    wBadge.className = 'px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shrink-0 self-start sm:self-auto';
+                    wBadge.textContent = lang === 'en' ? `OFFICIAL WARRANTY (Year ${age})` : `GARANSI RESMI (Tahun ke-${age})`;
+                } else {
+                    wBadge.className = 'px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0 self-start sm:self-auto';
+                    wBadge.textContent = lang === 'en' ? `OUT OF WARRANTY (Year ${age})` : `DI LUAR GARANSI (Tahun ke-${age})`;
+                }
             }
         }
 
