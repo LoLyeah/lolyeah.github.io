@@ -175,9 +175,14 @@
             30% { transform: scale(1.02); }
             45% { transform: scale(1.12); }
         }
-        @keyframes suckMouth {
+        @keyframes gentleSuck {
+            0%, 100% { transform: translateY(0) scale(1); }
+            45% { transform: translateY(-1.2px) scale(0.97); }
+            70% { transform: translateY(0.5px) scale(1.02); }
+        }
+        @keyframes cheekSuck {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15) translate(1px, -1px); }
+            50% { transform: scale(0.92); }
         }
 
         .animate-float { animation: floatSlow 7s ease-in-out infinite; }
@@ -185,7 +190,8 @@
         .animate-breathing { animation: breathingChest 3.5s ease-in-out infinite; }
         .animate-heart { animation: heartThump 0.75s ease-in-out infinite; }
         .animate-hiccup { animation: hiccupJolt 2.0s ease-in-out infinite; }
-        .animate-suck { animation: suckMouth 1.2s ease-in-out infinite; }
+        .animate-suck { animation: gentleSuck 1.4s ease-in-out infinite; }
+        .animate-cheek { animation: cheekSuck 1.4s ease-in-out infinite; transform-origin: 104px 78px; }
 
         /* Smooth Scrolling & Custom Scrollbar */
         html {
@@ -1487,8 +1493,8 @@
                     <path d="M 82 34 Q 92 30, 102 36" fill="none" stroke="${isUltrasoundMode ? '#64748b' : '#92400e'}" stroke-width="1.8" stroke-linecap="round" opacity="0.75" />
                     <path d="M 96 36 Q 106 34, 114 42" fill="none" stroke="${isUltrasoundMode ? '#64748b' : '#92400e'}" stroke-width="1.8" stroke-linecap="round" opacity="0.75" />
 
-                    <!-- Chubby Cheek Flush (Buccal Fat Pad) -->
-                    <circle cx="106" cy="80" r="9" fill="${isUltrasoundMode ? '#94a3b8' : '#f87171'}" opacity="0.25" />
+                    <!-- Chubby Cheek Flush (Buccal Fat Pad with gentle suction reflex) -->
+                    <circle cx="102" cy="78" r="8.5" fill="${isUltrasoundMode ? '#94a3b8' : '#f87171'}" opacity="0.22" class="${behavior === 'thumb' ? 'animate-cheek' : ''}" />
 
                     <!-- Detailed External Ear (Auricle & Lobe) -->
                     <path d="M 70 66 C 62 66, 60 74, 64 82 C 68 87, 74 86, 74 80" fill="none" stroke="${skinShadow}" stroke-width="2.6" stroke-linecap="round" />
@@ -1511,18 +1517,30 @@
                         `<path d="M 98 66 Q 103 69, 108 66" fill="none" stroke="${lineStroke}" stroke-width="2.4" stroke-linecap="round" />`
                     }
 
-                    <!-- Chubby Arm with Wrist Crease & Hand with Plump Fingers -->
-                    <path d="M 80 100 Q ${behavior === 'thumb' ? '100 90, 104 78' : '108 96, 104 84'}" fill="none" stroke="${skinColor}" stroke-width="10" stroke-linecap="round" />
-                    <!-- Plump Baby Hand & Thumb -->
-                    <circle cx="${behavior === 'thumb' ? 104 : 104}" cy="${behavior === 'thumb' ? 78 : 84}" r="5.5" fill="${skinHighlight}" />
-                    ${behavior === 'thumb' ? `<circle cx="105" cy="78" r="5.5" fill="#fb927c" class="animate-suck" />` : ''}
+                    <!-- Natural Chubby Arm & Curled Hand Anatomy -->
+                    ${behavior === 'thumb' ? `
+                        <!-- Arm curving gracefully from shoulder to mouth -->
+                        <path d="M 78 98 C 90 112, 102 108, 112 90" fill="none" stroke="${skinColor}" stroke-width="8.5" stroke-linecap="round" />
+                        <g class="animate-suck">
+                            <!-- Curled Baby Fingers -->
+                            <circle cx="113" cy="89" r="4.5" fill="${skinHighlight}" />
+                            <!-- Thumb gently nestled inside mouth opening -->
+                            <ellipse cx="116.5" cy="84" rx="2.5" ry="3.5" fill="${skinHighlight}" transform="rotate(-30 116.5 84)" />
+                            <!-- Subtle Amniotic Fluid Suction Halo -->
+                            <circle cx="118" cy="83.5" r="3.5" fill="rgba(253, 131, 106, 0.35)" class="animate-pulse" />
+                        </g>
+                    ` : `
+                        <path d="M 78 98 Q 96 108, 104 94" fill="none" stroke="${skinColor}" stroke-width="8.5" stroke-linecap="round" />
+                        <circle cx="104" cy="94" r="4.8" fill="${skinHighlight}" />
+                    `}
 
                     <!-- Chubby Thigh & Curled Plump Baby Foot with Toes -->
-                    <path d="M 86 146 Q ${behavior === 'kick' ? '140 162, 144 118' : '122 152, 116 122'}" fill="none" stroke="${skinColor}" stroke-width="11" stroke-linecap="round" />
-                    <ellipse cx="${behavior === 'kick' ? 144 : 116}" cy="${behavior === 'kick' ? 118 : 122}" rx="6" ry="8" fill="${skinHighlight}" transform="rotate(${behavior === 'kick' ? 35 : 18} ${behavior === 'kick' ? 144 : 116} ${behavior === 'kick' ? 118 : 122})" />
-                    <!-- Toes -->
-                    <circle cx="${behavior === 'kick' ? 147 : 119}" cy="${behavior === 'kick' ? 113 : 117}" r="2" fill="${skinColor}" />
-                    <circle cx="${behavior === 'kick' ? 144 : 116}" cy="${behavior === 'kick' ? 111 : 115}" r="1.8" fill="${skinColor}" />
+                    <path d="M 86 146 Q ${behavior === 'kick' ? '140 162, 144 118' : '120 152, 114 124'}" fill="none" stroke="${skinColor}" stroke-width="10" stroke-linecap="round" />
+                    <ellipse cx="${behavior === 'kick' ? 144 : 114}" cy="${behavior === 'kick' ? 118 : 124}" rx="5.5" ry="7.5" fill="${skinHighlight}" transform="rotate(${behavior === 'kick' ? 35 : 18} ${behavior === 'kick' ? 144 : 114} ${behavior === 'kick' ? 118 : 124})" />
+                    <!-- Curled Baby Toes along top edge -->
+                    <circle cx="${behavior === 'kick' ? 147 : 117}" cy="${behavior === 'kick' ? 113 : 119}" r="1.8" fill="${skinShadow}" />
+                    <circle cx="${behavior === 'kick' ? 144 : 114}" cy="${behavior === 'kick' ? 111 : 117}" r="1.6" fill="${skinShadow}" />
+                    <circle cx="${behavior === 'kick' ? 141 : 111}" cy="${behavior === 'kick' ? 110 : 116}" r="1.4" fill="${skinShadow}" />
 
                     ${behavior === 'kick' ? `<path d="M 148 112 Q 158 108, 152 126" fill="none" stroke="#ec4899" stroke-width="3.5" stroke-linecap="round" class="animate-pulse" />` : ''}
                 `;
@@ -1943,8 +1961,8 @@
                         <path d="M 82 34 Q 92 30, 102 36" fill="none" stroke="#92400e" stroke-width="1.8" stroke-linecap="round" opacity="0.75" />
                         <path d="M 96 36 Q 106 34, 114 42" fill="none" stroke="#92400e" stroke-width="1.8" stroke-linecap="round" opacity="0.75" />
 
-                        <!-- Chubby Cheek Flush -->
-                        <circle cx="106" cy="80" r="9" fill="#f87171" opacity="0.25" />
+                        <!-- Chubby Cheek Flush with Suction Reflex -->
+                        <circle cx="102" cy="78" r="8.5" fill="#f87171" opacity="0.22" class="animate-cheek" />
 
                         <!-- Detailed Ear -->
                         <path d="M 70 66 C 62 66, 60 74, 64 82 C 68 87, 74 86, 74 80" fill="none" stroke="#fb927c" stroke-width="2.6" stroke-linecap="round" />
@@ -1962,16 +1980,24 @@
                         <!-- Serene Closed Eyelashes -->
                         <path d="M 98 66 Q 103 69, 108 66" fill="none" stroke="#991b1b" stroke-width="2.4" stroke-linecap="round" />
 
-                        <!-- Chubby Baby Arm Positioned Right at Lips for Thumb Sucking -->
-                        <path d="M 80 100 Q 100 90, 104 78" fill="none" stroke="#fca590" stroke-width="10" stroke-linecap="round" />
-                        <circle cx="104" cy="78" r="5.5" fill="#fed7aa" />
-                        <circle cx="105" cy="78" r="5.5" fill="#fb927c" class="animate-suck" />
+                        <!-- Gracefully Positioned Chubby Arm to Lips -->
+                        <path d="M 78 98 C 90 112, 102 108, 112 90" fill="none" stroke="#fca590" stroke-width="8.5" stroke-linecap="round" />
+                        <g class="animate-suck">
+                            <!-- Curled Fingers -->
+                            <circle cx="113" cy="89" r="4.5" fill="#fed7aa" />
+                            <!-- Thumb nestled at lips -->
+                            <ellipse cx="116.5" cy="84" rx="2.5" ry="3.5" fill="#fed7aa" transform="rotate(-30 116.5 84)" />
+                            <!-- Subtle Amniotic Suction Halo -->
+                            <circle cx="118" cy="83.5" r="3.5" fill="rgba(253, 131, 106, 0.35)" class="animate-pulse" />
+                        </g>
 
                         <!-- Chubby Thigh & Curled Baby Foot with Toes -->
-                        <path d="M 86 146 Q 122 152, 116 122" fill="none" stroke="#fca590" stroke-width="11" stroke-linecap="round" />
-                        <ellipse cx="116" cy="122" rx="6" ry="8" fill="#fed7aa" transform="rotate(18 116 122)" />
-                        <circle cx="119" cy="117" r="2" fill="#fca590" />
-                        <circle cx="116" cy="115" r="1.8" fill="#fca590" />
+                        <path d="M 86 146 Q 120 152, 114 124" fill="none" stroke="#fca590" stroke-width="10" stroke-linecap="round" />
+                        <ellipse cx="114" cy="124" rx="5.5" ry="7.5" fill="#fed7aa" transform="rotate(18 114 124)" />
+                        <!-- Curled Toes along top edge of foot -->
+                        <circle cx="117" cy="119" r="1.8" fill="#fb927c" />
+                        <circle cx="114" cy="117" r="1.6" fill="#fb927c" />
+                        <circle cx="111" cy="116" r="1.4" fill="#fb927c" />
                     </svg>
                 `;
             } else if (type === 'hiccup') {
@@ -1992,7 +2018,8 @@
                         <path d="M 70 38 Q 76 32, 84 34" fill="none" stroke="#92400e" stroke-width="1.8" stroke-linecap="round" opacity="0.75" />
                         <path d="M 82 34 Q 92 30, 102 36" fill="none" stroke="#92400e" stroke-width="1.8" stroke-linecap="round" opacity="0.75" />
 
-                        <circle cx="106" cy="80" r="9" fill="#f87171" opacity="0.25" />
+                        <!-- Chubby Cheek Flush -->
+                        <circle cx="102" cy="78" r="8.5" fill="#f87171" opacity="0.22" />
 
                         <path d="M 70 66 C 62 66, 60 74, 64 82 C 68 87, 74 86, 74 80" fill="none" stroke="#fb927c" stroke-width="2.6" stroke-linecap="round" />
                         <path d="M 74 94 C 96 94, 102 114, 92 132 C 80 132, 68 114, 74 94 Z" fill="#f87171" class="animate-pulse" />
@@ -2007,11 +2034,16 @@
 
                         <path d="M 98 66 Q 103 68, 108 66" fill="none" stroke="#991b1b" stroke-width="2.6" stroke-linecap="round" />
 
-                        <path d="M 80 100 Q 104 94, 102 82" fill="none" stroke="#fca590" stroke-width="10" stroke-linecap="round" />
-                        <circle cx="102" cy="82" r="5.5" fill="#fed7aa" />
+                        <!-- Resting Arm -->
+                        <path d="M 78 98 Q 96 108, 104 94" fill="none" stroke="#fca590" stroke-width="8.5" stroke-linecap="round" />
+                        <circle cx="104" cy="94" r="4.8" fill="#fed7aa" />
 
-                        <path d="M 86 146 Q 122 152, 116 122" fill="none" stroke="#fca590" stroke-width="11" stroke-linecap="round" />
-                        <ellipse cx="116" cy="122" rx="6" ry="8" fill="#fed7aa" transform="rotate(18 116 122)" />
+                        <!-- Chubby Thigh & Curled Baby Foot with Toes -->
+                        <path d="M 86 146 Q 120 152, 114 124" fill="none" stroke="#fca590" stroke-width="10" stroke-linecap="round" />
+                        <ellipse cx="114" cy="124" rx="5.5" ry="7.5" fill="#fed7aa" transform="rotate(18 114 124)" />
+                        <circle cx="117" cy="119" r="1.8" fill="#fb927c" />
+                        <circle cx="114" cy="117" r="1.6" fill="#fb927c" />
+                        <circle cx="111" cy="116" r="1.4" fill="#fb927c" />
                     </svg>
                 `;
             } else if (type === 'rem') {
@@ -2035,7 +2067,8 @@
                         <path d="M 70 38 Q 76 32, 84 34" fill="none" stroke="#92400e" stroke-width="1.8" stroke-linecap="round" opacity="0.75" />
                         <path d="M 82 34 Q 92 30, 102 36" fill="none" stroke="#92400e" stroke-width="1.8" stroke-linecap="round" opacity="0.75" />
 
-                        <circle cx="106" cy="80" r="9" fill="#f87171" opacity="0.25" />
+                        <!-- Chubby Cheek Flush -->
+                        <circle cx="102" cy="78" r="8.5" fill="#f87171" opacity="0.22" />
 
                         <path d="M 70 66 C 62 66, 60 74, 64 82 C 68 87, 74 86, 74 80" fill="none" stroke="#fb927c" stroke-width="2.6" stroke-linecap="round" />
                         <path d="M 74 94 C 96 94, 102 114, 92 132 C 80 132, 68 114, 74 94 Z" fill="#fb927c" class="animate-breathing" />
@@ -2049,11 +2082,16 @@
                         <ellipse cx="102" cy="66" rx="4.5" ry="2.8" fill="#ffffff" />
                         <circle cx="102" cy="66" r="1.6" fill="#0284c7" class="animate-pulse" />
 
-                        <path d="M 80 100 Q 104 94, 102 82" fill="none" stroke="#fca590" stroke-width="10" stroke-linecap="round" />
-                        <circle cx="102" cy="82" r="5.5" fill="#fed7aa" />
+                        <!-- Resting Arm -->
+                        <path d="M 78 98 Q 96 108, 104 94" fill="none" stroke="#fca590" stroke-width="8.5" stroke-linecap="round" />
+                        <circle cx="104" cy="94" r="4.8" fill="#fed7aa" />
 
-                        <path d="M 86 146 Q 122 152, 116 122" fill="none" stroke="#fca590" stroke-width="11" stroke-linecap="round" />
-                        <ellipse cx="116" cy="122" rx="6" ry="8" fill="#fed7aa" transform="rotate(18 116 122)" />
+                        <!-- Chubby Thigh & Curled Baby Foot with Toes -->
+                        <path d="M 86 146 Q 120 152, 114 124" fill="none" stroke="#fca590" stroke-width="10" stroke-linecap="round" />
+                        <ellipse cx="114" cy="124" rx="5.5" ry="7.5" fill="#fed7aa" transform="rotate(18 114 124)" />
+                        <circle cx="117" cy="119" r="1.8" fill="#fb927c" />
+                        <circle cx="114" cy="117" r="1.6" fill="#fb927c" />
+                        <circle cx="111" cy="116" r="1.4" fill="#fb927c" />
                     </svg>
                 `;
             }
