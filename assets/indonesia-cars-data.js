@@ -35,7 +35,7 @@ const CAR_DATABASE = [
     "pros": "Handling tajam legendaris sedan BMW Seri 3 dipadu XtraBoost 292 PS dan kemampuan jalan senyap 50 km tenaga listrik murni.",
     "cons": "Kapasitas bagasi sedikit berkurang untuk modul baterai.",
     "wikiUrl": "https://en.wikipedia.org/wiki/BMW_3_Series_(G20)",
-    "officialUrl": "https://www.bmw.co.id/",
+    "officialUrl": "https://www.bmw.co.id/en_ID/all-models/3-series/sedan/2022/bmw-3-series-sedan-overview.html",
     "assembly": "CBU / CKD (Impor / Rakit Resmi APM BMW Indonesia)",
     "variants": [
       {
@@ -110,7 +110,7 @@ const CAR_DATABASE = [
     "pros": "Sedan bisnis eksekutif generasi G60 rakitan lokal, efisiensi tinggi berkat mild-hybrid 48V, kenyamanan peredaman suspensi nomor wahid.",
     "cons": "Bukan BEV sehingga tetap tunduk pada Ganjil-Genap.",
     "wikiUrl": "https://en.wikipedia.org/wiki/BMW_5_Series_(G60)",
-    "officialUrl": "https://www.bmw.co.id/",
+    "officialUrl": "https://www.bmw.co.id/en_ID/all-models/5-series/sedan/2023/bmw-5-series-sedan-overview.html",
     "assembly": "CKD (Rakit Pabrik Sunter Jakarta)",
     "variants": [
       {
@@ -148,7 +148,7 @@ const CAR_DATABASE = [
     "pros": "Mesin legendaris S58 warisan BMW M3/M4 bertenaga 460 PS pada sasis kompak roda belakang, 0-100 km/j dalam 4.1 detik.",
     "cons": "Pajak barang mewah PPnBM dan PKB tinggi, ground clearance 123mm sangat rendah.",
     "wikiUrl": "https://en.wikipedia.org/wiki/BMW_M2",
-    "officialUrl": "https://www.bmw.co.id/",
+    "officialUrl": "https://www.bmw.co.id/en_ID/all-models/m-series/m2-coupe/2022/bmw-m2-coupe-overview.html",
     "assembly": "CBU / CKD (Impor / Rakit Resmi APM BMW Indonesia)",
     "variants": [
       {
@@ -185,7 +185,7 @@ const CAR_DATABASE = [
     "pros": "SUV mewah 7-penumpang rakitan lokal (CKD Gaya Motor Sunter), mesin 6-silinder legendaris B58 sehalus sutra, air suspension 2-axle, bagasi split tailgate elektrik.",
     "cons": "Pajak tahunan PKB tinggi untuk mesin 3.000 cc.",
     "wikiUrl": "https://en.wikipedia.org/wiki/BMW_X5_(G05)",
-    "officialUrl": "https://www.bmw.co.id/",
+    "officialUrl": "https://www.bmw.co.id/en_ID/all-models/x-series/X5/2023/bmw-x5-overview.html",
     "assembly": "CKD (Rakit Resmi Pabrik Sunter Jakarta)",
     "variants": [
       {
@@ -261,7 +261,7 @@ const CAR_DATABASE = [
     "pros": "Sedan bisnis eksekutif Seri 5 elektrik tercanggih, BMW Interaction Bar kristal dinamis, kesenyapan kabin akustik sempurna, 100% bebas Gage.",
     "cons": "Dimensi bodi menembus 5.06 meter butuh garasi leluasa.",
     "wikiUrl": "https://en.wikipedia.org/wiki/BMW_5_Series_(G60)",
-    "officialUrl": "https://www.bmw.co.id/",
+    "officialUrl": "https://www.bmw.co.id/en_ID/all-models/bmw-i/i5/2023/bmw-i5-sedan.html",
     "assembly": "CBU (Impor Resmi BMW Group Indonesia)",
     "variants": [
       {
@@ -342,7 +342,7 @@ const CAR_DATABASE = [
     "pros": "Karakter berkendara BMW sejati dalam format SUV listrik ringkas: BMW Curved Display, BMW OS 9, bebas Ganjil-Genap.",
     "cons": "Harga premium di atas Rp 1,3 Milyar.",
     "wikiUrl": "https://en.wikipedia.org/wiki/BMW_X1_(U11)",
-    "officialUrl": "https://www.bmw.co.id/",
+    "officialUrl": "https://www.bmw.co.id/en_ID/all-models/bmw-i/ix1/2023/bmw-ix1.html",
     "gageExempt": true,
     "image": "../../assets/images/cars/bmw-ix1.jpg",
     "assembly": "CBU / CKD (Impor / Rakit Resmi APM BMW Indonesia)",
