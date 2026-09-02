@@ -1718,7 +1718,7 @@ const CAR_DATABASE = [
   {
     "id": "honda-super-one",
     "brand": "Honda",
-    "model": "Super One (Retro-Modern BEV)",
+    "model": "Super-ONE (Pocket Rocket BEV)",
     "powertrain": "BEV",
     "powertrainLabel": "Mobil Listrik (BEV)",
     "body": "Hatchback",
@@ -1732,23 +1732,30 @@ const CAR_DATABASE = [
     "dimensions": "3,650 x 1,600 x 1,550 mm",
     "gc": 150,
     "seats": 4,
-    "priceMin": 350.0,
-    "priceMax": 395.0,
-    "priceDisplay": "Rp 350,0 – 395,0 Juta",
+    "priceMin": 438.0,
+    "priceMax": 448.0,
+    "priceDisplay": "Rp 438,0 – 448,0 Juta",
     "gageExempt": true,
-    "assembly": "CBU (Impor Resmi PT Honda Prospect Motor)",
-    "pros": "Desain retro City Turbo II, fitur Boost Mode 95 PS dengan simulasi gigi 7-percepatan, 100% bebas Ganjil-Genap.",
-    "cons": "Kapasitas 4 penumpang, kuota awal pasar Indonesia eksklusif.",
+    "assembly": "CBU (Impor Resmi PT Honda Prospect Motor dari Jepang)",
+    "pros": "Pocket Rocket retro-futuristik, fitur BOOST Mode dengan Simulated 7-Speed Shift & Active Sound Control, 9-inch Google built-in, 100% bebas Ganjil-Genap.",
+    "cons": "Kapasitas 4 penumpang, kuota resmi tahun 2026 sangat terbatas hanya 100 unit CBU Jepang.",
     "wikiUrl": "https://en.wikipedia.org/wiki/Honda",
-    "officialUrl": "https://www.honda-indonesia.com/",
+    "officialUrl": "https://www.honda-indonesia.com/superone",
     "image": "../../assets/images/cars/honda-super-one.jpg",
     "variants": [
       {
-        "name": "Honda Super One (Retro-Modern BEV)",
-        "price": "Rp 350,0 – 395,0 Juta",
-        "engine": "Electric Motor (47 kW / 64 PS • Boost Mode 70 kW / 95 PS • 162 Nm)",
+        "name": "Honda Super-ONE (Standard Color)",
+        "price": "Rp 438,0 Juta",
+        "engine": "Electric Motor (Boost Mode 95 PS • 162 Nm)",
         "power": "95 PS / 162 Nm",
-        "highlights": "Desain retro City Turbo II"
+        "highlights": "Crystal Black Pearl, Simulated 7-Speed, Honda SENSING"
+      },
+      {
+        "name": "Honda Super-ONE (Special Color)",
+        "price": "Rp 448,0 Juta",
+        "engine": "Electric Motor (Boost Mode 95 PS • 162 Nm)",
+        "power": "95 PS / 162 Nm",
+        "highlights": "Boost Violet Pearl / Luminous Gray (+Rp 10 Jt)"
       }
     ],
     "wheelbase": 2520
