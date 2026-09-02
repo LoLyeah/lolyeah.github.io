@@ -2,7 +2,11 @@
 // Centralized data file used by:
 // - topics/indonesia-car-selector/database.html
 // - topics/indonesia-car-selector.html
-// Total Models: 207
+/**
+ * INDONESIAN CAR DATABASE (2026 OFFICIAL APM SPECIFICATION)
+ * Total Models: 210
+ * Standardized Schema: 28 Core Fields
+ */
 
 const CAR_DATABASE = [
   {
@@ -2917,7 +2921,7 @@ const CAR_DATABASE = [
     "image": "../../assets/images/cars/mg-4-ev.jpg",
     "powertrain": "BEV",
     "powertrainLabel": "Mobil Listrik (BEV)",
-    "body": "LCGC / City Car",
+    "body": "Hatchback",
     "engine": "Rear Electric Motor (125 kW / 170 PS / 250 Nm)",
     "power": 170,
     "torque": 250,
@@ -2936,15 +2940,74 @@ const CAR_DATABASE = [
     "pros": "Distribusi bobot seimbang 50:50 dengan penggerak roda belakang (RWD) dan suspensi 5-link independen, akselerasi lincah 'hot-hatch', bebas Ganjil-Genap.",
     "cons": "Bantingan suspensi agak kencang untuk profil mobil keluarga santai.",
     "wikiUrl": "https://en.wikipedia.org/wiki/MG4_EV",
-    "officialUrl": "https://mgmotor.id/models/mg-4-ev",
+    "officialUrl": "https://www.mgmotor.id/mgmodels/mg4ev",
     "assembly": "CBU / CKD (Impor / Rakit Resmi APM MG Indonesia)",
     "variants": [
       {
-        "name": "MG MG 4 EV (Magnify)",
-        "price": "Rp 395,0 – 425,0 Juta",
-        "engine": "Rear Electric Motor (125 kW / 170 PS / 250 Nm)",
+        "name": "MG 4 EV Ignite",
+        "price": "Rp 395,0 Juta",
+        "engine": "Rear Electric Motor (170 PS / 250 Nm)",
         "power": "170 PS / 250 Nm",
-        "highlights": "Distribusi bobot seimbang 50:50 dengan penggerak roda belakang (RWD) dan suspensi 5-link independen"
+        "highlights": "RWD 50:50, baterai 51 kWh, jangkauan 425 km"
+      },
+      {
+        "name": "MG 4 EV Magnify i-SMART",
+        "price": "Rp 425,0 Juta",
+        "engine": "Rear Electric Motor (170 PS / 250 Nm)",
+        "power": "170 PS / 250 Nm",
+        "highlights": "i-SMART connectivity, kamera 360, wireless phone charger"
+      }
+    ]
+  },
+  {
+    "id": "mg-s5-ev",
+    "brand": "MG",
+    "model": "New MGS5 EV",
+    "image": "../../assets/images/cars/mg-s5-ev.jpg",
+    "powertrain": "BEV",
+    "powertrainLabel": "Mobil Listrik (BEV)",
+    "body": "Medium SUV",
+    "engine": "Rear Electric Motor (170 PS / 250 Nm)",
+    "power": 170,
+    "torque": 250,
+    "battery": "49.1 – 62.2 kWh Rubik's Cube LFP Battery",
+    "range": "425 – 525 km (CLTC)",
+    "trans": "Single Speed Automatic",
+    "drive": "RWD",
+    "dimensions": "4.476 x 1.849 x 1.621 mm",
+    "wheelbase": 2730,
+    "gc": 165,
+    "seats": 5,
+    "priceMin": 333.9,
+    "priceMax": 455.9,
+    "priceDisplay": "Rp 333,9 – 455,9 Juta",
+    "gageExempt": true,
+    "pros": "SUV listrik RWD berdesain tajam dan dinamis, panoramic sunroof lebar, power tailgate dengan kick sensor, sistem hiburan built-in (YouTube, Spotify, TikTok), 100% bebas Ganjil-Genap.",
+    "cons": "Pengiriman varian tertinggi (Magnify Max) bertahap di paruh kedua 2026.",
+    "wikiUrl": "https://en.wikipedia.org/wiki/MG_Motor",
+    "officialUrl": "https://www.mgmotor.id/mgmodels/mgs5ev",
+    "assembly": "CKD / CBU (Resmi PT SAIC Motor Indonesia)",
+    "variants": [
+      {
+        "name": "MGS5 EV Ignite",
+        "price": "Rp 333,9 Juta",
+        "battery": "49.1 kWh LFP (425 km)",
+        "power": "170 PS / 250 Nm (RWD)",
+        "highlights": "RWD electric SUV, ADAS cerdas, layar sentuh lebar terhubung internet."
+      },
+      {
+        "name": "MGS5 EV Magnify",
+        "price": "Rp 355,9 Juta",
+        "battery": "49.1 kWh LFP (425 km)",
+        "power": "170 PS / 250 Nm (RWD)",
+        "highlights": "Panoramic sunroof, power tailgate kick sensor, wireless charger."
+      },
+      {
+        "name": "MGS5 EV Magnify Max",
+        "price": "Rp 455,9 Juta",
+        "battery": "62.2 kWh LFP (525 km)",
+        "power": "170 PS / 250 Nm (RWD)",
+        "highlights": "Jarak tempuh terjauh 525 km, paket keselamatan ADAS terlengkap."
       }
     ]
   },
@@ -2974,11 +3037,11 @@ const CAR_DATABASE = [
     "pros": "Roadster listrik atap terbuka pertama di Indonesia dengan pintu gunting elektrik (Scissor Doors), 536 PS 0-100 km/j dalam 3.2 detik, bebas Ganjil-Genap.",
     "cons": "Mobil murni 2-seater untuk gaya hidup akhir pekan.",
     "wikiUrl": "https://en.wikipedia.org/wiki/MG_Cyberster",
-    "officialUrl": "https://mgmotor.id/models/mg-cyberster",
+    "officialUrl": "https://www.mgmotor.id/mgmodels/mgcyberster",
     "assembly": "CBU / CKD (Impor / Rakit Resmi APM MG Indonesia)",
     "variants": [
       {
-        "name": "MG MG Cyberster (Electric Roadster)",
+        "name": "MG Cyberster AWD (Electric Roadster)",
         "price": "Rp 1,688 Milyar",
         "engine": "Dual Electric Motor AWD (400 kW / 536 PS / 725 Nm)",
         "power": "536 PS / 725 Nm",
@@ -2989,7 +3052,7 @@ const CAR_DATABASE = [
   {
     "id": "mg-vs",
     "brand": "MG",
-    "model": "MG VS HEV",
+    "model": "MG VS Super Hybrid",
     "image": "../../assets/images/cars/mg-vs.jpg",
     "powertrain": "HEV",
     "powertrainLabel": "Full Hybrid (HEV)",
@@ -3012,15 +3075,58 @@ const CAR_DATABASE = [
     "pros": "Crossover hybrid bertenaga 177 PS dengan akselerasi 0-100 km/j 8.9 detik dan I-MAX panoramic sunroof harga di bawah Rp 390 Juta.",
     "cons": "Tunduk aturan Ganjil-Genap.",
     "wikiUrl": "https://en.wikipedia.org/wiki/MG_ZS_(2017)#MG_VS",
-    "officialUrl": "https://mgmotor.id/models/mg-vs-hev",
+    "officialUrl": "https://www.mgmotor.id/mgmodels/mgvssuperhybrid",
     "assembly": "CBU / CKD (Impor / Rakit Resmi APM MG Indonesia)",
     "variants": [
       {
-        "name": "MG MG VS HEV",
+        "name": "MG VS Super Hybrid",
         "price": "Rp 389,9 Juta",
         "engine": "1.5L 4-Cylinder VTi-TECH + Electric Motor (177 PS / 350 Nm Combined)",
         "power": "177 PS / 350 Nm",
         "highlights": "Crossover hybrid bertenaga 177 PS dengan akselerasi 0-100 km/j 8.9 detik dan I-MAX panoramic sunroof harga di bawah Rp 390 Juta."
+      }
+    ]
+  },
+  {
+    "id": "mg-zs-hybrid",
+    "brand": "MG",
+    "model": "MG ZS HYBRID+",
+    "image": "../../assets/images/cars/mg-zs-hybrid.jpg",
+    "powertrain": "HEV",
+    "powertrainLabel": "Full Hybrid (HEV)",
+    "body": "Compact SUV",
+    "engine": "1.5L Dual Injection Engine + Electric Motor DHT (194 PS Combined)",
+    "power": 194,
+    "torque": 250,
+    "battery": "1.83 kWh High-Power NCM Battery",
+    "range": "20.0 – 24.5 km/L (Konsumsi BBM)",
+    "trans": "Dedicated Hybrid Transmission (3-Speed DHT)",
+    "drive": "FWD",
+    "dimensions": "4.430 x 1.818 x 1.635 mm",
+    "wheelbase": 2610,
+    "gc": 165,
+    "seats": 5,
+    "priceMin": 299.9,
+    "priceMax": 329.9,
+    "priceDisplay": "Rp 299,9 – 329,9 Juta",
+    "gageExempt": false,
+    "pros": "Generasi baru MG ZS dengan sistem Hybrid+ bertenaga 194 PS terbesar di kelasnya, transmisi hybrid 3-speed inovatif, harga hybrid paling kompetitif di bawah Rp 300 Juta.",
+    "cons": "Tunduk aturan Ganjil-Genap Jakarta karena mengusung mesin bensin pendukung.",
+    "wikiUrl": "https://en.wikipedia.org/wiki/MG_ZS_(crossover)",
+    "officialUrl": "https://www.mgmotor.id/mgmodels/mgzshybrid",
+    "assembly": "CKD / CBU (Resmi PT SAIC Motor Indonesia)",
+    "variants": [
+      {
+        "name": "MG ZS Hybrid+ Ignite",
+        "price": "Rp 299,9 Juta",
+        "engine": "1.5L Dual Injection Hybrid (194 PS Combined)",
+        "highlights": "Full Hybrid di bawah Rp 300 Juta, konsumsi BBM ultra irit, kabin senyap."
+      },
+      {
+        "name": "MG ZS Hybrid+ Magnify",
+        "price": "Rp 329,9 Juta",
+        "engine": "1.5L Dual Injection Hybrid (194 PS Combined)",
+        "highlights": "Panoramic sunroof, i-SMART telematika, kamera 360 HD, pelek 18 inci."
       }
     ]
   },
@@ -3048,13 +3154,13 @@ const CAR_DATABASE = [
     "pros": "Panoramic sunroof I-MAX sangat lebar, V2L power supply, baterai LFP berstandar keselamatan IP67 tahan banjir, bebas Ganjil-Genap.",
     "cons": "Ground clearance 161mm sedang, akselerasi dibatasi demi efisiensi.",
     "wikiUrl": "https://en.wikipedia.org/wiki/MG_ZS_(2017)",
-    "officialUrl": "https://mgmotor.id/models/mg-zs-ev",
+    "officialUrl": "https://www.mgmotor.id/mgmodels/newmgzsev",
     "gageExempt": true,
     "image": "../../assets/images/cars/mg-zs-ev.jpg",
     "assembly": "CBU / CKD (Impor / Rakit Resmi APM MG Indonesia)",
     "variants": [
       {
-        "name": "MG New MG ZS EV (Magnify)",
+        "name": "New MG ZS EV (Magnify)",
         "price": "Rp 453,0 Juta",
         "engine": "Electric Motor PMSM (177 PS / 280 Nm)",
         "power": "177 PS / 280 Nm",
@@ -7325,7 +7431,7 @@ const CAR_DATABASE = [
     "pros": "Sedan bergaya 4-door coupe paling agresif: grille Shark-hunting sangar, sunroof elektrik, jok kulit dual-tone sporty dengan jahitan merah, dan layar sentuh 10 inci jernih.",
     "cons": "Akselerasi mesin 1.5L naturally aspirated tergolong santai tidak seagresif tampilan eksteriornya.",
     "wikiUrl": "https://en.wikipedia.org/wiki/MG_5_(automobile)#Second_generation_(2020)",
-    "officialUrl": "https://mgmotor.id/models/mg-5-gt",
+    "officialUrl": "https://www.mgmotor.id/mgmodels/mg5gt",
     "assembly": "CBU / CKD (Impor / Fasilitas Handal PT MG Motor Indonesia)",
     "variants": [
       {
@@ -7374,7 +7480,7 @@ const CAR_DATABASE = [
     "pros": "Compact SUV bergaya Eropa modern dengan panoramic sunroof IMAX terbesar di kelasnya, layar cluster instrumen 7 inci digital, kamera 360, dan filter udara PM 2.5.",
     "cons": "Respons putaran mesin bawah terasa lambat saat membutuhkan akselerasi mendadak menyalip kendaraan.",
     "wikiUrl": "https://en.wikipedia.org/wiki/MG_ZS_(crossover)",
-    "officialUrl": "https://mgmotor.id/models/new-mg-zs",
+    "officialUrl": "https://www.mgmotor.id/mgmodels/mgzs",
     "assembly": "CBU (Impor Resmi PT MG Motor Indonesia dari SAIC Thailand)",
     "variants": [
       {
@@ -7394,6 +7500,55 @@ const CAR_DATABASE = [
         "price": "Rp 355,8 Juta",
         "engine": "1.5L VTi-TECH (114 PS / 150 Nm)",
         "transmission": "CVT Otomatis"
+      }
+    ]
+  },
+  {
+    "id": "mg-hs",
+    "brand": "MG",
+    "model": "New MG HS (Turbo SUV)",
+    "image": "../../assets/images/cars/mg-hs.jpg",
+    "powertrain": "ICE Gasoline",
+    "powertrainLabel": "Bensin (ICE)",
+    "body": "Medium SUV",
+    "engine": "1.5L Turbocharged DOHC 4-Silinder (162 PS / 250 Nm)",
+    "power": 162,
+    "torque": 250,
+    "battery": "N/A (Bensin Konvensional)",
+    "range": "N/A (Bensin Konvensional)",
+    "trans": "7-Speed Twin-Clutch Sportronic (TST)",
+    "drive": "FWD",
+    "dimensions": "4.574 x 1.876 x 1.664 mm",
+    "wheelbase": 2720,
+    "gc": 175,
+    "seats": 5,
+    "priceMin": 460.8,
+    "priceMax": 558.5,
+    "priceDisplay": "Rp 460,8 – 558,5 Juta",
+    "gageExempt": false,
+    "pros": "Medium SUV bermesin 1.5L Turbo 162 PS bertenaga responsif dengan 5 Driving Mode (termasuk tombol Super Sport di setir), jok bucket semi-kulit Alcantara, panoramic sunroof megah, dan i-SMART lengkap.",
+    "cons": "Konsumsi BBM dalam kota stop-and-go relatif membutuhkan oktan tinggi RON 92+.",
+    "wikiUrl": "https://en.wikipedia.org/wiki/MG_HS",
+    "officialUrl": "https://www.mgmotor.id/mgmodels/newmghs",
+    "assembly": "CBU / CKD (Resmi PT SAIC Motor Indonesia)",
+    "variants": [
+      {
+        "name": "New MG HS Activate",
+        "price": "Rp 460,8 Juta",
+        "engine": "1.5L Turbocharged (162 PS / 250 Nm)",
+        "highlights": "Mesin Turbo 162 PS, transmisi 7-Speed TST, layar sentuh 10.1 inci."
+      },
+      {
+        "name": "New MG HS Ignite",
+        "price": "Rp 509,8 Juta",
+        "engine": "1.5L Turbocharged (162 PS / 250 Nm)",
+        "highlights": "Panoramic sunroof elektrik, tombol kemudi Super Sport, jok sporty kulit sintetis."
+      },
+      {
+        "name": "New MG HS Magnify i-SMART",
+        "price": "Rp 558,5 Juta",
+        "engine": "1.5L Turbocharged (162 PS / 250 Nm)",
+        "highlights": "Paket MG Pilot ADAS terlengkap, i-SMART konektivitas pintar via smartphone."
       }
     ]
   },
