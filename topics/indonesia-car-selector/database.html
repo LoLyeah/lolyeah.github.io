@@ -5410,73 +5410,164 @@
             }).join('');
         }
 
-        // FULL SPECIFICATION & LARGE PHOTO MODAL LOGIC
+        // FULL SPECIFICATION & LARGE PHOTO MODAL LOGIC (Non-Truncated Table & Variants Breakdown)
         function openCarDetailModal(carId) {
             const car = CAR_DATABASE.find(c => c.id === carId);
             if (!car) return;
 
             activeModalCarId = car.id;
             const modal = document.getElementById('car-detail-modal');
+            if (!modal) return;
             const fallbackImg = "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&auto=format&fit=crop&q=80";
 
-            document.getElementById('modal-car-img').src = car.image || fallbackImg;
-            document.getElementById('modal-car-brand-badge').textContent = car.brand;
-            document.getElementById('modal-car-powertrain-badge').textContent = car.powertrainLabel || car.powertrain;
+            // 1. Header Banner & Badges
+            const imgEl = document.getElementById('modal-car-img');
+            if (imgEl) imgEl.src = car.image || fallbackImg;
 
-            const gageBadge = document.getElementById('modal-car-gage-badge');
-            if (car.gageExempt) {
-                gageBadge.textContent = "100% Bebas Ganjil-Genap Jakarta";
-                gageBadge.classList.remove('hidden');
-            } else {
-                gageBadge.classList.add('hidden');
+            const brandEl = document.getElementById('modal-car-brand-badge');
+            if (brandEl) brandEl.textContent = car.brand;
+
+            const pBadgeEl = document.getElementById('modal-car-powertrain-badge');
+            if (pBadgeEl) {
+                pBadgeEl.textContent = car.powertrainLabel || car.powertrain;
+                let badgeColor = "bg-amber-500 text-white";
+                if (car.powertrain === 'BEV') badgeColor = "bg-emerald-600 text-white";
+                else if (car.powertrain === 'HEV' || car.powertrain === 'PHEV') badgeColor = "bg-sky-600 text-white";
+                else if (car.powertrain === 'ICE Turbodiesel') badgeColor = "bg-slate-900 text-white";
+                pBadgeEl.className = `px-2.5 py-0.5 rounded-full text-[11px] font-bold ${badgeColor}`;
             }
 
-            document.getElementById('modal-car-title').textContent = `${car.brand} ${car.model}`;
-            document.getElementById('modal-car-price').textContent = `${car.priceDisplay} (OTR Jakarta 2026)`;
-            document.getElementById('modal-car-pros').textContent = car.pros;
-            document.getElementById('modal-car-cons').textContent = car.cons;
+            const gageBadge = document.getElementById('modal-car-gage-badge');
+            if (gageBadge) {
+                if (car.gageExempt) {
+                    gageBadge.classList.remove('hidden');
+                } else {
+                    gageBadge.classList.add('hidden');
+                }
+            }
 
-            // Populate Specs Grid
-            const specGrid = document.getElementById('modal-spec-grid');
-            const specs = [
-                { label: 'Powertrain', val: car.powertrainLabel || car.powertrain },
-                { label: 'Tipe Bodi', val: car.body },
-                { label: 'Mesin / Motor', val: car.engine },
-                { label: 'Tenaga Maksimal', val: `${car.power} PS` },
-                { label: 'Torsi Maksimal', val: `${car.torque} Nm` },
-                { label: 'Kapasitas Baterai', val: car.battery || '-' },
-                { label: 'Jangkauan / Efisiensi', val: car.range },
-                { label: 'Transmisi', val: car.trans },
-                { label: 'Sistem Penggerak', val: car.drive },
-                { label: 'Dimensi (P x L x T)', val: car.dimensions },
-                { label: 'Wheelbase', val: `${car.wheelbase} mm` },
-                { label: 'Ground Clearance', val: `${car.gc} mm` },
-                { label: 'Kapasitas Kursi', val: `${car.seats} Penumpang` },
-                { label: 'Estimasi Pajak PKB', val: car.gageExempt ? 'Rp 0 (0% BEV)' : 'Standar NJKB' }
-            ];
+            const assemblyBadge = document.getElementById('modal-car-assembly-badge');
+            if (assemblyBadge) {
+                if (car.assembly) {
+                    assemblyBadge.textContent = car.assembly;
+                    assemblyBadge.classList.remove('hidden');
+                } else {
+                    assemblyBadge.classList.add('hidden');
+                }
+            }
 
-            specGrid.innerHTML = specs.map(s => `
-                <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                    <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">${s.label}</span>
-                    <strong class="text-slate-900 block truncate" title="${s.val}">${s.val}</strong>
-                </div>
-            `).join('');
+            const titleEl = document.getElementById('modal-car-title');
+            if (titleEl) titleEl.textContent = `${car.brand} ${car.model}`;
 
-            // Links
-            document.getElementById('modal-link-wiki').href = car.wikiUrl;
-            document.getElementById('modal-link-official').href = car.officialUrl;
+            const priceEl = document.getElementById('modal-car-price');
+            if (priceEl) priceEl.textContent = `${car.priceDisplay}`;
 
-            // Compare button status
+            // 2. 4 Top Hero Stats (Numbers Only, No Ellipsis)
+            const statPower = document.getElementById('modal-stat-power');
+            if (statPower) statPower.textContent = `${car.power} PS`;
+
+            const statTorque = document.getElementById('modal-stat-torque');
+            if (statTorque) statTorque.textContent = `${car.torque} Nm`;
+
+            const statGc = document.getElementById('modal-stat-gc');
+            if (statGc) statGc.textContent = `${car.gc} mm`;
+
+            const statSeats = document.getElementById('modal-stat-seats');
+            if (statSeats) statSeats.textContent = `${car.seats} Penumpang`;
+
+            // 3. Variants Breakdown (Prominently Placed at the Top)
+            const variantsContainer = document.getElementById('modal-variants-section');
+            if (variantsContainer) {
+                if (car.variants && car.variants.length > 0) {
+                    variantsContainer.innerHTML = `
+                        <div class="bg-gradient-to-r from-sky-50/80 via-white to-sky-50/50 p-4 sm:p-5 rounded-2xl border border-sky-200/80 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-display font-bold text-sm text-sky-950 flex items-center gap-2">
+                                    <i data-lucide="layers" class="w-4 h-4 text-sky-600"></i>
+                                    <span>Perbedaan Varian &amp; Tipe Model Ini</span>
+                                </h4>
+                                <span class="text-[11px] text-sky-800 font-semibold bg-sky-100 px-2 py-0.5 rounded-full border border-sky-200">${car.variants.length} Varian Resmi APM</span>
+                            </div>
+                            <div class="grid grid-cols-1 ${car.variants.length > 1 ? 'sm:grid-cols-2 lg:grid-cols-' + Math.min(car.variants.length, 3) : ''} gap-3">
+                                ${car.variants.map(v => `
+                                    <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-2 flex flex-col justify-between">
+                                        <div>
+                                            <div class="font-bold text-sm text-slate-900">${v.name}</div>
+                                            <div class="font-display font-extrabold text-sky-700 text-sm mt-0.5">${v.price}</div>
+                                            <div class="text-xs text-slate-600 mt-2 space-y-1">
+                                                ${v.battery ? `<div><span class="font-semibold text-slate-500">Baterai:</span> ${v.battery}</div>` : ''}
+                                                ${v.range ? `<div><span class="font-semibold text-slate-500">Jangkauan:</span> ${v.range}</div>` : ''}
+                                                ${v.engine ? `<div><span class="font-semibold text-slate-500">Mesin:</span> ${v.engine}</div>` : ''}
+                                                ${v.power ? `<div><span class="font-semibold text-slate-500">Output:</span> ${v.power}</div>` : ''}
+                                            </div>
+                                        </div>
+                                        ${v.highlights ? `<div class="pt-2 border-t border-slate-100 text-[11px] text-slate-600 leading-relaxed"><strong class="text-slate-800 font-semibold">Fitur Utama:</strong> ${v.highlights}</div>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    variantsContainer.classList.remove('hidden');
+                } else {
+                    variantsContainer.innerHTML = '';
+                    variantsContainer.classList.add('hidden');
+                }
+            }
+
+            // 4. Non-Truncated Technical Specifications Table (Zero Cut-Off)
+            const specTableBody = document.getElementById('modal-spec-table-body');
+            if (specTableBody) {
+                const specs = [
+                    { label: 'Tipe Powertrain', val: car.powertrainLabel || car.powertrain },
+                    { label: 'Tipe Bodi', val: car.body },
+                    { label: 'Konfigurasi Mesin / Motor', val: car.engine },
+                    { label: 'Kapasitas Baterai', val: car.battery || '-' },
+                    { label: 'Jangkauan / Konsumsi BBM', val: car.range || '-' },
+                    { label: 'Sistem Transmisi', val: car.trans },
+                    { label: 'Sistem Penggerak Roda', val: car.drive },
+                    { label: 'Dimensi Bodi (P x L x T)', val: car.dimensions },
+                    { label: 'Status Perakitan', val: car.assembly || 'Resmi APM Indonesia' },
+                    { label: 'Fasilitas Ganjil-Genap', val: car.gageExempt ? '✅ 100% Bebas Aturan Ganjil-Genap Jakarta' : '❌ Mengikuti Aturan Ganjil-Genap' }
+                ];
+
+                specTableBody.innerHTML = specs.map((s, idx) => `
+                    <tr class="${idx % 2 === 0 ? 'bg-slate-50/50' : 'bg-white'}">
+                        <td class="py-2.5 px-4 font-semibold text-slate-500 w-1/3 sm:w-2/5 shrink-0 align-top">${s.label}</td>
+                        <td class="py-2.5 px-4 font-medium text-slate-900 w-2/3 sm:w-3/5 whitespace-normal break-words leading-relaxed">${s.val}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // 5. Key Highlights & Pros/Cons
+            const prosEl = document.getElementById('modal-car-pros');
+            if (prosEl) prosEl.textContent = car.pros;
+
+            const consEl = document.getElementById('modal-car-cons');
+            if (consEl) consEl.textContent = car.cons;
+
+            // 6. External Links
+            const linkWiki = document.getElementById('modal-link-wiki');
+            if (linkWiki) linkWiki.href = car.wikiUrl;
+
+            const linkOff = document.getElementById('modal-link-official');
+            if (linkOff) linkOff.href = car.officialUrl;
+
+            // 7. Update Compare Button State
             updateModalCompareButton();
 
+            // 8. Open Modal
             modal.classList.remove('hidden');
             document.body.classList.add('overflow-hidden');
-            lucide.createIcons();
+            if (window.lucide) lucide.createIcons();
         }
+
+        // Alias for compatibility
+        const showCarDetailModal = openCarDetailModal;
+        const showCarDetail = openCarDetailModal;
 
         function closeCarDetailModal() {
             const modal = document.getElementById('car-detail-modal');
-            modal.classList.add('hidden');
+            if (modal) modal.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
             activeModalCarId = null;
         }
@@ -5491,11 +5582,12 @@
         function updateModalCompareButton() {
             const btn = document.getElementById('modal-btn-compare');
             const text = document.getElementById('modal-compare-text');
+            if (!btn || !text) return;
             if (activeModalCarId && selectedCars.includes(activeModalCarId)) {
-                btn.className = "px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors";
+                btn.className = "px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors shadow-xs";
                 text.textContent = "Hapus dari Komparasi";
             } else {
-                btn.className = "px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors";
+                btn.className = "px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors shadow-xs";
                 text.textContent = "+ Tambah ke Komparasi";
             }
         }
