@@ -3962,7 +3962,7 @@
                 }
 
                 // Powertrain
-                if (dbFilters.powertrain !== 'all' && car.powertrain !== dbFilters.powertrain) {
+                if (dbFilters.powertrain !== 'all' && !car.powertrain.includes(dbFilters.powertrain)) {
                     return false;
                 }
 
@@ -3991,7 +3991,7 @@
 
                 // Quick Filters (8 Compact Representative Facets)
                 if (dbFilters.quickFilter === 'gage' && !car.gageExempt) return false;
-                if (dbFilters.quickFilter === 'hev-phev' && car.powertrain !== 'HEV' && car.powertrain !== 'PHEV') return false;
+                if (dbFilters.quickFilter === 'hev-phev' && !car.powertrain.includes('HEV') && !car.powertrain.includes('PHEV')) return false;
                 if (dbFilters.quickFilter === '7-seater' && car.seats < 7) return false;
                 if (dbFilters.quickFilter === 'anti-banjir' && car.gc < 200) return false;
                 if (dbFilters.quickFilter === 'ckd' && (!car.assembly || !car.assembly.includes('CKD'))) return false;
