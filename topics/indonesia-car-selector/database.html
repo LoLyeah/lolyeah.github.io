@@ -409,85 +409,124 @@
         </section>
     </main>
 
-    <!-- VEHICLE FULL SPECIFICATION & IMAGE DETAIL LIGHTBOX MODAL -->
-    <div id="car-detail-modal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="modal-car-title" onclick="closeCarDetailModal()">
-        <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-8 flex flex-col max-h-[90vh]" onclick="event.stopPropagation()">
+    <!-- VEHICLE FULL SPECIFICATION & IMAGE DETAIL LIGHTBOX MODAL (Non-Truncated Table Format) -->
+    <div id="car-detail-modal" class="fixed inset-0 z-50 hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 transition-all">
+        <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl border border-slate-200 max-h-[92vh] flex flex-col overflow-hidden relative" onclick="event.stopPropagation()">
 
-            <!-- Modal Header with Large Vehicle Image -->
-            <div class="relative bg-slate-900 h-64 sm:h-80 w-full overflow-hidden shrink-0 group">
-                <img id="modal-car-img" src="" alt="Vehicle Photo" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&auto=format&fit=crop&q=80'">
+            <!-- Close Button Floating -->
+            <button type="button" onclick="closeCarDetailModal()" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-slate-900/80 hover:bg-slate-900 text-white backdrop-blur-md flex items-center justify-center transition-all shadow-lg active:scale-95" title="Tutup Modal">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Modal Header with High-Res Photo Banner -->
+            <div class="relative h-60 sm:h-72 w-full shrink-0 overflow-hidden bg-slate-900">
+                <img id="modal-car-img" src="" class="w-full h-full object-cover" alt="Car Detail" onerror="this.src='https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&auto=format&fit=crop&q=80'">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
 
-                <!-- Close Button -->
-                <button type="button" onclick="closeCarDetailModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center backdrop-blur-md transition-colors z-10" aria-label="Close modal">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-
-                <!-- Vehicle Brand & Title overlay on photo -->
-                <div class="absolute bottom-4 left-4 right-4 text-white">
-                    <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                        <span id="modal-car-brand-badge" class="px-2.5 py-0.5 rounded-md bg-white/20 backdrop-blur-md text-xs font-bold uppercase tracking-wider text-white">Toyota</span>
-                        <span id="modal-car-powertrain-badge" class="px-2.5 py-0.5 rounded-md bg-sky-500/80 backdrop-blur-md text-xs font-bold text-white">Full Hybrid (HEV)</span>
-                        <span id="modal-car-gage-badge" class="px-2.5 py-0.5 rounded-md bg-emerald-500/80 backdrop-blur-md text-xs font-bold text-white">Bebas Ganjil-Genap</span>
+                <div class="absolute bottom-4 left-5 right-5 sm:left-7 sm:right-7 flex flex-col sm:flex-row sm:items-end justify-between gap-2 text-white">
+                    <div>
+                        <div class="flex flex-wrap items-center gap-1.5 mb-1.5">
+                            <span id="modal-car-brand-badge" class="px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-white font-bold text-[11px] border border-white/30">BYD</span>
+                            <span id="modal-car-powertrain-badge" class="px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-bold text-[11px]">Mobil Listrik (BEV)</span>
+                            <span id="modal-car-gage-badge" class="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-bold text-[11px]">Bebas Ganjil-Genap</span>
+                            <span id="modal-car-assembly-badge" class="px-2.5 py-0.5 rounded-full bg-slate-800/90 text-slate-200 font-medium text-[11px] border border-slate-700">CBU Resmi APM</span>
+                        </div>
+                        <h2 id="modal-car-title" class="font-display font-black text-2xl sm:text-3xl text-white tracking-tight leading-tight">BYD Seal</h2>
                     </div>
-                    <h2 id="modal-car-title" class="font-display font-black text-2xl sm:text-3xl text-white tracking-tight">Kijang Innova Zenix Hybrid</h2>
-                    <span id="modal-car-price" class="font-semibold text-emerald-400 text-sm sm:text-base">Rp 477,6 – 633,6 Juta (OTR Jakarta)</span>
+                    <div class="text-left sm:text-right shrink-0">
+                        <span class="text-[11px] text-slate-300 block">Estimasi OTR Jakarta 2026</span>
+                        <span id="modal-car-price" class="font-display font-black text-xl sm:text-2xl text-sky-300">Rp 629,0 – 719,0 Juta</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Modal Scrollable Content Body -->
-            <div class="p-6 sm:p-8 overflow-y-auto space-y-6 flex-grow">
+            <div class="p-5 sm:p-7 overflow-y-auto space-y-6 flex-grow text-slate-800">
 
-                <!-- Key Highlights & Pros/Cons -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-1.5">
-                        <strong class="font-bold text-emerald-950 flex items-center gap-1.5 text-sm">
-                            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
-                            <span>Kelebihan &amp; Nilai Jual Utama</span>
-                        </strong>
-                        <p id="modal-car-pros" class="text-emerald-900 leading-relaxed font-normal"></p>
+                <!-- 4 Quick Key Metrics Grid (Numbers Only, No Text Truncation) -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block mb-0.5 tracking-wider">Tenaga Maksimal</span>
+                        <span id="modal-stat-power" class="font-display font-extrabold text-lg text-slate-900 block">530 PS</span>
                     </div>
-                    <div class="p-4 rounded-2xl bg-rose-50/70 border border-rose-200 space-y-1.5">
-                        <strong class="font-bold text-rose-950 flex items-center gap-1.5 text-sm">
-                            <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600"></i>
-                            <span>Catatan &amp; Kelemahan Operasional</span>
-                        </strong>
-                        <p id="modal-car-cons" class="text-rose-900 leading-relaxed font-normal"></p>
+                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block mb-0.5 tracking-wider">Torsi Puncak</span>
+                        <span id="modal-stat-torque" class="font-display font-extrabold text-lg text-slate-900 block">670 Nm</span>
+                    </div>
+                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block mb-0.5 tracking-wider">Ground Clearance</span>
+                        <span id="modal-stat-gc" class="font-display font-extrabold text-lg text-slate-900 block">120 mm</span>
+                    </div>
+                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block mb-0.5 tracking-wider">Kapasitas Kursi</span>
+                        <span id="modal-stat-seats" class="font-display font-extrabold text-lg text-slate-900 block">5 Penumpang</span>
                     </div>
                 </div>
 
-                <!-- Comprehensive Technical Specifications Grid -->
-                <div class="space-y-3">
+                <!-- Comprehensive Technical Specifications (Clean 2-Column Table, Zero Ellipsis) -->
+                <div class="space-y-2.5">
                     <h3 class="font-display font-bold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2">
                         <i data-lucide="sliders" class="w-4 h-4 text-sky-600"></i>
                         <span>Spesifikasi Teknis Detail (Standar Resmi APM Indonesia)</span>
                     </h3>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 text-xs" id="modal-spec-grid">
-                        <!-- Populated by JS -->
+                    <div class="overflow-hidden rounded-2xl border border-slate-200 shadow-2xs">
+                        <table class="w-full text-xs text-left">
+                            <tbody id="modal-spec-table-body" class="divide-y divide-slate-100">
+                                <!-- Populated dynamically with non-truncated rows -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <!-- Quick Action Buttons Row -->
-                <div class="pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-                    <div class="flex items-center gap-2">
-                        <button type="button" id="modal-btn-compare" onclick="toggleCompareFromModal()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors">
-                            <i data-lucide="scale" class="w-4 h-4"></i>
-                            <span id="modal-compare-text">Bandingkan Mobil Ini</span>
-                        </button>
+                <!-- Variants Breakdown Section (If Model Has Multiple Trims/Variants) -->
+                <div id="modal-variants-section" class="space-y-3 pt-2">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <!-- Key Highlights & Pros/Cons Analysis -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-1">
+                    <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 space-y-1.5">
+                        <strong class="font-bold text-emerald-950 flex items-center gap-1.5 text-sm">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+                            <span>Kelebihan &amp; Nilai Jual Utama</span>
+                        </strong>
+                        <p id="modal-car-pros" class="text-emerald-900 leading-relaxed font-normal whitespace-normal break-words"></p>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <a id="modal-link-wiki" href="#" target="_blank" rel="noopener" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors">
-                            <i data-lucide="book-open" class="w-4 h-4 text-slate-600"></i>
-                            <span>Baca di Wikipedia</span>
-                        </a>
-                        <a id="modal-link-official" href="#" target="_blank" rel="noopener" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors shadow-xs">
-                            <i data-lucide="external-link" class="w-4 h-4"></i>
-                            <span>Situs Resmi APM</span>
-                        </a>
+                    <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-1.5">
+                        <strong class="font-bold text-amber-950 flex items-center gap-1.5 text-sm">
+                            <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600"></i>
+                            <span>Catatan &amp; Pertimbangan Operasional</span>
+                        </strong>
+                        <p id="modal-car-cons" class="text-amber-900 leading-relaxed font-normal whitespace-normal break-words"></p>
                     </div>
                 </div>
+
             </div>
+
+            <!-- Modal Footer Controls Sticky Bottom -->
+            <div class="p-4 sm:px-7 sm:py-3.5 bg-slate-50 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                <div class="flex items-center gap-2">
+                    <button type="button" id="modal-btn-compare" onclick="toggleCompareFromModal()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors shadow-xs">
+                        <i data-lucide="scale" class="w-4 h-4"></i>
+                        <span id="modal-compare-text">Bandingkan Mobil Ini</span>
+                    </button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a id="modal-link-wiki" href="#" target="_blank" rel="noopener" class="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl font-semibold text-xs flex items-center gap-1.5 transition-colors shadow-2xs">
+                        <i data-lucide="book-open" class="w-3.5 h-3.5 text-slate-500"></i>
+                        <span>Wikipedia</span>
+                    </a>
+                    <a id="modal-link-official" href="#" target="_blank" rel="noopener" class="px-3.5 py-2 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 rounded-xl font-semibold text-xs flex items-center gap-1.5 transition-colors shadow-2xs">
+                        <i data-lucide="external-link" class="w-3.5 h-3.5 text-sky-600"></i>
+                        <span>Situs Resmi APM</span>
+                    </a>
+                    <button type="button" onclick="closeCarDetailModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl font-bold text-xs transition-colors">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 
