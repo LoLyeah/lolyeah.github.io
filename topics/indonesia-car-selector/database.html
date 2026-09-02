@@ -28,7 +28,7 @@
       "@context": "https://schema.org",
       "@type": "Dataset",
       "name": "Master Database Otomotif Indonesia 2026",
-      "description": "Database terpusat spesifikasi teknis, foto kendaraan resmi, harga OTR Jakarta, dan link referensi untuk 126 model mobil di Indonesia.",
+      "description": "Database terpusat spesifikasi teknis, foto kendaraan resmi, harga OTR Jakarta, dan link referensi untuk 108 model mobil di Indonesia.",
       "url": "https://lolyeah.github.io/topics/indonesia-car-selector/database.html",
       "publisher": {
         "@type": "Organization",
@@ -165,7 +165,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-800 text-xs font-semibold tracking-wide uppercase mb-3">
                     <i data-lucide="database" class="w-3.5 h-3.5 text-sky-600"></i>
-                    <span class="id-only">Master Database Otomotif Indonesia (126 model 2026)</span>
+                    <span class="id-only">Master Database Otomotif Indonesia (108 model 2026)</span>
                     <span class="en-only">Indonesian Master Automotive Database (121+ 2026 Models)</span>
                 </div>
 
@@ -183,27 +183,27 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                     <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200">
                         <span class="text-xs font-medium text-slate-500 block mb-0.5">Total Model</span>
-                        <span class="font-display font-black text-xl text-slate-900" id="stat-total">126 model</span>
+                        <span class="font-display font-black text-xl text-slate-900" id="stat-total">108 Model</span>
                     </div>
                     <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200">
                         <span class="text-xs font-medium text-slate-500 block mb-0.5">ICE Bensin</span>
-                        <span class="font-display font-black text-xl text-amber-600" id="stat-ice-gas">28 Model</span>
+                        <span class="font-display font-black text-xl text-amber-600" id="stat-ice-gas">27 Model</span>
                     </div>
                     <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200">
                         <span class="text-xs font-medium text-slate-500 block mb-0.5">Turbodiesel</span>
-                        <span class="font-display font-black text-xl text-slate-700" id="stat-ice-diesel">10 Model</span>
+                        <span class="font-display font-black text-xl text-slate-700" id="stat-ice-diesel">9 Model</span>
                     </div>
                     <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200">
                         <span class="text-xs font-medium text-slate-500 block mb-0.5">HEV / Hybrid</span>
-                        <span class="font-display font-black text-xl text-sky-600" id="stat-hev">35 Model</span>
+                        <span class="font-display font-black text-xl text-sky-600" id="stat-hev">24 Model</span>
                     </div>
                     <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200">
                         <span class="text-xs font-medium text-slate-500 block mb-0.5">PHEV</span>
-                        <span class="font-display font-black text-xl text-purple-600" id="stat-phev">16 Model</span>
+                        <span class="font-display font-black text-xl text-purple-600" id="stat-phev">13 Model</span>
                     </div>
                     <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200">
                         <span class="text-xs font-medium text-slate-500 block mb-0.5">BEV (Listrik)</span>
-                        <span class="font-display font-black text-xl text-emerald-600" id="stat-bev">32 Model</span>
+                        <span class="font-display font-black text-xl text-emerald-600" id="stat-bev">35 Model</span>
                     </div>
                 </div>
             </div>
@@ -288,64 +288,76 @@
                             <option value="MG">MG</option>
                         </select>
 
-                        <!-- View Toggle Buttons -->
-                        <div class="inline-flex p-0.5 rounded-xl bg-slate-100 border border-slate-200">
-                            <button type="button" id="view-btn-cards" onclick="setViewMode('cards')" class="p-1.5 rounded-lg bg-white text-sky-700 shadow-xs transition-all" title="Tampilan Kartu Visual">
-                                <i data-lucide="grid" class="w-4 h-4"></i>
+                        <!-- Quick Filter Toggle & View Switcher -->
+                        <div class="flex items-center gap-2">
+                            <!-- Toggle Quick Filter Button -->
+                            <button type="button" id="btn-toggle-qf" onclick="toggleQuickFiltersBar()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 transition-colors shadow-2xs" title="Sembunyikan atau Tampilkan Filter Cepat">
+                                <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-sky-600"></i>
+                                <span id="qf-toggle-text-id" class="id-only">Filter Cepat</span>
+                                <span id="qf-toggle-text-en" class="en-only hidden">Quick Filters</span>
                             </button>
-                            <button type="button" id="view-btn-table" onclick="setViewMode('table')" class="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 transition-all" title="Tampilan Tabel Spreadsheet">
-                                <i data-lucide="table" class="w-4 h-4"></i>
-                            </button>
+
+                            <!-- View Toggle Buttons (Cards vs Table) -->
+                            <div class="inline-flex p-0.5 rounded-xl bg-slate-100 border border-slate-200">
+                                <button type="button" id="view-btn-cards" onclick="setViewMode('cards')" class="p-1.5 rounded-lg bg-white text-sky-700 shadow-xs transition-all" title="Tampilan Kartu Visual">
+                                    <i data-lucide="grid" class="w-4 h-4"></i>
+                                </button>
+                                <button type="button" id="view-btn-table" onclick="setViewMode('table')" class="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 transition-all" title="Tampilan Tabel Spreadsheet">
+                                    <i data-lucide="table" class="w-4 h-4"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Quick Filter Badges Row (Compact, Highly Representative, Mobile Scrollable) -->
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1.5 border-t border-slate-200/60">
-                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0 text-xs">
-                        <span class="text-slate-400 font-semibold text-[11px] shrink-0 mr-1 id-only">Filter Cepat:</span>
-                        <span class="text-slate-400 font-semibold text-[11px] shrink-0 mr-1 en-only">Quick Filters:</span>
+                <!-- Quick Filter Badges Row (Collapsible, Compact, 8 Core Facets) -->
+                <div id="quick-filters-container" class="transition-all duration-300 overflow-hidden">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1.5 border-t border-slate-200/60">
+                        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0 text-xs">
+                            <span class="text-slate-400 font-semibold text-[11px] shrink-0 mr-1 id-only">Filter Cepat:</span>
+                            <span class="text-slate-400 font-semibold text-[11px] shrink-0 mr-1 en-only">Quick Filters:</span>
 
-                        <button type="button" onclick="toggleQuickFilter('gage')" id="qf-gage" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
-                            <span class="id-only">Bebas Gage (BEV)</span>
-                            <span class="en-only">Odd-Even Free</span>
-                        </button>
-                        <button type="button" onclick="toggleQuickFilter('hev-phev')" id="qf-hev-phev" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
-                            <span>Hybrid &amp; PHEV</span>
-                        </button>
-                        <button type="button" onclick="toggleQuickFilter('7-seater')" id="qf-7-seater" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
-                            <span>7/8-Seater</span>
-                        </button>
-                        <button type="button" onclick="toggleQuickFilter('anti-banjir')" id="qf-anti-banjir" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
-                            <span class="id-only">GC &ge; 200mm</span>
-                            <span class="en-only">GC &ge; 200mm</span>
-                        </button>
-                        <button type="button" onclick="toggleQuickFilter('ckd')" id="qf-ckd" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
-                            <span class="id-only">Rakit Lokal (CKD)</span>
-                            <span class="en-only">Local Assembly</span>
-                        </button>
-                        <button type="button" onclick="toggleQuickFilter('under300')" id="qf-under300" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
-                            <span class="id-only">&lt; Rp 300 Jt</span>
-                            <span class="en-only">&lt; IDR 300M</span>
-                        </button>
-                        <button type="button" onclick="toggleQuickFilter('chinese-wave')" id="qf-chinese-wave" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
-                            <span class="id-only">Brand Tiongkok 2026</span>
-                            <span class="en-only">2026 China Brands</span>
-                        </button>
-                        <button type="button" onclick="toggleQuickFilter('awd-4x4')" id="qf-awd-4x4" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
-                            <span>AWD / 4x4</span>
-                        </button>
-                    </div>
+                            <button type="button" onclick="toggleQuickFilter('gage')" id="qf-gage" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
+                                <span class="id-only">Bebas Gage (BEV)</span>
+                                <span class="en-only">Odd-Even Free</span>
+                            </button>
+                            <button type="button" onclick="toggleQuickFilter('hev-phev')" id="qf-hev-phev" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
+                                <span>Hybrid &amp; PHEV</span>
+                            </button>
+                            <button type="button" onclick="toggleQuickFilter('7-seater')" id="qf-7-seater" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
+                                <span>7/8-Seater</span>
+                            </button>
+                            <button type="button" onclick="toggleQuickFilter('anti-banjir')" id="qf-anti-banjir" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
+                                <span class="id-only">GC &ge; 200mm</span>
+                                <span class="en-only">GC &ge; 200mm</span>
+                            </button>
+                            <button type="button" onclick="toggleQuickFilter('ckd')" id="qf-ckd" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
+                                <span class="id-only">Rakit Lokal (CKD)</span>
+                                <span class="en-only">Local Assembly</span>
+                            </button>
+                            <button type="button" onclick="toggleQuickFilter('under300')" id="qf-under300" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
+                                <span class="id-only">&lt; Rp 300 Jt</span>
+                                <span class="en-only">&lt; IDR 300M</span>
+                            </button>
+                            <button type="button" onclick="toggleQuickFilter('chinese-wave')" id="qf-chinese-wave" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
+                                <span class="id-only">Brand Tiongkok 2026</span>
+                                <span class="en-only">2026 China Brands</span>
+                            </button>
+                            <button type="button" onclick="toggleQuickFilter('awd-4x4')" id="qf-awd-4x4" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 font-medium text-[11px] shrink-0 transition-colors">
+                                <span>AWD / 4x4</span>
+                            </button>
+                        </div>
 
-                    <div class="flex items-center gap-2 shrink-0 justify-between sm:justify-end">
-                        <span id="filtered-count" class="text-[11px] font-medium text-slate-500">Menampilkan 126 model</span>
-                        <div class="flex items-center gap-1.5">
-                            <button type="button" onclick="exportData('csv')" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-lg text-[11px] font-medium shadow-xs transition-colors">
-                                CSV
-                            </button>
-                            <button type="button" onclick="exportData('json')" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-lg text-[11px] font-medium shadow-xs transition-colors">
-                                JSON
-                            </button>
+                        <div class="flex items-center gap-2 shrink-0 justify-between sm:justify-end">
+                            <span id="filtered-count" class="text-[11px] font-medium text-slate-500">Menampilkan 108 model</span>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" onclick="exportData('csv')" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-lg text-[11px] font-medium shadow-xs transition-colors">
+                                    CSV
+                                </button>
+                                <button type="button" onclick="exportData('json')" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-lg text-[11px] font-medium shadow-xs transition-colors">
+                                    JSON
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -565,7 +577,7 @@
 
     <!-- JAVASCRIPT MASTER LOGIC & DATASET -->
     <script>
-        // MASTER CENTRALIZED CAR DATABASE (126 model+ MODELS 2026)
+        // MASTER CENTRALIZED CAR DATABASE (108 model+ MODELS 2026)
         const CAR_DATABASE = [
     {
         "id": "bmw-330e",
@@ -713,7 +725,7 @@
         "assembly": "CBU / CKD (Impor / Rakit Resmi APM BYD Indonesia)"
     },
     {
-        "id": "byd-atto3",
+        "id": "byd-atto-3",
         "brand": "BYD",
         "model": "Atto 3 (Advanced & Superior)",
         "powertrain": "BEV",
@@ -732,43 +744,32 @@
         "seats": 5,
         "priceMin": 429.0,
         "priceMax": 515.0,
-        "priceDisplay": "Rp 429,0 - 515,0 Juta",
+        "priceDisplay": "Rp 429,0 – 515,0 Juta",
         "pros": "Kombinasi terbaik SUV listrik: kabin lega, panoramic sunroof, suspensi nyaman, jangkauan 480 km, bebas Ganjil-Genap.",
         "cons": "Desain interior tema gym dengan tali gitar pada door pocket tidak semua orang suka.",
         "wikiUrl": "https://en.wikipedia.org/wiki/BYD_Atto_3",
         "officialUrl": "https://www.byd.com/id/car/atto3",
         "gageExempt": true,
         "image": "../../assets/images/cars/byd-atto3.jpg",
-        "assembly": "CBU / CKD (Impor / Rakit Resmi APM BYD Indonesia)"
-    },
-    {
-        "id": "byd-atto-3",
-        "brand": "BYD",
-        "model": "Atto 3 (Superior Extended Range)",
-        "image": "../../assets/images/cars/byd-atto-3.jpg",
-        "powertrain": "BEV",
-        "powertrainLabel": "Mobil Listrik (BEV)",
-        "body": "Compact SUV",
-        "engine": "Electric Motor PMSM (150 kW / 204 PS / 310 Nm)",
-        "power": 204,
-        "torque": 310,
-        "battery": "60.48 kWh Blade Battery (LFP)",
-        "range": "480 km NEDC (410 km WLTP)",
-        "trans": "Single Speed Automatic",
-        "drive": "FWD",
-        "dimensions": "4.455 x 1.875 x 1.615 mm",
-        "wheelbase": 2720,
-        "gc": 175,
-        "seats": 5,
-        "priceMin": 429.0,
-        "priceMax": 515.0,
-        "priceDisplay": "Rp 429,0 – 515,0 Juta",
-        "gageExempt": true,
-        "pros": "SUV listrik terlaris dengan kabin bernuansa gym futuristik, panoramic sunroof, suspensi Multi-Link empuk, bebas Ganjil-Genap.",
-        "cons": "Desain kisi-kisi AC dan senar pintu gitar interior polarisasi selera.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/BYD_Atto_3",
-        "officialUrl": "https://www.byd.com/id/car/atto3",
-        "assembly": "CBU / CKD (Impor / Rakit Resmi APM BYD Indonesia)"
+        "assembly": "CBU / CKD (Impor / Rakit Resmi APM BYD Indonesia)",
+        "variants": [
+            {
+                "name": "Atto 3 Advanced (Standard Range)",
+                "price": "Rp 390,0 Juta",
+                "battery": "49.92 kWh Blade Battery",
+                "range": "410 km (NEDC)",
+                "power": "204 PS / 310 Nm",
+                "highlights": "Velg 17 inci, layar putar 12.8 inci, audio 6 speaker, wireless charging 15W."
+            },
+            {
+                "name": "Atto 3 Superior (Extended Range)",
+                "price": "Rp 515,0 Juta",
+                "battery": "60.48 kWh Blade Battery",
+                "range": "480 km (NEDC)",
+                "power": "204 PS / 310 Nm",
+                "highlights": "Velg 18 inci dual-tone, layar putar 15.6 inci, panoramic sunroof elektrik, power tailgate, ADAS level 2."
+            }
+        ]
     },
     {
         "id": "byd-m6-ev",
@@ -797,7 +798,33 @@
         "cons": "Pintu baris kedua belum model geser elektrik (masih swing door konvensional).",
         "wikiUrl": "https://en.wikipedia.org/wiki/BYD_Song_Max#BYD_M6",
         "officialUrl": "https://www.byd.com/id/car/m6",
-        "assembly": "CBU / CKD (Impor / Rakit Resmi APM BYD Indonesia)"
+        "assembly": "CBU / CKD (Impor / Rakit Resmi APM BYD Indonesia)",
+        "variants": [
+            {
+                "name": "M6 Standard (7-Seater)",
+                "price": "Rp 379,0 Juta",
+                "battery": "55.4 kWh Blade Battery",
+                "range": "420 km (NEDC)",
+                "power": "163 PS / 310 Nm",
+                "highlights": "Kapasitas 7 kursi, velg 17 inci, layar sentuh rotasi 12.8 inci, kamera 360."
+            },
+            {
+                "name": "M6 Superior (7-Seater)",
+                "price": "Rp 419,0 Juta",
+                "battery": "71.8 kWh Blade Battery",
+                "range": "530 km (NEDC)",
+                "power": "204 PS / 310 Nm",
+                "highlights": "Baterai lebih besar 530 km, panoramic glass roof, wireless charger, ventilated front seats."
+            },
+            {
+                "name": "M6 Superior Captain (6-Seater)",
+                "price": "Rp 429,0 Juta",
+                "battery": "71.8 kWh Blade Battery",
+                "range": "530 km (NEDC)",
+                "power": "204 PS / 310 Nm",
+                "highlights": "Konfigurasi 6-kursi dengan Captain Seat baris kedua yang sangat nyaman untuk keluarga VIP."
+            }
+        ]
     },
     {
         "id": "byd-dolphin",
@@ -826,36 +853,25 @@
         "cons": "Suspensi belakang varian Dynamic masih Torsion Beam, radius putar sedang.",
         "wikiUrl": "https://en.wikipedia.org/wiki/BYD_Dolphin",
         "officialUrl": "https://www.byd.com/id/car/dolphin",
-        "assembly": "CBU / CKD (Impor / Rakit Resmi APM BYD Indonesia)"
-    },
-    {
-        "id": "byd-m6",
-        "brand": "BYD",
-        "model": "M6 EV (Standard / Superior)",
-        "powertrain": "BEV",
-        "powertrainLabel": "Listrik Murni (BEV)",
-        "body": "Medium MPV",
-        "engine": "Single Electric Motor Permanent Magnet",
-        "power": 204,
-        "torque": 310,
-        "battery": "55.4 - 71.8 kWh Blade Battery LFP",
-        "range": "420 - 530 km NEDC",
-        "trans": "Single Speed",
-        "drive": "FWD",
-        "dimensions": "4.710 x 1.810 x 1.690 mm",
-        "wheelbase": 2800,
-        "gc": 170,
-        "seats": 7,
-        "priceMin": 379.0,
-        "priceMax": 429.0,
-        "priceDisplay": "Rp 379,0 - 429,0 Juta",
-        "pros": "MPV listrik 7-seater murni pertama di bawah Rp 430 Juta, baterai Blade sangat aman, jangkauan hingga 530 km, bebas Ganjil-Genap Jakarta.",
-        "cons": "Tidak ada pintu geser (pintu konvensional), baris ketiga sedang untuk orang dewasa tinggi >175cm.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/BYD_Song_Max",
-        "officialUrl": "https://www.byd.com/id/car/m6",
-        "gageExempt": true,
-        "image": "../../assets/images/cars/byd-m6.jpg",
-        "assembly": "CBU / CKD (Impor / Rakit Resmi APM BYD Indonesia)"
+        "assembly": "CBU / CKD (Impor / Rakit Resmi APM BYD Indonesia)",
+        "variants": [
+            {
+                "name": "Dolphin Dynamic (Standard Range)",
+                "price": "Rp 365,0 Juta",
+                "battery": "44.9 kWh Blade Battery",
+                "range": "410 km (NEDC)",
+                "power": "95 PS / 180 Nm",
+                "highlights": "Hatchback listrik kompak perkotaan, suspensi torsion beam belakang, velg 16 inci."
+            },
+            {
+                "name": "Dolphin Premium (Extended Range)",
+                "price": "Rp 425,0 Juta",
+                "battery": "60.48 kWh Blade Battery",
+                "range": "490 km (NEDC)",
+                "power": "204 PS / 310 Nm",
+                "highlights": "Tenaga 204 PS bertenaga, suspensi independen Multi-link belakang, panoramic glass roof, velg 17 inci."
+            }
+        ]
     },
     {
         "id": "byd-seal",
@@ -884,7 +900,25 @@
         "cons": "Ground clearance 120mm rendah untuk polisi tidur tinggi di perumahan.",
         "wikiUrl": "https://en.wikipedia.org/wiki/BYD_Seal",
         "officialUrl": "https://www.byd.com/id/car/seal",
-        "assembly": "CBU / CKD (Impor / Rakit Resmi APM BYD Indonesia)"
+        "assembly": "CBU / CKD (Impor / Rakit Resmi APM BYD Indonesia)",
+        "variants": [
+            {
+                "name": "Seal Premium (Extended Range RWD)",
+                "price": "Rp 629,0 Juta",
+                "battery": "82.56 kWh Blade Battery",
+                "range": "650 km (NEDC)",
+                "power": "313 PS / 360 Nm (RWD, 0-100 dlm 5.9s)",
+                "highlights": "Jarak tempuh terjauh 650 km, audio Dynaudio 12-speaker, HUD display, suspensi Frequency Selective Damping."
+            },
+            {
+                "name": "Seal Performance (Dual Motor AWD)",
+                "price": "Rp 719,0 Juta",
+                "battery": "82.56 kWh Blade Battery",
+                "range": "580 km (NEDC)",
+                "power": "530 PS / 670 Nm (AWD, 0-100 dlm 3.8s)",
+                "highlights": "Akselerasi buas supercar 3.8 detik, sistem iTAC (Intelligent Torque Adaptation Control), kaliper rem sport."
+            }
+        ]
     },
     {
         "id": "byd-sealion-6",
@@ -1029,7 +1063,23 @@
         "cons": "Desain mengotak menghasilkan koefisien hambatan angin lebih tinggi di jalan tol.",
         "wikiUrl": "https://en.wikipedia.org/wiki/ICAR_03",
         "officialUrl": "https://chery.co.id/",
-        "assembly": "CKD (Rakit Lokal Indonesia • Chery)"
+        "assembly": "CKD (Rakit Lokal Indonesia • Chery)",
+        "variants": [
+            {
+                "name": "Chery J6 RWD (Standard & Long Range)",
+                "price": "Rp 498,0 Juta",
+                "battery": "65.69 kWh LFP (Jangkauan 426 km)",
+                "power": "184 PS / 220 Nm (Penggerak Roda Belakang)",
+                "highlights": "SUV boxy all-aluminum, water wading depth 600mm, layar sentuh 15.6 inci, 8 mode berkendara."
+            },
+            {
+                "name": "Chery J6 iWD (Dual Motor AWD)",
+                "price": "Rp 558,0 Juta",
+                "battery": "69.77 kWh LFP (Jangkauan 501 km)",
+                "power": "279 PS / 385 Nm (Penggerak Semua Roda AWD)",
+                "highlights": "Dual motor AWD cerdas, akselerasi 0-100 km/jam dalam 6.5 detik, audio Infinity 12 speaker, atap kaca panoramic luas."
+            }
+        ]
     },
     {
         "id": "chery-q",
@@ -1348,7 +1398,7 @@
         "assembly": "Resmi APM Indonesia"
     },
     {
-        "id": "gwm-tank-500",
+        "id": "tank-500-hev",
         "brand": "GWM",
         "model": "Tank 500 HEV",
         "powertrain": "HEV",
@@ -1426,41 +1476,12 @@
         "seats": 5,
         "priceMin": 959.9,
         "priceMax": 959.9,
-        "priceDisplay": "Rp 959,9 Juta",
+        "priceDisplay": "Rp 959.9 – 959.9 Juta",
         "gageExempt": false,
         "pros": "Sedan flagship dengan Google Built-in pertama di kelasnya, torsi motor 335 Nm instan, Bose 12-speaker audio.",
         "cons": "Dimensi bodi hampir 5 meter, harga mendekati Rp 1 Milyar.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Honda_Accord",
         "officialUrl": "https://www.honda-indonesia.com/model/all-new-accord-rs-ehev",
-        "assembly": "CBU (Impor Resmi APM Honda Indonesia)"
-    },
-    {
-        "id": "honda-accord-rs-hybrid",
-        "brand": "Honda",
-        "model": "All New Accord RS e:HEV",
-        "powertrain": "HEV",
-        "powertrainLabel": "Full Hybrid (HEV)",
-        "body": "Sedan",
-        "engine": "2.0L Direct Injection Atkinson + Dual Motor (207 PS / 335 Nm)",
-        "power": 207,
-        "torque": 335,
-        "battery": "1.06 kWh Lithium-ion",
-        "range": "20 - 24 km/L (Konsumsi BBM)",
-        "trans": "e-CVT",
-        "drive": "FWD",
-        "dimensions": "4.962 x 1.862 x 1.449 mm",
-        "wheelbase": 2830,
-        "gc": 134,
-        "seats": 5,
-        "priceMin": 959.9,
-        "priceMax": 959.9,
-        "priceDisplay": "Rp 959,9 Juta",
-        "pros": "Sedan flagship dengan Google Built-in pertama di kelasnya, torsi motor 335 Nm instan, Bose 12-speaker audio.",
-        "cons": "Dimensi bodi hampir 5 meter, harga mendekati Rp 1 Milyar.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Honda_Accord",
-        "officialUrl": "https://www.honda-indonesia.com/model/all-new-accord-rs-ehev",
-        "gageExempt": false,
-        "image": "../../assets/images/cars/honda-accord-rs-hybrid.jpg",
         "assembly": "CBU (Impor Resmi APM Honda Indonesia)"
     },
     {
@@ -1512,43 +1533,28 @@
         "gc": 198,
         "seats": 5,
         "priceMin": 814.4,
-        "priceMax": 814.4,
-        "priceDisplay": "Rp 814,4 Juta",
+        "priceMax": 814.5,
+        "priceDisplay": "Rp 814.4 – 814.5 Juta",
         "gageExempt": false,
         "pros": "Handling presisi khas Honda, torsi motor 335 Nm instan dan sangat senyap, audio Bose 12-speaker, Honda CONNECT & Sensing lengkap.",
         "cons": "Varian hybrid hanya 5-seater (baterai traksi diletakkan di bawah ruang bagasi belakang).",
         "wikiUrl": "https://en.wikipedia.org/wiki/Honda_CR-V",
         "officialUrl": "https://www.honda-indonesia.com/model/all-new-cr-v",
-        "assembly": "CKD (Rakit Lokal Indonesia • Honda)"
-    },
-    {
-        "id": "honda-crv-hybrid",
-        "brand": "Honda",
-        "model": "All New CR-V RS e:HEV",
-        "powertrain": "HEV",
-        "powertrainLabel": "Full Hybrid (HEV)",
-        "body": "Monocoque SUV",
-        "engine": "2.0L Direct Injection Atkinson + Dual Electric Motor",
-        "power": 207,
-        "torque": 335,
-        "battery": "1.06 kWh Lithium-ion",
-        "range": "19 - 23 km/L (Uji Riil)",
-        "trans": "e-CVT with Lock-up Clutch",
-        "drive": "FWD",
-        "dimensions": "4.691 x 1.866 x 1.681 mm",
-        "wheelbase": 2701,
-        "gc": 198,
-        "seats": 5,
-        "priceMin": 814.5,
-        "priceMax": 814.5,
-        "priceDisplay": "Rp 814,5 Juta",
-        "pros": "Karakter berkendara sangat bertenaga (207 PS 335 Nm), bantingan suspensi mewah dan stabil di tol, Honda CONNECT + SENSING.",
-        "cons": "Hanya 5 kursi penumpang pada tipe Hybrid (tipe 7-seater hanya di versi 1.5 Turbo), harga menembus Rp 800 Jt.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Honda_CR-V",
-        "officialUrl": "https://www.honda-indonesia.com/model/all-new-cr-v",
-        "gageExempt": false,
-        "image": "../../assets/images/cars/honda-crv-hybrid.jpg",
-        "assembly": "CKD (Rakit Lokal Indonesia • Honda)"
+        "assembly": "CKD (Rakit Lokal Indonesia • Honda)",
+        "variants": [
+            {
+                "name": "CR-V 1.5L VTEC Turbo (7-Seater)",
+                "price": "Rp 749,1 Juta",
+                "engine": "1.5L DOHC VTEC Turbo (190 PS / 240 Nm)",
+                "highlights": "Kapasitas 3 baris kursi (7 penumpang), panoramic sunroof, Honda Sensing lengkap."
+            },
+            {
+                "name": "CR-V 2.0L RS e:HEV (Hybrid 5-Seater)",
+                "price": "Rp 814,4 Juta",
+                "engine": "2.0L Atkinson Cycle + Dual Motor Hybrid (207 PS / 335 Nm)",
+                "highlights": "Torsi instan 335 Nm, konsumsi BBM 20+ km/L, audio premium Bose 12-speaker, Honda CONNECT, badge RS sporty."
+            }
+        ]
     },
     {
         "id": "honda-hr-v",
@@ -1571,7 +1577,7 @@
         "seats": 5,
         "priceMin": 383.9,
         "priceMax": 540.3,
-        "priceDisplay": "Rp 383,9 – 540,3 Juta",
+        "priceDisplay": "Rp 383.9 – 540.3 Juta",
         "gageExempt": false,
         "pros": "Varian RS Turbo sangat kencang (177 PS), handling presisi, kepraktisan kursi Ultra Seats (Utility/Long/Tall/Refresh).",
         "cons": "Harga varian RS Turbo menyentuh Rp 540 Jt, penutup panoramic sunroof manual clip-on.",
@@ -1667,35 +1673,6 @@
         "assembly": "CBU (Impor Resmi APM Honda Indonesia)"
     },
     {
-        "id": "honda-hrv",
-        "brand": "Honda",
-        "model": "HR-V (SE & RS Turbo)",
-        "powertrain": "ICE Gasoline",
-        "powertrainLabel": "Bensin (ICE)",
-        "body": "Compact SUV",
-        "engine": "1.5L i-VTEC 121 PS / 1.5L VTEC Turbo 177 PS 240 Nm",
-        "power": 177,
-        "torque": 240,
-        "battery": "-",
-        "range": "13 - 17 km/L (Konsumsi BBM)",
-        "trans": "CVT with Paddle Shift",
-        "drive": "FWD",
-        "dimensions": "4.385 x 1.790 x 1.590 mm",
-        "wheelbase": 2610,
-        "gc": 196,
-        "seats": 5,
-        "priceMin": 383.9,
-        "priceMax": 540.3,
-        "priceDisplay": "Rp 383,9 - 540,3 Juta",
-        "pros": "Varian RS Turbo sangat kencang (177 PS), handling presisi, kepraktisan kursi Ultra Seats (Utility/Long/Tall/Refresh).",
-        "cons": "Harga varian RS Turbo menyentuh Rp 540 Jt, penutup panoramic sunroof manual clip-on.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Honda_HR-V",
-        "officialUrl": "https://www.honda-indonesia.com/model/all-new-hr-v",
-        "gageExempt": false,
-        "image": "../../assets/images/cars/honda-hrv.jpg",
-        "assembly": "CKD (Rakit Lokal Indonesia • Honda)"
-    },
-    {
         "id": "honda-stepwgn-ehev",
         "brand": "Honda",
         "model": "Step WGN e:HEV (RS)",
@@ -1753,7 +1730,7 @@
         "image": "../../assets/images/cars/honda-super-one.jpg"
     },
     {
-        "id": "honda-wrv",
+        "id": "honda-wr-v",
         "brand": "Honda",
         "model": "WR-V RS",
         "powertrain": "ICE Gasoline",
@@ -1770,44 +1747,15 @@
         "wheelbase": 2485,
         "gc": 220,
         "seats": 5,
-        "priceMin": 277.2,
+        "priceMin": 274.9,
         "priceMax": 326.1,
-        "priceDisplay": "Rp 277,2 - 326,1 Juta",
+        "priceDisplay": "Rp 274.9 – 326.1 Juta",
         "pros": "Ground clearance 220mm tertinggi di kelas small SUV, tenaga 121 PS terbesar di kelasnya, paket Honda SENSING lengkap.",
         "cons": "Peredaman suara kolong roda dan angin tol bisa ditingkatkan, rem belakang masih tromol.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Honda_WR-V",
         "officialUrl": "https://www.honda-indonesia.com/model/wr-v",
         "gageExempt": false,
         "image": "../../assets/images/cars/honda-wrv.jpg",
-        "assembly": "CKD (Rakit Lokal Indonesia • Honda)"
-    },
-    {
-        "id": "honda-wr-v",
-        "brand": "Honda",
-        "model": "WR-V RS with Honda Sensing",
-        "image": "../../assets/images/cars/honda-wr-v.jpg",
-        "powertrain": "ICE Gasoline",
-        "powertrainLabel": "Bensin (ICE)",
-        "body": "Compact SUV",
-        "engine": "1.5L DOHC i-VTEC (121 PS / 145 Nm)",
-        "power": 121,
-        "torque": 145,
-        "battery": "-",
-        "range": "15.0 – 18.0 km/L",
-        "trans": "CVT / 6-Speed Manual",
-        "drive": "FWD",
-        "dimensions": "4.060 x 1.780 x 1.608 mm",
-        "wheelbase": 2485,
-        "gc": 220,
-        "seats": 5,
-        "priceMin": 274.9,
-        "priceMax": 324.1,
-        "priceDisplay": "Rp 274,9 – 324,1 Juta",
-        "gageExempt": false,
-        "pros": "Mesin 121 PS paling bertenaga di kelas Small SUV, ground clearance 220mm tertinggi aman genangan air Jakarta, Honda Sensing.",
-        "cons": "Rem belakang masih menggunakan tromol (drum brake).",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Honda_WR-V#Second_generation_(DG4;_2022)",
-        "officialUrl": "https://www.honda-indonesia.com/model/wr-v",
         "assembly": "CKD (Rakit Lokal Indonesia • Honda)"
     },
     {
@@ -1887,42 +1835,13 @@
         "seats": 7,
         "priceMin": 786.3,
         "priceMax": 869.6,
-        "priceDisplay": "Rp 786,3 - 869,6 Juta",
+        "priceDisplay": "Rp 786.3 – 869.6 Juta",
         "pros": "Desain boxy radikal berkarakter outdoor mewah, kabin 7-seater luas, dual wireless charger, performa turbo hybrid 235 PS responsif.",
         "cons": "Bentuk belakang kotak membagi opini publik, ground clearance 177mm moderat.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Hyundai_Santa_Fe",
         "officialUrl": "https://www.hyundai.com/id/id/find-a-car/all-new-santa-fe/highlights",
         "gageExempt": false,
         "image": "../../assets/images/cars/hyundai-santafe-hybrid.jpg",
-        "assembly": "CKD (Rakit Lokal Indonesia • Hyundai)"
-    },
-    {
-        "id": "hyundai-santafe-hev",
-        "brand": "Hyundai",
-        "model": "All New Santa Fe Hybrid (HEV)",
-        "image": "../../assets/images/cars/hyundai-santafe-hev.jpg",
-        "powertrain": "HEV",
-        "powertrainLabel": "Full Hybrid (HEV)",
-        "body": "Monocoque SUV",
-        "engine": "1.6L Smartstream G1.6 T-GDi (180 PS) + Motor (65 PS / 264 Nm)",
-        "power": 235,
-        "torque": 367,
-        "battery": "1.49 kWh Lithium-ion",
-        "range": "17.0 – 21.5 km/L (Konsumsi BBM)",
-        "trans": "6-Speed Automatic Transmission",
-        "drive": "FWD / AWD",
-        "dimensions": "4.830 x 1.900 x 1.720 mm",
-        "wheelbase": 2815,
-        "gc": 177,
-        "seats": 7,
-        "priceMin": 786.3,
-        "priceMax": 869.6,
-        "priceDisplay": "Rp 786,3 – 869,6 Juta",
-        "gageExempt": false,
-        "pros": "Desain boxy petualang ikonik dengan lampu H-Signature, kabin teras belakang (Terrace Living) super lapang, dual wireless charger dengan sterilisasi UV-C.",
-        "cons": "Desain bagasi belakang datar mengundang perdebatan.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Hyundai_Santa_Fe",
-        "officialUrl": "https://www.hyundai.com/id/id/find-a-car/all-new-santa-fe/highlights",
         "assembly": "CKD (Rakit Lokal Indonesia • Hyundai)"
     },
     {
@@ -2013,7 +1932,7 @@
         "assembly": "CKD (Rakit Lokal Indonesia • Hyundai)"
     },
     {
-        "id": "hyundai-ioniq-5-n",
+        "id": "hyundai-ioniq5-n",
         "brand": "Hyundai",
         "model": "Ioniq 5 N",
         "powertrain": "BEV",
@@ -2032,42 +1951,13 @@
         "seats": 5,
         "priceMin": 1300.0,
         "priceMax": 1300.0,
-        "priceDisplay": "Rp 1,300 Milyar",
+        "priceDisplay": "Rp 1,300.0 Jt – 1.30 Milyar",
         "pros": "Mobil listrik performa tinggi paling menyenangkan di dunia: fitur N e-Shift mensimulasikan perpindahan gigi dan hentakan putaran mesin bensin + suara knalpot N Active Sound+, 650 PS, bebas Ganjil-Genap.",
         "cons": "Konsumsi energi listrik cukup boros saat mode track diaktifkan, bobot kendaraan 2.2 ton.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Hyundai_Ioniq_5#Ioniq_5_N",
         "officialUrl": "https://www.hyundai.com/id/id/find-a-car/ioniq-5-n/highlights",
         "gageExempt": true,
         "image": "../../assets/images/cars/hyundai-ioniq-5-n.jpg",
-        "assembly": "CBU (Impor Resmi APM Hyundai Indonesia)"
-    },
-    {
-        "id": "hyundai-ioniq5-n",
-        "brand": "Hyundai",
-        "model": "Ioniq 5 N (High Performance EV)",
-        "image": "../../assets/images/cars/hyundai-ioniq5-n.jpg",
-        "powertrain": "BEV",
-        "powertrainLabel": "Mobil Listrik Performa (BEV)",
-        "body": "Sports Car",
-        "engine": "Dual Electric Motor AWD (478 kW / 650 PS / 770 Nm with N Grin Boost)",
-        "power": 650,
-        "torque": 770,
-        "battery": "84.0 kWh Lithium-ion (800V Architecture)",
-        "range": "448 km WLTP",
-        "trans": "N e-Shift (Simulated 8-Speed Dual Clutch)",
-        "drive": "AWD with N Drift Optimizer & N Torque Distribution",
-        "dimensions": "4.715 x 1.940 x 1.585 mm",
-        "wheelbase": 3000,
-        "gc": 142,
-        "seats": 5,
-        "priceMin": 1300.0,
-        "priceMax": 1300.0,
-        "priceDisplay": "Rp 1,300 Milyar",
-        "gageExempt": true,
-        "pros": "Mobil listrik paling menyenangkan di dunia: simulasi perpindahan gigi 8-speed dengan hentakan putaran mesin + knalpot sintetis N Active Sound+, 650 PS, bebas Ganjil-Genap.",
-        "cons": "Konsumsi daya listrik tinggi saat mode Track/Drift aktif.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Hyundai_Ioniq_5#Ioniq_5_N",
-        "officialUrl": "https://www.hyundai.com/id/id/find-a-car/ioniq-5-n/highlights",
         "assembly": "CBU (Impor Resmi APM Hyundai Indonesia)"
     },
     {
@@ -2844,41 +2734,12 @@
         "seats": 7,
         "priceMin": 635.0,
         "priceMax": 639.5,
-        "priceDisplay": "Rp 635,0 – 639,5 Juta",
+        "priceDisplay": "Rp 635,0 – 639.5 Juta",
         "gageExempt": false,
         "pros": "Sensasi 100% mobil listrik tanpa colok kabel, pintu bagasi ganda (Dual Back Door) praktis di parkiran mall sempit, ProPILOT 2.0 ADAS.",
         "cons": "Masih terkena aturan Ganjil-Genap Jakarta karena mengonsumsi bensin.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Nissan_Serena",
         "officialUrl": "https://nissan.co.id/vehicles/new/serena-c28.html",
-        "assembly": "Resmi APM Indonesia"
-    },
-    {
-        "id": "nissan-serena-c28",
-        "brand": "Nissan",
-        "model": "All New Serena e-POWER C28",
-        "powertrain": "HEV",
-        "powertrainLabel": "Series Hybrid (e-POWER)",
-        "body": "Medium MPV",
-        "engine": "1.4L HR14DDe Generator + EM57 Electric Drive Motor",
-        "power": 163,
-        "torque": 315,
-        "battery": "1.77 kWh Lithium-ion",
-        "range": "19 - 22 km/L (Konsumsi BBM)",
-        "trans": "Direct Electric Drive (Single Speed)",
-        "drive": "FWD",
-        "dimensions": "4.765 x 1.715 x 1.870 mm",
-        "wheelbase": 2870,
-        "gc": 150,
-        "seats": 7,
-        "priceMin": 635.0,
-        "priceMax": 639.5,
-        "priceDisplay": "Rp 635,0 - 639,5 Juta",
-        "pros": "Sensasi berkendara 100% mobil listrik tanpa perlu colok cas, torsi 315 Nm instan, pintu bagasi ganda Dual Back Door sangat praktis di mall sempit, ProPILOT.",
-        "cons": "Ground clearance 150mm harus hati-hati di polisi tidur ekstrem, harga di atas Rp 600 Jt.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Nissan_Serena",
-        "officialUrl": "https://nissan.co.id/vehicles/new/serena-c28.html",
-        "gageExempt": false,
-        "image": "../../assets/images/cars/nissan-serena-c28.jpg",
         "assembly": "Resmi APM Indonesia"
     },
     {
@@ -2911,7 +2772,7 @@
         "assembly": "Resmi APM Indonesia"
     },
     {
-        "id": "porsche-cayenne-ehybrid",
+        "id": "porsche-cayenne",
         "brand": "Porsche",
         "model": "Porsche Cayenne E-Hybrid",
         "image": "../../assets/images/cars/porsche-cayenne-ehybrid.jpg",
@@ -2940,7 +2801,7 @@
         "assembly": "CBU / CKD (Impor / Rakit Resmi APM Porsche Indonesia)"
     },
     {
-        "id": "suzuki-ertiga-xl7",
+        "id": "suzuki-ertiga-hybrid",
         "brand": "Suzuki",
         "model": "All New Ertiga & XL7 Hybrid",
         "powertrain": "HEV",
@@ -2957,44 +2818,15 @@
         "wheelbase": 2740,
         "gc": 200,
         "seats": 7,
-        "priceMin": 255.4,
+        "priceMin": 255.1,
         "priceMax": 304.9,
-        "priceDisplay": "Rp 255,4 - 304,9 Juta",
+        "priceDisplay": "Rp 255.1 – 304.9 Juta",
         "pros": "MPV 7-seater berteknologi mild hybrid paling terjangkau di Indonesia, garansi baterai lithium 8 tahun, perawatan sangat murah.",
         "cons": "Transmisi masih 4-speed konvensional, fitur assist hybrid hanya aktif sebentar saat akselerasi.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Suzuki_Ertiga",
         "officialUrl": "https://www.suzuki.co.id/automobile/all-new-ertiga-hybrid",
         "gageExempt": false,
         "image": "../../assets/images/cars/suzuki-ertiga-xl7.jpg",
-        "assembly": "CKD (Rakit Lokal Indonesia • Suzuki)"
-    },
-    {
-        "id": "suzuki-ertiga-hybrid",
-        "brand": "Suzuki",
-        "model": "All New Ertiga Cruise Hybrid (MHEV)",
-        "image": "../../assets/images/cars/suzuki-ertiga-hybrid.jpg",
-        "powertrain": "HEV",
-        "powertrainLabel": "Smart Hybrid (MHEV)",
-        "body": "Low MPV",
-        "engine": "1.5L K15B + Integrated Starter Generator (104.7 PS / 138 Nm)",
-        "power": 104.7,
-        "torque": 138,
-        "battery": "10 Ah (0.12 kWh) Lithium-ion",
-        "range": "15.5 – 19.0 km/L (Konsumsi BBM)",
-        "trans": "4-Speed Automatic / 5-Speed Manual",
-        "drive": "FWD",
-        "dimensions": "4.395 x 1.735 x 1.690 mm",
-        "wheelbase": 2740,
-        "gc": 180,
-        "seats": 7,
-        "priceMin": 255.1,
-        "priceMax": 301.0,
-        "priceDisplay": "Rp 255,1 – 301,0 Juta",
-        "gageExempt": false,
-        "pros": "Mobil hybrid 7-seater paling terjangkau di Indonesia: baterai lithium-ion 10 Ah dengan garansi 8 tahun, biaya servis sangat murah.",
-        "cons": "Sistem Mild Hybrid tidak bisa melaju murni tenaga baterai (EV mode) saat stop-and-go macet.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Suzuki_Ertiga",
-        "officialUrl": "https://www.suzuki.co.id/automobile/all-new-ertiga-hybrid-cruise",
         "assembly": "CKD (Rakit Lokal Indonesia • Suzuki)"
     },
     {
@@ -3192,41 +3024,12 @@
         "seats": 7,
         "priceMin": 1407.0,
         "priceMax": 1710.0,
-        "priceDisplay": "Rp 1,407 – 1,710 Milyar",
+        "priceDisplay": "Rp 1,407.0 Jt – 1.71 Milyar",
         "gageExempt": false,
         "pros": "Simbol status eksekutif dan pejabat Indonesia: kabin first-class ultra kedap, Active Noise Control, konsumsi BBM 16 km/L sangat hemat untuk mobil sebesar ini.",
         "cons": "Waktu inden unit masih panjang di diler resmi.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Alphard",
         "officialUrl": "https://www.toyota.astra.co.id/product/all-new-alphard",
-        "assembly": "CBU (Impor Resmi APM Toyota Indonesia)"
-    },
-    {
-        "id": "toyota-alphard-hybrid",
-        "brand": "Toyota",
-        "model": "All New Alphard 2.5 HEV",
-        "powertrain": "HEV",
-        "powertrainLabel": "Full Hybrid (HEV)",
-        "body": "Luxury MPV",
-        "engine": "2.5L Dynamic Force A25A-FXS + Dual Electric Motor E-Four",
-        "power": 250,
-        "torque": 239,
-        "battery": "1.6 kWh Ni-MH",
-        "range": "16 - 19 km/L (Konsumsi BBM)",
-        "trans": "e-CVT",
-        "drive": "E-Four (AWD Listrik)",
-        "dimensions": "5.010 x 1.850 x 1.945 mm",
-        "wheelbase": 3000,
-        "gc": 150,
-        "seats": 7,
-        "priceMin": 1407.0,
-        "priceMax": 1710.0,
-        "priceDisplay": "Rp 1,407 - 1,710 Milyar",
-        "pros": "Simbol status dan kemewahan pejabat & konglomerat Indonesia: kursi Executive Lounge ottoman dengan penghangat & pemijat, kabin super hening berkat Active Noise Control.",
-        "cons": "Tidak bebas Ganjil-Genap, dimensi tinggi 1.945mm rawan mentok di basement mall tua tertentu.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Alphard",
-        "officialUrl": "https://www.toyota.astra.co.id/product/all-new-alphard",
-        "gageExempt": false,
-        "image": "../../assets/images/cars/toyota-alphard-hybrid.jpg",
         "assembly": "CBU (Impor Resmi APM Toyota Indonesia)"
     },
     {
@@ -3250,42 +3053,27 @@
         "seats": 7,
         "priceMin": 239.7,
         "priceMax": 339.8,
-        "priceDisplay": "Rp 239,7 – 339,8 Juta",
+        "priceDisplay": "Rp 239.7 – 339.8 Juta",
         "gageExempt": false,
         "pros": "Mobil sejuta umat: biaya perawatan termurah di Indonesia, jaringan servis di setiap kecamatan, konfigurasi Sofa Mode lapang.",
         "cons": "Peredaman suara roda dan angin pada kecepatan tinggi tol sedang.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Avanza",
         "officialUrl": "https://www.toyota.astra.co.id/product/all-new-avanza",
-        "assembly": "CKD (Rakit Lokal Indonesia • Toyota)"
-    },
-    {
-        "id": "toyota-avanza-veloz",
-        "brand": "Toyota",
-        "model": "All New Avanza & Veloz",
-        "powertrain": "ICE Gasoline",
-        "powertrainLabel": "Bensin (ICE)",
-        "body": "Low MPV",
-        "engine": "1.3L 1NR-VE (98 PS) / 1.5L 2NR-VE Dual VVT-i (106 PS)",
-        "power": 106,
-        "torque": 137,
-        "battery": "-",
-        "range": "14 - 18 km/L (Konsumsi BBM)",
-        "trans": "CVT / 5-Speed Manual",
-        "drive": "FWD",
-        "dimensions": "4.475 x 1.750 x 1.700 mm",
-        "wheelbase": 2750,
-        "gc": 205,
-        "seats": 7,
-        "priceMin": 239.7,
-        "priceMax": 339.8,
-        "priceDisplay": "Rp 239,7 - 339,8 Juta",
-        "pros": "Mobil sejuta umat dengan jaringan servis dan ketersediaan suku cadang terlengkap di seluruh pelosok Indonesia, kabin 7-seater luas, Sofa Mode.",
-        "cons": "Karakter FWD di tanjakan curam berlumpur membutuhkan momentum dibanding sasis RWD lawas.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Avanza",
-        "officialUrl": "https://www.toyota.astra.co.id/product/all-new-avanza",
-        "gageExempt": false,
-        "image": "../../assets/images/cars/toyota-avanza-veloz.jpg",
-        "assembly": "CKD (Rakit Lokal Indonesia • Toyota)"
+        "assembly": "CKD (Rakit Lokal Indonesia • Toyota)",
+        "variants": [
+            {
+                "name": "All New Avanza 1.3 & 1.5 (E / G CVT)",
+                "price": "Rp 239,7 – 276,7 Juta",
+                "engine": "1.3L 1NR-VE / 1.5L 2NR-VE Dual VVT-i (98-106 PS)",
+                "highlights": "Platform FWD DNGA hemat BBM, Sofa Mode fleksibel, ground clearance 205mm."
+            },
+            {
+                "name": "All New Veloz 1.5 (MT / Q CVT / Q TSS)",
+                "price": "Rp 292,9 – 339,8 Juta",
+                "engine": "1.5L 2NR-VE Dual VVT-i (106 PS / 137 Nm)",
+                "highlights": "Desain lebih mewah & sporty, rem cakram 4 roda, rem parkir elektrik (EPB), wireless charger, paket Toyota Safety Sense (TSS)."
+            }
+        ]
     },
     {
         "id": "toyota-camry-hev",
@@ -3308,41 +3096,12 @@
         "seats": 5,
         "priceMin": 937.4,
         "priceMax": 937.4,
-        "priceDisplay": "Rp 937,4 Juta",
+        "priceDisplay": "Rp 937.4 – 937.4 Juta",
         "gageExempt": false,
         "pros": "Sedan eksekutif para menteri dan komisaris: reclining rear seat control panel, JBL 9-speaker audio, kenyamanan suspensi kelas atas.",
         "cons": "Dimensi hampir 4.9 meter, tidak bebas Ganjil-Genap.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Camry_(XV70)",
         "officialUrl": "https://www.toyota.astra.co.id/product/camry",
-        "assembly": "CBU (Impor Resmi APM Toyota Indonesia)"
-    },
-    {
-        "id": "toyota-camry-hybrid",
-        "brand": "Toyota",
-        "model": "All New Camry 2.5 HEV",
-        "powertrain": "HEV",
-        "powertrainLabel": "Full Hybrid (HEV)",
-        "body": "Sedan",
-        "engine": "2.5L Dynamic Force A25A-FXS + Electric Motor",
-        "power": 211,
-        "torque": 221,
-        "battery": "1.6 kWh Ni-MH",
-        "range": "20 - 24 km/L (Konsumsi BBM)",
-        "trans": "e-CVT",
-        "drive": "FWD (TNGA-K)",
-        "dimensions": "4.885 x 1.840 x 1.445 mm",
-        "wheelbase": 2825,
-        "gc": 140,
-        "seats": 5,
-        "priceMin": 937.4,
-        "priceMax": 937.4,
-        "priceDisplay": "Rp 937,4 Juta",
-        "pros": "Sedan eksekutif legendaris: sandaran kursi belakang bisa direbahkan secara elektrik (Reclining Rear Seat), bantingan sangat halus, bensin seirit city car.",
-        "cons": "Tidak bebas Ganjil-Genap Jakarta, citra mobil dinas kementerian.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Camry",
-        "officialUrl": "https://www.toyota.astra.co.id/product/new-camry-hybrid",
-        "gageExempt": false,
-        "image": "../../assets/images/cars/toyota-camry-hybrid.jpg",
         "assembly": "CBU (Impor Resmi APM Toyota Indonesia)"
     },
     {
@@ -3424,41 +3183,12 @@
         "seats": 5,
         "priceMin": 440.6,
         "priceMax": 454.9,
-        "priceDisplay": "Rp 440,6 – 454,9 Juta",
+        "priceDisplay": "Rp 440.6 – 454.9 Juta",
         "gageExempt": false,
         "pros": "Mobil hybrid paling irit di Indonesia (tembus 26-29 km/L), ground clearance 210mm bebas cemas banjir, TSS lengkap.",
         "cons": "Ruang baris kedua pas-pasan jika pengemudi berpostur tinggi.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Yaris_Cross_(XP210)",
         "officialUrl": "https://www.toyota.astra.co.id/product/all-new-yaris-cross",
-        "assembly": "CKD (Rakit Lokal Indonesia • Toyota)"
-    },
-    {
-        "id": "toyota-yaris-cross-hybrid",
-        "brand": "Toyota",
-        "model": "All New Yaris Cross Hybrid",
-        "powertrain": "HEV",
-        "powertrainLabel": "Full Hybrid (HEV)",
-        "body": "Compact SUV",
-        "engine": "1.5L 2NR-VEX (91 PS) + Electric Motor (80 PS)",
-        "power": 111,
-        "torque": 121,
-        "battery": "0.7 kWh Lithium-ion",
-        "range": "25 - 30 km/L (Uji Riil)",
-        "trans": "e-CVT",
-        "drive": "FWD",
-        "dimensions": "4.310 x 1.770 x 1.615 mm",
-        "wheelbase": 2620,
-        "gc": 210,
-        "seats": 5,
-        "priceMin": 440.6,
-        "priceMax": 454.9,
-        "priceDisplay": "Rp 440,6 - 454,9 Juta",
-        "pros": "SUV Hybrid paling irit di Indonesia (tembus 28 km/L di rute perkotaan), ground clearance 210mm, TSS lengkap, panoramic glass roof.",
-        "cons": "Ruang baris kedua moderat, material peredam pintu agak tipis.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Yaris_Cross_(XP210)",
-        "officialUrl": "https://www.toyota.astra.co.id/product/all-new-yaris-cross",
-        "gageExempt": false,
-        "image": "../../assets/images/cars/toyota-yaris-cross-hybrid.jpg",
         "assembly": "CKD (Rakit Lokal Indonesia • Toyota)"
     },
     {
@@ -3491,7 +3221,7 @@
         "assembly": "CKD (Rakit Lokal Indonesia • Toyota)"
     },
     {
-        "id": "toyota-corolla-cross-hybrid",
+        "id": "toyota-corolla-cross-hev",
         "brand": "Toyota",
         "model": "Corolla Cross 1.8 HEV GR Sport",
         "powertrain": "HEV",
@@ -3510,42 +3240,13 @@
         "seats": 5,
         "priceMin": 568.2,
         "priceMax": 608.4,
-        "priceDisplay": "Rp 568,2 - 608,4 Juta",
+        "priceDisplay": "Rp 568.2 – 608.4 Juta",
         "pros": "Kenyamanan suspensi TNGA sangat matang dan halus, konsumsi bensin luar biasa irit, TSS lengkap.",
         "cons": "Ground clearance 161mm moderat untuk SUV, tidak bebas Ganjil-Genap.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Corolla_Cross",
         "officialUrl": "https://www.toyota.astra.co.id/product/corolla-cross-hybrid",
         "gageExempt": false,
         "image": "../../assets/images/cars/toyota-corolla-cross-hybrid.jpg",
-        "assembly": "CBU (Impor Resmi APM Toyota Indonesia)"
-    },
-    {
-        "id": "toyota-corolla-cross-hev",
-        "brand": "Toyota",
-        "model": "Corolla Cross Hybrid GR Sport",
-        "image": "../../assets/images/cars/toyota-corolla-cross-hev.jpg",
-        "powertrain": "HEV",
-        "powertrainLabel": "Full Hybrid (HEV)",
-        "body": "Compact SUV",
-        "engine": "1.8L 2ZR-FXE DOHC VVT-i (98 PS) + Motor (72 PS / 163 Nm)",
-        "power": 122,
-        "torque": 163,
-        "battery": "1.31 kWh (Ni-MH)",
-        "range": "18.5 – 22.0 km/L",
-        "trans": "e-CVT",
-        "drive": "FWD (TNGA-C)",
-        "dimensions": "4.460 x 1.825 x 1.620 mm",
-        "wheelbase": 2640,
-        "gc": 161,
-        "seats": 5,
-        "priceMin": 568.2,
-        "priceMax": 608.4,
-        "priceDisplay": "Rp 568,2 – 608,4 Juta",
-        "gageExempt": false,
-        "pros": "Crossover nyaman dengan handling stabil dan paket keselamatan aktif Toyota Safety Sense lengkap.",
-        "cons": "Ground clearance 161mm sedang, tidak bebas Ganjil-Genap.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Corolla_Cross",
-        "officialUrl": "https://www.toyota.astra.co.id/product/corolla-cross-hybrid",
         "assembly": "CBU (Impor Resmi APM Toyota Indonesia)"
     },
     {
@@ -3665,7 +3366,7 @@
         "assembly": "CKD (Rakit Lokal Indonesia • Toyota)"
     },
     {
-        "id": "toyota-zenix-gasoline",
+        "id": "toyota-innova-zenix",
         "brand": "Toyota",
         "model": "Kijang Innova Zenix Bensin (G/V)",
         "powertrain": "ICE Gasoline",
@@ -3683,73 +3384,35 @@
         "gc": 185,
         "seats": 7,
         "priceMin": 430.4,
-        "priceMax": 476.6,
-        "priceDisplay": "Rp 430,4 - 476,6 Juta",
+        "priceMax": 633.6,
+        "priceDisplay": "Rp 430.4 – 633.6 Juta",
         "pros": "Harga lebih terjangkau Rp 50-100 Jt dari varian Hybrid, tenaga 174 PS sangat responsif dengan transmisi Direct Shift-CVT gigi 1 mekanis.",
         "cons": "Konsumsi BBM dalam kota tidak seirit versi hybrid, tidak ada Ottoman seat pada tipe G/V bensin.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Innova#Third_generation_(AG10;_2022)",
         "officialUrl": "https://www.toyota.astra.co.id/product/all-new-kijang-innova-zenix",
         "gageExempt": false,
         "image": "../../assets/images/cars/toyota-zenix-gasoline.jpg",
-        "assembly": "CKD (Rakit Lokal Indonesia • Toyota)"
-    },
-    {
-        "id": "toyota-zenix-hev",
-        "brand": "Toyota",
-        "model": "Kijang Innova Zenix Hybrid",
-        "image": "../../assets/images/cars/toyota-zenix-hev.jpg",
-        "powertrain": "HEV",
-        "powertrainLabel": "Full Hybrid (HEV)",
-        "body": "Medium MPV",
-        "engine": "2.0L M20A-FXS Dynamic Force (152 PS) + Motor Listrik (113 PS / 206 Nm)",
-        "power": 186,
-        "torque": 206,
-        "battery": "1.31 kWh Ni-MH",
-        "range": "20.5 – 24.5 km/L (Konsumsi BBM)",
-        "trans": "e-CVT",
-        "drive": "FWD (TNGA-C Platform)",
-        "dimensions": "4.755 x 1.850 x 1.795 mm",
-        "wheelbase": 2850,
-        "gc": 185,
-        "seats": 7,
-        "priceMin": 477.6,
-        "priceMax": 633.6,
-        "priceDisplay": "Rp 477,6 – 633,6 Juta",
-        "gageExempt": false,
-        "pros": "Raja mobil keluarga Indonesia: kabin luar biasa lega, Ottoman Captain Seat dengan leg-rest elektrik, konsumsi BBM tembus 22 km/L, resale value terkuat.",
-        "cons": "Penggerak depan (FWD) butuh adaptasi pengemudi di tanjakan kerikil basah.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Innova#Third_generation_(AG10;_2022)",
-        "officialUrl": "https://www.toyota.astra.co.id/product/all-new-kijang-innova-zenix",
-        "assembly": "CKD (Rakit Lokal Indonesia • Toyota)"
-    },
-    {
-        "id": "toyota-zenix-hybrid",
-        "brand": "Toyota",
-        "model": "Kijang Innova Zenix Hybrid",
-        "powertrain": "HEV",
-        "powertrainLabel": "Full Hybrid (HEV)",
-        "body": "Medium MPV",
-        "engine": "2.0L M20A-FXS Dynamic Force (152 PS) + Electric Motor (113 PS)",
-        "power": 186,
-        "torque": 188,
-        "battery": "1.31 kWh Ni-MH",
-        "range": "20 - 24 km/L (Uji Riil Jakarta)",
-        "trans": "e-CVT",
-        "drive": "FWD (TNGA-C Monocoque)",
-        "dimensions": "4.755 x 1.850 x 1.795 mm",
-        "wheelbase": 2850,
-        "gc": 185,
-        "seats": 7,
-        "priceMin": 477.6,
-        "priceMax": 633.6,
-        "priceDisplay": "Rp 477,6 - 633,6 Juta",
-        "pros": "Raja mobil keluarga Indonesia: kabin luar biasa lega, Ottoman Captain Seat, konsumsi bensin tembus 22 km/L di kemacetan Jakarta, suspensi TNGA sangat nyaman.",
-        "cons": "Inden varian Q Modellista sempat panjang, tidak bebas aturan Ganjil-Genap.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Toyota_Innova#Third_generation_(AG10;_2022)",
-        "officialUrl": "https://www.toyota.astra.co.id/product/all-new-kijang-innova-zenix",
-        "gageExempt": false,
-        "image": "../../assets/images/cars/toyota-zenix-hybrid.jpg",
-        "assembly": "CKD (Rakit Lokal Indonesia • Toyota)"
+        "assembly": "CKD (Rakit Lokal Indonesia • Toyota)",
+        "variants": [
+            {
+                "name": "Zenix Bensin 2.0 G & V CVT",
+                "price": "Rp 430,4 – 476,6 Juta",
+                "engine": "2.0L M20A-FKS Dynamic Force (174 PS / 205 Nm)",
+                "highlights": "Mesin bensin 2.0L naturally aspirated, transmisi Direct Shift-CVT 10-speed, kabin monocoque lapang."
+            },
+            {
+                "name": "Zenix Hybrid 2.0 G & V HEV",
+                "price": "Rp 477,6 – 541,6 Juta",
+                "engine": "2.0L M20A-FXS + Motor Listrik (186 PS Combined)",
+                "highlights": "Konsumsi BBM 22 km/L, mode EV murni, kesenyapan kabin tinggi, layar instrumen TFT 7 inci."
+            },
+            {
+                "name": "Zenix Hybrid 2.0 Q HEV Modellista TSS",
+                "price": "Rp 620,0 – 633,6 Juta",
+                "engine": "2.0L M20A-FXS + Motor Listrik (186 PS Combined)",
+                "highlights": "Kasta tertinggi: Ottoman Captain Seat elektrik dengan legrest, dual rear seat entertainment 10 inci, panoramic sunroof, TSS 3.0."
+            }
+        ]
     },
     {
         "id": "toyota-fortuner-28",
@@ -3839,7 +3502,7 @@
         "assembly": "CBU (Impor Resmi APM Toyota Indonesia)"
     },
     {
-        "id": "toyota-calya-sigra",
+        "id": "toyota-calya",
         "brand": "Toyota / Daihatsu",
         "model": "Calya & Sigra",
         "powertrain": "ICE Gasoline",
@@ -3944,43 +3607,14 @@
         "wheelbase": 2984,
         "gc": 223,
         "seats": 7,
-        "priceMin": 1950.0,
-        "priceMax": 1950.0,
-        "priceDisplay": "Rp 1,950 Milyar",
+        "priceMin": 1890.0,
+        "priceMax": 2350.0,
+        "priceDisplay": "Rp 1,890.0 Jt – 2.35 Milyar",
         "gageExempt": false,
         "pros": "Standar keselamatan tertinggi di dunia (baja boron), audio 19-speaker Bowers & Wilkins legendaris, 455 PS melesat 0-100 dalam 5.3s pada format SUV 7-seater.",
         "cons": "Harga mendekati Rp 2 Milyar.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Volvo_XC90",
         "officialUrl": "https://www.volvocars.com/id/",
-        "assembly": "CBU / CKD (Impor / Rakit Resmi APM Volvo Indonesia)"
-    },
-    {
-        "id": "volvo-xc90-recharge",
-        "brand": "Volvo",
-        "model": "XC90 Recharge Ultimate PHEV",
-        "powertrain": "PHEV",
-        "powertrainLabel": "Plug-in Hybrid (PHEV)",
-        "body": "Monocoque SUV",
-        "engine": "2.0L Turbocharged + Rear Electric Motor (455 hp 709 Nm)",
-        "power": 455,
-        "torque": 709,
-        "battery": "18.8 kWh Lithium-ion",
-        "range": "77 km EV / 800 km Total",
-        "trans": "8-Speed Geartronic Automatic",
-        "drive": "eAWD (All-Wheel Drive)",
-        "dimensions": "4.953 x 1.958 x 1.776 mm",
-        "wheelbase": 2984,
-        "gc": 238,
-        "seats": 7,
-        "priceMin": 1890.0,
-        "priceMax": 2350.0,
-        "priceDisplay": "Rp 1,89 - 2,35 Milyar",
-        "pros": "Standar keselamatan tertinggi dunia, tenaga buas 455 tenaga kuda, Bowers & Wilkins audio 19-speaker, 7-seater sejati.",
-        "cons": "Pajak tahunan dan depresiasi mobil premium Eropa.",
-        "wikiUrl": "https://en.wikipedia.org/wiki/Volvo_XC90",
-        "officialUrl": "https://www.volvocars.com/id/",
-        "gageExempt": false,
-        "image": "../../assets/images/cars/volvo-xc90-recharge.jpg",
         "assembly": "CBU / CKD (Impor / Rakit Resmi APM Volvo Indonesia)"
     },
     {
@@ -4010,7 +3644,23 @@
         "cons": "Hanya 4-seater, bagasi sangat minim jika kursi baris kedua ditegakkan, belum mendukung DC Fast Charging.",
         "wikiUrl": "https://en.wikipedia.org/wiki/Wuling_Air_EV",
         "officialUrl": "https://wuling.id/id/air-ev",
-        "assembly": "CKD (Rakit Lokal Indonesia • Wuling)"
+        "assembly": "CKD (Rakit Lokal Indonesia • Wuling)",
+        "variants": [
+            {
+                "name": "Air ev Lite / Standard Range",
+                "price": "Rp 190,0 – 224,0 Juta",
+                "battery": "17.3 kWh LFP",
+                "range": "200 km",
+                "highlights": "Micro EV paling terjangkau, radius putar 3.7m, AC charging 2.0 kW hemat daya rumah."
+            },
+            {
+                "name": "Air ev Long Range",
+                "price": "Rp 255,0 Juta",
+                "battery": "28.1 kWh LFP",
+                "range": "300 km",
+                "highlights": "Layar ganda 10.25 inci TFT, rem parkir elektrik EPB & Auto Vehicle Hold, lampu depan modern horizon LED bar."
+            }
+        ]
     },
     {
         "id": "wuling-aira-ev",
@@ -4233,7 +3883,30 @@
             sortAsc: true
         };
 
+                let isQuickFiltersVisible = localStorage.getItem('hide_quick_filters') !== 'true';
+
+        function toggleQuickFiltersBar() {
+            isQuickFiltersVisible = !isQuickFiltersVisible;
+            localStorage.setItem('hide_quick_filters', (!isQuickFiltersVisible).toString());
+            applyQuickFiltersVisibility();
+        }
+
+        function applyQuickFiltersVisibility() {
+            const container = document.getElementById('quick-filters-container');
+            const btn = document.getElementById('btn-toggle-qf');
+            if (!container) return;
+
+            if (isQuickFiltersVisible) {
+                container.classList.remove('hidden');
+                btn.className = "inline-flex items-center gap-1.5 px-3 py-2 bg-sky-50 border border-sky-300 text-sky-800 rounded-xl text-xs font-semibold transition-colors shadow-2xs";
+            } else {
+                container.classList.add('hidden');
+                btn.className = "inline-flex items-center gap-1.5 px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-colors shadow-2xs";
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            applyQuickFiltersVisibility();
             lucide.createIcons();
             const savedLang = localStorage.getItem('site_lang') || 'id';
             setDbLanguage(savedLang);
