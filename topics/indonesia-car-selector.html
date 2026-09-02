@@ -64,6 +64,9 @@
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
+    <!-- Master Centralized Car Database (200+ Models) -->
+    <script src="../assets/indonesia-cars-data.js"></script>
+
     <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
@@ -153,8 +156,8 @@
             <div class="flex items-center gap-2 sm:gap-3">
                 <a href="./indonesia-car-selector/database.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-700 hover:text-sky-800 px-3 py-1.5 rounded-lg border border-sky-200 bg-sky-50 hover:bg-sky-100 transition-colors">
                     <i data-lucide="database" class="w-3.5 h-3.5"></i>
-                    <span class="id-only">Database 70+ Mobil</span>
-                    <span class="en-only">110+ Model Database</span>
+                    <span class="id-only">Database 200+ Model</span>
+                    <span class="en-only">200+ Model Database</span>
                 </a>
                 <a href="./indonesia-car-selector/body-types.html" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-sky-600 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition-colors">
                     <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
@@ -197,7 +200,7 @@
                             <i data-lucide="database" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <span class="font-display font-bold text-slate-900 group-hover:text-sky-700 text-sm block">Master Database (110+ Model Terpusat & Foto Resmi) →</span>
+                            <span class="font-display font-bold text-slate-900 group-hover:text-sky-700 text-sm block">Master Database (200+ Model Terpusat &amp; Foto Resmi) →</span>
                             <span class="text-xs text-slate-500 font-sans">Katalog spesifikasi teknis, harga OTR, tabel spreadsheet, link Wikipedia, dan portal resmi APM.</span>
                         </div>
                     </a>
@@ -225,11 +228,17 @@
                             <span class="w-7 h-7 rounded-lg bg-sky-600 text-white flex items-center justify-center font-bold text-xs" id="step-number-badge">1</span>
                             <span class="font-display font-bold text-sm sm:text-base" id="step-title">Langkah 1: Rentang Anggaran Pembelian (OTR Jakarta)</span>
                         </div>
-                        <span class="text-xs font-medium text-slate-400" id="step-counter">1 dari 6</span>
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-xs font-medium text-slate-400" id="step-counter">1 / 10</span>
+                            <button type="button" onclick="resetQuiz()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium transition-colors border border-slate-700/80 shadow-2xs" title="Reset semua jawaban kuesioner">
+                                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
+                                <span class="hidden sm:inline" id="header-reset-text">Reset</span>
+                            </button>
+                        </div>
                     </div>
                     <!-- Progress bar line -->
                     <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                        <div id="progress-bar" class="bg-gradient-to-r from-sky-500 to-blue-500 h-full w-1/6 transition-all duration-300"></div>
+                        <div id="progress-bar" class="bg-gradient-to-r from-sky-500 to-blue-500 h-full w-1/10 transition-all duration-300"></div>
                     </div>
                 </div>
 
@@ -239,9 +248,13 @@
                 </div>
 
                 <!-- Wizard Footer Navigation Buttons -->
-                <div class="bg-slate-50 px-6 sm:px-8 py-4 border-t border-slate-200 flex items-center justify-between">
+                <div class="bg-slate-50 px-6 sm:px-8 py-4 border-t border-slate-200 flex items-center justify-between gap-3">
                     <button type="button" id="btn-prev-step" onclick="prevStep()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" disabled>
                         ← Kembali
+                    </button>
+                    <button type="button" id="btn-reset-quiz" onclick="resetQuiz()" class="px-3.5 py-2 rounded-xl text-xs font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-slate-200/80 hover:border-rose-200 transition-colors flex items-center gap-1.5" title="Mulai ulang kuesioner dari awal">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                        <span id="btn-reset-text">Reset Kuesioner</span>
                     </button>
                     <button type="button" id="btn-next-step" onclick="nextStep()" class="px-6 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-1.5">
                         <span id="btn-next-text">Lanjutkan</span>
@@ -280,7 +293,7 @@
                             <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600"></i>
                             <span>Model Mobil Rekomendasi Teratas untuk Anda</span>
                         </h3>
-                        <a href="./indonesia-car-selector/database.html" class="text-xs text-sky-600 hover:underline font-semibold font-medium">Lihat Seluruh 110+ Model di Database →</a>
+                        <a href="./indonesia-car-selector/database.html" class="text-xs text-sky-600 hover:underline font-semibold font-medium">Lihat Seluruh 200+ Model di Database →</a>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="recommended-cars-grid">
@@ -302,7 +315,7 @@
                             ↺ Ulangi Kuesioner
                         </button>
                         <a href="./indonesia-car-selector/database.html" class="px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-bold text-xs transition-colors">
-                            Eksplorasi Master Database Lengkap (70+ Mobil) →
+                            Eksplorasi Master Database Lengkap (200+ Mobil) →
                         </a>
                     </div>
                 </div>
@@ -442,7 +455,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p>© 2026 LoLyeah Indonesian Automotive Compendium. Data dihimpun dari GAIKINDO, spesifikasi resmi APM Indonesia, dan Wikipedia.</p>
             <div class="flex items-center gap-4">
-                <a href="./indonesia-car-selector/database.html" class="hover:text-sky-600">Master Database (110+ Model)</a>
+                <a href="./indonesia-car-selector/database.html" class="hover:text-sky-600">Master Database (200+ Model)</a>
                 <a href="./indonesia-car-selector/body-types.html" class="hover:text-sky-600">Taksonomi Bodi &amp; Mesin</a>
                 <a href="./indonesia-hybrid-cars.html" class="hover:text-sky-600">Kompendium Mobil Hybrid</a>
             </div>
@@ -622,7 +635,16 @@
                 btnId.className = "px-2.5 py-1 rounded-md font-bold text-slate-500 hover:text-slate-900 transition-all";
             }
             renderStep();
-        }
+
+            const resetBtnText = document.getElementById('btn-reset-text');
+            if (resetBtnText) {
+                resetBtnText.textContent = lang === 'id' ? 'Reset Kuesioner' : 'Reset Questionnaire';
+            }
+            const headerResetText = document.getElementById('header-reset-text');
+            if (headerResetText) {
+                headerResetText.textContent = lang === 'id' ? 'Reset' : 'Reset';
+            }
+}
 
         function renderStep() {
             const step = WIZARD_STEPS[currentStepIndex];
@@ -708,397 +730,8 @@
             }
         }
 
-                // RECOMMENDATION ENGINE LOGIC (FACTORS ALL 10 DECISION VARIABLES)
-        function computeRecommendation() {
-            const isId = document.body.classList.contains('lang-id');
-            const resultWrap = document.getElementById('quiz-result-wrap');
-            resultWrap.classList.remove('hidden');
-            resultWrap.scrollIntoView({ behavior: 'smooth' });
-
-            const a = userAnswers;
-
-            // Baseline default scenario
-            let rec = {
-                title: "Full Hybrid Medium MPV (7-Seater Monocoque)",
-                matchPercent: 96,
-                rationale: "Kombinasi ideal untuk keluarga Indonesia: kabin luas 7 penumpang, efisiensi BBM hingga 22 km/L tanpa perlu repot colok charger, dan kenyamanan sasis monocoque modern.",
-                traits: ["Konsumsi BBM 20+ km/L", "Kapasitas 7-Penumpang", "Zero Range Anxiety", "Resale Value Tinggi"],
-                topCars: [
-                    {
-                        brand: "Toyota",
-                        model: "Kijang Innova Zenix Hybrid",
-                        image: "../assets/images/cars/zenix-hev.jpg",
-                        type: "Full Hybrid (HEV)",
-                        engine: "2.0L M20A-FXS Dynamic Force + Motor Listrik (186 PS Combined)",
-                        price: "Rp 477,6 - 633,6 Juta",
-                        pros: "Mobil keluarga terlaris di Indonesia, Ottoman Captain Seat, konsumsi BBM 22 km/L, AC elektrik mandiri.",
-                        wiki: "https://en.wikipedia.org/wiki/Toyota_Innova#Third_generation_(AG10;_2022)",
-                        official: "https://www.toyota.astra.co.id/product/all-new-kijang-innova-zenix"
-                    },
-                    {
-                        brand: "Nissan",
-                        model: "Serena e-POWER C28",
-                        image: "../assets/images/cars/serena-epower.jpg",
-                        type: "Series Hybrid (e-POWER)",
-                        engine: "1.4L Generator + Motor Listrik (163 PS / 315 Nm)",
-                        price: "Rp 635,0 - 639,5 Juta",
-                        pros: "Sensasi 100% mobil listrik tanpa colok kabel, pintu bagasi ganda praktis di mall sempit, ProPILOT.",
-                        wiki: "https://en.wikipedia.org/wiki/Nissan_Serena",
-                        official: "https://nissan.co.id/vehicles/new/serena-c28.html"
-                    }
-                ],
-                altCars: [
-                    { name: "BYD M6 EV (7-Seater Electric MPV)", desc: "Alternatif jika ingin 100% listrik dan bebas Ganjil-Genap (Rp 379-429 Jt)." },
-                    { name: "Toyota Avanza / Veloz (LMPV)", desc: "Pilihan bensin ekonomis (Rp 240-340 Jt) dengan biaya servis termurah." }
-                ]
-            };
-
-            // Rule 1: Compact City / Micro EV (Short garage, low/medium commute, urban, budget under 200/300)
-            if (a.garage === 'compact' || a.budget === 'under200' || (a.passengers === '1-2' && a.road === 'city')) {
-                if (a.charging !== 'none' || a.gage === 'critical') {
-                    rec.title = "Micro / Compact Electric City Car (2026 BEV Wave)";
-                    rec.matchPercent = 98;
-                    rec.rationale = "Solusi terbaik untuk garasi kompak (< 4.2m) dan kemacetan kota: 100% BEBAS aturan Ganjil-Genap Jakarta, biaya listrik super hemat ~Rp 20.000 / 100 km, dan radius putar lincah di gang sempit.";
-                    rec.traits = ["100% Bebas Ganjil-Genap", "Parkir Garasi Kompak < 4.2m", "Biaya Listrik Rp 20rb/100km", "Pajak PKB Rp 0"];
-                    rec.topCars = [
-                        {
-                            brand: "BYD",
-                            model: "Atto 1 (Seagull / Dolphin Mini)",
-                            image: "../assets/images/cars/byd-atto-1.jpg",
-                            type: "Mobil Listrik (BEV)",
-                            engine: "Electric Motor 55 kW (38.88 kWh Blade Battery • 405 km)",
-                            price: "Rp 195,0 - 235,0 Juta",
-                            pros: "Revolusi EV sub-200 juta: baterai Blade ultra aman, DiLink 10.1 inci rotasi, bebas Ganjil-Genap.",
-                            wiki: "https://en.wikipedia.org/wiki/BYD_Seagull",
-                            official: "https://www.byd.com/id"
-                        },
-                        {
-                            brand: "Wuling",
-                            model: "Aira EV / Air ev Long Range",
-                            image: "../assets/images/cars/wuling-air-ev.jpg",
-                            type: "Mobil Listrik (BEV)",
-                            engine: "Electric Motor (28.1 kWh Magic Battery • 320 km)",
-                            price: "Rp 190,0 - 255,0 Juta",
-                            pros: "Dukungan DC fast charging 30 menit, radius putar 3.7 meter lincah selap-selip gang perumahan.",
-                            wiki: "https://en.wikipedia.org/wiki/Wuling_Air_EV",
-                            official: "https://wuling.id/id/air-ev"
-                        }
-                    ];
-                    rec.altCars = [
-                        { name: "VinFast VF 3 (Mini SUV EV)", desc: "Desain boxy gagah ground clearance 191mm seharga Rp 215-245 Jt." },
-                        { name: "Geely EX2 Pro (Xingyuan)", desc: "Hatchback listrik 5-pintu suspensi independen RWD (Rp 239 Jt)." },
-                        { name: "Honda Brio Satya", desc: "Pilihan bensin 4-silinder teruji jika belum siap fasilitas charging." }
-                    ];
-                } else {
-                    rec.title = "Compact City Car / Hatchback Bensin (LCGC & City Car)";
-                    rec.matchPercent = 95;
-                    rec.rationale = "Paling praktis untuk mobilitas tanpa repot cas: mesin 1.2L 4-silinder halus, konsumsi BBM tembus 18-21 km/L, mudah diparkir di garasi mungil, dan biaya servis terjangkau di mana saja.";
-                    rec.traits = ["Mudah Masuk Garasi Sempit", "Konsumsi BBM 18-21 km/L", "Suku Cadang Melimpah", "Resale Value Stabil"];
-                    rec.topCars = [
-                        {
-                            brand: "Honda",
-                            model: "Brio Satya & RS",
-                            image: "../assets/images/cars/honda-brio.jpg",
-                            type: "Bensin (ICE)",
-                            engine: "1.2L i-VTEC 4-Cylinder SOHC (90 PS / 110 Nm)",
-                            price: "Rp 167,9 - 253,1 Juta",
-                            pros: "Mesin 4-silinder halus bertenaga, handling lincah, resale value terkuat di bursa mobil bekas.",
-                            wiki: "https://en.wikipedia.org/wiki/Honda_Brio",
-                            official: "https://www.honda-indonesia.com/model/brio"
-                        },
-                        {
-                            brand: "Toyota",
-                            model: "All New Agya & GR Sport",
-                            image: "../assets/images/cars/toyota-agya.jpg",
-                            type: "Bensin (ICE)",
-                            engine: "1.2L WA-VE 3-Cylinder Dual VVT-i (88 PS / 113 Nm)",
-                            price: "Rp 167,9 - 256,0 Juta",
-                            pros: "Transmisi D-CVT responsif, konsumsi BBM sangat irit, bengkel resmi ada di setiap kota.",
-                            wiki: "https://en.wikipedia.org/wiki/Toyota_Agya",
-                            official: "https://www.toyota.astra.co.id/product/all-new-agya"
-                        }
-                    ];
-                    rec.altCars = [
-                        { name: "Suzuki S-Presso / Baleno", desc: "Hatchback impor dengan konsumsi BBM 20+ km/L dan fitur lengkap." },
-                        { name: "Daihatsu Ayla 1.2", desc: "Pilihan ekonomis dengan biaya perawatan rutin paling terjangkau." }
-                    ];
-                }
-            }
-            // Rule 2: Heavy Mileage & Intercity Mudik (Zero Range Anxiety Hybrid / Clean Diesel)
-            else if (a.mileage === 'mudik' || (a.mileage === 'high' && a.charging === 'none')) {
-                rec.title = "Full Hybrid / Long-Range Intercity Cruiser (Zero Range Anxiety)";
-                rec.matchPercent = 97;
-                rec.rationale = "Solusi sempurna untuk jarak tempuh tinggi (> 70 km/hari) dan tradisi mudik antarkota: jangkauan 900–1.100 km dalam sekali isi bensin, efisiensi 22 km/L, tanpa perlu mengantre charging di rest area tol saat puncak arus mudik.";
-                rec.traits = ["Jangkauan 1.000+ km / Tangki", "Bensin Tembus 22 km/L", "Bebas Antre SPKLU Mudik", "Kenyamanan Kabin Jarak Jauh"];
-                rec.topCars = [
-                    {
-                        brand: "Toyota",
-                        model: "Kijang Innova Zenix Hybrid",
-                        image: "../assets/images/cars/zenix-hev.jpg",
-                        type: "Full Hybrid (HEV)",
-                        engine: "2.0L Dynamic Force Hybrid M20A-FXS (186 PS Combined)",
-                        price: "Rp 477,6 - 633,6 Juta",
-                        pros: "Raja mobil mudik keluarga: kabin super senyap, Ottoman Captain Seat, konsumsi BBM 22 km/L, tangki 52L tembus 1.000+ km.",
-                        wiki: "https://en.wikipedia.org/wiki/Toyota_Innova#Third_generation_(AG10;_2022)",
-                        official: "https://www.toyota.astra.co.id/product/all-new-kijang-innova-zenix"
-                    },
-                    {
-                        brand: "Honda",
-                        model: "All New CR-V RS e:HEV",
-                        image: "../assets/images/cars/crv-ehev.jpg",
-                        type: "Full Hybrid (HEV)",
-                        engine: "2.0L Direct Injection Atkinson + Dual Motor (207 PS / 335 Nm)",
-                        price: "Rp 814,4 Juta",
-                        pros: "Handling presisi di Tol Trans-Jawa, torsi 335 Nm instan, audio Bose 12-speaker, Honda Sensing lengkap.",
-                        wiki: "https://en.wikipedia.org/wiki/Honda_CR-V",
-                        official: "https://www.honda-indonesia.com/model/all-new-cr-v"
-                    }
-                ];
-                rec.altCars = [
-                    { name: "Toyota Yaris Cross Hybrid", desc: "Compact crossover hybrid paling irit (26-29 km/L) dengan ground clearance 210mm." },
-                    { name: "Nissan Serena e-POWER C28", desc: "MPV boxy nyaman sensasi 100% elektrik tanpa colok kabel (Rp 635 Jt)." },
-                    { name: "Jaecoo 7 / Chery Tiggo 8 C-DM", desc: "PHEV dengan 100 km mode listrik murni + 1.200 km total range bensin." }
-                ]
-            }
-            // Rule 3: Mainstream EV Wave (Gage critical, Tier-1 Metro, Home charging ready)
-            else if ((a.gage === 'critical' || a.priority === 'economy') && a.charging === 'home') {
-                rec.title = "Mainstream Electric Crossover / SUV / 7-Seater EV (2026 Wave)";
-                rec.matchPercent = 98;
-                rec.rationale = "Kombinasi teknologi tercanggih dan kebebasan aturan Ganjil-Genap Jakarta: jangkauan baterai 450–530 km cukup untuk sepekan beraktivitas, cas murah di rumah semalaman, dan bebas polusi udara.";
-                rec.traits = ["100% Bebas Ganjil-Genap", "Baterai Blade / Magazine Safe", "V2L Power Source Camping", "Pajak Tahunan Rp 0"];
-                rec.topCars = [
-                    {
-                        brand: "Chery",
-                        model: "Chery J6 (iCAR 03 Boxy Offroad EV)",
-                        image: "../assets/images/cars/chery-j6.jpg",
-                        type: "Mobil Listrik Offroad (BEV)",
-                        engine: "Dual Motor AWD (279 PS / 385 Nm • 69.8 kWh • 501 km)",
-                        price: "Rp 498,0 - 558,0 Juta",
-                        pros: "SUV listrik boxy all-aluminum, water wading 600mm tahan banjir Jakarta, sistem iWD pintar 8+X mode.",
-                        wiki: "https://en.wikipedia.org/wiki/ICAR_03",
-                        official: "https://chery.co.id/"
-                    },
-                    {
-                        brand: "BYD",
-                        model: "BYD M6 EV (7-Seater MPV)",
-                        image: "../assets/images/cars/byd-m6-ev.jpg",
-                        type: "Mobil Listrik MPV (BEV)",
-                        engine: "Electric Motor (71.8 kWh Blade Battery • 530 km)",
-                        price: "Rp 379,0 - 429,0 Juta",
-                        pros: "MPV listrik 7-seater pertama terjangkau di bawah Rp 400 Juta, opsi Captain Seat, 100% bebas Ganjil-Genap.",
-                        wiki: "https://en.wikipedia.org/wiki/BYD_Song_Max#BYD_M6",
-                        official: "https://www.byd.com/id/car/m6"
-                    }
-                ];
-                rec.altCars = [
-                    { name: "BYD Atto 3 (Superior Extended)", desc: "SUV listrik terlaris 204 PS dengan panoramic sunroof (Rp 429-515 Jt)." },
-                    { name: "Leapmotor C10 (Stellantis)", desc: "SUV listrik pintar sasis Cell-to-Chassis standar uji tabrak Euro NCAP 5-bintang." },
-                    { name: "GAC AION Y Plus / Hyptec HT", desc: "Kabin super lega pintu 90 derajat atau Gullwing doors 800V." }
-                ];
-            }
-            // Rule 4: Tough Off-road & Plantation (Ladder-Frame Diesel / 4x4)
-            else if (a.road === 'offroad' || (a.road === 'flood' && a.priority === 'durability') || a.network === 'tier2_japan') {
-                rec.title = "Mid-Size Ladder-Frame Turbodiesel SUV (4x2 / 4x4)";
-                rec.matchPercent = 95;
-                rec.rationale = "Kendaraan paling tangguh di nusantara: sasis tangga tahan benturan jalan rusak perkebunan/tambang, torsi badak 430–500 Nm untuk menanjak ekstrem, dan ground clearance 225mm bebas cemas banjir.";
-                rec.traits = ["Torsi Monster 500 Nm", "Ground Clearance 225 mm", "Sasis Tangga Tahan Banting", "Resale Value Sangat Kuat"];
-                rec.topCars = [
-                    {
-                        brand: "Toyota",
-                        model: "New Fortuner 2.8 GR Sport (4x2 & 4x4)",
-                        image: "../assets/images/cars/toyota-fortuner-28.jpg",
-                        type: "Turbodiesel (ICE)",
-                        engine: "2.8L 1GD-FTV VN Turbo Intercooler (204 PS / 500 Nm)",
-                        price: "Rp 573,7 - 761,7 Juta",
-                        pros: "Torsi raksasa 500 Nm, sasis tangga teruji di seluruh pelosok Indonesia, jaringan servis ada di setiap kota.",
-                        wiki: "https://en.wikipedia.org/wiki/Toyota_Fortuner",
-                        official: "https://www.toyota.astra.co.id/product/new-fortuner"
-                    },
-                    {
-                        brand: "GWM / Mitsubishi",
-                        model: "Tank 300 / Pajero Sport Dakar 4x4",
-                        image: "../assets/images/cars/tank-300-hev.jpg",
-                        type: "Full Hybrid 4x4 / Turbodiesel",
-                        engine: "2.0T Hybrid 347 PS / 2.4L MIVEC Turbo 181 PS (430 Nm)",
-                        price: "Rp 567,1 - 828,8 Juta",
-                        pros: "Tangguh melibas banjir dan medan ekstrem, 3 differential lock (Tank 300) atau Super Select 4WD-II.",
-                        wiki: "https://en.wikipedia.org/wiki/Tank_300",
-                        official: "https://greatwallmotor.co.id/"
-                    }
-                ];
-                rec.altCars = [
-                    { name: "Ford Everest Titanium 4x4", desc: "Bi-Turbo 210 PS dengan panoramic sunroof dan teknologi 4x4 canggih (Rp 870 Jt)." },
-                    { name: "Toyota Hilux Rangga / Triton", desc: "Kendaraan utility sasis tangga serbaguna untuk usaha dan petualangan." },
-                    { name: "Toyota Innova Reborn Diesel", desc: "Medium MPV diesel sasis tangga favorit pasar luar Jawa (Rp 406-431 Jt)." }
-                ];
-            }
-            // Rule 5: Luxury VIP Executive (Prestige / Big Budget / VIP Lounge)
-            else if (a.passengers === 'vip' || a.budget === 'above1200' || a.priority === 'prestige') {
-                rec.title = "Luxury VIP Lounge MPV / Flagship Luxury EV";
-                rec.matchPercent = 98;
-                rec.rationale = "Kasta tertinggi kenyamanan dan prestise eksekutif: kabin first-class dengan jok pijat ottoman elektrik, peredaman suara tanpa cela, dan suspensi udara sehalus karpet terbang.";
-                rec.traits = ["Kabin First-Class Lounge", "Ottoman Massage Seats", "Peredaman Suara Kedap", "Simbol Status Eksekutif"];
-                rec.topCars = [
-                    {
-                        brand: "Toyota",
-                        model: "All New Alphard 2.5 HEV",
-                        image: "../assets/images/cars/alphard-hev.jpg",
-                        type: "Full Hybrid (HEV)",
-                        engine: "2.5L Dynamic Force Hybrid E-Four (250 PS Combined)",
-                        price: "Rp 1,407 - 1,710 Milyar",
-                        pros: "Simbol kemewahan pejabat & direktur Indonesia, Active Noise Cancellation, kenyamanan tiada tanding.",
-                        wiki: "https://en.wikipedia.org/wiki/Toyota_Alphard",
-                        official: "https://www.toyota.astra.co.id/product/all-new-alphard"
-                    },
-                    {
-                        brand: "Denza / Zeekr",
-                        model: "Denza D9 / Zeekr 009 Ultra VIP Lounge",
-                        image: "../assets/images/cars/denza-d9.jpg",
-                        type: "Mobil Listrik Mewah (BEV)",
-                        engine: "Dual Motor AWD (103-140 kWh • 600-822 km)",
-                        price: "Rp 950 Jt - 2,2 Milyar",
-                        pros: "Kenyamanan suspensi udara karpet terbang, 100% BEBAS Ganjil-Genap, teknologi zero-gravity sofa layar sentuh mandiri.",
-                        wiki: "https://en.wikipedia.org/wiki/Denza_D9",
-                        official: "https://www.byd.com/id"
-                    }
-                ];
-                rec.altCars = [
-                    { name: "Lexus LM 350h", desc: "Kasta puncak VIP 4-seater dengan partisi kaca elektrokromik dan layar bioskop 48 inci." },
-                    { name: "Porsche Cayenne E-Hybrid / Macan EV", desc: "DNA mobil sport Porsche dalam kemasan SUV mewah 470 PS." },
-                    { name: "BMW 330e / BYD Seal", desc: "Sedan mewah sporty untuk dikemudikan sendiri (driving enthusiast)." }
-                ];
-            }
-            // Rule 6: Performance Enthusiast
-            else if (a.priority === 'performance' && a.passengers !== '6-7') {
-                rec.title = "Sports Performance Car / Hot Hatch (RWD / AWD)";
-                rec.matchPercent = 96;
-                rec.rationale = "Didedikasikan untuk Anda penikmat sensasi berkendara sejati: akselerasi tajam, handling presisi sirkuit, distribusi bobot ideal, dan koneksi mekanis murni antara pengemudi dan aspal.";
-                rec.traits = ["High Horsepower", "Handling Sirkuit Tajam", "RWD / AWD Performance", "Fun-to-Drive"];
-                rec.topCars = [
-                    {
-                        brand: "Toyota",
-                        model: "GR Yaris Facelift (280 PS 4WD)",
-                        image: "../assets/images/cars/toyota-gr-yaris.jpg",
-                        type: "Bensin Turbo 4WD (ICE)",
-                        engine: "1.6L G16E-GTS Turbo (280 PS / 390 Nm • GR-FOUR 4WD)",
-                        price: "Rp 984,0 Jt - 1,20 Milyar",
-                        pros: "Mobil homologasi reli WRC sejati: atap carbon fiber CFRP, sistem GR-FOUR 4WD dengan mode Track (50:50).",
-                        wiki: "https://en.wikipedia.org/wiki/Toyota_GR_Yaris",
-                        official: "https://www.toyota.astra.co.id/product/gr-yaris"
-                    },
-                    {
-                        brand: "Hyundai",
-                        model: "Ioniq 5 N (Electric Performance)",
-                        image: "../assets/images/cars/hyundai-ioniq5-n.jpg",
-                        type: "Mobil Listrik Performa (BEV)",
-                        engine: "Dual Motor AWD (650 PS • 770 Nm • N Grin Boost)",
-                        price: "Rp 1,300 Milyar",
-                        pros: "Tenaga buas 650 PS dengan simulasi pergantian gigi 8-speed dan suara knalpot N Active Sound+, bebas Ganjil-Genap.",
-                        wiki: "https://en.wikipedia.org/wiki/Hyundai_Ioniq_5#Ioniq_5_N",
-                        official: "https://www.hyundai.com/id/id/find-a-car/ioniq-5-n/highlights"
-                    }
-                ];
-                rec.altCars = [
-                    { name: "Honda Civic Type R FL5", desc: "Raja FWD sirkuit Nürburgring dengan transmisi manual 6-speed terbaik (Rp 1,42 M)." },
-                    { name: "BMW M2 Coupe (G87)", desc: "Mesin S58 460 PS Inline-6 TwinPower Turbo penggerak roda belakang (Rp 2,16 M)." },
-                    { name: "MG Cyberster Roadster", desc: "Roadster listrik atap terbuka pintu gunting elektrik 536 PS 0-100 dalam 3.2s." }
-                ];
-            }
-            // Rule 7: Entry Budget Practical LMPV (Default for 200-400 family)
-            else {
-                rec.title = "Low MPV (LMPV 7-Seater) / Compact Crossover";
-                rec.matchPercent = 94;
-                rec.rationale = "Pilihan paling rasional dan ekonomis untuk mobilitas keluarga Indonesia: 7 kursi penumpang, ground clearance tinggi 205–225mm, perawatan termudah, dan suku cadang melimpah di mana saja.";
-                rec.traits = ["Keluarga 7-Seater", "Ground Clearance 205-225 mm", "Suku Cadang Murah", "Resale Value Stabil"];
-                rec.topCars = [
-                    {
-                        brand: "Mitsubishi",
-                        model: "Xpander & Xpander Cross",
-                        image: "../assets/images/cars/mitsubishi-xpander.jpg",
-                        type: "Bensin (ICE)",
-                        engine: "1.5L MIVEC DOHC (105 PS / 141 Nm)",
-                        price: "Rp 263,2 - 351,1 Juta",
-                        pros: "Bantingan suspensi paling nyaman di kelasnya (shock Lancer Evo), ground clearance 225mm aman banjir.",
-                        wiki: "https://en.wikipedia.org/wiki/Mitsubishi_Xpander",
-                        official: "https://www.mitsubishi-motors.co.id/our-cars/xpander"
-                    },
-                    {
-                        brand: "Toyota",
-                        model: "All New Avanza & Veloz",
-                        image: "../assets/images/cars/toyota-avanza.jpg",
-                        type: "Bensin (ICE)",
-                        engine: "1.5L 2NR-VE Dual VVT-i (106 PS / 137 Nm)",
-                        price: "Rp 239,7 - 339,8 Juta",
-                        pros: "Mobil sejuta umat dengan jaringan purnajual terluas, Sofa Mode kabin lapang, TSS safety.",
-                        wiki: "https://en.wikipedia.org/wiki/Toyota_Avanza",
-                        official: "https://www.toyota.astra.co.id/product/all-new-avanza"
-                    }
-                ];
-                rec.altCars = [
-                    { name: "Suzuki XL7 / Ertiga Hybrid", desc: "MPV 7-seater berteknologi mild hybrid dengan konsumsi BBM 18 km/L (Rp 260-309 Jt)." },
-                    { name: "Hyundai Stargazer Prime", desc: "LMPV dengan opsi Captain Seat baris kedua dan mesin 115 PS bertenaga." },
-                    { name: "Honda BR-V N7X Edition", desc: "LSUV 7-seater bertenaga 121 PS dengan ground clearance 220mm dan Honda Sensing." }
-                ];
-            }
-
-            document.getElementById('match-percent').textContent = `${rec.matchPercent}%`;
-            document.getElementById('result-category-title').textContent = rec.title;
-            document.getElementById('result-rationale').textContent = rec.rationale;
-
-            document.getElementById('result-traits').innerHTML = rec.traits.map(t =>
-                `<span class="px-3 py-1 rounded-full bg-sky-900/60 border border-sky-700 text-sky-200">${t}</span>`
-            ).join('');
-
-            // Render Top Cars Cards with Official Vehicle Photo Thumbnail
-            document.getElementById('recommended-cars-grid').innerHTML = rec.topCars.map(c => `
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden flex flex-col justify-between hover:border-sky-300 transition-all group">
-                    <div class="relative bg-slate-100 h-44 sm:h-48 overflow-hidden">
-                        <img src="${c.image || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&auto=format&fit=crop&q=80'}" alt="${c.brand} ${c.model}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&auto=format&fit=crop&q=80'">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-                        <div class="absolute top-3 right-3">
-                            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-white/90 text-slate-900 backdrop-blur-md shadow-xs border border-white/50">
-                                ${c.type}
-                            </span>
-                        </div>
-                        <div class="absolute bottom-3 left-3 right-3 text-white">
-                            <span class="text-[10px] font-bold uppercase tracking-wider opacity-80">${c.brand}</span>
-                            <h4 class="font-display font-black text-xl text-white drop-shadow-sm">${c.model}</h4>
-                        </div>
-                    </div>
-
-                    <div class="p-5 space-y-3 flex-grow">
-                        <div class="bg-slate-50 p-3 rounded-xl text-xs space-y-1 font-medium border border-slate-100">
-                            <div><strong>Mesin/Motor:</strong> ${c.engine}</div>
-                            <div><strong>Harga OTR:</strong> <span class="text-sky-700 font-bold">${c.price}</span></div>
-                        </div>
-                        <p class="text-xs text-slate-600 leading-relaxed">${c.pros}</p>
-                    </div>
-
-                    <div class="p-5 pt-0 flex items-center gap-2">
-                        <a href="${c.wiki}" target="_blank" rel="noopener" class="flex-1 py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold text-center flex items-center justify-center gap-1.5 transition-colors">
-                            <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
-                            <span>Wikipedia</span>
-                        </a>
-                        <a href="${c.official}" target="_blank" rel="noopener" class="flex-1 py-2 px-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold text-center flex items-center justify-center gap-1.5 transition-colors">
-                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                            <span>Situs Resmi APM</span>
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-
-            // Render Alt Cars
-            document.getElementById('alternative-cars-grid').innerHTML = rec.altCars.map(c => `
-                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                    <strong class="text-slate-900 block font-bold text-sm mb-1">${c.name}</strong>
-                    <span class="text-slate-600">${c.desc}</span>
-                </div>
-            `).join('');
-
-            lucide.createIcons();
-        }
-
-        function restartQuiz() {
+                        // RESET QUIZ FUNCTIONALITY
+        function resetQuiz() {
             currentStepIndex = 0;
             userAnswers = {
                 budget: null,
@@ -1112,9 +745,414 @@
                 network: null,
                 transmission: null
             };
-            document.getElementById('quiz-result-wrap').classList.add('hidden');
+            const resultWrap = document.getElementById('quiz-result-wrap');
+            if (resultWrap) {
+                resultWrap.classList.add('hidden');
+            }
             renderStep();
-            document.getElementById('wizard-section').scrollIntoView({ behavior: 'smooth' });
+            const wizardSection = document.getElementById('wizard-section');
+            if (wizardSection) {
+                wizardSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function restartQuiz() {
+            resetQuiz();
+        }
+
+        // Helper to resolve car photo asset path in topics/
+        function resolveCarImg(img) {
+            if (!img) return 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&auto=format&fit=crop&q=80';
+            if (img.startsWith('http')) return img;
+            return img.replace(/^\.\.\/\.\.\//, '../');
+        }
+
+        // WEIGHTED SCORING ENGINE (EVALUATES ALL 200+ CARS AGAINST 10 CRITERIA)
+        function scoreCar(car, a) {
+            let score = 0;
+            const pMin = car.priceMin || 0;
+            const pMax = car.priceMax || 0;
+
+            // 1. BUDGET (OTR Price) - WEIGHT: 40 POINTS (HEAVIEST CONSTRAINT)
+            if (a.budget === 'under200') {
+                if (pMax <= 200) score += 40;
+                else if (pMin <= 200 && pMax <= 250) score += 28;
+                else if (pMin <= 200 && pMax > 250) score += 12;
+                else if (pMin > 200 && pMin <= 240) score += 5;
+                else return -999; // Strict elimination
+            } else if (a.budget === '200-400') {
+                if (pMin >= 190 && pMax <= 430) score += 40;
+                else if ((pMin >= 160 && pMin <= 200) || (pMax >= 400 && pMax <= 480)) score += 25;
+                else if (pMin > 500 || pMax < 150) return -999; // Strict elimination
+            } else if (a.budget === '400-700') {
+                if (pMin >= 380 && pMax <= 750) score += 40;
+                else if ((pMin >= 320 && pMin < 380) || (pMax > 750 && pMax <= 850)) score += 25;
+                else if (pMin > 900 || pMax < 280) return -999; // Strict elimination
+            } else if (a.budget === '700-1200') {
+                if (pMin >= 680 && pMax <= 1250) score += 40;
+                else if ((pMin >= 550 && pMin < 680) || (pMax > 1250 && pMax <= 1400)) score += 25;
+                else if (pMin > 1550 || pMax < 450) return -999; // Strict elimination
+            } else if (a.budget === 'above1200') {
+                // High budget luxury (> 1.2 Milyar)
+                if (pMin >= 1150 || pMax >= 1200) score += 40;
+                else if (pMin >= 900 && pMax >= 950) score += 26; // Luxury flagship e.g. Denza D9 at 950 Jt
+                else if (pMax < 700) return -999; // COMPLETE DISQUALIFICATION for economy cars like BYD M6, Avanza, etc.
+                else score += 5;
+            }
+
+            // 2. PASSENGER CAPACITY & CABIN SPACE - WEIGHT: 12 POINTS
+            const seats = car.seats || 5;
+            const body = car.body || '';
+            const isVIP = body.includes('Luxury MPV') ||
+                          car.model.includes('VIP') ||
+                          car.model.includes('Ottoman') ||
+                          car.model.includes('Executive') ||
+                          ['Lexus', 'Denza'].includes(car.brand) ||
+                          ['maxus-mifa-9', 'zeekr-009', 'mercedes-v-class', 'toyota-alphard-hev', 'toyota-vellfire-hev'].includes(car.id);
+
+            if (a.passengers === 'vip') {
+                if (isVIP) score += 12;
+                else if (seats >= 5 && ['BMW', 'Mercedes-Benz', 'Porsche', 'Volvo'].includes(car.brand)) score += 8;
+                else if (seats <= 4) score += 4;
+                else score += 2;
+            } else if (a.passengers === '6-7') {
+                if (seats >= 7) score += 12;
+                else if (seats === 6) score += 10;
+                else score -= 25; // Strict penalty for not having 3 rows
+            } else if (a.passengers === '4-5') {
+                if (seats === 5) score += 12;
+                else if (seats >= 6) score += 9;
+                else score -= 15;
+            } else if (a.passengers === '1-2') {
+                if (seats <= 5) score += 12;
+                else score += 6;
+            }
+
+            // 3. ROAD GEOGRAPHY & FLOODS - WEIGHT: 10 POINTS
+            const gc = car.gc || 160;
+            const drive = car.drive || '';
+            const isAWD = drive.includes('AWD') || drive.includes('4x4') || drive.includes('4WD') || drive.includes('DIRECT4') || drive.includes('xDrive') || drive.includes('4MATIC') || drive.includes('E-Four');
+            const isLadder = body.includes('Ladder-Frame') || ['Fortuner', 'Pajero', 'Land Cruiser', 'Everest', 'Tank', 'Jimny', 'Mu-X', 'Hilux', 'Triton'].some(k => car.model.includes(k));
+
+            if (a.road === 'flood') {
+                if (gc >= 200) score += 10;
+                else if (gc >= 180) score += 7;
+                else if (gc >= 160) score += 4;
+                else score -= 10;
+            } else if (a.road === 'offroad') {
+                if (isLadder && isAWD) score += 10;
+                else if (isAWD || isLadder) score += 8;
+                else if (gc >= 200) score += 5;
+                else score -= 15;
+            } else if (a.road === 'city') {
+                const dims = car.dimensions || '';
+                const lengthMatch = dims.match(/^([\d.]+)/);
+                const carLength = lengthMatch ? parseFloat(lengthMatch[1].replace('.', '')) : 4500;
+                if (carLength <= 4400) score += 10;
+                else if (carLength <= 4800) score += 7;
+                else score += 3;
+            } else if (a.road === 'highway') {
+                if ((car.power || 0) >= 200 || body.includes('Sedan') || body.includes('Monocoque') || isVIP) score += 10;
+                else score += 6;
+            }
+
+            // 4. CHARGING INFRASTRUCTURE - WEIGHT: 10 POINTS
+            const pt = car.powertrain || '';
+            if (a.charging === 'home') {
+                if (pt === 'BEV') score += 10;
+                else if (pt === 'PHEV') score += 9;
+                else if (pt === 'HEV') score += 7;
+                else score += 5;
+            } else if (a.charging === 'public') {
+                if (pt === 'BEV') score += 10;
+                else if (pt === 'PHEV') score += 8;
+                else if (pt === 'HEV') score += 8;
+                else score += 6;
+            } else if (a.charging === 'none') {
+                if (pt === 'HEV') score += 10;
+                else if (pt.includes('ICE')) score += 9;
+                else if (pt === 'PHEV') score += 4;
+                else if (pt === 'BEV') score -= 30; // Strong penalty if user explicitly refuses to charge
+            }
+
+            // 5. PRIMARY DRIVING PRIORITY - WEIGHT: 8 POINTS
+            if (a.priority === 'prestige') {
+                const luxury = ['Lexus', 'BMW', 'Mercedes-Benz', 'Porsche', 'Volvo', 'Denza', 'Zeekr', 'Audi', 'Maxus'];
+                if (luxury.includes(car.brand) || pMin >= 1000) score += 8;
+                else if (pMin >= 600) score += 4;
+                else score += 1;
+            } else if (a.priority === 'performance') {
+                if ((car.power || 0) >= 300 || body.includes('Sports')) score += 8;
+                else if ((car.power || 0) >= 200) score += 6;
+                else if ((car.power || 0) >= 140) score += 3;
+                else score -= 4;
+            } else if (a.priority === 'economy') {
+                if (pt === 'BEV') score += 8;
+                else if (pt.includes('HEV') || pt === 'PHEV') score += 7;
+                else if (body.includes('LCGC') || body.includes('Kei')) score += 6;
+                else score += 2;
+            } else if (a.priority === 'comfort') {
+                if (isVIP || body.includes('Monocoque') || body.includes('Medium MPV') || body.includes('Sedan')) score += 8;
+                else if (!isLadder) score += 6;
+                else score += 3;
+            } else if (a.priority === 'durability') {
+                const widespread = ['Toyota', 'Honda', 'Mitsubishi', 'Isuzu', 'Suzuki', 'Daihatsu'];
+                if (widespread.includes(car.brand)) score += 8;
+                else score += 3;
+            }
+
+            // 6. JAKARTA ODD-EVEN (Gage) - WEIGHT: 8 POINTS
+            if (a.gage === 'critical') {
+                if (car.gageExempt) score += 8;
+                else score += 1;
+            } else if (a.gage === 'occasional') {
+                if (car.gageExempt) score += 6;
+                else score += 4;
+            } else {
+                score += 5;
+            }
+
+            // 7. COMMUTE MILEAGE & MUDIK - WEIGHT: 6 POINTS
+            if (a.mileage === 'mudik') {
+                if (pt.includes('HEV') || pt.includes('Turbodiesel') || pt === 'PHEV') score += 6;
+                else if (pt.includes('Gasoline')) score += 5;
+                else if (pt === 'BEV') {
+                    const rangeNum = parseInt(car.range) || 400;
+                    if (rangeNum >= 550) score += 4;
+                    else if (rangeNum >= 450) score += 2;
+                    else score -= 10;
+                }
+            } else if (a.mileage === 'high') {
+                if (pt === 'BEV' || pt.includes('HEV') || pt.includes('Turbodiesel')) score += 6;
+                else score += 3;
+            } else {
+                score += 5;
+            }
+
+            // 8. GARAGE SPACE - WEIGHT: 4 POINTS
+            const dims = car.dimensions || '';
+            const lengthMatch = dims.match(/^([\d.]+)/);
+            const carLength = lengthMatch ? parseFloat(lengthMatch[1].replace('.', '')) : 4600;
+            if (a.garage === 'compact') {
+                if (carLength <= 4200) score += 4;
+                else if (carLength <= 4450) score += 1;
+                else score -= 25;
+            } else if (a.garage === 'standard') {
+                if (carLength <= 4850) score += 4;
+                else score += 1;
+            } else {
+                score += 4;
+            }
+
+            // 9. DEALER NETWORK & AFTERSALES - WEIGHT: 4 POINTS
+            const widespreadBrands = ['Toyota', 'Daihatsu', 'Mitsubishi', 'Suzuki', 'Honda', 'Isuzu'];
+            if (a.network === 'tier2_japan') {
+                if (widespreadBrands.includes(car.brand)) score += 4;
+                else score -= 10;
+            } else if (a.network === 'tech_warranty') {
+                const techBrands = ['BYD', 'Denza', 'Maxus', 'Chery', 'Wuling', 'Geely', 'Zeekr', 'Leapmotor', 'GAC AION', 'VinFast', 'MG'];
+                if (techBrands.includes(car.brand)) score += 4;
+                else score += 2;
+            } else {
+                score += 4;
+            }
+
+            // 10. TRANSMISSION - WEIGHT: 2 POINTS
+            const trans = (car.trans || '').toLowerCase();
+            if (a.transmission === 'manual') {
+                if (trans.includes('manual')) score += 2;
+                else score -= 15;
+            } else if (a.transmission === 'auto_cvt') {
+                if (trans.includes('cvt') || trans.includes('single') || trans.includes('reduction') || trans.includes('direct')) score += 2;
+                else score += 1;
+            } else if (a.transmission === 'auto_torque') {
+                if (trans.includes('steptronic') || trans.includes('automatic') || trans.includes('dct') || trans.includes('g-tronic') || trans.includes('direct shift')) score += 2;
+                else score += 1;
+            } else if (a.transmission === 'one_pedal') {
+                if (pt === 'BEV') score += 2;
+                else score += 0;
+            }
+
+            return score;
+        }
+
+        // RECOMMENDATION ENGINE LOGIC (INTELLIGENT WEIGHTED SCORING)
+        function computeRecommendation() {
+            const isId = document.body.classList.contains('lang-id');
+            const resultWrap = document.getElementById('quiz-result-wrap');
+            resultWrap.classList.remove('hidden');
+            resultWrap.scrollIntoView({ behavior: 'smooth' });
+
+            const a = userAnswers;
+            const db = (typeof CAR_DATABASE !== 'undefined' && Array.isArray(CAR_DATABASE)) ? CAR_DATABASE : [];
+
+            if (db.length === 0) {
+                console.error("CAR_DATABASE is not loaded");
+                return;
+            }
+
+            // Score all vehicles
+            const scoredList = [];
+            for (const car of db) {
+                const s = scoreCar(car, a);
+                if (s > 0) {
+                    const matchPercent = Math.min(99, Math.max(65, Math.round((s / 95) * 100)));
+                    scoredList.push({
+                        ...car,
+                        score: s,
+                        matchPercent: matchPercent
+                    });
+                }
+            }
+
+            // Sort descending by score
+            scoredList.sort((x, y) => y.score - x.score);
+
+            // Select distinct top 2 cars
+            const topCars = [];
+            const seenModels = new Set();
+            for (const car of scoredList) {
+                if (topCars.length >= 2) break;
+                const baseName = car.brand + ' ' + car.model.split('(')[0].trim();
+                if (!seenModels.has(baseName)) {
+                    seenModels.add(baseName);
+                    topCars.push(car);
+                }
+            }
+
+            // Select 3 to 4 distinct runner-ups
+            const altCars = [];
+            for (const car of scoredList) {
+                if (altCars.length >= 4) break;
+                const baseName = car.brand + ' ' + car.model.split('(')[0].trim();
+                if (!seenModels.has(baseName)) {
+                    seenModels.add(baseName);
+                    altCars.push(car);
+                }
+            }
+
+            // Determine dynamic title, rationale, and traits
+            const top = topCars[0] || scoredList[0] || db[0];
+            let dynamicTitle = "";
+            let dynamicRationale = "";
+            let traits = [];
+
+            if (a.budget === 'above1200') {
+                if (top.powertrain === 'BEV') {
+                    dynamicTitle = isId ? "Mobil Listrik Mewah & VIP Lounge Eksekutif (> Rp 1.2 Milyar)" : "Luxury Flagship Electric & VIP Executive Lounge (> IDR 1.2B)";
+                    dynamicRationale = isId
+                        ? `Pilihan puncak kemewahan eksekutif: ${top.brand} ${top.model} memadukan kenyamanan kabin first-class, akselerasi instan tanpa getaran mesin, 100% BEBAS aturan Ganjil-Genap Jakarta, dan fasilitas pengisian daya premium di rumah.`
+                        : `The pinnacle of executive luxury: ${top.brand} ${top.model} combines first-class cabin serenity, instant seamless acceleration, 100% Jakarta Odd-Even exemption, and home fast-charging capability.`;
+                    traits = [isId ? "100% Bebas Ganjil-Genap" : "100% Odd-Even Exempt", isId ? "Kabin First-Class VIP" : "VIP Lounge Seating", isId ? "Air Suspension Halus" : "Adaptive Air Suspension", isId ? "Pajak PKB Rp 0" : "Zero Annual Road Tax"];
+                } else if (top.powertrain === 'HEV' || top.powertrain === 'PHEV') {
+                    dynamicTitle = isId ? "Full Hybrid Mewah & Flagship VIP MPV/SUV (> Rp 1.2 Milyar)" : "Flagship Luxury Hybrid VIP Lounge / SUV (> IDR 1.2B)";
+                    dynamicRationale = isId
+                        ? `Kombinasi prestise tertinggi dan jangkauan tanpa batas: ${top.brand} ${top.model} menghadirkan kemewahan kursi Ottoman kelas satu, peredaman suara tanpa cela, dan efisiensi konsumsi BBM tanpa cemas antrean SPKLU saat mudik antarkota.`
+                        : `Top prestige and zero range anxiety: ${top.brand} ${top.model} delivers first-class Ottoman seating, whisper-quiet NVH insulation, and hybrid efficiency for effortless intercity cruising.`;
+                    traits = [isId ? "Zero Range Anxiety" : "Zero Range Anxiety", isId ? "Ottoman Massage Seats" : "Ottoman Massage Seats", isId ? "Simbol Prestise Eksekutif" : "Executive Prestige", isId ? "Bantingan Senyap Mewah" : "Plush Acoustic NVH"];
+                } else {
+                    dynamicTitle = isId ? "Flagship Luxury SUV / Sports Car (> Rp 1.2 Milyar)" : "Flagship Luxury SUV / Sports Car (> IDR 1.2B)";
+                    dynamicRationale = isId
+                        ? `Performa luar biasa dan daya tahan tak tertandingi: ${top.brand} ${top.model} menawarkan performa mesin tangguh bertenaga besar, kenyamanan berkendara tingkat tinggi, dan gengsi premium di jalanan nusantara.`
+                        : `Unrivaled performance and command: ${top.brand} ${top.model} delivers potent powertrain reserves, superior ride refinement, and commanding presence on Indonesian highways.`;
+                    traits = [isId ? "Performa Tenaga Besar" : "High Horsepower", isId ? "Sasis Kokoh Tangguh" : "Heavy-Duty Chassis", isId ? "Kemewahan Eksekutif" : "Executive Luxury", isId ? "Resale Value Kuat" : "Strong Resale Value"];
+                }
+            } else if (a.budget === '700-1200') {
+                dynamicTitle = isId ? "Premium Hybrid / Executive EV / High-End SUV (Rp 700 Jt - 1.2 Milyar)" : "Premium Hybrid / Executive EV / High-End SUV (IDR 700M - 1.2B)";
+                dynamicRationale = isId
+                    ? `Perpaduan teknologi modern dan prestise menengah-atas: ${top.brand} ${top.model} memberikan fitur keselamatan ADAS terlengkap, interior berbalut kulit mewah, dan performa efisien untuk rute kota maupun luar kota.`
+                    : `The optimal balance of cutting-edge technology and executive prestige: ${top.brand} ${top.model} delivers comprehensive ADAS safety, premium leather appointments, and refined touring performance.`;
+                traits = [isId ? "Fitur ADAS Canggih" : "Advanced Level 2+ ADAS", isId ? "Kenyamanan Interior Premium" : "Premium Interior Craft", isId ? "Efisiensi Energi Tinggi" : "High Energy Efficiency", isId ? "Kabin Senyap Kedap" : "Acoustic Insulation"];
+            } else if (a.budget === '400-700') {
+                dynamicTitle = isId ? "Medium MPV Hybrid / Mid-Size SUV / Long-Range EV (Rp 400 - 700 Juta)" : "Medium Hybrid MPV / Mid-Size SUV / Long-Range EV (IDR 400 - 700M)";
+                dynamicRationale = isId
+                    ? `Pilihan paling rasional dan populer untuk keluarga Indonesia: ${top.brand} ${top.model} menawarkan kabin lapang, efisiensi konsumsi bahan bakar/energi sangat tinggi, dan nilai depresiasi harga yang sangat stabil.`
+                    : `The quintessential high-value choice for Indonesian families: ${top.brand} ${top.model} delivers expansive passenger room, class-leading efficiency, and dependable long-term reliability.`;
+                traits = [isId ? "Kapasitas Lega Keluarga" : "Spacious Family Cabin", isId ? "Konsumsi BBM/Energi Irit" : "High Fuel/Power Economy", isId ? "Biaya Rawat Terjangkau" : "Accessible Ownership", isId ? "Resale Value Favorit" : "Strong Resale Demand"];
+            } else if (a.budget === '200-400') {
+                dynamicTitle = isId ? "Low MPV 7-Seater / Compact Crossover / Mainstream EV (Rp 200 - 400 Juta)" : "7-Seat LMPV / Compact Crossover / Mainstream EV (IDR 200 - 400M)";
+                dynamicRationale = isId
+                    ? `Solusi mobilitas paling fungsional dan teruji di jalanan Indonesia: ${top.brand} ${top.model} sanggup memuat seluruh anggota keluarga, ground clearance tinggi aman genangan banjir, serta jaringan bengkel dan suku cadang melimpah.`
+                    : `The most dependable mobility solution tailored to Indonesian road realities: ${top.brand} ${top.model} accommodates full family passenger loads with resilient ground clearance and ubiquitous service points.`;
+                traits = [isId ? "Muat Banyak 7 Penumpang" : "Full 7-Passenger Seating", isId ? "Ground Clearance Tinggi" : "High Ground Clearance", isId ? "Suku Cadang Melimpah" : "Ubiquitous Spare Parts", isId ? "Servis Termudah" : "Low Maintenance Cost"];
+            } else {
+                dynamicTitle = isId ? "LCGC / City Car Kompak / Micro EV Urban (< Rp 200 Juta)" : "LCGC / Compact City Car / Urban Micro EV (< IDR 200M)";
+                dynamicRationale = isId
+                    ? `Paling lincah, ekonomis, dan mudah diparkir di garasi mungil atau gang sempit: ${top.brand} ${top.model} memberikan biaya operasional terendah, pajak tahunan ringan, dan radius putar kecil untuk manuver harian.`
+                    : `Ultra-agile, exceptionally cost-effective, and easy to park in compact spaces: ${top.brand} ${top.model} minimizes monthly operational spending with tight turning radius agility.`;
+                traits = [isId ? "Muat Garasi Sempit < 4.2m" : "Compact Carport < 4.2m", isId ? "Biaya Operasional Super Hemat" : "Ultra-Low Running Cost", isId ? "Radius Putar Lincah" : "Small Turning Radius", isId ? "Pajak Tahunan Ringan" : "Low Annual Road Tax"];
+            }
+
+            // Render Header Match
+            document.getElementById('match-percent').textContent = `${top.matchPercent}%`;
+            document.getElementById('result-category-title').textContent = dynamicTitle;
+            document.getElementById('result-rationale').textContent = dynamicRationale;
+
+            document.getElementById('result-traits').innerHTML = traits.map(t =>
+                `<span class="px-3 py-1 rounded-full bg-sky-900/60 border border-sky-700 text-sky-200 text-xs font-semibold">${t}</span>`
+            ).join('');
+
+            // Render Recommended Cards
+            document.getElementById('recommended-cars-grid').innerHTML = topCars.map(c => `
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden flex flex-col justify-between hover:border-sky-300 transition-all group">
+                    <div class="relative bg-slate-100 h-48 sm:h-52 overflow-hidden">
+                        <img src="${resolveCarImg(c.image)}" alt="${c.brand} ${c.model}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&auto=format&fit=crop&q=80'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-transparent"></div>
+                        <div class="absolute top-3 right-3 flex items-center gap-1.5">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-white/90 text-slate-900 backdrop-blur-md shadow-xs border border-white/50">
+                                ${c.powertrainLabel || c.powertrain}
+                            </span>
+                            <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-emerald-600 text-white shadow-xs">
+                                ${c.matchPercent}% ${isId ? 'Cocok' : 'Match'}
+                            </span>
+                        </div>
+                        <div class="absolute bottom-3 left-3 right-3 text-white">
+                            <span class="text-[10px] font-bold uppercase tracking-wider opacity-80">${c.brand}</span>
+                            <h4 class="font-display font-black text-xl text-white drop-shadow-sm">${c.model}</h4>
+                        </div>
+                    </div>
+
+                    <div class="p-5 space-y-3 flex-grow">
+                        <div class="bg-slate-50 p-3 rounded-xl text-xs space-y-1.5 font-medium border border-slate-100">
+                            <div><strong>${isId ? 'Mesin/Motor' : 'Powertrain'}:</strong> ${c.engine}</div>
+                            <div><strong>${isId ? 'Harga OTR' : 'OTR Price'}:</strong> <span class="text-sky-700 font-bold">${c.priceDisplay}</span></div>
+                            <div><strong>${isId ? 'Kapasitas' : 'Seating'}:</strong> ${c.seats} ${isId ? 'Kursi' : 'Seats'} • <strong>GC:</strong> ${c.gc} mm</div>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed font-sans">${c.pros}</p>
+                    </div>
+
+                    <div class="p-5 pt-0 flex items-center gap-2">
+                        <a href="${c.wikiUrl || '#'}" target="_blank" rel="noopener" class="flex-1 py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold text-center flex items-center justify-center gap-1.5 transition-colors">
+                            <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                            <span>Wikipedia</span>
+                        </a>
+                        <a href="${c.officialUrl || '#'}" target="_blank" rel="noopener" class="flex-1 py-2 px-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold text-center flex items-center justify-center gap-1.5 transition-colors">
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                            <span>${isId ? 'Situs Resmi APM' : 'Official Portal'}</span>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Alt Cars (Runner-Ups)
+            document.getElementById('alternative-cars-grid').innerHTML = altCars.map(c => `
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <strong class="text-slate-900 font-bold text-sm">${c.brand} ${c.model}</strong>
+                            <span class="text-[11px] font-bold text-sky-700 bg-sky-100/80 px-2 py-0.5 rounded-full">${c.matchPercent}% ${isId ? 'Cocok' : 'Match'}</span>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-700 mb-1.5">${c.priceDisplay} • ${c.powertrainLabel || c.powertrain}</div>
+                        <p class="text-xs text-slate-600 leading-relaxed">${c.pros}</p>
+                    </div>
+                    <div class="mt-2.5 pt-2 border-t border-slate-200/60 flex items-center justify-between text-[11px]">
+                        <span class="text-slate-500">${c.seats} ${isId ? 'kursi' : 'seats'} • GC ${c.gc}mm</span>
+                        <a href="${c.officialUrl || '#'}" target="_blank" rel="noopener" class="text-sky-600 hover:underline font-bold">Info APM →</a>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
         }
 
         // TCO CALCULATOR LOGIC

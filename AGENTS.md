@@ -18,6 +18,7 @@ For a multi-page topic:
 3. Give the hub a prominent directory/banner linking to its subpages.
 4. Give every subpage a clear `← Main Compendium` link to `../<topic-name>.html`.
 5. Add every published hub and subpage to `sitemap.xml` with current `<lastmod>` values. Use priorities `1.0` for the homepage, `0.9` for hubs, and `0.8` for subpages/prototypes that are publicly indexed.
+6. Topic-specific datasets and simulator protocols should be maintained with dedicated sub-guides (e.g. [`topics/indonesia-car-selector/AGENTS.md`](./topics/indonesia-car-selector/AGENTS.md) for automotive database and decision engine rules).
 
 ## 2. Product direction: editorial, modern, and topic-led
 
