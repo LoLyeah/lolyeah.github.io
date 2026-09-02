@@ -767,7 +767,7 @@ const CAR_DATABASE = [
     "pros": "Compact EV 5-seater jangkauan 400 km di harga Rp 239-269 Juta, DC Fast Charging 16.5 menit (30-80%), chipset Qualcomm 8155, 20 fitur ADAS, 100% bebas Ganjil-Genap.",
     "cons": "Jaringan servis EV Chery masih dalam ekspansi di luar kota-kota besar.",
     "wikiUrl": "https://en.wikipedia.org/wiki/Chery",
-    "officialUrl": "https://chery.co.id/",
+    "officialUrl": "https://chery.co.id/id/model/bev/tipe/chery-q",
     "image": "../../assets/images/cars/chery-q.jpg",
     "variants": [
       {
