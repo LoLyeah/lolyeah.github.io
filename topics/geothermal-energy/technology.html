@@ -50,6 +50,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geothermal Plant Technology & Architecture: Past, Present & Future — LoLyeah</title>
 
+    <!-- Early Theme Detection Script (Prevents flash of light mode) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('geothermal_theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -1346,15 +1359,18 @@
 
         let currentArch = 'single_flash';
         let currentEra = 'all';
-        let currentLang = 'en';
+        let currentLang = localStorage.getItem('geothermal_lang') || 'en';
+        let currentTheme = localStorage.getItem('geothermal_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+        // Apply theme immediately
+        if (currentTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
 
         // Initialize on DOM load
         document.addEventListener('DOMContentLoaded', () => {
-            // Restore language preference
-            const savedLang = localStorage.getItem('site_lang');
-            if (savedLang === 'id' || savedLang === 'en') {
-                currentLang = savedLang;
-            }
             updateLanguage();
 
             // Initialize Lucide icons
@@ -1380,7 +1396,7 @@
         // Language Toggle
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'id' : 'en';
-            localStorage.setItem('site_lang', currentLang);
+            localStorage.setItem('geothermal_lang', currentLang);
             updateLanguage();
             selectArchitecture(currentArch); // Refresh dynamic card
         }
@@ -1399,7 +1415,7 @@
         // Theme Toggle
         function toggleTheme() {
             const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+            localStorage.setItem('geothermal_theme', isDark ? 'dark' : 'light');
             if (window.lucide) lucide.createIcons();
         }
 
