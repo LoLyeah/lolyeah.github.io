@@ -27,10 +27,10 @@ The site should feel like a curated digital publication: calm, intentional, legi
 ### Visual principles
 
 - Start with a topic thesis and audience: what should a visitor understand or decide in the first minute?
-- Each topic use a small, deliberate design system: one background family, one surface hierarchy, one primary accent, one supporting accent, and semantic status colors only where necessary.
+- Each topic use a small, deliberate design system: one background family, one surface hierarchy, one primary accent, one supporting accent, and semantic status colors only where necessary. Using blocky typewriter monospace should be discouraged except if necessary.
 - Prefer subtle depth: restrained shadows, hairline borders, tonal surfaces, and occasional gradients. Glass, noise, scanlines, excessive glow, and animated backgrounds are optional accents—not defaults.
 - Every decorative effect must preserve contrast, performance, and the information hierarchy. 
-- Make sure there's animation and transition, should be classy and modern.
+- Make sure there's animation and transition, should be classy and modern. Motion and dynamic visual feedback preferred.
 - You don't need to force dark mode if the topic isn't suited for it. The vibes should be modern and professional.
 
 ### Page composition
