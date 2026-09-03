@@ -137,6 +137,10 @@
             --heat-gradient: radial-gradient(circle at 50% 10%, rgba(234, 88, 12, 0.24) 0%, rgba(20, 184, 166, 0.09) 50%, transparent 85%);
         }
 
+        html {
+            scroll-padding-top: 5.5rem;
+        }
+
         body {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -232,7 +236,11 @@
         }
         .pipe-brine-flow {
             stroke-dasharray: 6 4;
-            animation: fluidDash 1.8s linear infinite reverse;
+            animation: fluidDash 1.6s linear infinite;
+        }
+        .pipe-reinjection-flow {
+            stroke-dasharray: 6 4;
+            animation: fluidDash 1.4s linear infinite;
         }
 
         /* Scroll-triggered reveal system */
@@ -512,14 +520,16 @@
                     <!-- Production Well (Hot fluid rising) -->
                     <path d="M 220 380 L 220 180" stroke="#f97316" stroke-width="10" stroke-linecap="round"/>
                     <path d="M 220 380 L 220 180" stroke="#ffffff" stroke-width="3.5" class="pipe-steam-flow"/>
-                    <text x="200" y="214" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" fill="#fdba74" font-weight="700" text-anchor="end">PRODUCTION WELL</text>
-                    <text x="200" y="228" font-family="'JetBrains Mono', monospace" font-size="9" fill="#9ca3af" text-anchor="end" id="svg-prod-well-desc">High-Enthalpy Brine (&gt;180&deg;C)</text>
+                    <polygon points="214,185 226,185 220,172" fill="#f97316"/>
+                    <text x="200" y="212" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" fill="#fdba74" font-weight="700" text-anchor="end">PRODUCTION WELL &bull; &#x25B2;</text>
+                    <text x="200" y="226" font-family="'JetBrains Mono', monospace" font-size="9" fill="#9ca3af" text-anchor="end" id="svg-prod-well-desc">Hot Fluid Ascends (&gt;180&deg;C)</text>
 
                     <!-- Reinjection Well (Cold fluid sinking) -->
                     <path d="M 760 180 L 760 380" stroke="#0284c7" stroke-width="10" stroke-linecap="round"/>
-                    <path d="M 760 180 L 760 380" stroke="#ffffff" stroke-width="3.5" class="pipe-brine-flow"/>
-                    <text x="780" y="214" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" fill="#38bdf8" font-weight="700">REINJECTION WELL</text>
-                    <text x="780" y="228" font-family="'JetBrains Mono', monospace" font-size="9" fill="#9ca3af" id="svg-reinject-desc">100% Fluid Returned</text>
+                    <path d="M 760 180 L 760 380" stroke="#ffffff" stroke-width="3.5" class="pipe-reinjection-flow"/>
+                    <polygon points="754,374 766,374 760,388" fill="#0284c7"/>
+                    <text x="780" y="212" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" fill="#38bdf8" font-weight="700">REINJECTION WELL &bull; &#x25BC;</text>
+                    <text x="780" y="226" font-family="'JetBrains Mono', monospace" font-size="9" fill="#9ca3af" id="svg-reinject-desc">Cooled Fluid Injected Down</text>
 
                     <!-- Subterranean Recharge Convection Arrow -->
                     <path d="M 720 370 Q 490 398 260 370" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="6 4" class="pipe-steam-flow"/>
@@ -530,11 +540,11 @@
                         <!-- Cyclone Separator Vessel -->
                         <g id="schematic-separator">
                             <rect x="290" y="115" width="70" height="95" rx="12" fill="#334155" stroke="#f97316" stroke-width="2"/>
-                            <!-- Internal cyclone swirl lines -->
-                            <path d="M 300 145 Q 325 155 350 145" fill="none" stroke="#fdba74" stroke-width="1.5" stroke-dasharray="3 2"/>
-                            <path d="M 305 165 Q 325 175 345 165" fill="none" stroke="#fdba74" stroke-width="1.5" stroke-dasharray="3 2"/>
-                            <text x="325" y="140" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" fill="#ffffff" text-anchor="middle" font-weight="800">CYCLONE</text>
-                            <text x="325" y="152" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" fill="#fdba74" text-anchor="middle" font-weight="700">SEPARATOR</text>
+                            <!-- Internal cyclone swirl lines placed in lower vortex chamber -->
+                            <path d="M 302 166 Q 325 174 348 166" fill="none" stroke="#fdba74" stroke-width="1.5" stroke-dasharray="3 2"/>
+                            <path d="M 306 184 Q 325 192 344 184" fill="none" stroke="#fdba74" stroke-width="1.5" stroke-dasharray="3 2"/>
+                            <text x="325" y="136" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" fill="#ffffff" text-anchor="middle" font-weight="800">CYCLONE</text>
+                            <text x="325" y="148" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" fill="#fdba74" text-anchor="middle" font-weight="700">SEPARATOR</text>
                             <!-- Feed pipe from production well -->
                             <path d="M 220 180 L 290 180" stroke="#f97316" stroke-width="8"/>
                         </g>
@@ -544,7 +554,7 @@
                         <text x="390" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" fill="#38bdf8" font-weight="700" text-anchor="middle">Dry Flashed Steam</text>
 
                         <!-- Brine Drain Pipe along ground to Reinjection -->
-                        <path d="M 325 210 L 325 230 L 760 230 L 760 180" fill="none" stroke="#0284c7" stroke-width="6" class="pipe-brine-flow"/>
+                        <path d="M 325 210 L 325 230 L 760 230" fill="none" stroke="#0284c7" stroke-width="6" class="pipe-brine-flow"/>
                         <text x="540" y="222" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" fill="#38bdf8" font-weight="600" text-anchor="middle">Separated Liquid Brine Drain Line &bull; 100% Reinjected</text>
                     </g>
 
@@ -562,7 +572,7 @@
                         </g>
 
                         <!-- Primary Brine Direct Return along ground to Reinjection (No collision with equipment) -->
-                        <path d="M 370 195 L 370 230 L 760 230 L 760 180" fill="none" stroke="#0284c7" stroke-width="6" class="pipe-brine-flow"/>
+                        <path d="M 370 195 L 370 230 L 760 230" fill="none" stroke="#0284c7" stroke-width="6" class="pipe-brine-flow"/>
                         <text x="540" y="222" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" fill="#34d399" font-weight="600" text-anchor="middle">Closed Primary Brine Return Line &bull; 100% Retained &bull; 0 Emissions</text>
 
                         <!-- Secondary Organic Loop: Vapor line to Turbine -->
@@ -611,7 +621,9 @@
                             <line x1="0" y1="-12" x2="0" y2="12" stroke="#38bdf8" stroke-width="3" id="svg-turbine-blade-2"/>
                             <circle cx="0" cy="0" r="4" fill="#ffffff"/>
                         </g>
-                        <text x="25" y="42" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#ffffff" text-anchor="middle" font-weight="700" id="svg-turbine-text">STEAM TURBINE</text>
+                        <!-- Turbine Label positioned cleanly above turbine in open sky -->
+                        <rect x="-12" y="-45" width="74" height="17" rx="4" fill="#0f172a" fill-opacity="0.85" stroke="#38bdf8" stroke-width="0.75"/>
+                        <text x="25" y="-33" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" fill="#ffffff" text-anchor="middle" font-weight="700" id="svg-turbine-text">STEAM TURBINE</text>
                     </g>
 
                     <!-- Generator -->
@@ -655,10 +667,11 @@
 
                         <!-- Billowing Steam Vapor Particles (Hidden in Binary ORC) -->
                         <g id="schematic-steam-particles" style="transition: opacity 0.3s ease;">
-                            <circle cx="20" cy="-8" r="6" fill="#ffffff" class="steam-particle-1"/>
-                            <circle cx="28" cy="-14" r="8" fill="#ffffff" class="steam-particle-2"/>
-                            <circle cx="15" cy="-20" r="10" fill="#ffffff" class="steam-particle-3"/>
-                            <text x="25" y="-28" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" fill="#94a3b8" text-anchor="middle">Clean Steam Plume</text>
+                            <circle cx="18" cy="-8" r="5" fill="#ffffff" class="steam-particle-1"/>
+                            <circle cx="26" cy="-14" r="7" fill="#ffffff" class="steam-particle-2"/>
+                            <circle cx="14" cy="-20" r="8" fill="#ffffff" class="steam-particle-3"/>
+                            <text x="44" y="-16" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" fill="#94a3b8" font-weight="600" text-anchor="start">Clean Steam Plume</text>
+                            <text x="44" y="-6" font-family="'Plus Jakarta Sans', sans-serif" font-size="6.5" fill="#64748b" text-anchor="start">(H₂O Vapor Only)</text>
                         </g>
                     </g>
 
