@@ -53,10 +53,10 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Plus Jakarta Sans (Editorial UI), Outfit (Display Title), JetBrains Mono (Technical Readouts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -69,8 +69,8 @@
                 extend: {
                     fontFamily: {
                         display: ['"Outfit"', 'sans-serif'],
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        mono: ['"Space Mono"', 'monospace'],
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
                     },
                     colors: {
                         magma: {
@@ -107,10 +107,10 @@
 
     <style>
         :root {
-            --indo-gradient: radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.1) 0%, rgba(234, 88, 12, 0.06) 45%, transparent 70%);
+            --indo-gradient: radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.12) 0%, rgba(234, 88, 12, 0.08) 45%, transparent 75%);
         }
         .dark {
-            --indo-gradient: radial-gradient(circle at 50% 15%, rgba(5, 150, 105, 0.18) 0%, rgba(234, 88, 12, 0.15) 50%, transparent 80%);
+            --indo-gradient: radial-gradient(circle at 50% 15%, rgba(5, 150, 105, 0.22) 0%, rgba(234, 88, 12, 0.18) 50%, transparent 85%);
         }
 
         body {
@@ -120,10 +120,11 @@
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.86);
+            background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(16, 185, 129, 0.18);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
         }
         .dark .glass-card {
             background: rgba(15, 19, 26, 0.85);
@@ -132,10 +133,57 @@
             border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 36px -10px rgba(16, 185, 129, 0.15), 0 0 0 1px rgba(16, 185, 129, 0.3);
+        }
+        .dark .glass-card:hover {
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.7), 0 0 25px rgba(16, 185, 129, 0.2), 0 0 0 1px rgba(16, 185, 129, 0.35);
+        }
+
         .glass-panel-dark {
             background: linear-gradient(135deg, rgba(16, 32, 26, 0.95), rgba(9, 12, 16, 0.95));
             border: 1px solid rgba(16, 185, 129, 0.25);
         }
+
+        /* Ambient floating glow */
+        @keyframes ambientGlowIndo {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.45; }
+            50% { transform: translate(-25px, -15px) scale(1.15); opacity: 0.75; }
+        }
+        .ambient-heat-orb {
+            position: absolute;
+            width: 550px;
+            height: 550px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.16) 0%, rgba(234, 88, 12, 0.08) 50%, transparent 70%);
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: 0;
+            animation: ambientGlowIndo 14s ease-in-out infinite;
+        }
+
+        /* Scroll-triggered reveal system */
+        .reveal-init {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .reveal-visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        /* Hero Entry Animations */
+        @keyframes heroFadeIn {
+            from { opacity: 0; transform: translateY(22px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-stagger-1 { animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards; opacity: 0; }
+        .hero-stagger-2 { animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.18s forwards; opacity: 0; }
+        .hero-stagger-3 { animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.30s forwards; opacity: 0; }
+        .hero-stagger-4 { animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.42s forwards; opacity: 0; }
 
         /* Pulse and flow effects */
         @keyframes pulseRing {
@@ -147,8 +195,19 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .ring-pulsing {
+            .ring-pulsing, .ambient-heat-orb,
+            .hero-stagger-1, .hero-stagger-2, .hero-stagger-3, .hero-stagger-4 {
                 animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .reveal-init {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+            .glass-card:hover {
+                transform: none !important;
             }
         }
     </style>
@@ -185,43 +244,44 @@
     </header>
 
     <!-- Main Container -->
-    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16" style="background: var(--indo-gradient);">
+    <main class="relative flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16 overflow-hidden" style="background: var(--indo-gradient);">
+        <div class="ambient-heat-orb top-10 left-1/2 -translate-x-1/2"></div>
 
         <!-- Hero Section -->
-        <section class="space-y-6 pt-4 text-center max-w-4xl mx-auto">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emeraldGlow-500/10 border border-emeraldGlow-500/30 text-emeraldGlow-700 dark:text-emeraldGlow-300 text-xs font-semibold shadow-inner">
+        <section class="relative z-10 space-y-6 pt-4 text-center max-w-4xl mx-auto">
+            <div class="hero-stagger-1 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emeraldGlow-500/10 border border-emeraldGlow-500/30 text-emeraldGlow-700 dark:text-emeraldGlow-300 text-xs font-semibold shadow-inner">
                 <i data-lucide="flame" class="w-3.5 h-3.5 text-magma-500"></i>
                 <span data-en="Pacific Ring of Fire &bull; 24+ GW Potential &bull; PLN Energy Transition" data-id="Cincin Api Pasifik &bull; Potensi 24+ GW &bull; Transisi Energi PLN">Pacific Ring of Fire &bull; 24+ GW Potential &bull; PLN Energy Transition</span>
             </div>
 
-            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold text-stone-900 dark:text-white tracking-tight leading-tight">
+            <h1 class="hero-stagger-2 text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold text-stone-900 dark:text-white tracking-tight leading-tight">
                 <span data-en="Geothermal Energy in Indonesia (PLTP):" data-id="Pembangkit Panas Bumi di Indonesia (PLTP):">Geothermal Energy in Indonesia (PLTP):</span><br>
                 <span class="bg-gradient-to-r from-emeraldGlow-600 via-teal-500 to-magma-500 bg-clip-text text-transparent" data-en="Is It Really a Good Choice to Build Many Geothermal Plants?" data-id="Apakah Tepat Membangun Banyak PLTP di Indonesia?">Is It Really a Good Choice to Build Many Geothermal Plants?</span>
             </h1>
 
-            <p class="text-base sm:text-lg text-stone-600 dark:text-stone-300 leading-relaxed font-normal" data-en="Indonesia sits upon approximately 40% of the world's volcanic geothermal reserves—over 24 Gigawatts of subterranean thermal potential. Yet after four decades of commercial operation, only ~2.4 to 2.6 GW (~10%) is utilized. Why hasn't Indonesia built hundreds of geothermal plants? Is scaling geothermal the golden key to replacing 35+ GW of dirty coal, or does it face insurmountable barriers in exploration risk, grid overcapacity, conservation forests, and tariff politics?" data-id="Indonesia berdiri di atas sekitar 40% potensi panas bumi vulkanik dunia—lebih dari 24 Gigawatt potensi termal bawah tanah. Namun setelah empat dekade beroperasi komersial, baru ~2,4 hingga 2,6 GW (~10%) yang berhasil dimanfaatkan. Mengapa Indonesia belum membangun ratusan PLTP? Apakah memperbanyak PLTP merupakan kunci emas menggantikan 35+ GW batubara kotor, ataukah terbentur risiko eksplorasi, kelebihan pasokan listrik PLN, hutan lindung, dan keekonomian tarif?">
+            <p class="hero-stagger-3 text-base sm:text-lg text-stone-600 dark:text-stone-300 leading-relaxed font-normal" data-en="Indonesia sits upon approximately 40% of the world's volcanic geothermal reserves—over 24 Gigawatts of subterranean thermal potential. Yet after four decades of commercial operation, only ~2.4 to 2.6 GW (~10%) is utilized. Why hasn't Indonesia built hundreds of geothermal plants? Is scaling geothermal the golden key to replacing 35+ GW of dirty coal, or does it face insurmountable barriers in exploration risk, grid overcapacity, conservation forests, and tariff politics?" data-id="Indonesia berdiri di atas sekitar 40% potensi panas bumi vulkanik dunia—lebih dari 24 Gigawatt potensi termal bawah tanah. Namun setelah empat dekade beroperasi komersial, baru ~2,4 hingga 2,6 GW (~10%) yang berhasil dimanfaatkan. Mengapa Indonesia belum membangun ratusan PLTP? Apakah memperbanyak PLTP merupakan kunci emas menggantikan 35+ GW batubara kotor, ataukah terbentur risiko eksplorasi, kelebihan pasokan listrik PLN, hutan lindung, dan keekonomian tarif?">
                 Indonesia sits upon approximately 40% of the world's volcanic geothermal reserves—over 24 Gigawatts of subterranean thermal potential. Yet after four decades of commercial operation, only ~2.4 to 2.6 GW (~10%) is utilized. Why hasn't Indonesia built hundreds of geothermal plants? Is scaling geothermal the golden key to replacing 35+ GW of dirty coal, or does it face insurmountable barriers in exploration risk, grid overcapacity, conservation forests, and tariff politics?
             </p>
 
-            <!-- Key Figures Summary -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-4 text-left">
+            <!-- Key Figures Summary with Hover Dynamics -->
+            <div class="hero-stagger-4 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-4 text-left">
                 <div class="glass-card rounded-2xl p-4 shadow-sm">
-                    <div class="text-xs font-mono text-stone-500 dark:text-stone-400 uppercase" data-en="National Potential" data-id="Potensi Nasional">National Potential</div>
+                    <div class="text-[11px] font-sans font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider" data-en="National Potential" data-id="Potensi Nasional">National Potential</div>
                     <div class="text-2xl sm:text-3xl font-display font-extrabold text-emeraldGlow-600 dark:text-emeraldGlow-400 mt-1">24.0 <span class="text-sm font-normal">GW</span></div>
                     <div class="text-xs text-stone-500 mt-0.5" data-en="~40% of global volcanic heat" data-id="~40% panas vulkanik dunia">~40% of global volcanic heat</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4 shadow-sm">
-                    <div class="text-xs font-mono text-stone-500 dark:text-stone-400 uppercase" data-en="Installed PLTP Capacity" data-id="Kapasitas Terpasang">Installed PLTP Capacity</div>
+                    <div class="text-[11px] font-sans font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider" data-en="Installed PLTP Capacity" data-id="Kapasitas Terpasang">Installed PLTP Capacity</div>
                     <div class="text-2xl sm:text-3xl font-display font-extrabold text-magma-600 dark:text-magma-400 mt-1">~2.41 <span class="text-sm font-normal">GW</span></div>
                     <div class="text-xs text-stone-500 mt-0.5" data-en="#2 globally behind United States" data-id="Peringkat 2 dunia setelah AS">#2 globally behind United States</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4 shadow-sm">
-                    <div class="text-xs font-mono text-stone-500 dark:text-stone-400 uppercase" data-en="Share in National Mix" data-id="Porsi Bauran Nasional">Share in National Mix</div>
+                    <div class="text-[11px] font-sans font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider" data-en="Share in National Mix" data-id="Porsi Bauran Nasional">Share in National Mix</div>
                     <div class="text-2xl sm:text-3xl font-display font-extrabold text-teal-600 dark:text-teal-400 mt-1">~5.2%</div>
                     <div class="text-xs text-stone-500 mt-0.5" data-en="Coal still dominates at ~62%" data-id="Batubara masih dominan ~62%">Coal still dominates at ~62%</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4 shadow-sm">
-                    <div class="text-xs font-mono text-stone-500 dark:text-stone-400 uppercase" data-en="In Conservation Forests" data-id="Di Hutan Konservasi">In Conservation Forests</div>
+                    <div class="text-[11px] font-sans font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider" data-en="In Conservation Forests" data-id="Di Hutan Konservasi">In Conservation Forests</div>
                     <div class="text-2xl sm:text-3xl font-display font-extrabold text-amber-600 dark:text-amber-400 mt-1">&gt; 42%</div>
                     <div class="text-xs text-stone-500 mt-0.5" data-en="Key environmental licensing hurdle" data-id="Dilema izin lingkungan utama">Key environmental licensing hurdle</div>
                 </div>
@@ -229,9 +289,9 @@
         </section>
 
         <!-- Section 1: Ring of Fire Geology & Geographic Distribution -->
-        <section class="space-y-6">
+        <section class="space-y-6 reveal-init">
             <div class="border-b border-stone-200 dark:border-stone-800 pb-3">
-                <div class="text-xs font-mono font-bold uppercase tracking-wider text-emeraldGlow-600 dark:text-emeraldGlow-400" data-en="Section 01 &bull; Tectonic Endowment" data-id="Bagian 01 &bull; Kekayaan Tektonik">Section 01 &bull; Tectonic Endowment</div>
+                <div class="text-xs font-sans font-bold uppercase tracking-wider text-emeraldGlow-600 dark:text-emeraldGlow-400" data-en="Section 01 &bull; Tectonic Endowment" data-id="Bagian 01 &bull; Kekayaan Tektonik">Section 01 &bull; Tectonic Endowment</div>
                 <h2 class="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-white mt-1" data-en="The Geological Gift of the Pacific Ring of Fire" data-id="Anugerah Geologis Cincin Api Pasifik">
                     The Geological Gift of the Pacific Ring of Fire
                 </h2>
@@ -308,10 +368,10 @@
         </section>
 
         <!-- Section 2: Major Indonesian PLTP Fields Database Explorer -->
-        <section class="glass-card rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+        <section class="glass-card rounded-3xl p-6 sm:p-8 shadow-xl space-y-6 reveal-init">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-200 dark:border-stone-800 pb-5">
                 <div>
-                    <div class="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-emeraldGlow-600 dark:text-emeraldGlow-400">
+                    <div class="inline-flex items-center gap-1.5 text-xs font-sans font-bold uppercase tracking-wider text-emeraldGlow-600 dark:text-emeraldGlow-400">
                         <i data-lucide="database" class="w-4 h-4"></i>
                         <span data-en="Field Database" data-id="Basis Data Lapangan">Field Database</span>
                     </div>
@@ -436,9 +496,9 @@
         </section>
 
         <!-- Section 3: The Core Question: Is It Really a Good Choice in Indonesia? -->
-        <section class="space-y-6">
+        <section class="space-y-6 reveal-init">
             <div class="border-b border-stone-200 dark:border-stone-800 pb-3">
-                <div class="text-xs font-mono font-bold uppercase tracking-wider text-emeraldGlow-600 dark:text-emeraldGlow-400" data-en="Section 03 &bull; Strategic Assessment" data-id="Bagian 03 &bull; Kajian Strategis">Section 03 &bull; Strategic Assessment</div>
+                <div class="text-xs font-sans font-bold uppercase tracking-wider text-emeraldGlow-600 dark:text-emeraldGlow-400" data-en="Section 03 &bull; Strategic Assessment" data-id="Bagian 03 &bull; Kajian Strategis">Section 03 &bull; Strategic Assessment</div>
                 <h2 class="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-white mt-1" data-en="Is It Really a Good Choice for Indonesia to Have Many Geothermal Power Plants?" data-id="Apakah Tepat Bagi Indonesia Membangun Banyak PLTP?">
                     Is It Really a Good Choice for Indonesia to Have Many Geothermal Power Plants?
                 </h2>
@@ -499,9 +559,9 @@
         </section>
 
         <!-- Section 4: Interactive National Strategy Decision Engine -->
-        <section class="glass-card rounded-3xl p-6 sm:p-8 shadow-xl space-y-8" id="decision-engine">
+        <section class="glass-card rounded-3xl p-6 sm:p-8 shadow-xl space-y-8 reveal-init" id="decision-engine">
             <div class="border-b border-stone-200 dark:border-stone-800 pb-4">
-                <div class="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-emeraldGlow-600 dark:text-emeraldGlow-400">
+                <div class="inline-flex items-center gap-2 text-xs font-sans font-bold uppercase tracking-wider text-emeraldGlow-600 dark:text-emeraldGlow-400">
                     <i data-lucide="compass" class="w-4 h-4"></i>
                     <span data-en="Strategic Decision Simulator" data-id="Simulator Keputusan Strategis">Strategic Decision Simulator</span>
                 </div>
@@ -648,9 +708,9 @@
         </section>
 
         <!-- Section 5: The Strategic Verdict & Policy Roadmap -->
-        <section class="space-y-6">
+        <section class="space-y-6 reveal-init">
             <div class="border-b border-stone-200 dark:border-stone-800 pb-3">
-                <div class="text-xs font-mono font-bold uppercase tracking-wider text-emeraldGlow-600 dark:text-emeraldGlow-400" data-en="Section 05 &bull; Policy Verdict" data-id="Bagian 05 &bull; Rekomendasi Kebijakan">Section 05 &bull; Policy Verdict</div>
+                <div class="text-xs font-sans font-bold uppercase tracking-wider text-emeraldGlow-600 dark:text-emeraldGlow-400" data-en="Section 05 &bull; Policy Verdict" data-id="Bagian 05 &bull; Rekomendasi Kebijakan">Section 05 &bull; Policy Verdict</div>
                 <h2 class="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-white mt-1" data-en="The Strategic Verdict: How Indonesia Can Win With Geothermal" data-id="Kesimpulan Strategis: Cara Indonesia Memenangkan Potensi Panas Bumi">
                     The Strategic Verdict: How Indonesia Can Win With Geothermal
                 </h2>
@@ -742,9 +802,9 @@
                 const el = document.getElementById(`filter-${b}`);
                 if (el) {
                     if (b === island) {
-                        el.className = "px-3 py-1.5 text-xs font-mono font-semibold rounded-lg bg-emeraldGlow-600 text-white transition-all shadow";
+                        el.className = "px-3.5 py-1.5 text-xs font-sans font-bold rounded-lg bg-emeraldGlow-600 text-white transition-all shadow";
                     } else {
-                        el.className = "px-3 py-1.5 text-xs font-mono font-semibold rounded-lg bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-300 dark:hover:bg-stone-700 transition-all";
+                        el.className = "px-3.5 py-1.5 text-xs font-sans font-semibold rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white hover:bg-stone-200 dark:hover:bg-stone-700 transition-all";
                     }
                 }
             });
@@ -772,7 +832,6 @@
             document.getElementById('slider-val-forest').textContent = `${forest}%`;
 
             // Weighted scoring algorithms (0-100)
-            // Geothermal: Excels in baseload (1.0), carbon (0.95), land efficiency (0.9), penalized by low capex risk tolerance (exploration risk) and forest sensitivity
             const scoreGeo = Math.round(
                 (base * 0.40) +
                 (capex * 0.20) +
@@ -780,7 +839,6 @@
                 ((100 - (forest * 0.35)) * 0.10)
             );
 
-            // Solar + BESS: Low baseload without battery, excellent low exploration capex, good carbon, low forest impact if rooftop/degraded land
             const scoreSolar = Math.round(
                 ((100 - base) * 0.25) +
                 ((100 - (capex * 0.4)) * 0.25) +
@@ -788,7 +846,6 @@
                 (forest * 0.20)
             );
 
-            // Hydropower: Good baseload if large reservoir, very high capex/lead time, high forest flooding sensitivity
             const scoreHydro = Math.round(
                 (base * 0.35) +
                 (capex * 0.15) +
@@ -796,7 +853,6 @@
                 ((100 - forest) * 0.20)
             );
 
-            // Coal: High baseload, cheap upfront DMO, severely penalized by carbon penalty
             const scoreCoal = Math.round(
                 (base * 0.45) +
                 ((100 - capex) * 0.20) +
@@ -804,7 +860,7 @@
                 (forest * 0.05)
             );
 
-            // Update UI scores and bars
+            // Update UI scores and bars with smooth CSS transitions
             document.getElementById('score-geo').textContent = `${scoreGeo} / 100`;
             document.getElementById('bar-geo').style.width = `${Math.min(100, Math.max(5, scoreGeo))}%`;
 
@@ -855,6 +911,21 @@
             }
             runDecisionEngine();
             lucide.createIcons();
+
+            // Scroll Reveal Observer for classy entrance motion
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('reveal-visible');
+                        }
+                    });
+                }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+                document.querySelectorAll('.reveal-init').forEach(el => observer.observe(el));
+            } else {
+                document.querySelectorAll('.reveal-init').forEach(el => el.classList.add('reveal-visible'));
+            }
         });
     </script>
 </body>

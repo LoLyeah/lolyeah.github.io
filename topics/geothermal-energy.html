@@ -53,10 +53,10 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Plus Jakarta Sans (Editorial UI), Outfit (Display Title), JetBrains Mono (Technical Readouts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -69,8 +69,8 @@
                 extend: {
                     fontFamily: {
                         display: ['"Outfit"', 'sans-serif'],
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        mono: ['"Space Mono"', 'monospace'],
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
                     },
                     colors: {
                         magma: {
@@ -112,10 +112,10 @@
 
     <style>
         :root {
-            --heat-gradient: radial-gradient(circle at 50% 10%, rgba(249, 115, 22, 0.12) 0%, rgba(13, 148, 136, 0.05) 45%, transparent 70%);
+            --heat-gradient: radial-gradient(circle at 50% 10%, rgba(249, 115, 22, 0.14) 0%, rgba(13, 148, 136, 0.06) 45%, transparent 75%);
         }
         .dark {
-            --heat-gradient: radial-gradient(circle at 50% 10%, rgba(234, 88, 12, 0.22) 0%, rgba(20, 184, 166, 0.08) 50%, transparent 80%);
+            --heat-gradient: radial-gradient(circle at 50% 10%, rgba(234, 88, 12, 0.24) 0%, rgba(20, 184, 166, 0.09) 50%, transparent 85%);
         }
 
         body {
@@ -126,16 +126,25 @@
 
         /* Glassmorphism */
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(249, 115, 22, 0.18);
+            border: 1px solid rgba(249, 115, 22, 0.16);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
         }
         .dark .glass-card {
-            background: rgba(15, 19, 26, 0.82);
+            background: rgba(15, 19, 26, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(249, 115, 22, 0.2);
+            border: 1px solid rgba(249, 115, 22, 0.18);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 36px -10px rgba(234, 88, 12, 0.15), 0 0 0 1px rgba(249, 115, 22, 0.3);
+        }
+        .dark .glass-card:hover {
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.7), 0 0 25px rgba(234, 88, 12, 0.2), 0 0 0 1px rgba(249, 115, 22, 0.35);
         }
 
         .glass-panel-dark {
@@ -143,15 +152,32 @@
             border: 1px solid rgba(249, 115, 22, 0.25);
         }
 
-        /* Dynamic Animations */
+        /* Ambient floating magma glow */
+        @keyframes ambientGlow {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.45; }
+            50% { transform: translate(30px, -20px) scale(1.15); opacity: 0.75; }
+        }
+        .ambient-heat-orb {
+            position: absolute;
+            width: 550px;
+            height: 550px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(234, 88, 12, 0.16) 0%, rgba(20, 184, 166, 0.05) 50%, transparent 70%);
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: 0;
+            animation: ambientGlow 14s ease-in-out infinite;
+        }
+
+        /* Dynamic Motion & Keyframe Animations */
         @keyframes pulseMagma {
-            0%, 100% { opacity: 0.6; filter: drop-shadow(0 0 12px rgba(234, 88, 12, 0.5)); }
-            50% { opacity: 1; filter: drop-shadow(0 0 24px rgba(249, 115, 22, 0.8)); }
+            0%, 100% { opacity: 0.65; filter: drop-shadow(0 0 10px rgba(234, 88, 12, 0.5)); }
+            50% { opacity: 1; filter: drop-shadow(0 0 26px rgba(249, 115, 22, 0.9)); }
         }
         @keyframes steamRise {
-            0% { transform: translateY(0px) scale(0.9); opacity: 0.2; }
-            50% { opacity: 0.8; }
-            100% { transform: translateY(-35px) scale(1.3); opacity: 0; }
+            0% { transform: translateY(0px) scale(0.9); opacity: 0.25; }
+            50% { opacity: 0.9; }
+            100% { transform: translateY(-38px) scale(1.35); opacity: 0; }
         }
         @keyframes turbineSpin {
             from { transform: rotate(0deg); }
@@ -186,11 +212,81 @@
             animation: fluidDash 1.8s linear infinite reverse;
         }
 
-        /* Reduced Motion */
+        /* Scroll-triggered reveal system */
+        .reveal-init {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .reveal-visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        /* Hero Entry Animations */
+        @keyframes heroFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .hero-stagger-1 { animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards; opacity: 0; }
+        .hero-stagger-2 { animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.18s forwards; opacity: 0; }
+        .hero-stagger-3 { animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.30s forwards; opacity: 0; }
+        .hero-stagger-4 { animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.42s forwards; opacity: 0; }
+
+        /* Circuit transition morphing */
+        .circuit-layer {
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: 325px 160px;
+        }
+
+        /* Segmented Cycle Tab Buttons */
+        .cycle-tab-btn {
+            position: relative;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .cycle-tab-btn:hover {
+            transform: translateY(-1.5px);
+        }
+        .cycle-tab-btn:active {
+            transform: translateY(0.5px) scale(0.98);
+        }
+        .cycle-tab-btn.is-active {
+            box-shadow: 0 4px 16px -2px rgba(234, 88, 12, 0.45);
+        }
+
+        /* Value Recalculation Pulse */
+        @keyframes valPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.04); color: #ea580c; }
+            100% { transform: scale(1); }
+        }
+        .value-pulse {
+            animation: valPulse 0.35s ease-out;
+        }
+
+        /* Reduced Motion Fallback */
         @media (prefers-reduced-motion: reduce) {
             .magma-pulsing, .steam-particle-1, .steam-particle-2, .steam-particle-3,
-            .turbine-blade, .pipe-steam-flow, .pipe-brine-flow {
+            .turbine-blade, .pipe-steam-flow, .pipe-brine-flow, .ambient-heat-orb,
+            .hero-stagger-1, .hero-stagger-2, .hero-stagger-3, .hero-stagger-4 {
                 animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .reveal-init {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+            .glass-card:hover {
+                transform: none !important;
             }
         }
 
@@ -264,44 +360,45 @@
         </div>
     </aside>
 
-    <!-- Main Content Container -->
-    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16" style="background: var(--heat-gradient);">
+    <!-- Main Content Container with Ambient Heat Orb -->
+    <main class="relative flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16 overflow-hidden" style="background: var(--heat-gradient);">
+        <div class="ambient-heat-orb top-10 left-1/2 -translate-x-1/2"></div>
 
-        <!-- Hero Section -->
-        <section class="space-y-6 pt-4 text-center max-w-4xl mx-auto">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-magma-50 dark:bg-magma-950/80 border border-magma-200 dark:border-magma-800/60 text-magma-700 dark:text-magma-300 text-xs font-semibold shadow-inner">
+        <!-- Hero Section with Staggered Cascading Reveal -->
+        <section class="relative z-10 space-y-6 pt-4 text-center max-w-4xl mx-auto">
+            <div class="hero-stagger-1 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-magma-50 dark:bg-magma-950/80 border border-magma-200 dark:border-magma-800/60 text-magma-700 dark:text-magma-300 text-xs font-semibold shadow-inner">
                 <i data-lucide="flame" class="w-3.5 h-3.5 text-magma-500 animate-pulse"></i>
                 <span data-en="Thermodynamics &bull; Zero-Carbon Baseload &bull; Subterranean Geology" data-id="Termodinamika &bull; Beban Dasar Nol-Karbon &bull; Geologi Bawah Tanah">Thermodynamics &bull; Zero-Carbon Baseload &bull; Subterranean Geology</span>
             </div>
 
-            <h1 class="text-4xl sm:text-6xl font-display font-extrabold text-stone-900 dark:text-white tracking-tight leading-tight">
-                <span data-en="Harnessing the Earth's Deep Heat:" data-id="Memanen Panas Dalam Bumi:">Harnessing the Earth's Deep Heat:</span><br>
+            <h1 class="hero-stagger-2 text-4xl sm:text-6xl font-display font-extrabold text-stone-900 dark:text-white tracking-tight leading-[1.12]">
+                <span data-en="Harnessing the Earth's Heat:" data-id="Memanen Panas Bumi:">Harnessing the Earth's Heat:</span><br>
                 <span class="bg-gradient-to-r from-magma-600 via-amber-500 to-steam-500 bg-clip-text text-transparent" data-en="Geothermal Power, Thermodynamics &amp; Climate Reality" data-id="Pembangkit Panas Bumi, Termodinamika &amp; Realitas Iklim">Geothermal Power, Thermodynamics &amp; Climate Reality</span>
             </h1>
 
-            <p class="text-base sm:text-xl text-stone-600 dark:text-stone-300 leading-relaxed font-normal" data-en="Beneath the planetary crust lies an inexhaustible thermal reservoir generated by primordial formation and radiogenic isotopic decay. How do modern power plants tap this subterranean enthalpy, convert high-pressure steam into continuous gigawatts, cope with Carnot efficiency bottlenecks, and anchor decarbonized electric grids?" data-id="Di bawah kerak bumi tersimpan reservoir panas tak berhingga yang terbentuk dari panas primordial dan peluruhan isotop radiogenik. Bagaimana pembangkit modern memanen entalpi bawah tanah ini, mengonversi uap bertekanan tinggi menjadi gigawatt stabil 24/7, mengatasi batas efisiensi Carnot, dan menopang transisi energi bersih?">
+            <p class="hero-stagger-3 text-base sm:text-xl text-stone-600 dark:text-stone-300 leading-relaxed font-normal" data-en="Beneath the planetary crust lies an inexhaustible thermal reservoir generated by primordial formation and radiogenic isotopic decay. How do modern power plants tap this subterranean enthalpy, convert high-pressure steam into continuous gigawatts, cope with Carnot efficiency bottlenecks, and anchor decarbonized electric grids?" data-id="Di bawah kerak bumi tersimpan reservoir panas tak berhingga yang terbentuk dari panas primordial dan peluruhan isotop radiogenik. Bagaimana pembangkit modern memanen entalpi bawah tanah ini, mengonversi uap bertekanan tinggi menjadi gigawatt stabil 24/7, mengatasi batas efisiensi Carnot, dan menopang transisi energi bersih?">
                 Beneath the planetary crust lies an inexhaustible thermal reservoir generated by primordial formation and radiogenic isotopic decay. How do modern power plants tap this subterranean enthalpy, convert high-pressure steam into continuous gigawatts, cope with Carnot efficiency bottlenecks, and anchor decarbonized electric grids?
             </p>
 
-            <!-- Quick Metrics Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-4 text-left">
+            <!-- Quick Metrics Grid with Hover Dynamics -->
+            <div class="hero-stagger-4 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-4 text-left">
                 <div class="glass-card rounded-2xl p-4 shadow-sm">
-                    <div class="text-xs font-mono text-stone-500 dark:text-stone-400 uppercase" data-en="Capacity Factor" data-id="Faktor Kapasitas">Capacity Factor</div>
+                    <div class="text-[11px] font-sans font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider" data-en="Capacity Factor" data-id="Faktor Kapasitas">Capacity Factor</div>
                     <div class="text-2xl sm:text-3xl font-display font-extrabold text-magma-600 dark:text-magma-400 mt-1">&gt; 90%</div>
                     <div class="text-xs text-stone-500 dark:text-stone-400 mt-0.5" data-en="Continuous 24/7 baseload" data-id="Beban dasar kontinu 24/7">Continuous 24/7 baseload</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4 shadow-sm">
-                    <div class="text-xs font-mono text-stone-500 dark:text-stone-400 uppercase" data-en="Lifecycle CO₂ eq" data-id="Emisi CO₂ Siklus">Lifecycle CO₂ eq</div>
+                    <div class="text-[11px] font-sans font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider" data-en="Lifecycle CO₂ eq" data-id="Emisi CO₂ Siklus">Lifecycle CO₂ eq</div>
                     <div class="text-2xl sm:text-3xl font-display font-extrabold text-steam-600 dark:text-steam-400 mt-1">15–90 <span class="text-sm font-normal">g/kWh</span></div>
                     <div class="text-xs text-stone-500 dark:text-stone-400 mt-0.5" data-en="95% lower than coal" data-id="95% lebih rendah dr batubara">95% lower than coal</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4 shadow-sm">
-                    <div class="text-xs font-mono text-stone-500 dark:text-stone-400 uppercase" data-en="Surface Footprint" data-id="Jejak Ruang Lahan">Surface Footprint</div>
+                    <div class="text-[11px] font-sans font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider" data-en="Surface Footprint" data-id="Jejak Ruang Lahan">Surface Footprint</div>
                     <div class="text-2xl sm:text-3xl font-display font-extrabold text-amber-600 dark:text-amber-400 mt-1">400 <span class="text-sm font-normal">m²/GWh</span></div>
                     <div class="text-xs text-stone-500 dark:text-stone-400 mt-0.5" data-en="Smallest of all renewables" data-id="Terkecil dr semua EBT">Smallest of all renewables</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4 shadow-sm">
-                    <div class="text-xs font-mono text-stone-500 dark:text-stone-400 uppercase" data-en="Carnot Limit" data-id="Batas Carnot">Carnot Limit</div>
+                    <div class="text-[11px] font-sans font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider" data-en="Carnot Limit" data-id="Batas Carnot">Carnot Limit</div>
                     <div class="text-2xl sm:text-3xl font-display font-extrabold text-purple-600 dark:text-purple-400 mt-1">25–45%</div>
                     <div class="text-xs text-stone-500 dark:text-stone-400 mt-0.5" data-en="Governed by reservoir T" data-id="Dibatasi suhu reservoir">Governed by reservoir T</div>
                 </div>
@@ -309,10 +406,10 @@
         </section>
 
         <!-- Interactive Animated Subterranean & Plant Schematic -->
-        <section class="glass-card rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+        <section class="glass-card rounded-3xl p-6 sm:p-8 shadow-xl space-y-6 reveal-init">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-200 dark:border-stone-800 pb-5">
                 <div>
-                    <div class="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-magma-600 dark:text-magma-400">
+                    <div class="inline-flex items-center gap-1.5 text-xs font-sans font-bold uppercase tracking-wider text-magma-600 dark:text-magma-400">
                         <i data-lucide="layers" class="w-4 h-4"></i>
                         <span data-en="Interactive Schematic" data-id="Skema Interaktif">Interactive Schematic</span>
                     </div>
@@ -320,15 +417,16 @@
                         Hydrothermal Reservoir &amp; Power Generation Loop
                     </h2>
                 </div>
-                <div class="flex flex-wrap items-center gap-2">
-                    <button onclick="setSchematicCycle('flash')" id="tab-btn-flash" class="px-3 py-1.5 text-xs font-mono font-semibold rounded-lg bg-magma-600 text-white transition-all shadow">Flash Steam</button>
-                    <button onclick="setSchematicCycle('binary')" id="tab-btn-binary" class="px-3 py-1.5 text-xs font-mono font-semibold rounded-lg bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-300 dark:hover:bg-stone-700 transition-all">Binary ORC</button>
-                    <button onclick="setSchematicCycle('dry')" id="tab-btn-dry" class="px-3 py-1.5 text-xs font-mono font-semibold rounded-lg bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-300 dark:hover:bg-stone-700 transition-all">Dry Steam</button>
+                <!-- Modern Segmented Pill Controls -->
+                <div class="flex items-center gap-1.5 p-1 rounded-xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700/60 shadow-inner">
+                    <button onclick="setSchematicCycle('flash')" id="tab-btn-flash" class="cycle-tab-btn is-active px-4 py-1.5 text-xs font-sans font-bold rounded-lg bg-magma-600 text-white shadow transition-all">Flash Steam</button>
+                    <button onclick="setSchematicCycle('binary')" id="tab-btn-binary" class="cycle-tab-btn px-4 py-1.5 text-xs font-sans font-semibold rounded-lg text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white hover:bg-white/70 dark:hover:bg-stone-700/60 transition-all">Binary ORC</button>
+                    <button onclick="setSchematicCycle('dry')" id="tab-btn-dry" class="cycle-tab-btn px-4 py-1.5 text-xs font-sans font-semibold rounded-lg text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white hover:bg-white/70 dark:hover:bg-stone-700/60 transition-all">Dry Steam</button>
                 </div>
             </div>
 
             <!-- SVG Animated Graphic -->
-            <div class="relative w-full rounded-2xl bg-basalt-900 overflow-hidden border border-stone-800 p-2 sm:p-4 text-white">
+            <div class="relative w-full rounded-2xl bg-basalt-900 overflow-hidden border border-stone-800 p-2 sm:p-4 text-white shadow-inner">
                 <svg viewBox="0 0 960 480" class="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg" id="geothermal-schematic-svg">
                     <defs>
                         <!-- Gradients -->
@@ -351,7 +449,7 @@
                     <rect x="0" y="240" width="960" height="240" fill="#151922" />
                     <!-- Impermeable Caprock -->
                     <rect x="0" y="240" width="960" height="40" fill="#262c3a" stroke="#374151" stroke-width="1"/>
-                    <text x="30" y="265" font-family="'Space Mono', monospace" font-size="11" fill="#9ca3af" font-weight="bold">IMPERMEABLE CAPROCK SEAL</text>
+                    <text x="30" y="265" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" fill="#9ca3af" font-weight="700" letter-spacing="0.5">IMPERMEABLE CAPROCK SEAL</text>
 
                     <!-- Fractured Permeable Reservoir -->
                     <rect x="0" y="280" width="960" height="130" fill="#1c2230"/>
@@ -363,108 +461,108 @@
                         <line x1="600" y1="320" x2="700" y2="380"/>
                         <line x1="720" y1="350" x2="840" y2="310"/>
                     </g>
-                    <text x="30" y="345" font-family="'Space Mono', monospace" font-size="11" fill="#fdba74" font-weight="bold" id="svg-reservoir-text">HYDROTHERMAL RESERVOIR (FRACTURED PERMEABLE ROCK &amp; SUPERHEATED BRINE)</text>
+                    <text x="30" y="345" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" fill="#fdba74" font-weight="700" id="svg-reservoir-text">HYDROTHERMAL RESERVOIR (FRACTURED PERMEABLE ROCK &amp; SUPERHEATED BRINE)</text>
 
                     <!-- Deep Magma / Heat Source -->
                     <rect x="0" y="410" width="960" height="70" fill="url(#magmaGrad)" class="magma-pulsing"/>
-                    <text x="30" y="445" font-family="'Outfit', sans-serif" font-size="14" fill="#ffffff" font-weight="bold" letter-spacing="1">DEEP PLUTONIC MAGMA INTRUSION / HEAT SOURCE (&gt; 600&deg;C)</text>
+                    <text x="30" y="445" font-family="'Outfit', sans-serif" font-size="14" fill="#ffffff" font-weight="800" letter-spacing="1">DEEP PLUTONIC MAGMA INTRUSION / HEAT SOURCE (&gt; 600&deg;C)</text>
 
                     <!-- Active Mode Status Badge in SVG -->
-                    <g id="svg-mode-badge" transform="translate(620, 20)">
-                        <rect x="0" y="0" width="320" height="24" rx="6" fill="#1e293b" stroke="#ea580c" stroke-width="1.5" id="svg-badge-box"/>
-                        <text x="160" y="16" font-family="'Space Mono', monospace" font-size="9" fill="#f97316" font-weight="bold" text-anchor="middle" id="svg-badge-text">MODE: FLASH STEAM (2-PHASE DEPRESSURIZATION)</text>
+                    <g id="svg-mode-badge" transform="translate(580, 20)">
+                        <rect x="0" y="0" width="360" height="26" rx="8" fill="#1e293b" stroke="#ea580c" stroke-width="1.5" id="svg-badge-box"/>
+                        <text x="180" y="17" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#f97316" font-weight="700" text-anchor="middle" id="svg-badge-text">MODE: FLASH STEAM (2-PHASE DEPRESSURIZATION)</text>
                     </g>
 
                     <!-- Wells Geometry (Common) -->
                     <!-- Production Well (Hot fluid rising) -->
                     <path d="M 220 380 L 220 180" stroke="#f97316" stroke-width="10" stroke-linecap="round"/>
-                    <path d="M 220 380 L 220 180" stroke="#ffffff" stroke-width="3" class="pipe-steam-flow"/>
-                    <text x="135" y="215" font-family="'Space Mono', monospace" font-size="10" fill="#fdba74" font-weight="bold">PRODUCTION WELL</text>
-                    <text x="135" y="228" font-family="'Space Mono', monospace" font-size="9" fill="#9ca3af" id="svg-prod-well-desc">High-Enthalpy Brine (&gt;180&deg;C)</text>
+                    <path d="M 220 380 L 220 180" stroke="#ffffff" stroke-width="3.5" class="pipe-steam-flow"/>
+                    <text x="135" y="214" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" fill="#fdba74" font-weight="700">PRODUCTION WELL</text>
+                    <text x="135" y="228" font-family="'JetBrains Mono', monospace" font-size="9" fill="#9ca3af" id="svg-prod-well-desc">High-Enthalpy Brine (&gt;180&deg;C)</text>
 
                     <!-- Reinjection Well (Cold fluid sinking) -->
                     <path d="M 760 180 L 760 380" stroke="#0284c7" stroke-width="10" stroke-linecap="round"/>
-                    <path d="M 760 180 L 760 380" stroke="#ffffff" stroke-width="3" class="pipe-brine-flow"/>
-                    <text x="775" y="215" font-family="'Space Mono', monospace" font-size="10" fill="#38bdf8" font-weight="bold">REINJECTION WELL</text>
-                    <text x="775" y="228" font-family="'Space Mono', monospace" font-size="9" fill="#9ca3af" id="svg-reinject-desc">100% Fluid Returned</text>
+                    <path d="M 760 180 L 760 380" stroke="#ffffff" stroke-width="3.5" class="pipe-brine-flow"/>
+                    <text x="775" y="214" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" fill="#38bdf8" font-weight="700">REINJECTION WELL</text>
+                    <text x="775" y="228" font-family="'JetBrains Mono', monospace" font-size="9" fill="#9ca3af" id="svg-reinject-desc">100% Fluid Returned</text>
 
                     <!-- Subterranean Recharge Convection Arrow -->
                     <path d="M 730 350 Q 500 390 250 350" fill="none" stroke="#38bdf8" stroke-width="3" stroke-dasharray="6 4" class="pipe-steam-flow"/>
-                    <text x="440" y="375" font-family="'Space Mono', monospace" font-size="10" fill="#38bdf8" text-anchor="middle">Hydrological Pressure Recharge Loop</text>
+                    <text x="440" y="375" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#38bdf8" font-weight="600" text-anchor="middle">Hydrological Pressure Recharge Loop</text>
 
                     <!-- ================= MODE 1: FLASH STEAM CIRCUIT ================= -->
-                    <g id="svg-circuit-flash" style="transition: opacity 0.3s ease;">
+                    <g id="svg-circuit-flash" class="circuit-layer circuit-active">
                         <!-- Cyclone Separator Vessel -->
                         <g id="schematic-separator">
                             <rect x="290" y="115" width="70" height="95" rx="12" fill="#334155" stroke="#f97316" stroke-width="2"/>
                             <!-- Internal cyclone swirl lines -->
                             <path d="M 300 145 Q 325 155 350 145" fill="none" stroke="#fdba74" stroke-width="1.5" stroke-dasharray="3 2"/>
                             <path d="M 305 165 Q 325 175 345 165" fill="none" stroke="#fdba74" stroke-width="1.5" stroke-dasharray="3 2"/>
-                            <text x="325" y="140" font-family="'Space Mono', monospace" font-size="9" fill="#ffffff" text-anchor="middle" font-weight="bold">CYCLONE</text>
-                            <text x="325" y="152" font-family="'Space Mono', monospace" font-size="8" fill="#fdba74" text-anchor="middle">SEPARATOR</text>
+                            <text x="325" y="140" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" fill="#ffffff" text-anchor="middle" font-weight="800">CYCLONE</text>
+                            <text x="325" y="152" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" fill="#fdba74" text-anchor="middle" font-weight="700">SEPARATOR</text>
                             <!-- Feed pipe from production well -->
                             <path d="M 220 180 L 290 180" stroke="#f97316" stroke-width="8"/>
                         </g>
 
                         <!-- Steam Pipe to Turbine -->
                         <path d="M 325 115 L 325 70 L 460 70" fill="none" stroke="#38bdf8" stroke-width="6" class="pipe-steam-flow"/>
-                        <text x="390" y="60" font-family="'Space Mono', monospace" font-size="9" fill="#38bdf8" text-anchor="middle">Dry Flashed Steam (Vapor)</text>
+                        <text x="390" y="60" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" fill="#38bdf8" font-weight="600" text-anchor="middle">Dry Flashed Steam (Vapor)</text>
 
                         <!-- Brine Drain Pipe along ground to Reinjection -->
                         <path d="M 325 210 L 325 230 L 760 230 L 760 180" fill="none" stroke="#0284c7" stroke-width="6" class="pipe-brine-flow"/>
-                        <text x="540" y="222" font-family="'Space Mono', monospace" font-size="9" fill="#38bdf8" text-anchor="middle">Separated Liquid Brine Drain Line (Silica &amp; Dissolved Salts)</text>
+                        <text x="540" y="222" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" fill="#38bdf8" font-weight="500" text-anchor="middle">Separated Liquid Brine Drain Line (Silica &amp; Dissolved Salts)</text>
                     </g>
 
                     <!-- ================= MODE 2: BINARY ORC CIRCUIT ================= -->
-                    <g id="svg-circuit-binary" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
+                    <g id="svg-circuit-binary" class="circuit-layer circuit-hidden" style="display: none;">
                         <!-- Heat Exchanger Vessel -->
                         <g id="schematic-heatexchanger">
                             <rect x="280" y="115" width="90" height="95" rx="10" fill="#1e293b" stroke="#10b981" stroke-width="2.5"/>
                             <!-- Internal Tube Coils -->
                             <path d="M 290 145 C 310 135 340 135 360 145 C 340 155 310 155 290 165 C 310 175 340 175 360 185" fill="none" stroke="#10b981" stroke-width="2.5"/>
-                            <text x="325" y="132" font-family="'Space Mono', monospace" font-size="8" fill="#34d399" text-anchor="middle" font-weight="bold">HEAT EXCHANGER</text>
-                            <text x="325" y="142" font-family="'Space Mono', monospace" font-size="7.5" fill="#a7f3d0" text-anchor="middle">VAPORIZER (SHELL)</text>
+                            <text x="325" y="132" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" fill="#34d399" text-anchor="middle" font-weight="800">HEAT EXCHANGER</text>
+                            <text x="325" y="143" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" fill="#a7f3d0" text-anchor="middle" font-weight="600">VAPORIZER (SHELL)</text>
                             <!-- Primary Geothermal Inlet -->
                             <path d="M 220 180 L 280 180" stroke="#f97316" stroke-width="8"/>
                         </g>
 
                         <!-- Primary Brine Direct Return to Reinjection (Closed Loop) -->
                         <path d="M 370 190 L 760 190 L 760 180" fill="none" stroke="#0284c7" stroke-width="6" class="pipe-brine-flow"/>
-                        <text x="540" y="182" font-family="'Space Mono', monospace" font-size="8.5" fill="#34d399" text-anchor="middle">Closed Primary Brine Return Line &bull; 100% Retained &bull; 0 Emissions</text>
+                        <text x="540" y="182" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" fill="#34d399" font-weight="600" text-anchor="middle">Closed Primary Brine Return Line &bull; 100% Retained &bull; 0 Emissions</text>
 
                         <!-- Secondary Organic Loop: Vapor line to Turbine -->
                         <path d="M 325 115 L 325 70 L 460 70" fill="none" stroke="#10b981" stroke-width="6" class="pipe-steam-flow"/>
-                        <text x="390" y="60" font-family="'Space Mono', monospace" font-size="9" fill="#34d399" text-anchor="middle">Isopentane Vapor (Low Boiling Pt: 28&deg;C)</text>
+                        <text x="390" y="60" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" fill="#34d399" font-weight="600" text-anchor="middle">Isopentane Vapor (Low Boiling Pt: 28&deg;C)</text>
 
                         <!-- Secondary Organic Return Line with Feed Pump -->
                         <g id="organic-feed-pump" transform="translate(390, 140)">
                             <rect x="0" y="0" width="32" height="22" rx="4" fill="#065f46" stroke="#34d399" stroke-width="1.5"/>
                             <circle cx="16" cy="11" r="5" fill="none" stroke="#ffffff" stroke-width="1.5"/>
-                            <text x="16" y="32" font-family="'Space Mono', monospace" font-size="7.5" fill="#34d399" text-anchor="middle">PUMP</text>
+                            <text x="16" y="32" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" fill="#34d399" font-weight="700" text-anchor="middle">PUMP</text>
                         </g>
                         <!-- Pipe from condenser back through pump to heat exchanger -->
                         <path d="M 480 150 L 422 150 M 390 150 L 370 150" fill="none" stroke="#10b981" stroke-width="4"/>
                     </g>
 
                     <!-- ================= MODE 3: DRY STEAM CIRCUIT ================= -->
-                    <g id="svg-circuit-dry" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
+                    <g id="svg-circuit-dry" class="circuit-layer circuit-hidden" style="display: none;">
                         <!-- Inline Rock Catcher / Filter Strainer -->
                         <g id="schematic-rockcatcher">
                             <rect x="295" y="145" width="60" height="55" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
                             <line x1="305" y1="155" x2="345" y2="190" stroke="#64748b" stroke-width="1.5"/>
                             <line x1="345" y1="155" x2="305" y2="190" stroke="#64748b" stroke-width="1.5"/>
-                            <text x="325" y="137" font-family="'Space Mono', monospace" font-size="8" fill="#38bdf8" text-anchor="middle" font-weight="bold">ROCK CATCHER</text>
-                            <text x="325" y="215" font-family="'Space Mono', monospace" font-size="7.5" fill="#94a3b8" text-anchor="middle">(PARTICULATE FILTER)</text>
+                            <text x="325" y="137" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" fill="#38bdf8" text-anchor="middle" font-weight="800">ROCK CATCHER</text>
+                            <text x="325" y="215" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" fill="#94a3b8" text-anchor="middle" font-weight="500">(PARTICULATE FILTER)</text>
                             <!-- Direct Steam from well -->
                             <path d="M 220 180 L 295 180" stroke="#38bdf8" stroke-width="8"/>
                         </g>
 
                         <!-- Direct High-Pressure Dry Steam Line -->
                         <path d="M 355 170 L 390 170 L 390 70 L 460 70" fill="none" stroke="#38bdf8" stroke-width="7" class="pipe-steam-flow"/>
-                        <text x="400" y="58" font-family="'Space Mono', monospace" font-size="9" fill="#38bdf8" text-anchor="middle">100% Superheated Natural Steam (Zero Water Separation Needed)</text>
+                        <text x="400" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" fill="#38bdf8" font-weight="600" text-anchor="middle">100% Superheated Natural Steam (Zero Water Separation Needed)</text>
 
                         <!-- Faded Out Brine Note -->
-                        <text x="540" y="222" font-family="'Space Mono', monospace" font-size="8.5" fill="#64748b" text-anchor="middle" stroke-dasharray="2 2">[No Liquid Brine Phase in Vapor-Dominated Field]</text>
+                        <text x="540" y="222" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" fill="#64748b" text-anchor="middle" stroke-dasharray="2 2">[No Liquid Brine Phase in Vapor-Dominated Field]</text>
                     </g>
 
                     <!-- Common Power Island (Turbine & Generator) -->
@@ -472,25 +570,25 @@
                     <g id="schematic-turbine" transform="translate(490, 70)">
                         <polygon points="0,-25 50,-15 50,15 0,25" fill="#475569" stroke="#38bdf8" stroke-width="2" id="svg-turbine-poly"/>
                         <!-- Spinning Blade Symbol -->
-                        <g class="turbine-blade" transform="translate(25, 0)">
+                        <g class="turbine-blade" transform="translate(25, 0)" id="svg-turbine-blade-group">
                             <line x1="-12" y1="0" x2="12" y2="0" stroke="#38bdf8" stroke-width="3" id="svg-turbine-blade-1"/>
                             <line x1="0" y1="-12" x2="0" y2="12" stroke="#38bdf8" stroke-width="3" id="svg-turbine-blade-2"/>
                             <circle cx="0" cy="0" r="4" fill="#ffffff"/>
                         </g>
-                        <text x="25" y="42" font-family="'Space Mono', monospace" font-size="10" fill="#ffffff" text-anchor="middle" font-weight="bold" id="svg-turbine-text">STEAM TURBINE</text>
+                        <text x="25" y="42" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#ffffff" text-anchor="middle" font-weight="700" id="svg-turbine-text">STEAM TURBINE</text>
                     </g>
 
                     <!-- Generator -->
                     <rect x="555" y="52" width="60" height="36" rx="6" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
-                    <text x="585" y="74" font-family="'Space Mono', monospace" font-size="10" fill="#ffffff" text-anchor="middle" font-weight="bold">GEN</text>
+                    <text x="585" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#ffffff" text-anchor="middle" font-weight="800">GEN</text>
                     <!-- Transmission Line -->
                     <path d="M 615 70 L 670 70 L 670 40 L 700 40" fill="none" stroke="#eab308" stroke-width="3" stroke-dasharray="4 2"/>
                     <polygon points="695,35 710,40 695,45" fill="#eab308"/>
-                    <text x="650" y="32" font-family="'Space Mono', monospace" font-size="10" fill="#facc15" font-weight="bold">GRID 150/500 kV</text>
+                    <text x="650" y="32" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#facc15" font-weight="700">GRID 150/500 kV</text>
 
                     <!-- Condenser (Below Turbine) -->
                     <rect x="480" y="125" width="70" height="50" rx="8" fill="#1e293b" stroke="#0ea5e9" stroke-width="1.5" id="svg-condenser-box"/>
-                    <text x="515" y="152" font-family="'Space Mono', monospace" font-size="9" fill="#38bdf8" text-anchor="middle" id="svg-condenser-text">CONDENSER</text>
+                    <text x="515" y="152" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" fill="#38bdf8" font-weight="600" text-anchor="middle" id="svg-condenser-text">CONDENSER</text>
                     <path d="M 515 95 L 515 125" stroke="#38bdf8" stroke-width="4"/>
 
                     <!-- Cooling Module -->
@@ -498,8 +596,8 @@
                         <!-- Cooling Tower Body (Flash & Dry) -->
                         <g id="svg-cooling-tower-body" style="transition: opacity 0.3s ease;">
                             <path d="M 0 70 C 15 35 15 20 5 0 L 45 0 C 35 20 35 35 50 70 Z" fill="#334155" stroke="#64748b" stroke-width="1.5"/>
-                            <text x="25" y="45" font-family="'Space Mono', monospace" font-size="8" fill="#cbd5e1" text-anchor="middle">COOLING</text>
-                            <text x="25" y="56" font-family="'Space Mono', monospace" font-size="8" fill="#cbd5e1" text-anchor="middle">TOWER</text>
+                            <text x="25" y="45" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" fill="#cbd5e1" text-anchor="middle" font-weight="600">COOLING</text>
+                            <text x="25" y="56" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" fill="#cbd5e1" text-anchor="middle" font-weight="600">TOWER</text>
                         </g>
 
                         <!-- Air Cooled Condenser Body (Binary ORC) -->
@@ -511,8 +609,8 @@
                                 <line x1="-10" y1="0" x2="10" y2="0" stroke="#2dd4bf" stroke-width="2"/>
                                 <line x1="0" y1="-10" x2="0" y2="10" stroke="#2dd4bf" stroke-width="2"/>
                             </g>
-                            <text x="25" y="6" font-family="'Space Mono', monospace" font-size="7.5" fill="#2dd4bf" text-anchor="middle" font-weight="bold">AIR-COOLED</text>
-                            <text x="25" y="74" font-family="'Space Mono', monospace" font-size="7" fill="#a7f3d0" text-anchor="middle">(ACC CONDENSER)</text>
+                            <text x="25" y="6" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" fill="#2dd4bf" text-anchor="middle" font-weight="800">AIR-COOLED</text>
+                            <text x="25" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" fill="#a7f3d0" text-anchor="middle" font-weight="600">(ACC CONDENSER)</text>
                         </g>
 
                         <!-- Condenser to Cooling Loop -->
@@ -523,7 +621,7 @@
                             <circle cx="20" cy="-8" r="6" fill="#ffffff" class="steam-particle-1"/>
                             <circle cx="28" cy="-14" r="8" fill="#ffffff" class="steam-particle-2"/>
                             <circle cx="15" cy="-20" r="10" fill="#ffffff" class="steam-particle-3"/>
-                            <text x="25" y="-28" font-family="'Space Mono', monospace" font-size="7" fill="#94a3b8" text-anchor="middle">Clean Steam Plume</text>
+                            <text x="25" y="-28" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" fill="#94a3b8" text-anchor="middle">Clean Steam Plume</text>
                         </g>
                     </g>
 
@@ -542,7 +640,7 @@
         </section>
 
         <!-- Section 1: Geological & Thermodynamic Foundations -->
-        <section class="space-y-6">
+        <section class="space-y-6 reveal-init">
             <div class="border-b border-stone-200 dark:border-stone-800 pb-3">
                 <div class="text-xs font-mono font-bold uppercase tracking-wider text-magma-600 dark:text-magma-400" data-en="Section 01 &bull; Geological Origins" data-id="Bagian 01 &bull; Asal Usul Geologis">Section 01 &bull; Geological Origins</div>
                 <h2 class="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-white mt-1" data-en="Where Does the Earth's Thermal Energy Come From?" data-id="Dari Mana Asal Energi Panas Bumi?">
@@ -595,7 +693,7 @@
         </section>
 
         <!-- Section 2: Power Plant Architectures -->
-        <section class="space-y-6">
+        <section class="space-y-6 reveal-init">
             <div class="border-b border-stone-200 dark:border-stone-800 pb-3">
                 <div class="text-xs font-mono font-bold uppercase tracking-wider text-magma-600 dark:text-magma-400" data-en="Section 02 &bull; Conversion Engineering" data-id="Bagian 02 &bull; Rekayasa Konversi">Section 02 &bull; Conversion Engineering</div>
                 <h2 class="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-white mt-1" data-en="The Four Modern Geothermal Architectures" data-id="Empat Arsitektur Pembangkit Panas Bumi Modern">
@@ -663,7 +761,7 @@
         </section>
 
         <!-- Section 3: Thermal Efficiency & The Carnot Bottleneck -->
-        <section class="space-y-6">
+        <section class="space-y-6 reveal-init">
             <div class="border-b border-stone-200 dark:border-stone-800 pb-3">
                 <div class="text-xs font-mono font-bold uppercase tracking-wider text-magma-600 dark:text-magma-400" data-en="Section 03 &bull; Thermodynamic Physics" data-id="Bagian 03 &bull; Fisika Termodinamika">Section 03 &bull; Thermodynamic Physics</div>
                 <h2 class="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-white mt-1" data-en="Why Geothermal Thermal Efficiency is 10–23% (And Why It Doesn't Matter)" data-id="Mengapa Efisiensi Termal Panas Bumi Hanya 10–23% (Dan Mengapa Itu Bukan Masalah)">
@@ -889,7 +987,7 @@
         </section>
 
         <!-- Section 5: Rigorous Pros & Cons Matrix -->
-        <section class="space-y-6">
+        <section class="space-y-6 reveal-init">
             <div class="border-b border-stone-200 dark:border-stone-800 pb-3">
                 <div class="text-xs font-mono font-bold uppercase tracking-wider text-magma-600 dark:text-magma-400" data-en="Section 04 &bull; Objective Evaluation" data-id="Bagian 04 &bull; Evaluasi Objektif">Section 04 &bull; Objective Evaluation</div>
                 <h2 class="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-white mt-1" data-en="The Full Balance Sheet: Geothermal Pros and Cons" data-id="Neraca Objektif: Kelebihan dan Kekurangan Panas Bumi">
@@ -993,7 +1091,7 @@
         </section>
 
         <!-- Section 6: Climate Change & Environmental Effects -->
-        <section class="space-y-6">
+        <section class="space-y-6 reveal-init">
             <div class="border-b border-stone-200 dark:border-stone-800 pb-3">
                 <div class="text-xs font-mono font-bold uppercase tracking-wider text-magma-600 dark:text-magma-400" data-en="Section 05 &bull; Planetary Decarbonization" data-id="Bagian 05 &bull; Dekarbonisasi Bumi">Section 05 &bull; Planetary Decarbonization</div>
                 <h2 class="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-white mt-1" data-en="Climate Change Effects: Why Geothermal is Vital for Net Zero" data-id="Dampak Perubahan Iklim: Mengapa Panas Bumi Kunci Menuju Net Zero">
@@ -1065,7 +1163,7 @@
         </section>
 
         <!-- Section 7: Prominent Indonesia Subpage Banner & Directory -->
-        <section class="relative rounded-3xl overflow-hidden shadow-2xl border border-emerald-500/40 bg-gradient-to-br from-basalt-900 via-emerald-950 to-basalt-950 p-6 sm:p-10 text-white">
+        <section class="relative rounded-3xl overflow-hidden shadow-2xl border border-emerald-500/40 bg-gradient-to-br from-basalt-900 via-emerald-950 to-basalt-950 p-6 sm:p-10 text-white reveal-init">
             <div class="relative z-10 max-w-3xl space-y-4">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono font-bold uppercase tracking-wider border border-emerald-500/40">
                     <i data-lucide="map" class="w-3.5 h-3.5"></i>
@@ -1171,11 +1269,12 @@
             const reservoirText = document.getElementById('svg-reservoir-text');
 
             [btnFlash, btnBinary, btnDry].forEach(b => {
-                b.className = "px-3 py-1.5 text-xs font-mono font-semibold rounded-lg bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-300 dark:hover:bg-stone-700 transition-all";
+                b.className = "cycle-tab-btn px-4 py-1.5 text-xs font-sans font-semibold rounded-lg text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white hover:bg-white/70 dark:hover:bg-stone-700/60 transition-all";
+                b.classList.remove('is-active');
             });
 
             if (mode === 'flash') {
-                btnFlash.className = "px-3 py-1.5 text-xs font-mono font-semibold rounded-lg bg-magma-600 text-white transition-all shadow";
+                btnFlash.className = "cycle-tab-btn is-active px-4 py-1.5 text-xs font-sans font-bold rounded-lg bg-magma-600 text-white shadow transition-all";
 
                 // SVG updates for Flash Steam
                 if (flashCircuit) { flashCircuit.style.display = 'block'; setTimeout(() => flashCircuit.style.opacity = '1', 10); }
@@ -1210,7 +1309,7 @@
                 if (simTech) { simTech.value = 'flash'; runSimulation(); }
 
             } else if (mode === 'binary') {
-                btnBinary.className = "px-3 py-1.5 text-xs font-mono font-semibold rounded-lg bg-emeraldGlow-600 text-white transition-all shadow";
+                btnBinary.className = "cycle-tab-btn is-active px-4 py-1.5 text-xs font-sans font-bold rounded-lg bg-emerald-600 text-white shadow transition-all";
 
                 // SVG updates for Binary ORC
                 if (flashCircuit) { flashCircuit.style.opacity = '0'; setTimeout(() => flashCircuit.style.display = 'none', 300); }
@@ -1245,7 +1344,7 @@
                 if (simTech) { simTech.value = 'binary'; runSimulation(); }
 
             } else if (mode === 'dry') {
-                btnDry.className = "px-3 py-1.5 text-xs font-mono font-semibold rounded-lg bg-steam-600 text-white transition-all shadow";
+                btnDry.className = "cycle-tab-btn is-active px-4 py-1.5 text-xs font-sans font-bold rounded-lg bg-steam-600 text-white shadow transition-all";
 
                 // SVG updates for Dry Steam
                 if (flashCircuit) { flashCircuit.style.opacity = '0'; setTimeout(() => flashCircuit.style.display = 'none', 300); }
@@ -1329,12 +1428,18 @@
             const thermalEta = carnotLimit * secondLawFactor;
 
             // Approximate thermal enthalpy available: Q_in = m * Cp * (Th - Tc)
-            // Specific heat of brine approx 4.18 kJ/kg*K
             const Qin_MWth = (flow * 4.18 * (Th_C - Tc_C)) / 1000;
             const NetPwr_MWe = Qin_MWth * thermalEta;
             const Qreject_MWth = Math.max(0, Qin_MWth - NetPwr_MWe);
 
-            // Update UI
+            // Modulate turbine rotation speed based on flow rate (Physical visual feedback!)
+            const turbineGroup = document.getElementById('svg-turbine-blade-group');
+            if (turbineGroup) {
+                const spinSec = Math.max(0.35, 2.5 - (flow / 300));
+                turbineGroup.style.animationDuration = `${spinSec.toFixed(2)}s`;
+            }
+
+            // Update UI Readouts
             document.getElementById('out-carnot').textContent = (carnotLimit * 100).toFixed(1) + '%';
             document.getElementById('out-thermal-eta').textContent = (thermalEta * 100).toFixed(1) + '%';
             document.getElementById('out-net-power').innerHTML = `${NetPwr_MWe.toFixed(1)} MW<sub>e</sub>`;
@@ -1373,6 +1478,21 @@
             }
             runSimulation();
             lucide.createIcons();
+
+            // Scroll Reveal Observer for classy entrance motion
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('reveal-visible');
+                        }
+                    });
+                }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+                document.querySelectorAll('.reveal-init').forEach(el => observer.observe(el));
+            } else {
+                document.querySelectorAll('.reveal-init').forEach(el => el.classList.add('reveal-visible'));
+            }
         });
     </script>
 </body>
