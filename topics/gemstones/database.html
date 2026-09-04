@@ -92,7 +92,18 @@
             --radius-md: 12px;
             --radius-lg: 18px;
             --radius-full: 9999px;
-            --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --motion-fast: 120ms;
+            --motion-normal: 220ms;
+            --motion-smooth: 320ms;
+            --transition-fast: 120ms cubic-bezier(0.16, 1, 0.3, 1);
+            --transition: 220ms cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-smooth: 320ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         *, *::before, *::after {
@@ -576,15 +587,32 @@
             border-color: var(--vault-border-gold);
         }
 
+        #filterToggleArrow {
+            display: inline-flex;
+            align-items: center;
+            transition: transform 0.25s var(--ease-out);
+        }
+
+        .filter-mobile-toggle[aria-expanded="true"] #filterToggleArrow {
+            transform: rotate(180deg);
+        }
+
         @media (max-width: 768px) {
             .filter-mobile-toggle {
                 display: flex;
             }
             .filter-collapsible {
-                display: none;
+                display: grid;
+                grid-template-rows: 0fr;
+                opacity: 0;
+                transition: grid-template-rows 0.35s var(--ease-out), opacity 0.25s ease;
             }
             .filter-collapsible.expanded {
-                display: block;
+                grid-template-rows: 1fr;
+                opacity: 1;
+            }
+            .filter-collapsible-inner {
+                overflow: hidden;
             }
         }
 
@@ -663,6 +691,44 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
             cursor: pointer;
             border: 2px solid #06090e;
+            transition: transform 0.15s var(--ease-out), box-shadow 0.15s ease, background-color 0.15s ease;
+        }
+
+        .range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.18);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.75);
+            border-color: var(--gold-bright);
+        }
+
+        .range-slider:active::-webkit-slider-thumb {
+            transform: scale(1.28);
+            background: #ffffff;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.85);
+            border-color: var(--gold-bright);
+        }
+
+        .range-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--gold-bright);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+            cursor: pointer;
+            border: 2px solid #06090e;
+            transition: transform 0.15s var(--ease-out), box-shadow 0.15s ease, background-color 0.15s ease;
+        }
+
+        .range-slider::-moz-range-thumb:hover {
+            transform: scale(1.18);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.75);
+            border-color: var(--gold-bright);
+        }
+
+        .range-slider:active::-moz-range-thumb {
+            transform: scale(1.28);
+            background: #ffffff;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.85);
+            border-color: var(--gold-bright);
         }
 
         /* Database Summary Bar */
@@ -674,6 +740,22 @@
             font-size: 0.86rem;
             color: var(--text-dim);
             font-family: var(--font-mono);
+        }
+
+        /* View Mode Cross-Fade Animation */
+        .view-pane-active {
+            animation: paneFadeIn 0.25s var(--ease-out) forwards;
+        }
+
+        @keyframes paneFadeIn {
+            from {
+                opacity: 0.65;
+                transform: translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* GRID VIEW */
@@ -691,7 +773,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: var(--transition);
+            transition: border-color 0.22s ease, background-color 0.22s ease, transform 0.22s var(--ease-out), box-shadow 0.22s ease;
             cursor: pointer;
         }
 
@@ -709,6 +791,13 @@
             position: relative;
             overflow: hidden;
             border-bottom: 1px solid var(--vault-border-subtle);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+            transition: box-shadow 0.25s var(--ease-out), border-color 0.25s ease;
+        }
+
+        .db-card:hover .db-card-img-wrap {
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4);
+            border-bottom-color: var(--vault-border);
         }
 
         .db-card-img {
@@ -716,10 +805,6 @@
             height: 100%;
             object-fit: cover;
             display: block;
-        }
-
-        .db-card:hover .db-card-img {
-            filter: brightness(1.04);
         }
 
         .db-card-badges {
@@ -868,13 +953,21 @@
             background: rgba(6, 9, 14, 0.94);
             backdrop-filter: blur(14px);
             z-index: 1000;
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
             padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s var(--ease-out), visibility 0.25s var(--ease-out);
         }
 
-        .modal-overlay.active { display: flex; }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
 
         .inspector-modal {
             max-width: 960px;
@@ -886,6 +979,12 @@
             overflow-y: auto;
             position: relative;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+            transform: scale(0.96) translateY(10px);
+            transition: transform 0.28s var(--ease-out);
+        }
+
+        .modal-overlay.active .inspector-modal {
+            transform: scale(1) translateY(0);
         }
 
         .modal-head {
@@ -922,12 +1021,17 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: var(--transition);
+            transition: border-color 0.18s ease, color 0.18s ease, transform 0.12s var(--ease-out);
         }
 
         .modal-close-btn:hover {
             border-color: var(--gold-bright);
             color: var(--gold-bright);
+            transform: scale(1.08);
+        }
+
+        .modal-close-btn:active {
+            transform: scale(0.95);
         }
 
         /* Footer */
@@ -944,6 +1048,7 @@
         footer a {
             color: var(--gold-primary);
             text-decoration: none;
+            transition: color 0.18s ease;
         }
 
         footer a:hover {
@@ -970,8 +1075,20 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            * {
-                animation: none !important;
+            html {
+                scroll-behavior: auto !important;
+            }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .modal-overlay {
+                transition: opacity 0.01s linear !important;
+            }
+            .inspector-modal {
+                transform: none !important;
                 transition: none !important;
             }
         }
@@ -1067,61 +1184,63 @@
             </button>
 
             <div class="filter-collapsible" id="filterCollapsible">
-                <!-- Category Filter -->
-                <div class="filter-row">
-                    <span class="filter-label"><span class="en-only">Archetype Category</span><span class="id-only">Kategori Arketipe</span></span>
-                    <div class="chip-deck" id="catChips" role="group" aria-label="Filter by Archetype Category">
-                        <button class="filter-chip active" data-cat="all" onclick="setCategoryFilter('all', this);" aria-pressed="true"><span class="en-only">All Categories</span><span class="id-only">Semua Kategori</span> <span class="filter-badge" id="badge-cat-all">41</span></button>
-                        <button class="filter-chip" data-cat="popular" onclick="setCategoryFilter('popular', this);" aria-pressed="false"><span class="en-only">Most Popular</span><span class="id-only">Paling Populer</span> <span class="filter-badge" id="badge-cat-popular">6</span></button>
-                        <button class="filter-chip" data-cat="underrated" onclick="setCategoryFilter('underrated', this);" aria-pressed="false"><span class="en-only">Most Underrated</span><span class="id-only">Paling Underrated</span> <span class="filter-badge" id="badge-cat-underrated">8</span></button>
-                        <button class="filter-chip" data-cat="hidden" onclick="setCategoryFilter('hidden', this);" aria-pressed="false"><span class="en-only">Hidden Gems</span><span class="id-only">Hidden Gems</span> <span class="filter-badge" id="badge-cat-hidden">7</span></button>
-                        <button class="filter-chip" data-cat="overrated" onclick="setCategoryFilter('overrated', this);" aria-pressed="false"><span class="en-only">Most Overrated</span><span class="id-only">Paling Overrated</span> <span class="filter-badge" id="badge-cat-overrated">6</span></button>
-                        <button class="filter-chip" data-cat="cheapest" onclick="setCategoryFilter('cheapest', this);" aria-pressed="false"><span class="en-only">Most Affordable</span><span class="id-only">Paling Terjangkau</span> <span class="filter-badge" id="badge-cat-cheapest">8</span></button>
-                        <button class="filter-chip" data-cat="expensive" onclick="setCategoryFilter('expensive', this);" aria-pressed="false"><span class="en-only">The Most Expensive</span><span class="id-only">Paling Mahal</span> <span class="filter-badge" id="badge-cat-expensive">6</span></button>
-                    </div>
-                </div>
-
-                <!-- Crystal System Filter -->
-                <div class="filter-row">
-                    <span class="filter-label"><span class="en-only">Crystal System</span><span class="id-only">Sistem Kristal</span></span>
-                    <div class="chip-deck" id="systemChips" role="group" aria-label="Filter by Crystal System">
-                        <button class="filter-chip active" data-sys="all" onclick="setSystemFilter('all', this);" aria-pressed="true"><span class="en-only">All Systems</span><span class="id-only">Semua Sistem</span> <span class="filter-badge" id="badge-sys-all">41</span></button>
-                        <button class="filter-chip" data-sys="Isometric" onclick="setSystemFilter('Isometric', this);" aria-pressed="false">Isometric (Cubic) <span class="filter-badge" id="badge-sys-Isometric">0</span></button>
-                        <button class="filter-chip" data-sys="Hexagonal" onclick="setSystemFilter('Hexagonal', this);" aria-pressed="false">Hexagonal <span class="filter-badge" id="badge-sys-Hexagonal">0</span></button>
-                        <button class="filter-chip" data-sys="Trigonal" onclick="setSystemFilter('Trigonal', this);" aria-pressed="false">Trigonal <span class="filter-badge" id="badge-sys-Trigonal">0</span></button>
-                        <button class="filter-chip" data-sys="Tetragonal" onclick="setSystemFilter('Tetragonal', this);" aria-pressed="false">Tetragonal <span class="filter-badge" id="badge-sys-Tetragonal">0</span></button>
-                        <button class="filter-chip" data-sys="Orthorhombic" onclick="setSystemFilter('Orthorhombic', this);" aria-pressed="false">Orthorhombic <span class="filter-badge" id="badge-sys-Orthorhombic">0</span></button>
-                        <button class="filter-chip" data-sys="Monoclinic" onclick="setSystemFilter('Monoclinic', this);" aria-pressed="false">Monoclinic <span class="filter-badge" id="badge-sys-Monoclinic">0</span></button>
-                        <button class="filter-chip" data-sys="Triclinic" onclick="setSystemFilter('Triclinic', this);" aria-pressed="false">Triclinic <span class="filter-badge" id="badge-sys-Triclinic">0</span></button>
-                        <button class="filter-chip" data-sys="Amorphous" onclick="setSystemFilter('Amorphous', this);" aria-pressed="false">Amorphous <span class="filter-badge" id="badge-sys-Amorphous">0</span></button>
-                    </div>
-                </div>
-
-                <!-- Hardness Range Slider -->
-                <div class="slider-row">
-                    <div class="slider-ctrl">
-                        <div class="slider-head">
-                            <span><span class="en-only">Min Mohs Hardness:</span><span class="id-only">Kekerasan Mohs Min:</span></span>
-                            <span id="minMohsVal">1.0</span>
+                <div class="filter-collapsible-inner">
+                    <!-- Category Filter -->
+                    <div class="filter-row">
+                        <span class="filter-label"><span class="en-only">Archetype Category</span><span class="id-only">Kategori Arketipe</span></span>
+                        <div class="chip-deck" id="catChips" role="group" aria-label="Filter by Archetype Category">
+                            <button class="filter-chip active" data-cat="all" onclick="setCategoryFilter('all', this);" aria-pressed="true"><span class="en-only">All Categories</span><span class="id-only">Semua Kategori</span> <span class="filter-badge" id="badge-cat-all">41</span></button>
+                            <button class="filter-chip" data-cat="popular" onclick="setCategoryFilter('popular', this);" aria-pressed="false"><span class="en-only">Most Popular</span><span class="id-only">Paling Populer</span> <span class="filter-badge" id="badge-cat-popular">6</span></button>
+                            <button class="filter-chip" data-cat="underrated" onclick="setCategoryFilter('underrated', this);" aria-pressed="false"><span class="en-only">Most Underrated</span><span class="id-only">Paling Underrated</span> <span class="filter-badge" id="badge-cat-underrated">8</span></button>
+                            <button class="filter-chip" data-cat="hidden" onclick="setCategoryFilter('hidden', this);" aria-pressed="false"><span class="en-only">Hidden Gems</span><span class="id-only">Hidden Gems</span> <span class="filter-badge" id="badge-cat-hidden">7</span></button>
+                            <button class="filter-chip" data-cat="overrated" onclick="setCategoryFilter('overrated', this);" aria-pressed="false"><span class="en-only">Most Overrated</span><span class="id-only">Paling Overrated</span> <span class="filter-badge" id="badge-cat-overrated">6</span></button>
+                            <button class="filter-chip" data-cat="cheapest" onclick="setCategoryFilter('cheapest', this);" aria-pressed="false"><span class="en-only">Most Affordable</span><span class="id-only">Paling Terjangkau</span> <span class="filter-badge" id="badge-cat-cheapest">8</span></button>
+                            <button class="filter-chip" data-cat="expensive" onclick="setCategoryFilter('expensive', this);" aria-pressed="false"><span class="en-only">The Most Expensive</span><span class="id-only">Paling Mahal</span> <span class="filter-badge" id="badge-cat-expensive">6</span></button>
                         </div>
-                        <input type="range" class="range-slider" id="minMohsSlider" min="1" max="10" step="0.5" value="1" oninput="updateMohsFilter();" aria-label="Minimum Mohs Hardness">
                     </div>
 
-                    <div class="slider-ctrl">
-                        <div class="slider-head">
-                            <span><span class="en-only">Optical Phenomenon:</span><span class="id-only">Fenomena Optik Khusus:</span></span>
-                            <span id="phenomSelectVal">All</span>
+                    <!-- Crystal System Filter -->
+                    <div class="filter-row">
+                        <span class="filter-label"><span class="en-only">Crystal System</span><span class="id-only">Sistem Kristal</span></span>
+                        <div class="chip-deck" id="systemChips" role="group" aria-label="Filter by Crystal System">
+                            <button class="filter-chip active" data-sys="all" onclick="setSystemFilter('all', this);" aria-pressed="true"><span class="en-only">All Systems</span><span class="id-only">Semua Sistem</span> <span class="filter-badge" id="badge-sys-all">41</span></button>
+                            <button class="filter-chip" data-sys="Isometric" onclick="setSystemFilter('Isometric', this);" aria-pressed="false">Isometric (Cubic) <span class="filter-badge" id="badge-sys-Isometric">0</span></button>
+                            <button class="filter-chip" data-sys="Hexagonal" onclick="setSystemFilter('Hexagonal', this);" aria-pressed="false">Hexagonal <span class="filter-badge" id="badge-sys-Hexagonal">0</span></button>
+                            <button class="filter-chip" data-sys="Trigonal" onclick="setSystemFilter('Trigonal', this);" aria-pressed="false">Trigonal <span class="filter-badge" id="badge-sys-Trigonal">0</span></button>
+                            <button class="filter-chip" data-sys="Tetragonal" onclick="setSystemFilter('Tetragonal', this);" aria-pressed="false">Tetragonal <span class="filter-badge" id="badge-sys-Tetragonal">0</span></button>
+                            <button class="filter-chip" data-sys="Orthorhombic" onclick="setSystemFilter('Orthorhombic', this);" aria-pressed="false">Orthorhombic <span class="filter-badge" id="badge-sys-Orthorhombic">0</span></button>
+                            <button class="filter-chip" data-sys="Monoclinic" onclick="setSystemFilter('Monoclinic', this);" aria-pressed="false">Monoclinic <span class="filter-badge" id="badge-sys-Monoclinic">0</span></button>
+                            <button class="filter-chip" data-sys="Triclinic" onclick="setSystemFilter('Triclinic', this);" aria-pressed="false">Triclinic <span class="filter-badge" id="badge-sys-Triclinic">0</span></button>
+                            <button class="filter-chip" data-sys="Amorphous" onclick="setSystemFilter('Amorphous', this);" aria-pressed="false">Amorphous <span class="filter-badge" id="badge-sys-Amorphous">0</span></button>
                         </div>
-                        <select class="search-input" id="phenomSelect" onchange="applyFilters();" style="padding: 6px 12px; font-size: 0.85rem;" aria-label="Special Optical Phenomenon">
-                            <option value="all">All / Any Optical Type</option>
-                            <option value="Fluorescence">UV Fluorescence</option>
-                            <option value="Pleochroism">Pleochroism / Trichroism</option>
-                            <option value="Color-Change">Color-Change (Alexandrite effect)</option>
-                            <option value="Play-of-Color">Play-of-Color (Opal)</option>
-                            <option value="Asterism">Asterism / Chatoyancy (Star &amp; Cat's Eye)</option>
-                            <option value="Labradorescence">Labradorescence (Schiller effect)</option>
-                            <option value="High Fire">High Dispersion Fire (&gt;0.035)</option>
-                        </select>
+                    </div>
+
+                    <!-- Hardness Range Slider -->
+                    <div class="slider-row">
+                        <div class="slider-ctrl">
+                            <div class="slider-head">
+                                <span><span class="en-only">Min Mohs Hardness:</span><span class="id-only">Kekerasan Mohs Min:</span></span>
+                                <span id="minMohsVal">1.0</span>
+                            </div>
+                            <input type="range" class="range-slider" id="minMohsSlider" min="1" max="10" step="0.5" value="1" oninput="updateMohsFilter();" aria-label="Minimum Mohs Hardness">
+                        </div>
+
+                        <div class="slider-ctrl">
+                            <div class="slider-head">
+                                <span><span class="en-only">Optical Phenomenon:</span><span class="id-only">Fenomena Optik Khusus:</span></span>
+                                <span id="phenomSelectVal">All</span>
+                            </div>
+                            <select class="search-input" id="phenomSelect" onchange="applyFilters();" style="padding: 6px 12px; font-size: 0.85rem;" aria-label="Special Optical Phenomenon">
+                                <option value="all">All / Any Optical Type</option>
+                                <option value="Fluorescence">UV Fluorescence</option>
+                                <option value="Pleochroism">Pleochroism / Trichroism</option>
+                                <option value="Color-Change">Color-Change (Alexandrite effect)</option>
+                                <option value="Play-of-Color">Play-of-Color (Opal)</option>
+                                <option value="Asterism">Asterism / Chatoyancy (Star &amp; Cat's Eye)</option>
+                                <option value="Labradorescence">Labradorescence (Schiller effect)</option>
+                                <option value="High Fire">High Dispersion Fire (&gt;0.035)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1409,10 +1528,8 @@
         function toggleFilterDrawer() {
             const drawer = document.getElementById('filterCollapsible');
             const btn = document.getElementById('filterToggleBtn');
-            const arrow = document.getElementById('filterToggleArrow');
             const isExpanded = drawer.classList.toggle('expanded');
             btn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-            arrow.textContent = isExpanded ? '▲' : '▼';
         }
 
         /* ─── FILTER LOGIC ─── */
@@ -1467,16 +1584,24 @@
 
         function setViewMode(mode) {
             currentView = mode;
+            const grid = document.getElementById('dbGrid');
+            const table = document.getElementById('dbTableWrap');
             if (mode === 'grid') {
-                document.getElementById('dbGrid').style.display = 'grid';
-                document.getElementById('dbTableWrap').style.display = 'none';
+                grid.style.display = 'grid';
+                table.style.display = 'none';
+                grid.classList.remove('view-pane-active');
+                void grid.offsetWidth;
+                grid.classList.add('view-pane-active');
                 document.getElementById('btnGridView').classList.add('active');
                 document.getElementById('btnGridView').setAttribute('aria-pressed', 'true');
                 document.getElementById('btnTableView').classList.remove('active');
                 document.getElementById('btnTableView').setAttribute('aria-pressed', 'false');
             } else {
-                document.getElementById('dbGrid').style.display = 'none';
-                document.getElementById('dbTableWrap').style.display = 'block';
+                grid.style.display = 'none';
+                table.style.display = 'block';
+                table.classList.remove('view-pane-active');
+                void table.offsetWidth;
+                table.classList.add('view-pane-active');
                 document.getElementById('btnGridView').classList.remove('active');
                 document.getElementById('btnGridView').setAttribute('aria-pressed', 'false');
                 document.getElementById('btnTableView').classList.add('active');

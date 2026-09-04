@@ -57,6 +57,11 @@ spacing:
   md: "16px"
   lg: "24px"
   xl: "32px"
+motion:
+  fast: "120ms cubic-bezier(0.16, 1, 0.3, 1)"
+  normal: "220ms cubic-bezier(0.16, 1, 0.3, 1)"
+  smooth: "320ms cubic-bezier(0.16, 1, 0.3, 1)"
+  ease-out: "cubic-bezier(0.16, 1, 0.3, 1)"
 components:
   portal-card:
     backgroundColor: "{colors.vault-surface-card}"
@@ -111,6 +116,14 @@ The palette is rooted in deep obsidian basalt with warm, brushed gold accents an
 - Real physical depth via soft blurred drop shadows (`0 16px 36px -10px rgba(0, 0, 0, 0.75)`).
 - Hairline vitrine borders (`1px solid rgba(197, 160, 89, 0.2)`) delineate exhibition cards.
 - Vitrine glass panels use dark obsidian wells with inner inset shadows (`inset 0 0 40px rgba(0, 0, 0, 0.9)`).
+
+## Motion & Animation
+- **Thesis:** Motion represents the physical refraction of light, lapidary micrometer precision, and subterranean crystalline revelation.
+- **Tokens:**
+  - Fast feedback (`120ms cubic-bezier(0.16, 1, 0.3, 1)`): button active presses, slider thumbs, chip toggles.
+  - Normal transitions (`220ms cubic-bezier(0.16, 1, 0.3, 1)`): card hover frame highlights, status badge cross-fades, view mode toggles.
+  - Smooth expansion (`320ms cubic-bezier(0.16, 1, 0.3, 1)`): modal chamber scale/fade, collapsible filter drawer easing, wearability score fill glide.
+- **Reduced Motion:** `@media (prefers-reduced-motion: reduce)` removes spatial movement while preserving opacity and color transitions for essential feedback.
 
 ## Shapes
 - Modest corner radii (`6px` for small controls, `12px` for vitrine plates, `18px` for major chamber boxes).
