@@ -174,9 +174,7 @@
             font-weight: 700;
             font-size: 1.05rem;
             letter-spacing: 0.08em;
-            background: linear-gradient(135deg, #f8fafc, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #ffffff;
             text-decoration: none;
         }
 
@@ -245,9 +243,7 @@
             font-weight: 800;
             line-height: 1.2;
             margin-bottom: 12px;
-            background: linear-gradient(135deg, #ffffff, #cbd5e1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #ffffff;
         }
 
         .subpage-hero p {
@@ -295,7 +291,23 @@
 
         .search-input:focus {
             border-color: var(--accent-diamond);
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+            outline: 2px solid var(--accent-diamond);
+            outline-offset: 1px;
+        }
+
+        .kbd-hint {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            pointer-events: none;
         }
 
         .search-icon {
@@ -383,11 +395,14 @@
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--glass-border);
             color: var(--text-muted);
-            padding: 6px 14px;
+            padding: 6px 12px;
             border-radius: var(--radius-full);
             font-size: 0.82rem;
             font-weight: 500;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             transition: var(--transition);
         }
 
@@ -401,7 +416,164 @@
             border-color: var(--accent-diamond);
             color: #ffffff;
             font-weight: 600;
-            box-shadow: 0 0 14px rgba(56, 189, 248, 0.2);
+        }
+
+        .filter-badge {
+            font-size: 0.72rem;
+            padding: 1px 6px;
+            border-radius: var(--radius-full);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+            font-weight: 500;
+        }
+
+        .filter-chip.active .filter-badge {
+            background: rgba(56, 189, 248, 0.35);
+            color: #ffffff;
+        }
+
+        /* Active Filter Tags Bar */
+        .active-filter-bar {
+            display: none;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px dashed rgba(56, 189, 248, 0.3);
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+        }
+
+        .active-filter-bar.visible {
+            display: flex;
+        }
+
+        .active-filter-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-right: 4px;
+        }
+
+        .active-tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            color: #e0f2fe;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 0.78rem;
+            font-family: var(--font-sans);
+        }
+
+        .active-tag-pill button {
+            background: none;
+            border: none;
+            color: var(--accent-diamond);
+            cursor: pointer;
+            font-size: 0.95rem;
+            line-height: 1;
+            padding: 0 2px;
+            transition: var(--transition);
+        }
+
+        .active-tag-pill button:hover {
+            color: #ffffff;
+        }
+
+        .reset-all-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(244, 63, 94, 0.12);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            color: #fca5a5;
+            padding: 5px 14px;
+            border-radius: var(--radius-full);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: auto;
+        }
+
+        .reset-all-btn:hover {
+            background: rgba(244, 63, 94, 0.25);
+            border-color: #f43f5e;
+            color: #ffffff;
+        }
+
+        /* Mobile Collapsible Toggle */
+        .filter-mobile-toggle {
+            display: none;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: var(--transition);
+        }
+
+        .filter-mobile-toggle:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--glass-border-hover);
+        }
+
+        @media (max-width: 768px) {
+            .filter-mobile-toggle {
+                display: flex;
+            }
+            .filter-collapsible {
+                display: none;
+            }
+            .filter-collapsible.expanded {
+                display: block;
+            }
+        }
+
+        /* Empty State */
+        .empty-state-box {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 48px 24px;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px dashed var(--glass-border);
+            border-radius: var(--radius-md);
+            margin: 20px 0 40px;
+        }
+
+        .empty-state-icon {
+            font-size: 2.4rem;
+            margin-bottom: 12px;
+            opacity: 0.85;
+        }
+
+        .empty-state-title {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            max-width: 520px;
+            margin: 0 auto 20px;
+            line-height: 1.5;
         }
 
         .slider-row {
@@ -499,7 +671,7 @@
         }
 
         .db-card:hover .db-card-img {
-            transform: scale(1.06);
+            filter: brightness(1.04);
         }
 
         .db-card-badges {
@@ -828,95 +1000,115 @@
             <div class="search-bar-row">
                 <div class="search-input-wrap">
                     <span class="search-icon">🔍</span>
-                    <input type="text" class="search-input" id="dbSearchInput" placeholder="Search by name, chemical formula, origin, or phenomenon..." oninput="applyFilters();">
+                    <input type="text" class="search-input" id="dbSearchInput" placeholder="Search by name, chemical formula, origin, or phenomenon..." oninput="applyFilters();" aria-label="Search gemstones by name, formula, origin, or phenomenon">
+                    <span class="kbd-hint" title="Press / to search">/</span>
                 </div>
 
-                <div class="view-toggle-group">
-                    <button class="view-btn active" id="btnGridView" onclick="setViewMode('grid');">
+                <div class="view-toggle-group" role="group" aria-label="Display View Mode">
+                    <button class="view-btn active" id="btnGridView" onclick="setViewMode('grid');" aria-pressed="true">
                         ⊞ <span class="en-only">Grid View</span><span class="id-only">Tampilan Grid</span>
                     </button>
-                    <button class="view-btn" id="btnTableView" onclick="setViewMode('table');">
+                    <button class="view-btn" id="btnTableView" onclick="setViewMode('table');" aria-pressed="false">
                         ☰ <span class="en-only">Table View</span><span class="id-only">Tampilan Tabel</span>
                     </button>
                 </div>
 
-                <button class="export-btn" onclick="exportData('csv');">
+                <button class="export-btn" onclick="exportData('csv');" title="Export database to CSV">
                     📥 CSV
                 </button>
-                <button class="export-btn" onclick="exportData('json');">
+                <button class="export-btn" onclick="exportData('json');" title="Export database to JSON">
                     📥 JSON
                 </button>
             </div>
 
-            <!-- Category Filter -->
-            <div class="filter-row">
-                <span class="filter-label"><span class="en-only">Archetype Category</span><span class="id-only">Kategori Arketipe</span></span>
-                <div class="chip-deck" id="catChips">
-                    <button class="filter-chip active" data-cat="all" onclick="setCategoryFilter('all', this);"><span class="en-only">All Categories</span><span class="id-only">Semua Kategori</span></button>
-                    <button class="filter-chip" data-cat="popular" onclick="setCategoryFilter('popular', this);">👑 <span class="en-only">Most Popular</span><span class="id-only">Paling Populer</span></button>
-                    <button class="filter-chip" data-cat="underrated" onclick="setCategoryFilter('underrated', this);">✨ <span class="en-only">Most Underrated</span><span class="id-only">Paling Underrated</span></button>
-                    <button class="filter-chip" data-cat="hidden" onclick="setCategoryFilter('hidden', this);">🔮 <span class="en-only">Hidden Gems</span><span class="id-only">Hidden Gems</span></button>
-                    <button class="filter-chip" data-cat="overrated" onclick="setCategoryFilter('overrated', this);">⚠️ <span class="en-only">Most Overrated</span><span class="id-only">Paling Overrated</span></button>
-                    <button class="filter-chip" data-cat="cheapest" onclick="setCategoryFilter('cheapest', this);">🏷️ <span class="en-only">The Most Cheapest</span><span class="id-only">Paling Terjangkau</span></button>
-                    <button class="filter-chip" data-cat="expensive" onclick="setCategoryFilter('expensive', this);">💎 <span class="en-only">The Most Expensive</span><span class="id-only">Paling Mahal</span></button>
-                </div>
-            </div>
+            <button class="filter-mobile-toggle" id="filterToggleBtn" onclick="toggleFilterDrawer();" aria-expanded="false">
+                <span><span class="en-only">Filter Parameters</span><span class="id-only">Parameter Filter</span> <span id="mobileActiveCount" style="color: var(--accent-diamond);"></span></span>
+                <span id="filterToggleArrow">▼</span>
+            </button>
 
-            <!-- Crystal System Filter -->
-            <div class="filter-row">
-                <span class="filter-label"><span class="en-only">Crystal System</span><span class="id-only">Sistem Kristal</span></span>
-                <div class="chip-deck" id="systemChips">
-                    <button class="filter-chip active" data-sys="all" onclick="setSystemFilter('all', this);"><span class="en-only">All Systems</span><span class="id-only">Semua Sistem</span></button>
-                    <button class="filter-chip" data-sys="Isometric" onclick="setSystemFilter('Isometric', this);">Isometric (Cubic)</button>
-                    <button class="filter-chip" data-sys="Hexagonal" onclick="setSystemFilter('Hexagonal', this);">Hexagonal</button>
-                    <button class="filter-chip" data-sys="Trigonal" onclick="setSystemFilter('Trigonal', this);">Trigonal</button>
-                    <button class="filter-chip" data-sys="Tetragonal" onclick="setSystemFilter('Tetragonal', this);">Tetragonal</button>
-                    <button class="filter-chip" data-sys="Orthorhombic" onclick="setSystemFilter('Orthorhombic', this);">Orthorhombic</button>
-                    <button class="filter-chip" data-sys="Monoclinic" onclick="setSystemFilter('Monoclinic', this);">Monoclinic</button>
-                    <button class="filter-chip" data-sys="Triclinic" onclick="setSystemFilter('Triclinic', this);">Triclinic</button>
-                    <button class="filter-chip" data-sys="Amorphous" onclick="setSystemFilter('Amorphous', this);">Amorphous</button>
-                </div>
-            </div>
-
-            <!-- Hardness Range Slider -->
-            <div class="slider-row">
-                <div class="slider-ctrl">
-                    <div class="slider-head">
-                        <span><span class="en-only">Min Mohs Hardness:</span><span class="id-only">Kekerasan Mohs Min:</span></span>
-                        <span id="minMohsVal">1.0</span>
+            <div class="filter-collapsible" id="filterCollapsible">
+                <!-- Category Filter -->
+                <div class="filter-row">
+                    <span class="filter-label"><span class="en-only">Archetype Category</span><span class="id-only">Kategori Arketipe</span></span>
+                    <div class="chip-deck" id="catChips" role="group" aria-label="Filter by Archetype Category">
+                        <button class="filter-chip active" data-cat="all" onclick="setCategoryFilter('all', this);" aria-pressed="true"><span class="en-only">All Categories</span><span class="id-only">Semua Kategori</span> <span class="filter-badge" id="badge-cat-all">41</span></button>
+                        <button class="filter-chip" data-cat="popular" onclick="setCategoryFilter('popular', this);" aria-pressed="false">👑 <span class="en-only">Most Popular</span><span class="id-only">Paling Populer</span> <span class="filter-badge" id="badge-cat-popular">6</span></button>
+                        <button class="filter-chip" data-cat="underrated" onclick="setCategoryFilter('underrated', this);" aria-pressed="false">✨ <span class="en-only">Most Underrated</span><span class="id-only">Paling Underrated</span> <span class="filter-badge" id="badge-cat-underrated">8</span></button>
+                        <button class="filter-chip" data-cat="hidden" onclick="setCategoryFilter('hidden', this);" aria-pressed="false">🔮 <span class="en-only">Hidden Gems</span><span class="id-only">Hidden Gems</span> <span class="filter-badge" id="badge-cat-hidden">7</span></button>
+                        <button class="filter-chip" data-cat="overrated" onclick="setCategoryFilter('overrated', this);" aria-pressed="false">⚠️ <span class="en-only">Most Overrated</span><span class="id-only">Paling Overrated</span> <span class="filter-badge" id="badge-cat-overrated">6</span></button>
+                        <button class="filter-chip" data-cat="cheapest" onclick="setCategoryFilter('cheapest', this);" aria-pressed="false">🏷️ <span class="en-only">Most Affordable</span><span class="id-only">Paling Terjangkau</span> <span class="filter-badge" id="badge-cat-cheapest">8</span></button>
+                        <button class="filter-chip" data-cat="expensive" onclick="setCategoryFilter('expensive', this);" aria-pressed="false">💎 <span class="en-only">The Most Expensive</span><span class="id-only">Paling Mahal</span> <span class="filter-badge" id="badge-cat-expensive">6</span></button>
                     </div>
-                    <input type="range" class="range-slider" id="minMohsSlider" min="1" max="10" step="0.5" value="1" oninput="updateMohsFilter();">
                 </div>
 
-                <div class="slider-ctrl">
-                    <div class="slider-head">
-                        <span><span class="en-only">Optical Phenomenon:</span><span class="id-only">Fenomena Optik Khusus:</span></span>
-                        <span id="phenomSelectVal">All</span>
+                <!-- Crystal System Filter -->
+                <div class="filter-row">
+                    <span class="filter-label"><span class="en-only">Crystal System</span><span class="id-only">Sistem Kristal</span></span>
+                    <div class="chip-deck" id="systemChips" role="group" aria-label="Filter by Crystal System">
+                        <button class="filter-chip active" data-sys="all" onclick="setSystemFilter('all', this);" aria-pressed="true"><span class="en-only">All Systems</span><span class="id-only">Semua Sistem</span> <span class="filter-badge" id="badge-sys-all">41</span></button>
+                        <button class="filter-chip" data-sys="Isometric" onclick="setSystemFilter('Isometric', this);" aria-pressed="false">Isometric (Cubic) <span class="filter-badge" id="badge-sys-Isometric">0</span></button>
+                        <button class="filter-chip" data-sys="Hexagonal" onclick="setSystemFilter('Hexagonal', this);" aria-pressed="false">Hexagonal <span class="filter-badge" id="badge-sys-Hexagonal">0</span></button>
+                        <button class="filter-chip" data-sys="Trigonal" onclick="setSystemFilter('Trigonal', this);" aria-pressed="false">Trigonal <span class="filter-badge" id="badge-sys-Trigonal">0</span></button>
+                        <button class="filter-chip" data-sys="Tetragonal" onclick="setSystemFilter('Tetragonal', this);" aria-pressed="false">Tetragonal <span class="filter-badge" id="badge-sys-Tetragonal">0</span></button>
+                        <button class="filter-chip" data-sys="Orthorhombic" onclick="setSystemFilter('Orthorhombic', this);" aria-pressed="false">Orthorhombic <span class="filter-badge" id="badge-sys-Orthorhombic">0</span></button>
+                        <button class="filter-chip" data-sys="Monoclinic" onclick="setSystemFilter('Monoclinic', this);" aria-pressed="false">Monoclinic <span class="filter-badge" id="badge-sys-Monoclinic">0</span></button>
+                        <button class="filter-chip" data-sys="Triclinic" onclick="setSystemFilter('Triclinic', this);" aria-pressed="false">Triclinic <span class="filter-badge" id="badge-sys-Triclinic">0</span></button>
+                        <button class="filter-chip" data-sys="Amorphous" onclick="setSystemFilter('Amorphous', this);" aria-pressed="false">Amorphous <span class="filter-badge" id="badge-sys-Amorphous">0</span></button>
                     </div>
-                    <select class="search-input" id="phenomSelect" onchange="applyFilters();" style="padding: 6px 12px; font-size: 0.85rem;">
-                        <option value="all">All / Any Optical Type</option>
-                        <option value="Fluorescence">UV Fluorescence</option>
-                        <option value="Pleochroism">Pleochroism / Trichroism</option>
-                        <option value="Color-Change">Color-Change (Alexandrite effect)</option>
-                        <option value="Play-of-Color">Play-of-Color (Opal)</option>
-                        <option value="Asterism">Asterism / Chatoyancy (Star &amp; Cat's Eye)</option>
-                        <option value="Labradorescence">Labradorescence (Schiller effect)</option>
-                        <option value="High Fire">High Dispersion Fire (&gt;0.035)</option>
-                    </select>
+                </div>
+
+                <!-- Hardness Range Slider -->
+                <div class="slider-row">
+                    <div class="slider-ctrl">
+                        <div class="slider-head">
+                            <span><span class="en-only">Min Mohs Hardness:</span><span class="id-only">Kekerasan Mohs Min:</span></span>
+                            <span id="minMohsVal">1.0</span>
+                        </div>
+                        <input type="range" class="range-slider" id="minMohsSlider" min="1" max="10" step="0.5" value="1" oninput="updateMohsFilter();" aria-label="Minimum Mohs Hardness">
+                    </div>
+
+                    <div class="slider-ctrl">
+                        <div class="slider-head">
+                            <span><span class="en-only">Optical Phenomenon:</span><span class="id-only">Fenomena Optik Khusus:</span></span>
+                            <span id="phenomSelectVal">All</span>
+                        </div>
+                        <select class="search-input" id="phenomSelect" onchange="applyFilters();" style="padding: 6px 12px; font-size: 0.85rem;" aria-label="Special Optical Phenomenon">
+                            <option value="all">All / Any Optical Type</option>
+                            <option value="Fluorescence">UV Fluorescence</option>
+                            <option value="Pleochroism">Pleochroism / Trichroism</option>
+                            <option value="Color-Change">Color-Change (Alexandrite effect)</option>
+                            <option value="Play-of-Color">Play-of-Color (Opal)</option>
+                            <option value="Asterism">Asterism / Chatoyancy (Star &amp; Cat's Eye)</option>
+                            <option value="Labradorescence">Labradorescence (Schiller effect)</option>
+                            <option value="High Fire">High Dispersion Fire (&gt;0.035)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- Active Filter Tags Bar -->
+        <div class="active-filter-bar" id="activeFilterBar">
+            <span class="active-filter-label"><span class="en-only">Active Filters:</span><span class="id-only">Filter Aktif:</span></span>
+            <div id="activeFilterPills" style="display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center;"></div>
+            <button type="button" class="reset-all-btn" onclick="resetAllFilters();">
+                ↺ <span class="en-only">Reset All Filters</span><span class="id-only">Reset Semua</span>
+            </button>
+        </div>
+
         <!-- Summary Bar -->
         <div class="db-summary-bar">
-            <div>
-                <span class="en-only">SHOWING:</span><span class="id-only">MENAMPILKAN:</span> 
-                <strong id="recordCount" style="color: var(--accent-diamond);">40</strong> 
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="en-only">SHOWING:</span><span class="id-only">MENAMPILKAN:</span>
+                <strong id="recordCount" style="color: var(--accent-diamond);" aria-live="polite">41</strong>
                 <span class="en-only">SPECIES</span><span class="id-only">SPESIES MINERAL</span>
+                <button type="button" class="reset-all-btn" id="summaryResetBtn" style="display: none; padding: 2px 10px; font-size: 0.75rem;" onclick="resetAllFilters();">
+                    ↺ Reset
+                </button>
             </div>
             <div>
                 <span class="en-only">SORT BY:</span><span class="id-only">URUTKAN:</span>
-                <select id="sortSelect" onchange="applyFilters();" style="background: transparent; color: var(--text-main); border: 1px solid var(--glass-border); padding: 4px 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.8rem;">
+                <select id="sortSelect" onchange="applyFilters();" style="background: transparent; color: var(--text-main); border: 1px solid var(--glass-border); padding: 4px 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.8rem;" aria-label="Sort database by field">
                     <option value="name_asc">Name (A &rarr; Z)</option>
                     <option value="mohs_desc">Hardness (High &rarr; Low)</option>
                     <option value="ri_desc">Refractive Index (High &rarr; Low)</option>
@@ -964,7 +1156,7 @@
                 <div class="modal-body">
                     <div>
                         <div class="modal-img-box">
-                            <img id="mImg" src="" alt="Gem Specimen">
+                            <img id="mImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="Gem Specimen">
                         </div>
                         <div style="margin-top: 14px; font-size: 0.82rem; color: var(--text-dim); text-align: center;">
                             <span class="en-only">Specimen Origin:</span><span class="id-only">Asal Spesimen:</span> <strong id="mOrigin" style="color: #fff;"></strong>
@@ -1075,7 +1267,14 @@
             { id: "paraiba", nameEn: "Neon Paraíba Tourmaline", nameId: "Turmalin Neon Paraíba", cat: "expensive", formula: "Elbaite : Cu, Mn", system: "Trigonal", mohs: 7.2, ri: 1.635, disp: 0.017, optic: "Uniaxial (-)", phenom: "Fluorescence", price: "$20,000 – $100,000+ / ct", origin: "Paraíba (Brazil)", img: "https://upload.wikimedia.org/wikipedia/commons/0/00/Tourmaline-121240.jpg", descEn: "Atomic copper creates a glowing electric neon turquoise cyan hue unmatched in nature.", descId: "Atom tembaga menghasilkan pendaran toska neon elektrik yang tak tertandingi di alam.", care: "Good durability; protect from sudden extreme heat." },
             { id: "alexandrite", nameEn: "Russian Alexandrite", nameId: "Alexandrite Rusia", cat: "expensive", formula: "BeAl₂O₄ : Cr³⁺", system: "Orthorhombic", mohs: 8.5, ri: 1.748, disp: 0.015, optic: "Biaxial (+)", phenom: "Color-Change", price: "$15,000 – $70,000 / ct", origin: "Ural Mountains (Russia)", img: "https://upload.wikimedia.org/wikipedia/commons/5/50/Chrysoberyl-282796.jpg", descEn: "Drastic 100% color change from emerald green in daylight to raspberry red in candlelight.", descId: "Perubahan warna 100% dari hijau zamrud di siang hari menjadi merah raspberry di bawah lilin.", care: "Elite Mohs 8.5 hardness. Safe for daily wear." },
             { id: "musgravite", nameEn: "Musgravite", nameId: "Musgravite", cat: "expensive", formula: "Be(Mg,Fe,Zn)₂Al₆O₁₂", system: "Trigonal", mohs: 8.2, ri: 1.725, disp: 0.018, optic: "Uniaxial (-)", phenom: "None", price: "$35,000 / ct", origin: "Australia, Greenland, Madagascar", img: "https://upload.wikimedia.org/wikipedia/commons/f/fc/Musgravit-G-EmpireTheWorldOfGems.jpg", descEn: "Hyper-rare beryllium aluminum oxide closely related to taaffeite. Extremely scarce faceted specimens.", descId: "Oksida berilium aluminium super langka yang berkerabat dekat dengan taaffeite.", care: "Hardness 8.2; great physical stability." },
-            { id: "kashmir_sapphire", nameEn: "Kashmir Cornflower Sapphire", nameId: "Safir Biru Kashmir", cat: "expensive", formula: "Al₂O₃ : Fe, Ti + Rutile", system: "Trigonal", mohs: 9.0, ri: 1.766, disp: 0.018, optic: "Uniaxial (-)", phenom: "Asterism", price: "$30,000 – $150,000+ / ct", origin: "Kashmir (India - Depleted 1887)", img: "https://upload.wikimedia.org/wikipedia/commons/8/87/Logan_Sapphire_10956420_cropped.png", descEn: "Velvety cornflower blue created by microscopic light-scattering rutile silk. Legendary auction status.", descId: "Biru beludru cornflower yang tercipta dari pembauran cahaya oleh serat rutil mikro.", care: "Supreme Mohs 9 corundum toughness." }
+            { id: "kashmir_sapphire", nameEn: "Kashmir Cornflower Sapphire", nameId: "Safir Biru Kashmir", cat: "expensive", formula: "Al₂O₃ : Fe, Ti + Rutile", system: "Trigonal", mohs: 9.0, ri: 1.766, disp: 0.018, optic: "Uniaxial (-)", phenom: "Asterism", price: "$30,000 – $150,000+ / ct", origin: "Kashmir (India - Depleted 1887)", img: "https://upload.wikimedia.org/wikipedia/commons/8/87/Logan_Sapphire_10956420_cropped.png", descEn: "Velvety cornflower blue created by microscopic light-scattering rutile silk. Legendary auction status.", descId: "Biru beludru cornflower yang tercipta dari pembauran cahaya oleh serat rutil mikro.", care: "Supreme Mohs 9 corundum toughness." },
+
+            // 37-41: ADDITIONAL MASTER SPECIMENS (Reaching 41 Species)
+            { id: "demantoid", nameEn: "Demantoid Garnet", nameId: "Garnet Demantoid", cat: "underrated", formula: "Ca₃Fe₂(SiO₄)₃", system: "Isometric", mohs: 6.5, ri: 1.888, disp: 0.057, optic: "Isotropic (Singly Refractive)", phenom: "High Fire", price: "$1,000 – $8,000 / ct", origin: "Ural Mountains (Russia), Madagascar", img: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Andradite-Demantoid-47209.jpg", descEn: "Supreme andradite garnet with a dispersion fire of 0.057—vastly exceeding diamond (0.044)—and iconic fibrous chrysotile 'horsetail' inclusions.", descId: "Garnet andradite kasta tertinggi dengan api dispersi 0.057—jauh melampaui berlian (0.044)—dan inklusi serat 'ekor kuda' krisotil legendaris.", care: "Hardness 6.5; protect from heavy abrasive friction." },
+            { id: "chrome_tourmaline", nameEn: "Chrome Tourmaline", nameId: "Turmalin Kromium", cat: "underrated", formula: "Na(Mg,Fe)₃Al₆(BO₃)₃Si₆O₁₈(OH)₄ : Cr, V", system: "Trigonal", mohs: 7.5, ri: 1.624, disp: 0.017, optic: "Uniaxial (-)", phenom: "Pleochroism", price: "$400 – $2,500 / ct", origin: "Tanzania, Kenya", img: "https://upload.wikimedia.org/wikipedia/commons/0/00/Tourmaline-121240.jpg", descEn: "Colored by pure chromium and vanadium rather than iron, producing an electric forest green that rivals top emeralds with superior everyday toughness.", descId: "Diwarnai kromium dan vanadium murni tanpa besi, memancarkan hijau hutan elektrik setara zamrud terbaik namun jauh lebih tangguh untuk perhiasan harian.", care: "Durable Mohs 7.5; safe for daily ring settings." },
+            { id: "heliodor", nameEn: "Heliodor (Golden Beryl)", nameId: "Heliodor (Beril Emas)", cat: "cheapest", formula: "Be₃Al₂Si₆O₁₈ : Fe³⁺", system: "Hexagonal", mohs: 7.5, ri: 1.575, disp: 0.014, optic: "Uniaxial (-)", phenom: "None", price: "$30 – $150 / ct", origin: "Brazil, Namibia, Ukraine", img: "https://upload.wikimedia.org/wikipedia/commons/f/f3/Beryl09.jpg", descEn: "The solar golden-yellow sister of emerald and aquamarine. Offers immaculate eye-clean clarity, exceptional brilliance, and Mohs 7.5 hardness at accessible prices.", descId: "Saudara emas dari zamrud dan aquamarine. Menawarkan kejernihan kristal tanpa cacat, kemilau tinggi, dan kekerasan Mohs 7.5 dengan harga sangat terjangkau.", care: "Hard and durable; clean with warm soapy water." },
+            { id: "fire_agate", nameEn: "Fire Agate", nameId: "Agat Api (Fire Agate)", cat: "cheapest", formula: "SiO₂ · Fe₂O₃", system: "Trigonal", mohs: 6.5, ri: 1.540, disp: 0.000, optic: "Aggregate", phenom: "Play-of-Color", price: "$10 – $80 / ct", origin: "Arizona (USA), Mexico", img: "https://upload.wikimedia.org/wikipedia/commons/3/38/Labradorite_polie_3%28Madagascar%29.jpg", descEn: "Botryoidal chalcedony with alternating microscopic layers of iron oxide (limonite) creating iridescent holographic Schiller fire.", descId: "Kalsedon botrioidal dengan lapisan mikroskopis oksida besi yang memancarkan pendaran warna-warni Schiller holografis di bawah cahaya.", care: "Tough aggregate structure; safe for active lifestyle rings." },
+            { id: "danburite", nameEn: "Danburite", nameId: "Danburite", cat: "hidden", formula: "CaB₂Si₂O₈", system: "Orthorhombic", mohs: 7.0, ri: 1.633, disp: 0.017, optic: "Biaxial (-)", phenom: "Fluorescence", price: "$20 – $120 / ct", origin: "Charcas (Mexico), Japan", img: "https://upload.wikimedia.org/wikipedia/commons/8/85/Jeremejevite-273103.jpg", descEn: "Calcium borosilicate with diamond-like crystal shapes and bright sky-blue UV fluorescence. Exceptional high-clarity alternative to white topaz.", descId: "Kalsium borosilikat dengan morfologi kristal menyerupai berlian dan fluoresensi UV biru langit cerah. Alternatif jernih pengganti topaz putih.", care: "Mohs 7.0; clean with mild soapy water." }
         ];
 
         /* ─── STATE MANAGEMENT ─── */
@@ -1084,6 +1283,61 @@
         let filterSys = 'all';
         let minMohs = 1.0;
         let activeSort = 'name_asc';
+        window.activeFilterActions = [];
+
+        /* ─── URL QUERY STATE SYNCHRONIZATION ─── */
+        function readUrlState() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('cat')) filterCat = params.get('cat');
+            if (params.has('sys')) filterSys = params.get('sys');
+            if (params.has('mohs')) {
+                minMohs = Math.max(1.0, Math.min(10.0, parseFloat(params.get('mohs')) || 1.0));
+                document.getElementById('minMohsSlider').value = minMohs;
+                document.getElementById('minMohsVal').textContent = minMohs.toFixed(1);
+            }
+            if (params.has('phenom')) {
+                document.getElementById('phenomSelect').value = params.get('phenom');
+            }
+            if (params.has('q')) {
+                document.getElementById('dbSearchInput').value = params.get('q');
+            }
+            if (params.has('sort')) {
+                activeSort = params.get('sort');
+                document.getElementById('sortSelect').value = activeSort;
+            }
+            if (params.has('view')) {
+                setViewMode(params.get('view'));
+            }
+
+            // Sync visual active class and aria-pressed on chips
+            document.querySelectorAll('#catChips .filter-chip').forEach(c => {
+                const isActive = c.getAttribute('data-cat') === filterCat;
+                c.classList.toggle('active', isActive);
+                c.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+            document.querySelectorAll('#systemChips .filter-chip').forEach(c => {
+                const isActive = c.getAttribute('data-sys') === filterSys;
+                c.classList.toggle('active', isActive);
+                c.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+        }
+
+        function syncUrlState() {
+            const params = new URLSearchParams();
+            if (filterCat !== 'all') params.set('cat', filterCat);
+            if (filterSys !== 'all') params.set('sys', filterSys);
+            if (minMohs > 1.0) params.set('mohs', minMohs.toFixed(1));
+            const phenomFilter = document.getElementById('phenomSelect').value;
+            if (phenomFilter !== 'all') params.set('phenom', phenomFilter);
+            const query = document.getElementById('dbSearchInput').value.trim();
+            if (query) params.set('q', query);
+            if (activeSort !== 'name_asc') params.set('sort', activeSort);
+            if (currentView !== 'grid') params.set('view', currentView);
+
+            const queryString = params.toString();
+            const newUrl = window.location.pathname + (queryString ? '?' + queryString : '');
+            window.history.replaceState(null, '', newUrl);
+        }
 
         /* ─── BILINGUAL TOGGLE ─── */
         function toggleLanguage() {
@@ -1091,10 +1345,12 @@
             if (isId) {
                 document.body.classList.remove('lang-id');
                 document.body.classList.add('lang-en');
+                document.documentElement.lang = 'en';
                 localStorage.setItem('lolyeah_lang', 'en');
             } else {
                 document.body.classList.remove('lang-en');
                 document.body.classList.add('lang-id');
+                document.documentElement.lang = 'id';
                 localStorage.setItem('lolyeah_lang', 'id');
             }
             applyFilters();
@@ -1104,19 +1360,40 @@
         if (savedLang === 'id') {
             document.body.classList.remove('lang-en');
             document.body.classList.add('lang-id');
+            document.documentElement.lang = 'id';
+        } else {
+            document.documentElement.lang = 'en';
+        }
+
+        /* ─── MOBILE FILTER DRAWER TOGGLE ─── */
+        function toggleFilterDrawer() {
+            const drawer = document.getElementById('filterCollapsible');
+            const btn = document.getElementById('filterToggleBtn');
+            const arrow = document.getElementById('filterToggleArrow');
+            const isExpanded = drawer.classList.toggle('expanded');
+            btn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+            arrow.textContent = isExpanded ? '▲' : '▼';
         }
 
         /* ─── FILTER LOGIC ─── */
         function setCategoryFilter(cat, btn) {
-            document.querySelectorAll('#catChips .filter-chip').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('#catChips .filter-chip').forEach(c => {
+                c.classList.remove('active');
+                c.setAttribute('aria-pressed', 'false');
+            });
             btn.classList.add('active');
+            btn.setAttribute('aria-pressed', 'true');
             filterCat = cat;
             applyFilters();
         }
 
         function setSystemFilter(sys, btn) {
-            document.querySelectorAll('#systemChips .filter-chip').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('#systemChips .filter-chip').forEach(c => {
+                c.classList.remove('active');
+                c.setAttribute('aria-pressed', 'false');
+            });
             btn.classList.add('active');
+            btn.setAttribute('aria-pressed', 'true');
             filterSys = sys;
             applyFilters();
         }
@@ -1127,18 +1404,141 @@
             applyFilters();
         }
 
+        function resetAllFilters() {
+            filterCat = 'all';
+            filterSys = 'all';
+            minMohs = 1.0;
+            document.getElementById('minMohsSlider').value = 1.0;
+            document.getElementById('minMohsVal').textContent = '1.0';
+            document.getElementById('dbSearchInput').value = '';
+            document.getElementById('phenomSelect').value = 'all';
+            document.querySelectorAll('#catChips .filter-chip').forEach(c => {
+                const isAll = c.getAttribute('data-cat') === 'all';
+                c.classList.toggle('active', isAll);
+                c.setAttribute('aria-pressed', isAll ? 'true' : 'false');
+            });
+            document.querySelectorAll('#systemChips .filter-chip').forEach(c => {
+                const isAll = c.getAttribute('data-sys') === 'all';
+                c.classList.toggle('active', isAll);
+                c.setAttribute('aria-pressed', isAll ? 'true' : 'false');
+            });
+            applyFilters();
+        }
+
         function setViewMode(mode) {
             currentView = mode;
             if (mode === 'grid') {
                 document.getElementById('dbGrid').style.display = 'grid';
                 document.getElementById('dbTableWrap').style.display = 'none';
                 document.getElementById('btnGridView').classList.add('active');
+                document.getElementById('btnGridView').setAttribute('aria-pressed', 'true');
                 document.getElementById('btnTableView').classList.remove('active');
+                document.getElementById('btnTableView').setAttribute('aria-pressed', 'false');
             } else {
                 document.getElementById('dbGrid').style.display = 'none';
                 document.getElementById('dbTableWrap').style.display = 'block';
                 document.getElementById('btnGridView').classList.remove('active');
+                document.getElementById('btnGridView').setAttribute('aria-pressed', 'false');
                 document.getElementById('btnTableView').classList.add('active');
+                document.getElementById('btnTableView').setAttribute('aria-pressed', 'true');
+            }
+            syncUrlState();
+        }
+
+        function updateDynamicBadgesAndPills(filtered) {
+            // Update Chip Count Badges
+            document.querySelectorAll('#catChips .filter-chip').forEach(chip => {
+                const cat = chip.getAttribute('data-cat');
+                let count = 0;
+                if (cat === 'all') {
+                    count = DATABASE.length;
+                } else {
+                    count = DATABASE.filter(g => g.cat === cat).length;
+                }
+                const badge = chip.querySelector('.filter-badge');
+                if (badge) badge.textContent = count;
+            });
+
+            document.querySelectorAll('#systemChips .filter-chip').forEach(chip => {
+                const sys = chip.getAttribute('data-sys');
+                let count = 0;
+                if (sys === 'all') {
+                    count = DATABASE.length;
+                } else {
+                    count = DATABASE.filter(g => g.system === sys).length;
+                }
+                const badge = chip.querySelector('.filter-badge');
+                if (badge) badge.textContent = count;
+            });
+
+            // Update Active Tags Pill Bar
+            const bar = document.getElementById('activeFilterBar');
+            const pillsContainer = document.getElementById('activeFilterPills');
+            const summaryReset = document.getElementById('summaryResetBtn');
+            const mobileActiveCount = document.getElementById('mobileActiveCount');
+            const query = document.getElementById('dbSearchInput').value.trim();
+            const phenomFilter = document.getElementById('phenomSelect').value;
+            const isId = document.body.classList.contains('lang-id');
+
+            const activeItems = [];
+            if (filterCat !== 'all') {
+                const catChip = document.querySelector(`#catChips [data-cat="${filterCat}"]`);
+                const catName = catChip ? catChip.textContent.replace(/[0-9]/g, '').trim() : filterCat;
+                activeItems.push({
+                    label: `${isId ? 'Kategori' : 'Category'}: ${catName}`,
+                    clear: () => setCategoryFilter('all', document.querySelector('#catChips [data-cat="all"]'))
+                });
+            }
+            if (filterSys !== 'all') {
+                activeItems.push({
+                    label: `${isId ? 'Sistem' : 'System'}: ${filterSys}`,
+                    clear: () => setSystemFilter('all', document.querySelector('#systemChips [data-sys="all"]'))
+                });
+            }
+            if (minMohs > 1.0) {
+                activeItems.push({
+                    label: `Mohs ≥ ${minMohs.toFixed(1)}`,
+                    clear: () => {
+                        document.getElementById('minMohsSlider').value = 1.0;
+                        updateMohsFilter();
+                    }
+                });
+            }
+            if (phenomFilter !== 'all') {
+                activeItems.push({
+                    label: `${isId ? 'Fenomena' : 'Phenomenon'}: ${phenomFilter}`,
+                    clear: () => {
+                        document.getElementById('phenomSelect').value = 'all';
+                        applyFilters();
+                    }
+                });
+            }
+            if (query) {
+                activeItems.push({
+                    label: `"${query}"`,
+                    clear: () => {
+                        document.getElementById('dbSearchInput').value = '';
+                        applyFilters();
+                    }
+                });
+            }
+
+            if (activeItems.length > 0) {
+                bar.classList.add('visible');
+                summaryReset.style.display = 'inline-flex';
+                mobileActiveCount.textContent = `(${activeItems.length} active)`;
+                window.activeFilterActions = activeItems.map(item => item.clear);
+                pillsContainer.innerHTML = activeItems.map((item, idx) => `
+                    <span class="active-tag-pill">
+                        ${item.label}
+                        <button type="button" onclick="window.activeFilterActions[${idx}]();" title="Remove filter">&times;</button>
+                    </span>
+                `).join('');
+            } else {
+                bar.classList.remove('visible');
+                summaryReset.style.display = 'none';
+                mobileActiveCount.textContent = '';
+                pillsContainer.innerHTML = '';
             }
         }
 
@@ -1146,6 +1546,7 @@
             const query = document.getElementById('dbSearchInput').value.toLowerCase().trim();
             const phenomFilter = document.getElementById('phenomSelect').value;
             const sortVal = document.getElementById('sortSelect').value;
+            activeSort = sortVal;
             const isId = document.body.classList.contains('lang-id');
 
             let filtered = DATABASE.filter(g => {
@@ -1187,6 +1588,8 @@
 
             renderGrid(filtered);
             renderTable(filtered);
+            updateDynamicBadgesAndPills(filtered);
+            syncUrlState();
         }
 
         function renderGrid(data) {
@@ -1194,14 +1597,27 @@
             const isId = document.body.classList.contains('lang-id');
 
             if (data.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: var(--text-dim);">No gemstones match your filter criteria.</div>`;
+                grid.innerHTML = `
+                <div class="empty-state-box">
+                    <div class="empty-state-icon">🔬</div>
+                    <h3 class="empty-state-title">${isId ? 'Tidak Ada Spesimen yang Cocok' : 'No Matching Gemstone Specimens'}</h3>
+                    <p class="empty-state-desc">
+                        ${isId
+                            ? 'Kriteria filter yang aktif saat ini tidak menghasilkan kecocokan mineral. Coba turunkan batas kekerasan Mohs, pilih kategori lain, atau klik tombol di bawah untuk mereset semua filter.'
+                            : 'Your current combination of category, crystal system, and Mohs hardness produced zero records. Try loosening constraints or reset filters to explore.'}
+                    </p>
+                    <button type="button" class="reset-all-btn" style="display: inline-flex; margin: 0 auto;" onclick="resetAllFilters();">
+                        ↺ ${isId ? 'Reset Semua Filter' : 'Reset All Filters'}
+                    </button>
+                </div>
+                `;
                 return;
             }
 
             grid.innerHTML = data.map(g => {
                 const name = isId ? g.nameId : g.nameEn;
                 return `
-                <div class="db-card" onclick="openInspector('${g.id}');">
+                <div class="db-card" onclick="openInspector('${g.id}');" tabindex="0" role="button" aria-label="Inspect ${name}" onkeydown="if(event.key==='Enter')openInspector('${g.id}');">
                     <div class="db-card-img-wrap">
                         <img class="db-card-img" src="${g.img}" alt="${name}" loading="lazy" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/6/6f/Brillanten.jpg'">
                         <div class="db-card-badges">
@@ -1229,10 +1645,26 @@
             const tbody = document.getElementById('dbTableBody');
             const isId = document.body.classList.contains('lang-id');
 
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 48px 16px; color: var(--text-dim);">
+                        ${isId ? 'Tidak ada catatan mineral yang cocok dengan filter.' : 'No mineral records match your active criteria.'}
+                        <div style="margin-top: 12px;">
+                            <button type="button" class="reset-all-btn" style="display: inline-flex;" onclick="resetAllFilters();">
+                                ↺ ${isId ? 'Reset Filter' : 'Reset Filters'}
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                `;
+                return;
+            }
+
             tbody.innerHTML = data.map(g => {
                 const name = isId ? g.nameId : g.nameEn;
                 return `
-                <tr onclick="openInspector('${g.id}');" style="cursor: pointer;">
+                <tr onclick="openInspector('${g.id}');" style="cursor: pointer;" tabindex="0" onkeydown="if(event.key==='Enter')openInspector('${g.id}');">
                     <td>
                         <div class="tbl-gem-cell">
                             <img class="tbl-thumb" src="${g.img}" alt="${name}" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/6/6f/Brillanten.jpg'">
@@ -1248,7 +1680,7 @@
                     <td style="font-family: var(--font-mono);">${g.disp > 0 ? g.disp : 'Special'}</td>
                     <td>${g.system}</td>
                     <td style="font-family: var(--font-mono); color: var(--accent-diamond);">${g.price}</td>
-                    <td><button class="export-btn" style="padding: 4px 10px; font-size: 0.78rem;">Inspect ↗</button></td>
+                    <td><button class="export-btn" style="padding: 4px 10px; font-size: 0.78rem;" aria-label="Inspect ${name}">Inspect ↗</button></td>
                 </tr>
                 `;
             }).join('');
@@ -1282,6 +1714,10 @@
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeInspector();
+            if (e.key === '/' && document.activeElement !== document.getElementById('dbSearchInput')) {
+                e.preventDefault();
+                document.getElementById('dbSearchInput').focus();
+            }
         });
 
         /* ─── CSV / JSON EXPORT ─── */
@@ -1314,7 +1750,10 @@
             applyFilters();
         }
 
-        window.addEventListener('DOMContentLoaded', applyFilters);
+        window.addEventListener('DOMContentLoaded', () => {
+            readUrlState();
+            applyFilters();
+        });
     </script>
 </body>
 </html>
