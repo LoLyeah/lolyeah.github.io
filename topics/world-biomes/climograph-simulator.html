@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- BEGIN ANTIGRAVITY SEO OPTIMIZATION -->
+    <meta name="description" content="Advanced Whittaker Climograph Laboratory and ecological transition simulator. Generate 12-month Walter-Lieth climate diagrams, model continentality seasonality curves, and evaluate ecotone boundary stability.">
+    <meta name="keywords" content="whittaker diagram, climograph simulator, walter-lieth climate diagram, holdridge life zones, ecotone stability, continentality index, potential evapotranspiration, lolyeah">
+    <meta name="author" content="LoLyeah">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lolyeah.github.io/topics/world-biomes/climograph-simulator.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Whittaker Climograph Laboratory &amp; Ecological Transition Simulator | LoLyeah">
+    <meta property="og:description" content="Interactive 12-month Walter-Lieth climate diagram synthesizer, Whittaker phase-space trajectory tracer, and ecotone boundary stability calculator.">
+    <meta property="og:url" content="https://lolyeah.github.io/topics/world-biomes/climograph-simulator.html">
+    <meta property="og:site_name" content="LoLyeah Interactive Guides">
+    <meta property="og:image" content="https://lolyeah.github.io/assets/logo.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Whittaker Climograph Laboratory &amp; Ecological Transition Simulator | LoLyeah">
+    <meta name="twitter:description" content="Interactive 12-month Walter-Lieth climate diagram synthesizer, Whittaker phase-space trajectory tracer, and ecotone boundary stability calculator.">
+    <meta name="twitter:image" content="https://lolyeah.github.io/assets/logo.png">
+
+    <!-- Structured Data JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "name": "Whittaker Climograph Laboratory & Ecological Transition Simulator",
+      "description": "An interactive mathematical laboratory for generating 12-month Walter-Lieth climographs, tracing seasonal climate loops through Whittaker biome phase space, and computing ecotone transition stability.",
+      "url": "https://lolyeah.github.io/topics/world-biomes/climograph-simulator.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "LoLyeah Interactive Guides",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://lolyeah.github.io/assets/logo.png"
+        }
+      },
+      "author": {
+        "@type": "Person",
+        "name": "LoLyeah"
+      }
+    }
+    </script>
+    <!-- END ANTIGRAVITY SEO OPTIMIZATION -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whittaker Climograph Laboratory &amp; Transition Simulator — LoLyeah</title>
+
+    <!-- Early Theme Detection Script -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('biomes_theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Outfit"', 'sans-serif'],
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+                    },
+                    colors: {
+                        biosphere: {
+                            850: '#0b1612',
+                            900: '#070f0c',
+                            950: '#040907',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --mesh-gradient: radial-gradient(circle at 50% 10%, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.06) 45%, transparent 75%);
+        }
+        .dark {
+            --mesh-gradient: radial-gradient(circle at 50% 10%, rgba(16, 185, 129, 0.22) 0%, rgba(6, 182, 212, 0.10) 50%, transparent 85%);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            background-image: var(--mesh-gradient);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.86);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(16, 185, 129, 0.18);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .dark .glass-card {
+            background: rgba(11, 22, 18, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.22);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            outline: none;
+        }
+        .dark input[type="range"] {
+            background: #1f2e27;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #10b981;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            border: 2px solid #ffffff;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 dark:bg-biosphere-950 text-stone-800 dark:text-stone-100 font-sans transition-colors duration-300 min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <!-- Top Sticky Header -->
+    <header class="sticky top-0 z-50 bg-white/85 dark:bg-biosphere-900/90 backdrop-blur-md border-b border-stone-200 dark:border-stone-800/80 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="../world-biomes.html" class="flex items-center gap-2 group text-emerald-600 dark:text-emerald-400 font-bold text-xs font-mono uppercase tracking-wider hover:underline" aria-label="Return to World Biomes Hub">
+                    <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                    <span data-en="Main Compendium" data-id="Kompensium Utama">Main Compendium</span>
+                </a>
+                <span class="text-stone-300 dark:text-stone-700">/</span>
+                <span class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-semibold border border-emerald-500/20" data-en="Climograph Laboratory" data-id="Laboratorium Klimograf">Climograph Laboratory</span>
+            </div>
+
+            <!-- Header Controls -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="./marine-aquatic.html" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 hover:bg-cyan-500/20 transition-all shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span data-en="Marine Biomes &rarr;" data-id="Bioma Laut &rarr;">Marine Biomes &rarr;</span>
+                </a>
+
+                <!-- Language Toggle -->
+                <button onclick="toggleLanguage()" class="px-2.5 py-1.5 text-xs font-mono font-bold rounded-xl bg-stone-100 dark:bg-stone-800/80 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 border border-stone-200 dark:border-stone-700/80 transition-all flex items-center gap-1.5 shadow-sm" aria-label="Toggle language">
+                    <i data-lucide="globe" class="w-3.5 h-3.5 text-emerald-500"></i>
+                    <span id="lang-indicator">EN</span>
+                </button>
+
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-stone-100 dark:bg-stone-800/80 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 border border-stone-200 dark:border-stone-700/80 transition-all shadow-sm" aria-label="Toggle theme">
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-stone-600"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="relative z-10 flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12">
+
+        <!-- Hero Section -->
+        <section class="space-y-4 max-w-4xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                <span data-en="WALTER-LIETH CONVENTIONS &bull; HOLDRIDGE LIFE ZONES" data-id="KONVENSI WALTER-LIETH &bull; ZONA HIDUP HOLDRIDGE">WALTER-LIETH CONVENTIONS &bull; HOLDRIDGE LIFE ZONES</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold tracking-tight text-stone-900 dark:text-white">
+                <span data-en="Whittaker Climograph Lab:" data-id="Laboratorium Klimograf Whittaker:">Whittaker Climograph Lab:</span>
+                <span class="bg-gradient-to-r from-emerald-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-400 bg-clip-text text-transparent" data-en="Annual Trajectories &amp; Ecotone Sensitivity" data-id="Trajektori Tahunan &amp; Sensitivitas Ekoton">Annual Trajectories &amp; Ecotone Sensitivity</span>
+            </h1>
+            <p class="text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed" data-en="Annual mean values tell only half the story. Real ecosystems experience seasonal oscillation between wet and dry months, frost and warmth. Use this advanced sandbox to model 12-month Walter-Lieth climate curves, trace orbital loops through Whittaker phase space, and compute ecotone transition vulnerability." data-id="Rata-rata tahunan hanya menceritakan separuh fakta. Ekosistem nyata mengalami osilasi musiman antara bulan basah dan kering, beku dan hangat. Gunakan laboratorium ini untuk memodelkan kurva Walter-Lieth 12 bulan, melacak lintasan di ruang fase Whittaker, dan menghitung kerentanan transisi ekoton.">
+                Annual mean values tell only half the story. Real ecosystems experience seasonal oscillation between wet and dry months, frost and warmth. Use this advanced sandbox to model 12-month Walter-Lieth climate curves, trace orbital loops through Whittaker phase space, and compute ecotone transition vulnerability.
+            </p>
+        </section>
+
+        <!-- Sandbox Layout Grid -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+            <!-- Controls Column (4 cols) -->
+            <div class="lg:col-span-4 glass-card p-5 rounded-2xl space-y-5">
+                <div class="flex items-center justify-between border-b border-stone-200 dark:border-stone-800 pb-3">
+                    <span class="text-xs font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
+                        <i data-lucide="sliders" class="w-4 h-4 text-emerald-500"></i>
+                        <span data-en="Oscillation Controls" data-id="Kontrol Osilasi Musim">Oscillation Controls</span>
+                    </span>
+                    <span id="lab-biome-tag" class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">Tropical Rainforest</span>
+                </div>
+
+                <!-- Mean Temp -->
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-mono">
+                        <span class="text-stone-600 dark:text-stone-300" data-en="Mean Annual Temp (MAT)" data-id="Suhu Rata-rata (MAT)">Mean Annual Temp</span>
+                        <span id="lab-temp-readout" class="font-bold text-emerald-600 dark:text-emerald-400">26.0°C</span>
+                    </div>
+                    <input type="range" id="lab-slider-mat" min="-15" max="32" step="0.5" value="26.0" oninput="updateLabSimulation()">
+                </div>
+
+                <!-- Seasonal Temp Amplitude (Continentality) -->
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-mono">
+                        <span class="text-stone-600 dark:text-stone-300" data-en="Seasonality Amplitude (&Delta;T)" data-id="Amplitudo Musim (&Delta;T)">Seasonality Amplitude (&Delta;T)</span>
+                        <span id="lab-amp-readout" class="font-bold text-amber-600 dark:text-amber-400">3.0°C (Equatorial)</span>
+                    </div>
+                    <input type="range" id="lab-slider-amp" min="1" max="35" step="0.5" value="3.0" oninput="updateLabSimulation()">
+                    <div class="flex justify-between text-[10px] font-mono text-stone-400">
+                        <span>1°C (Maritime)</span>
+                        <span>15°C (Temperate)</span>
+                        <span>35°C (Siberian)</span>
+                    </div>
+                </div>
+
+                <!-- Annual Precip -->
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-mono">
+                        <span class="text-stone-600 dark:text-stone-300" data-en="Annual Precipitation (MAP)" data-id="Curah Hujan (MAP)">Annual Precipitation</span>
+                        <span id="lab-precip-readout" class="font-bold text-cyan-600 dark:text-cyan-400">2,600 mm</span>
+                    </div>
+                    <input type="range" id="lab-slider-map" min="30" max="4500" step="30" value="2600" oninput="updateLabSimulation()">
+                </div>
+
+                <!-- Rain Seasonality Distribution -->
+                <div class="space-y-1">
+                    <label class="block text-xs font-mono text-stone-600 dark:text-stone-300" data-en="Precipitation Distribution Pattern" data-id="Pola Distribusi Curah Hujan">Precipitation Distribution Pattern</label>
+                    <select id="lab-select-precip-pattern" class="w-full text-xs font-mono p-2 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-200" onchange="updateLabSimulation()">
+                        <option value="equable" data-en="Uniform Year-Round Rain" data-id="Curah Hujan Merata Sepanjang Tahun">Uniform Year-Round Rain</option>
+                        <option value="summer_monsoon" data-en="Summer Monsoon (Wet Summer / Dry Winter)" data-id="Monsun Musim Panas (Panas Basah / Dingin Kering)">Summer Monsoon (Wet Summer / Dry Winter)</option>
+                        <option value="mediterranean" data-en="Mediterranean (Dry Summer / Wet Winter)" data-id="Mediterania (Panas Kering / Dingin Basah)">Mediterranean (Dry Summer / Wet Winter)</option>
+                        <option value="bimodal" data-en="Bimodal Equinoctial Peaks (Double Wet Season)" data-id="Bimodal Ekuinoks (Dua Puncak Musim Hujan)">Bimodal Equinoctial Peaks (Double Wet Season)</option>
+                    </select>
+                </div>
+
+                <!-- Presets -->
+                <div class="pt-2 border-t border-stone-200 dark:border-stone-800">
+                    <span class="text-[11px] font-mono font-semibold text-stone-500 uppercase block mb-1.5" data-en="Real Climograph Presets" data-id="Preset Klimograf Nyata">Real Climograph Presets</span>
+                    <div class="flex flex-wrap gap-1.5">
+                        <button onclick="setLabPreset(27.2, 2.5, 2300, 'bimodal')" class="px-2 py-1 text-xs font-mono rounded bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20">Manaus (Amazon)</button>
+                        <button onclick="setLabPreset(27.8, 4.0, 1600, 'summer_monsoon')" class="px-2 py-1 text-xs font-mono rounded bg-amber-500/10 text-amber-600 hover:bg-amber-500/20">Darwin (Savanna)</button>
+                        <button onclick="setLabPreset(16.5, 12.0, 750, 'mediterranean')" class="px-2 py-1 text-xs font-mono rounded bg-lime-500/10 text-lime-600 hover:bg-lime-500/20">Rome (Chaparral)</button>
+                        <button onclick="setLabPreset(10.5, 9.0, 680, 'equable')" class="px-2 py-1 text-xs font-mono rounded bg-teal-500/10 text-teal-600 hover:bg-teal-500/20">London (Oceanic)</button>
+                        <button onclick="setLabPreset(5.8, 28.0, 700, 'summer_monsoon')" class="px-2 py-1 text-xs font-mono rounded bg-cyan-500/10 text-cyan-600 hover:bg-cyan-500/20">Moscow (Continental)</button>
+                        <button onclick="setLabPreset(-15.5, 34.0, 215, 'summer_monsoon')" class="px-2 py-1 text-xs font-mono rounded bg-blue-500/10 text-blue-600 hover:bg-blue-500/20">Oymyakon (Extreme Cold)</button>
+                        <button onclick="setLabPreset(23.5, 15.0, 190, 'bimodal')" class="px-2 py-1 text-xs font-mono rounded bg-orange-500/10 text-orange-600 hover:bg-orange-500/20">Phoenix (Sonoran)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization Column: Walter-Lieth Diagram & Whittaker Loop (8 cols) -->
+            <div class="lg:col-span-8 space-y-6">
+
+                <!-- Walter-Lieth Climograph Canvas Card -->
+                <div class="glass-card p-5 rounded-2xl space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
+                                <i data-lucide="bar-chart" class="w-4 h-4 text-cyan-500"></i>
+                                <span data-en="12-Month Walter-Lieth Climograph" data-id="Klimograf 12-Bulan Walter-Lieth">12-Month Walter-Lieth Climograph</span>
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-3 text-xs font-mono">
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-cyan-500"></span> Precip (mm)</span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Temp (°C)</span>
+                            <span class="flex items-center gap-1 text-amber-500"><span class="w-2.5 h-2.5 rounded bg-amber-400"></span> Arid Period (P &lt; 2T)</span>
+                        </div>
+                    </div>
+
+                    <!-- Canvas -->
+                    <div class="w-full aspect-[16/9] max-h-[340px] rounded-xl overflow-hidden bg-stone-900 border border-stone-800">
+                        <canvas id="walterLiethCanvas" class="w-full h-full block"></canvas>
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs font-mono text-stone-500 dark:text-stone-400">
+                        <span id="aridity-period-summary" data-en="Arid Period: 0 months (Perhumid)" data-id="Periode Kering: 0 bulan (Sangat Lembap)">Arid Period: 0 months (Perhumid)</span>
+                        <span id="holdridge-pet-summary" data-en="Holdridge PET Ratio: 0.44 (Wet Forest)" data-id="Rasio PET Holdridge: 0,44 (Hutan Basah)">Holdridge PET Ratio: 0.44 (Wet Forest)</span>
+                    </div>
+                </div>
+
+                <!-- Whittaker Phase Space Loop Card -->
+                <div class="glass-card p-5 rounded-2xl space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
+                            <i data-lucide="circle-dot" class="w-4 h-4 text-emerald-500"></i>
+                            <span data-en="Whittaker Phase Space Seasonal Trajectory Loop" data-id="Lintasan Siklus Musiman Ruang Fase Whittaker">Whittaker Phase Space Seasonal Trajectory Loop</span>
+                        </span>
+                        <span class="text-xs font-mono text-emerald-500 font-bold" id="trajectory-crossings-badge">Enclosed in 1 Biome</span>
+                    </div>
+
+                    <!-- Canvas -->
+                    <div class="w-full aspect-[16/8] max-h-[280px] rounded-xl overflow-hidden bg-stone-900 border border-stone-800">
+                        <canvas id="whittakerLoopCanvas" class="w-full h-full block"></canvas>
+                    </div>
+
+                    <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed" data-en="Notice how areas with high thermal amplitude or extreme monsoons trace elongated ellipses that cross multiple biome boundaries. An ecosystem whose seasonal trajectory exits its core classification for more than 4 months develops transitional ecotone adaptations (e.g. deciduous dry-forest traits in savanna borders)." data-id="Perhatikan bagaimana daerah dengan amplitudo termal tinggi atau monsun ekstrem membentuk elips memanjang yang melintasi beberapa batas bioma. Ekosistem yang lintasannya keluar dari klasifikasi intinya selama lebih dari 4 bulan mengembangkan adaptasi ekoton transisi.">
+                        Notice how areas with high thermal amplitude or extreme monsoons trace elongated ellipses that cross multiple biome boundaries. An ecosystem whose seasonal trajectory exits its core classification for more than 4 months develops transitional ecotone adaptations.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ecotone Mathematical Formulas Section -->
+        <section class="glass-card p-6 rounded-3xl space-y-4">
+            <h3 class="text-lg font-display font-bold text-stone-900 dark:text-white" data-en="Mathematical Formulations of Ecological Boundaries" data-id="Formulasi Matematis Batas-Batas Ekologi">Mathematical Formulations of Ecological Boundaries</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono text-stone-600 dark:text-stone-300">
+                <div class="p-4 rounded-xl bg-stone-100 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700/60 space-y-1.5">
+                    <div class="font-bold text-emerald-600 dark:text-emerald-400">1. Walter-Lieth Aridity Criterion</div>
+                    <div class="text-sm font-bold text-stone-900 dark:text-white">P &lt; 2 &times; T</div>
+                    <p class="text-[11px] leading-relaxed text-stone-500">When monthly precipitation (in mm) drops below twice the mean monthly temperature (in °C), potential evapotranspiration outstrips rainfall, entering water-stress aridity.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-stone-100 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700/60 space-y-1.5">
+                    <div class="font-bold text-cyan-600 dark:text-cyan-400">2. Holdridge PET Ratio</div>
+                    <div class="text-sm font-bold text-stone-900 dark:text-white">PET = (58.93 &times; T_bio) / MAP</div>
+                    <p class="text-[11px] leading-relaxed text-stone-500">Holdridge's Potential Evapotranspiration Ratio. Values &lt;1.0 indicate humid moisture surplus; values &gt;1.0 indicate semi-arid to arid deficits.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-stone-100 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700/60 space-y-1.5">
+                    <div class="font-bold text-amber-600 dark:text-amber-400">3. Bailey's Moisture Index</div>
+                    <div class="text-sm font-bold text-stone-900 dark:text-white">M = MAP / (MAT + 10)</div>
+                    <p class="text-[11px] leading-relaxed text-stone-500">Evaluates climatic continentality and drought severity index across temperate steppe and woodland transitions.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-16 border-t border-stone-200 dark:border-stone-800 bg-stone-100/60 dark:bg-biosphere-900/60 py-8 text-center text-xs text-stone-500 dark:text-stone-400">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p><a href="../world-biomes.html" class="text-emerald-500 hover:underline">&larr; Return to Main World Biomes Compendium</a></p>
+            <p>&copy; 2026 LoLyeah. Distributed under open educational standards.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        let currentLang = localStorage.getItem('biomes_lang') || 'en';
+        let currentTheme = localStorage.getItem('biomes_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+        let labMat = 26.0;
+        let labAmp = 3.0;
+        let labMap = 2600;
+        let labPattern = 'equable';
+
+        if (currentTheme === 'dark') document.documentElement.classList.add('dark');
+        else document.documentElement.classList.remove('dark');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            updateLanguageDisplay();
+            initCanvases();
+            updateLabSimulation();
+        });
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('biomes_theme', isDark ? 'dark' : 'light');
+            if (window.lucide) lucide.createIcons();
+            updateLabSimulation();
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'id' : 'en';
+            localStorage.setItem('biomes_lang', currentLang);
+            updateLanguageDisplay();
+            updateLabSimulation();
+        }
+
+        function updateLanguageDisplay() {
+            const ind = document.getElementById('lang-indicator');
+            if (ind) ind.textContent = currentLang.toUpperCase();
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const txt = currentLang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-id');
+                if (txt) el.textContent = txt;
+            });
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function classifyBiome(temp, precip) {
+            if (temp < -5) return 'Tundra';
+            if (temp < 0 && precip < 700) return 'Tundra';
+            if (temp >= -5 && temp < 5 && precip >= 350) return 'Taiga / Boreal Forest';
+            if (temp >= 0 && temp < 8 && precip >= 400 && precip < 1100) return 'Taiga / Boreal Forest';
+            if (precip < 250 && temp > 18) return 'Subtropical Desert';
+            if (precip < 150) return 'Subtropical Desert';
+            if (temp > 20 && precip >= 1800) return 'Tropical Rainforest';
+            if (temp > 18 && precip >= 800 && precip < 1800) return 'Tropical Savanna';
+            if (temp >= 6 && temp <= 18 && precip >= 300 && precip < 800) return 'Temperate Grassland';
+            if (temp >= 5 && temp <= 18 && precip >= 800 && precip < 2000) return 'Temperate Deciduous Forest';
+            if (temp >= 5 && temp <= 18 && precip >= 2000) return 'Temperate Rainforest';
+            if (temp > 12 && precip < 600) return 'Woodland / Shrubland';
+            return 'Temperate Deciduous Forest';
+        }
+
+        const biomeTranslations = {
+            'Tundra': { en: 'Arctic / Alpine Tundra', id: 'Tundra Arktik / Alpin' },
+            'Taiga / Boreal Forest': { en: 'Taiga / Boreal Forest', id: 'Taiga / Hutan Boreal' },
+            'Subtropical Desert': { en: 'Subtropical Desert', id: 'Gurun Subtropis' },
+            'Tropical Rainforest': { en: 'Tropical Rainforest', id: 'Hutan Hujan Tropis' },
+            'Tropical Savanna': { en: 'Tropical Savanna', id: 'Sabana Tropis' },
+            'Temperate Grassland': { en: 'Temperate Grassland', id: 'Padang Rumput Sedang' },
+            'Temperate Deciduous Forest': { en: 'Temperate Deciduous Forest', id: 'Hutan Gugur Iklim Sedang' },
+            'Temperate Rainforest': { en: 'Temperate Rainforest', id: 'Hutan Hujan Sedang' },
+            'Woodland / Shrubland': { en: 'Woodland / Shrubland', id: 'Semak Belukar Mediterania' }
+        };
+
+        let wlCanvas, wlCtx;
+        let loopCanvas, loopCtx;
+        let cachedMonthlyTemps = null;
+        let cachedMonthlyPrecips = null;
+        let animTracerId = null;
+
+        function initCanvases() {
+            wlCanvas = document.getElementById('walterLiethCanvas');
+            loopCanvas = document.getElementById('whittakerLoopCanvas');
+            if (wlCanvas) wlCtx = wlCanvas.getContext('2d');
+            if (loopCanvas) loopCtx = loopCanvas.getContext('2d');
+
+            resizeCanvases();
+            window.addEventListener('resize', resizeCanvases);
+            startTracerLoop();
+        }
+
+        function resizeCanvases() {
+            const dpr = window.devicePixelRatio || 1;
+            if (wlCanvas) {
+                const rect = wlCanvas.getBoundingClientRect();
+                const targetW = rect.width || 640;
+                const targetH = rect.height || 360;
+                wlCanvas.width = targetW * dpr;
+                wlCanvas.height = targetH * dpr;
+            }
+            if (loopCanvas) {
+                const rect = loopCanvas.getBoundingClientRect();
+                const targetW = rect.width || 640;
+                const targetH = rect.height || 320;
+                loopCanvas.width = targetW * dpr;
+                loopCanvas.height = targetH * dpr;
+            }
+            if (cachedMonthlyTemps && cachedMonthlyPrecips) {
+                drawWalterLieth(cachedMonthlyTemps, cachedMonthlyPrecips);
+                drawWhittakerLoop(cachedMonthlyTemps, cachedMonthlyPrecips);
+            }
+        }
+
+        function startTracerLoop() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            function step() {
+                if (cachedMonthlyTemps && cachedMonthlyPrecips && loopCtx) {
+                    drawWhittakerLoop(cachedMonthlyTemps, cachedMonthlyPrecips);
+                }
+                animTracerId = requestAnimationFrame(step);
+            }
+            cancelAnimationFrame(animTracerId);
+            animTracerId = requestAnimationFrame(step);
+        }
+
+        function setLabPreset(mat, amp, map, pattern) {
+            labMat = mat;
+            labAmp = amp;
+            labMap = map;
+            labPattern = pattern;
+            document.getElementById('lab-slider-mat').value = mat;
+            document.getElementById('lab-slider-amp').value = amp;
+            document.getElementById('lab-slider-map').value = map;
+            document.getElementById('lab-select-precip-pattern').value = pattern;
+            updateLabSimulation();
+        }
+
+        function updateLabSimulation() {
+            labMat = parseFloat(document.getElementById('lab-slider-mat').value);
+            labAmp = parseFloat(document.getElementById('lab-slider-amp').value);
+            labMap = parseFloat(document.getElementById('lab-slider-map').value);
+            labPattern = document.getElementById('lab-select-precip-pattern').value;
+
+            const isEn = currentLang === 'en';
+            document.getElementById('lab-temp-readout').textContent = `${labMat.toFixed(1)}°C`;
+            const ampType = labAmp < 6 ? (isEn ? 'Equatorial Minimal Seasonality' : 'Ekuatorial Minim Musiman')
+                          : labAmp < 18 ? (isEn ? 'Temperate Seasonal' : 'Sedang Bermusim')
+                          : (isEn ? 'Continental Extreme' : 'Kontinental Ekstrem');
+            document.getElementById('lab-amp-readout').textContent = `${labAmp.toFixed(1)}°C (${ampType})`;
+            document.getElementById('lab-precip-readout').textContent = `${labMap.toLocaleString()} mm`;
+
+            // Calculate 12-month data
+            const monthlyTemps = [];
+            const monthlyPrecip = [];
+            let aridMonths = 0;
+
+            for (let m = 0; m < 12; m++) {
+                // Temperature sine wave peak in July (m=6) for northern hemisphere
+                const angle = ((m - 3) / 12) * Math.PI * 2;
+                const temp = labMat + Math.sin(angle) * (labAmp / 2);
+                monthlyTemps.push(temp);
+
+                // Precipitation distribution
+                let precipFraction = 1 / 12;
+                if (labPattern === 'summer_monsoon') {
+                    precipFraction = (1 + Math.sin(angle) * 0.8) / 12;
+                } else if (labPattern === 'mediterranean') {
+                    precipFraction = (1 - Math.sin(angle) * 0.85) / 12;
+                } else if (labPattern === 'bimodal') {
+                    const bimodalAngle = (m / 12) * Math.PI * 4;
+                    precipFraction = (1 + Math.sin(bimodalAngle) * 0.7) / 12;
+                }
+                const precip = Math.max(2, labMap * precipFraction);
+                monthlyPrecip.push(precip);
+
+                // Walter-Lieth aridity condition: P < 2 * T
+                if (precip < (2 * temp) && temp > 0) {
+                    aridMonths++;
+                }
+            }
+
+            cachedMonthlyTemps = monthlyTemps;
+            cachedMonthlyPrecips = monthlyPrecip;
+
+            // Classify mean biome
+            const meanBiome = classifyBiome(labMat, labMap);
+            const tagEl = document.getElementById('lab-biome-tag');
+            if (tagEl) {
+                const trans = biomeTranslations[meanBiome];
+                tagEl.textContent = isEn ? (trans ? trans.en : meanBiome) : (trans ? trans.id : meanBiome);
+            }
+
+            // Inspect 12 monthly coordinates against classifyBiome
+            const visitedBiomesSet = new Set();
+            for (let m = 0; m < 12; m++) {
+                const annualizedPrecip = monthlyPrecip[m] * 12;
+                visitedBiomesSet.add(classifyBiome(monthlyTemps[m], annualizedPrecip));
+            }
+            const uniqueBiomes = Array.from(visitedBiomesSet);
+            const badgeEl = document.getElementById('trajectory-crossings-badge');
+            if (badgeEl) {
+                if (uniqueBiomes.length === 1) {
+                    const bName = isEn ? uniqueBiomes[0] : (biomeTranslations[uniqueBiomes[0]]?.id || uniqueBiomes[0]);
+                    badgeEl.textContent = isEn ? `Enclosed in 1 Biome (${bName})` : `Terlingkupi 1 Bioma (${bName})`;
+                } else {
+                    const names = uniqueBiomes.map(b => isEn ? b : (biomeTranslations[b]?.id || b)).join(' ➔ ');
+                    badgeEl.textContent = isEn ? `Spans ${uniqueBiomes.length} Biomes: ${names}` : `Melintasi ${uniqueBiomes.length} Bioma: ${names}`;
+                }
+            }
+
+            // Summaries
+            const petRatio = ((58.93 * Math.max(0, labMat)) / Math.max(50, labMap)).toFixed(2);
+            const aridDesc = aridMonths === 0 ? (isEn ? '(Humid Surplus)' : '(Surplus Humid)')
+                           : aridMonths > 6 ? (isEn ? '(Severe Arid Drought)' : '(Kekeringan Parah)')
+                           : (isEn ? '(Seasonal Drought)' : '(Kemarau Musiman)');
+            document.getElementById('aridity-period-summary').textContent = isEn 
+                ? `Arid Period: ${aridMonths} months ${aridDesc}`
+                : `Periode Kering: ${aridMonths} bulan ${aridDesc}`;
+
+            const petType = petRatio < 0.5 ? (isEn ? 'Super-Humid' : 'Super-Humid')
+                          : petRatio < 1.0 ? (isEn ? 'Humid' : 'Humid')
+                          : petRatio < 2.0 ? (isEn ? 'Sub-Humid' : 'Sub-Humid')
+                          : (isEn ? 'Arid' : 'Kering/Arid');
+            document.getElementById('holdridge-pet-summary').textContent = isEn
+                ? `Holdridge PET Ratio: ${petRatio} (${petType})`
+                : `Rasio PET Holdridge: ${petRatio} (${petType})`;
+
+            drawWalterLieth(monthlyTemps, monthlyPrecip);
+            drawWhittakerLoop(monthlyTemps, monthlyPrecip);
+        }
+
+        function drawWalterLieth(temps, precips) {
+            if (!wlCtx || !wlCanvas) return;
+            const ctx = wlCtx;
+            const w = wlCanvas.width;
+            const h = wlCanvas.height;
+            const dpr = window.devicePixelRatio || 1;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const padL = 55 * dpr, padR = 55 * dpr, padT = 30 * dpr, padB = 40 * dpr;
+            const graphW = w - padL - padR;
+            const graphH = h - padT - padB;
+
+            // Draw Month Columns & Grid
+            const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+            const stepX = graphW / 12;
+
+            const maxP = Math.max(250, Math.max(...precips) * 1.25);
+            const minT = Math.min(-10, Math.min(...temps) - 5);
+            const maxT = Math.max(35, Math.max(...temps) + 5);
+
+            function toX(m) { return padL + (m + 0.5) * stepX; }
+            function toPrecipY(p) { return padT + graphH - (p / maxP) * graphH; }
+            function toTempY(t) { return padT + graphH - ((t - minT) / (maxT - minT)) * graphH; }
+
+            // Draw Background Grid
+            ctx.strokeStyle = '#27272a';
+            ctx.lineWidth = 1 * dpr;
+            for (let i = 0; i <= 12; i++) {
+                ctx.beginPath();
+                ctx.moveTo(padL + i * stepX, padT);
+                ctx.lineTo(padL + i * stepX, padT + graphH);
+                ctx.stroke();
+            }
+
+            // Draw 0°C Freeze Line if within range
+            if (minT <= 0 && maxT >= 0) {
+                const y0 = toTempY(0);
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 1.5 * dpr;
+                ctx.setLineDash([4 * dpr, 4 * dpr]);
+                ctx.beginPath();
+                ctx.moveTo(padL, y0);
+                ctx.lineTo(padL + graphW, y0);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // Draw Precip Bars
+            for (let m = 0; m < 12; m++) {
+                const x = padL + m * stepX + stepX * 0.15;
+                const barW = stepX * 0.7;
+                const barH = (precips[m] / maxP) * graphH;
+                const y = padT + graphH - barH;
+
+                // Color code if arid (P < 2T)
+                const isArid = precips[m] < (2 * temps[m]) && temps[m] > 0;
+                ctx.fillStyle = isArid ? '#f59e0b' : '#06b6d4';
+                ctx.fillRect(x, y, barW, barH);
+            }
+
+            // Draw Temp Curve
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 3 * dpr;
+            ctx.beginPath();
+            for (let m = 0; m < 12; m++) {
+                const cx = toX(m);
+                const cy = toTempY(temps[m]);
+                if (m === 0) ctx.moveTo(cx, cy);
+                else ctx.lineTo(cx, cy);
+            }
+            ctx.stroke();
+
+            // Draw Temp Dots
+            ctx.fillStyle = '#ffffff';
+            for (let m = 0; m < 12; m++) {
+                ctx.beginPath();
+                ctx.arc(toX(m), toTempY(temps[m]), 4 * dpr, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Axis Labels
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = `${Math.round(11 * dpr)}px "JetBrains Mono", monospace`;
+            for (let m = 0; m < 12; m++) {
+                ctx.textAlign = 'center';
+                ctx.fillText(months[m], toX(m), padT + graphH + 18 * dpr);
+            }
+
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#06b6d4';
+            ctx.fillText(`${Math.round(maxP)}mm`, padL - 8 * dpr, padT + 12 * dpr);
+            ctx.fillText('0mm', padL - 8 * dpr, padT + graphH);
+
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#f43f5e';
+            ctx.fillText(`${Math.round(maxT)}°C`, padL + graphW + 8 * dpr, padT + 12 * dpr);
+            ctx.fillText(`${Math.round(minT)}°C`, padL + graphW + 8 * dpr, padT + graphH);
+        }
+
+        function drawWhittakerLoop(temps, precips) {
+            if (!loopCtx || !loopCanvas) return;
+            const ctx = loopCtx;
+            const w = loopCanvas.width;
+            const h = loopCanvas.height;
+            const dpr = window.devicePixelRatio || 1;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Whittaker Phase Polygons
+            function toX(p) { return (p / 4500) * w; }
+            function toY(t) { return h - ((t - (-15)) / (32 - (-15))) * h; }
+
+            // Draw underlying Whittaker zones
+            const zones = [
+                { name: 'Tundra', col: '#38bdf8', pts: [[0, -15], [0, 2], [600, -2], [800, -15]] },
+                { name: 'Taiga', col: '#0d9488', pts: [[350, -5], [400, 6], [1200, 6], [1000, -5], [600, -2]] },
+                { name: 'Desert', col: '#ea580c', pts: [[0, 2], [0, 32], [450, 32], [250, 12], [200, 2]] },
+                { name: 'Grassland', col: '#eab308', pts: [[250, 2], [250, 20], [750, 20], [750, 0], [400, 0]] },
+                { name: 'Deciduous', col: '#16a34a', pts: [[750, 4], [750, 20], [1600, 20], [1500, 4]] },
+                { name: 'Rainforest', col: '#059669', pts: [[2000, 20], [2000, 32], [4500, 32], [4500, 20]] }
+            ];
+
+            zones.forEach(z => {
+                ctx.beginPath();
+                z.pts.forEach((pt, idx) => {
+                    const cx = toX(pt[0]);
+                    const cy = toY(pt[1]);
+                    if (idx === 0) ctx.moveTo(cx, cy);
+                    else ctx.lineTo(cx, cy);
+                });
+                ctx.closePath();
+                ctx.fillStyle = z.col;
+                ctx.globalAlpha = 0.22;
+                ctx.fill();
+            });
+
+            ctx.globalAlpha = 1.0;
+
+            // Draw the 12-month loop trajectory
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 3 * dpr;
+            ctx.beginPath();
+            const pts = [];
+            for (let m = 0; m < 12; m++) {
+                const annualizedPrecip = precips[m] * 12;
+                const cx = toX(annualizedPrecip);
+                const cy = toY(temps[m]);
+                pts.push({ x: cx, y: cy, t: temps[m], p: annualizedPrecip });
+                if (m === 0) ctx.moveTo(cx, cy);
+                else ctx.lineTo(cx, cy);
+            }
+            ctx.closePath();
+            ctx.stroke();
+
+            // Month points
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            for (let m = 0; m < 12; m++) {
+                ctx.fillStyle = m === 6 ? '#f43f5e' : '#ffffff';
+                ctx.beginPath();
+                ctx.arc(pts[m].x, pts[m].y, (m === 6 ? 5 : 3.5) * dpr, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Label Annual Mean Center
+            const meanX = toX(labMap);
+            const meanY = toY(labMat);
+            ctx.fillStyle = '#10b981';
+            ctx.beginPath();
+            ctx.arc(meanX, meanY, 7 * dpr, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2 * dpr;
+            ctx.stroke();
+
+            // Animated Traveling Tracer Dot along 12-month loop
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (!reducedMotion && pts.length === 12) {
+                const cycleMs = 7000;
+                const prog = (Date.now() % cycleMs) / cycleMs;
+                const segFloat = prog * 12;
+                const segIdx = Math.floor(segFloat);
+                const segFrac = segFloat - segIdx;
+                const nextIdx = (segIdx + 1) % 12;
+
+                const curP = pts[segIdx];
+                const nextP = pts[nextIdx];
+                const tracerX = curP.x + (nextP.x - curP.x) * segFrac;
+                const tracerY = curP.y + (nextP.y - curP.y) * segFrac;
+
+                // Pulsing glow halo
+                const pulse = Math.sin(Date.now() * 0.008) * 3 * dpr;
+                ctx.fillStyle = 'rgba(251, 191, 36, 0.35)';
+                ctx.beginPath();
+                ctx.arc(tracerX, tracerY, (11 * dpr) + pulse, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Core dot
+                ctx.fillStyle = '#fbbf24';
+                ctx.beginPath();
+                ctx.arc(tracerX, tracerY, 5 * dpr, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Month Tag Pill
+                const activeMonth = monthNames[segIdx];
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+                ctx.beginPath();
+                ctx.roundRect(tracerX - 18 * dpr, tracerY - 24 * dpr, 36 * dpr, 16 * dpr, 4 * dpr);
+                ctx.fill();
+                ctx.fillStyle = '#f8fafc';
+                ctx.font = `bold ${Math.round(9 * dpr)}px "JetBrains Mono", monospace`;
+                ctx.textAlign = 'center';
+                ctx.fillText(activeMonth, tracerX, tracerY - 12 * dpr);
+            }
+        }
+    </script>
+</body>
+</html>
