@@ -524,16 +524,16 @@
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-xs font-mono font-bold text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
                                 <i data-lucide="crosshair" class="w-3.5 h-3.5 text-emerald-500"></i>
-                                <span data-en="Whittaker Phase Space (Click/Drag)" data-id="Ruang Fase Whittaker (Klik/Tarik)">Whittaker Phase Space (Click/Drag)</span>
+                                <span data-en="Whittaker Biome Phase Space" data-id="Ruang Fase Bioma Whittaker">Whittaker Biome Phase Space</span>
                             </span>
-                            <span class="text-[11px] font-mono text-stone-400">Y: Temp | X: Precip</span>
+                            <span class="text-[11px] font-mono text-stone-400" data-en="Y: Temp (°C) &bull; X: Precip (mm)" data-id="Y: Suhu (°C) &bull; X: Presip (mm)">Y: Temp (°C) &bull; X: Precip (mm)</span>
                         </div>
-                        <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-stone-900 border border-stone-800 cursor-crosshair">
+                        <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-stone-950 border border-stone-800 cursor-crosshair shadow-inner">
                             <canvas id="whittakerCanvas" class="w-full h-full block"></canvas>
                         </div>
                         <div class="flex items-center justify-between text-[11px] font-mono text-stone-400 mt-2">
-                            <span data-en="&bull; Pulsing dot = Current Coordinate" data-id="&bull; Titik berkedip = Koordinat aktif">&bull; Pulsing dot = Current Coordinate</span>
-                            <button onclick="resetToGlobalMean()" class="text-emerald-500 hover:underline" data-en="Reset to Global Mean (14°C, 990mm)" data-id="Reset ke Rata-rata Bumi (14°C, 990mm)">Reset</button>
+                            <span data-en="&bull; Drag anywhere across biomes to explore climate boundaries" data-id="&bull; Geser ke mana saja melintasi bioma untuk menguji batas iklim">&bull; Drag anywhere across biomes to explore climate boundaries</span>
+                            <button onclick="resetToGlobalMean()" class="text-emerald-500 hover:underline font-semibold" data-en="Reset to Global Mean (14°C, 990mm)" data-id="Reset ke Rata-rata Bumi (14°C, 990mm)">Reset</button>
                         </div>
                     </div>
                 </div>
@@ -1384,43 +1384,45 @@
         // ================= WHITTAKER BIOME CLASSIFICATION ENGINE =================
         // Robert Whittaker (1975) matrix boundaries
         function classifyBiome(temp, precip) {
-            // Tundra: Very cold (temp < -2°C) or cold and very low rainfall
-            if (temp < -5) return 'Tundra';
-            if (temp < 0 && precip < 700) return 'Tundra';
+            const t = Math.max(-15, Math.min(32, temp));
+            const p = Math.max(0, Math.min(4500, precip));
 
-            // Taiga / Boreal Forest: Cold winter, moderate rain
-            if (temp >= -5 && temp < 5 && precip >= 350) return 'Taiga / Boreal Forest';
-            if (temp >= 0 && temp < 8 && precip >= 400 && precip < 1100) return 'Taiga / Boreal Forest';
+            // Tundra: coldest cryic zone
+            if (t < -5) return 'Tundra';
+            if (t <= 0 && p < 1000) return 'Tundra';
 
-            // Desert: Hyper-arid or hot dry
-            if (precip < 250) {
-                return temp > 18 ? 'Subtropical Desert' : 'Temperate Grassland';
+            // Taiga / Boreal Forest: subarctic cold, moderate precip
+            if (t < 3 && p < 2200) return 'Taiga / Boreal Forest';
+
+            // Subtropical Desert: hot & hyper-arid
+            if (p < 400 && t >= 18) return 'Subtropical Desert';
+            if (p < 250 && t >= 6) return 'Subtropical Desert';
+
+            // Woodland / Shrubland (Mediterranean Sclerophyll)
+            if (t >= 6 && t <= 18 && p >= 350 && p <= 900 && (t >= 10 && p <= 750)) {
+                return 'Woodland / Shrubland';
             }
-            if (precip < 450 && temp > 15 && precip < (temp * 15)) {
-                return 'Subtropical Desert';
+
+            // Temperate Grassland
+            if (t >= 0 && t <= 18 && p < 750) {
+                return 'Temperate Grassland';
             }
 
-            // Tropical Rainforest: Warm (>20°C) and heavy precip (>2000mm)
-            if (temp >= 20 && precip >= 2000) return 'Tropical Rainforest';
+            // High precipitation zone (> 1700mm)
+            if (p >= 1700) {
+                if (t >= 18) return 'Tropical Rainforest';
+                if (t >= 3) return 'Temperate Rainforest';
+                return 'Taiga / Boreal Forest';
+            }
 
-            // Tropical Savanna / Seasonal Forest: Warm (>18°C), seasonal/medium rain (500-2000mm)
-            if (temp >= 18 && precip >= 500 && precip < 2000) return 'Tropical Savanna';
+            // Moderate-high precipitation zone: Savanna (warm) vs Deciduous (mild)
+            if (t >= 18) {
+                return 'Tropical Savanna';
+            }
+            if (t >= 3) {
+                return 'Temperate Deciduous Forest';
+            }
 
-            // Temperate Rainforest: Cool-temperate (4-15°C) and exceptionally wet (>1500mm)
-            if (temp >= 4 && temp < 18 && precip >= 1500) return 'Temperate Rainforest';
-
-            // Mediterranean / Chaparral / Woodland: Mild (10-22°C), moderate seasonal rain (300-800mm)
-            if (temp >= 10 && temp <= 22 && precip >= 300 && precip < 800) return 'Woodland / Shrubland';
-
-            // Temperate Deciduous Forest: Mild/cool (4-18°C), moderate rain (750-1500mm)
-            if (temp >= 4 && temp <= 20 && precip >= 750 && precip < 1600) return 'Temperate Deciduous Forest';
-
-            // Temperate Grassland: Moderate temp, drier (250-750mm)
-            if (temp >= 0 && temp <= 22 && precip >= 250 && precip < 750) return 'Temperate Grassland';
-
-            // Fallbacks
-            if (temp > 20) return 'Tropical Savanna';
-            if (temp > 5) return 'Temperate Deciduous Forest';
             return 'Taiga / Boreal Forest';
         }
 
@@ -1666,6 +1668,83 @@
         // ================= WHITTAKER PHASE CANVAS RENDERING =================
         let whittakerCanvas, whittakerCtx;
         let whittakerAnimId;
+
+        // Robert Whittaker (1975) interlocking biome polygon matrix
+        const WHITTAKER_POLYGONS = [
+            {
+                id: 'Tundra',
+                labelEn: 'TUNDRA',
+                labelId: 'TUNDRA',
+                color: '#38bdf8',
+                labelPos: [450, -8],
+                pts: [[0, -15], [0, 0], [500, 0], [1000, -5], [1400, -15]]
+            },
+            {
+                id: 'Taiga / Boreal Forest',
+                labelEn: 'TAIGA / BOREAL',
+                labelId: 'TAIGA / BOREAL',
+                color: '#0d9488',
+                labelPos: [950, -1],
+                pts: [[0, 0], [250, 3], [500, 3], [1400, 3], [2000, 0], [1000, -5], [500, 0], [0, 0]]
+            },
+            {
+                id: 'Subtropical Desert',
+                labelEn: 'DESERT',
+                labelId: 'GURUN',
+                color: '#ea580c',
+                labelPos: [160, 24],
+                pts: [[0, 0], [0, 32], [500, 32], [400, 18], [250, 6], [100, 0]]
+            },
+            {
+                id: 'Temperate Grassland',
+                labelEn: 'GRASSLAND',
+                labelId: 'PADANG RUMPUT',
+                color: '#eab308',
+                labelPos: [450, 9],
+                pts: [[100, 0], [250, 6], [400, 18], [750, 18], [600, 3], [250, 3]]
+            },
+            {
+                id: 'Woodland / Shrubland',
+                labelEn: 'WOODLAND',
+                labelId: 'SEMAK BELUKAR',
+                color: '#84cc16',
+                labelPos: [620, 13],
+                pts: [[350, 6], [400, 18], [900, 18], [800, 6]]
+            },
+            {
+                id: 'Temperate Deciduous Forest',
+                labelEn: 'DECIDUOUS FOREST',
+                labelId: 'HUTAN GUGUR',
+                color: '#16a34a',
+                labelPos: [1150, 10],
+                pts: [[600, 3], [750, 18], [1700, 18], [1700, 3], [1400, 3]]
+            },
+            {
+                id: 'Temperate Rainforest',
+                labelEn: 'TEMP. RAINFOREST',
+                labelId: 'HUTAN HUJAN SEDANG',
+                color: '#06b6d4',
+                labelPos: [2900, 10],
+                pts: [[1700, 3], [1700, 18], [4500, 18], [4500, 3], [2000, 0], [1400, 3]]
+            },
+            {
+                id: 'Tropical Savanna',
+                labelEn: 'TROPICAL SAVANNA',
+                labelId: 'SABANA TROPIS',
+                color: '#d97706',
+                labelPos: [1100, 25],
+                pts: [[500, 32], [400, 18], [1700, 18], [2000, 20], [2000, 32]]
+            },
+            {
+                id: 'Tropical Rainforest',
+                labelEn: 'TROPICAL RAINFOREST',
+                labelId: 'HUTAN HUJAN TROPIS',
+                color: '#059669',
+                labelPos: [3100, 25],
+                pts: [[2000, 20], [2000, 32], [4500, 32], [4500, 18], [1700, 18]]
+            }
+        ];
+
         function initWhittakerCanvas() {
             whittakerCanvas = document.getElementById('whittakerCanvas');
             if (!whittakerCanvas) return;
@@ -1681,19 +1760,27 @@
             resizeWhittaker();
             window.addEventListener('resize', resizeWhittaker);
 
-            // Mouse & Touch Dragging on Canvas
+            // Mouse & Touch Dragging with plot padding calibration
             let isDragging = false;
             function updateFromEvent(e) {
                 const rect = whittakerCanvas.getBoundingClientRect();
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                const x = Math.max(0, Math.min(rect.width, clientX - rect.left));
-                const y = Math.max(0, Math.min(rect.height, clientY - rect.top));
+                const relX = clientX - rect.left;
+                const relY = clientY - rect.top;
 
-                // Map X (0..width) to Precip (20..4500mm)
-                // Map Y (height..0) to Temp (-15..32°C)
-                const precip = Math.round(20 + (x / rect.width) * (4500 - 20));
-                const temp = parseFloat((32 - (y / rect.height) * (32 - (-15))).toFixed(1));
+                const padL_css = 42;
+                const padR_css = 16;
+                const padT_css = 28;
+                const padB_css = 30;
+                const plotW_css = Math.max(1, rect.width - padL_css - padR_css);
+                const plotH_css = Math.max(1, rect.height - padT_css - padB_css);
+
+                const fracX = Math.max(0, Math.min(1, (relX - padL_css) / plotW_css));
+                const fracY = Math.max(0, Math.min(1, (relY - padT_css) / plotH_css));
+
+                const precip = Math.round(fracX * 4500);
+                const temp = parseFloat((32 - fracY * (32 - (-15))).toFixed(1));
 
                 matVal = temp;
                 mapVal = precip;
@@ -1730,33 +1817,83 @@
         }
 
         function drawWhittaker() {
-            if (!whittakerCtx) return;
+            if (!whittakerCtx || !whittakerCanvas) return;
             const ctx = whittakerCtx;
             const w = whittakerCanvas.width;
             const h = whittakerCanvas.height;
+            const dpr = window.devicePixelRatio || 1;
 
             ctx.clearRect(0, 0, w, h);
+
+            // Responsive padding layout
+            const padL = Math.round(42 * dpr);
+            const padR = Math.round(16 * dpr);
+            const padT = Math.round(28 * dpr);
+            const padB = Math.round(30 * dpr);
+            const plotW = Math.max(10, w - padL - padR);
+            const plotH = Math.max(10, h - padT - padB);
 
             // Coordinates mapping helper
             // X: Precip (0 -> 4500 mm)
             // Y: Temp (-15°C -> +32°C)
-            function toCanvasX(p) { return (p / 4500) * w; }
-            function toCanvasY(t) { return h - ((t - (-15)) / (32 - (-15))) * h; }
+            function toCanvasX(p) {
+                return padL + (Math.max(0, Math.min(4500, p)) / 4500) * plotW;
+            }
+            function toCanvasY(t) {
+                return padT + plotH - ((Math.max(-15, Math.min(32, t)) - (-15)) / (32 - (-15))) * plotH;
+            }
 
-            // Polygons for Whittaker Biomes
-            const polygons = [
-                { name: 'Tundra', color: '#38bdf8', opacity: 0.35, pts: [[0, -15], [0, 2], [600, -2], [800, -15]] },
-                { name: 'Taiga', color: '#0d9488', opacity: 0.38, pts: [[350, -5], [400, 6], [1200, 6], [1000, -5], [600, -2]] },
-                { name: 'Desert', color: '#ea580c', opacity: 0.40, pts: [[0, 2], [0, 32], [450, 32], [250, 12], [200, 2]] },
-                { name: 'Grassland', color: '#eab308', opacity: 0.35, pts: [[250, 2], [250, 20], [750, 20], [750, 0], [400, 0]] },
-                { name: 'Woodland', color: '#84cc16', opacity: 0.38, pts: [[300, 10], [300, 22], [850, 22], [850, 10]] },
-                { name: 'Deciduous', color: '#16a34a', opacity: 0.40, pts: [[750, 4], [750, 20], [1600, 20], [1500, 4]] },
-                { name: 'Temp Rain', color: '#06b6d4', opacity: 0.45, pts: [[1500, 4], [1600, 18], [3600, 18], [3400, 4]] },
-                { name: 'Savanna', color: '#d97706', opacity: 0.42, pts: [[500, 20], [500, 32], [2000, 32], [1600, 18], [800, 18]] },
-                { name: 'Trop Rain', color: '#059669', opacity: 0.50, pts: [[2000, 20], [2000, 32], [4500, 32], [4500, 20], [3200, 20]] },
-            ];
+            // Draw Background plot area
+            ctx.fillStyle = '#0c0a09';
+            ctx.fillRect(padL, padT, plotW, plotH);
 
-            polygons.forEach(p => {
+            // Gridlines - Vertical (Precipitation: 1000, 2000, 3000, 4000)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+            ctx.lineWidth = 1 * dpr;
+            ctx.setLineDash([3 * dpr, 3 * dpr]);
+            [1000, 2000, 3000, 4000].forEach(p => {
+                const gx = toCanvasX(p);
+                ctx.beginPath();
+                ctx.moveTo(gx, padT);
+                ctx.lineTo(gx, padT + plotH);
+                ctx.stroke();
+            });
+
+            // Gridlines - Horizontal (Temperature: -10, 10, 20, 30)
+            [-10, 10, 20, 30].forEach(t => {
+                const gy = toCanvasY(t);
+                ctx.beginPath();
+                ctx.moveTo(padL, gy);
+                ctx.lineTo(padL + plotW, gy);
+                ctx.stroke();
+            });
+            ctx.setLineDash([]);
+
+            // Draw 0°C Freeze Line
+            const y0 = toCanvasY(0);
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)';
+            ctx.lineWidth = 1.5 * dpr;
+            ctx.setLineDash([4 * dpr, 3 * dpr]);
+            ctx.beginPath();
+            ctx.moveTo(padL, y0);
+            ctx.lineTo(padL + plotW, y0);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Freeze Line Text
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.9)';
+            ctx.font = `bold ${Math.round(8.5 * dpr)}px "JetBrains Mono", monospace`;
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('❄ 0°C FREEZE LINE', padL + 6 * dpr, y0 - 3 * dpr);
+
+            // Determine Active Biome
+            const activeBiome = classifyBiome(matVal, mapVal);
+            const isEn = typeof currentLang === 'undefined' || currentLang === 'en';
+
+            // Draw Whittaker Polygons
+            WHITTAKER_POLYGONS.forEach(p => {
+                const isActive = (p.id === activeBiome);
                 ctx.beginPath();
                 p.pts.forEach((pt, idx) => {
                     const cx = toCanvasX(pt[0]);
@@ -1765,51 +1902,179 @@
                     else ctx.lineTo(cx, cy);
                 });
                 ctx.closePath();
+
+                // Fill with active highlighting
                 ctx.fillStyle = p.color;
-                ctx.globalAlpha = p.opacity;
+                ctx.globalAlpha = isActive ? 0.62 : 0.28;
                 ctx.fill();
-                ctx.strokeStyle = p.color;
-                ctx.globalAlpha = 0.8;
-                ctx.lineWidth = 1;
+
+                // Boundary stroke
+                ctx.strokeStyle = isActive ? '#ffffff' : p.color;
+                ctx.lineWidth = isActive ? (2.2 * dpr) : (1 * dpr);
+                ctx.globalAlpha = isActive ? 0.95 : 0.50;
                 ctx.stroke();
             });
-
             ctx.globalAlpha = 1.0;
 
-            // Draw Axis Guides
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-            ctx.lineWidth = 1;
-            // 0°C line
-            const y0 = toCanvasY(0);
+            // Draw Biome Labels inside polygons
+            WHITTAKER_POLYGONS.forEach(p => {
+                const isActive = (p.id === activeBiome);
+                const lx = toCanvasX(p.labelPos[0]);
+                const ly = toCanvasY(p.labelPos[1]);
+                const labelText = isEn ? p.labelEn : p.labelId;
+
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = `${isActive ? 'bold ' : '600 '}${Math.round((isActive ? 10 : 8.5) * dpr)}px "JetBrains Mono", monospace`;
+
+                // Text outline for high contrast
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.85)';
+                ctx.lineWidth = 2.5 * dpr;
+                ctx.strokeText(labelText, lx, ly);
+
+                ctx.fillStyle = isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.65)';
+                ctx.fillText(labelText, lx, ly);
+            });
+
+            // Draw Axis Lines (Left Y & Bottom X)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+            ctx.lineWidth = 1 * dpr;
             ctx.beginPath();
-            ctx.moveTo(0, y0);
-            ctx.lineTo(w, y0);
+            ctx.moveTo(padL, padT);
+            ctx.lineTo(padL, padT + plotH);
+            ctx.lineTo(padL + plotW, padT + plotH);
             ctx.stroke();
 
-            // Label 0°C
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            ctx.font = `${Math.max(10, Math.round(w * 0.022))}px "JetBrains Mono"`;
-            ctx.fillText('0°C Freeze Line', 8, y0 - 4);
+            // Y-Axis Ticks & Labels (-10, 0, 10, 20, 30)
+            ctx.font = `${Math.round(8.5 * dpr)}px "JetBrains Mono", monospace`;
+            ctx.fillStyle = 'rgba(214, 211, 209, 0.75)';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            [-10, 0, 10, 20, 30].forEach(t => {
+                const ty = toCanvasY(t);
+                ctx.beginPath();
+                ctx.moveTo(padL - 3 * dpr, ty);
+                ctx.lineTo(padL, ty);
+                ctx.stroke();
+                ctx.fillText(`${t}°`, padL - 5 * dpr, ty);
+            });
 
-            // Draw Current Cursor Position
+            // X-Axis Ticks & Labels (0, 1000, 2000, 3000, 4000)
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            [0, 1000, 2000, 3000, 4000].forEach(p => {
+                const px = toCanvasX(p);
+                ctx.beginPath();
+                ctx.moveTo(px, padT + plotH);
+                ctx.lineTo(px, padT + plotH + 3 * dpr);
+                ctx.stroke();
+                const lbl = p === 0 ? '0' : `${p / 1000}k`;
+                ctx.fillText(lbl, px, padT + plotH + 5 * dpr);
+            });
+
+            // Axis Title Headings
+            ctx.font = `bold ${Math.round(8.5 * dpr)}px "JetBrains Mono", monospace`;
+            ctx.fillStyle = 'rgba(168, 162, 158, 0.8)';
+            // Y header at top left
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('TEMP (°C)', padL - 6 * dpr, padT - 8 * dpr);
+
+            // X header at bottom right
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'top';
+            ctx.fillText(isEn ? 'PRECIPITATION (mm/yr)' : 'CURAH HUJAN (mm/thn)', padL + plotW, padT + plotH + 16 * dpr);
+
+            // Dynamic Crosshairs from Current Coordinate
             const curX = toCanvasX(mapVal);
             const curY = toCanvasY(matVal);
 
-            // Real-time Pulsing target halo
+            ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
+            ctx.lineWidth = 1 * dpr;
+            ctx.setLineDash([3 * dpr, 3 * dpr]);
+            // Crosshair to Y-axis
+            ctx.beginPath();
+            ctx.moveTo(padL, curY);
+            ctx.lineTo(curX, curY);
+            ctx.stroke();
+            // Crosshair to X-axis
+            ctx.beginPath();
+            ctx.moveTo(curX, padT + plotH);
+            ctx.lineTo(curX, curY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Highlighted Active Coordinate Callouts on Axes
+            // Y-Axis Callout (Temp)
+            ctx.font = `bold ${Math.round(8.5 * dpr)}px "JetBrains Mono", monospace`;
+            const tempStr = `${matVal.toFixed(1)}°`;
+            const tempStrW = ctx.measureText(tempStr).width;
+            ctx.fillStyle = '#047857';
+            ctx.fillRect(padL - tempStrW - 10 * dpr, curY - 7 * dpr, tempStrW + 8 * dpr, 14 * dpr);
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(tempStr, padL - 6 * dpr, curY);
+
+            // X-Axis Callout (Precip)
+            const precipStr = `${Math.round(mapVal)}`;
+            const precipStrW = ctx.measureText(precipStr).width;
+            ctx.fillStyle = '#047857';
+            ctx.fillRect(curX - precipStrW / 2 - 4 * dpr, padT + plotH + 2 * dpr, precipStrW + 8 * dpr, 13 * dpr);
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(precipStr, curX, padT + plotH + 8.5 * dpr);
+
+            // Pulsing target ring around current coordinate
             const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             const time = Date.now() * 0.003;
-            const haloR = isReduced ? 10 : (10 + Math.sin(time) * 4);
+            const haloR = (isReduced ? 10 : (10 + Math.sin(time) * 3.5)) * dpr;
 
             ctx.beginPath();
-            ctx.arc(curX, curY, Math.max(4, haloR), 0, Math.PI * 2);
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2;
+            ctx.arc(curX, curY, haloR, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+            ctx.lineWidth = 1.5 * dpr;
             ctx.stroke();
 
+            // Center Point
             ctx.beginPath();
-            ctx.arc(curX, curY, 5, 0, Math.PI * 2);
-            ctx.fillStyle = '#f43f5e';
+            ctx.arc(curX, curY, 4.5 * dpr, 0, Math.PI * 2);
+            ctx.fillStyle = '#10b981';
             ctx.fill();
+            ctx.lineWidth = 1.5 * dpr;
+            ctx.strokeStyle = '#ffffff';
+            ctx.stroke();
+
+            // In-Canvas Top HUD Chip
+            const currentData = biomeData[activeBiome];
+            const biomeIcon = currentData?.icon || '🌱';
+            const displayBiomeName = isEn ? activeBiome : (currentData?.id_name || activeBiome);
+            const hudText = `${biomeIcon} ${displayBiomeName}`;
+
+            ctx.font = `bold ${Math.round(9.5 * dpr)}px "JetBrains Mono", monospace`;
+            const hudTextW = ctx.measureText(hudText).width;
+            const hudW = hudTextW + 16 * dpr;
+            const hudH = 20 * dpr;
+            const hudX = padL + plotW - hudW - 6 * dpr;
+            const hudY = padT + 6 * dpr;
+
+            ctx.fillStyle = 'rgba(12, 10, 9, 0.88)';
+            if (ctx.roundRect) {
+                ctx.beginPath();
+                ctx.roundRect(hudX, hudY, hudW, hudH, 5 * dpr);
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+                ctx.lineWidth = 1 * dpr;
+                ctx.stroke();
+            } else {
+                ctx.fillRect(hudX, hudY, hudW, hudH);
+            }
+
+            ctx.fillStyle = '#34d399';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(hudText, hudX + 8 * dpr, hudY + hudH / 2);
         }
 
         // ================= PROCEDURAL BIOME WORLD CANVAS ENGINE =================
