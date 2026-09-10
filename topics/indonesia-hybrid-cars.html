@@ -56,7 +56,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -73,7 +73,7 @@
                     fontFamily: {
                         display: ['"Outfit"', 'sans-serif'],
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        mono: ['"Space Mono"', 'monospace'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
                     },
                     colors: {
                         hybrid: {
@@ -113,7 +113,7 @@
         :root {
             --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
             --font-display: 'Outfit', sans-serif;
-            --font-mono: 'Space Mono', monospace;
+            --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         }
 
         body {
@@ -180,9 +180,10 @@
             filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.7));
         }
 
-        /* Smooth Scroll Behavior */
+        /* Smooth Scroll Behavior & Anchor Offset for Sticky Header */
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: 5rem;
         }
 
         /* Back to top button hover glow */
@@ -1736,9 +1737,12 @@
                             <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-mono font-bold" id="tco-badge-total-km">14.600 km/thn</span>
                         </div>
 
-                        <!-- Chart.js Container -->
+                        <!-- Chart.js Container with Resilient Fallback -->
                         <div class="h-64 sm:h-72 w-full relative">
-                            <canvas id="tcoChart"></canvas>
+                            <canvas id="tcoChart" class="w-full h-full block"></canvas>
+                            <div id="tcoFallback" class="hidden absolute inset-0 flex flex-col justify-center gap-2.5 p-3 bg-slate-50/80 rounded-2xl border border-slate-100 overflow-y-auto">
+                                <!-- Populated dynamically if Chart.js is delayed or blocked -->
+                            </div>
                         </div>
 
                         <!-- Financial Summary Cards -->
@@ -2075,6 +2079,8 @@
         // Initialize Lucide Icons
         lucide.createIcons();
 
+        let currentAnatomyKey = 'ice';
+
         // 1. LANGUAGE TOGGLING LOGIC
         function setLanguage(lang) {
             document.body.classList.remove('lang-id', 'lang-en');
@@ -2097,14 +2103,14 @@
             }
 
             // Real-time refresh of all interactive widgets
-            updateFlowUi();
-            selectAnatomy(currentAnatomyKey);
-            calculateTaxes();
-            updateBatteryHealth();
-            updateTcoSimulation();
+            try { if (typeof updateFlowUi === 'function') updateFlowUi(); } catch(e) { console.warn(e); }
+            try { if (typeof selectAnatomy === 'function') selectAnatomy(currentAnatomyKey); } catch(e) { console.warn(e); }
+            try { if (typeof calculateTaxes === 'function') calculateTaxes(); } catch(e) { console.warn(e); }
+            try { if (typeof updateBatteryHealth === 'function') updateBatteryHealth(); } catch(e) { console.warn(e); }
+            try { if (typeof updateTcoSimulation === 'function') updateTcoSimulation(); } catch(e) { console.warn(e); }
             const qBox = document.getElementById('quiz-result-box');
             if (qBox && !qBox.classList.contains('hidden')) {
-                evaluateQuiz();
+                try { if (typeof evaluateQuiz === 'function') evaluateQuiz(); } catch(e) { console.warn(e); }
             }
         }
 
@@ -2966,6 +2972,7 @@
         };
 
         function selectAnatomy(key) {
+            currentAnatomyKey = key;
             const d = anatomyData[key];
             if (!d) return;
 
@@ -3320,13 +3327,77 @@
         };
 
         let tcoChartInstance = null;
+        let tcoChartRetries = 0;
+
+        function renderTcoFallback(costIce, costMhev, costHev, costPhev, costBev, isId) {
+            const wrap = document.getElementById('tcoFallback');
+            const canvas = document.getElementById('tcoChart');
+            if (!wrap) return;
+            wrap.classList.remove('hidden');
+            if (canvas) canvas.classList.add('hidden');
+
+            const maxCost = Math.max(costIce, costMhev, costHev, costPhev, costBev, 1);
+            const items = [
+                {
+                    label: isId ? 'Bensin (ICE)' : 'Standard ICE',
+                    cost: costIce,
+                    color: 'bg-rose-500',
+                    text: 'text-rose-700'
+                },
+                {
+                    label: isId ? 'Mild Hybrid (MHEV)' : 'Mild Hybrid (MHEV)',
+                    cost: costMhev,
+                    color: 'bg-amber-500',
+                    text: 'text-amber-700'
+                },
+                {
+                    label: isId ? 'Full Hybrid (HEV)' : 'Full Hybrid (HEV)',
+                    cost: costHev,
+                    color: 'bg-sky-500',
+                    text: 'text-sky-700'
+                },
+                {
+                    label: isId ? 'Plug-in (PHEV)' : 'Plug-in Hybrid (PHEV)',
+                    cost: costPhev,
+                    color: 'bg-purple-500',
+                    text: 'text-purple-700'
+                },
+                {
+                    label: isId ? 'Listrik (BEV)' : 'Battery EV (BEV)',
+                    cost: costBev,
+                    color: 'bg-emerald-500',
+                    text: 'text-emerald-700'
+                }
+            ];
+
+            wrap.innerHTML = items.map(it => {
+                const pct = Math.min(100, Math.max(10, Math.round((it.cost / maxCost) * 100)));
+                const formatted = 'Rp ' + (it.cost / 1000000).toFixed(1) + ' Jt';
+                return `
+                    <div>
+                        <div class="flex justify-between items-center text-xs font-semibold mb-1">
+                            <span class="text-slate-700">${it.label}</span>
+                            <span class="font-mono font-bold ${it.text}">${formatted}</span>
+                        </div>
+                        <div class="h-3 w-full bg-slate-200/80 rounded-full overflow-hidden">
+                            <div class="h-full ${it.color} rounded-full transition-all duration-500 ease-out" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
 
         function initTcoChart() {
             const canvas = document.getElementById('tcoChart');
             if (!canvas) return;
 
             if (typeof Chart === 'undefined') {
-                setTimeout(initTcoChart, 150);
+                if (tcoChartRetries < 20) {
+                    tcoChartRetries++;
+                    setTimeout(initTcoChart, 150);
+                } else {
+                    console.warn("Chart.js unavailable; using native visual fallback.");
+                }
                 updateTcoSimulation();
                 return;
             }
@@ -3335,6 +3406,10 @@
                 if (tcoChartInstance) {
                     tcoChartInstance.destroy();
                 }
+                const fallback = document.getElementById('tcoFallback');
+                if (fallback) fallback.classList.add('hidden');
+                canvas.classList.remove('hidden');
+
                 const ctx = canvas.getContext('2d');
                 const isId = !document.body.classList.contains('lang-en');
                 const chartLabels = isId ?
@@ -3363,7 +3438,7 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         animation: {
-                            duration: 500
+                            duration: 400
                         },
                         plugins: {
                             legend: { display: false },
@@ -3454,17 +3529,23 @@
             // BEV
             const costBev = (totalKm / 100) * p.bev_kwh_100 * plnRate;
 
-            // Update Chart if available
+            const isId = !document.body.classList.contains('lang-en');
+
+            // Update Chart if available, otherwise render fallback
             if (tcoChartInstance) {
-                const isId = !document.body.classList.contains('lang-en');
+                const fallback = document.getElementById('tcoFallback');
+                if (fallback) fallback.classList.add('hidden');
+                const canvas = document.getElementById('tcoChart');
+                if (canvas) canvas.classList.remove('hidden');
+
                 tcoChartInstance.data.labels = isId ?
                     ['Bensin (ICE)', 'Mild Hybrid', 'Full Hybrid (HEV)', 'Plug-in (PHEV)', 'Listrik (BEV)'] :
                     ['Standard ICE', 'Mild Hybrid', 'Full Hybrid (HEV)', 'Plug-in (PHEV)', 'Battery EV (BEV)'];
                 tcoChartInstance.data.datasets[0].data = [costIce, costMhev, costHev, costPhev, costBev];
                 tcoChartInstance.update();
+            } else {
+                renderTcoFallback(costIce, costMhev, costHev, costPhev, costBev, isId);
             }
-
-            const isId = !document.body.classList.contains('lang-en');
 
             // Update Headings and Badges
             const subElem = document.getElementById('tco-chart-sub');
@@ -3713,9 +3794,9 @@
             try {
                 savedLang = localStorage.getItem('lolyeah_lang_pref') || 'id';
             } catch(e) {}
+            initTcoChart();
             setLanguage(savedLang);
             updateFlowUi();
-            initTcoChart();
             calculateTaxes();
             updateBatteryHealth();
             initBackToTop();
