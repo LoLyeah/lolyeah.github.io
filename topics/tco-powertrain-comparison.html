@@ -64,6 +64,9 @@
     <!-- Master Centralized Car Database (210 Models) -->
     <script src="../assets/indonesia-cars-data.js"></script>
 
+    <!-- Chart.js CDN (Explicit UMD browser bundle) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
     <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
@@ -274,33 +277,51 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mt-10">
                     <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
                         <span class="text-[11px] font-mono uppercase tracking-wider text-slate-500 block mb-1">ICE (Bensin)</span>
-                        <div class="text-xl font-display font-black text-slate-900">~Rp 1.100</div>
-                        <div class="text-[11px] text-slate-500">Biaya energi / km</div>
+                        <div class="text-xl font-display font-black text-slate-900" id="hero-metric-ice">~Rp 1.087</div>
+                        <div class="text-[11px] text-slate-500">
+                            <span class="id-only">Biaya energi / km</span>
+                            <span class="en-only">Energy cost / km</span>
+                        </div>
                     </div>
                     <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
                         <span class="text-[11px] font-mono uppercase tracking-wider text-slate-500 block mb-1">MHEV (Mild)</span>
-                        <div class="text-xl font-display font-black text-sky-600">~Rp 950</div>
-                        <div class="text-[11px] text-slate-500">Hemat ~8-12% bensin</div>
+                        <div class="text-xl font-display font-black text-sky-600" id="hero-metric-mhev">~Rp 833</div>
+                        <div class="text-[11px] text-slate-500">
+                            <span class="id-only">Hemat ~8-12% bensin</span>
+                            <span class="en-only">Save ~8-12% fuel</span>
+                        </div>
                     </div>
                     <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
                         <span class="text-[11px] font-mono uppercase tracking-wider text-slate-500 block mb-1">HEV (Full)</span>
-                        <div class="text-xl font-display font-black text-emerald-600">~Rp 640</div>
-                        <div class="text-[11px] text-slate-500">Hemat ~45% BBM kota</div>
+                        <div class="text-xl font-display font-black text-emerald-600" id="hero-metric-hev">~Rp 556</div>
+                        <div class="text-[11px] text-slate-500">
+                            <span class="id-only">Hemat ~45% BBM kota</span>
+                            <span class="en-only">Save ~45% city fuel</span>
+                        </div>
                     </div>
                     <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
                         <span class="text-[11px] font-mono uppercase tracking-wider text-slate-500 block mb-1">PHEV (Plug-in)</span>
-                        <div class="text-xl font-display font-black text-purple-600">~Rp 480</div>
-                        <div class="text-[11px] text-slate-500">Dual EV + Bensin</div>
+                        <div class="text-xl font-display font-black text-purple-600" id="hero-metric-phev">~Rp 453</div>
+                        <div class="text-[11px] text-slate-500">
+                            <span class="id-only">Dual EV + Bensin</span>
+                            <span class="en-only">Dual EV + Petrol</span>
+                        </div>
                     </div>
                     <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
                         <span class="text-[11px] font-mono uppercase tracking-wider text-slate-500 block mb-1">EREV (Series)</span>
-                        <div class="text-xl font-display font-black text-cyan-600">~Rp 620</div>
-                        <div class="text-[11px] text-slate-500">Mesin hanya genset</div>
+                        <div class="text-xl font-display font-black text-cyan-600" id="hero-metric-erev">~Rp 610</div>
+                        <div class="text-[11px] text-slate-500">
+                            <span class="id-only">Mesin hanya genset</span>
+                            <span class="en-only">Engine generator only</span>
+                        </div>
                     </div>
                     <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
                         <span class="text-[11px] font-mono uppercase tracking-wider text-slate-500 block mb-1">BEV (Listrik)</span>
-                        <div class="text-xl font-display font-black text-blue-600">~Rp 260</div>
-                        <div class="text-[11px] text-slate-500">Pajak PKB 0% RI</div>
+                        <div class="text-xl font-display font-black text-blue-600" id="hero-metric-bev">~Rp 257</div>
+                        <div class="text-[11px] text-slate-500">
+                            <span class="id-only">Pajak PKB 0% RI</span>
+                            <span class="en-only">0% Annual PKB Tax</span>
+                        </div>
                     </div>
                 </div>
 
@@ -334,57 +355,57 @@
                                 <tbody class="divide-y divide-slate-200 text-slate-700">
                                     <tr>
                                         <td class="p-3 font-bold text-orange-700">ICE (Bensin)</td>
-                                        <td class="p-3">Avanza 1.5 G CVT</td>
-                                        <td class="p-3">Rp 280,0 Juta</td>
-                                        <td class="p-3">~Rp 1.100 / km</td>
-                                        <td class="p-3">Rp 5,2 Juta</td>
-                                        <td class="p-3 font-bold">Rp 500,0 Juta</td>
-                                        <td class="p-3 text-slate-500">Benchmark dasar pembelian awal murah.</td>
+                                        <td class="p-3">Innova Zenix 2.0 G CVT</td>
+                                        <td class="p-3">Rp 430,4 Juta</td>
+                                        <td class="p-3">~Rp 1.847 / km</td>
+                                        <td class="p-3">Rp 8,2 Juta</td>
+                                        <td class="p-3 font-bold">Rp 799,8 Juta</td>
+                                        <td class="p-3 text-slate-500">Benchmark bensin: konsumsi 11,5 km/L &amp; PKB normal.</td>
                                     </tr>
                                     <tr>
                                         <td class="p-3 font-bold text-sky-700">MHEV (Mild 48V)</td>
-                                        <td class="p-3">Suzuki XL7 / Ertiga Cruise</td>
-                                        <td class="p-3">Rp 305,0 Juta</td>
-                                        <td class="p-3">~Rp 1.120 / km</td>
-                                        <td class="p-3">Rp 5,4 Juta</td>
-                                        <td class="p-3 font-bold">Rp 529,0 Juta</td>
-                                        <td class="p-3 text-amber-700">Sulit impas di kemacetan tropis (AC boros).</td>
+                                        <td class="p-3">Grand Vitara GLX Hybrid</td>
+                                        <td class="p-3">Rp 389,0 Juta</td>
+                                        <td class="p-3">~Rp 1.503 / km</td>
+                                        <td class="p-3">Rp 6,8 Juta</td>
+                                        <td class="p-3 font-bold">Rp 704,7 Juta</td>
+                                        <td class="p-3 text-amber-700">MSRP terjangkau, namun efisiensi macet tropis terbatas (~15 km/L).</td>
                                     </tr>
                                     <tr>
                                         <td class="p-3 font-bold text-emerald-700">HEV (Full Hybrid)</td>
-                                        <td class="p-3">Veloz V HV / Zenix HV</td>
-                                        <td class="p-3">Rp 302,0 Juta</td>
-                                        <td class="p-3">~Rp 642 / km</td>
-                                        <td class="p-3">Rp 5,6 Juta</td>
-                                        <td class="p-3 font-bold text-emerald-800">Rp 460,5 Juta</td>
-                                        <td class="p-3 text-emerald-700 font-bold">Mengalahkan Avanza 1.5G di 48.082 km!</td>
+                                        <td class="p-3">Toyota Yaris Cross S HEV</td>
+                                        <td class="p-3">Rp 440,6 Juta</td>
+                                        <td class="p-3">~Rp 1.206 / km</td>
+                                        <td class="p-3">Rp 7,2 Juta</td>
+                                        <td class="p-3 font-bold text-emerald-800">Rp 711,7 Juta</td>
+                                        <td class="p-3 text-emerald-700 font-bold">Mengalahkan Zenix ICE pada 15.600 km berkat 22,5 km/L!</td>
                                     </tr>
                                     <tr>
                                         <td class="p-3 font-bold text-purple-700">PHEV (Plug-in)</td>
                                         <td class="p-3">BYD Sealion 6 DM-i</td>
                                         <td class="p-3">Rp 499,0 Juta</td>
-                                        <td class="p-3">~Rp 590 / km</td>
+                                        <td class="p-3">~Rp 1.088 / km</td>
                                         <td class="p-3">Rp 7,5 Juta</td>
-                                        <td class="p-3 font-bold">Rp 617,0 Juta</td>
-                                        <td class="p-3 text-purple-700">Sangat hemat jika cas rutin di rumah.</td>
+                                        <td class="p-3 font-bold">Rp 776,7 Juta</td>
+                                        <td class="p-3 text-purple-700">Mengalahkan ICE di 91.000 km jika 70% cas malam rumahan.</td>
                                     </tr>
                                     <tr>
                                         <td class="p-3 font-bold text-cyan-700">EREV (Series)</td>
-                                        <td class="p-3">Nissan Serena e-POWER</td>
-                                        <td class="p-3">Rp 635,0 Juta</td>
-                                        <td class="p-3">~Rp 820 / km</td>
-                                        <td class="p-3">Rp 11,2 Juta</td>
-                                        <td class="p-3 font-bold">Rp 799,0 Juta</td>
-                                        <td class="p-3 text-cyan-700">Kenyamanan EV murni tanpa kabel cas.</td>
+                                        <td class="p-3">Nissan Kicks e-POWER</td>
+                                        <td class="p-3">Rp 519,0 Juta</td>
+                                        <td class="p-3">~Rp 1.345 / km</td>
+                                        <td class="p-3">Rp 8,8 Juta</td>
+                                        <td class="p-3 font-bold">Rp 823,0 Juta</td>
+                                        <td class="p-3 text-cyan-700">Sensasi EV 100% tanpa colok cas, efisien di perkotaan (20,5 km/L).</td>
                                     </tr>
                                     <tr>
                                         <td class="p-3 font-bold text-blue-700">BEV (Pure EV)</td>
-                                        <td class="p-3">BYD M6 / Atto 3</td>
+                                        <td class="p-3">BYD M6 Superior 7-Seat</td>
                                         <td class="p-3">Rp 429,0 Juta</td>
-                                        <td class="p-3">~Rp 360 / km</td>
+                                        <td class="p-3">~Rp 589 / km</td>
                                         <td class="p-3 font-bold text-blue-700">Rp 0 (0% PKB)</td>
-                                        <td class="p-3 font-bold text-blue-800">Rp 501,0 Juta</td>
-                                        <td class="p-3 text-blue-700 font-bold">Biaya energi terendah + bebas ganjil genap.</td>
+                                        <td class="p-3 font-bold text-blue-800">Rp 546,9 Juta</td>
+                                        <td class="p-3 text-blue-700 font-bold">MSRP setara ICE, energi cas rumah Rp 257/km + bebas ganjil genap!</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -407,11 +428,11 @@
                             <span class="en-only">Interactive Breakeven Trajectory (0–250,000 km)</span>
                         </div>
                         <h2 class="text-2xl sm:text-3xl font-display font-black text-slate-900" id="chart-main-title">
-                            Total Cost of Ownership: Avanza ICE vs Veloz Hybrid Lineup
+                            Total Cost of Ownership: Komparasi 6 Powertrain (Harga Setara)
                         </h2>
                         <p class="text-sm text-slate-600 mt-1 max-w-3xl">
-                            <span class="id-only">Grafik memetakan harga awal (MSRP), kemiringan biaya operasional (BBM/listrik + servis + pajak PKB), lonjakan penggantian baterai pada 120.000 km, dan titik persilangan (crossover) di mana mobil dengan harga beli lebih mahal mengalahkan mobil yang lebih murah.</span>
-                            <span class="en-only">The chart graphs initial purchase (MSRP), running cost slope (energy + maintenance + PKB tax), battery milestone replacement step-jumps at 120,000 km, and dynamic crossover breakevens where higher-priced electrified vehicles permanently defeat cheaper base models.</span>
+                            <span class="id-only">Simulasi komparasi langsung 6 arsitektur powertrain (ICE, MHEV, HEV, PHEV, EREV, BEV) pada segmen harga setara (~Rp 390M–520M): memetakan harga awal (MSRP), kemiringan biaya operasional (energi, servis, ban, pajak PKB), lonjakan penggantian baterai pada 120.000 km, dan titik persilangan (crossover breakeven).</span>
+                            <span class="en-only">Direct 6-powertrain comparison (ICE, MHEV, HEV, PHEV, EREV, BEV) in a comparable pricing tier (~Rp 390M–520M): graphing acquisition MSRP, running cost slope (energy, service, tires, PKB tax), battery milestone replacement step-jumps at 120,000 km, and dynamic crossover breakevens.</span>
                         </p>
                     </div>
 
@@ -431,21 +452,25 @@
 
                 <!-- PRESET SELECTOR BUTTONS -->
                 <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200 flex flex-wrap gap-2 mb-6" role="tablist">
-                    <button type="button" onclick="applyPreset('avanza-veloz')" id="btn-preset-avanza" class="preset-tab-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-white text-emerald-800 shadow-xs border border-emerald-200 flex items-center gap-2">
-                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
-                        <span>Avanza ICE vs Veloz Hybrid (Reference)</span>
+                    <button type="button" onclick="applyPreset('six-crossover')" id="btn-preset-six-crossover" class="preset-tab-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-white text-emerald-800 shadow-xs border border-emerald-200 flex items-center gap-2">
+                        <i data-lucide="layers" class="w-4 h-4 text-emerald-600"></i>
+                        <span class="id-only">6 Powertrain: Mid Crossover &amp; MPV (~Rp 390M–520M)</span>
+                        <span class="en-only">6 Powertrains: Mid Crossover &amp; MPV (~Rp 390M–520M)</span>
                     </button>
-                    <button type="button" onclick="applyPreset('six-powertrains')" id="btn-preset-six" class="preset-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-2">
-                        <i data-lucide="layers" class="w-4 h-4 text-blue-500"></i>
-                        <span>6 Archetypes Showdown (ICE–MHEV–HEV–PHEV–EREV–BEV)</span>
+                    <button type="button" onclick="applyPreset('six-family7')" id="btn-preset-six-family7" class="preset-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-2">
+                        <i data-lucide="users" class="w-4 h-4 text-blue-500"></i>
+                        <span class="id-only">6 Powertrain: Family 7-Seater (~Rp 305M–635M)</span>
+                        <span class="en-only">6 Powertrains: Family 7-Seater (~Rp 305M–635M)</span>
                     </button>
                     <button type="button" onclick="applyPreset('zenix-matchup')" id="btn-preset-zenix" class="preset-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-2">
                         <i data-lucide="car" class="w-4 h-4 text-purple-500"></i>
-                        <span>Innova Zenix Bensin vs Zenix Hybrid vs BYD M6 BEV</span>
+                        <span class="id-only">Innova Zenix Bensin vs Hybrid vs BYD M6 BEV</span>
+                        <span class="en-only">Innova Zenix Petrol vs Hybrid vs BYD M6 BEV</span>
                     </button>
-                    <button type="button" onclick="applyPreset('compact-city')" id="btn-preset-compact" class="preset-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-2">
-                        <i data-lucide="navigation" class="w-4 h-4 text-emerald-500"></i>
-                        <span>City Commuter (Brio vs Ertiga MHEV vs Yaris Cross HEV vs Binguo BEV)</span>
+                    <button type="button" onclick="applyPreset('avanza-veloz')" id="btn-preset-avanza" class="preset-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-2">
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <span class="id-only">Avanza ICE vs Veloz Hybrid (Referensi)</span>
+                        <span class="en-only">Avanza ICE vs Veloz Hybrid (Reference)</span>
                     </button>
                 </div>
 
@@ -516,15 +541,10 @@
                     </div>
                 </div>
 
-                <!-- CANVAS CHART CONTAINER -->
+                <!-- CHART CANVAS CONTAINER -->
                 <div class="relative">
-                    <div class="chart-container" id="chart-wrapper">
+                    <div class="chart-container relative w-full bg-white rounded-2xl p-2 sm:p-4 border border-slate-200 shadow-soft" id="chart-wrapper">
                         <canvas id="tcoChart" class="w-full h-full block"></canvas>
-                    </div>
-
-                    <!-- Live Hover Legend / Telemetry Tooltip -->
-                    <div id="chart-tooltip" class="hidden absolute top-4 right-4 bg-slate-900/95 text-white p-3.5 rounded-xl text-xs font-mono shadow-xl border border-slate-700 pointer-events-none backdrop-blur-md z-30 transition-opacity">
-                        <!-- Populated dynamically via JS -->
                     </div>
                 </div>
 
@@ -539,7 +559,7 @@
                         <span class="text-xs text-slate-500 font-mono">Berdasarkan asumsi 20.000 km/tahun</span>
                     </div>
 
-                    <div id="crossover-badges-grid" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div id="crossover-badges-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
                         <!-- Populated dynamically by JS math engine -->
                     </div>
                 </div>
@@ -845,11 +865,26 @@
 
                 <!-- Distance Milestone Selector Tabs -->
                 <div class="flex flex-wrap gap-2 mb-8">
-                    <button type="button" onclick="setBreakdownKm(50000, this)" class="breakdown-km-btn px-4 py-2 rounded-xl text-xs font-mono font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">50.000 km (~2.5 Thn)</button>
-                    <button type="button" onclick="setBreakdownKm(100000, this)" class="breakdown-km-btn px-4 py-2 rounded-xl text-xs font-mono font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">100.000 km (~5 Thn)</button>
-                    <button type="button" onclick="setBreakdownKm(150000, this)" class="breakdown-km-btn px-4 py-2 rounded-xl text-xs font-mono font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">150.000 km (~7.5 Thn)</button>
-                    <button type="button" onclick="setBreakdownKm(200000, this)" class="breakdown-km-btn active px-4 py-2 rounded-xl text-xs font-mono font-bold border border-emerald-500 bg-emerald-50 text-emerald-800 transition-all">200.000 km (~10 Thn)</button>
-                    <button type="button" onclick="setBreakdownKm(250000, this)" class="breakdown-km-btn px-4 py-2 rounded-xl text-xs font-mono font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">250.000 km (~12.5 Thn)</button>
+                    <button type="button" onclick="setBreakdownKm(50000, this)" class="breakdown-km-btn px-4 py-2 rounded-xl text-xs font-mono font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">
+                        <span class="id-only">50.000 km (~2,5 Thn)</span>
+                        <span class="en-only">50,000 km (~2.5 Yrs)</span>
+                    </button>
+                    <button type="button" onclick="setBreakdownKm(100000, this)" class="breakdown-km-btn px-4 py-2 rounded-xl text-xs font-mono font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">
+                        <span class="id-only">100.000 km (~5 Thn)</span>
+                        <span class="en-only">100,000 km (~5 Yrs)</span>
+                    </button>
+                    <button type="button" onclick="setBreakdownKm(150000, this)" class="breakdown-km-btn px-4 py-2 rounded-xl text-xs font-mono font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">
+                        <span class="id-only">150.000 km (~7,5 Thn)</span>
+                        <span class="en-only">150,000 km (~7.5 Yrs)</span>
+                    </button>
+                    <button type="button" onclick="setBreakdownKm(200000, this)" class="breakdown-km-btn active px-4 py-2 rounded-xl text-xs font-mono font-bold border border-emerald-500 bg-emerald-50 text-emerald-800 transition-all">
+                        <span class="id-only">200.000 km (~10 Thn)</span>
+                        <span class="en-only">200,000 km (~10 Yrs)</span>
+                    </button>
+                    <button type="button" onclick="setBreakdownKm(250000, this)" class="breakdown-km-btn px-4 py-2 rounded-xl text-xs font-mono font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">
+                        <span class="id-only">250.000 km (~12,5 Thn)</span>
+                        <span class="en-only">250,000 km (~12.5 Yrs)</span>
+                    </button>
                 </div>
 
                 <!-- DYNAMIC BREAKDOWN TABLE & STACKED VISUALIZER -->
@@ -916,8 +951,8 @@
                             <span class="en-only">200,000 km Financial TCO Verdict:</span>
                         </strong>
                         <p class="text-slate-600">
-                            <span class="id-only">Meskipun mobil Hybrid (HEV) dan Listrik Murni (BEV) memiliki harga beli awal (MSRP) lebih tinggi Rp 25–100 Juta dibanding versi bensin biasa (ICE), selisih efisiensi bahan bakar di kemacetan kota ditambah insentif pajak PKB 0% (pada BEV) membalikkan total biaya sebelum 100.000 km. Bahkan setelah menghitung biaya ganti baterai hybrid Rp 30 Juta pada 120.000 km, Veloz Hybrid tetap permanen lebih hemat hingga Rp 40+ Juta di 200.000 km dibanding Avanza 1.5 G CVT.</span>
-                            <span class="en-only">Although Full Hybrid (HEV) and Pure EV (BEV) carry Rp 25–100 Million higher initial MSRP compared to base ICE models, tropical urban fuel efficiency and 0% PKB tax incentives reverse total expenditure before 100,000 km. Even after factoring in an out-of-warranty Rp 30 Million hybrid battery swap at 120,000 km, Veloz Hybrid remains permanently over Rp 40M cheaper at 200,000 km than Avanza 1.5 G CVT.</span>
+                            <span class="id-only">Pada kelas crossover &amp; MPV setara (~Rp 390M–520M), mobil Listrik Murni (BEV seperti BYD M6) menawarkan TCO terendah sejak awal berkat harga MSRP yang sudah setara ICE (Rp 429 Juta), biaya energi cas rumah hemat ~75% (Rp 257/km vs Rp 1.087/km bensin), serta pembebasan PKB 0% (Permendagri 6/2023). Untuk Full Hybrid (HEV seperti Yaris Cross), selisih harga awal Rp 10 Juta dibanding ICE Zenix impas hanya dalam 15.600 km (~9 bulan) dan tetap lebih hemat Rp 88 Juta di 200.000 km meski memperhitungkan ganti baterai Rp 30 Juta. Sementara Mild Hybrid (MHEV) hanya menghemat ~10% BBM karena kompresor AC tetap membebani mesin saat macet tropis.</span>
+                            <span class="en-only">In the comparable ~Rp 390M–520M crossover &amp; MPV class, Battery Electric Vehicles (BEVs like BYD M6) deliver the lowest TCO from day one due to MSRP parity with ICE (Rp 429M), ~75% cheaper home-charging fuel cost (Rp 257/km vs Rp 1,087/km petrol), and 0% annual PKB vehicle tax (Permendagri 6/2023). Full Hybrids (HEVs like Yaris Cross) recover their Rp 10M price premium over ICE in just 15,600 km (~9 months) and retain an Rp 88M cumulative advantage at 200,000 km even after an out-of-warranty Rp 30M battery swap. Mild Hybrids (MHEVs) save only ~10% fuel as heavy tropical AC load forces constant engine idling.</span>
                         </p>
                     </div>
                 </div>
@@ -949,9 +984,12 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     <!-- Slot 1 -->
                     <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-soft">
-                        <div class="flex items-center justify-between text-xs font-mono font-bold mb-2 text-purple-700">
-                            <span>KENDARAAN 1 (Benchmark)</span>
-                            <span class="w-3 h-3 rounded-full bg-purple-500"></span>
+                        <div class="flex items-center justify-between text-xs font-mono font-bold mb-2 text-orange-600">
+                            <span>
+                                <span class="id-only">KENDARAAN 1 (Benchmark)</span>
+                                <span class="en-only">VEHICLE 1 (Benchmark)</span>
+                            </span>
+                            <span class="w-3 h-3 rounded-full bg-orange-500"></span>
                         </div>
                         <select id="custom-car-1" onchange="handleCustomSlotChange(0, this.value)" class="w-full text-xs font-mono rounded-lg border-slate-200 p-2 bg-slate-50 border">
                             <!-- Populated via JS -->
@@ -963,9 +1001,12 @@
 
                     <!-- Slot 2 -->
                     <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-soft">
-                        <div class="flex items-center justify-between text-xs font-mono font-bold mb-2 text-orange-600">
-                            <span>KENDARAAN 2</span>
-                            <span class="w-3 h-3 rounded-full bg-orange-500"></span>
+                        <div class="flex items-center justify-between text-xs font-mono font-bold mb-2 text-sky-600">
+                            <span>
+                                <span class="id-only">KENDARAAN 2</span>
+                                <span class="en-only">VEHICLE 2</span>
+                            </span>
+                            <span class="w-3 h-3 rounded-full bg-sky-500"></span>
                         </div>
                         <select id="custom-car-2" onchange="handleCustomSlotChange(1, this.value)" class="w-full text-xs font-mono rounded-lg border-slate-200 p-2 bg-slate-50 border">
                             <!-- Populated via JS -->
@@ -978,7 +1019,10 @@
                     <!-- Slot 3 -->
                     <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-soft">
                         <div class="flex items-center justify-between text-xs font-mono font-bold mb-2 text-emerald-700">
-                            <span>KENDARAAN 3</span>
+                            <span>
+                                <span class="id-only">KENDARAAN 3</span>
+                                <span class="en-only">VEHICLE 3</span>
+                            </span>
                             <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
                         </div>
                         <select id="custom-car-3" onchange="handleCustomSlotChange(2, this.value)" class="w-full text-xs font-mono rounded-lg border-slate-200 p-2 bg-slate-50 border">
@@ -991,9 +1035,12 @@
 
                     <!-- Slot 4 -->
                     <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-soft">
-                        <div class="flex items-center justify-between text-xs font-mono font-bold mb-2 text-cyan-600">
-                            <span>KENDARAAN 4</span>
-                            <span class="w-3 h-3 rounded-full bg-cyan-500"></span>
+                        <div class="flex items-center justify-between text-xs font-mono font-bold mb-2 text-blue-600">
+                            <span>
+                                <span class="id-only">KENDARAAN 4</span>
+                                <span class="en-only">VEHICLE 4</span>
+                            </span>
+                            <span class="w-3 h-3 rounded-full bg-blue-600"></span>
                         </div>
                         <select id="custom-car-4" onchange="handleCustomSlotChange(3, this.value)" class="w-full text-xs font-mono rounded-lg border-slate-200 p-2 bg-slate-50 border">
                             <!-- Populated via JS -->
@@ -1161,196 +1208,218 @@
         // --- 1. GLOBAL STATE & PRESETS ---
         let currentLang = 'id';
         let distanceHorizon = 250000;
-        let fuelPrice = 12500; // Rp/L (Pertamax)
+        let fuelPrice = 12500; // Rp/L (Pertamax RON 92)
         let elecPrice = 1444;  // Rp/kWh (Home R1)
         let includeBatteryMilestone = true;
-        let activePresetId = 'avanza-veloz';
+        let activePresetId = 'six-crossover';
         let hiddenSeriesIds = new Set();
         let selectedBreakdownDistance = 200000;
 
-        // PRESET 1: Avanza ICE vs Veloz Hybrid (EXACT MATCH TO REFERENCE IMAGE)
-        // Reference image parameters:
-        // Avanza 1.3 E CVT: 258M base, rate ~1075.4 Rp/km -> ~530M at 250k km
-        // Avanza 1.5 G CVT: 280M base, rate ~1100.0 Rp/km -> ~555M at 250k km
-        // Veloz V HV: 302M base, rate ~642.45 Rp/km, step jump +30M at 120k km -> beats 1.5G at 48,082 km, permanently beats 1.3E at 170,935 km
-        // Veloz Q HV: 325M base, rate ~642.45 Rp/km, step jump +30M at 120k km -> beats 1.5G at 98,696 km
-        // Veloz Q HV Mod. TSS: 385M base, rate ~642.45 Rp/km, step jump +30M at 120k km
+        // 6 POWERTRAINS COMPARISON PRESETS (COMPARABLE REAL INDONESIAN CARS)
         const PRESETS = {
-            'avanza-veloz': {
-                title: 'Total Cost of Ownership: Avanza ICE vs Veloz Hybrid Lineup',
-                titleEn: 'Total Cost of Ownership: Avanza ICE vs Veloz Hybrid Lineup',
-                vehicles: [
-                    {
-                        id: 'avanza-13-e',
-                        name: 'Avanza 1.3 E CVT (ICE)',
-                        shortName: '1.3 E CVT',
-                        powertrain: 'ICE',
-                        color: '#9333ea', // Purple
-                        msrp: 258,
-                        runningRate: 1075.3631, // Exactly 170,935 km permanent crossover
-                        batteryStepKm: 0,
-                        batteryStepCost: 0,
-                        fuelKmPerL: 14.5,
-                        maintPerKm: 180,
-                        annualPkb: 4.5,
-                        resalePct5Yr: 0.65
-                    },
-                    {
-                        id: 'avanza-15-g',
-                        name: 'Avanza 1.5 G CVT (ICE)',
-                        shortName: '1.5 G CVT',
-                        powertrain: 'ICE',
-                        color: '#ea580c', // Orange
-                        msrp: 280,
-                        runningRate: 1100.0017, // Exactly 48,082 km crossover
-                        batteryStepKm: 0,
-                        batteryStepCost: 0,
-                        fuelKmPerL: 13.5,
-                        maintPerKm: 190,
-                        annualPkb: 5.2,
-                        resalePct5Yr: 0.66
-                    },
-                    {
-                        id: 'veloz-v-hv',
-                        name: 'Veloz V HV (Hybrid)',
-                        shortName: 'V HV',
-                        powertrain: 'HEV',
-                        color: '#16a34a', // Green
-                        msrp: 302,
-                        runningRate: 642.45, // Rp/km
-                        batteryStepKm: 120000,
-                        batteryStepCost: 30, // 30 Million Rp
-                        fuelKmPerL: 22.5,
-                        maintPerKm: 135,
-                        annualPkb: 5.6,
-                        resalePct5Yr: 0.70
-                    },
-                    {
-                        id: 'veloz-q-hv',
-                        name: 'Veloz Q HV (Hybrid)',
-                        shortName: 'Q HV',
-                        powertrain: 'HEV',
-                        color: '#06b6d4', // Cyan
-                        msrp: 325.1585, // Exactly 98,696 km crossover
-                        runningRate: 642.45, // Rp/km
-                        batteryStepKm: 120000,
-                        batteryStepCost: 30,
-                        fuelKmPerL: 22.5,
-                        maintPerKm: 135,
-                        annualPkb: 6.2,
-                        resalePct5Yr: 0.71
-                    },
-                    {
-                        id: 'veloz-q-tss-hv',
-                        name: 'Veloz Q HV Mod. TSS (Hybrid)',
-                        shortName: 'Q HV Mod. TSS',
-                        powertrain: 'HEV',
-                        color: '#dc2626', // Red
-                        msrp: 385,
-                        runningRate: 642.45, // Rp/km
-                        batteryStepKm: 120000,
-                        batteryStepCost: 30,
-                        fuelKmPerL: 22.0,
-                        maintPerKm: 140,
-                        annualPkb: 7.2,
-                        resalePct5Yr: 0.68
-                    }
-                ]
-            },
-
-            'six-powertrains': {
-                title: 'TCO Benchmark: 6 Powertrain Archetypes (MPV / Mid SUV Class)',
-                titleEn: 'TCO Benchmark: 6 Powertrain Archetypes (MPV / Mid SUV Class)',
+            'six-crossover': {
+                title: 'Total Cost of Ownership: Komparasi 6 Powertrain (Mid Crossover & MPV ~Rp 390M–520M)',
+                titleEn: 'Total Cost of Ownership: 6-Powertrain Benchmark (Mid Crossover & MPV ~Rp 390M–520M)',
                 vehicles: [
                     {
                         id: 'pt-ice',
-                        name: '1. ICE Gasoline (Innova Zenix 2.0 V)',
+                        name: '1. ICE (Toyota Innova Zenix 2.0 G CVT)',
                         shortName: 'Zenix ICE',
                         powertrain: 'ICE',
-                        color: '#ea580c',
-                        msrp: 476,
-                        runningRate: 1420.0,
+                        color: '#ea580c', // Orange
+                        msrp: 430.4,
+                        runningRate: 1847.0,
+                        fuelKmPerL: 11.5,
+                        maintPerKm: 200,
+                        annualPkb: 8.2,
+                        tiresPerKm: 150,
                         batteryStepKm: 0,
                         batteryStepCost: 0,
-                        fuelKmPerL: 11.2,
-                        maintPerKm: 210,
-                        annualPkb: 8.8,
                         resalePct5Yr: 0.68
                     },
                     {
                         id: 'pt-mhev',
-                        name: '2. MHEV 48V (Suzuki XL7 / Ertiga Cruise)',
-                        shortName: 'XL7 MHEV',
+                        name: '2. MHEV (Suzuki Grand Vitara GLX Hybrid)',
+                        shortName: 'Grand Vitara MHEV',
                         powertrain: 'MHEV',
-                        color: '#0284c7',
-                        msrp: 305,
-                        runningRate: 1120.0,
+                        color: '#0284c7', // Sky Blue
+                        msrp: 389.0,
+                        runningRate: 1503.3,
+                        fuelKmPerL: 15.0,
+                        maintPerKm: 180,
+                        annualPkb: 6.8,
+                        tiresPerKm: 150,
                         batteryStepKm: 120000,
                         batteryStepCost: 15,
-                        fuelKmPerL: 14.5,
-                        maintPerKm: 185,
-                        annualPkb: 5.4,
                         resalePct5Yr: 0.62
                     },
                     {
                         id: 'pt-hev',
-                        name: '3. HEV Full Hybrid (Zenix 2.0 V Hybrid)',
-                        shortName: 'Zenix HEV',
+                        name: '3. HEV (Toyota Yaris Cross 1.5 S HEV)',
+                        shortName: 'Yaris Cross HEV',
                         powertrain: 'HEV',
-                        color: '#16a34a',
-                        msrp: 542,
-                        runningRate: 810.0,
+                        color: '#16a34a', // Emerald Green
+                        msrp: 440.6,
+                        runningRate: 1205.6,
+                        fuelKmPerL: 22.5,
+                        maintPerKm: 140,
+                        annualPkb: 7.2,
+                        tiresPerKm: 150,
                         batteryStepKm: 120000,
-                        batteryStepCost: 35,
-                        fuelKmPerL: 20.5,
-                        maintPerKm: 150,
-                        annualPkb: 9.6,
-                        resalePct5Yr: 0.74
+                        batteryStepCost: 30,
+                        resalePct5Yr: 0.72
                     },
                     {
                         id: 'pt-phev',
-                        name: '4. PHEV Plug-in (BYD Sealion 6 DM-i)',
-                        shortName: 'Sealion PHEV',
+                        name: '4. PHEV (BYD Sealion 6 DM-i Super Hybrid)',
+                        shortName: 'Sealion 6 PHEV',
                         powertrain: 'PHEV',
-                        color: '#8b5cf6',
-                        msrp: 499,
-                        runningRate: 590.0,
-                        batteryStepKm: 140000,
-                        batteryStepCost: 65,
-                        fuelKmPerL: 24.0,
-                        maintPerKm: 170,
+                        color: '#8b5cf6', // Violet
+                        msrp: 499.0,
+                        runningRate: 1088.5,
+                        eleckWhPer100Km: 16.0,
+                        fuelKmPerL: 20.0,
+                        maintPerKm: 160,
                         annualPkb: 7.5,
+                        tiresPerKm: 180,
+                        batteryStepKm: 140000,
+                        batteryStepCost: 60,
                         resalePct5Yr: 0.60
                     },
                     {
                         id: 'pt-erev',
-                        name: '5. EREV Series (Nissan Serena e-POWER C28)',
-                        shortName: 'Serena EREV',
+                        name: '5. EREV (Nissan Kicks e-POWER)',
+                        shortName: 'Kicks e-POWER',
                         powertrain: 'EREV',
-                        color: '#06b6d4',
-                        msrp: 635,
-                        runningRate: 820.0,
+                        color: '#06b6d4', // Cyan
+                        msrp: 519.0,
+                        runningRate: 1344.8,
+                        fuelKmPerL: 20.5,
+                        maintPerKm: 145,
+                        annualPkb: 8.8,
+                        tiresPerKm: 150,
                         batteryStepKm: 140000,
-                        batteryStepCost: 40,
-                        fuelKmPerL: 19.5,
-                        maintPerKm: 140,
-                        annualPkb: 11.2,
-                        resalePct5Yr: 0.65
+                        batteryStepCost: 35,
+                        resalePct5Yr: 0.64
                     },
                     {
                         id: 'pt-bev',
-                        name: '6. BEV Pure EV (BYD M6 Superior 7-Seat)',
-                        shortName: 'M6 BEV',
+                        name: '6. BEV (BYD M6 Superior 7-Seater)',
+                        shortName: 'BYD M6 BEV',
                         powertrain: 'BEV',
-                        color: '#2563eb',
-                        msrp: 429,
-                        runningRate: 360.0,
+                        color: '#2563eb', // Royal Blue
+                        msrp: 429.0,
+                        runningRate: 589.5,
+                        eleckWhPer100Km: 15.5,
+                        maintPerKm: 85,
+                        annualPkb: 0.143,
+                        tiresPerKm: 240,
                         batteryStepKm: 160000,
                         batteryStepCost: 0,
-                        fuelKmPerL: 0,
+                        resalePct5Yr: 0.55
+                    }
+                ]
+            },
+
+            'six-family7': {
+                title: 'Total Cost of Ownership: 6 Powertrain Kelas Family 7-Seater (~Rp 305M–635M)',
+                titleEn: 'Total Cost of Ownership: 6 Powertrains Family 7-Seater Tier (~Rp 305M–635M)',
+                vehicles: [
+                    {
+                        id: 'f7-ice',
+                        name: '1. ICE (Toyota Innova Zenix 2.0 V CVT)',
+                        shortName: 'Zenix 2.0 V ICE',
+                        powertrain: 'ICE',
+                        color: '#ea580c',
+                        msrp: 476.0,
+                        runningRate: 1886.0,
+                        fuelKmPerL: 11.2,
+                        maintPerKm: 210,
+                        annualPkb: 8.8,
+                        tiresPerKm: 160,
+                        batteryStepKm: 0,
+                        batteryStepCost: 0,
+                        resalePct5Yr: 0.68
+                    },
+                    {
+                        id: 'f7-mhev',
+                        name: '2. MHEV (Suzuki XL7 Hybrid Alpha)',
+                        shortName: 'XL7 MHEV',
+                        powertrain: 'MHEV',
+                        color: '#0284c7',
+                        msrp: 305.0,
+                        runningRate: 1182.0,
+                        fuelKmPerL: 15.5,
+                        maintPerKm: 175,
+                        annualPkb: 5.2,
+                        tiresPerKm: 140,
+                        batteryStepKm: 120000,
+                        batteryStepCost: 15,
+                        resalePct5Yr: 0.63
+                    },
+                    {
+                        id: 'f7-hev',
+                        name: '3. HEV (Toyota Innova Zenix 2.0 V Hybrid)',
+                        shortName: 'Zenix 2.0 V HEV',
+                        powertrain: 'HEV',
+                        color: '#16a34a',
+                        msrp: 542.0,
+                        runningRate: 1240.0,
+                        fuelKmPerL: 20.5,
+                        maintPerKm: 150,
+                        annualPkb: 9.6,
+                        tiresPerKm: 160,
+                        batteryStepKm: 120000,
+                        batteryStepCost: 35,
+                        resalePct5Yr: 0.74
+                    },
+                    {
+                        id: 'f7-phev',
+                        name: '4. PHEV (Chery Tiggo 8 C-DM 7-Seater)',
+                        shortName: 'Tiggo 8 C-DM PHEV',
+                        powertrain: 'PHEV',
+                        color: '#8b5cf6',
+                        msrp: 550.0,
+                        runningRate: 1120.0,
+                        eleckWhPer100Km: 17.0,
+                        fuelKmPerL: 18.0,
+                        maintPerKm: 165,
+                        annualPkb: 8.5,
+                        tiresPerKm: 180,
+                        batteryStepKm: 140000,
+                        batteryStepCost: 65,
+                        resalePct5Yr: 0.58
+                    },
+                    {
+                        id: 'f7-erev',
+                        name: '5. EREV (Nissan All New Serena e-POWER C28)',
+                        shortName: 'Serena C28 e-POWER',
+                        powertrain: 'EREV',
+                        color: '#06b6d4',
+                        msrp: 635.0,
+                        runningRate: 1475.0,
+                        fuelKmPerL: 19.5,
+                        maintPerKm: 160,
+                        annualPkb: 10.5,
+                        tiresPerKm: 160,
+                        batteryStepKm: 140000,
+                        batteryStepCost: 40,
+                        resalePct5Yr: 0.63
+                    },
+                    {
+                        id: 'f7-bev',
+                        name: '6. BEV (BYD M6 Superior 7-Seater)',
+                        shortName: 'BYD M6 BEV',
+                        powertrain: 'BEV',
+                        color: '#2563eb',
+                        msrp: 429.0,
+                        runningRate: 589.5,
                         eleckWhPer100Km: 15.5,
-                        maintPerKm: 90,
+                        maintPerKm: 85,
                         annualPkb: 0.143,
+                        tiresPerKm: 240,
+                        batteryStepKm: 160000,
+                        batteryStepCost: 0,
                         resalePct5Yr: 0.55
                     }
                 ]
@@ -1362,32 +1431,34 @@
                 vehicles: [
                     {
                         id: 'zenix-ice',
-                        name: 'Zenix 2.0 V CVT (Bensin)',
+                        name: 'Innova Zenix 2.0 V CVT (Bensin)',
                         shortName: 'Zenix Bensin',
                         powertrain: 'ICE',
                         color: '#ea580c',
-                        msrp: 476,
-                        runningRate: 1420.0,
-                        batteryStepKm: 0,
-                        batteryStepCost: 0,
+                        msrp: 476.0,
+                        runningRate: 1886.0,
                         fuelKmPerL: 11.2,
                         maintPerKm: 210,
                         annualPkb: 8.8,
+                        tiresPerKm: 160,
+                        batteryStepKm: 0,
+                        batteryStepCost: 0,
                         resalePct5Yr: 0.68
                     },
                     {
                         id: 'zenix-hev',
-                        name: 'Zenix 2.0 V Hybrid (HEV)',
+                        name: 'Innova Zenix 2.0 V Hybrid (HEV)',
                         shortName: 'Zenix Hybrid',
                         powertrain: 'HEV',
                         color: '#16a34a',
-                        msrp: 542,
-                        runningRate: 810.0,
-                        batteryStepKm: 120000,
-                        batteryStepCost: 35,
+                        msrp: 542.0,
+                        runningRate: 1240.0,
                         fuelKmPerL: 20.5,
                         maintPerKm: 150,
                         annualPkb: 9.6,
+                        tiresPerKm: 160,
+                        batteryStepKm: 120000,
+                        batteryStepCost: 35,
                         resalePct5Yr: 0.74
                     },
                     {
@@ -1396,672 +1467,530 @@
                         shortName: 'BYD M6 BEV',
                         powertrain: 'BEV',
                         color: '#2563eb',
-                        msrp: 429,
-                        runningRate: 360.0,
-                        batteryStepKm: 0,
-                        batteryStepCost: 0,
-                        fuelKmPerL: 0,
+                        msrp: 429.0,
+                        runningRate: 589.5,
                         eleckWhPer100Km: 15.5,
-                        maintPerKm: 90,
+                        maintPerKm: 85,
                         annualPkb: 0.143,
+                        tiresPerKm: 240,
+                        batteryStepKm: 160000,
+                        batteryStepCost: 0,
                         resalePct5Yr: 0.55
                     }
                 ]
             },
 
-            'compact-city': {
-                title: 'Urban Commuter: Brio ICE vs Swift MHEV vs Yaris Cross HEV vs Binguo BEV',
-                titleEn: 'Urban Commuter: Brio ICE vs Swift MHEV vs Yaris Cross HEV vs Binguo BEV',
+            'avanza-veloz': {
+                title: 'Total Cost of Ownership: Avanza ICE vs Veloz Hybrid Lineup',
+                titleEn: 'Total Cost of Ownership: Avanza ICE vs Veloz Hybrid Lineup',
                 vehicles: [
                     {
-                        id: 'brio-ice',
-                        name: 'Honda Brio RS (ICE)',
-                        shortName: 'Brio ICE',
+                        id: 'avanza-13-e',
+                        name: 'Avanza 1.3 E CVT (ICE)',
+                        shortName: '1.3 E CVT',
                         powertrain: 'ICE',
-                        color: '#ea580c',
-                        msrp: 245,
-                        runningRate: 980.0,
+                        color: '#9333ea',
+                        msrp: 258.0,
+                        runningRate: 1075.4,
+                        fuelKmPerL: 14.5,
+                        maintPerKm: 180,
+                        annualPkb: 4.5,
+                        tiresPerKm: 140,
                         batteryStepKm: 0,
                         batteryStepCost: 0,
-                        fuelKmPerL: 15.5,
-                        maintPerKm: 160,
-                        annualPkb: 3.8,
+                        resalePct5Yr: 0.65
+                    },
+                    {
+                        id: 'avanza-15-g',
+                        name: 'Avanza 1.5 G CVT (ICE)',
+                        shortName: '1.5 G CVT',
+                        powertrain: 'ICE',
+                        color: '#ea580c',
+                        msrp: 280.0,
+                        runningRate: 1100.0,
+                        fuelKmPerL: 13.5,
+                        maintPerKm: 190,
+                        annualPkb: 5.2,
+                        tiresPerKm: 140,
+                        batteryStepKm: 0,
+                        batteryStepCost: 0,
+                        resalePct5Yr: 0.66
+                    },
+                    {
+                        id: 'veloz-v-hv',
+                        name: 'Veloz V HV (Hybrid)',
+                        shortName: 'V HV',
+                        powertrain: 'HEV',
+                        color: '#16a34a',
+                        msrp: 302.0,
+                        runningRate: 642.5,
+                        fuelKmPerL: 22.5,
+                        maintPerKm: 135,
+                        annualPkb: 5.6,
+                        tiresPerKm: 140,
+                        batteryStepKm: 120000,
+                        batteryStepCost: 30,
                         resalePct5Yr: 0.70
                     },
                     {
-                        id: 'swift-mhev',
-                        name: 'Suzuki Fronx / Ertiga Hybrid (MHEV)',
-                        shortName: 'Fronx MHEV',
-                        powertrain: 'MHEV',
-                        color: '#0284c7',
-                        msrp: 285,
-                        runningRate: 890.0,
-                        batteryStepKm: 120000,
-                        batteryStepCost: 15,
-                        fuelKmPerL: 17.5,
-                        maintPerKm: 160,
-                        annualPkb: 4.5,
-                        resalePct5Yr: 0.64
-                    },
-                    {
-                        id: 'yaris-cross-hev',
-                        name: 'Toyota Yaris Cross S HV (HEV)',
-                        shortName: 'Yaris Cross HEV',
+                        id: 'veloz-q-hv',
+                        name: 'Veloz Q HV (Hybrid)',
+                        shortName: 'Q HV',
                         powertrain: 'HEV',
-                        color: '#16a34a',
-                        msrp: 440,
-                        runningRate: 610.0,
+                        color: '#06b6d4',
+                        msrp: 325.2,
+                        runningRate: 642.5,
+                        fuelKmPerL: 22.5,
+                        maintPerKm: 135,
+                        annualPkb: 6.2,
+                        tiresPerKm: 140,
                         batteryStepKm: 120000,
                         batteryStepCost: 30,
-                        fuelKmPerL: 25.0,
-                        maintPerKm: 130,
-                        annualPkb: 7.2,
-                        resalePct5Yr: 0.72
+                        resalePct5Yr: 0.71
                     },
                     {
-                        id: 'binguo-bev',
-                        name: 'Wuling Binguo EV 410km (BEV)',
-                        shortName: 'Binguo BEV',
-                        powertrain: 'BEV',
-                        color: '#2563eb',
-                        msrp: 372,
-                        runningRate: 290.0,
-                        batteryStepKm: 0,
-                        batteryStepCost: 0,
-                        fuelKmPerL: 0,
-                        eleckWhPer100Km: 13.0,
-                        maintPerKm: 75,
-                        annualPkb: 0.143,
-                        resalePct5Yr: 0.52
+                        id: 'veloz-q-tss-hv',
+                        name: 'Veloz Q HV Mod. TSS (Hybrid)',
+                        shortName: 'Q HV Mod. TSS',
+                        powertrain: 'HEV',
+                        color: '#dc2626',
+                        msrp: 385.0,
+                        runningRate: 642.5,
+                        fuelKmPerL: 22.0,
+                        maintPerKm: 140,
+                        annualPkb: 7.2,
+                        tiresPerKm: 140,
+                        batteryStepKm: 120000,
+                        batteryStepCost: 30,
+                        resalePct5Yr: 0.68
                     }
                 ]
             }
         };
 
-        let currentVehicles = JSON.parse(JSON.stringify(PRESETS['avanza-veloz'].vehicles));
+        let currentVehicles = JSON.parse(JSON.stringify(PRESETS['six-crossover'].vehicles));
 
-        // --- 2. CANVAS RENDERING ENGINE ---
-        const canvas = document.getElementById('tcoChart');
-        const ctx = canvas.getContext('2d');
-        let hoverXKm = null;
-        let hoverYPixel = null;
-        let calculatedCrossovers = [];
-
-        function resizeCanvas() {
-            const container = document.getElementById('chart-wrapper');
-            const rect = container.getBoundingClientRect();
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = rect.width * dpr;
-            canvas.height = rect.height * dpr;
-            ctx.scale(dpr, dpr);
-            renderChart();
-        }
-
-        window.addEventListener('resize', resizeCanvas);
-
-        function drawRoundRect(c, x, y, w, h, r) {
-            if (typeof c.roundRect === 'function') {
-                c.roundRect(x, y, w, h, r);
-            } else {
-                c.beginPath();
-                c.moveTo(x + r, y);
-                c.lineTo(x + w - r, y);
-                c.quadraticCurveTo(x + w, y, x + w, y + r);
-                c.lineTo(x + w, y + h - r);
-                c.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-                c.lineTo(x + r, y + h);
-                c.quadraticCurveTo(x, y + h, x, y + h - r);
-                c.lineTo(x, y + r);
-                c.quadraticCurveTo(x, y, x + r, y);
-                c.closePath();
-            }
-        }
-
-        function drawArrowhead(c, fromX, fromY, toX, toY, headLength = 7) {
-            const angle = Math.atan2(toY - fromY, toX - fromX);
-            const tipX = toX - 3 * Math.cos(angle);
-            const tipY = toY - 3 * Math.sin(angle);
-            c.save();
-            c.fillStyle = '#0f172a';
-            c.beginPath();
-            c.moveTo(tipX, tipY);
-            c.lineTo(tipX - headLength * Math.cos(angle - Math.PI / 6), tipY - headLength * Math.sin(angle - Math.PI / 6));
-            c.lineTo(tipX - headLength * Math.cos(angle + Math.PI / 6), tipY - headLength * Math.sin(angle + Math.PI / 6));
-            c.closePath();
-            c.fill();
-            c.restore();
-        }
-
+        // --- 2. COST MODEL & RUNNING RATE CALCULATIONS ---
         function calculateVehicleCost(v, km) {
-            let running = (v.runningRate * km) / 1000000; // in Millions Rp
+            const running = (v.runningRate * km) / 1e6; // in Millions Rp
             let batteryCost = 0;
-            if (includeBatteryMilestone && v.batteryStepKm > 0 && km >= v.batteryStepKm) {
+            if (includeBatteryMilestone && v.batteryStepKm > 0 && v.batteryStepCost > 0 && km >= v.batteryStepKm) {
                 batteryCost = v.batteryStepCost;
             }
             return v.msrp + running + batteryCost;
         }
 
+        function updateHeroTelemetry() {
+            const iceVal = Math.round(fuelPrice / 11.5);
+            const mhevVal = Math.round(fuelPrice / 15.0);
+            const hevVal = Math.round(fuelPrice / 22.5);
+            const phevVal = Math.round(0.70 * ((16.0 / 100) * elecPrice * 1.15) + 0.30 * (fuelPrice / 20.0));
+            const erevVal = Math.round(fuelPrice / 20.5);
+            const bevVal = Math.round((15.5 / 100) * elecPrice * 1.15);
+            const loc = currentLang === 'en' ? 'en-US' : 'id-ID';
+
+            const elIce = document.getElementById('hero-metric-ice');
+            if (elIce) elIce.textContent = `~Rp ${iceVal.toLocaleString(loc)}`;
+            const elMhev = document.getElementById('hero-metric-mhev');
+            if (elMhev) elMhev.textContent = `~Rp ${mhevVal.toLocaleString(loc)}`;
+            const elHev = document.getElementById('hero-metric-hev');
+            if (elHev) elHev.textContent = `~Rp ${hevVal.toLocaleString(loc)}`;
+            const elPhev = document.getElementById('hero-metric-phev');
+            if (elPhev) elPhev.textContent = `~Rp ${phevVal.toLocaleString(loc)}`;
+            const elErev = document.getElementById('hero-metric-erev');
+            if (elErev) elErev.textContent = `~Rp ${erevVal.toLocaleString(loc)}`;
+            const elBev = document.getElementById('hero-metric-bev');
+            if (elBev) elBev.textContent = `~Rp ${bevVal.toLocaleString(loc)}`;
+        }
+
+        function recalculateRunningRates() {
+            currentVehicles.forEach(v => {
+                let energyPerKm = 0;
+                if (v.powertrain === 'BEV') {
+                    energyPerKm = ((v.eleckWhPer100Km || 15.5) / 100) * elecPrice * 1.15;
+                } else if (v.powertrain === 'PHEV') {
+                    const evShare = 0.70;
+                    const evEnergy = ((v.eleckWhPer100Km || 16.0) / 100) * elecPrice * 1.15;
+                    const gasEnergy = fuelPrice / (v.fuelKmPerL || 20.0);
+                    energyPerKm = evShare * evEnergy + (1 - evShare) * gasEnergy;
+                } else if (v.fuelKmPerL > 0) {
+                    energyPerKm = fuelPrice / v.fuelKmPerL;
+                }
+
+                const taxPerKm = ((v.annualPkb || 5) * 1e6) / 20000;
+                const maintPerKm = v.maintPerKm || 150;
+                const tiresPerKm = v.tiresPerKm || (v.powertrain === 'BEV' ? 240 : 150);
+
+                v.runningRate = energyPerKm + maintPerKm + taxPerKm + tiresPerKm;
+            });
+
+            updateHeroTelemetry();
+        }
+
         function findCrossovers() {
             const crossovers = [];
             const activeVehicles = currentVehicles.filter(v => !hiddenSeriesIds.has(v.id));
+            if (activeVehicles.length < 2) return crossovers;
+
+            const rawKnots = [0, distanceHorizon];
+            activeVehicles.forEach(v => {
+                if (includeBatteryMilestone && v.batteryStepKm > 0 && v.batteryStepCost > 0 && v.batteryStepKm < distanceHorizon) {
+                    rawKnots.push(v.batteryStepKm);
+                }
+            });
+            const knots = Array.from(new Set(rawKnots)).sort((a, b) => a - b);
+            const seenKeys = new Set();
 
             for (let i = 0; i < activeVehicles.length; i++) {
                 for (let j = i + 1; j < activeVehicles.length; j++) {
                     const vA = activeVehicles[i];
                     const vB = activeVehicles[j];
 
-                    // Check before battery jump (0 to 120k) and after (120k to horizon)
-                    const segments = [
-                        { start: 0, end: 120000 },
-                        { start: 120000, end: distanceHorizon }
-                    ];
+                    for (let k = 0; k < knots.length - 1; k++) {
+                        const k1 = knots[k];
+                        const k2 = knots[k + 1];
 
-                    segments.forEach(seg => {
-                        const costA1 = calculateVehicleCost(vA, seg.start);
-                        const costB1 = calculateVehicleCost(vB, seg.start);
-                        const costA2 = calculateVehicleCost(vA, seg.end);
-                        const costB2 = calculateVehicleCost(vB, seg.end);
+                        const slopeA = vA.runningRate / 1e6;
+                        const slopeB = vB.runningRate / 1e6;
+                        const deltaSlope = slopeA - slopeB;
 
-                        const diff1 = costA1 - costB1;
-                        const diff2 = costA2 - costB2;
+                        if (Math.abs(deltaSlope) < 1e-11) continue;
 
-                        if ((diff1 < 0 && diff2 > 0) || (diff1 > 0 && diff2 < 0)) {
-                            // Intersection occurs in this segment
-                            const slopeA = (costA2 - costA1) / (seg.end - seg.start);
-                            const slopeB = (costB2 - costB1) / (seg.end - seg.start);
-                            if (Math.abs(slopeA - slopeB) > 1e-9) {
-                                const crossKm = seg.start + (costB1 - costA1) / (slopeA - slopeB);
-                                if (crossKm >= 1000 && crossKm <= distanceHorizon) {
-                                    const winner = slopeA < slopeB ? vA : vB;
-                                    const loser = slopeA < slopeB ? vB : vA;
-                                    const costAtCross = calculateVehicleCost(winner, crossKm);
-                                    crossovers.push({
-                                        km: Math.round(crossKm),
-                                        cost: costAtCross,
-                                        winner,
-                                        loser,
-                                        isPermanent: seg.start >= 120000 || !includeBatteryMilestone || (winner.batteryStepCost === 0 && loser.batteryStepCost === 0)
-                                    });
-                                }
-                            }
+                        const baseA = calculateVehicleCost(vA, k1 + 1e-4) - slopeA * (k1 + 1e-4);
+                        const baseB = calculateVehicleCost(vB, k1 + 1e-4) - slopeB * (k1 + 1e-4);
+                        const crossKm = (baseB - baseA) / deltaSlope;
+
+                        if (crossKm >= k1 && crossKm <= k2 && crossKm >= 1000 && crossKm <= distanceHorizon) {
+                            const winner = slopeA < slopeB ? vA : vB;
+                            const loser = slopeA < slopeB ? vB : vA;
+                            const roundedKm = Math.round(crossKm);
+                            const dedupKey = `${winner.id}__${loser.id}__${Math.round(roundedKm / 200)}`;
+                            if (seenKeys.has(dedupKey)) continue;
+                            seenKeys.add(dedupKey);
+
+                            const costAtCross = calculateVehicleCost(winner, roundedKm);
+                            const costWinnerEnd = calculateVehicleCost(winner, distanceHorizon);
+                            const costLoserEnd = calculateVehicleCost(loser, distanceHorizon);
+                            const savingsAtHorizon = Math.max(0, costLoserEnd - costWinnerEnd);
+
+                            const priorCross = crossovers.some(c => c.winner.id === winner.id && c.loser.id === loser.id);
+                            const isPostBattery = priorCross || (includeBatteryMilestone && winner.batteryStepKm > 0 && roundedKm > winner.batteryStepKm);
+
+                            crossovers.push({
+                                km: roundedKm,
+                                cost: costAtCross,
+                                winner,
+                                loser,
+                                years: (roundedKm / 20000).toFixed(1),
+                                savingsAtHorizon,
+                                isPostBattery,
+                                isPermanent: k2 >= distanceHorizon
+                            });
                         }
-                    });
+                    }
                 }
             }
 
-            // Deduplicate and sort by km
             crossovers.sort((a, b) => a.km - b.km);
             return crossovers;
         }
 
+        // --- 3. CHART.JS VISUALIZATION ENGINE ---
+        let tcoChartInstance = null;
+        let calculatedCrossovers = [];
+
         function renderChart() {
-            const container = document.getElementById('chart-wrapper');
-            const rect = container.getBoundingClientRect();
-            const width = rect.width;
-            const height = rect.height;
+            const canvas = document.getElementById('tcoChart');
+            if (!canvas) return;
 
-            ctx.clearRect(0, 0, width, height);
-
-            // Padding
-            const padLeft = 60;
-            const padRight = 40;
-            const padTop = 44;
-            const padBottom = 50;
-            const chartW = width - padLeft - padRight;
-            const chartH = height - padTop - padBottom;
-
-            // In-Canvas Centered Chart Title (matching reference image)
-            const activePreset = PRESETS[activePresetId];
-            const chartTitle = activePreset ? (currentLang === 'en' ? activePreset.titleEn : activePreset.title) : 'Total Cost of Ownership';
-            ctx.save();
-            ctx.fillStyle = '#0f172a';
-            ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(chartTitle, width / 2, 22);
-            ctx.restore();
-
-            // Y-range determination
-            let minY = 200;
-            let maxY = 800;
-            let yStep = 100;
-
-            if (activePresetId === 'avanza-veloz') {
-                // Fixed calibration scale matching reference image
-                minY = 200;
-                maxY = 800;
-                yStep = 100;
-            } else {
-                const activeVehicles = currentVehicles.filter(v => !hiddenSeriesIds.has(v.id));
-                if (activeVehicles.length > 0) {
-                    let actualMin = Infinity;
-                    let actualMax = -Infinity;
-                    activeVehicles.forEach(v => {
-                        const c0 = calculateVehicleCost(v, 0);
-                        const cEnd = calculateVehicleCost(v, distanceHorizon);
-                        if (c0 < actualMin) actualMin = c0;
-                        if (cEnd > actualMax) actualMax = cEnd;
-                    });
-                    minY = Math.floor((actualMin - 40) / 50) * 50;
-                    maxY = Math.ceil((actualMax + 60) / 50) * 50;
-                    if (minY < 0) minY = 0;
-                }
-                yStep = (maxY - minY) > 400 ? 100 : 50;
+            if (typeof Chart === 'undefined') {
+                setTimeout(renderChart, 100);
+                return;
             }
 
-            const scaleX = km => padLeft + (km / distanceHorizon) * chartW;
-            const scaleY = cost => padTop + chartH - ((cost - minY) / (maxY - minY)) * chartH;
-
-            // 1. Draw Grid Lines & Ticks
-            ctx.strokeStyle = '#e2e8f0';
-            ctx.lineWidth = 1;
-            ctx.setLineDash([4, 4]);
-
-            // Y Grid
-            ctx.fillStyle = '#64748b';
-            ctx.font = '11px "JetBrains Mono", monospace';
-            ctx.textAlign = 'right';
-            ctx.textBaseline = 'middle';
-
-            for (let yVal = minY; yVal <= maxY; yVal += yStep) {
-                const py = scaleY(yVal);
-                ctx.beginPath();
-                ctx.moveTo(padLeft, py);
-                ctx.lineTo(width - padRight, py);
-                ctx.stroke();
-
-                ctx.fillText(yVal.toString(), padLeft - 10, py);
-            }
-
-            // X Grid
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'top';
-            const xStep = distanceHorizon <= 150000 ? 25000 : 50000;
-            for (let xVal = 0; xVal <= distanceHorizon; xVal += xStep) {
-                const px = scaleX(xVal);
-                ctx.beginPath();
-                ctx.moveTo(px, padTop);
-                ctx.lineTo(px, height - padBottom);
-                ctx.stroke();
-
-                ctx.fillText(xVal.toLocaleString(), px, height - padBottom + 10);
-            }
-
-            ctx.setLineDash([]); // Reset dash
-
-            // 2. Draw Solid Axis Lines & Small Tick Marks
-            ctx.strokeStyle = '#334155';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.moveTo(padLeft, padTop);
-            ctx.lineTo(padLeft, height - padBottom);
-            ctx.lineTo(width - padRight, height - padBottom);
-            ctx.stroke();
-
-            // Axis ticks
-            ctx.beginPath();
-            for (let yVal = minY; yVal <= maxY; yVal += yStep) {
-                const py = scaleY(yVal);
-                ctx.moveTo(padLeft - 4, py);
-                ctx.lineTo(padLeft, py);
-            }
-            for (let xVal = 0; xVal <= distanceHorizon; xVal += xStep) {
-                const px = scaleX(xVal);
-                ctx.moveTo(px, height - padBottom);
-                ctx.lineTo(px, height - padBottom + 4);
-            }
-            ctx.stroke();
-
-            // 3. Milestone: Hybrid Battery Replacement Dashed Line at 120,000 km
-            if (includeBatteryMilestone && distanceHorizon >= 120000) {
-                const px120 = scaleX(120000);
-                ctx.strokeStyle = '#94a3b8';
-                ctx.lineWidth = 1.5;
-                ctx.setLineDash([6, 6]);
-                ctx.beginPath();
-                ctx.moveTo(px120, padTop);
-                ctx.lineTo(px120, height - padBottom);
-                ctx.stroke();
-                ctx.setLineDash([]);
-
-                // Milestone Label Badge at bottom (3 lines matching reference)
-                const labelW = 126;
-                const labelH = 44;
-                const lx = px120 + 8;
-                const ly = height - padBottom - 52;
-
-                ctx.fillStyle = '#f8fafc';
-                ctx.strokeStyle = '#cbd5e1';
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                drawRoundRect(ctx, lx, ly, labelW, labelH, 6);
-                ctx.fill();
-                ctx.stroke();
-
-                ctx.fillStyle = '#64748b';
-                ctx.font = '10px "Plus Jakarta Sans", sans-serif';
-                ctx.textAlign = 'left';
-                ctx.fillText('Hybrid Battery', lx + 8, ly + 13);
-                ctx.fillText('Replaced for all HVs', lx + 8, ly + 25);
-                ctx.fillStyle = '#94a3b8';
-                ctx.font = '9px "JetBrains Mono", monospace';
-                ctx.fillText('(120,000 km)', lx + 8, ly + 37);
-            }
-
-            const activeVehicles = currentVehicles.filter(v => !hiddenSeriesIds.has(v.id));
-
-            // 4. Draw Vehicle Curves
-            activeVehicles.forEach(v => {
-                ctx.strokeStyle = v.color;
-                ctx.lineWidth = 2.75;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-
-                ctx.beginPath();
-
-                if (includeBatteryMilestone && v.batteryStepKm > 0 && v.batteryStepKm <= distanceHorizon) {
-                    // Pre-step
-                    const x0 = scaleX(0);
-                    const y0 = scaleY(calculateVehicleCost(v, 0));
-                    const xStep = scaleX(v.batteryStepKm);
-                    const yPre = scaleY(v.msrp + (v.runningRate * v.batteryStepKm) / 1e6);
-                    const yPost = scaleY(v.msrp + (v.runningRate * v.batteryStepKm) / 1e6 + v.batteryStepCost);
-
-                    ctx.moveTo(x0, y0);
-                    ctx.lineTo(xStep, yPre);
-                    ctx.lineTo(xStep, yPost); // Vertical step jump
-
-                    const xEnd = scaleX(distanceHorizon);
-                    const yEnd = scaleY(calculateVehicleCost(v, distanceHorizon));
-                    ctx.lineTo(xEnd, yEnd);
-                } else {
-                    const x0 = scaleX(0);
-                    const y0 = scaleY(calculateVehicleCost(v, 0));
-                    const xEnd = scaleX(distanceHorizon);
-                    const yEnd = scaleY(calculateVehicleCost(v, distanceHorizon));
-                    ctx.moveTo(x0, y0);
-                    ctx.lineTo(xEnd, yEnd);
-                }
-
-                ctx.stroke();
-
-                // Origin Dot at x = 0
-                ctx.fillStyle = v.color;
-                ctx.beginPath();
-                ctx.arc(scaleX(0), scaleY(calculateVehicleCost(v, 0)), 4.5, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
-            // 5. In-Canvas Top-Left Legend Box (matching reference image)
-            if (activeVehicles.length > 0) {
-                const legX = padLeft + 16;
-                const legY = padTop + 14;
-                const legLineH = 18;
-                const legPad = 10;
-                ctx.font = '500 10.5px "Plus Jakarta Sans", sans-serif';
-                let maxLabelW = 0;
-                activeVehicles.forEach(v => {
-                    const w = ctx.measureText(v.name).width;
-                    if (w > maxLabelW) maxLabelW = w;
-                });
-                const legW = Math.max(180, maxLabelW + 42);
-                const legH = legPad * 2 + activeVehicles.length * legLineH;
-
-                ctx.save();
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.94)';
-                ctx.strokeStyle = '#cbd5e1';
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                drawRoundRect(ctx, legX, legY, legW, legH, 6);
-                ctx.fill();
-                ctx.stroke();
-
-                activeVehicles.forEach((v, i) => {
-                    const itemY = legY + legPad + i * legLineH + legLineH / 2;
-                    ctx.strokeStyle = v.color;
-                    ctx.lineWidth = 2.5;
-                    ctx.beginPath();
-                    ctx.moveTo(legX + 10, itemY);
-                    ctx.lineTo(legX + 28, itemY);
-                    ctx.stroke();
-
-                    ctx.fillStyle = '#1e293b';
-                    ctx.textAlign = 'left';
-                    ctx.textBaseline = 'middle';
-                    ctx.font = '500 10.5px "Plus Jakarta Sans", sans-serif';
-                    ctx.fillText(v.name, legX + 34, itemY);
-                });
-                ctx.restore();
-            }
-
-            // 6. Draw Crossover Breakeven Badges & Pointers
+            recalculateRunningRates();
             calculatedCrossovers = findCrossovers();
 
-            calculatedCrossovers.forEach((cross, idx) => {
-                const px = scaleX(cross.km);
-                const py = scaleY(cross.cost);
+            const activeVehicles = currentVehicles.filter(v => !hiddenSeriesIds.has(v.id));
 
-                // Draw Intersection Point (Black ring dot with white border)
-                ctx.fillStyle = '#0f172a';
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(px, py, 5, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.stroke();
+            // Sampling points every 5,000 km
+            const stepSize = distanceHorizon <= 150000 ? 2500 : 5000;
+            const kmPoints = [];
+            for (let km = 0; km <= distanceHorizon; km += stepSize) {
+                kmPoints.push(km);
+            }
+            if (kmPoints[kmPoints.length - 1] !== distanceHorizon) {
+                kmPoints.push(distanceHorizon);
+            }
 
-                // Short names for badge clarity matching reference image
-                const textWinner = cross.winner.shortName || cross.winner.name.split(' (')[0];
-                const textLoser = cross.loser.shortName || cross.loser.name.split(' (')[0];
-                const line1 = cross.isPermanent ? `${textWinner} permanently beats` : `${textWinner} beats`;
-                const line2 = textLoser;
-                const line3 = `(${cross.km.toLocaleString()} km)`;
+            let actualMin = Infinity;
+            let actualMax = -Infinity;
+            activeVehicles.forEach(v => {
+                const c0 = calculateVehicleCost(v, 0);
+                const cEnd = calculateVehicleCost(v, distanceHorizon);
+                if (c0 < actualMin) actualMin = c0;
+                if (cEnd > actualMax) actualMax = cEnd;
+            });
+            if (actualMin === Infinity) {
+                actualMin = 200;
+                actualMax = 800;
+            }
+            const minY = Math.max(0, Math.floor((actualMin - 30) / 50) * 50);
+            const maxY = Math.ceil((actualMax + 50) / 50) * 50;
 
-                ctx.font = 'bold 9.5px "Plus Jakarta Sans", sans-serif';
-                const w1 = ctx.measureText(line1).width;
-                ctx.font = '9.5px "Plus Jakarta Sans", sans-serif';
-                const w2 = ctx.measureText(line2).width;
-                ctx.font = '9px "JetBrains Mono", monospace';
-                const w3 = ctx.measureText(line3).width;
-                const badgeW = Math.max(w1, w2, w3) + 20;
-                const badgeH = 46;
+            const datasets = [];
 
-                // Position badge offsets
-                let bx, by;
-                if (activePresetId === 'avanza-veloz') {
-                    if (idx === 0) {
-                        // 48,082 km: Above-left
-                        bx = px - badgeW / 2 - 25;
-                        by = py - badgeH - 35;
-                    } else if (idx === 1) {
-                        // 98,696 km: Below
-                        bx = px - 15;
-                        by = py + 30;
-                    } else if (idx === 2) {
-                        // 170,935 km: Above-left
-                        bx = px - badgeW / 2 - 25;
-                        by = py - badgeH - 35;
-                    } else {
-                        bx = px + 20;
-                        by = py - badgeH - 20;
-                    }
-                } else {
-                    const isAbove = py > padTop + chartH / 2;
-                    bx = Math.max(padLeft + 10, Math.min(width - padRight - badgeW - 10, px - badgeW / 2 + (idx % 2 === 0 ? -30 : 30)));
-                    by = isAbove ? (py - badgeH - 35) : (py + 35);
+            activeVehicles.forEach(v => {
+                const xVals = new Set(kmPoints);
+                const hasBatteryJump = includeBatteryMilestone && v.batteryStepKm > 0 && v.batteryStepCost > 0 && v.batteryStepKm <= distanceHorizon;
+                if (hasBatteryJump) {
+                    xVals.add(v.batteryStepKm - 0.001);
+                    xVals.add(v.batteryStepKm);
                 }
+                const data = Array.from(xVals).sort((a, b) => a - b).map(x => ({
+                    x: x,
+                    y: calculateVehicleCost(v, x)
+                }));
 
-                // Keep inside chart bounds
-                bx = Math.max(padLeft + 5, Math.min(width - padRight - badgeW - 5, bx));
-                by = Math.max(padTop + 5, Math.min(height - padBottom - badgeH - 5, by));
-
-                // Leader line starting point (from badge edge nearest to intersection dot)
-                let startLineX = bx + badgeW / 2;
-                let startLineY = by + (by < py ? badgeH : 0);
-
-                // Draw Leader Line
-                ctx.strokeStyle = '#0f172a';
-                ctx.lineWidth = 1.25;
-                ctx.beginPath();
-                ctx.moveTo(startLineX, startLineY);
-                ctx.lineTo(px, py);
-                ctx.stroke();
-
-                // Draw Arrowhead at (px, py) pointing from (startLineX, startLineY)
-                drawArrowhead(ctx, startLineX, startLineY, px, py, 6);
-
-                // Draw Badge Container
-                ctx.fillStyle = '#ffffff';
-                ctx.strokeStyle = cross.winner.color;
-                ctx.lineWidth = 1.5;
-                ctx.beginPath();
-                drawRoundRect(ctx, bx, by, badgeW, badgeH, 6);
-                ctx.fill();
-                ctx.stroke();
-
-                // Badge Texts (3 lines)
-                ctx.textAlign = 'center';
-                const centerX = bx + badgeW / 2;
-
-                ctx.fillStyle = cross.winner.color;
-                ctx.font = 'bold 9.5px "Plus Jakarta Sans", sans-serif';
-                ctx.fillText(line1, centerX, by + 14);
-
-                ctx.fillStyle = '#334155';
-                ctx.font = '500 9.5px "Plus Jakarta Sans", sans-serif';
-                ctx.fillText(line2, centerX, by + 27);
-
-                ctx.fillStyle = cross.winner.color;
-                ctx.font = '600 9px "JetBrains Mono", monospace';
-                ctx.fillText(line3, centerX, by + 39);
+                datasets.push({
+                    type: 'line',
+                    label: v.name,
+                    data: data,
+                    borderColor: v.color,
+                    backgroundColor: v.color,
+                    borderWidth: 2.75,
+                    tension: 0,
+                    pointRadius: 0,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: v.color,
+                    pointHoverBorderColor: '#ffffff',
+                    pointHoverBorderWidth: 2,
+                    vehicleRef: v
+                });
             });
 
-            // 7. Axes Titles
-            ctx.save();
-            ctx.fillStyle = '#475569';
-            ctx.font = '600 11px "Plus Jakarta Sans", sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('Distance Driven (km)', padLeft + chartW / 2, height - 12);
-
-            ctx.translate(16, padTop + chartH / 2);
-            ctx.rotate(-Math.PI / 2);
-            ctx.fillText('Cumulative Cost (Millions Rp)', 0, 0);
-            ctx.restore();
-
-            // 8. Hover Scrubber & Dynamic Crosshair
-            if (hoverXKm !== null && hoverXKm >= 0 && hoverXKm <= distanceHorizon) {
-                const hx = scaleX(hoverXKm);
-                ctx.strokeStyle = '#64748b';
-                ctx.lineWidth = 1;
-                ctx.setLineDash([3, 3]);
-                ctx.beginPath();
-                ctx.moveTo(hx, padTop);
-                ctx.lineTo(hx, height - padBottom);
-                ctx.stroke();
-                ctx.setLineDash([]);
-
-                // Draw dots on each vehicle curve at hover km
-                activeVehicles.forEach(v => {
-                    const hy = scaleY(calculateVehicleCost(v, hoverXKm));
-                    ctx.fillStyle = v.color;
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.arc(hx, hy, 5, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.stroke();
+            if (calculatedCrossovers.length > 0) {
+                datasets.push({
+                    type: 'scatter',
+                    label: currentLang === 'en' ? 'Breakeven Crossover' : 'Titik Impas (Crossover)',
+                    data: calculatedCrossovers.map(c => ({
+                        x: c.km,
+                        y: c.cost,
+                        crossoverRef: c
+                    })),
+                    backgroundColor: '#0f172a',
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 9,
+                    showLine: false
                 });
             }
-        }
 
-        // --- 3. INTERACTIVE CANVAS HOVER & TOOLTIP (MOUSE & TOUCH SUPPORT) ---
-        canvas.addEventListener('mousemove', e => {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
+            const batteryMilestonePlugin = {
+                id: 'batteryMilestonePlugin',
+                afterDraw(chart) {
+                    if (!includeBatteryMilestone || distanceHorizon < 120000) return;
+                    const { ctx, chartArea, scales: { x } } = chart;
+                    const px120 = x.getPixelForValue(120000);
+                    if (px120 < chartArea.left || px120 > chartArea.right) return;
 
-            const padLeft = 60;
-            const padRight = 40;
-            const chartW = rect.width - padLeft - padRight;
+                    ctx.save();
+                    ctx.strokeStyle = '#94a3b8';
+                    ctx.lineWidth = 1.5;
+                    ctx.setLineDash([5, 5]);
+                    ctx.beginPath();
+                    ctx.moveTo(px120, chartArea.top);
+                    ctx.lineTo(px120, chartArea.bottom);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
 
-            if (x >= padLeft && x <= rect.width - padRight) {
-                hoverXKm = Math.round(((x - padLeft) / chartW) * distanceHorizon);
-                renderChart();
-                updateTooltip(e.clientX, e.clientY, hoverXKm);
+                    const labelText = currentLang === 'en' ? '🔋 Battery Milestone (120k km)' : '🔋 Milestone Baterai (120k km)';
+                    ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
+                    const textWidth = ctx.measureText(labelText).width;
+                    const badgeW = textWidth + 16;
+                    const badgeH = 22;
+                    const badgeX = Math.max(chartArea.left + 6, Math.min(chartArea.right - badgeW - 6, px120 + 8));
+                    const badgeY = chartArea.bottom - badgeH - 10;
+
+                    ctx.fillStyle = 'rgba(248, 250, 252, 0.95)';
+                    ctx.strokeStyle = '#cbd5e1';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    if (typeof ctx.roundRect === 'function') {
+                        ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 6);
+                    } else {
+                        ctx.rect(badgeX, badgeY, badgeW, badgeH);
+                    }
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#475569';
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(labelText, badgeX + 8, badgeY + badgeH / 2);
+                    ctx.restore();
+                }
+            };
+
+            const verticalGuidelinePlugin = {
+                id: 'verticalGuidelinePlugin',
+                afterDraw(chart) {
+                    if (chart.tooltip && chart.tooltip._active && chart.tooltip._active.length) {
+                        const activePoint = chart.tooltip._active[0];
+                        const { ctx, chartArea } = chart;
+                        const x = activePoint.element.x;
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.moveTo(x, chartArea.top);
+                        ctx.lineTo(x, chartArea.bottom);
+                        ctx.lineWidth = 1;
+                        ctx.strokeStyle = 'rgba(100, 116, 139, 0.4)';
+                        ctx.setLineDash([4, 4]);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                }
+            };
+
+            const whiteBackgroundPlugin = {
+                id: 'whiteBackgroundPlugin',
+                beforeDraw(chart) {
+                    const { ctx, width, height } = chart;
+                    ctx.save();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, width, height);
+                    ctx.restore();
+                }
+            };
+
+            if (tcoChartInstance) {
+                tcoChartInstance.data.datasets = datasets;
+                tcoChartInstance.options.scales.x.max = distanceHorizon;
+                tcoChartInstance.options.scales.y.min = minY;
+                tcoChartInstance.options.scales.y.max = maxY;
+                tcoChartInstance.options.scales.x.title.text = currentLang === 'en' ? 'Distance Driven (km)' : 'Jarak Tempuh Kumulatif (km)';
+                tcoChartInstance.options.scales.y.title.text = currentLang === 'en' ? 'Cumulative TCO (Million IDR)' : 'Akumulasi Biaya TCO (Juta Rupiah)';
+                tcoChartInstance.update();
             } else {
-                hoverXKm = null;
-                renderChart();
-                hideTooltip();
+                const ctx = canvas.getContext('2d');
+                tcoChartInstance = new Chart(ctx, {
+                    data: { datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: { duration: 300 },
+                        resizeDelay: 50,
+                        interaction: {
+                            mode: 'nearest',
+                            axis: 'x',
+                            intersect: false
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                enabled: true,
+                                backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                titleColor: '#f8fafc',
+                                bodyColor: '#e2e8f0',
+                                borderColor: '#334155',
+                                borderWidth: 1,
+                                padding: 12,
+                                cornerRadius: 8,
+                                titleFont: { family: 'Plus Jakarta Sans', size: 12, weight: 'bold' },
+                                bodyFont: { family: 'JetBrains Mono', size: 11 },
+                                filter: (item) => {
+                                    if (item.dataset.type === 'scatter') {
+                                        const c = item.raw.crossoverRef;
+                                        return Math.abs(item.parsed.x - c.km) <= 5000;
+                                    }
+                                    return true;
+                                },
+                                itemSort: (a, b) => {
+                                    if (a.dataset.type === 'scatter') return 1;
+                                    if (b.dataset.type === 'scatter') return -1;
+                                    return a.parsed.y - b.parsed.y;
+                                },
+                                callbacks: {
+                                    title: (items) => {
+                                        if (!items || items.length === 0) return '';
+                                        const scatterItem = items.find(it => it.dataset.type === 'scatter');
+                                        if (scatterItem) {
+                                            const c = scatterItem.raw.crossoverRef;
+                                            const loc = currentLang === 'en' ? 'en-US' : 'id-ID';
+                                            return currentLang === 'en'
+                                                ? `🎯 Breakeven: ${c.km.toLocaleString(loc)} km (~${c.years} yrs)`
+                                                : `🎯 Titik Impas: ${c.km.toLocaleString(loc)} km (~${c.years} thn)`;
+                                        }
+                                        const firstLine = items.find(it => it.dataset.type === 'line') || items[0];
+                                        const km = Math.round(firstLine.parsed.x);
+                                        const yrs = (km / 20000).toFixed(1);
+                                        const loc = currentLang === 'en' ? 'en-US' : 'id-ID';
+                                        return currentLang === 'en'
+                                            ? `KM: ${km.toLocaleString(loc)} km (~${yrs} Years)`
+                                            : `KM: ${km.toLocaleString(loc)} km (~${yrs} Tahun)`;
+                                    },
+                                    label: (context) => {
+                                        const loc = currentLang === 'en' ? 'en-US' : 'id-ID';
+                                        if (context.dataset.type === 'scatter') {
+                                            const c = context.raw.crossoverRef;
+                                            const winnerName = c.winner.shortName || c.winner.name.split(' (')[0];
+                                            const loserName = c.loser.shortName || c.loser.name.split(' (')[0];
+                                            const prefix = c.isPostBattery ? (currentLang === 'en' ? ' 🔋 [Post-Battery] ' : ' 🔋 [Pasca Baterai] ') : ' 🎯 ';
+                                            return currentLang === 'en'
+                                                ? `${prefix}${winnerName} beats ${loserName} (${c.km.toLocaleString(loc)} km, Rp ${c.cost.toFixed(1)}M)`
+                                                : `${prefix}${winnerName} menyalip ${loserName} (${c.km.toLocaleString(loc)} km, Rp ${c.cost.toFixed(1)}M)`;
+                                        }
+                                        const v = context.dataset.vehicleRef;
+                                        const label = v ? (v.shortName || v.name) : context.dataset.label;
+                                        const cost = context.parsed.y;
+                                        return currentLang === 'en'
+                                            ? ` ${label}: Rp ${cost.toFixed(1)}M`
+                                            : ` ${label}: Rp ${cost.toFixed(1)} Juta`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                min: 0,
+                                max: distanceHorizon,
+                                title: {
+                                    display: true,
+                                    text: currentLang === 'en' ? 'Distance Driven (km)' : 'Jarak Tempuh Kumulatif (km)',
+                                    color: '#475569',
+                                    font: { family: 'Plus Jakarta Sans', weight: '600', size: 12 }
+                                },
+                                ticks: {
+                                    callback: (val) => val.toLocaleString('id-ID') + ' km',
+                                    font: { family: 'JetBrains Mono', size: 10 },
+                                    color: '#64748b'
+                                },
+                                grid: { color: '#f1f5f9' }
+                            },
+                            y: {
+                                type: 'linear',
+                                min: minY,
+                                max: maxY,
+                                title: {
+                                    display: true,
+                                    text: currentLang === 'en' ? 'Cumulative TCO (Million IDR)' : 'Akumulasi Biaya TCO (Juta Rupiah)',
+                                    color: '#475569',
+                                    font: { family: 'Plus Jakarta Sans', weight: '600', size: 12 }
+                                },
+                                ticks: {
+                                    callback: (val) => 'Rp ' + val + 'M',
+                                    font: { family: 'JetBrains Mono', size: 10 },
+                                    color: '#64748b'
+                                },
+                                grid: { color: '#f1f5f9' }
+                            }
+                        }
+                    },
+                    plugins: [whiteBackgroundPlugin, batteryMilestonePlugin, verticalGuidelinePlugin]
+                });
             }
-        });
-
-        canvas.addEventListener('mouseleave', () => {
-            hoverXKm = null;
-            renderChart();
-            hideTooltip();
-        });
-
-        function handleTouchScrub(e) {
-            if (!e.touches || e.touches.length === 0) return;
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            const x = touch.clientX - rect.left;
-            const padLeft = 60;
-            const padRight = 40;
-            const chartW = rect.width - padLeft - padRight;
-
-            if (x >= padLeft && x <= rect.width - padRight) {
-                hoverXKm = Math.round(((x - padLeft) / chartW) * distanceHorizon);
-                renderChart();
-                updateTooltip(touch.clientX, touch.clientY, hoverXKm);
-            }
-        }
-
-        canvas.addEventListener('touchstart', handleTouchScrub, { passive: true });
-        canvas.addEventListener('touchmove', handleTouchScrub, { passive: true });
-        canvas.addEventListener('touchend', () => {
-            hoverXKm = null;
-            renderChart();
-            hideTooltip();
-        }, { passive: true });
-
-        function updateTooltip(clientX, clientY, km) {
-            const tip = document.getElementById('chart-tooltip');
-            const activeVehicles = currentVehicles.filter(v => !hiddenSeriesIds.has(v.id));
-            if (activeVehicles.length === 0) return;
-
-            let html = `<div class="font-bold text-slate-300 pb-1 mb-1 border-b border-slate-700 flex justify-between gap-4">
-                <span>KM: ${km.toLocaleString()} km</span>
-                <span class="text-slate-400 font-normal">~${(km / 20000).toFixed(1)} Thn</span>
-            </div><div class="space-y-1 text-[11px]">`;
-
-            // Sort vehicles by cost ascending at this km
-            const sorted = [...activeVehicles].map(v => ({
-                name: v.name,
-                cost: calculateVehicleCost(v, km),
-                color: v.color
-            })).sort((a, b) => a.cost - b.cost);
-
-            const cheapestCost = sorted[0].cost;
-
-            sorted.forEach((item, idx) => {
-                const diff = item.cost - cheapestCost;
-                const badge = idx === 0 ? '<span class="text-emerald-400 font-bold">★ TERMURAH</span>' : `+Rp ${diff.toFixed(1)}M`;
-                html += `<div class="flex items-center justify-between gap-3">
-                    <span class="flex items-center gap-1.5" style="color: ${item.color}">
-                        <span class="w-2 h-2 rounded-full" style="background-color: ${item.color}"></span>
-                        ${item.name.split(' (')[0]}
-                    </span>
-                    <span class="font-bold">Rp ${item.cost.toFixed(1)}M <span class="text-[10px] text-slate-400 font-normal">(${badge})</span></span>
-                </div>`;
-            });
-
-            html += `</div>`;
-            tip.innerHTML = html;
-            tip.classList.remove('hidden');
-        }
-
-        function hideTooltip() {
-            document.getElementById('chart-tooltip').classList.add('hidden');
         }
 
         // --- 4. PRESETS & DYNAMIC UI UPDATE ---
@@ -2070,28 +1999,28 @@
             const preset = PRESETS[presetId];
             if (!preset) return;
 
-            // Deep clone to prevent preset vehicle template mutation
             currentVehicles = JSON.parse(JSON.stringify(preset.vehicles));
             hiddenSeriesIds.clear();
 
-            // Update Tab Active Style
             document.querySelectorAll('.preset-tab-btn').forEach(b => {
-                b.classList.remove('active', 'bg-white', 'text-emerald-800', 'shadow-xs', 'border-emerald-200');
+                b.classList.remove('active', 'bg-white', 'text-emerald-800', 'shadow-xs', 'border', 'border-emerald-200');
                 b.classList.add('text-slate-600');
             });
 
             const activeBtn = document.getElementById(
-                presetId === 'avanza-veloz' ? 'btn-preset-avanza' :
-                presetId === 'six-powertrains' ? 'btn-preset-six' :
-                presetId === 'zenix-matchup' ? 'btn-preset-zenix' : 'btn-preset-compact'
+                presetId === 'six-crossover' ? 'btn-preset-six-crossover' :
+                presetId === 'six-family7' ? 'btn-preset-six-family7' :
+                presetId === 'zenix-matchup' ? 'btn-preset-zenix' : 'btn-preset-avanza'
             );
             if (activeBtn) {
                 activeBtn.classList.add('active', 'bg-white', 'text-emerald-800', 'shadow-xs', 'border', 'border-emerald-200');
                 activeBtn.classList.remove('text-slate-600');
             }
 
-            // Update Title
-            document.getElementById('chart-main-title').textContent = currentLang === 'en' ? preset.titleEn : preset.title;
+            const titleEl = document.getElementById('chart-main-title');
+            if (titleEl) {
+                titleEl.textContent = currentLang === 'en' ? preset.titleEn : preset.title;
+            }
 
             renderSeriesPills();
             renderChart();
@@ -2101,19 +2030,22 @@
 
         function renderSeriesPills() {
             const container = document.getElementById('series-legend-pills');
+            if (!container) return;
             container.innerHTML = '';
 
             currentVehicles.forEach(v => {
                 const isHidden = hiddenSeriesIds.has(v.id);
                 const pill = document.createElement('button');
                 pill.type = 'button';
+                pill.setAttribute('aria-pressed', (!isHidden).toString());
+                pill.setAttribute('aria-label', `${v.name} toggle visibility`);
                 pill.onclick = () => toggleSeriesVisibility(v.id);
                 pill.className = `inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all border ${
-                    isHidden ? 'bg-slate-100 text-slate-400 border-slate-200 opacity-60' : 'bg-white text-slate-800 border-slate-300 shadow-2xs'
+                    isHidden ? 'bg-slate-100 text-slate-400 border-slate-200 opacity-60' : 'bg-white text-slate-800 border-slate-300 shadow-2xs hover:border-emerald-400'
                 }`;
                 pill.innerHTML = `
-                    <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${isHidden ? '#94a3b8' : v.color}"></span>
-                    <span>${v.name}</span>
+                    <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${isHidden ? '#94a3b8' : v.color}"></span>
+                    <span>${v.shortName || v.name.split(' (')[0]}</span>
                     <span class="text-[10px] text-slate-400 font-normal">Rp ${v.msrp}M</span>
                 `;
                 container.appendChild(pill);
@@ -2137,46 +2069,126 @@
             if (!container) return;
             container.innerHTML = '';
 
-            if (calculatedCrossovers.length === 0) {
+            const activeVehicles = currentVehicles.filter(v => !hiddenSeriesIds.has(v.id));
+            const iceVehicle = activeVehicles.find(v => v.powertrain === 'ICE');
+            const day1ParityList = [];
+            const locale = currentLang === 'en' ? 'en-US' : 'id-ID';
+
+            if (iceVehicle) {
+                activeVehicles.forEach(v => {
+                    if (v.id !== iceVehicle.id && v.msrp <= iceVehicle.msrp && v.runningRate < iceVehicle.runningRate) {
+                        const costIceEnd = calculateVehicleCost(iceVehicle, distanceHorizon);
+                        const costVEnd = calculateVehicleCost(v, distanceHorizon);
+                        const savings = Math.max(0, costIceEnd - costVEnd);
+                        day1ParityList.push({ vehicle: v, benchmark: iceVehicle, savings });
+                    }
+                });
+            }
+
+            if ((!calculatedCrossovers || calculatedCrossovers.length === 0) && day1ParityList.length === 0) {
                 container.innerHTML = `
-                    <div class="col-span-3 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-500 text-center">
+                    <div class="col-span-full p-5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-500 text-center">
                         ${currentLang === 'en' ? 'No crossover breakeven point detected within current distance range.' : 'Tidak ada garis persilangan breakeven terdeteksi dalam rentang jarak saat ini.'}
                     </div>
                 `;
                 return;
             }
 
-            calculatedCrossovers.slice(0, 6).forEach(cross => {
+            // 1. Render Day 1 Parity (Instant Breakeven) cards first
+            day1ParityList.forEach(({ vehicle: v, benchmark: b, savings }) => {
                 const card = document.createElement('div');
-                card.className = 'p-3.5 rounded-xl border bg-white shadow-2xs transition-all hover:shadow-sm';
-                card.style.borderColor = cross.winner.color + '40';
+                card.className = 'p-4 rounded-2xl border bg-white shadow-soft hover:shadow-md transition-all flex flex-col justify-between ring-1 ring-emerald-500/20';
+                card.style.borderColor = v.color + '60';
 
-                const yrs = (cross.km / 20000).toFixed(1);
-                const winnerName = cross.winner.shortName || cross.winner.name.split(' (')[0];
-                const loserName = cross.loser.shortName || cross.loser.name.split(' (')[0];
+                const vName = v.shortName || v.name.split(' (')[0];
+                const bName = b.shortName || b.name.split(' (')[0];
+
+                const titleText = `★ ${vName} vs ${bName} (0 km)`;
 
                 const desc = currentLang === 'en'
-                    ? `Outperforms <strong>${loserName}</strong> after <strong>~${yrs} years</strong> (at Rp ${cross.cost.toFixed(1)}M cumulative).`
-                    : `Mengalahkan <strong>${loserName}</strong> setelah <strong>~${yrs} tahun</strong> (pada akumulasi Rp ${cross.cost.toFixed(1)} Juta).`;
+                    ? `More affordable from day one (MSRP Rp ${v.msrp.toFixed(1)}M vs Rp ${b.msrp.toFixed(1)}M). Zero payback mileage needed, boosted by 0% tax and lower energy costs. Saves <strong>Rp ${savings.toFixed(1)}M</strong> at ${distanceHorizon.toLocaleString(locale)} km.`
+                    : `Lebih terjangkau sejak hari pertama (MSRP Rp ${v.msrp.toFixed(1)}M vs Rp ${b.msrp.toFixed(1)}M) tanpa perlu jarak tempuh untuk impas, didukung insentif PKB dan energi hemat. Menghemat <strong>Rp ${savings.toFixed(1)} Juta</strong> di ${distanceHorizon.toLocaleString(locale)} km.`;
+
+                const statusText = currentLang === 'en' ? '★ Instant Breakeven' : '★ Impas Hari ke-1';
 
                 card.innerHTML = `
-                    <div class="flex items-center justify-between text-xs font-mono mb-1">
-                        <span class="font-bold flex items-center gap-1" style="color: ${cross.winner.color}">
-                            <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
-                            ${winnerName}
-                        </span>
-                        <span class="text-slate-500 text-[11px]">${cross.km.toLocaleString()} km</span>
+                    <div>
+                        <div class="flex items-center justify-between text-xs font-mono mb-2">
+                            <span class="font-bold flex items-center gap-1.5" style="color: ${v.color}">
+                                <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${v.color}"></span>
+                                ${titleText}
+                            </span>
+                            <span class="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded text-[11px]">0 km (Day 1)</span>
+                        </div>
+                        <p class="text-xs text-slate-600 font-sans leading-relaxed">
+                            ${desc}
+                        </p>
                     </div>
-                    <div class="text-xs text-slate-600 font-sans">
-                        ${desc}
+                    <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                        <span>MSRP Rp ${v.msrp.toFixed(1)}M vs Rp ${b.msrp.toFixed(1)}M</span>
+                        <span class="text-blue-600 font-semibold">${statusText}</span>
                     </div>
                 `;
                 container.appendChild(card);
             });
-            if (window.lucide) lucide.createIcons();
+
+            // 2. Render Crossovers
+            const maxBadges = Math.max(1, 6 - day1ParityList.length);
+            calculatedCrossovers.slice(0, maxBadges).forEach(cross => {
+                const card = document.createElement('div');
+                card.className = 'p-4 rounded-2xl border bg-white shadow-soft hover:shadow-md transition-all flex flex-col justify-between';
+                card.style.borderColor = cross.winner.color + '40';
+
+                const winnerName = cross.winner.shortName || cross.winner.name.split(' (')[0];
+                const loserName = cross.loser.shortName || cross.loser.name.split(' (')[0];
+
+                const postBattTag = cross.isPostBattery
+                    ? (currentLang === 'en' ? ' (Post-Battery)' : ' (Pasca Baterai)')
+                    : '';
+
+                const titleText = currentLang === 'en'
+                    ? `${winnerName}${postBattTag} beats ${loserName}`
+                    : `${winnerName}${postBattTag} menyalip ${loserName}`;
+
+                const horizonText = distanceHorizon.toLocaleString(locale);
+                const desc = cross.isPostBattery
+                    ? (currentLang === 'en'
+                        ? `After traction battery milestone, regains permanent lead at Rp ${cross.cost.toFixed(1)}M cumulative (${cross.km.toLocaleString(locale)} km).${cross.savingsAtHorizon > 0 ? ` Saves <strong>Rp ${cross.savingsAtHorizon.toFixed(1)}M</strong> at ${horizonText} km.` : ''}`
+                        : `Setelah milestone ganti baterai, kembali menyalip permanen pada total Rp ${cross.cost.toFixed(1)} Juta (${cross.km.toLocaleString(locale)} km).${cross.savingsAtHorizon > 0 ? ` Menghemat <strong>Rp ${cross.savingsAtHorizon.toFixed(1)} Juta</strong> di ${horizonText} km.` : ''}`)
+                    : (currentLang === 'en'
+                        ? `Achieves breakeven after <strong>~${cross.years} years</strong> (${cross.km.toLocaleString(locale)} km) at Rp ${cross.cost.toFixed(1)}M cumulative.${cross.savingsAtHorizon > 0 ? ` Saves <strong>Rp ${cross.savingsAtHorizon.toFixed(1)}M</strong> at ${horizonText} km.` : ''}`
+                        : `Mencapai titik impas setelah <strong>~${cross.years} tahun</strong> (${cross.km.toLocaleString(locale)} km) pada total Rp ${cross.cost.toFixed(1)} Juta.${cross.savingsAtHorizon > 0 ? ` Menghemat <strong>Rp ${cross.savingsAtHorizon.toFixed(1)} Juta</strong> di ${horizonText} km.` : ''}`);
+
+                const statusText = cross.isPostBattery
+                    ? (currentLang === 'en' ? '🔋 Post-Battery' : '🔋 Pasca Baterai')
+                    : (cross.isPermanent
+                        ? (currentLang === 'en' ? '✓ Permanent' : '✓ Permanen')
+                        : (currentLang === 'en' ? 'Crossover' : 'Persilangan'));
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between text-xs font-mono mb-2">
+                            <span class="font-bold flex items-center gap-1.5" style="color: ${cross.winner.color}">
+                                <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${cross.winner.color}"></span>
+                                ${titleText}
+                            </span>
+                            <span class="text-slate-500 font-bold bg-slate-100 px-2 py-0.5 rounded text-[11px]">${cross.km.toLocaleString(locale)} km</span>
+                        </div>
+                        <p class="text-xs text-slate-600 font-sans leading-relaxed">
+                            ${desc}
+                        </p>
+                    </div>
+                    <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                        <span>Rp ${cross.cost.toFixed(1)}M ${currentLang === 'en' ? 'breakeven' : 'crossover'}</span>
+                        <span class="text-emerald-600 font-semibold">${statusText}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            if (window.lucide) window.lucide.createIcons();
         }
 
-        // --- 5. BREAKDOWN TABLE CALCULATION (RECONCILED WITH RUNNING RATE) ---
+        // --- 5. BREAKDOWN TABLE CALCULATION ---
         function setBreakdownKm(km, btnEl) {
             selectedBreakdownDistance = km;
             document.querySelectorAll('.breakdown-km-btn').forEach(btn => {
@@ -2194,17 +2206,20 @@
             const years = km / 20000;
             const msrp = v.msrp;
             let batteryCost = 0;
-            if (includeBatteryMilestone && v.batteryStepKm > 0 && km >= v.batteryStepKm) {
+            if (includeBatteryMilestone && v.batteryStepKm > 0 && v.batteryStepCost > 0 && km >= v.batteryStepKm) {
                 batteryCost = v.batteryStepCost;
             }
 
-            // Total running cost in Millions Rp strictly calibrated to runningRate
             const totalRunning = (v.runningRate * km) / 1000000;
 
-            // Component cost estimates
             let energyPerKm = 0;
             if (v.powertrain === 'BEV') {
-                energyPerKm = ((v.eleckWhPer100Km || 15) / 100) * elecPrice * 1.15;
+                energyPerKm = ((v.eleckWhPer100Km || 15.5) / 100) * elecPrice * 1.15;
+            } else if (v.powertrain === 'PHEV') {
+                const evShare = 0.70;
+                const evEnergy = ((v.eleckWhPer100Km || 16.0) / 100) * elecPrice * 1.15;
+                const gasEnergy = fuelPrice / (v.fuelKmPerL || 20.0);
+                energyPerKm = evShare * evEnergy + (1 - evShare) * gasEnergy;
             } else if (v.fuelKmPerL > 0) {
                 energyPerKm = fuelPrice / v.fuelKmPerL;
             }
@@ -2212,14 +2227,13 @@
             const taxAnnual = (v.annualPkb || 5);
             const taxCost = taxAnnual * years;
 
-            const tirePerKm = (v.powertrain === 'BEV' ? 12 : 7.5) * 1e6 / 50000;
+            const tirePerKm = v.tiresPerKm || (v.powertrain === 'BEV' ? 240 : 150);
             const tireCost = (tirePerKm * km) / 1e6;
 
             const energyCostRaw = (energyPerKm * km) / 1e6;
             const maintPerKm = v.maintPerKm || 150;
             const maintCostRaw = (maintPerKm * km) / 1e6;
 
-            // Reconcile energy and maintenance so component sum strictly matches totalRunning
             const nonEnergyTaxTire = Math.max(0, totalRunning - taxCost - tireCost);
             const rawSum = energyCostRaw + maintCostRaw;
             let energyCost = energyCostRaw;
@@ -2253,16 +2267,27 @@
             tbody.innerHTML = '';
 
             const km = selectedBreakdownDistance;
+            const items = currentVehicles.map(v => {
+                return {
+                    vehicle: v,
+                    breakdown: getVehicleCostBreakdown(v, km)
+                };
+            });
 
-            currentVehicles.forEach(v => {
-                const b = getVehicleCostBreakdown(v, km);
+            let minNetTco = Infinity;
+            items.forEach(it => {
+                if (it.breakdown.netTco < minNetTco) minNetTco = it.breakdown.netTco;
+            });
 
+            items.forEach(({ vehicle: v, breakdown: b }) => {
+                const isWinner = Math.abs(b.netTco - minNetTco) < 0.05;
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50/80 transition-colors';
+                tr.className = `hover:bg-slate-50/80 transition-colors ${isWinner ? 'bg-emerald-50/40 font-medium' : ''}`;
                 tr.innerHTML = `
                     <td class="p-4 font-bold font-sans flex items-center gap-2">
                         <span class="w-3 h-3 rounded-full shrink-0" style="background-color: ${v.color}"></span>
                         <span>${v.name}</span>
+                        ${isWinner ? `<span class="ml-1 px-1.5 py-0.5 rounded text-[10px] bg-emerald-100 text-emerald-800 font-mono font-bold">${currentLang === 'en' ? '★ Best Value' : '★ Terhemat'}</span>` : ''}
                     </td>
                     <td class="p-4 font-bold">Rp ${b.msrp.toFixed(1)}M</td>
                     <td class="p-4 text-slate-600">Rp ${b.energyCost.toFixed(1)}M</td>
@@ -2272,7 +2297,7 @@
                     <td class="p-4 text-slate-600">${b.batteryCost > 0 ? `+Rp ${b.batteryCost.toFixed(1)}M` : '-'}</td>
                     <td class="p-4 font-bold bg-slate-50 text-slate-900">Rp ${b.totalCumul.toFixed(1)}M</td>
                     <td class="p-4 font-bold text-emerald-700">Rp ${b.resaleValue.toFixed(1)}M</td>
-                    <td class="p-4 font-black bg-emerald-50/60 text-emerald-950">Rp ${b.netTco.toFixed(1)}M</td>
+                    <td class="p-4 font-black ${isWinner ? 'bg-emerald-100 text-emerald-950' : 'bg-emerald-50/60 text-emerald-950'}">Rp ${b.netTco.toFixed(1)}M</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -2281,23 +2306,25 @@
         // --- 6. CONTROLS HANDLERS ---
         function handleFuelPriceChange(val) {
             fuelPrice = parseFloat(val);
-            document.getElementById('label-fuel-price').textContent = `Rp ${fuelPrice.toLocaleString()}`;
+            document.getElementById('label-fuel-price').textContent = `Rp ${fuelPrice.toLocaleString('id-ID')}`;
             recalculateRunningRates();
             renderChart();
+            updateCrossoverBadges();
             updateBreakdownTable();
         }
 
         function handleElecPriceChange(val) {
             elecPrice = parseFloat(val);
-            document.getElementById('label-elec-price').textContent = `Rp ${elecPrice.toLocaleString()}`;
+            document.getElementById('label-elec-price').textContent = `Rp ${elecPrice.toLocaleString('id-ID')}`;
             recalculateRunningRates();
             renderChart();
+            updateCrossoverBadges();
             updateBreakdownTable();
         }
 
         function updateDistanceHorizon(val) {
-            distanceHorizon = parseInt(val);
-            document.getElementById('label-distance-horizon').textContent = `${distanceHorizon.toLocaleString()} km`;
+            distanceHorizon = parseInt(val, 10);
+            document.getElementById('label-distance-horizon').textContent = `${distanceHorizon.toLocaleString('id-ID')} km`;
             renderChart();
             updateCrossoverBadges();
         }
@@ -2319,23 +2346,6 @@
             updateBreakdownTable();
         }
 
-        function recalculateRunningRates() {
-            // Update vehicle running rates dynamically based on new fuel/electricity prices
-            currentVehicles.forEach(v => {
-                if (v.powertrain === 'BEV') {
-                    const energyPerKm = ((v.eleckWhPer100Km || 15) / 100) * elecPrice * 1.15; // 15% charging losses
-                    const taxPerKm = ((v.annualPkb || 0.143) * 1e6) / 20000;
-                    const tirePerKm = 12 * 1e6 / 50000;
-                    v.runningRate = energyPerKm + (v.maintPerKm || 90) + taxPerKm + tirePerKm;
-                } else if (v.fuelKmPerL > 0) {
-                    const energyPerKm = fuelPrice / v.fuelKmPerL;
-                    const taxPerKm = ((v.annualPkb || 5) * 1e6) / 20000;
-                    const tirePerKm = 7.5 * 1e6 / 50000;
-                    v.runningRate = energyPerKm + (v.maintPerKm || 150) + taxPerKm + tirePerKm;
-                }
-            });
-        }
-
         function resetToDefaultPreset() {
             document.getElementById('select-fuel-preset').value = '12500';
             document.getElementById('select-elec-preset').value = '1444';
@@ -2353,13 +2363,14 @@
             document.getElementById('label-battery-status').textContent = currentLang === 'en' ? 'Active (+Rp 30M)' : 'Aktif (+Rp 30Jt)';
             document.getElementById('label-battery-status').className = 'text-emerald-700 font-bold';
 
-            applyPreset('avanza-veloz');
+            applyPreset('six-crossover');
         }
 
         function downloadChartPng() {
+            if (!tcoChartInstance) return;
             const link = document.createElement('a');
             link.download = `tco-chart-${activePresetId}-${distanceHorizon}km.png`;
-            link.href = canvas.toDataURL('image/png');
+            link.href = tcoChartInstance.toBase64Image('image/png', 1.0);
             link.click();
         }
 
@@ -2374,18 +2385,18 @@
                 document.getElementById('custom-car-4')
             ];
 
-            const defaultIds = ['toyota-avanza', 'suzuki-ertiga-hybrid', 'toyota-zenix-hev', 'byd-atto-3'];
+            const defaultIds = ['toyota-zenix-gasoline', 'suzuki-grand-vitara', 'toyota-yaris-cross-hev', 'byd-m6-ev'];
 
             selects.forEach((sel, idx) => {
+                if (!sel) return;
                 sel.innerHTML = '';
                 CAR_DATABASE.forEach(car => {
                     const opt = document.createElement('option');
                     opt.value = car.id;
-                    opt.textContent = `${car.brand} ${car.model} (${car.powertrain})`;
+                    opt.textContent = `${car.brand} ${car.model} (${car.powertrainLabel || car.powertrain})`;
                     sel.appendChild(opt);
                 });
 
-                // Set initial selection
                 if (CAR_DATABASE.some(c => c.id === defaultIds[idx])) {
                     sel.value = defaultIds[idx];
                 } else if (CAR_DATABASE[idx * 10]) {
@@ -2397,19 +2408,20 @@
 
         function handleCustomSlotChange(slotIdx, carId) {
             const specEl = document.getElementById(`custom-spec-${slotIdx + 1}`);
-            if (!CAR_DATABASE) return;
+            if (!specEl || typeof CAR_DATABASE === 'undefined') return;
             const car = CAR_DATABASE.find(c => c.id === carId);
             if (!car) return;
 
+            const isId = currentLang === 'id';
             specEl.innerHTML = `
-                <div><strong>Harga:</strong> ${car.priceDisplay || `Rp ${car.priceMin}M`}</div>
-                <div><strong>Powertrain:</strong> ${car.powertrainLabel || car.powertrain}</div>
-                <div><strong>Efisiensi:</strong> ${car.range || '-'}</div>
+                <div><strong>${isId ? 'Harga:' : 'Price:'}</strong> ${car.priceDisplay || `Rp ${car.priceMin}M`}</div>
+                <div><strong>${isId ? 'Powertrain:' : 'Powertrain:'}</strong> ${car.powertrainLabel || car.powertrain}</div>
+                <div><strong>${isId ? 'Efisiensi / Jarak:' : 'Efficiency / Range:'}</strong> ${car.range || '-'}</div>
             `;
         }
 
         function loadCustomMatchupToChart() {
-            if (!CAR_DATABASE) return;
+            if (typeof CAR_DATABASE === 'undefined') return;
             const selects = [
                 document.getElementById('custom-car-1').value,
                 document.getElementById('custom-car-2').value,
@@ -2417,70 +2429,150 @@
                 document.getElementById('custom-car-4').value
             ];
 
-            const colors = ['#9333ea', '#ea580c', '#16a34a', '#06b6d4'];
+            const colors = ['#ea580c', '#0284c7', '#16a34a', '#2563eb'];
             const customList = [];
 
             selects.forEach((id, idx) => {
                 const car = CAR_DATABASE.find(c => c.id === id);
                 if (!car) return;
 
-                const isBev = car.powertrain === 'BEV';
-                const isHev = car.powertrain === 'HEV';
-                const isPhev = car.powertrain === 'PHEV';
-                const price = car.priceMin || 300;
+                const pType = (car.powertrain || '').toUpperCase();
+                const pLabel = (car.powertrainLabel || '').toLowerCase();
+                const pEng = (car.engine || '').toLowerCase();
 
-                // Estimate km/L or kWh/100km from car specifications
-                let kmPerL = isHev ? 21.0 : (isPhev ? 25.0 : 13.5);
-                if (!isBev && car.range) {
+                let pt = 'ICE';
+                if (pType.includes('BEV') || pLabel.includes('listrik') || pLabel.includes('pure ev')) {
+                    pt = 'BEV';
+                } else if (pType.includes('PHEV') || pLabel.includes('plug-in')) {
+                    pt = 'PHEV';
+                } else if (pLabel.includes('series') || pLabel.includes('e-power') || pEng.includes('generator')) {
+                    pt = 'EREV';
+                } else if (pType.includes('MHEV') || pLabel.includes('mild') || pLabel.includes('mhev') || pLabel.includes('shvs') || pLabel.includes('isg')) {
+                    pt = 'MHEV';
+                } else if (pType.includes('HEV') || pLabel.includes('hybrid')) {
+                    pt = 'HEV';
+                } else {
+                    pt = 'ICE';
+                }
+
+                const price = car.priceMin || 350;
+
+                let kmPerL = 12.5;
+                if (pt === 'HEV') kmPerL = 22.0;
+                else if (pt === 'MHEV') kmPerL = 15.5;
+                else if (pt === 'EREV') kmPerL = 20.5;
+                else if (pt === 'PHEV') kmPerL = 20.0;
+                else if (pt === 'ICE') kmPerL = 12.0;
+
+                if (pt !== 'BEV' && car.range) {
                     const m = car.range.match(/([\d\.]+)\s*(?:-|–)?\s*([\d\.]*)\s*km\/L/i);
                     if (m && m[1]) {
                         kmPerL = m[2] ? (parseFloat(m[1]) + parseFloat(m[2])) / 2 : parseFloat(m[1]);
                     }
                 }
 
-                let kWhPer100 = 15.0;
-                if (isBev) {
+                let kWhPer100 = 15.5;
+                if (pt === 'BEV') {
                     const mBatt = car.battery ? car.battery.match(/([\d\.]+)\s*kWh/i) : null;
                     const mRange = car.range ? car.range.match(/([\d\.]+)\s*km/i) : null;
                     if (mBatt && mRange && parseFloat(mRange[1]) > 0) {
                         kWhPer100 = (parseFloat(mBatt[1]) / parseFloat(mRange[1])) * 100;
                     }
+                } else if (pt === 'PHEV') {
+                    kWhPer100 = 16.0;
                 }
 
-                let rate = isBev ? (((kWhPer100 / 100) * elecPrice * 1.15) + 80 + (0.143 * 1e6 / 20000))
-                                 : (fuelPrice / kmPerL + (isHev ? 140 : 180) + (price * 0.015 * 1e6 / 20000));
+                let maint = 150;
+                let tires = 150;
+                let annualPkb = price * 0.016;
+                let battStepKm = 0;
+                let battStepCost = 0;
+                let resale = 0.65;
+
+                if (pt === 'BEV') {
+                    maint = 85;
+                    tires = 240;
+                    annualPkb = 0.143;
+                    battStepKm = 160000;
+                    battStepCost = 0;
+                    resale = 0.55;
+                } else if (pt === 'PHEV') {
+                    maint = 160;
+                    tires = 180;
+                    annualPkb = price * 0.015;
+                    battStepKm = 140000;
+                    battStepCost = 60;
+                    resale = 0.60;
+                } else if (pt === 'EREV') {
+                    maint = 145;
+                    tires = 150;
+                    annualPkb = price * 0.017;
+                    battStepKm = 140000;
+                    battStepCost = 35;
+                    resale = 0.64;
+                } else if (pt === 'MHEV') {
+                    maint = 175;
+                    tires = 150;
+                    annualPkb = price * 0.017;
+                    battStepKm = 120000;
+                    battStepCost = 15;
+                    resale = 0.62;
+                } else if (pt === 'HEV') {
+                    maint = 140;
+                    tires = 150;
+                    annualPkb = price * 0.016;
+                    battStepKm = 120000;
+                    battStepCost = 30;
+                    resale = 0.72;
+                } else {
+                    maint = 190;
+                    tires = 150;
+                    annualPkb = price * 0.019;
+                    battStepKm = 0;
+                    battStepCost = 0;
+                    resale = 0.66;
+                }
 
                 customList.push({
                     id: car.id,
-                    name: `${car.model} (${car.powertrain})`,
+                    name: `${car.brand} ${car.model} (${pt})`,
                     shortName: car.model,
-                    powertrain: car.powertrain,
+                    powertrain: pt,
                     color: colors[idx],
                     msrp: price,
-                    runningRate: rate,
-                    batteryStepKm: isHev ? 120000 : (isPhev ? 140000 : 0),
-                    batteryStepCost: isHev ? 30 : (isPhev ? 65 : 0),
-                    fuelKmPerL: isBev ? 0 : kmPerL,
-                    eleckWhPer100Km: isBev ? kWhPer100 : 0,
-                    maintPerKm: isBev ? 80 : (isHev ? 140 : 180),
-                    annualPkb: isBev ? 0.143 : price * 0.015,
-                    resalePct5Yr: isBev ? 0.55 : (isHev ? 0.70 : 0.65)
+                    runningRate: 1000, // Will be computed by recalculateRunningRates()
+                    fuelKmPerL: pt === 'BEV' ? 0 : kmPerL,
+                    eleckWhPer100Km: (pt === 'BEV' || pt === 'PHEV') ? kWhPer100 : 0,
+                    maintPerKm: maint,
+                    annualPkb: annualPkb,
+                    tiresPerKm: tires,
+                    batteryStepKm: battStepKm,
+                    batteryStepCost: battStepCost,
+                    resalePct5Yr: resale
                 });
             });
 
             currentVehicles = customList;
             hiddenSeriesIds.clear();
-            document.getElementById('chart-main-title').textContent = 'Custom Matchup: ' + customList.map(c => c.name.split(' (')[0]).join(' vs ');
+            activePresetId = 'custom';
+
+            document.querySelectorAll('.preset-tab-btn').forEach(b => {
+                b.classList.remove('active', 'bg-white', 'text-emerald-800', 'shadow-xs', 'border', 'border-emerald-200');
+                b.classList.add('text-slate-600');
+            });
+
+            recalculateRunningRates();
+            const carNames = customList.map(c => c.shortName || c.name.split(' (')[0]).join(' vs ');
+            document.getElementById('chart-main-title').textContent = (currentLang === 'en' ? 'Custom Matchup: ' : 'Komparasi Kustom: ') + carNames;
             renderSeriesPills();
             renderChart();
             updateCrossoverBadges();
             updateBreakdownTable();
 
-            // Scroll smoothly up to chart
             document.getElementById('chart-section').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // --- 8. SCROLL REVEAL ANIMATION (IntersectionObserver) ---
+        // --- 8. SCROLL REVEAL ANIMATION ---
         function initScrollAnimations() {
             const observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
@@ -2518,13 +2610,19 @@
                 localStorage.setItem('lolyeah_lang', lang);
             } catch (e) {}
 
-            // Update title
-            const activePreset = PRESETS[activePresetId];
-            if (activePreset) {
-                document.getElementById('chart-main-title').textContent = lang === 'en' ? activePreset.titleEn : activePreset.title;
+            const titleEl = document.getElementById('chart-main-title');
+            if (titleEl) {
+                if (activePresetId === 'custom') {
+                    const carNames = currentVehicles.map(c => c.shortName || c.name.split(' (')[0]).join(' vs ');
+                    titleEl.textContent = (lang === 'en' ? 'Custom Matchup: ' : 'Komparasi Kustom: ') + carNames;
+                } else {
+                    const activePreset = PRESETS[activePresetId];
+                    if (activePreset) {
+                        titleEl.textContent = lang === 'en' ? activePreset.titleEn : activePreset.title;
+                    }
+                }
             }
 
-            // Update dynamic label status
             const battLabel = document.getElementById('label-battery-status');
             if (battLabel) {
                 if (includeBatteryMilestone) {
@@ -2536,6 +2634,13 @@
                 }
             }
 
+            // Refresh custom slot specs language
+            for (let i = 0; i < 4; i++) {
+                const sel = document.getElementById(`custom-car-${i + 1}`);
+                if (sel && sel.value) handleCustomSlotChange(i, sel.value);
+            }
+
+            renderSeriesPills();
             renderChart();
             updateCrossoverBadges();
             updateBreakdownTable();
@@ -2543,23 +2648,20 @@
 
         // --- 10. INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Restore language
+            let initialLang = 'id';
             try {
                 const savedLang = localStorage.getItem('lolyeah_lang');
                 if (savedLang === 'en' || savedLang === 'id') {
-                    setLanguage(savedLang);
+                    initialLang = savedLang;
                 }
             } catch (e) {}
 
-            resizeCanvas();
-            renderSeriesPills();
-            updateCrossoverBadges();
-            updateBreakdownTable();
+            setLanguage(initialLang);
             initCarDatabasePicker();
             initScrollAnimations();
 
             if (window.lucide) {
-                lucide.createIcons();
+                window.lucide.createIcons();
             }
         });
     </script>
