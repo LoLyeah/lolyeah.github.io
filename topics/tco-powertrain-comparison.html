@@ -1,0 +1,2567 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <!-- BEGIN ANTIGRAVITY SEO OPTIMIZATION -->
+    <meta name="description" content="Kajian komparasi Total Cost of Ownership (TCO) mobil ICE, MHEV, HEV, PHEV, EREV, dan BEV di Indonesia (2026). Simulator interaktif grafik jarak tempuh (0–250.000 km) vs akumulasi biaya, breakeven crossover, lonjakan penggantian baterai 120.000 km, regulasi pajak PKB PP 74/2021 &amp; Permendagri 6/2023, keausan ban EV, dan database 200+ mobil.">
+    <meta name="keywords" content="total cost of ownership mobil indonesia, tco ice vs bev vs hybrid, biaya kepemilikan mobil listrik vs bensin, avanza vs veloz hybrid tco, breakeven mobil hybrid, biaya ganti baterai hybrid 120000 km, pajak pkb mobil listrik permendagri 6 2023, ppnbm pp 74 2021, beda tco mhev hev phev erev bev, keausan ban mobil listrik, lolyeah">
+    <meta name="author" content="LoLyeah">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lolyeah.github.io/topics/tco-powertrain-comparison.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Total Cost of Ownership (TCO) Simulator: ICE vs MHEV vs HEV vs PHEV vs EREV vs BEV | LoLyeah">
+    <meta property="og:description" content="Simulator finansial kepemilikan mobil 0–250.000 km: komparasi kurva biaya riil, titik impas (breakeven), milestone baterai 120k km, pajak PKB/PPnBM, dan efisiensi kemacetan tropis di Indonesia.">
+    <meta property="og:url" content="https://lolyeah.github.io/topics/tco-powertrain-comparison.html">
+    <meta property="og:site_name" content="LoLyeah Interactive Guides">
+    <meta property="og:image" content="https://lolyeah.github.io/assets/og-image.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Total Cost of Ownership (TCO) Simulator: ICE vs MHEV vs HEV vs PHEV vs EREV vs BEV | LoLyeah">
+    <meta name="twitter:description" content="Simulator interaktif TCO 0–250.000 km untuk 6 arsitektur powertrain: titik impas crossover, biaya servis berkala, insentif pajak RI, dan database 200+ mobil.">
+    <meta name="twitter:image" content="https://lolyeah.github.io/assets/og-image.png">
+
+    <!-- Structured Data JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "name": "Total Cost of Ownership (TCO) Simulator: ICE vs MHEV vs HEV vs PHEV vs EREV vs BEV (Indonesia 2026)",
+      "description": "Kajian empiris dan simulator interaktif total cost of ownership otomotif di Indonesia membandingkan 6 arsitektur powertrain: ICE, MHEV, HEV, PHEV, EREV, dan BEV dari 0 hingga 250.000 km dengan milestone baterai dan deteksi crossover dinamis.",
+      "url": "https://lolyeah.github.io/topics/tco-powertrain-comparison.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "LoLyeah Interactive Guides",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://lolyeah.github.io/assets/logo.png"
+        }
+      },
+      "author": {
+        "@type": "Person",
+        "name": "LoLyeah"
+      }
+    }
+    </script>
+    <!-- END ANTIGRAVITY SEO OPTIMIZATION -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total Cost of Ownership (TCO) Simulator: ICE, MHEV, HEV, PHEV, EREV &amp; BEV — LoLyeah</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Master Centralized Car Database (210 Models) -->
+    <script src="../assets/indonesia-cars-data.js"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Outfit"', 'sans-serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        },
+                        pt: {
+                            ice: '#ea580c',
+                            mhev: '#0284c7',
+                            hev: '#16a34a',
+                            phev: '#8b5cf6',
+                            erev: '#06b6d4',
+                            bev: '#2563eb'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+                        'glow-pt': '0 0 25px -5px rgba(22, 163, 74, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-display: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            font-family: var(--font-sans);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Subtle mesh background */
+        .bg-mesh-light {
+            background-color: #f8fafc;
+            background-image:
+                radial-gradient(at 15% 10%, rgba(37, 99, 235, 0.06) 0px, transparent 50%),
+                radial-gradient(at 85% 20%, rgba(22, 163, 74, 0.06) 0px, transparent 50%),
+                radial-gradient(at 50% 80%, rgba(139, 92, 246, 0.04) 0px, transparent 50%);
+        }
+
+        /* Bilingual Toggling */
+        body.lang-id .en-only { display: none !important; }
+        body.lang-en .id-only { display: none !important; }
+
+        /* Scroll reveal animations */
+        .reveal-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .reveal-card {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Chart Canvas wrapper */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 520px;
+            background: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="lang-id bg-mesh-light min-h-screen text-slate-900 flex flex-col">
+
+    <!-- Skip to main content -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-emerald-600 focus:text-white focus:rounded-lg focus:shadow-lg focus:font-semibold">
+        Lewati ke Konten Utama
+    </a>
+
+    <!-- Sticky Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-slate-200/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+
+            <div class="flex items-center gap-3">
+                <a href="../index.html" class="flex items-center gap-2 text-slate-600 hover:text-emerald-600 transition-colors group">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 group-hover:bg-emerald-50 flex items-center justify-center border border-slate-200 transition-colors">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-sm font-medium hidden sm:inline">LoLyeah Compendium</span>
+                </a>
+                <span class="text-slate-300">/</span>
+                <div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-mono font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>TCO · 6 Powertrains</span>
+                </div>
+            </div>
+
+            <!-- Nav Actions -->
+            <div class="flex items-center gap-3">
+                <!-- Direct Database Link -->
+                <a href="./indonesia-car-selector/database.html" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition-all">
+                    <i data-lucide="database" class="w-3.5 h-3.5"></i>
+                    <span class="id-only">200+ Mobil DB</span>
+                    <span class="en-only">200+ Cars DB</span>
+                </a>
+
+                <!-- Language Toggle -->
+                <div class="inline-flex p-0.5 rounded-lg bg-slate-100 border border-slate-200 text-xs font-mono" role="group" aria-label="Language Selector">
+                    <button type="button" id="btn-lang-id" onclick="setLanguage('id')" class="px-2.5 py-1 rounded-md font-bold transition-all bg-white text-emerald-700 shadow-xs" aria-pressed="true">ID</button>
+                    <button type="button" id="btn-lang-en" onclick="setLanguage('en')" class="px-2.5 py-1 rounded-md font-bold text-slate-500 hover:text-slate-900 transition-all" aria-pressed="false">EN</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="flex-grow">
+
+        <!-- HERO SECTION -->
+        <section class="relative pt-12 pb-14 md:pt-16 md:pb-20 border-b border-slate-200/70 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+                <div class="max-w-4xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-mono font-semibold tracking-wide uppercase mb-6">
+                        <i data-lucide="calculator" class="w-3.5 h-3.5 text-emerald-600"></i>
+                        <span class="id-only">Simulator Finansial &amp; Whitepaper Otomotif 2026</span>
+                        <span class="en-only">Automotive TCO &amp; Financial Whitepaper 2026</span>
+                    </div>
+
+                    <h1 class="font-display font-black text-4xl sm:text-5xl lg:text-6xl text-slate-950 tracking-tight leading-[1.12] mb-6">
+                        <span class="id-only">Total Cost of Ownership (TCO): <span class="bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 bg-clip-text text-transparent">Komparasi Riil 6 Arsitektur Powertrain</span></span>
+                        <span class="en-only">Total Cost of Ownership (TCO): <span class="bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 bg-clip-text text-transparent">Real-World 6-Powertrain Simulator</span></span>
+                    </h1>
+
+                    <p class="text-lg sm:text-xl text-slate-600 leading-relaxed mb-8">
+                        <span class="id-only">Berapa biaya riil memiliki mobil di Indonesia dari 0 hingga 250.000 km? Bedah komprehensif antara <strong>ICE (Bensin/Diesel)</strong>, <strong>MHEV (Mild Hybrid)</strong>, <strong>HEV (Full Hybrid)</strong>, <strong>PHEV (Plug-in Hybrid)</strong>, <strong>EREV (Series Hybrid)</strong>, dan <strong>BEV (Listrik Murni)</strong>: titik impas crossover, konsumsi energi tropis, servis berkala, insentif pajak PKB/PPnBM, keausan ban EV, hingga milestone penggantian baterai.</span>
+                        <span class="en-only">What does it truly cost to own a car in Indonesia from 0 to 250,000 km? Comprehensive quantitative comparison of <strong>ICE</strong>, <strong>MHEV</strong>, <strong>HEV</strong>, <strong>PHEV</strong>, <strong>EREV</strong>, and <strong>BEV</strong>: dynamic crossover breakevens, tropical traffic consumption, routine servicing, PKB/PPnBM tax regimes, EV tire wear, and battery replacement milestones.</span>
+                    </p>
+
+                    <!-- Cross-navigation Chips -->
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <a href="#chart-section" class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold shadow-2xs hover:border-emerald-300 transition-all flex items-center gap-1.5">
+                            <i data-lucide="trending-up" class="w-3.5 h-3.5 text-emerald-600"></i>
+                            <span class="id-only">Grafik Simulator TCO</span>
+                            <span class="en-only">TCO Interactive Chart</span>
+                        </a>
+                        <a href="#powertrains-matrix" class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold shadow-2xs hover:border-blue-300 transition-all flex items-center gap-1.5">
+                            <i data-lucide="layers" class="w-3.5 h-3.5 text-blue-600"></i>
+                            <span class="id-only">6 Arsitektur Powertrain</span>
+                            <span class="en-only">6 Powertrain Topologies</span>
+                        </a>
+                        <a href="#cost-breakdown" class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold shadow-2xs hover:border-purple-300 transition-all flex items-center gap-1.5">
+                            <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-purple-600"></i>
+                            <span class="id-only">Rincian Komponen Biaya</span>
+                            <span class="en-only">Cost Stack Breakdown</span>
+                        </a>
+                        <a href="#car-selector-tool" class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold shadow-2xs hover:border-amber-300 transition-all flex items-center gap-1.5">
+                            <i data-lucide="car" class="w-3.5 h-3.5 text-amber-600"></i>
+                            <span class="id-only">Katalog &amp; Perbandingan Kustom</span>
+                            <span class="en-only">Custom Car Matchup</span>
+                        </a>
+                        <a href="#faq-assumptions" class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold shadow-2xs hover:border-slate-300 transition-all flex items-center gap-1.5">
+                            <i data-lucide="help-circle" class="w-3.5 h-3.5 text-slate-600"></i>
+                            <span class="id-only">Metodologi &amp; Regulasi RI</span>
+                            <span class="en-only">Formulas &amp; ID Regulations</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Telemetry Metrics Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mt-10">
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-500 block mb-1">ICE (Bensin)</span>
+                        <div class="text-xl font-display font-black text-slate-900">~Rp 1.100</div>
+                        <div class="text-[11px] text-slate-500">Biaya energi / km</div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-500 block mb-1">MHEV (Mild)</span>
+                        <div class="text-xl font-display font-black text-sky-600">~Rp 950</div>
+                        <div class="text-[11px] text-slate-500">Hemat ~8-12% bensin</div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-500 block mb-1">HEV (Full)</span>
+                        <div class="text-xl font-display font-black text-emerald-600">~Rp 640</div>
+                        <div class="text-[11px] text-slate-500">Hemat ~45% BBM kota</div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-500 block mb-1">PHEV (Plug-in)</span>
+                        <div class="text-xl font-display font-black text-purple-600">~Rp 480</div>
+                        <div class="text-[11px] text-slate-500">Dual EV + Bensin</div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-500 block mb-1">EREV (Series)</span>
+                        <div class="text-xl font-display font-black text-cyan-600">~Rp 620</div>
+                        <div class="text-[11px] text-slate-500">Mesin hanya genset</div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-500 block mb-1">BEV (Listrik)</span>
+                        <div class="text-xl font-display font-black text-blue-600">~Rp 260</div>
+                        <div class="text-[11px] text-slate-500">Pajak PKB 0% RI</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- STATIC FALLBACK IF JAVASCRIPT IS DISABLED -->
+        <noscript>
+            <section class="py-8 bg-amber-50 border-b border-amber-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="p-6 rounded-2xl bg-white border border-amber-300 shadow-soft">
+                        <div class="flex items-center gap-2 text-amber-800 font-bold text-sm mb-3">
+                            <span>⚠️ JavaScript Non-aktif (Mode Statis TCO)</span>
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed mb-4">
+                            Untuk menjalankan simulator grafik interaktif, kustomisasi harga BBM/listrik, dan deteksi titik persilangan breakeven secara real-time, silakan aktifkan JavaScript pada peramban Anda. Berikut ringkasan komparasi statis Total Cost of Ownership (TCO) 200.000 km di Indonesia:
+                        </p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs font-mono border-collapse text-left">
+                                <thead class="bg-slate-100 border-b border-slate-300 text-slate-800">
+                                    <tr>
+                                        <th class="p-3">Powertrain</th>
+                                        <th class="p-3">Model Representatif</th>
+                                        <th class="p-3">Harga Beli (MSRP)</th>
+                                        <th class="p-3">Biaya/km (BBM+Servis)</th>
+                                        <th class="p-3">Pajak PKB / Thn</th>
+                                        <th class="p-3">Akumulasi 200.000 km</th>
+                                        <th class="p-3">Kesimpulan Breakeven</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200 text-slate-700">
+                                    <tr>
+                                        <td class="p-3 font-bold text-orange-700">ICE (Bensin)</td>
+                                        <td class="p-3">Avanza 1.5 G CVT</td>
+                                        <td class="p-3">Rp 280,0 Juta</td>
+                                        <td class="p-3">~Rp 1.100 / km</td>
+                                        <td class="p-3">Rp 5,2 Juta</td>
+                                        <td class="p-3 font-bold">Rp 500,0 Juta</td>
+                                        <td class="p-3 text-slate-500">Benchmark dasar pembelian awal murah.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-sky-700">MHEV (Mild 48V)</td>
+                                        <td class="p-3">Suzuki XL7 / Ertiga Cruise</td>
+                                        <td class="p-3">Rp 305,0 Juta</td>
+                                        <td class="p-3">~Rp 1.120 / km</td>
+                                        <td class="p-3">Rp 5,4 Juta</td>
+                                        <td class="p-3 font-bold">Rp 529,0 Juta</td>
+                                        <td class="p-3 text-amber-700">Sulit impas di kemacetan tropis (AC boros).</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-emerald-700">HEV (Full Hybrid)</td>
+                                        <td class="p-3">Veloz V HV / Zenix HV</td>
+                                        <td class="p-3">Rp 302,0 Juta</td>
+                                        <td class="p-3">~Rp 642 / km</td>
+                                        <td class="p-3">Rp 5,6 Juta</td>
+                                        <td class="p-3 font-bold text-emerald-800">Rp 460,5 Juta</td>
+                                        <td class="p-3 text-emerald-700 font-bold">Mengalahkan Avanza 1.5G di 48.082 km!</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-purple-700">PHEV (Plug-in)</td>
+                                        <td class="p-3">BYD Sealion 6 DM-i</td>
+                                        <td class="p-3">Rp 499,0 Juta</td>
+                                        <td class="p-3">~Rp 590 / km</td>
+                                        <td class="p-3">Rp 7,5 Juta</td>
+                                        <td class="p-3 font-bold">Rp 617,0 Juta</td>
+                                        <td class="p-3 text-purple-700">Sangat hemat jika cas rutin di rumah.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-cyan-700">EREV (Series)</td>
+                                        <td class="p-3">Nissan Serena e-POWER</td>
+                                        <td class="p-3">Rp 635,0 Juta</td>
+                                        <td class="p-3">~Rp 820 / km</td>
+                                        <td class="p-3">Rp 11,2 Juta</td>
+                                        <td class="p-3 font-bold">Rp 799,0 Juta</td>
+                                        <td class="p-3 text-cyan-700">Kenyamanan EV murni tanpa kabel cas.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-blue-700">BEV (Pure EV)</td>
+                                        <td class="p-3">BYD M6 / Atto 3</td>
+                                        <td class="p-3">Rp 429,0 Juta</td>
+                                        <td class="p-3">~Rp 360 / km</td>
+                                        <td class="p-3 font-bold text-blue-700">Rp 0 (0% PKB)</td>
+                                        <td class="p-3 font-bold text-blue-800">Rp 501,0 Juta</td>
+                                        <td class="p-3 text-blue-700 font-bold">Biaya energi terendah + bebas ganjil genap.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </noscript>
+
+        <!-- SECTION 1: INTERACTIVE TCO CHART SIMULATOR -->
+        <section id="chart-section" class="py-12 md:py-16 border-b border-slate-200/70 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <!-- Section Header -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                    <div>
+                        <div class="inline-flex items-center gap-2 text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md mb-2">
+                            <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+                            <span class="id-only">Simulasi Garis Titik Impas (0–250.000 km)</span>
+                            <span class="en-only">Interactive Breakeven Trajectory (0–250,000 km)</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-display font-black text-slate-900" id="chart-main-title">
+                            Total Cost of Ownership: Avanza ICE vs Veloz Hybrid Lineup
+                        </h2>
+                        <p class="text-sm text-slate-600 mt-1 max-w-3xl">
+                            <span class="id-only">Grafik memetakan harga awal (MSRP), kemiringan biaya operasional (BBM/listrik + servis + pajak PKB), lonjakan penggantian baterai pada 120.000 km, dan titik persilangan (crossover) di mana mobil dengan harga beli lebih mahal mengalahkan mobil yang lebih murah.</span>
+                            <span class="en-only">The chart graphs initial purchase (MSRP), running cost slope (energy + maintenance + PKB tax), battery milestone replacement step-jumps at 120,000 km, and dynamic crossover breakevens where higher-priced electrified vehicles permanently defeat cheaper base models.</span>
+                        </p>
+                    </div>
+
+                    <!-- Chart Actions -->
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="downloadChartPng()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono font-medium transition-colors">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>Export PNG</span>
+                        </button>
+                        <button type="button" onclick="resetToDefaultPreset()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono font-medium transition-colors">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                            <span class="id-only">Reset Preset</span>
+                            <span class="en-only">Reset</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PRESET SELECTOR BUTTONS -->
+                <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200 flex flex-wrap gap-2 mb-6" role="tablist">
+                    <button type="button" onclick="applyPreset('avanza-veloz')" id="btn-preset-avanza" class="preset-tab-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-white text-emerald-800 shadow-xs border border-emerald-200 flex items-center gap-2">
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <span>Avanza ICE vs Veloz Hybrid (Reference)</span>
+                    </button>
+                    <button type="button" onclick="applyPreset('six-powertrains')" id="btn-preset-six" class="preset-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-2">
+                        <i data-lucide="layers" class="w-4 h-4 text-blue-500"></i>
+                        <span>6 Archetypes Showdown (ICE–MHEV–HEV–PHEV–EREV–BEV)</span>
+                    </button>
+                    <button type="button" onclick="applyPreset('zenix-matchup')" id="btn-preset-zenix" class="preset-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-2">
+                        <i data-lucide="car" class="w-4 h-4 text-purple-500"></i>
+                        <span>Innova Zenix Bensin vs Zenix Hybrid vs BYD M6 BEV</span>
+                    </button>
+                    <button type="button" onclick="applyPreset('compact-city')" id="btn-preset-compact" class="preset-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-2">
+                        <i data-lucide="navigation" class="w-4 h-4 text-emerald-500"></i>
+                        <span>City Commuter (Brio vs Ertiga MHEV vs Yaris Cross HEV vs Binguo BEV)</span>
+                    </button>
+                </div>
+
+                <!-- SIMULATOR CONTROL BAR -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-200/90 mb-6">
+                    <!-- Fuel Price -->
+                    <div>
+                        <label class="block text-xs font-mono font-semibold text-slate-700 mb-1.5 flex justify-between">
+                            <span class="id-only">Harga Bensin (Rp / Liter)</span>
+                            <span class="en-only">Fuel Price (IDR / Liter)</span>
+                            <span id="label-fuel-price" class="text-emerald-700 font-bold">Rp 12.500</span>
+                        </label>
+                        <select id="select-fuel-preset" onchange="handleFuelPriceChange(this.value)" class="w-full text-xs font-mono rounded-lg border-slate-200 p-2 bg-white border shadow-2xs">
+                            <option value="10000">Pertalite (RON 90) — Rp 10.000</option>
+                            <option value="12500" selected>Pertamax (RON 92) — Rp 12.500</option>
+                            <option value="13500">Pertamax Turbo / Shell V-Power — Rp 13.500</option>
+                            <option value="13900">Dexlite (Solar Euro 4) — Rp 13.900</option>
+                        </select>
+                    </div>
+
+                    <!-- Electricity Tariff -->
+                    <div>
+                        <label class="block text-xs font-mono font-semibold text-slate-700 mb-1.5 flex justify-between">
+                            <span class="id-only">Tarif Listrik EV (Rp / kWh)</span>
+                            <span class="en-only">Electricity Rate (IDR / kWh)</span>
+                            <span id="label-elec-price" class="text-blue-700 font-bold">Rp 1.444</span>
+                        </label>
+                        <select id="select-elec-preset" onchange="handleElecPriceChange(this.value)" class="w-full text-xs font-mono rounded-lg border-slate-200 p-2 bg-white border shadow-2xs">
+                            <option value="1444" selected>Home Charging (PLN R1 900-2200VA) — Rp 1.444</option>
+                            <option value="1699">Home Charging (PLN R2 &gt;3500VA) — Rp 1.699</option>
+                            <option value="2466">SPKLU Fast/Ultra Fast Charging — Rp 2.466</option>
+                            <option value="1010">Home Charging Midnight (Diskon 30%) — Rp 1.010</option>
+                        </select>
+                    </div>
+
+                    <!-- Distance Horizon Slider -->
+                    <div>
+                        <label class="block text-xs font-mono font-semibold text-slate-700 mb-1.5 flex justify-between">
+                            <span class="id-only">Batas Jarak Analisis</span>
+                            <span class="en-only">Max Distance Horizon</span>
+                            <span id="label-distance-horizon" class="text-slate-900 font-bold">250.000 km</span>
+                        </label>
+                        <input type="range" id="slider-distance" min="50000" max="300000" step="10000" value="250000" oninput="updateDistanceHorizon(this.value)" class="w-full accent-emerald-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
+                        <div class="flex justify-between text-[10px] font-mono text-slate-400 mt-1">
+                            <span>50k km</span>
+                            <span>150k km</span>
+                            <span>300k km</span>
+                        </div>
+                    </div>
+
+                    <!-- Battery Milestone Jump Toggle -->
+                    <div>
+                        <label class="block text-xs font-mono font-semibold text-slate-700 mb-1.5 flex justify-between">
+                            <span class="id-only">Milestone Baterai (120k km)</span>
+                            <span class="en-only">Battery Milestone (120k km)</span>
+                            <span id="label-battery-status" class="text-emerald-700 font-bold">Aktif (+Rp 30Jt)</span>
+                        </label>
+                        <div class="flex items-center gap-2 mt-1">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="toggle-battery-milestone" checked onchange="toggleBatteryStep(this.checked)" class="sr-only peer">
+                                <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                            </label>
+                            <span class="text-xs text-slate-600">
+                                <span class="id-only">Simulasi ganti sel baterai HV</span>
+                                <span class="en-only">Simulate HV battery swap</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CANVAS CHART CONTAINER -->
+                <div class="relative">
+                    <div class="chart-container" id="chart-wrapper">
+                        <canvas id="tcoChart" class="w-full h-full block"></canvas>
+                    </div>
+
+                    <!-- Live Hover Legend / Telemetry Tooltip -->
+                    <div id="chart-tooltip" class="hidden absolute top-4 right-4 bg-slate-900/95 text-white p-3.5 rounded-xl text-xs font-mono shadow-xl border border-slate-700 pointer-events-none backdrop-blur-md z-30 transition-opacity">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- DYNAMIC CROSSOVER BREAKEVEN BADGES DECK -->
+                <div class="mt-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-sm font-bold font-mono uppercase tracking-wider text-slate-700 flex items-center gap-2">
+                            <i data-lucide="git-commit" class="w-4 h-4 text-emerald-600"></i>
+                            <span class="id-only">Titik Impas (Breakeven Crossover Milestones)</span>
+                            <span class="en-only">Breakeven Crossover Milestones</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 font-mono">Berdasarkan asumsi 20.000 km/tahun</span>
+                    </div>
+
+                    <div id="crossover-badges-grid" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <!-- Populated dynamically by JS math engine -->
+                    </div>
+                </div>
+
+                <!-- ACTIVE VEHICLE LEGEND TOGGLE PILLS -->
+                <div class="mt-6 pt-4 border-t border-slate-200">
+                    <div class="text-xs font-mono text-slate-500 mb-2">
+                        <span class="id-only">Klik seri kendaraan di bawah untuk menampilkan / menyembunyikan garis:</span>
+                        <span class="en-only">Click vehicle series below to toggle line visibility:</span>
+                    </div>
+                    <div id="series-legend-pills" class="flex flex-wrap gap-2">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE 6 POWERTRAIN ARCHETYPES DEEP DIVE -->
+        <section id="powertrains-matrix" class="py-14 md:py-20 border-b border-slate-200/70 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <div class="max-w-3xl mb-12">
+                    <div class="inline-flex items-center gap-2 text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md mb-2">
+                        <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                        <span class="id-only">Taksonomi Powertrain Lengkap</span>
+                        <span class="en-only">Complete Powertrain Taxonomy</span>
+                    </div>
+                    <h2 class="text-3xl font-display font-black text-slate-950">
+                        <span class="id-only">Bedah 6 Arsitektur Powertrain: Fisika, Efisiensi &amp; Biaya</span>
+                        <span class="en-only">Anatomy of 6 Powertrains: Physics, Efficiency &amp; Costs</span>
+                    </h2>
+                    <p class="text-base text-slate-600 mt-2">
+                        <span class="id-only">Mengapa Mild Hybrid sering mengecewakan di kemacetan tropis? Apa beda Series Hybrid (EREV) vs Parallel (HEV)? Dan kenapa mobil listrik murni (BEV) punya biaya ban tersembunyi yang mahal?</span>
+                        <span class="en-only">Why do Mild Hybrids often disappoint in tropical stop-and-go jams? What is the engineering difference between Series Hybrid (EREV) and Parallel (HEV)? And why do pure EVs carry higher tire replacement expenses?</span>
+                    </p>
+                </div>
+
+                <!-- 6 POWERTRAIN CARDS GRID -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- 1. ICE -->
+                    <div class="reveal-card bg-white rounded-2xl p-6 border border-slate-200 shadow-soft hover:shadow-md transition-all">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-orange-50 text-orange-700 border border-orange-200">ICE (Internal Combustion)</span>
+                            <span class="text-xs font-mono text-slate-400">
+                                <span class="id-only">Bensin / Solar</span>
+                                <span class="en-only">Petrol / Diesel</span>
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-2">
+                            <span class="id-only">Mesin Pembakaran Dalam</span>
+                            <span class="en-only">Internal Combustion Engine</span>
+                        </h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                            <span class="id-only">Konstruksi tradisional: motor bakar bensin (Otto/Atkinson) atau turbodiesel dengan transmisi MT/CVT/AT konvensional.</span>
+                            <span class="en-only">Traditional architecture: gasoline or turbodiesel engine paired with conventional MT/CVT/AT transmission. High mechanical friction and zero regenerative braking.</span>
+                        </p>
+                        <div class="space-y-2 text-xs font-mono border-t border-slate-100 pt-3">
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Konsumsi Kota:</span><span class="en-only">City Fuel Economy:</span></span>
+                                <strong class="text-slate-900">10 – 13 km/L</strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Pajak Tahunan PKB:</span><span class="en-only">Annual PKB Tax:</span></span>
+                                <strong class="text-slate-900">1.5% – 2.0% NJKB</strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Ganjil Genap:</span><span class="en-only">Odd-Even Rule:</span></span>
+                                <strong class="text-rose-600"><span class="id-only">Kena Gage</span><span class="en-only">Restricted</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Servis Rutin:</span><span class="en-only">Routine Service:</span></span>
+                                <strong class="text-slate-900"><span class="id-only">Oli, Filter tiap 10k km</span><span class="en-only">Oil, filters per 10k km</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Kelemahan TCO:</span><span class="en-only">TCO Vulnerability:</span></span>
+                                <strong class="text-rose-600"><span class="id-only">BBM boros saat idle macet</span><span class="en-only">Zero efficiency in idle jams</span></strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. MHEV -->
+                    <div class="reveal-card bg-white rounded-2xl p-6 border border-slate-200 shadow-soft hover:shadow-md transition-all">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-sky-50 text-sky-700 border border-sky-200">MHEV (Mild Hybrid 12V/48V)</span>
+                            <span class="text-xs font-mono text-slate-400">Ertiga, XL7, BMW 520i</span>
+                        </div>
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-2">
+                            <span class="id-only">Mild Hybrid (ISG Assist)</span>
+                            <span class="en-only">Mild Hybrid (12V/48V ISG)</span>
+                        </h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                            <span class="id-only">Motor starter terintegrasi (ISG) dengan sabuk pulley + baterai kecil (10–48V). Motor listrik <strong>tidak bisa</strong> memutar roda secara independen murni EV.</span>
+                            <span class="en-only">Integrated Starter Generator (ISG) with belt pulley and 10–48V micro-battery. Electric motor <strong>cannot</strong> drive wheels independently in pure EV mode.</span>
+                        </p>
+                        <div class="space-y-2 text-xs font-mono border-t border-slate-100 pt-3">
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Konsumsi Kota:</span><span class="en-only">City Fuel Economy:</span></span>
+                                <strong class="text-slate-900">12 – 15 km/L</strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Hemat Riil Tropis:</span><span class="en-only">Real Tropical Savings:</span></span>
+                                <strong class="text-amber-600"><span class="id-only">Hanya ~8–12% (AC nyala)</span><span class="en-only">Only ~8–12% (AC load)</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Pajak Tahunan PKB:</span><span class="en-only">Annual PKB Tax:</span></span>
+                                <strong class="text-slate-900"><span class="id-only">Tarif Standar ICE</span><span class="en-only">Standard ICE Tariff</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Ganjil Genap:</span><span class="en-only">Odd-Even Rule:</span></span>
+                                <strong class="text-rose-600"><span class="id-only">Kena Gage</span><span class="en-only">Restricted</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Kelemahan TCO:</span><span class="en-only">TCO Vulnerability:</span></span>
+                                <strong class="text-amber-600"><span class="id-only">Baterai 48V ganti Rp 12–18Jt</span><span class="en-only">48V battery swap ~Rp 15M</span></strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. HEV -->
+                    <div class="reveal-card bg-white rounded-2xl p-6 border border-emerald-200 shadow-soft hover:shadow-md transition-all ring-1 ring-emerald-500/20">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">HEV (Full / Strong Hybrid)</span>
+                            <span class="text-xs font-mono text-emerald-600 font-bold">
+                                <span class="id-only">Paling Populer RI</span>
+                                <span class="en-only">Top Seller in ID</span>
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-2">
+                            <span class="id-only">Full Hybrid (Series-Parallel)</span>
+                            <span class="en-only">Full Hybrid (Power-Split e-CVT)</span>
+                        </h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                            <span class="id-only">Dual-motor e-CVT (Toyota THS-II / Honda e:HEV) dengan baterai 1.3–1.8 kWh. Bisa jalan mode EV murni saat stop-and-go merayap di kemacetan Jakarta.</span>
+                            <span class="en-only">Dual-motor power-split e-CVT (Toyota THS-II / Honda e:HEV) with 1.3–1.8 kWh battery. Creeps in pure EV mode during severe tropical stop-and-go jams.</span>
+                        </p>
+                        <div class="space-y-2 text-xs font-mono border-t border-slate-100 pt-3">
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Konsumsi Kota:</span><span class="en-only">City Fuel Economy:</span></span>
+                                <strong class="text-emerald-700">19 – 24 km/L</strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Hemat Riil Kemacetan:</span><span class="en-only">Traffic Savings:</span></span>
+                                <strong class="text-emerald-700"><span class="id-only">Hemat 40% – 50% BBM</span><span class="en-only">40% – 50% fuel reduction</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Insentif PPnBM:</span><span class="en-only">PPnBM Incentive:</span></span>
+                                <strong class="text-emerald-700">6% – 8% (PP 74/2021)</strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Kampas Rem:</span><span class="en-only">Brake Wear:</span></span>
+                                <strong class="text-emerald-700"><span class="id-only">Awet 100k+ km (Regen)</span><span class="en-only">100k+ km via regen</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Milestone Baterai:</span><span class="en-only">Battery Milestone:</span></span>
+                                <strong class="text-slate-900">Rp 25–40 Jt (120k–160k km)</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. PHEV -->
+                    <div class="reveal-card bg-white rounded-2xl p-6 border border-slate-200 shadow-soft hover:shadow-md transition-all">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-purple-50 text-purple-700 border border-purple-200">PHEV (Plug-in Hybrid)</span>
+                            <span class="text-xs font-mono text-slate-400">BYD Sealion 6, Tiggo 8 C-DM</span>
+                        </div>
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-2">
+                            <span class="id-only">Plug-in Hybrid EV</span>
+                            <span class="en-only">Plug-in Hybrid (PHEV)</span>
+                        </h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                            <span class="id-only">Kombinasi baterai besar (15–30 kWh) colok charger rumahan untuk 60–120 km listrik murni, plus tangki bensin untuk perjalanan antar kota tanpa risau cas.</span>
+                            <span class="en-only">Large 15–30 kWh pack with home wallbox charging for 60–120 km pure electric commuting, plus combustion engine for zero range-anxiety intercity travel.</span>
+                        </p>
+                        <div class="space-y-2 text-xs font-mono border-t border-slate-100 pt-3">
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Mode EV Harian:</span><span class="en-only">Daily EV Cost:</span></span>
+                                <strong class="text-purple-700">~Rp 300 / km</strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Konsumsi Bensin Hybrid:</span><span class="en-only">Hybrid Petrol Mode:</span></span>
+                                <strong class="text-slate-900">16 – 20 km/L</strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">PPnBM PP 74/2021:</span><span class="en-only">PPnBM Rate:</span></span>
+                                <strong class="text-purple-700">5% (PP 74/2021)</strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Kompleksitas Servis:</span><span class="en-only">Maintenance:</span></span>
+                                <strong class="text-amber-600"><span class="id-only">Dual servis (Mesin + EV)</span><span class="en-only">Dual powertrain servicing</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Milestone Baterai:</span><span class="en-only">Battery Milestone:</span></span>
+                                <strong class="text-rose-600">Rp 50–90 Jt (Pack besar)</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. EREV -->
+                    <div class="reveal-card bg-white rounded-2xl p-6 border border-slate-200 shadow-soft hover:shadow-md transition-all">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyan-50 text-cyan-700 border border-cyan-200">EREV (Series Hybrid)</span>
+                            <span class="text-xs font-mono text-slate-400">Nissan Serena e-POWER</span>
+                        </div>
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-2">
+                            <span class="id-only">Series Hybrid (Range Extender)</span>
+                            <span class="en-only">Series Hybrid / Range Extender</span>
+                        </h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                            <span class="id-only">Roda 100% diputar oleh motor listrik traksi. Mesin bensin bertindak murni sebagai generator pengisi baterai di putaran RPM termal paling efisien.</span>
+                            <span class="en-only">Wheels 100% driven by electric traction motor. Combustion engine functions purely as an onboard generator running at optimal thermal efficiency RPM.</span>
+                        </p>
+                        <div class="space-y-2 text-xs font-mono border-t border-slate-100 pt-3">
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Sensasi Rasa Berkendara:</span><span class="en-only">Driving Dynamics:</span></span>
+                                <strong class="text-cyan-700"><span class="id-only">100% Instan Torsi Halus EV</span><span class="en-only">100% Instant EV Torque</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Konsumsi BBM:</span><span class="en-only">Fuel Economy:</span></span>
+                                <strong class="text-cyan-700">18 – 22 km/L</strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Gearbox Transmisi:</span><span class="en-only">Transmission:</span></span>
+                                <strong class="text-cyan-700"><span class="id-only">Single-speed (Bebas CVT)</span><span class="en-only">Direct Single-speed</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Pajak Tahunan PKB:</span><span class="en-only">Annual PKB Tax:</span></span>
+                                <strong class="text-slate-900"><span class="id-only">Tarif Standar Bensin</span><span class="en-only">Standard ICE Tariff</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Ganjil Genap:</span><span class="en-only">Odd-Even Rule:</span></span>
+                                <strong class="text-rose-600"><span class="id-only">Kena Gage</span><span class="en-only">Restricted</span></strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6. BEV -->
+                    <div class="reveal-card bg-white rounded-2xl p-6 border border-blue-200 shadow-soft hover:shadow-md transition-all ring-1 ring-blue-500/20">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-blue-50 text-blue-700 border border-blue-200">BEV (Battery Electric Vehicle)</span>
+                            <span class="text-xs font-mono text-blue-600 font-bold">
+                                <span class="id-only">Pajak PKB 0%</span>
+                                <span class="en-only">0% Annual Tax</span>
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-2">
+                            <span class="id-only">Mobil Listrik Murni (BEV)</span>
+                            <span class="en-only">Pure Battery Electric (BEV)</span>
+                        </h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                            <span class="id-only">Tanpa mesin bensin, knalpot, oli mesin, dan filter busi. Motor listrik bertenaga baterai lithium (LFP/NMC 40–90 kWh) dengan efisiensi energi 85–92%.</span>
+                            <span class="en-only">Zero combustion: no engine oil, spark plugs, or exhaust. Electric motor powered by 40–90 kWh LFP/NMC pack with 85–92% wall-to-wheel efficiency.</span>
+                        </p>
+                        <div class="space-y-2 text-xs font-mono border-t border-slate-100 pt-3">
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Biaya Energi Cas Rumah:</span><span class="en-only">Home Charging Cost:</span></span>
+                                <strong class="text-blue-700">~Rp 220 – 260 / km</strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Pajak Tahunan PKB:</span><span class="en-only">Annual PKB Tax:</span></span>
+                                <strong class="text-blue-700">Rp 0 (SWDKLLJ Rp 143k)</strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Bebas Ganjil Genap:</span><span class="en-only">Odd-Even Status:</span></span>
+                                <strong class="text-blue-700"><span class="id-only">100% Bebas Gage Jakarta</span><span class="en-only">100% Jakarta Exempt</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Biaya Servis Mekanikal:</span><span class="en-only">Mechanical Servicing:</span></span>
+                                <strong class="text-blue-700"><span class="id-only">Sangat Murah (~Rp 80/km)</span><span class="en-only">Minimal (~Rp 80/km)</span></strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span><span class="id-only">Kelemahan TCO:</span><span class="en-only">TCO Vulnerability:</span></span>
+                                <strong class="text-rose-600"><span class="id-only">Ban EV aus 35k km + bobot</span><span class="en-only">EV tires wear out ~35k km</span></strong>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3: COST STACK BREAKDOWN & INTERACTIVE SLICER -->
+        <section id="cost-breakdown" class="py-14 md:py-20 border-b border-slate-200/70 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <div class="max-w-3xl mb-10">
+                    <div class="inline-flex items-center gap-2 text-xs font-mono font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-md mb-2">
+                        <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+                        <span class="id-only">Komposisi Biaya Kepemilikan</span>
+                        <span class="en-only">Ownership Cost Stack</span>
+                    </div>
+                    <h2 class="text-3xl font-display font-black text-slate-950">
+                        <span class="id-only">Ke Mana Uang Anda Mengalir? Rincian Struktur Biaya</span>
+                        <span class="en-only">Where Does Your Money Go? The Cost Breakdown</span>
+                    </h2>
+                    <p class="text-base text-slate-600 mt-2">
+                        <span class="id-only">Bandingkan rincian biaya aktual pada jarak tempuh tertentu: Harga beli OTR, BBM/Listrik, servis berkala, pajak tahunan, ban, penggantian baterai, dan nilai jual kembali (resale value).</span>
+                        <span class="en-only">Compare the detailed actual cost stack at a selected mileage milestone: MSRP acquisition, fuel/electricity, routine maintenance, annual taxes, tires, battery replacement, and residual resale value.</span>
+                    </p>
+                </div>
+
+                <!-- Distance Milestone Selector Tabs -->
+                <div class="flex flex-wrap gap-2 mb-8">
+                    <button type="button" onclick="setBreakdownKm(50000, this)" class="breakdown-km-btn px-4 py-2 rounded-xl text-xs font-mono font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">50.000 km (~2.5 Thn)</button>
+                    <button type="button" onclick="setBreakdownKm(100000, this)" class="breakdown-km-btn px-4 py-2 rounded-xl text-xs font-mono font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">100.000 km (~5 Thn)</button>
+                    <button type="button" onclick="setBreakdownKm(150000, this)" class="breakdown-km-btn px-4 py-2 rounded-xl text-xs font-mono font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">150.000 km (~7.5 Thn)</button>
+                    <button type="button" onclick="setBreakdownKm(200000, this)" class="breakdown-km-btn active px-4 py-2 rounded-xl text-xs font-mono font-bold border border-emerald-500 bg-emerald-50 text-emerald-800 transition-all">200.000 km (~10 Thn)</button>
+                    <button type="button" onclick="setBreakdownKm(250000, this)" class="breakdown-km-btn px-4 py-2 rounded-xl text-xs font-mono font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">250.000 km (~12.5 Thn)</button>
+                </div>
+
+                <!-- DYNAMIC BREAKDOWN TABLE & STACKED VISUALIZER -->
+                <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-soft bg-white mb-8">
+                    <table class="w-full text-left text-xs font-mono border-collapse" id="breakdown-table">
+                        <thead class="bg-slate-50 border-b border-slate-200 text-slate-700">
+                            <tr>
+                                <th class="p-4 font-bold font-sans">
+                                    <span class="id-only">Mobil &amp; Powertrain</span>
+                                    <span class="en-only">Vehicle &amp; Powertrain</span>
+                                </th>
+                                <th class="p-4 font-bold">
+                                    <span class="id-only">Harga Beli (MSRP)</span>
+                                    <span class="en-only">Purchase MSRP</span>
+                                </th>
+                                <th class="p-4 font-bold">
+                                    <span class="id-only">BBM / Listrik</span>
+                                    <span class="en-only">Energy (Fuel/Elec)</span>
+                                </th>
+                                <th class="p-4 font-bold">
+                                    <span class="id-only">Servis Rutin</span>
+                                    <span class="en-only">Routine Service</span>
+                                </th>
+                                <th class="p-4 font-bold">
+                                    <span class="id-only">Ban &amp; Friksi</span>
+                                    <span class="en-only">Tires &amp; Friction</span>
+                                </th>
+                                <th class="p-4 font-bold">
+                                    <span class="id-only">Pajak PKB</span>
+                                    <span class="en-only">PKB Taxes</span>
+                                </th>
+                                <th class="p-4 font-bold">
+                                    <span class="id-only">Ganti Baterai</span>
+                                    <span class="en-only">Battery Milestone</span>
+                                </th>
+                                <th class="p-4 font-bold bg-slate-100 text-slate-900">
+                                    <span class="id-only">Total Akumulasi</span>
+                                    <span class="en-only">Cumulative Total</span>
+                                </th>
+                                <th class="p-4 font-bold text-emerald-700">
+                                    <span class="id-only">Nilai Jual Sisa</span>
+                                    <span class="en-only">Residual Resale</span>
+                                </th>
+                                <th class="p-4 font-bold bg-emerald-50 text-emerald-900">
+                                    <span class="id-only">Net TCO Riil</span>
+                                    <span class="en-only">Net Real TCO</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="breakdown-table-body" class="divide-y divide-slate-100">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Key Takeaway Banner -->
+                <div class="p-5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-sky-50 border border-emerald-200 text-xs sm:text-sm text-slate-700 leading-relaxed flex items-start gap-4">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                        <i data-lucide="lightbulb" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <strong class="text-slate-900 font-bold block mb-1">
+                            <span class="id-only">Kesimpulan Analisis Finansial TCO 200.000 km:</span>
+                            <span class="en-only">200,000 km Financial TCO Verdict:</span>
+                        </strong>
+                        <p class="text-slate-600">
+                            <span class="id-only">Meskipun mobil Hybrid (HEV) dan Listrik Murni (BEV) memiliki harga beli awal (MSRP) lebih tinggi Rp 25–100 Juta dibanding versi bensin biasa (ICE), selisih efisiensi bahan bakar di kemacetan kota ditambah insentif pajak PKB 0% (pada BEV) membalikkan total biaya sebelum 100.000 km. Bahkan setelah menghitung biaya ganti baterai hybrid Rp 30 Juta pada 120.000 km, Veloz Hybrid tetap permanen lebih hemat hingga Rp 40+ Juta di 200.000 km dibanding Avanza 1.5 G CVT.</span>
+                            <span class="en-only">Although Full Hybrid (HEV) and Pure EV (BEV) carry Rp 25–100 Million higher initial MSRP compared to base ICE models, tropical urban fuel efficiency and 0% PKB tax incentives reverse total expenditure before 100,000 km. Even after factoring in an out-of-warranty Rp 30 Million hybrid battery swap at 120,000 km, Veloz Hybrid remains permanently over Rp 40M cheaper at 200,000 km than Avanza 1.5 G CVT.</span>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 4: CUSTOM VEHICLE MATCHUP TOOL -->
+        <section id="car-selector-tool" class="py-14 md:py-20 border-b border-slate-200/70 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <div class="max-w-3xl mb-10">
+                    <div class="inline-flex items-center gap-2 text-xs font-mono font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md mb-2">
+                        <i data-lucide="git-branch" class="w-3.5 h-3.5"></i>
+                        <span class="id-only">Katalog &amp; Perbandingan Kustom</span>
+                        <span class="en-only">Custom Head-to-Head Comparison</span>
+                    </div>
+                    <h2 class="text-3xl font-display font-black text-slate-950">
+                        <span class="id-only">Bandingkan Mobil Apapun dari Database Resmi 2026</span>
+                        <span class="en-only">Compare Any Car from the Official 2026 Database</span>
+                    </h2>
+                    <p class="text-base text-slate-600 mt-2">
+                        <span class="id-only">Pilih hingga 4 kendaraan dari 200+ database mobil di Indonesia untuk melihat simulasi perbandingan TCO garis persilangan breakeven secara real-time.</span>
+                        <span class="en-only">Select up to 4 vehicles from the 200+ Indonesian automotive database to instantly simulate custom TCO breakeven curves.</span>
+                    </p>
+                </div>
+
+                <!-- Vehicle Picker Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <!-- Slot 1 -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-soft">
+                        <div class="flex items-center justify-between text-xs font-mono font-bold mb-2 text-purple-700">
+                            <span>KENDARAAN 1 (Benchmark)</span>
+                            <span class="w-3 h-3 rounded-full bg-purple-500"></span>
+                        </div>
+                        <select id="custom-car-1" onchange="handleCustomSlotChange(0, this.value)" class="w-full text-xs font-mono rounded-lg border-slate-200 p-2 bg-slate-50 border">
+                            <!-- Populated via JS -->
+                        </select>
+                        <div id="custom-spec-1" class="mt-3 text-[11px] font-mono text-slate-500 space-y-1">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Slot 2 -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-soft">
+                        <div class="flex items-center justify-between text-xs font-mono font-bold mb-2 text-orange-600">
+                            <span>KENDARAAN 2</span>
+                            <span class="w-3 h-3 rounded-full bg-orange-500"></span>
+                        </div>
+                        <select id="custom-car-2" onchange="handleCustomSlotChange(1, this.value)" class="w-full text-xs font-mono rounded-lg border-slate-200 p-2 bg-slate-50 border">
+                            <!-- Populated via JS -->
+                        </select>
+                        <div id="custom-spec-2" class="mt-3 text-[11px] font-mono text-slate-500 space-y-1">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Slot 3 -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-soft">
+                        <div class="flex items-center justify-between text-xs font-mono font-bold mb-2 text-emerald-700">
+                            <span>KENDARAAN 3</span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                        </div>
+                        <select id="custom-car-3" onchange="handleCustomSlotChange(2, this.value)" class="w-full text-xs font-mono rounded-lg border-slate-200 p-2 bg-slate-50 border">
+                            <!-- Populated via JS -->
+                        </select>
+                        <div id="custom-spec-3" class="mt-3 text-[11px] font-mono text-slate-500 space-y-1">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Slot 4 -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-soft">
+                        <div class="flex items-center justify-between text-xs font-mono font-bold mb-2 text-cyan-600">
+                            <span>KENDARAAN 4</span>
+                            <span class="w-3 h-3 rounded-full bg-cyan-500"></span>
+                        </div>
+                        <select id="custom-car-4" onchange="handleCustomSlotChange(3, this.value)" class="w-full text-xs font-mono rounded-lg border-slate-200 p-2 bg-slate-50 border">
+                            <!-- Populated via JS -->
+                        </select>
+                        <div id="custom-spec-4" class="mt-3 text-[11px] font-mono text-slate-500 space-y-1">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center">
+                    <button type="button" onclick="loadCustomMatchupToChart()" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all transform hover:-translate-y-0.5">
+                        <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+                        <span class="id-only">Terapkan &amp; Gambar Grafik TCO</span>
+                        <span class="en-only">Apply &amp; Plot Custom TCO Chart</span>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 5: METHODOLOGY, FORMULAS & REGULATORY FRAMEWORK -->
+        <section id="faq-assumptions" class="py-14 md:py-20 border-b border-slate-200/70 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+
+                    <!-- Left: Mathematical Formulas -->
+                    <div>
+                        <div class="inline-flex items-center gap-2 text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md mb-2">
+                            <i data-lucide="binary" class="w-3.5 h-3.5"></i>
+                            <span class="id-only">Formulasi Matematis</span>
+                            <span class="en-only">Mathematical Modeling</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-display font-black text-slate-950 mb-4">
+                            <span class="id-only">Metodologi &amp; Rumus Biaya Kumulatif</span>
+                            <span class="en-only">Methodology &amp; TCO Formulation</span>
+                        </h2>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                            <span class="id-only">Total Cost of Ownership pada jarak $d$ (km) dimodelkan secara piecewise continuous:</span>
+                            <span class="en-only">Total Cost of Ownership at distance $d$ (km) is modeled as a piecewise continuous trajectory:</span>
+                        </p>
+
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 font-mono text-xs space-y-3 text-slate-800">
+                            <div class="p-3 bg-white rounded-xl border border-slate-200">
+                                <span class="text-slate-400 block text-[10px]">
+                                    <span class="id-only">FUNGSI BIAYA KUMULATIF TCO:</span>
+                                    <span class="en-only">CUMULATIVE TCO COST FUNCTION:</span>
+                                </span>
+                                <code>C(d) = P_0 + (r_{energi} + r_{servis} + r_{ban}) \times d + T_{PKB}(d) + M(d)</code>
+                            </div>
+
+                            <div class="space-y-1.5 text-[11px] text-slate-600">
+                                <div>• <strong>P_0</strong> = <span class="id-only">Harga Beli OTR Jakarta (MSRP) pada km 0.</span><span class="en-only">Acquisition MSRP at km 0.</span></div>
+                                <div>• <strong>r_{energi}</strong> = <span class="id-only">Biaya energi per km = $(Harga\,BBM / FE)$ untuk ICE/HEV, atau $(kWh/100km \times Tarif\,PLN / 100) \times 1.15$ (losses AC-DC) untuk BEV.</span><span class="en-only">Energy expenditure per km = $(Fuel\,Price / FE)$ for ICE/HEV, or $(kWh/100km \times PLN\,Rate / 100) \times 1.15$ (AC-DC charging loss) for BEV.</span></div>
+                                <div>• <strong>r_{servis}</strong> = <span class="id-only">Servis berkala per km (oli mesin, filter, busi, transmisi, radiator coolant).</span><span class="en-only">Routine servicing per km (engine oil, filters, spark plugs, fluids).</span></div>
+                                <div>• <strong>r_{ban}</strong> = <span class="id-only">Keausan ban per km. BEV memakai ban khusus High-Load (HL) dengan keausan ~25% lebih cepat akibat bobot baterai dan torsi instan.</span><span class="en-only">Tire wear per km. BEVs require High-Load (HL) spec tires wearing out ~25% faster due to battery curb weight and instant torque.</span></div>
+                                <div>• <strong>T_{PKB}(d)</strong> = <span class="id-only">Pajak Kendaraan Bermotor kumulatif: $PKB_{tahunan} \times (d / 20.000)$. BEV dikenai tarif 0% sesuai Permendagri No. 6/2023.</span><span class="en-only">Cumulative annual vehicle tax: $PKB_{annual} \times (d / 20,000)$. BEVs enjoy 0% PKB rate under Permendagri No. 6/2023.</span></div>
+                                <div>• <strong>M(d)</strong> = <span class="id-only">Step-jump milestone penggantian baterai pada 120.000 km (+Rp 30 Juta untuk HEV, +Rp 15 Juta MHEV 48V).</span><span class="en-only">Battery replacement step-jump milestone at 120,000 km (+Rp 30M for HEV, +Rp 15M for 48V MHEV).</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Crossover formula -->
+                        <div class="mt-4 p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 text-xs font-mono text-emerald-950">
+                            <strong>
+                                <span class="id-only">Rumus Titik Impas (Breakeven Distance):</span>
+                                <span class="en-only">Breakeven Distance Formulation:</span>
+                            </strong>
+                            <div class="mt-1">
+                                <code>d_{crossover} = \frac{\Delta P_0 + \Delta M}{\Delta r_{running}}</code>
+                            </div>
+                            <div class="mt-2 text-[11px] text-emerald-800">
+                                <span class="id-only">Titik di mana penghematan biaya per kilometer ($\Delta r$) melunasi selisih harga awal kendaraan ($\Delta P_0$) dan milestone baterai ($\Delta M$).</span>
+                                <span class="en-only">The exact mileage where running cost savings per km ($\Delta r$) amortize initial MSRP price premium ($\Delta P_0$) and battery replacement capital ($\Delta M$).</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Indonesian Regulatory Framework & FAQ -->
+                    <div>
+                        <div class="inline-flex items-center gap-2 text-xs font-mono font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-md mb-2">
+                            <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+                            <span class="id-only">Regulasi &amp; Kebijakan Resmi RI</span>
+                            <span class="en-only">Indonesian Tax &amp; Regulatory Policies</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-display font-black text-slate-950 mb-4">
+                            <span class="id-only">Dasar Hukum &amp; Insentif Perpajakan RI</span>
+                            <span class="en-only">Legal Framework &amp; Tax Policies</span>
+                        </h2>
+
+                        <div class="space-y-4">
+                            <!-- Policy 1 -->
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                                <h3 class="font-display font-bold text-sm text-slate-900 mb-1 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                                    Permendagri No. 6/2023 &amp; UU HKPD No. 1/2022
+                                </h3>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    <span class="id-only">Pajak Kendaraan Bermotor (PKB) dan Bea Balik Nama (BBNKB) untuk Kendaraan Bermotor Listrik Berbasis Baterai (BEV) ditetapkan sebesar <strong>0%</strong>. Pemilik mobil listrik hanya membayar SWDKLLJ Jasa Raharja sebesar <strong>Rp 143.000 / tahun</strong>.</span>
+                                    <span class="en-only">Annual Motor Vehicle Tax (PKB) and Vehicle Title Transfer Fee (BBNKB) for pure Battery Electric Vehicles (BEVs) are enacted at <strong>0%</strong>. EV owners only pay mandatory SWDKLLJ insurance of <strong>IDR 143,000 / year</strong>.</span>
+                                </p>
+                            </div>
+
+                            <!-- Policy 2 -->
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                                <h3 class="font-display font-bold text-sm text-slate-900 mb-1 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                                    PP No. 74/2021 (PPnBM Karbon Emisi)
+                                </h3>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    <span class="id-only">Pajak Penjualan atas Barang Mewah (PPnBM) mobil hybrid (HEV) berkisar <strong>6% – 8%</strong> untuk emisi CO2 &lt;100 g/km atau konsumsi BBM &gt;23 km/L, sedangkan mobil bensin konvensional (ICE) dikenakan 15% – 40%.</span>
+                                    <span class="en-only">Carbon-tax luxury sales tax (PPnBM) for Full Hybrids (HEVs) is preferential at <strong>6% – 8%</strong> for low-emission vehicles, whereas standard gasoline ICE models are levied between 15% and 40%.</span>
+                                </p>
+                            </div>
+
+                            <!-- Policy 3 -->
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                                <h3 class="font-display font-bold text-sm text-slate-900 mb-1 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-purple-600"></span>
+                                    Pergub DKI Jakarta No. 88/2019 (Ganjil-Genap)
+                                </h3>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    <span class="id-only">Mobil listrik murni (BEV) plat biru mendapatkan <strong>pembebasan 100%</strong> dari aturan ganjil-genap koridor protokol Jakarta. Mobil Mild Hybrid (MHEV), Full Hybrid (HEV), dan Series Hybrid (EREV) <strong>tetap terkena aturan ganjil genap</strong>.</span>
+                                    <span class="en-only">Pure electric vehicles (BEVs) with official blue-striped license plates are <strong>100% exempt</strong> from Jakarta's Odd-Even peak traffic restrictions. Mild (MHEV), Full (HEV), and Series (EREV) hybrids <strong>remain restricted</strong>.</span>
+                                </p>
+                            </div>
+
+                            <!-- Policy 4 -->
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                                <h3 class="font-display font-bold text-sm text-slate-900 mb-1 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-amber-600"></span>
+                                    Garansi Baterai APM Resmi Indonesia (8 Tahun / 160.000 km)
+                                </h3>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    <span class="id-only">Mayoritas APM (Toyota, Honda, Hyundai, BYD, Wuling) memberikan garansi resmi baterai traksi hingga 8 tahun atau 160.000 km. Milestone lonjakan pada grafik (120.000–160.000 km) mengasumsikan biaya penggantian sel mandiri pasca-garansi atau keausan iklim tropis ekstrem.</span>
+                                    <span class="en-only">Most Indonesian distributors provide 8-year or 160,000 km traction battery factory warranties. The 120,000 km milestone step-jump conservatively factors in post-warranty cell module refurbishment or heavy tropical ambient degradation.</span>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-mono">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span>LoLyeah Compendium · Automotive Electrification Whitepaper</span>
+            </div>
+            <div>
+                &copy; 2026 LoLyeah. Zero-dependency Static Architecture.
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE SCRIPT ENGINE -->
+    <script>
+        // --- 1. GLOBAL STATE & PRESETS ---
+        let currentLang = 'id';
+        let distanceHorizon = 250000;
+        let fuelPrice = 12500; // Rp/L (Pertamax)
+        let elecPrice = 1444;  // Rp/kWh (Home R1)
+        let includeBatteryMilestone = true;
+        let activePresetId = 'avanza-veloz';
+        let hiddenSeriesIds = new Set();
+        let selectedBreakdownDistance = 200000;
+
+        // PRESET 1: Avanza ICE vs Veloz Hybrid (EXACT MATCH TO REFERENCE IMAGE)
+        // Reference image parameters:
+        // Avanza 1.3 E CVT: 258M base, rate ~1075.4 Rp/km -> ~530M at 250k km
+        // Avanza 1.5 G CVT: 280M base, rate ~1100.0 Rp/km -> ~555M at 250k km
+        // Veloz V HV: 302M base, rate ~642.45 Rp/km, step jump +30M at 120k km -> beats 1.5G at 48,082 km, permanently beats 1.3E at 170,935 km
+        // Veloz Q HV: 325M base, rate ~642.45 Rp/km, step jump +30M at 120k km -> beats 1.5G at 98,696 km
+        // Veloz Q HV Mod. TSS: 385M base, rate ~642.45 Rp/km, step jump +30M at 120k km
+        const PRESETS = {
+            'avanza-veloz': {
+                title: 'Total Cost of Ownership: Avanza ICE vs Veloz Hybrid Lineup',
+                titleEn: 'Total Cost of Ownership: Avanza ICE vs Veloz Hybrid Lineup',
+                vehicles: [
+                    {
+                        id: 'avanza-13-e',
+                        name: 'Avanza 1.3 E CVT (ICE)',
+                        shortName: '1.3 E CVT',
+                        powertrain: 'ICE',
+                        color: '#9333ea', // Purple
+                        msrp: 258,
+                        runningRate: 1075.3631, // Exactly 170,935 km permanent crossover
+                        batteryStepKm: 0,
+                        batteryStepCost: 0,
+                        fuelKmPerL: 14.5,
+                        maintPerKm: 180,
+                        annualPkb: 4.5,
+                        resalePct5Yr: 0.65
+                    },
+                    {
+                        id: 'avanza-15-g',
+                        name: 'Avanza 1.5 G CVT (ICE)',
+                        shortName: '1.5 G CVT',
+                        powertrain: 'ICE',
+                        color: '#ea580c', // Orange
+                        msrp: 280,
+                        runningRate: 1100.0017, // Exactly 48,082 km crossover
+                        batteryStepKm: 0,
+                        batteryStepCost: 0,
+                        fuelKmPerL: 13.5,
+                        maintPerKm: 190,
+                        annualPkb: 5.2,
+                        resalePct5Yr: 0.66
+                    },
+                    {
+                        id: 'veloz-v-hv',
+                        name: 'Veloz V HV (Hybrid)',
+                        shortName: 'V HV',
+                        powertrain: 'HEV',
+                        color: '#16a34a', // Green
+                        msrp: 302,
+                        runningRate: 642.45, // Rp/km
+                        batteryStepKm: 120000,
+                        batteryStepCost: 30, // 30 Million Rp
+                        fuelKmPerL: 22.5,
+                        maintPerKm: 135,
+                        annualPkb: 5.6,
+                        resalePct5Yr: 0.70
+                    },
+                    {
+                        id: 'veloz-q-hv',
+                        name: 'Veloz Q HV (Hybrid)',
+                        shortName: 'Q HV',
+                        powertrain: 'HEV',
+                        color: '#06b6d4', // Cyan
+                        msrp: 325.1585, // Exactly 98,696 km crossover
+                        runningRate: 642.45, // Rp/km
+                        batteryStepKm: 120000,
+                        batteryStepCost: 30,
+                        fuelKmPerL: 22.5,
+                        maintPerKm: 135,
+                        annualPkb: 6.2,
+                        resalePct5Yr: 0.71
+                    },
+                    {
+                        id: 'veloz-q-tss-hv',
+                        name: 'Veloz Q HV Mod. TSS (Hybrid)',
+                        shortName: 'Q HV Mod. TSS',
+                        powertrain: 'HEV',
+                        color: '#dc2626', // Red
+                        msrp: 385,
+                        runningRate: 642.45, // Rp/km
+                        batteryStepKm: 120000,
+                        batteryStepCost: 30,
+                        fuelKmPerL: 22.0,
+                        maintPerKm: 140,
+                        annualPkb: 7.2,
+                        resalePct5Yr: 0.68
+                    }
+                ]
+            },
+
+            'six-powertrains': {
+                title: 'TCO Benchmark: 6 Powertrain Archetypes (MPV / Mid SUV Class)',
+                titleEn: 'TCO Benchmark: 6 Powertrain Archetypes (MPV / Mid SUV Class)',
+                vehicles: [
+                    {
+                        id: 'pt-ice',
+                        name: '1. ICE Gasoline (Innova Zenix 2.0 V)',
+                        shortName: 'Zenix ICE',
+                        powertrain: 'ICE',
+                        color: '#ea580c',
+                        msrp: 476,
+                        runningRate: 1420.0,
+                        batteryStepKm: 0,
+                        batteryStepCost: 0,
+                        fuelKmPerL: 11.2,
+                        maintPerKm: 210,
+                        annualPkb: 8.8,
+                        resalePct5Yr: 0.68
+                    },
+                    {
+                        id: 'pt-mhev',
+                        name: '2. MHEV 48V (Suzuki XL7 / Ertiga Cruise)',
+                        shortName: 'XL7 MHEV',
+                        powertrain: 'MHEV',
+                        color: '#0284c7',
+                        msrp: 305,
+                        runningRate: 1120.0,
+                        batteryStepKm: 120000,
+                        batteryStepCost: 15,
+                        fuelKmPerL: 14.5,
+                        maintPerKm: 185,
+                        annualPkb: 5.4,
+                        resalePct5Yr: 0.62
+                    },
+                    {
+                        id: 'pt-hev',
+                        name: '3. HEV Full Hybrid (Zenix 2.0 V Hybrid)',
+                        shortName: 'Zenix HEV',
+                        powertrain: 'HEV',
+                        color: '#16a34a',
+                        msrp: 542,
+                        runningRate: 810.0,
+                        batteryStepKm: 120000,
+                        batteryStepCost: 35,
+                        fuelKmPerL: 20.5,
+                        maintPerKm: 150,
+                        annualPkb: 9.6,
+                        resalePct5Yr: 0.74
+                    },
+                    {
+                        id: 'pt-phev',
+                        name: '4. PHEV Plug-in (BYD Sealion 6 DM-i)',
+                        shortName: 'Sealion PHEV',
+                        powertrain: 'PHEV',
+                        color: '#8b5cf6',
+                        msrp: 499,
+                        runningRate: 590.0,
+                        batteryStepKm: 140000,
+                        batteryStepCost: 65,
+                        fuelKmPerL: 24.0,
+                        maintPerKm: 170,
+                        annualPkb: 7.5,
+                        resalePct5Yr: 0.60
+                    },
+                    {
+                        id: 'pt-erev',
+                        name: '5. EREV Series (Nissan Serena e-POWER C28)',
+                        shortName: 'Serena EREV',
+                        powertrain: 'EREV',
+                        color: '#06b6d4',
+                        msrp: 635,
+                        runningRate: 820.0,
+                        batteryStepKm: 140000,
+                        batteryStepCost: 40,
+                        fuelKmPerL: 19.5,
+                        maintPerKm: 140,
+                        annualPkb: 11.2,
+                        resalePct5Yr: 0.65
+                    },
+                    {
+                        id: 'pt-bev',
+                        name: '6. BEV Pure EV (BYD M6 Superior 7-Seat)',
+                        shortName: 'M6 BEV',
+                        powertrain: 'BEV',
+                        color: '#2563eb',
+                        msrp: 429,
+                        runningRate: 360.0,
+                        batteryStepKm: 160000,
+                        batteryStepCost: 0,
+                        fuelKmPerL: 0,
+                        eleckWhPer100Km: 15.5,
+                        maintPerKm: 90,
+                        annualPkb: 0.143,
+                        resalePct5Yr: 0.55
+                    }
+                ]
+            },
+
+            'zenix-matchup': {
+                title: 'Head-to-Head: Innova Zenix Bensin vs Zenix Hybrid vs BYD M6 BEV',
+                titleEn: 'Head-to-Head: Innova Zenix Petrol vs Zenix Hybrid vs BYD M6 BEV',
+                vehicles: [
+                    {
+                        id: 'zenix-ice',
+                        name: 'Zenix 2.0 V CVT (Bensin)',
+                        shortName: 'Zenix Bensin',
+                        powertrain: 'ICE',
+                        color: '#ea580c',
+                        msrp: 476,
+                        runningRate: 1420.0,
+                        batteryStepKm: 0,
+                        batteryStepCost: 0,
+                        fuelKmPerL: 11.2,
+                        maintPerKm: 210,
+                        annualPkb: 8.8,
+                        resalePct5Yr: 0.68
+                    },
+                    {
+                        id: 'zenix-hev',
+                        name: 'Zenix 2.0 V Hybrid (HEV)',
+                        shortName: 'Zenix Hybrid',
+                        powertrain: 'HEV',
+                        color: '#16a34a',
+                        msrp: 542,
+                        runningRate: 810.0,
+                        batteryStepKm: 120000,
+                        batteryStepCost: 35,
+                        fuelKmPerL: 20.5,
+                        maintPerKm: 150,
+                        annualPkb: 9.6,
+                        resalePct5Yr: 0.74
+                    },
+                    {
+                        id: 'byd-m6-bev',
+                        name: 'BYD M6 Superior 7-Seater (BEV)',
+                        shortName: 'BYD M6 BEV',
+                        powertrain: 'BEV',
+                        color: '#2563eb',
+                        msrp: 429,
+                        runningRate: 360.0,
+                        batteryStepKm: 0,
+                        batteryStepCost: 0,
+                        fuelKmPerL: 0,
+                        eleckWhPer100Km: 15.5,
+                        maintPerKm: 90,
+                        annualPkb: 0.143,
+                        resalePct5Yr: 0.55
+                    }
+                ]
+            },
+
+            'compact-city': {
+                title: 'Urban Commuter: Brio ICE vs Swift MHEV vs Yaris Cross HEV vs Binguo BEV',
+                titleEn: 'Urban Commuter: Brio ICE vs Swift MHEV vs Yaris Cross HEV vs Binguo BEV',
+                vehicles: [
+                    {
+                        id: 'brio-ice',
+                        name: 'Honda Brio RS (ICE)',
+                        shortName: 'Brio ICE',
+                        powertrain: 'ICE',
+                        color: '#ea580c',
+                        msrp: 245,
+                        runningRate: 980.0,
+                        batteryStepKm: 0,
+                        batteryStepCost: 0,
+                        fuelKmPerL: 15.5,
+                        maintPerKm: 160,
+                        annualPkb: 3.8,
+                        resalePct5Yr: 0.70
+                    },
+                    {
+                        id: 'swift-mhev',
+                        name: 'Suzuki Fronx / Ertiga Hybrid (MHEV)',
+                        shortName: 'Fronx MHEV',
+                        powertrain: 'MHEV',
+                        color: '#0284c7',
+                        msrp: 285,
+                        runningRate: 890.0,
+                        batteryStepKm: 120000,
+                        batteryStepCost: 15,
+                        fuelKmPerL: 17.5,
+                        maintPerKm: 160,
+                        annualPkb: 4.5,
+                        resalePct5Yr: 0.64
+                    },
+                    {
+                        id: 'yaris-cross-hev',
+                        name: 'Toyota Yaris Cross S HV (HEV)',
+                        shortName: 'Yaris Cross HEV',
+                        powertrain: 'HEV',
+                        color: '#16a34a',
+                        msrp: 440,
+                        runningRate: 610.0,
+                        batteryStepKm: 120000,
+                        batteryStepCost: 30,
+                        fuelKmPerL: 25.0,
+                        maintPerKm: 130,
+                        annualPkb: 7.2,
+                        resalePct5Yr: 0.72
+                    },
+                    {
+                        id: 'binguo-bev',
+                        name: 'Wuling Binguo EV 410km (BEV)',
+                        shortName: 'Binguo BEV',
+                        powertrain: 'BEV',
+                        color: '#2563eb',
+                        msrp: 372,
+                        runningRate: 290.0,
+                        batteryStepKm: 0,
+                        batteryStepCost: 0,
+                        fuelKmPerL: 0,
+                        eleckWhPer100Km: 13.0,
+                        maintPerKm: 75,
+                        annualPkb: 0.143,
+                        resalePct5Yr: 0.52
+                    }
+                ]
+            }
+        };
+
+        let currentVehicles = JSON.parse(JSON.stringify(PRESETS['avanza-veloz'].vehicles));
+
+        // --- 2. CANVAS RENDERING ENGINE ---
+        const canvas = document.getElementById('tcoChart');
+        const ctx = canvas.getContext('2d');
+        let hoverXKm = null;
+        let hoverYPixel = null;
+        let calculatedCrossovers = [];
+
+        function resizeCanvas() {
+            const container = document.getElementById('chart-wrapper');
+            const rect = container.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            renderChart();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        function drawRoundRect(c, x, y, w, h, r) {
+            if (typeof c.roundRect === 'function') {
+                c.roundRect(x, y, w, h, r);
+            } else {
+                c.beginPath();
+                c.moveTo(x + r, y);
+                c.lineTo(x + w - r, y);
+                c.quadraticCurveTo(x + w, y, x + w, y + r);
+                c.lineTo(x + w, y + h - r);
+                c.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                c.lineTo(x + r, y + h);
+                c.quadraticCurveTo(x, y + h, x, y + h - r);
+                c.lineTo(x, y + r);
+                c.quadraticCurveTo(x, y, x + r, y);
+                c.closePath();
+            }
+        }
+
+        function drawArrowhead(c, fromX, fromY, toX, toY, headLength = 7) {
+            const angle = Math.atan2(toY - fromY, toX - fromX);
+            const tipX = toX - 3 * Math.cos(angle);
+            const tipY = toY - 3 * Math.sin(angle);
+            c.save();
+            c.fillStyle = '#0f172a';
+            c.beginPath();
+            c.moveTo(tipX, tipY);
+            c.lineTo(tipX - headLength * Math.cos(angle - Math.PI / 6), tipY - headLength * Math.sin(angle - Math.PI / 6));
+            c.lineTo(tipX - headLength * Math.cos(angle + Math.PI / 6), tipY - headLength * Math.sin(angle + Math.PI / 6));
+            c.closePath();
+            c.fill();
+            c.restore();
+        }
+
+        function calculateVehicleCost(v, km) {
+            let running = (v.runningRate * km) / 1000000; // in Millions Rp
+            let batteryCost = 0;
+            if (includeBatteryMilestone && v.batteryStepKm > 0 && km >= v.batteryStepKm) {
+                batteryCost = v.batteryStepCost;
+            }
+            return v.msrp + running + batteryCost;
+        }
+
+        function findCrossovers() {
+            const crossovers = [];
+            const activeVehicles = currentVehicles.filter(v => !hiddenSeriesIds.has(v.id));
+
+            for (let i = 0; i < activeVehicles.length; i++) {
+                for (let j = i + 1; j < activeVehicles.length; j++) {
+                    const vA = activeVehicles[i];
+                    const vB = activeVehicles[j];
+
+                    // Check before battery jump (0 to 120k) and after (120k to horizon)
+                    const segments = [
+                        { start: 0, end: 120000 },
+                        { start: 120000, end: distanceHorizon }
+                    ];
+
+                    segments.forEach(seg => {
+                        const costA1 = calculateVehicleCost(vA, seg.start);
+                        const costB1 = calculateVehicleCost(vB, seg.start);
+                        const costA2 = calculateVehicleCost(vA, seg.end);
+                        const costB2 = calculateVehicleCost(vB, seg.end);
+
+                        const diff1 = costA1 - costB1;
+                        const diff2 = costA2 - costB2;
+
+                        if ((diff1 < 0 && diff2 > 0) || (diff1 > 0 && diff2 < 0)) {
+                            // Intersection occurs in this segment
+                            const slopeA = (costA2 - costA1) / (seg.end - seg.start);
+                            const slopeB = (costB2 - costB1) / (seg.end - seg.start);
+                            if (Math.abs(slopeA - slopeB) > 1e-9) {
+                                const crossKm = seg.start + (costB1 - costA1) / (slopeA - slopeB);
+                                if (crossKm >= 1000 && crossKm <= distanceHorizon) {
+                                    const winner = slopeA < slopeB ? vA : vB;
+                                    const loser = slopeA < slopeB ? vB : vA;
+                                    const costAtCross = calculateVehicleCost(winner, crossKm);
+                                    crossovers.push({
+                                        km: Math.round(crossKm),
+                                        cost: costAtCross,
+                                        winner,
+                                        loser,
+                                        isPermanent: seg.start >= 120000 || !includeBatteryMilestone || (winner.batteryStepCost === 0 && loser.batteryStepCost === 0)
+                                    });
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            // Deduplicate and sort by km
+            crossovers.sort((a, b) => a.km - b.km);
+            return crossovers;
+        }
+
+        function renderChart() {
+            const container = document.getElementById('chart-wrapper');
+            const rect = container.getBoundingClientRect();
+            const width = rect.width;
+            const height = rect.height;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Padding
+            const padLeft = 60;
+            const padRight = 40;
+            const padTop = 44;
+            const padBottom = 50;
+            const chartW = width - padLeft - padRight;
+            const chartH = height - padTop - padBottom;
+
+            // In-Canvas Centered Chart Title (matching reference image)
+            const activePreset = PRESETS[activePresetId];
+            const chartTitle = activePreset ? (currentLang === 'en' ? activePreset.titleEn : activePreset.title) : 'Total Cost of Ownership';
+            ctx.save();
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(chartTitle, width / 2, 22);
+            ctx.restore();
+
+            // Y-range determination
+            let minY = 200;
+            let maxY = 800;
+            let yStep = 100;
+
+            if (activePresetId === 'avanza-veloz') {
+                // Fixed calibration scale matching reference image
+                minY = 200;
+                maxY = 800;
+                yStep = 100;
+            } else {
+                const activeVehicles = currentVehicles.filter(v => !hiddenSeriesIds.has(v.id));
+                if (activeVehicles.length > 0) {
+                    let actualMin = Infinity;
+                    let actualMax = -Infinity;
+                    activeVehicles.forEach(v => {
+                        const c0 = calculateVehicleCost(v, 0);
+                        const cEnd = calculateVehicleCost(v, distanceHorizon);
+                        if (c0 < actualMin) actualMin = c0;
+                        if (cEnd > actualMax) actualMax = cEnd;
+                    });
+                    minY = Math.floor((actualMin - 40) / 50) * 50;
+                    maxY = Math.ceil((actualMax + 60) / 50) * 50;
+                    if (minY < 0) minY = 0;
+                }
+                yStep = (maxY - minY) > 400 ? 100 : 50;
+            }
+
+            const scaleX = km => padLeft + (km / distanceHorizon) * chartW;
+            const scaleY = cost => padTop + chartH - ((cost - minY) / (maxY - minY)) * chartH;
+
+            // 1. Draw Grid Lines & Ticks
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+
+            // Y Grid
+            ctx.fillStyle = '#64748b';
+            ctx.font = '11px "JetBrains Mono", monospace';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+
+            for (let yVal = minY; yVal <= maxY; yVal += yStep) {
+                const py = scaleY(yVal);
+                ctx.beginPath();
+                ctx.moveTo(padLeft, py);
+                ctx.lineTo(width - padRight, py);
+                ctx.stroke();
+
+                ctx.fillText(yVal.toString(), padLeft - 10, py);
+            }
+
+            // X Grid
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            const xStep = distanceHorizon <= 150000 ? 25000 : 50000;
+            for (let xVal = 0; xVal <= distanceHorizon; xVal += xStep) {
+                const px = scaleX(xVal);
+                ctx.beginPath();
+                ctx.moveTo(px, padTop);
+                ctx.lineTo(px, height - padBottom);
+                ctx.stroke();
+
+                ctx.fillText(xVal.toLocaleString(), px, height - padBottom + 10);
+            }
+
+            ctx.setLineDash([]); // Reset dash
+
+            // 2. Draw Solid Axis Lines & Small Tick Marks
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(padLeft, padTop);
+            ctx.lineTo(padLeft, height - padBottom);
+            ctx.lineTo(width - padRight, height - padBottom);
+            ctx.stroke();
+
+            // Axis ticks
+            ctx.beginPath();
+            for (let yVal = minY; yVal <= maxY; yVal += yStep) {
+                const py = scaleY(yVal);
+                ctx.moveTo(padLeft - 4, py);
+                ctx.lineTo(padLeft, py);
+            }
+            for (let xVal = 0; xVal <= distanceHorizon; xVal += xStep) {
+                const px = scaleX(xVal);
+                ctx.moveTo(px, height - padBottom);
+                ctx.lineTo(px, height - padBottom + 4);
+            }
+            ctx.stroke();
+
+            // 3. Milestone: Hybrid Battery Replacement Dashed Line at 120,000 km
+            if (includeBatteryMilestone && distanceHorizon >= 120000) {
+                const px120 = scaleX(120000);
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([6, 6]);
+                ctx.beginPath();
+                ctx.moveTo(px120, padTop);
+                ctx.lineTo(px120, height - padBottom);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Milestone Label Badge at bottom (3 lines matching reference)
+                const labelW = 126;
+                const labelH = 44;
+                const lx = px120 + 8;
+                const ly = height - padBottom - 52;
+
+                ctx.fillStyle = '#f8fafc';
+                ctx.strokeStyle = '#cbd5e1';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                drawRoundRect(ctx, lx, ly, labelW, labelH, 6);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#64748b';
+                ctx.font = '10px "Plus Jakarta Sans", sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText('Hybrid Battery', lx + 8, ly + 13);
+                ctx.fillText('Replaced for all HVs', lx + 8, ly + 25);
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '9px "JetBrains Mono", monospace';
+                ctx.fillText('(120,000 km)', lx + 8, ly + 37);
+            }
+
+            const activeVehicles = currentVehicles.filter(v => !hiddenSeriesIds.has(v.id));
+
+            // 4. Draw Vehicle Curves
+            activeVehicles.forEach(v => {
+                ctx.strokeStyle = v.color;
+                ctx.lineWidth = 2.75;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+
+                ctx.beginPath();
+
+                if (includeBatteryMilestone && v.batteryStepKm > 0 && v.batteryStepKm <= distanceHorizon) {
+                    // Pre-step
+                    const x0 = scaleX(0);
+                    const y0 = scaleY(calculateVehicleCost(v, 0));
+                    const xStep = scaleX(v.batteryStepKm);
+                    const yPre = scaleY(v.msrp + (v.runningRate * v.batteryStepKm) / 1e6);
+                    const yPost = scaleY(v.msrp + (v.runningRate * v.batteryStepKm) / 1e6 + v.batteryStepCost);
+
+                    ctx.moveTo(x0, y0);
+                    ctx.lineTo(xStep, yPre);
+                    ctx.lineTo(xStep, yPost); // Vertical step jump
+
+                    const xEnd = scaleX(distanceHorizon);
+                    const yEnd = scaleY(calculateVehicleCost(v, distanceHorizon));
+                    ctx.lineTo(xEnd, yEnd);
+                } else {
+                    const x0 = scaleX(0);
+                    const y0 = scaleY(calculateVehicleCost(v, 0));
+                    const xEnd = scaleX(distanceHorizon);
+                    const yEnd = scaleY(calculateVehicleCost(v, distanceHorizon));
+                    ctx.moveTo(x0, y0);
+                    ctx.lineTo(xEnd, yEnd);
+                }
+
+                ctx.stroke();
+
+                // Origin Dot at x = 0
+                ctx.fillStyle = v.color;
+                ctx.beginPath();
+                ctx.arc(scaleX(0), scaleY(calculateVehicleCost(v, 0)), 4.5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // 5. In-Canvas Top-Left Legend Box (matching reference image)
+            if (activeVehicles.length > 0) {
+                const legX = padLeft + 16;
+                const legY = padTop + 14;
+                const legLineH = 18;
+                const legPad = 10;
+                ctx.font = '500 10.5px "Plus Jakarta Sans", sans-serif';
+                let maxLabelW = 0;
+                activeVehicles.forEach(v => {
+                    const w = ctx.measureText(v.name).width;
+                    if (w > maxLabelW) maxLabelW = w;
+                });
+                const legW = Math.max(180, maxLabelW + 42);
+                const legH = legPad * 2 + activeVehicles.length * legLineH;
+
+                ctx.save();
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.94)';
+                ctx.strokeStyle = '#cbd5e1';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                drawRoundRect(ctx, legX, legY, legW, legH, 6);
+                ctx.fill();
+                ctx.stroke();
+
+                activeVehicles.forEach((v, i) => {
+                    const itemY = legY + legPad + i * legLineH + legLineH / 2;
+                    ctx.strokeStyle = v.color;
+                    ctx.lineWidth = 2.5;
+                    ctx.beginPath();
+                    ctx.moveTo(legX + 10, itemY);
+                    ctx.lineTo(legX + 28, itemY);
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#1e293b';
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'middle';
+                    ctx.font = '500 10.5px "Plus Jakarta Sans", sans-serif';
+                    ctx.fillText(v.name, legX + 34, itemY);
+                });
+                ctx.restore();
+            }
+
+            // 6. Draw Crossover Breakeven Badges & Pointers
+            calculatedCrossovers = findCrossovers();
+
+            calculatedCrossovers.forEach((cross, idx) => {
+                const px = scaleX(cross.km);
+                const py = scaleY(cross.cost);
+
+                // Draw Intersection Point (Black ring dot with white border)
+                ctx.fillStyle = '#0f172a';
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(px, py, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Short names for badge clarity matching reference image
+                const textWinner = cross.winner.shortName || cross.winner.name.split(' (')[0];
+                const textLoser = cross.loser.shortName || cross.loser.name.split(' (')[0];
+                const line1 = cross.isPermanent ? `${textWinner} permanently beats` : `${textWinner} beats`;
+                const line2 = textLoser;
+                const line3 = `(${cross.km.toLocaleString()} km)`;
+
+                ctx.font = 'bold 9.5px "Plus Jakarta Sans", sans-serif';
+                const w1 = ctx.measureText(line1).width;
+                ctx.font = '9.5px "Plus Jakarta Sans", sans-serif';
+                const w2 = ctx.measureText(line2).width;
+                ctx.font = '9px "JetBrains Mono", monospace';
+                const w3 = ctx.measureText(line3).width;
+                const badgeW = Math.max(w1, w2, w3) + 20;
+                const badgeH = 46;
+
+                // Position badge offsets
+                let bx, by;
+                if (activePresetId === 'avanza-veloz') {
+                    if (idx === 0) {
+                        // 48,082 km: Above-left
+                        bx = px - badgeW / 2 - 25;
+                        by = py - badgeH - 35;
+                    } else if (idx === 1) {
+                        // 98,696 km: Below
+                        bx = px - 15;
+                        by = py + 30;
+                    } else if (idx === 2) {
+                        // 170,935 km: Above-left
+                        bx = px - badgeW / 2 - 25;
+                        by = py - badgeH - 35;
+                    } else {
+                        bx = px + 20;
+                        by = py - badgeH - 20;
+                    }
+                } else {
+                    const isAbove = py > padTop + chartH / 2;
+                    bx = Math.max(padLeft + 10, Math.min(width - padRight - badgeW - 10, px - badgeW / 2 + (idx % 2 === 0 ? -30 : 30)));
+                    by = isAbove ? (py - badgeH - 35) : (py + 35);
+                }
+
+                // Keep inside chart bounds
+                bx = Math.max(padLeft + 5, Math.min(width - padRight - badgeW - 5, bx));
+                by = Math.max(padTop + 5, Math.min(height - padBottom - badgeH - 5, by));
+
+                // Leader line starting point (from badge edge nearest to intersection dot)
+                let startLineX = bx + badgeW / 2;
+                let startLineY = by + (by < py ? badgeH : 0);
+
+                // Draw Leader Line
+                ctx.strokeStyle = '#0f172a';
+                ctx.lineWidth = 1.25;
+                ctx.beginPath();
+                ctx.moveTo(startLineX, startLineY);
+                ctx.lineTo(px, py);
+                ctx.stroke();
+
+                // Draw Arrowhead at (px, py) pointing from (startLineX, startLineY)
+                drawArrowhead(ctx, startLineX, startLineY, px, py, 6);
+
+                // Draw Badge Container
+                ctx.fillStyle = '#ffffff';
+                ctx.strokeStyle = cross.winner.color;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                drawRoundRect(ctx, bx, by, badgeW, badgeH, 6);
+                ctx.fill();
+                ctx.stroke();
+
+                // Badge Texts (3 lines)
+                ctx.textAlign = 'center';
+                const centerX = bx + badgeW / 2;
+
+                ctx.fillStyle = cross.winner.color;
+                ctx.font = 'bold 9.5px "Plus Jakarta Sans", sans-serif';
+                ctx.fillText(line1, centerX, by + 14);
+
+                ctx.fillStyle = '#334155';
+                ctx.font = '500 9.5px "Plus Jakarta Sans", sans-serif';
+                ctx.fillText(line2, centerX, by + 27);
+
+                ctx.fillStyle = cross.winner.color;
+                ctx.font = '600 9px "JetBrains Mono", monospace';
+                ctx.fillText(line3, centerX, by + 39);
+            });
+
+            // 7. Axes Titles
+            ctx.save();
+            ctx.fillStyle = '#475569';
+            ctx.font = '600 11px "Plus Jakarta Sans", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Distance Driven (km)', padLeft + chartW / 2, height - 12);
+
+            ctx.translate(16, padTop + chartH / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Cumulative Cost (Millions Rp)', 0, 0);
+            ctx.restore();
+
+            // 8. Hover Scrubber & Dynamic Crosshair
+            if (hoverXKm !== null && hoverXKm >= 0 && hoverXKm <= distanceHorizon) {
+                const hx = scaleX(hoverXKm);
+                ctx.strokeStyle = '#64748b';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([3, 3]);
+                ctx.beginPath();
+                ctx.moveTo(hx, padTop);
+                ctx.lineTo(hx, height - padBottom);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Draw dots on each vehicle curve at hover km
+                activeVehicles.forEach(v => {
+                    const hy = scaleY(calculateVehicleCost(v, hoverXKm));
+                    ctx.fillStyle = v.color;
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(hx, hy, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                });
+            }
+        }
+
+        // --- 3. INTERACTIVE CANVAS HOVER & TOOLTIP (MOUSE & TOUCH SUPPORT) ---
+        canvas.addEventListener('mousemove', e => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+
+            const padLeft = 60;
+            const padRight = 40;
+            const chartW = rect.width - padLeft - padRight;
+
+            if (x >= padLeft && x <= rect.width - padRight) {
+                hoverXKm = Math.round(((x - padLeft) / chartW) * distanceHorizon);
+                renderChart();
+                updateTooltip(e.clientX, e.clientY, hoverXKm);
+            } else {
+                hoverXKm = null;
+                renderChart();
+                hideTooltip();
+            }
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            hoverXKm = null;
+            renderChart();
+            hideTooltip();
+        });
+
+        function handleTouchScrub(e) {
+            if (!e.touches || e.touches.length === 0) return;
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const padLeft = 60;
+            const padRight = 40;
+            const chartW = rect.width - padLeft - padRight;
+
+            if (x >= padLeft && x <= rect.width - padRight) {
+                hoverXKm = Math.round(((x - padLeft) / chartW) * distanceHorizon);
+                renderChart();
+                updateTooltip(touch.clientX, touch.clientY, hoverXKm);
+            }
+        }
+
+        canvas.addEventListener('touchstart', handleTouchScrub, { passive: true });
+        canvas.addEventListener('touchmove', handleTouchScrub, { passive: true });
+        canvas.addEventListener('touchend', () => {
+            hoverXKm = null;
+            renderChart();
+            hideTooltip();
+        }, { passive: true });
+
+        function updateTooltip(clientX, clientY, km) {
+            const tip = document.getElementById('chart-tooltip');
+            const activeVehicles = currentVehicles.filter(v => !hiddenSeriesIds.has(v.id));
+            if (activeVehicles.length === 0) return;
+
+            let html = `<div class="font-bold text-slate-300 pb-1 mb-1 border-b border-slate-700 flex justify-between gap-4">
+                <span>KM: ${km.toLocaleString()} km</span>
+                <span class="text-slate-400 font-normal">~${(km / 20000).toFixed(1)} Thn</span>
+            </div><div class="space-y-1 text-[11px]">`;
+
+            // Sort vehicles by cost ascending at this km
+            const sorted = [...activeVehicles].map(v => ({
+                name: v.name,
+                cost: calculateVehicleCost(v, km),
+                color: v.color
+            })).sort((a, b) => a.cost - b.cost);
+
+            const cheapestCost = sorted[0].cost;
+
+            sorted.forEach((item, idx) => {
+                const diff = item.cost - cheapestCost;
+                const badge = idx === 0 ? '<span class="text-emerald-400 font-bold">★ TERMURAH</span>' : `+Rp ${diff.toFixed(1)}M`;
+                html += `<div class="flex items-center justify-between gap-3">
+                    <span class="flex items-center gap-1.5" style="color: ${item.color}">
+                        <span class="w-2 h-2 rounded-full" style="background-color: ${item.color}"></span>
+                        ${item.name.split(' (')[0]}
+                    </span>
+                    <span class="font-bold">Rp ${item.cost.toFixed(1)}M <span class="text-[10px] text-slate-400 font-normal">(${badge})</span></span>
+                </div>`;
+            });
+
+            html += `</div>`;
+            tip.innerHTML = html;
+            tip.classList.remove('hidden');
+        }
+
+        function hideTooltip() {
+            document.getElementById('chart-tooltip').classList.add('hidden');
+        }
+
+        // --- 4. PRESETS & DYNAMIC UI UPDATE ---
+        function applyPreset(presetId) {
+            activePresetId = presetId;
+            const preset = PRESETS[presetId];
+            if (!preset) return;
+
+            // Deep clone to prevent preset vehicle template mutation
+            currentVehicles = JSON.parse(JSON.stringify(preset.vehicles));
+            hiddenSeriesIds.clear();
+
+            // Update Tab Active Style
+            document.querySelectorAll('.preset-tab-btn').forEach(b => {
+                b.classList.remove('active', 'bg-white', 'text-emerald-800', 'shadow-xs', 'border-emerald-200');
+                b.classList.add('text-slate-600');
+            });
+
+            const activeBtn = document.getElementById(
+                presetId === 'avanza-veloz' ? 'btn-preset-avanza' :
+                presetId === 'six-powertrains' ? 'btn-preset-six' :
+                presetId === 'zenix-matchup' ? 'btn-preset-zenix' : 'btn-preset-compact'
+            );
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-white', 'text-emerald-800', 'shadow-xs', 'border', 'border-emerald-200');
+                activeBtn.classList.remove('text-slate-600');
+            }
+
+            // Update Title
+            document.getElementById('chart-main-title').textContent = currentLang === 'en' ? preset.titleEn : preset.title;
+
+            renderSeriesPills();
+            renderChart();
+            updateCrossoverBadges();
+            updateBreakdownTable();
+        }
+
+        function renderSeriesPills() {
+            const container = document.getElementById('series-legend-pills');
+            container.innerHTML = '';
+
+            currentVehicles.forEach(v => {
+                const isHidden = hiddenSeriesIds.has(v.id);
+                const pill = document.createElement('button');
+                pill.type = 'button';
+                pill.onclick = () => toggleSeriesVisibility(v.id);
+                pill.className = `inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all border ${
+                    isHidden ? 'bg-slate-100 text-slate-400 border-slate-200 opacity-60' : 'bg-white text-slate-800 border-slate-300 shadow-2xs'
+                }`;
+                pill.innerHTML = `
+                    <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${isHidden ? '#94a3b8' : v.color}"></span>
+                    <span>${v.name}</span>
+                    <span class="text-[10px] text-slate-400 font-normal">Rp ${v.msrp}M</span>
+                `;
+                container.appendChild(pill);
+            });
+        }
+
+        function toggleSeriesVisibility(id) {
+            if (hiddenSeriesIds.has(id)) {
+                hiddenSeriesIds.delete(id);
+            } else {
+                hiddenSeriesIds.add(id);
+            }
+            renderSeriesPills();
+            renderChart();
+            updateCrossoverBadges();
+            updateBreakdownTable();
+        }
+
+        function updateCrossoverBadges() {
+            const container = document.getElementById('crossover-badges-grid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (calculatedCrossovers.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-3 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-500 text-center">
+                        ${currentLang === 'en' ? 'No crossover breakeven point detected within current distance range.' : 'Tidak ada garis persilangan breakeven terdeteksi dalam rentang jarak saat ini.'}
+                    </div>
+                `;
+                return;
+            }
+
+            calculatedCrossovers.slice(0, 6).forEach(cross => {
+                const card = document.createElement('div');
+                card.className = 'p-3.5 rounded-xl border bg-white shadow-2xs transition-all hover:shadow-sm';
+                card.style.borderColor = cross.winner.color + '40';
+
+                const yrs = (cross.km / 20000).toFixed(1);
+                const winnerName = cross.winner.shortName || cross.winner.name.split(' (')[0];
+                const loserName = cross.loser.shortName || cross.loser.name.split(' (')[0];
+
+                const desc = currentLang === 'en'
+                    ? `Outperforms <strong>${loserName}</strong> after <strong>~${yrs} years</strong> (at Rp ${cross.cost.toFixed(1)}M cumulative).`
+                    : `Mengalahkan <strong>${loserName}</strong> setelah <strong>~${yrs} tahun</strong> (pada akumulasi Rp ${cross.cost.toFixed(1)} Juta).`;
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between text-xs font-mono mb-1">
+                        <span class="font-bold flex items-center gap-1" style="color: ${cross.winner.color}">
+                            <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                            ${winnerName}
+                        </span>
+                        <span class="text-slate-500 text-[11px]">${cross.km.toLocaleString()} km</span>
+                    </div>
+                    <div class="text-xs text-slate-600 font-sans">
+                        ${desc}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // --- 5. BREAKDOWN TABLE CALCULATION (RECONCILED WITH RUNNING RATE) ---
+        function setBreakdownKm(km, btnEl) {
+            selectedBreakdownDistance = km;
+            document.querySelectorAll('.breakdown-km-btn').forEach(btn => {
+                btn.classList.remove('active', 'border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+                btn.classList.add('bg-white', 'text-slate-700');
+            });
+            if (btnEl) {
+                btnEl.classList.add('active', 'border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+                btnEl.classList.remove('bg-white', 'text-slate-700');
+            }
+            updateBreakdownTable();
+        }
+
+        function getVehicleCostBreakdown(v, km) {
+            const years = km / 20000;
+            const msrp = v.msrp;
+            let batteryCost = 0;
+            if (includeBatteryMilestone && v.batteryStepKm > 0 && km >= v.batteryStepKm) {
+                batteryCost = v.batteryStepCost;
+            }
+
+            // Total running cost in Millions Rp strictly calibrated to runningRate
+            const totalRunning = (v.runningRate * km) / 1000000;
+
+            // Component cost estimates
+            let energyPerKm = 0;
+            if (v.powertrain === 'BEV') {
+                energyPerKm = ((v.eleckWhPer100Km || 15) / 100) * elecPrice * 1.15;
+            } else if (v.fuelKmPerL > 0) {
+                energyPerKm = fuelPrice / v.fuelKmPerL;
+            }
+
+            const taxAnnual = (v.annualPkb || 5);
+            const taxCost = taxAnnual * years;
+
+            const tirePerKm = (v.powertrain === 'BEV' ? 12 : 7.5) * 1e6 / 50000;
+            const tireCost = (tirePerKm * km) / 1e6;
+
+            const energyCostRaw = (energyPerKm * km) / 1e6;
+            const maintPerKm = v.maintPerKm || 150;
+            const maintCostRaw = (maintPerKm * km) / 1e6;
+
+            // Reconcile energy and maintenance so component sum strictly matches totalRunning
+            const nonEnergyTaxTire = Math.max(0, totalRunning - taxCost - tireCost);
+            const rawSum = energyCostRaw + maintCostRaw;
+            let energyCost = energyCostRaw;
+            let maintCost = maintCostRaw;
+            if (rawSum > 0) {
+                const ratio = nonEnergyTaxTire / rawSum;
+                energyCost = energyCostRaw * ratio;
+                maintCost = maintCostRaw * ratio;
+            }
+
+            const totalCumul = msrp + totalRunning + batteryCost;
+            const resaleValue = msrp * Math.pow(v.resalePct5Yr || 0.65, years / 5);
+            const netTco = totalCumul - resaleValue;
+
+            return {
+                msrp,
+                energyCost,
+                maintCost,
+                tireCost,
+                taxCost,
+                batteryCost,
+                totalCumul,
+                resaleValue,
+                netTco
+            };
+        }
+
+        function updateBreakdownTable() {
+            const tbody = document.getElementById('breakdown-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const km = selectedBreakdownDistance;
+
+            currentVehicles.forEach(v => {
+                const b = getVehicleCostBreakdown(v, km);
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50/80 transition-colors';
+                tr.innerHTML = `
+                    <td class="p-4 font-bold font-sans flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full shrink-0" style="background-color: ${v.color}"></span>
+                        <span>${v.name}</span>
+                    </td>
+                    <td class="p-4 font-bold">Rp ${b.msrp.toFixed(1)}M</td>
+                    <td class="p-4 text-slate-600">Rp ${b.energyCost.toFixed(1)}M</td>
+                    <td class="p-4 text-slate-600">Rp ${b.maintCost.toFixed(1)}M</td>
+                    <td class="p-4 text-slate-600">Rp ${b.tireCost.toFixed(1)}M</td>
+                    <td class="p-4 text-slate-600">Rp ${b.taxCost.toFixed(1)}M</td>
+                    <td class="p-4 text-slate-600">${b.batteryCost > 0 ? `+Rp ${b.batteryCost.toFixed(1)}M` : '-'}</td>
+                    <td class="p-4 font-bold bg-slate-50 text-slate-900">Rp ${b.totalCumul.toFixed(1)}M</td>
+                    <td class="p-4 font-bold text-emerald-700">Rp ${b.resaleValue.toFixed(1)}M</td>
+                    <td class="p-4 font-black bg-emerald-50/60 text-emerald-950">Rp ${b.netTco.toFixed(1)}M</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- 6. CONTROLS HANDLERS ---
+        function handleFuelPriceChange(val) {
+            fuelPrice = parseFloat(val);
+            document.getElementById('label-fuel-price').textContent = `Rp ${fuelPrice.toLocaleString()}`;
+            recalculateRunningRates();
+            renderChart();
+            updateBreakdownTable();
+        }
+
+        function handleElecPriceChange(val) {
+            elecPrice = parseFloat(val);
+            document.getElementById('label-elec-price').textContent = `Rp ${elecPrice.toLocaleString()}`;
+            recalculateRunningRates();
+            renderChart();
+            updateBreakdownTable();
+        }
+
+        function updateDistanceHorizon(val) {
+            distanceHorizon = parseInt(val);
+            document.getElementById('label-distance-horizon').textContent = `${distanceHorizon.toLocaleString()} km`;
+            renderChart();
+            updateCrossoverBadges();
+        }
+
+        function toggleBatteryStep(checked) {
+            includeBatteryMilestone = checked;
+            const battLabel = document.getElementById('label-battery-status');
+            if (battLabel) {
+                if (checked) {
+                    battLabel.textContent = currentLang === 'en' ? 'Active (+Rp 30M)' : 'Aktif (+Rp 30Jt)';
+                    battLabel.className = 'text-emerald-700 font-bold';
+                } else {
+                    battLabel.textContent = currentLang === 'en' ? 'Disabled (Full Warranty)' : 'Non-aktif (Garansi Penuh)';
+                    battLabel.className = 'text-slate-400 font-bold';
+                }
+            }
+            renderChart();
+            updateCrossoverBadges();
+            updateBreakdownTable();
+        }
+
+        function recalculateRunningRates() {
+            // Update vehicle running rates dynamically based on new fuel/electricity prices
+            currentVehicles.forEach(v => {
+                if (v.powertrain === 'BEV') {
+                    const energyPerKm = ((v.eleckWhPer100Km || 15) / 100) * elecPrice * 1.15; // 15% charging losses
+                    const taxPerKm = ((v.annualPkb || 0.143) * 1e6) / 20000;
+                    const tirePerKm = 12 * 1e6 / 50000;
+                    v.runningRate = energyPerKm + (v.maintPerKm || 90) + taxPerKm + tirePerKm;
+                } else if (v.fuelKmPerL > 0) {
+                    const energyPerKm = fuelPrice / v.fuelKmPerL;
+                    const taxPerKm = ((v.annualPkb || 5) * 1e6) / 20000;
+                    const tirePerKm = 7.5 * 1e6 / 50000;
+                    v.runningRate = energyPerKm + (v.maintPerKm || 150) + taxPerKm + tirePerKm;
+                }
+            });
+        }
+
+        function resetToDefaultPreset() {
+            document.getElementById('select-fuel-preset').value = '12500';
+            document.getElementById('select-elec-preset').value = '1444';
+            document.getElementById('slider-distance').value = '250000';
+            document.getElementById('toggle-battery-milestone').checked = true;
+
+            fuelPrice = 12500;
+            elecPrice = 1444;
+            distanceHorizon = 250000;
+            includeBatteryMilestone = true;
+
+            document.getElementById('label-fuel-price').textContent = 'Rp 12.500';
+            document.getElementById('label-elec-price').textContent = 'Rp 1.444';
+            document.getElementById('label-distance-horizon').textContent = '250.000 km';
+            document.getElementById('label-battery-status').textContent = currentLang === 'en' ? 'Active (+Rp 30M)' : 'Aktif (+Rp 30Jt)';
+            document.getElementById('label-battery-status').className = 'text-emerald-700 font-bold';
+
+            applyPreset('avanza-veloz');
+        }
+
+        function downloadChartPng() {
+            const link = document.createElement('a');
+            link.download = `tco-chart-${activePresetId}-${distanceHorizon}km.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // --- 7. CAR DATABASE INTEGRATION FOR CUSTOM MATCHUP ---
+        function initCarDatabasePicker() {
+            if (typeof CAR_DATABASE === 'undefined' || !Array.isArray(CAR_DATABASE)) return;
+
+            const selects = [
+                document.getElementById('custom-car-1'),
+                document.getElementById('custom-car-2'),
+                document.getElementById('custom-car-3'),
+                document.getElementById('custom-car-4')
+            ];
+
+            const defaultIds = ['toyota-avanza', 'suzuki-ertiga-hybrid', 'toyota-zenix-hev', 'byd-atto-3'];
+
+            selects.forEach((sel, idx) => {
+                sel.innerHTML = '';
+                CAR_DATABASE.forEach(car => {
+                    const opt = document.createElement('option');
+                    opt.value = car.id;
+                    opt.textContent = `${car.brand} ${car.model} (${car.powertrain})`;
+                    sel.appendChild(opt);
+                });
+
+                // Set initial selection
+                if (CAR_DATABASE.some(c => c.id === defaultIds[idx])) {
+                    sel.value = defaultIds[idx];
+                } else if (CAR_DATABASE[idx * 10]) {
+                    sel.value = CAR_DATABASE[idx * 10].id;
+                }
+                handleCustomSlotChange(idx, sel.value);
+            });
+        }
+
+        function handleCustomSlotChange(slotIdx, carId) {
+            const specEl = document.getElementById(`custom-spec-${slotIdx + 1}`);
+            if (!CAR_DATABASE) return;
+            const car = CAR_DATABASE.find(c => c.id === carId);
+            if (!car) return;
+
+            specEl.innerHTML = `
+                <div><strong>Harga:</strong> ${car.priceDisplay || `Rp ${car.priceMin}M`}</div>
+                <div><strong>Powertrain:</strong> ${car.powertrainLabel || car.powertrain}</div>
+                <div><strong>Efisiensi:</strong> ${car.range || '-'}</div>
+            `;
+        }
+
+        function loadCustomMatchupToChart() {
+            if (!CAR_DATABASE) return;
+            const selects = [
+                document.getElementById('custom-car-1').value,
+                document.getElementById('custom-car-2').value,
+                document.getElementById('custom-car-3').value,
+                document.getElementById('custom-car-4').value
+            ];
+
+            const colors = ['#9333ea', '#ea580c', '#16a34a', '#06b6d4'];
+            const customList = [];
+
+            selects.forEach((id, idx) => {
+                const car = CAR_DATABASE.find(c => c.id === id);
+                if (!car) return;
+
+                const isBev = car.powertrain === 'BEV';
+                const isHev = car.powertrain === 'HEV';
+                const isPhev = car.powertrain === 'PHEV';
+                const price = car.priceMin || 300;
+
+                // Estimate km/L or kWh/100km from car specifications
+                let kmPerL = isHev ? 21.0 : (isPhev ? 25.0 : 13.5);
+                if (!isBev && car.range) {
+                    const m = car.range.match(/([\d\.]+)\s*(?:-|–)?\s*([\d\.]*)\s*km\/L/i);
+                    if (m && m[1]) {
+                        kmPerL = m[2] ? (parseFloat(m[1]) + parseFloat(m[2])) / 2 : parseFloat(m[1]);
+                    }
+                }
+
+                let kWhPer100 = 15.0;
+                if (isBev) {
+                    const mBatt = car.battery ? car.battery.match(/([\d\.]+)\s*kWh/i) : null;
+                    const mRange = car.range ? car.range.match(/([\d\.]+)\s*km/i) : null;
+                    if (mBatt && mRange && parseFloat(mRange[1]) > 0) {
+                        kWhPer100 = (parseFloat(mBatt[1]) / parseFloat(mRange[1])) * 100;
+                    }
+                }
+
+                let rate = isBev ? (((kWhPer100 / 100) * elecPrice * 1.15) + 80 + (0.143 * 1e6 / 20000))
+                                 : (fuelPrice / kmPerL + (isHev ? 140 : 180) + (price * 0.015 * 1e6 / 20000));
+
+                customList.push({
+                    id: car.id,
+                    name: `${car.model} (${car.powertrain})`,
+                    shortName: car.model,
+                    powertrain: car.powertrain,
+                    color: colors[idx],
+                    msrp: price,
+                    runningRate: rate,
+                    batteryStepKm: isHev ? 120000 : (isPhev ? 140000 : 0),
+                    batteryStepCost: isHev ? 30 : (isPhev ? 65 : 0),
+                    fuelKmPerL: isBev ? 0 : kmPerL,
+                    eleckWhPer100Km: isBev ? kWhPer100 : 0,
+                    maintPerKm: isBev ? 80 : (isHev ? 140 : 180),
+                    annualPkb: isBev ? 0.143 : price * 0.015,
+                    resalePct5Yr: isBev ? 0.55 : (isHev ? 0.70 : 0.65)
+                });
+            });
+
+            currentVehicles = customList;
+            hiddenSeriesIds.clear();
+            document.getElementById('chart-main-title').textContent = 'Custom Matchup: ' + customList.map(c => c.name.split(' (')[0]).join(' vs ');
+            renderSeriesPills();
+            renderChart();
+            updateCrossoverBadges();
+            updateBreakdownTable();
+
+            // Scroll smoothly up to chart
+            document.getElementById('chart-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- 8. SCROLL REVEAL ANIMATION (IntersectionObserver) ---
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal-card').forEach(el => observer.observe(el));
+        }
+
+        // --- 9. BILINGUAL LANGUAGE SWITCHER ---
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.body.className = document.body.className.replace(/lang-(id|en)/g, '') + ' lang-' + lang;
+
+            const btnId = document.getElementById('btn-lang-id');
+            const btnEn = document.getElementById('btn-lang-en');
+
+            if (lang === 'id') {
+                btnId.className = 'px-2.5 py-1 rounded-md font-bold transition-all bg-white text-emerald-700 shadow-xs';
+                btnId.setAttribute('aria-pressed', 'true');
+                btnEn.className = 'px-2.5 py-1 rounded-md font-bold text-slate-500 hover:text-slate-900 transition-all';
+                btnEn.setAttribute('aria-pressed', 'false');
+            } else {
+                btnEn.className = 'px-2.5 py-1 rounded-md font-bold transition-all bg-white text-emerald-700 shadow-xs';
+                btnEn.setAttribute('aria-pressed', 'true');
+                btnId.className = 'px-2.5 py-1 rounded-md font-bold text-slate-500 hover:text-slate-900 transition-all';
+                btnId.setAttribute('aria-pressed', 'false');
+            }
+
+            try {
+                localStorage.setItem('lolyeah_lang', lang);
+            } catch (e) {}
+
+            // Update title
+            const activePreset = PRESETS[activePresetId];
+            if (activePreset) {
+                document.getElementById('chart-main-title').textContent = lang === 'en' ? activePreset.titleEn : activePreset.title;
+            }
+
+            // Update dynamic label status
+            const battLabel = document.getElementById('label-battery-status');
+            if (battLabel) {
+                if (includeBatteryMilestone) {
+                    battLabel.textContent = lang === 'en' ? 'Active (+Rp 30M)' : 'Aktif (+Rp 30Jt)';
+                    battLabel.className = 'text-emerald-700 font-bold';
+                } else {
+                    battLabel.textContent = lang === 'en' ? 'Disabled (Full Warranty)' : 'Non-aktif (Garansi Penuh)';
+                    battLabel.className = 'text-slate-400 font-bold';
+                }
+            }
+
+            renderChart();
+            updateCrossoverBadges();
+            updateBreakdownTable();
+        }
+
+        // --- 10. INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Restore language
+            try {
+                const savedLang = localStorage.getItem('lolyeah_lang');
+                if (savedLang === 'en' || savedLang === 'id') {
+                    setLanguage(savedLang);
+                }
+            } catch (e) {}
+
+            resizeCanvas();
+            renderSeriesPills();
+            updateCrossoverBadges();
+            updateBreakdownTable();
+            initCarDatabasePicker();
+            initScrollAnimations();
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>
