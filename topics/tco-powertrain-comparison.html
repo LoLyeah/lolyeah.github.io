@@ -489,16 +489,32 @@
                     <!-- Fuel Price -->
                     <div>
                         <label class="block text-xs font-mono font-semibold text-slate-700 mb-1.5 flex justify-between">
-                            <span class="id-only">Harga Bensin (Rp / Liter)</span>
+                            <span class="id-only">Harga BBM (Rp / Liter)</span>
                             <span class="en-only">Fuel Price (IDR / Liter)</span>
-                            <span id="label-fuel-price" class="text-emerald-700 font-bold">Rp 12.500</span>
+                            <span id="label-fuel-price" class="text-emerald-700 font-bold">Rp 15.950</span>
                         </label>
-                        <select id="select-fuel-preset" onchange="handleFuelPriceChange(this.value)" class="w-full text-xs font-mono rounded-lg border-slate-200 p-2 bg-white border shadow-2xs">
-                            <option value="10000">Pertalite (RON 90) — Rp 10.000</option>
-                            <option value="12500" selected>Pertamax (RON 92) — Rp 12.500</option>
-                            <option value="13500">Pertamax Turbo / Shell V-Power — Rp 13.500</option>
-                            <option value="13900">Dexlite (Solar Euro 4) — Rp 13.900</option>
-                        </select>
+                        <div class="flex items-center gap-1.5">
+                            <select id="select-fuel-preset" onchange="handleFuelSelectChange(this.value)" class="w-full text-xs font-mono rounded-lg border-slate-200 p-2 bg-white border shadow-2xs">
+                                <optgroup label="Bensin Standar &amp; Subsidi">
+                                    <option value="15950" selected>Pertamax (RON 92) — Rp 15.950</option>
+                                    <option value="10000">Pertalite (RON 90 Subsidi) — Rp 10.000</option>
+                                </optgroup>
+                                <optgroup label="Bensin High-RON">
+                                    <option value="19150">Pertamax Green 95 — Rp 19.150</option>
+                                    <option value="19600">Pertamax Turbo (RON 98) — Rp 19.600</option>
+                                    <option value="19500">Shell V-Power / BP 95 — Rp 19.500</option>
+                                </optgroup>
+                                <optgroup label="Bahan Bakar Diesel / Solar">
+                                    <option value="23700">Dexlite (Solar Euro 4) — Rp 23.700</option>
+                                    <option value="25200">Pertamina Dex (CN 53) — Rp 25.200</option>
+                                    <option value="6800">Biosolar (Solar Subsidi) — Rp 6.800</option>
+                                </optgroup>
+                                <optgroup label="Kustom">
+                                    <option value="custom">Kustom / Manual Rp/L...</option>
+                                </optgroup>
+                            </select>
+                            <input type="number" id="input-fuel-custom" oninput="handleFuelPriceChange(this.value)" placeholder="15950" step="50" min="5000" max="35000" class="hidden w-28 text-xs font-mono rounded-lg border-slate-200 p-2 bg-white border shadow-2xs focus:ring-1 focus:ring-emerald-500">
+                        </div>
                     </div>
 
                     <!-- Electricity Tariff -->
@@ -547,6 +563,49 @@
                                 <span class="id-only">Simulasi ganti sel baterai HV</span>
                                 <span class="en-only">Simulate HV battery swap</span>
                             </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PERTALITE (RON 90) WARNING BANNER (DYNAMICALLY REVEALED WHEN PERTALITE IS SELECTED) -->
+                <div id="banner-pertalite-warning" class="hidden mb-6 p-4 rounded-2xl bg-amber-50/95 border border-amber-300 text-amber-950 text-xs shadow-soft transition-all duration-300">
+                    <div class="flex items-start gap-3">
+                        <div class="p-2 rounded-xl bg-amber-100 border border-amber-300 text-amber-800 shrink-0 mt-0.5">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-700"></i>
+                        </div>
+                        <div class="flex-grow space-y-1.5">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <h4 class="font-display font-bold text-sm text-amber-950 flex items-center gap-1.5">
+                                    <span class="id-only">⚠️ Catatan Khusus: Pertalite (RON 90) Bukan Bahan Bakar Rekomendasi Pabrikan</span>
+                                    <span class="en-only">⚠️ Notice: Pertalite (RON 90) is Not Manufacturer-Recommended Fuel</span>
+                                </h4>
+                                <span class="px-2 py-0.5 rounded bg-amber-200/80 text-amber-900 font-mono text-[10px] font-bold uppercase">Euro 4 / High Compression Advisory</span>
+                            </div>
+                            <p class="text-amber-900/90 leading-relaxed font-sans">
+                                <span class="id-only">
+                                    Mayoritas mobil baru (rasio kompresi statis &gt;10,5:1, mesin turbo direct-injection, maupun siklus Atkinson hybrid seperti Innova Zenix &amp; Yaris Cross HEV) <strong>mensyaratkan bahan bakar minimal RON 92 (Pertamax)</strong>. Mengisi Pertalite (RON 90) demi mengejar biaya murah menimbulkan konsekuensi teknis:
+                                </span>
+                                <span class="en-only">
+                                    Most modern vehicles (compression ratios &gt;10.5:1, direct-injected turbochargers, or Atkinson-cycle hybrids like Zenix &amp; Yaris Cross HEV) <strong>require minimum RON 92 (Pertamax)</strong>. Using RON 90 Pertalite involves several technical trade-offs:
+                                </span>
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1 text-[11px] font-mono">
+                                <div class="bg-white/80 p-2.5 rounded-xl border border-amber-200/70">
+                                    <strong class="text-amber-950 block mb-1">💥 Knocking &amp; Efisiensi Turun</strong>
+                                    <span class="text-slate-600 id-only">Sensor ketukan (knock sensor) memaksa ECU memundurkan timing pengapian, menurunkan efisiensi termal dan menaikkan konsumsi BBM riil 5%–10%.</span>
+                                    <span class="text-slate-600 en-only">Knock sensors force ECU to retard ignition timing, degrading thermal efficiency and increasing actual fuel consumption by 5%–10%.</span>
+                                </div>
+                                <div class="bg-white/80 p-2.5 rounded-xl border border-amber-200/70">
+                                    <strong class="text-amber-950 block mb-1">🛠️ Kerak Karbon &amp; Injektor</strong>
+                                    <span class="text-slate-600 id-only">Kandungan sulfur dan deposit lebih tinggi mempercepat penumpukan kerak di nozzle injektor presisi dan memperpendek usia katalis knalpot.</span>
+                                    <span class="text-slate-600 en-only">Higher sulfur and gum content accelerates carbon fouling on fine direct injectors and shortens catalytic converter lifespan.</span>
+                                </div>
+                                <div class="bg-white/80 p-2.5 rounded-xl border border-amber-200/70">
+                                    <strong class="text-amber-950 block mb-1">📋 Klaim Garansi Mesin</strong>
+                                    <span class="text-slate-600 id-only">Pabrikan berhak menolak klaim garansi sistem bahan bakar dan mesin jika analisis laboratorium menemukan residu oktan di bawah spesifikasi buku manual.</span>
+                                    <span class="text-slate-600 en-only">Manufacturers reserve the right to void warranty claims on powertrain and fuel systems if damage is traced to sub-spec fuel.</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1221,7 +1280,7 @@
         // --- 1. GLOBAL STATE & PRESETS ---
         let currentLang = 'id';
         let distanceHorizon = 250000;
-        let fuelPrice = 12500; // Rp/L (Pertamax RON 92)
+        let fuelPrice = 15950; // Rp/L (Pertamax RON 92 Resmi Terbaru)
         let elecPrice = 1444;  // Rp/kWh (Home R1)
         let includeBatteryMilestone = true;
         let activePresetId = 'six-crossover';
@@ -2538,10 +2597,37 @@
             });
         }
 
-        // --- 6. CONTROLS HANDLERS ---
+        function handleFuelSelectChange(val) {
+            const customInput = document.getElementById('input-fuel-custom');
+            if (val === 'custom') {
+                if (customInput) {
+                    customInput.classList.remove('hidden');
+                    customInput.value = fuelPrice;
+                    customInput.focus();
+                }
+            } else {
+                if (customInput) customInput.classList.add('hidden');
+                handleFuelPriceChange(val);
+            }
+        }
+
         function handleFuelPriceChange(val) {
-            fuelPrice = parseFloat(val);
+            const num = parseFloat(val);
+            if (isNaN(num) || num <= 0) return;
+            fuelPrice = num;
             document.getElementById('label-fuel-price').textContent = `Rp ${fuelPrice.toLocaleString('id-ID')}`;
+
+            // Dynamic Pertalite (RON 90) Warning Banner
+            const pertaliteBanner = document.getElementById('banner-pertalite-warning');
+            if (pertaliteBanner) {
+                if (fuelPrice <= 10000) {
+                    pertaliteBanner.classList.remove('hidden');
+                    if (window.lucide) window.lucide.createIcons();
+                } else {
+                    pertaliteBanner.classList.add('hidden');
+                }
+            }
+
             recalculateRunningRates();
             renderChart();
             updateCrossoverBadges();
@@ -2582,21 +2668,26 @@
         }
 
         function resetToDefaultPreset() {
-            document.getElementById('select-fuel-preset').value = '12500';
+            document.getElementById('select-fuel-preset').value = '15950';
+            const customInput = document.getElementById('input-fuel-custom');
+            if (customInput) customInput.classList.add('hidden');
             document.getElementById('select-elec-preset').value = '1444';
             document.getElementById('slider-distance').value = '250000';
             document.getElementById('toggle-battery-milestone').checked = true;
 
-            fuelPrice = 12500;
+            fuelPrice = 15950;
             elecPrice = 1444;
             distanceHorizon = 250000;
             includeBatteryMilestone = true;
 
-            document.getElementById('label-fuel-price').textContent = 'Rp 12.500';
+            document.getElementById('label-fuel-price').textContent = 'Rp 15.950';
             document.getElementById('label-elec-price').textContent = 'Rp 1.444';
             document.getElementById('label-distance-horizon').textContent = '250.000 km';
             document.getElementById('label-battery-status').textContent = currentLang === 'en' ? 'Active (+Rp 30M)' : 'Aktif (+Rp 30Jt)';
             document.getElementById('label-battery-status').className = 'text-emerald-700 font-bold';
+
+            const pertaliteBanner = document.getElementById('banner-pertalite-warning');
+            if (pertaliteBanner) pertaliteBanner.classList.add('hidden');
 
             applyPreset('six-crossover');
         }
