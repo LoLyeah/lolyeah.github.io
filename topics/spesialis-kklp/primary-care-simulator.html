@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- BEGIN ANTIGRAVITY SEO OPTIMIZATION -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulator Gatekeeper Layanan Primer: Dampak Fiskal BPJS &amp; Kasus Klinis | LoLyeah</title>
+    <meta name="description" content="Simulator interaktif sistem kesehatan primer: Hitung penghematan triliunan rupiah kas BPJS Kesehatan dari penurunan rujukan RS, pencegahan komplikasi stroke &amp; hemodialisis, serta komparasi alur klinis Sp.KKLP.">
+    <meta name="keywords" content="Simulator Gatekeeper BPJS, penghematan klaim INA-CBG, Sp.KKLP simulator, rujukan berjenjang BPJS, Prolanis diabetes hipertensi, biopisikososial kasus klinis, perhitungan kapitasi risiko, lolyeah">
+    <meta name="author" content="LoLyeah">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lolyeah.github.io/topics/spesialis-kklp/primary-care-simulator.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Simulator Gatekeeper Layanan Primer: Dampak Fiskal BPJS &amp; Kasus Klinis | LoLyeah">
+    <meta property="og:description" content="Simulasikan dampak populasi Sp.KKLP terhadap pembiayaan JKN BPJS dan bandingkan 4 studi kasus klinis multimorbiditas secara interaktif.">
+    <meta property="og:url" content="https://lolyeah.github.io/topics/spesialis-kklp/primary-care-simulator.html">
+    <meta property="og:site_name" content="LoLyeah Interactive Guides">
+    <meta property="og:image" content="https://lolyeah.github.io/assets/og-image.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Simulator Gatekeeper Layanan Primer: Dampak Fiskal BPJS &amp; Kasus Klinis | LoLyeah">
+    <meta name="twitter:description" content="Hitung potensi penghematan triliunan rupiah kas BPJS jika Puskesmas dipimpin dokter spesialis KKLP.">
+    <meta name="twitter:image" content="https://lolyeah.github.io/assets/og-image.png">
+
+    <!-- Structured Data JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "name": "Simulator Gatekeeper Layanan Primer: Dampak Fiskal BPJS dan Kasus Klinis",
+      "description": "Interactive health system and clinical gatekeeping simulator modeling BPJS fiscal savings, hospital referral reductions, and biophysicosocial case management outcomes by Sp.KKLP.",
+      "url": "https://lolyeah.github.io/topics/spesialis-kklp/primary-care-simulator.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "LoLyeah Interactive Guides",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://lolyeah.github.io/assets/logo.png"
+        }
+      },
+      "author": {
+        "@type": "Person",
+        "name": "LoLyeah"
+      }
+    }
+    </script>
+    <!-- END ANTIGRAVITY SEO OPTIMIZATION -->
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+                    },
+                    colors: {
+                        teal: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
+                        }
+                    },
+                    boxShadow: {
+                        'subtle': '0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05)',
+                        'card': '0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.03)',
+                        'elevated': '0 10px 15px -3px rgba(15, 23, 42, 0.05), 0 4px 6px -4px rgba(15, 23, 42, 0.03)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 5rem;
+        }
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        .fade-in-card {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .fade-in-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .fade-in-card {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+            html {
+                scroll-behavior: auto;
+            }
+        }
+        a:focus-visible, button:focus-visible, input:focus-visible {
+            outline: 2px solid #0d9488;
+            outline-offset: 2px;
+        }
+        input[type="range"] {
+            accent-color: #0d9488;
+        }
+        .bg-grid-pattern {
+            background-size: 32px 32px;
+            background-image: 
+                linear-gradient(to right, rgba(226, 232, 240, 0.6) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(226, 232, 240, 0.6) 1px, transparent 1px);
+        }
+    </style>
+</head>
+<body class="selection:bg-teal-100 selection:text-teal-900">
+
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 bg-teal-700 text-white rounded-md shadow-lg outline-none ring-2 ring-teal-400">
+        Skip to main content
+    </a>
+
+    <!-- Fixed Header & Global Navigation -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/90 border-b border-slate-200/80 transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand & Back Link to Main Compendium Hub -->
+            <div class="flex items-center space-x-3">
+                <a href="../spesialis-kklp.html" class="flex items-center space-x-2 text-slate-600 hover:text-teal-700 transition-colors duration-150 group">
+                    <i data-lucide="arrow-left" class="w-4 h-4 transition-transform group-hover:-translate-x-1"></i>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 group-hover:text-teal-700" data-en="← Sp.KKLP Compendium" data-id="← Kompendium Sp.KKLP">← Sp.KKLP Compendium</span>
+                </a>
+                <span class="text-slate-300">/</span>
+                <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span class="text-sm font-bold text-slate-900 tracking-tight hidden sm:inline" data-en="Primary Care Simulator" data-id="Simulator Layanan Primer">Primary Care Simulator</span>
+                    <span class="text-sm font-bold text-slate-900 tracking-tight sm:hidden">Simulator</span>
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <nav class="hidden md:flex items-center space-x-5 text-xs font-medium text-slate-600">
+                    <a href="#fiscal-simulator" class="hover:text-teal-700 transition-colors" data-en="Fiscal Calculator" data-id="Kalkulator Fiskal">Fiscal Calculator</a>
+                    <a href="#clinical-vignettes" class="hover:text-teal-700 transition-colors" data-en="4 Clinical Vignettes" data-id="4 Kasus Klinis">4 Clinical Vignettes</a>
+                </nav>
+
+                <!-- Sibling Subpage Link -->
+                <a href="./indonesia-vs-world-family-medicine.html" class="inline-flex items-center space-x-1 text-xs font-semibold px-2.5 py-1 rounded-md bg-teal-50 text-teal-800 hover:bg-teal-100 transition-colors border border-teal-200/60" title="Global Comparison">
+                    <i data-lucide="globe" class="w-3.5 h-3.5 text-teal-600"></i>
+                    <span class="hidden sm:inline" data-en="Indonesia vs World" data-id="Indonesia vs Dunia">Indonesia vs World</span>
+                </a>
+
+                <!-- Language Toggle Button -->
+                <button id="lang-toggle-btn" class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition-colors shadow-xs" aria-label="Toggle language between English and Indonesian" aria-pressed="false">
+                    <i data-lucide="languages" class="w-3.5 h-3.5 text-slate-500"></i>
+                    <span id="current-lang-label" class="font-mono">EN</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main id="main-content">
+
+        <!-- Hero Section -->
+        <section class="relative pt-12 pb-14 md:pt-16 md:pb-20 overflow-hidden bg-white border-b border-slate-200 bg-grid-pattern">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+                
+                <!-- Category Badges -->
+                <div class="flex flex-wrap items-center gap-2 mb-6">
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        <i data-lucide="calculator" class="w-3.5 h-3.5 mr-1.5 text-emerald-600"></i>
+                        <span data-en="Interactive Health Economics &amp; Clinical Engine" data-id="Simulator Ekonomi Kesehatan &amp; Keputusan Klinis">Interactive Health Economics &amp; Clinical Engine</span>
+                    </span>
+                </div>
+
+                <div class="max-w-4xl">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15] mb-5">
+                        <span data-en="Primary Care Gatekeeping Simulator:" data-id="Simulator Gatekeeper Layanan Primer:">Primary Care Gatekeeping Simulator:</span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-700 block sm:inline" data-en="BPJS Fiscal Savings &amp; Clinical Outcomes." data-id="Dampak Fiskal BPJS &amp; Luaran Pasien.">BPJS Fiscal Savings &amp; Clinical Outcomes.</span>
+                    </h1>
+                    <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-3xl" data-en="Model how deploying Sp.KKLP specialists to lead primary care clinics reshapes patient flow, curtails unwarranted secondary hospital claims, and prevents catastrophic cardiovascular and renal end-stage crises. Followed by 4 interactive multimorbidity patient scenarios." data-id="Simulasikan bagaimana penempatan dokter Sp.KKLP memimpin faskes primer merekonfigurasi arus rujukan, memangkas klaim rumah sakit yang tidak perlu, dan mencegah komplikasi penyakit katastropik kardiovaskular dan ginjal. Dilengkapi dengan 4 skenario interaktif pasien multimorbiditas.">
+                        Simulasikan bagaimana penempatan dokter Sp.KKLP memimpin faskes primer merekonfigurasi arus rujukan, memangkas klaim rumah sakit yang tidak perlu, dan mencegah komplikasi penyakit katastropik kardiovaskular dan ginjal. Dilengkapi dengan 4 skenario interaktif pasien multimorbiditas.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- WIDGET 1: BPJS GATEKEEPER FISCAL SIMULATOR -->
+        <section id="fiscal-simulator" class="py-12 md:py-20 bg-slate-50 border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="max-w-3xl mb-8">
+                    <div class="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100/70 px-3 py-1 rounded-full mb-3">
+                        <i data-lucide="sliders" class="w-3.5 h-3.5 text-emerald-700"></i>
+                        <span data-en="Tool 1: Macro Population &amp; Fiscal Model" data-id="Alat 1: Model Fiskal &amp; Populasi Makro">Tool 1: Macro Population &amp; Fiscal Model</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" data-en="Simulate Primary Care Catchment &amp; Hospital Claims Reduction" data-id="Simulasi Wilayah Binaan FKTP &amp; Penghematan Klaim RS">
+                        Simulate Primary Care Catchment &amp; Hospital Claims Reduction
+                    </h2>
+                    <p class="text-slate-600 mt-2 text-sm leading-relaxed" data-en="Adjust the enrolled BPJS participant base, the primary clinical staffing model, and chronic disease adherence to calculate avoided hospital claims and complications." data-id="Sesuaikan jumlah peserta terdaftar BPJS, model dokter FKTP, dan tingkat kepatuhan Prolanis untuk melihat estimasi penghematan klaim rumah sakit dan komplikasi yang terhindarkan.">
+                        Sesuaikan jumlah peserta terdaftar BPJS, model dokter FKTP, dan tingkat kepatuhan Prolanis untuk melihat estimasi penghematan klaim rumah sakit dan komplikasi yang terhindarkan.
+                    </p>
+                </div>
+
+                <!-- Simulator Container Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Left: Control Inputs (5 cols) -->
+                    <div class="lg:col-span-5 p-6 sm:p-7 rounded-2xl bg-white border border-slate-200 shadow-card space-y-6">
+                        <h3 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
+                            <span data-en="Simulation Controls" data-id="Pengaturan Parameter">Simulation Controls</span>
+                            <i data-lucide="settings-2" class="w-4 h-4 text-slate-400"></i>
+                        </h3>
+
+                        <!-- Input 1: Catchment Population -->
+                        <div>
+                            <div class="flex justify-between items-center text-xs font-semibold mb-2">
+                                <label for="pop-slider" class="text-slate-700" data-en="Enrolled BPJS Catchment Size" data-id="Jumlah Peserta Terdaftar FKTP">Enrolled BPJS Catchment Size</label>
+                                <span id="pop-readout" class="font-mono text-teal-700 text-sm font-bold">30,000</span>
+                            </div>
+                            <input type="range" id="pop-slider" min="10000" max="80000" step="5000" value="30000" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+                            <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
+                                <span>10,000</span>
+                                <span>45,000</span>
+                                <span>80,000</span>
+                            </div>
+                        </div>
+
+                        <!-- Input 2: Physician Model Toggle -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-2" data-en="Primary Care Physician Model" data-id="Model Tenaga Medis FKTP">Primary Care Physician Model</label>
+                            <div class="grid grid-cols-2 gap-2" role="radiogroup">
+                                <button type="button" id="model-gp-btn" class="model-toggle-btn px-3 py-2.5 rounded-lg border text-xs font-semibold text-left transition-all border-slate-300 bg-slate-50 text-slate-700" data-model="gp" aria-checked="false">
+                                    <div class="font-bold">Dokter Umum</div>
+                                    <div class="text-[10px] text-slate-500 font-normal mt-0.5" data-en="Standard GP (Non-Specialist)" data-id="Dokter Umum Standar">Standard GP</div>
+                                </button>
+                                <button type="button" id="model-kklp-btn" class="model-toggle-btn px-3 py-2.5 rounded-lg border text-xs font-semibold text-left transition-all border-teal-600 bg-teal-50 text-teal-900 ring-2 ring-teal-400/40" data-model="kklp" aria-checked="true">
+                                    <div class="font-bold flex items-center justify-between">
+                                        <span>Spesialis KKLP</span>
+                                        <i data-lucide="check" class="w-3.5 h-3.5 text-teal-600"></i>
+                                    </div>
+                                    <div class="text-[10px] text-teal-700 font-normal mt-0.5" data-en="ILP Cluster Lead Specialist" data-id="Pimpinan Klaster ILP">ILP Cluster Lead</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Input 3: Chronic Disease Adherence / Prolanis -->
+                        <div>
+                            <div class="flex justify-between items-center text-xs font-semibold mb-2">
+                                <label for="prolanis-slider" class="text-slate-700" data-en="Prolanis NCD Control &amp; Compliance" data-id="Kepatuhan &amp; Pengendalian Prolanis">Prolanis NCD Control &amp; Compliance</label>
+                                <span id="prolanis-readout" class="font-mono text-emerald-700 text-sm font-bold">75%</span>
+                            </div>
+                            <input type="range" id="prolanis-slider" min="30" max="95" step="5" value="75" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+                            <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
+                                <span data-en="30% Poor" data-id="30% Buruk">30% Poor</span>
+                                <span data-en="65% Moderate" data-id="65% Sedang">65% Moderate</span>
+                                <span data-en="95% Optimal" data-id="95% Optimal">95% Optimal</span>
+                            </div>
+                        </div>
+
+                        <!-- Info note on formulas -->
+                        <div class="p-3 rounded-lg bg-slate-50 border border-slate-200 text-[11px] text-slate-500 leading-relaxed">
+                            <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1 text-slate-400"></i>
+                            <span data-en="Model assumptions based on BPJS Kesehatan 2024–2025 statistical yearbooks: Average secondary outpatient visit = Rp 230,000 (INA-CBG code), hospitalization rate for uncontrolled NCDs = Rp 7.8 Million/admission." data-id="Asumsi model mengacu pada data statistik BPJS Kesehatan 2024–2025: Rata-rata klaim rawat jalan RS = Rp 230.000 (tarif INA-CBG), rawat inap akibat komplikasi NCD tak terkontrol = Rp 7,8 Juta/kasus.">
+                                Asumsi model mengacu pada data statistik BPJS Kesehatan 2024–2025: Rata-rata klaim rawat jalan RS = Rp 230.000 (tarif INA-CBG).
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <!-- Right: Dynamic Output Dashboard (7 cols) -->
+                    <div class="lg:col-span-7 space-y-6">
+                        
+                        <!-- Primary Highlight Card: Annual Net Fiscal Savings -->
+                        <div class="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-teal-900 via-slate-900 to-slate-950 text-white shadow-elevated border border-teal-500/30 fade-in-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-mono font-semibold uppercase tracking-wider text-teal-300" data-en="Estimated Net Annual JKN Savings" data-id="Estimasi Penghematan Bersih Kas JKN Tahunan">
+                                    Estimated Net Annual JKN Savings
+                                </span>
+                                <span id="savings-badge" class="px-2 py-0.5 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                    Optimal Impact
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-baseline space-x-3 my-2">
+                                <div id="savings-value" class="text-4xl sm:text-5xl font-extrabold text-white font-mono tracking-tight">
+                                    Rp 2.84 M
+                                </div>
+                                <span class="text-xs text-slate-300" data-en="/ faskes / year" data-id="/ faskes / tahun">/ faskes / year</span>
+                            </div>
+
+                            <p id="savings-explanation" class="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2" data-en="By resolving 88% of cases conclusively in-house and optimizing Prolanis NCD titration, this health center prevents unwarranted secondary referrals and saves catastrophic inpatient claim reserves." data-id="Dengan menuntaskan 88% kasus di FKTP dan mengoptimalkan titrasi Prolanis, faskes ini mencegah rujukan sekunder berlebih dan menghemat cadangan klaim rawat inap katastropik.">
+                                Dengan menuntaskan 88% kasus di FKTP dan mengoptimalkan titrasi Prolanis, faskes ini mencegah rujukan sekunder berlebih dan menghemat cadangan klaim rawat inap katastropik.
+                            </p>
+                        </div>
+
+                        <!-- Secondary Metrics 2x2 Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            
+                            <!-- Metric 1: Monthly Hospital Referrals -->
+                            <div class="p-5 rounded-xl bg-white border border-slate-200 shadow-subtle fade-in-card">
+                                <div class="flex items-center justify-between text-xs font-semibold text-slate-500 mb-1">
+                                    <span data-en="Hospital Referral Volume" data-id="Volume Rujukan ke RS">Hospital Referral Volume</span>
+                                    <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400"></i>
+                                </div>
+                                <div id="referrals-readout" class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-mono">
+                                    216 <span class="text-xs font-sans text-slate-500 font-normal">kasus/bln</span>
+                                </div>
+                                <div id="referral-rate-pct" class="text-xs font-semibold text-teal-700 mt-1">
+                                    Rasio Rujukan: 7.2%
+                                </div>
+                            </div>
+
+                            <!-- Metric 2: Avoided Secondary Hospital Visits -->
+                            <div class="p-5 rounded-xl bg-white border border-slate-200 shadow-subtle fade-in-card">
+                                <div class="flex items-center justify-between text-xs font-semibold text-slate-500 mb-1">
+                                    <span data-en="Avoided Hospital Visits / Year" data-id="Kunjungan RS Terhindar / Thn">Avoided Hospital Visits / Year</span>
+                                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+                                </div>
+                                <div id="avoided-visits-readout" class="text-2xl sm:text-3xl font-extrabold text-emerald-700 font-mono">
+                                    3,840
+                                </div>
+                                <div class="text-[11px] text-slate-500 mt-1" data-en="Eliminated patient queuing &amp; travel fatigue." data-id="Memangkas antrean 6 jam &amp; kelelahan pasien di RS.">
+                                    Memangkas antrean 6 jam di RS.
+                                </div>
+                            </div>
+
+                            <!-- Metric 3: Catastrophic Complications Prevented -->
+                            <div class="p-5 rounded-xl bg-white border border-slate-200 shadow-subtle fade-in-card">
+                                <div class="flex items-center justify-between text-xs font-semibold text-slate-500 mb-1">
+                                    <span data-en="Prevented Strokes &amp; Dialysis" data-id="Stroke &amp; Cuci Darah Terhindar">Prevented Strokes &amp; Dialysis</span>
+                                    <i data-lucide="heart-pulse" class="w-4 h-4 text-rose-500"></i>
+                                </div>
+                                <div id="complications-readout" class="text-2xl sm:text-3xl font-extrabold text-rose-600 font-mono">
+                                    19 <span class="text-xs font-sans text-slate-500 font-normal">pasien/thn</span>
+                                </div>
+                                <div class="text-[11px] text-slate-500 mt-1" data-en="Target blood pressure &amp; nephroprotection." data-id="Lewat kendali tensi &amp; proteksi ginjal dini.">
+                                    Lewat kendali tensi &amp; proteksi ginjal dini.
+                                </div>
+                            </div>
+
+                            <!-- Metric 4: Prescriptive Rationality Score -->
+                            <div class="p-5 rounded-xl bg-white border border-slate-200 shadow-subtle fade-in-card">
+                                <div class="flex items-center justify-between text-xs font-semibold text-slate-500 mb-1">
+                                    <span data-en="Antibiotic Stewardship" data-id="Kerasionalan Antibiotik">Antibiotic Stewardship</span>
+                                    <i data-lucide="pill" class="w-4 h-4 text-sky-600"></i>
+                                </div>
+                                <div id="stewardship-readout" class="text-2xl sm:text-3xl font-extrabold text-sky-700 font-mono">
+                                    92%
+                                </div>
+                                <div class="text-[11px] text-slate-500 mt-1" data-en="Zero inappropriate antibiotics for viral URTI." data-id="Bebas antibiotik tidak rasional untuk ISPA viral.">
+                                    Bebas antibiotik tidak rasional pada ISPA.
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- WIDGET 2: 4 CLINICAL VIGNETTES COMPARATOR -->
+        <section id="clinical-vignettes" class="py-16 md:py-24 bg-white border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="max-w-3xl mb-10">
+                    <div class="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-teal-800 bg-teal-100/70 px-3 py-1 rounded-full mb-3">
+                        <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-700"></i>
+                        <span data-en="Tool 2: Granular Case Vignette Pathways" data-id="Alat 2: Alur Keputusan Kasus Klinis Riil">Tool 2: Granular Case Vignette Pathways</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight" data-en="Interactive Clinical Vignettes: 4 Real-World Cases" data-id="Studi Kasus Klinis Interaktif: 4 Skenario Multimorbiditas">
+                        Interactive Clinical Vignettes: 4 Real-World Cases
+                    </h2>
+                    <p class="text-slate-600 mt-3 text-base leading-relaxed" data-en="Select a patient archetype below to contrast the traditional fragmented general practice workflow against the Sp.KKLP biophysicosocial whole-person protocol." data-id="Pilih arketipe pasien di bawah ini untuk melihat perbandingan tajam antara penanganan dokter umum terfragmentasi konvensional versus protokol holistik Sp.KKLP.">
+                        Pilih arketipe pasien di bawah ini untuk melihat perbandingan tajam antara penanganan dokter umum terfragmentasi konvensional versus protokol holistik Sp.KKLP.
+                    </p>
+                </div>
+
+                <!-- Case Selector Tabs -->
+                <div class="flex flex-wrap gap-2 mb-8" role="tablist">
+                    <button type="button" class="case-btn px-4 py-2.5 rounded-xl border text-xs font-bold transition-all border-teal-600 bg-teal-50 text-teal-900 ring-2 ring-teal-400/40" data-case="case1">
+                        Case 1: Ibu Aminah (DM &amp; Caregiver)
+                    </button>
+                    <button type="button" class="case-btn px-4 py-2.5 rounded-xl border text-xs font-bold transition-all border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100" data-case="case2">
+                        Case 2: Pak Joko (Geriatric Polypharmacy)
+                    </button>
+                    <button type="button" class="case-btn px-4 py-2.5 rounded-xl border text-xs font-bold transition-all border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100" data-case="case3">
+                        Case 3: Mas Rudi (Chronic Low Back Pain)
+                    </button>
+                    <button type="button" class="case-btn px-4 py-2.5 rounded-xl border text-xs font-bold transition-all border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100" data-case="case4">
+                        Case 4: Balita Alif (Wheezing &amp; Stunting)
+                    </button>
+                </div>
+
+                <!-- Active Case Display Container -->
+                <div class="p-6 sm:p-8 rounded-2xl bg-slate-50 border border-slate-200 shadow-card fade-in-card">
+                    
+                    <!-- Case Header Information -->
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-200 mb-6">
+                        <div>
+                            <span class="text-xs font-mono font-bold uppercase tracking-wider text-teal-700" id="case-category">Chronic NCD &amp; Psychosocial Multimorbidity</span>
+                            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1" id="case-title">
+                                Ibu Aminah (56 Years Old) — Uncontrolled Diabetes &amp; Caregiver Strain
+                            </h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2 text-xs font-semibold" id="case-tags">
+                            <span class="px-2.5 py-1 rounded-md bg-rose-100 text-rose-800">HbA1c: 9.6%</span>
+                            <span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-800">TD: 155/95 mmHg</span>
+                            <span class="px-2.5 py-1 rounded-md bg-sky-100 text-sky-800">Microalbumin (+)</span>
+                        </div>
+                    </div>
+
+                    <!-- Case Context Narrative -->
+                    <p class="text-sm text-slate-700 leading-relaxed mb-8 bg-white p-4 rounded-xl border border-slate-200" id="case-description">
+                        Ibu Aminah datang dengan keluhan badan lemas, gula darah tak terkontrol, tensi naik, dan insomnia. Di rumah, ia merawat suaminya yang lumpuh total pasca-stroke, memicu caregiver burnout berat sehingga kerap lupa meminum obat harian.
+                    </p>
+
+                    <!-- Side-by-Side Comparison -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Left: GP Fragmented -->
+                        <div class="p-5 rounded-xl bg-white border border-rose-200 shadow-subtle flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center space-x-2 text-rose-800 font-bold text-sm mb-4">
+                                    <i data-lucide="x-circle" class="w-4 h-4 text-rose-600"></i>
+                                    <span data-en="Standard GP Referral Pathway" data-id="Jalur Dokter Umum Konvensional">Standard GP Referral Pathway</span>
+                                </div>
+                                <div class="text-xs text-slate-700 space-y-3" id="case-gp-steps">
+                                    <p><strong>1. Konsultasi Kilat:</strong> Durasi 3–4 menit di Puskesmas padat tanpa penelusuran beban psikososial keluarga.</p>
+                                    <p><strong>2. Pemecahan Organ:</strong> Pasien dirujuk terpisah ke Poli Penyakit Dalam RS (evaluasi gula) dan Poli Saraf RS (konsultasi suami).</p>
+                                    <p><strong>3. Kerepotan Logistik:</strong> Pasien mengantre berjam-jam di RS rujukan; suami di rumah terlantar tanpa pendamping.</p>
+                                    <p><strong>4. Biaya Membengkak:</strong> Klaim klausal rujukan ganda membebani BPJS Rp 800.000–1.200.000 per bulan.</p>
+                                </div>
+                            </div>
+                            <div class="mt-6 pt-3 border-t border-rose-100 text-xs font-mono font-bold text-rose-700" id="case-gp-outcome">
+                                Hasil: Ketidakpatuhan berulang, risiko cuci darah tinggi dalam 3 tahun.
+                            </div>
+                        </div>
+
+                        <!-- Right: Sp.KKLP Comprehensive -->
+                        <div class="p-5 rounded-xl bg-white border-2 border-teal-600/70 shadow-subtle flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center space-x-2 text-teal-900 font-bold text-sm mb-4">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-teal-600"></i>
+                                    <span data-en="Sp.KKLP Holistic Care Protocol" data-id="Protokol Holistik Sp.KKLP">Sp.KKLP Holistic Care Protocol</span>
+                                </div>
+                                <div class="text-xs text-slate-700 space-y-3" id="case-kklp-steps">
+                                    <p><strong>1. Penilaian Biopisikososial:</strong> Identifikasi kelelahan mengasuh suami (caregiver strain) sebagai akar pasien lalai minum obat.</p>
+                                    <p><strong>2. Rasionalisasi Dosis:</strong> Simplifikasi regimen obat menjadi kombinasi sekali sehari; titrasi ACEi/ARB untuk nefroproteksi dini ginjal.</p>
+                                    <p><strong>3. Mobilisasi ILP:</strong> Jadwalkan kunjungan rumah perawat Pustu/kader untuk fisioterapi stroke suami, meringankan beban mental pasien.</p>
+                                    <p><strong>4. Nol Rujukan RS:</strong> Kasus terkelola tuntas di FKTP dengan monitoring Prolanis rutin.</p>
+                                </div>
+                            </div>
+                            <div class="mt-6 pt-3 border-t border-teal-100 text-xs font-mono font-bold text-teal-800" id="case-kklp-outcome">
+                                Hasil: HbA1c turun ke 7,1%, tensi terkontrol, penghematan klaim JKN >80%.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <a href="../../index.html" class="text-white font-bold tracking-tight text-lg hover:text-teal-400 transition-colors">LoLyeah</a>
+                <p class="text-xs text-slate-500 mt-1" data-en="Zero-dependency static compendiums &amp; interactive simulators." data-id="Kompendium statis zero-dependency &amp; simulator interaktif.">
+                    Zero-dependency static compendiums &amp; interactive simulators.
+                </p>
+            </div>
+            <div class="flex items-center space-x-6 text-xs font-medium">
+                <a href="../../index.html" class="hover:text-white transition-colors" data-en="Home" data-id="Beranda">Home</a>
+                <a href="../spesialis-kklp.html" class="hover:text-white transition-colors" data-en="Main Compendium" data-id="Kompendium Utama">Main Compendium</a>
+                <a href="./indonesia-vs-world-family-medicine.html" class="hover:text-white transition-colors" data-en="Indonesia vs World" data-id="Indonesia vs Dunia">Indonesia vs World</a>
+                <a href="#main-content" class="hover:text-white transition-colors flex items-center space-x-1">
+                    <span data-en="Back to top" data-id="Kembali ke atas">Back to top</span>
+                    <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Simulator & Case Vignettes Script -->
+    <script>
+        lucide.createIcons();
+
+        // Bilingual State
+        let currentLang = 'id';
+        try {
+            const savedLang = localStorage.getItem('kklp_lang') || localStorage.getItem('pref_lang');
+            if (savedLang === 'en' || savedLang === 'id') {
+                currentLang = savedLang;
+            }
+        } catch (e) {}
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            try {
+                localStorage.setItem('kklp_lang', lang);
+                localStorage.setItem('pref_lang', lang);
+            } catch (e) {}
+            document.documentElement.lang = lang;
+            
+            const labelEl = document.getElementById('current-lang-label');
+            if (labelEl) labelEl.textContent = lang.toUpperCase();
+
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const text = el.getAttribute('data-' + lang);
+                if (text) {
+                    el.innerHTML = text;
+                }
+            });
+
+            const langBtn = document.getElementById('lang-toggle-btn');
+            if (langBtn) {
+                langBtn.setAttribute('aria-label', lang === 'en' ? 'Switch to Indonesian' : 'Ganti ke Bahasa Inggris');
+                langBtn.setAttribute('aria-pressed', lang === 'id' ? 'true' : 'false');
+            }
+
+            updateSimulator();
+            renderActiveCase();
+        }
+
+        const langBtn = document.getElementById('lang-toggle-btn');
+        if (langBtn) {
+            langBtn.addEventListener('click', () => {
+                setLanguage(currentLang === 'en' ? 'id' : 'en');
+            });
+        }
+
+        // TOOL 1: FISCAL SIMULATOR LOGIC
+        const popSlider = document.getElementById('pop-slider');
+        const popReadout = document.getElementById('pop-readout');
+        const prolanisSlider = document.getElementById('prolanis-slider');
+        const prolanisReadout = document.getElementById('prolanis-readout');
+        const modelGpBtn = document.getElementById('model-gp-btn');
+        const modelKklpBtn = document.getElementById('model-kklp-btn');
+
+        let simState = {
+            population: 30000,
+            model: 'kklp',
+            prolanisPct: 75
+        };
+
+        function updateSimulator() {
+            const pop = simState.population;
+            const isKklp = simState.model === 'kklp';
+            const prolanis = simState.prolanisPct;
+
+            popReadout.textContent = pop.toLocaleString();
+            prolanisReadout.textContent = prolanis + '%';
+
+            // Baseline monthly visits: ~10% of enrolled population visit FKTP monthly
+            const monthlyVisits = pop * 0.10;
+
+            // Referral rate:
+            // Standard GP: ~18% referral rate, reduced slightly by prolanis compliance down to 14%
+            // Sp.KKLP: ~9.5% referral rate at 50% prolanis, down to 6.5% at 95% prolanis
+            let refRate = 0;
+            if (isKklp) {
+                refRate = 0.11 - ((prolanis - 30) / 65) * 0.045; // 11% down to 6.5%
+            } else {
+                refRate = 0.20 - ((prolanis - 30) / 65) * 0.05; // 20% down to 15%
+            }
+
+            const monthlyReferrals = Math.round(monthlyVisits * refRate);
+            const refRatePercent = (refRate * 100).toFixed(1);
+
+            document.getElementById('referrals-readout').innerHTML = `${monthlyReferrals.toLocaleString()} <span class="text-xs font-sans text-slate-500 font-normal">${currentLang === 'en' ? 'cases/mo' : 'kasus/bln'}</span>`;
+            document.getElementById('referral-rate-pct').textContent = `${currentLang === 'en' ? 'Referral Rate:' : 'Rasio Rujukan:'} ${refRatePercent}%`;
+
+            // Avoided visits per year relative to worst-case GP (22% referral)
+            const benchmarkReferralsAnnual = (monthlyVisits * 0.20) * 12;
+            const currentReferralsAnnual = monthlyReferrals * 12;
+            const avoidedVisits = Math.max(0, Math.round(benchmarkReferralsAnnual - currentReferralsAnnual));
+            document.getElementById('avoided-visits-readout').textContent = avoidedVisits.toLocaleString();
+
+            // Net Annual Savings:
+            // Outpatient claim cost saved = avoidedVisits * Rp 230,000
+            // Inpatient complication admissions saved:
+            // Uncontrolled NCD rate = ~4.5% of diabetic/hypertensive patients hospitalized annually
+            // In a 30,000 pop, ~12% have diabetes/HTN = 3,600 people
+            const chronicPop = pop * 0.12;
+            // Prevented complication multiplier
+            const compMultiplier = isKklp ? (prolanis / 100) * 0.055 : (prolanis / 100) * 0.015;
+            const preventedHospitalizations = Math.round(chronicPop * compMultiplier);
+            const complicationSavings = preventedHospitalizations * 7800000; // Rp 7.8M per admission
+            const outpatientSavings = avoidedVisits * 230000;
+            const totalGrossSavings = outpatientSavings + complicationSavings;
+
+            // Sp.KKLP practice cost adjustment (~Rp 180M/yr specialist salary incentive)
+            const netSavings = isKklp ? Math.max(0, totalGrossSavings - 180000000) : totalGrossSavings;
+            const netSavingsBillion = (netSavings / 1000000000).toFixed(2);
+
+            document.getElementById('savings-value').textContent = `Rp ${netSavingsBillion} Miliar`;
+            
+            // Prevented catastrophic events (strokes/dialysis)
+            const preventedCatastrophic = Math.round(preventedHospitalizations * 0.42);
+            document.getElementById('complications-readout').innerHTML = `${preventedCatastrophic} <span class="text-xs font-sans text-slate-500 font-normal">${currentLang === 'en' ? 'patients/yr' : 'pasien/thn'}</span>`;
+
+            // Stewardship score
+            const stewardScore = isKklp ? Math.min(96, Math.round(82 + (prolanis * 0.14))) : Math.min(68, Math.round(48 + (prolanis * 0.15)));
+            document.getElementById('stewardship-readout').textContent = `${stewardScore}%`;
+
+            // Badge text
+            const badgeEl = document.getElementById('savings-badge');
+            if (isKklp && prolanis >= 70) {
+                badgeEl.textContent = currentLang === 'en' ? 'High Impact' : 'Dampak Optimal';
+                badgeEl.className = 'px-2 py-0.5 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+            } else if (isKklp) {
+                badgeEl.textContent = currentLang === 'en' ? 'Moderate Impact' : 'Dampak Menengah';
+                badgeEl.className = 'px-2 py-0.5 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-teal-500/20 text-teal-300 border border-teal-500/30';
+            } else {
+                badgeEl.textContent = currentLang === 'en' ? 'Baseline GP' : 'Baseline Dokter Umum';
+                badgeEl.className = 'px-2 py-0.5 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/30';
+            }
+        }
+
+        popSlider.addEventListener('input', (e) => {
+            simState.population = parseInt(e.target.value);
+            updateSimulator();
+        });
+
+        prolanisSlider.addEventListener('input', (e) => {
+            simState.prolanisPct = parseInt(e.target.value);
+            updateSimulator();
+        });
+
+        modelGpBtn.addEventListener('click', () => {
+            simState.model = 'gp';
+            modelGpBtn.classList.add('border-teal-600', 'bg-teal-50', 'text-teal-900', 'ring-2', 'ring-teal-400/40');
+            modelGpBtn.classList.remove('border-slate-300', 'bg-slate-50', 'text-slate-700');
+            modelGpBtn.setAttribute('aria-checked', 'true');
+
+            modelKklpBtn.classList.remove('border-teal-600', 'bg-teal-50', 'text-teal-900', 'ring-2', 'ring-teal-400/40');
+            modelKklpBtn.classList.add('border-slate-300', 'bg-slate-50', 'text-slate-700');
+            modelKklpBtn.setAttribute('aria-checked', 'false');
+            updateSimulator();
+        });
+
+        modelKklpBtn.addEventListener('click', () => {
+            simState.model = 'kklp';
+            modelKklpBtn.classList.add('border-teal-600', 'bg-teal-50', 'text-teal-900', 'ring-2', 'ring-teal-400/40');
+            modelKklpBtn.classList.remove('border-slate-300', 'bg-slate-50', 'text-slate-700');
+            modelKklpBtn.setAttribute('aria-checked', 'true');
+
+            modelGpBtn.classList.remove('border-teal-600', 'bg-teal-50', 'text-teal-900', 'ring-2', 'ring-teal-400/40');
+            modelGpBtn.classList.add('border-slate-300', 'bg-slate-50', 'text-slate-700');
+            modelGpBtn.setAttribute('aria-checked', 'false');
+            updateSimulator();
+        });
+
+        // TOOL 2: CLINICAL CASES DATA
+        const casesData = {
+            case1: {
+                category: {
+                    en: "Chronic NCD & Psychosocial Multimorbidity",
+                    id: "Penyakit Kronis & Multimorbiditas Psikososial"
+                },
+                title: {
+                    en: "Ibu Aminah (56 Years Old) — Uncontrolled T2DM & Caregiver Burnout",
+                    id: "Ibu Aminah (56 Tahun) — Diabetes Tak Terkontrol & Beban Pengasuh"
+                },
+                tags: ["HbA1c: 9.6%", "TD: 155/95 mmHg", "Microalbumin (+)"],
+                desc: {
+                    en: "Ibu Aminah visits her Puskesmas with fatigue, uncontrolled blood glucose, rising blood pressure, and insomnia. She cares for a stroke-paralyzed spouse at home and frequently forgets her daily medications due to emotional burnout.",
+                    id: "Ibu Aminah datang dengan keluhan badan lemas, gula darah tak terkontrol, tensi naik, dan susah tidur. Di rumah, ia merawat suaminya yang lumpuh total pasca-stroke, memicu caregiver burnout berat sehingga kerap lupa meminum obat harian."
+                },
+                gpSteps: {
+                    en: "<p><strong>1. Time crunch:</strong> 4-minute consultation; clinician sees 90 patients that morning.</p><p><strong>2. Fragmentation:</strong> Separate referrals to Hospital Internist (Sp.PD) and Neurologist (Sp.N).</p><p><strong>3. Queuing ordeal:</strong> 6-hour hospital lines; spouse left unassisted at home.</p><p><strong>4. Escalating claims:</strong> Incurred claims of Rp 800,000–1,200,000/month.</p>",
+                    id: "<p><strong>1. Konsultasi Kilat:</strong> Durasi 3–4 menit di Puskesmas padat tanpa penelusuran beban psikososial keluarga.</p><p><strong>2. Pemecahan Organ:</strong> Pasien dirujuk terpisah ke Poli Penyakit Dalam RS (evaluasi gula) dan Poli Saraf RS (konsultasi suami).</p><p><strong>3. Kerepotan Logistik:</strong> Pasien mengantre berjam-jam di RS rujukan; suami di rumah terlantar tanpa pendamping.</p><p><strong>4. Biaya Membengkak:</strong> Klaim rujukan ganda membebani BPJS Rp 800.000–1.200.000 per bulan.</p>"
+                },
+                gpOutcome: {
+                    en: "Outcome: Continued non-compliance; dialysis transition within 3 years.",
+                    id: "Hasil: Ketidakpatuhan berulang, risiko cuci darah tinggi dalam 3 tahun."
+                },
+                kklpSteps: {
+                    en: "<p><strong>1. Biophysicosocial:</strong> Identifies caregiver burnout as the root cause of medication lapse.</p><p><strong>2. Simplification:</strong> Switches to single once-daily combination pill; titrates ACEi/ARB for renal protection.</p><p><strong>3. ILP Mobilization:</strong> Assigns Pustu nurse for home-visit physical therapy for husband.</p><p><strong>4. Zero Hospital Referral:</strong> Managed completely in primary care with Prolanis follow-up.</p>",
+                    id: "<p><strong>1. Penilaian Biopisikososial:</strong> Identifikasi kelelahan mengasuh suami (caregiver strain) sebagai akar pasien lalai minum obat.</p><p><strong>2. Rasionalisasi Dosis:</strong> Simplifikasi regimen obat menjadi kombinasi sekali sehari; titrasi ACEi/ARB untuk nefroproteksi dini ginjal.</p><p><strong>3. Mobilisasi ILP:</strong> Jadwalkan kunjungan rumah perawat Pustu/kader untuk fisioterapi stroke suami, meringankan beban mental pasien.</p><p><strong>4. Nol Rujukan RS:</strong> Kasus terkelola tuntas di FKTP dengan monitoring Prolanis rutin.</p>"
+                },
+                kklpOutcome: {
+                    en: "Outcome: HbA1c drops to 7.1%, BP controlled, >80% BPJS claim savings.",
+                    id: "Hasil: HbA1c turun ke 7,1%, tensi terkontrol, penghematan klaim JKN >80%."
+                }
+            },
+            case2: {
+                category: {
+                    en: "Geriatric Polypharmacy & Fall Risk",
+                    id: "Geriatri, Polifarmasi & Risiko Jatuh"
+                },
+                title: {
+                    en: "Pak Joko (68 Years Old) — BPH, Knee Osteoarthritis & Cognitive Decline",
+                    id: "Pak Joko (68 Tahun) — BPH, Osteoartritis Lutut & Polifarmasi Akut"
+                },
+                tags: ["8 Obat Berbeda", "Tensi Labil", "Risiko Jatuh Tinggi"],
+                desc: {
+                    en: "Pak Joko suffers from severe dizziness, unstable blood pressure, and knee pain. He takes 8 different medications prescribed by multiple independent clinics, causing orthostatic hypotension and near-falls.",
+                    id: "Pak Joko mengeluh sering pusing melayang, tensi naik turun tak menentu, dan nyeri lutut hebat. Pasien mengonsumsi 8 macam obat berbeda dari berbagai dokter berbeda, memicu hipotensi ortostatik dan risiko jatuh berbahaya."
+                },
+                gpSteps: {
+                    en: "<p><strong>1. Symptom Treat:</strong> Adds an anti-vertigo drug (Betahistine) to an already crowded list of 8 pills.</p><p><strong>2. Double Referral:</strong> Refers to Hospital Orthopedist (for knee) and Urologist (for prostate).</p><p><strong>3. Drug cascade:</strong> Anticholinergic burden worsens cognitive impairment and confusion.</p>",
+                    id: "<p><strong>1. Resep Tambahan:</strong> Menambahkan obat anti-vertigo (Betahistin) ke dalam tumpukan 8 obat yang sudah ada.</p><p><strong>2. Rujukan Ganda:</strong> Merujuk ke Poli Orthopedi RS (untuk lutut) dan Poli Urologi RS (untuk prostat).</p><p><strong>3. Kaskade Preskripsi:</strong> Beban antikolinergik obat memperburuk kebingungan dan demensia ringan pasien.</p>"
+                },
+                gpOutcome: {
+                    en: "Outcome: Fall with hip fracture at home; expensive emergency surgery at tertiary hospital.",
+                    id: "Hasil: Terjatuh di rumah hingga patah tulang panggul; operasi darurat mahal di RS."
+                },
+                kklpSteps: {
+                    en: "<p><strong>1. Beers Criteria Review:</strong> De-prescribes 4 duplicate and dangerous medications; resolves drug interactions.</p><p><strong>2. Joint Infiltration:</strong> Performs primary in-house knee injection; rationalizes prostate medication timing.</p><p><strong>3. Home Safety Audit:</strong> Coordinates community kader to install grab bars in patient's bathroom.</p>",
+                    id: "<p><strong>1. Audit Kriteria Beers:</strong> Menghapus (de-prescribing) 4 obat yang saling berinteraksi negatif dan berisiko tinggi.</p><p><strong>2. Infiltrasi Sendi Primer:</strong> Memberikan injeksi sendi lutut di FKTP dan merapikan jadwal obat prostat malam hari.</p><p><strong>3. Modifikasi Rumah:</strong> Menggerakkan kader lansia untuk pemasangan pegangan tangan di kamar mandi pasien.</p>"
+                },
+                kklpOutcome: {
+                    en: "Outcome: Dizziness cured, mobility restored, zero hospital referrals required.",
+                    id: "Hasil: Pusing hilang total, mobilitas pulih, terhindar dari operasi patah tulang."
+                }
+            },
+            case3: {
+                category: {
+                    en: "Musculoskeletal & Somatization",
+                    id: "Muskuloskeletal & Somatisasi Nyeri Kronis"
+                },
+                title: {
+                    en: "Mas Rudi (42 Years Old) — Chronic Recurrent Low Back Pain",
+                    id: "Mas Rudi (42 Tahun) — Nyeri Punggung Bawah Kronis & Somatisasi"
+                },
+                tags: ["Nyeri Kronis 6 Bulan", "Absen Kerja", "Permintaan MRI"],
+                desc: {
+                    en: "Mas Rudi, a factory warehouse worker, has suffered lower back pain for 6 months. He strongly demands a referral to a spine surgeon and an expensive lumbar MRI scan, experiencing severe work absenteeism.",
+                    id: "Mas Rudi, pekerja gudang pabrik, menderita nyeri pinggang bawah kambuhan selama 6 bulan. Pasien mendesak minta rujukan ke dokter bedah saraf RS dan pemeriksaan MRI lumbal, serta sering absen kerja."
+                },
+                gpSteps: {
+                    en: "<p><strong>1. Yielding to Pressure:</strong> Doctor capitulates to patient demand and prints referral to Hospital Neurosurgeon.</p><p><strong>2. Diagnostic Waste:</strong> Unwarranted MRI (costing Rp 2.5M) shows normal age-related degenerative changes.</p><p><strong>3. Prolonged Disability:</strong> Medicalization leads to psychological kinesiophobia (fear of movement).</p>",
+                    id: "<p><strong>1. Takluk Tekanan:</strong> Dokter umum menyerah pada desakan pasien dan mencetak surat rujukan ke Bedah Saraf RS.</p><p><strong>2. Pemborosan MRI:</strong> MRI lumbal di RS (biaya Rp 2,5 Juta) hanya menunjukkan perubahan degeneratif wajar sesuai usia.</p><p><strong>3. Disabilitas Memanjang:</strong> Medisikalisasi berlebihan memicu kinesiophobia (pasien takut bergerak bekerja).</p>"
+                },
+                gpOutcome: {
+                    en: "Outcome: Chronic disability pension claims, excessive imaging costs, unresolved pain.",
+                    id: "Hasil: Klaim MRI mahal, nyeri tak sembuh, pasien kehilangan produktivitas kerja."
+                },
+                kklpSteps: {
+                    en: "<p><strong>1. Red Flag Screen:</strong> Rigorous examination rules out cauda equina and malignancy, eliminating MRI need.</p><p><strong>2. Ergonomic Prescription:</strong> Analyzes factory lifting mechanics; prescribes core stabilization exercises.</p><p><strong>3. Cognitive Reassurance:</strong> Explains pain neurophysiology, dispelling fears of paralysis.</p>",
+                    id: "<p><strong>1. Skrining 'Red Flags':</strong> Pemeriksaan menyeluruh menyingkirkan tanda bahaya cauda equina dan keganasan; edukasi tidak perlu MRI.</p><p><strong>2. Resep Ergonomi:</strong> Menganalisis teknik angkat beban di pabrik dan melatih peregangan otot inti (core stability).</p><p><strong>3. Reassurance Kognitif:</strong> Menjelaskan neurofisiologi nyeri, meredakan ketakutan lumpuh, dan memotivasi kembali bekerja.</p>"
+                },
+                kklpOutcome: {
+                    en: "Outcome: Patient returns to work in 2 weeks; saved Rp 4.5M in tertiary spine consultations.",
+                    id: "Hasil: Pasien kembali bekerja aktif dalam 2 minggu; menghemat klaim RS Rp 4,5 Juta."
+                }
+            },
+            case4: {
+                category: {
+                    en: "Pediatric Asthma & Environmental Health",
+                    id: "Kesehatan Anak, Asma & Sanitasi Lingkungan"
+                },
+                title: {
+                    en: "Balita Alif (3 Years Old) — Recurrent Wheezing & Stunting Risk",
+                    id: "Balita Alif (3 Tahun) — Mengi Kambuhan & Ancaman Stunting"
+                },
+                tags: ["Mengi Berulang", "BB Sulit Naik", "Asap Rokok Rumah"],
+                desc: {
+                    en: "3-year-old Alif visits frequently for coughing fits and wheezing. His weight trajectory has plateaued on the growth chart. The grandfather and father smoke heavily inside their poorly ventilated two-room home.",
+                    id: "Balita Alif sering dibawa ke Puskesmas karena batuk mengi berulang dan sesak napas ringan. Garis berat badannya mendatar di KMS (risiko stunting). Kakek dan ayahnya adalah perokok aktif berat di dalam rumah kontrakan sempit."
+                },
+                gpSteps: {
+                    en: "<p><strong>1. Symptomatic Nebulization:</strong> Prescribes antibiotics, oral salbutamol syrup, and nebulizer; sends home.</p><p><strong>2. Hospital Pediatric Referral:</strong> Refers to Hospital Pediatrician for allergy workup when symptoms recur.</p><p><strong>3. Environmental Neglect:</strong> Household indoor smoking is never addressed or mitigated.</p>",
+                    id: "<p><strong>1. Terapi Simptomatik:</strong> Memberi antibiotik sirup, obat batuk hitam, dan nebulizer sesaat lalu dipulangkan.</p><p><strong>2. Rujukan Poli Anak:</strong> Merujuk ke Poli Anak RS saat mengi kambuh seminggu kemudian.</p><p><strong>3. Mengabaikan Sanitasi:</strong> Paparan asap rokok dan ventilasi rumah tidak pernah dibahas atau diintervensi.</p>"
+                },
+                gpOutcome: {
+                    en: "Outcome: Frequent acute relapses; child progresses to diagnosed moderate stunting.",
+                    id: "Hasil: Mengi kambuh tiap bulan; anak jatuh ke kondisi stunting dan sering opname."
+                },
+                kklpSteps: {
+                    en: "<p><strong>1. Environmental Audit:</strong> Triggers ILP Cluster 4 sanitarian home inspection; identifies indoor PM2.5 pollution.</p><p><strong>2. Family Smoking Cessation:</strong> Enrolls father and grandfather in Puskesmas smoking cessation counseling.</p><p><strong>3. Metered Dose Inhaler:</strong> Prescribes proper spacer technique for asthma control; optimizes high-protein nutrition.</p>",
+                    id: "<p><strong>1. Inspeksi Lingkungan ILP:</strong> Meminta sanitarian Klaster 4 memeriksa ventilasi rumah; identifikasi polusi asap rokok masif.</p><p><strong>2. Konseling Berhenti Merokok:</strong> Mengedukasi ayah dan kakek di klinik berhenti merokok Puskesmas demi keselamatan balita.</p><p><strong>3. Inhaler Spacer &amp; Nutrisi:</strong> Meresepkan inhaler dengan spacer yang benar dan mendampingi pemenuhan protein hewani.</p>"
+                },
+                kklpOutcome: {
+                    en: "Outcome: Wheezing attacks drop 90%; child achieves normal growth percentile trajectory.",
+                    id: "Hasil: Mengi reda 90%; berat badan kembali naik mengejar kurva pertumbuhan normal."
+                }
+            }
+        };
+
+        let activeCaseKey = 'case1';
+
+        function renderActiveCase() {
+            const data = casesData[activeCaseKey];
+            if (!data) return;
+
+            document.getElementById('case-category').textContent = data.category[currentLang];
+            document.getElementById('case-title').textContent = data.title[currentLang];
+            document.getElementById('case-description').textContent = data.desc[currentLang];
+
+            const tagsContainer = document.getElementById('case-tags');
+            tagsContainer.innerHTML = data.tags.map(t => `<span class="px-2.5 py-1 rounded-md bg-teal-100 text-teal-800">${t}</span>`).join('');
+
+            document.getElementById('case-gp-steps').innerHTML = data.gpSteps[currentLang];
+            document.getElementById('case-gp-outcome').textContent = data.gpOutcome[currentLang];
+
+            document.getElementById('case-kklp-steps').innerHTML = data.kklpSteps[currentLang];
+            document.getElementById('case-kklp-outcome').textContent = data.kklpOutcome[currentLang];
+        }
+
+        const caseBtns = document.querySelectorAll('.case-btn');
+        caseBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                caseBtns.forEach(b => {
+                    b.classList.remove('border-teal-600', 'bg-teal-50', 'text-teal-900', 'ring-2', 'ring-teal-400/40');
+                    b.classList.add('border-slate-200', 'bg-slate-50', 'text-slate-700');
+                });
+                btn.classList.add('border-teal-600', 'bg-teal-50', 'text-teal-900', 'ring-2', 'ring-teal-400/40');
+                btn.classList.remove('border-slate-200', 'bg-slate-50', 'text-slate-700');
+                activeCaseKey = btn.getAttribute('data-case');
+                renderActiveCase();
+            });
+        });
+
+        // Card fade-in observer
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Initialize state on load
+        setLanguage(currentLang);
+    </script>
+</body>
+</html>
