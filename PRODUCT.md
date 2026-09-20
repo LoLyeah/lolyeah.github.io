@@ -42,7 +42,7 @@ web
 - Brand Name: LoLyeah Compendium (`lolyeah.github.io`).
 - Visual Voice: Editorial, modern, topic-led, calm, intentional, and premium. A curated digital publication rather than a software dashboard.
 - Design System: Small, deliberate palettes per topic (one background family, surface hierarchy, primary and supporting accents); restrained depth with hairline borders and subtle tonal surfaces; no gratuitous typewriter monospace.
-- Assets: Shared logos and icons in `assets/` (e.g., `assets/logo.png`).
+- Assets: Shared SVG and theme-aware assets in `assets/` (`assets/logo.svg`, `assets/logo-light.svg`, `assets/logo-dark.svg`, and transparent fallbacks `assets/logo.png`, `assets/favicon-*.png`).
 
 ## Evidence on Hand
 

@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="assets/logo.png" alt="LoLyeah Logo" width="120" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
+    <img src="assets/logo-light.svg" alt="LoLyeah Logo" width="120" />
+  </picture>
 </p>
 
 # LoLyeah Compendium
