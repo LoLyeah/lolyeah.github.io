@@ -87,6 +87,26 @@
             outline: 2px solid #0d9488;
             outline-offset: 2px;
         }
+        .fade-in-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .fade-in-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .fade-in-card {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+            html {
+                scroll-behavior: auto;
+            }
+        }
     </style>
 </head>
 <body class="font-sans antialiased text-slate-800 bg-slate-50 lang-en" id="top">
@@ -128,7 +148,7 @@
     <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
 
         <!-- Hero Section -->
-        <section class="relative rounded-2xl overflow-hidden bg-slate-900 text-white p-6 sm:p-10 lg:p-12 shadow-elevated">
+        <section class="relative rounded-2xl overflow-hidden bg-slate-900 text-white p-6 sm:p-10 lg:p-12 shadow-elevated fade-in-card">
             <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-teal-950 opacity-90"></div>
             <div class="absolute -right-16 -bottom-16 w-96 h-96 bg-teal-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -164,7 +184,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Node 1: Hyperactive Limbic Core -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-card space-y-3">
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-card space-y-3 fade-in-card">
                     <div class="flex items-center justify-between">
                         <span class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-mono font-bold text-xs">01</span>
                         <span class="text-[10px] font-bold text-rose-600 uppercase">Hyperactive Engine</span>
@@ -184,7 +204,7 @@
                 </div>
 
                 <!-- Node 2: Hypoactive Prefrontal Brake -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-card space-y-3">
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-card space-y-3 fade-in-card">
                     <div class="flex items-center justify-between">
                         <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-mono font-bold text-xs">02</span>
                         <span class="text-[10px] font-bold text-amber-600 uppercase">Failed Inhibitory Brake</span>
@@ -204,7 +224,7 @@
                 </div>
 
                 <!-- Node 3: Uncinate Fasciculus Disruption -->
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-card space-y-3">
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-card space-y-3 fade-in-card">
                     <div class="flex items-center justify-between">
                         <span class="w-8 h-8 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-mono font-bold text-xs">03</span>
                         <span class="text-[10px] font-bold text-teal-600 uppercase">Disconnected Wiring</span>
@@ -226,7 +246,7 @@
         </section>
 
         <!-- Section 2: Endogenous Opioids, Oxytocin & The Neuroscience of NSSI -->
-        <section class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-card space-y-6">
+        <section class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-card space-y-6 fade-in-card">
             <div class="border-b border-slate-100 pb-4">
                 <div class="flex items-center gap-2 text-rose-600 font-bold text-xs uppercase tracking-wide">
                     <i data-lucide="zap" class="w-4 h-4"></i>
@@ -291,7 +311,7 @@
         </section>
 
         <!-- Section 3: Interactive Biosocial Reaction Curve Simulator -->
-        <section class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-card space-y-6">
+        <section class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-card space-y-6 fade-in-card">
             <div class="border-b border-slate-100 pb-4">
                 <div class="flex items-center gap-2 text-teal-600 font-bold text-xs uppercase tracking-wide">
                     <i data-lucide="sliders" class="w-4 h-4"></i>
@@ -421,6 +441,26 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             if (window.lucide) lucide.createIcons();
+
+            // Card fade-in on scroll with IntersectionObserver
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -40px 0px',
+                threshold: 0.08
+            };
+
+            const cardObserver = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in-card').forEach(card => {
+                cardObserver.observe(card);
+            });
         });
     </script>
 </body>
