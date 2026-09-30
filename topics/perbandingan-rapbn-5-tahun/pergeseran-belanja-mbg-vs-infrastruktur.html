@@ -62,7 +62,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
@@ -134,6 +134,7 @@
         .reveal-on-scroll.is-visible {
             opacity: 1;
             transform: translateY(0);
+            will-change: auto;
             transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
@@ -161,6 +162,38 @@
                 transition-duration: 0.01ms !important;
                 transition-delay: 0ms !important;
             }
+        }
+
+        @media print {
+            .reveal-on-scroll,
+            .js .reveal-on-scroll {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+
+        /* Themed Browser Surfaces */
+        ::selection {
+            background: rgba(245, 158, 11, 0.25);
+            color: var(--gold);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-elevated);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
         }
 
         *, *::before, *::after {
@@ -756,6 +789,96 @@
     </main>
 
     <script>
+        // 1. Scroll Animation (IntersectionObserver) - Immediate & Resilient
+        function initScrollReveal() {
+            const revealEls = document.querySelectorAll('.reveal-on-scroll');
+            if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('revealed');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { root: null, rootMargin: '0px 0px 80px 0px', threshold: 0 });
+
+                revealEls.forEach(el => observer.observe(el));
+            } else {
+                revealEls.forEach(el => el.classList.add('revealed'));
+            }
+
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(el => {
+                    el.classList.add('revealed');
+                });
+            }, 1000);
+        }
+        initScrollReveal();
+
+        // 2. Interactive Simulator Logic
+        const sliderMbg = document.getElementById('sliderMbg');
+        const sliderInfra = document.getElementById('sliderInfra');
+        const sliderLocal = document.getElementById('sliderLocal');
+
+        const valMbg = document.getElementById('valMbg');
+        const valInfra = document.getElementById('valInfra');
+        const valLocal = document.getElementById('valLocal');
+
+        const resMultiplier = document.getElementById('resMultiplier');
+        const resGdpStimulus = document.getElementById('resGdpStimulus');
+        const resImportLeak = document.getElementById('resImportLeak');
+        const resGrowthStatus = document.getElementById('resGrowthStatus');
+
+        function updateSim() {
+            if (!sliderMbg) return;
+            const mbg = parseInt(sliderMbg.value, 10);
+            const infra = parseInt(sliderInfra.value, 10);
+            const local = parseInt(sliderLocal.value, 10);
+
+            if (valMbg) valMbg.textContent = 'Rp ' + mbg + ' T';
+            if (valInfra) valInfra.textContent = 'Rp ' + infra + ' T';
+            if (valLocal) valLocal.textContent = local + '%';
+
+            const localRatio = local / 100;
+            const importRatio = 1 - localRatio;
+
+            // Multiplier for MBG adjusted for local vs import leakage
+            // Base local multiplier 0.85, imported fraction leaks out with multiplier 0.15
+            const mbgMultiplier = (localRatio * 0.88) + (importRatio * 0.20);
+            // CapEx infrastructure multiplier ~1.60
+            const infraMultiplier = 1.60;
+
+            const totalSpend = mbg + infra;
+            const weightedMult = ((mbg * mbgMultiplier) + (infra * infraMultiplier)) / totalSpend;
+            const netStimulus = (mbg * mbgMultiplier) + (infra * infraMultiplier);
+            const importLeakage = mbg * importRatio;
+
+            if (resMultiplier) resMultiplier.textContent = weightedMult.toFixed(2) + 'x';
+            if (resGdpStimulus) resGdpStimulus.textContent = 'Rp ' + netStimulus.toFixed(1) + ' T';
+            if (resImportLeak) resImportLeak.textContent = 'Rp ' + importLeakage.toFixed(1) + ' T';
+
+            if (resGrowthStatus) {
+                if (weightedMult >= 1.45) {
+                    resGrowthStatus.textContent = currentLang === 'en' ? 'HIGH EFFICIENCY (5.8% - 6.4%)' : 'EFISIEN TINGGI (5,8% - 6,4%)';
+                    resGrowthStatus.className = 'res-val text-emerald';
+                } else if (weightedMult >= 1.25) {
+                    resGrowthStatus.textContent = currentLang === 'en' ? 'MODERATE (5.1% - 5.4%)' : 'MODERAT (5,1% - 5,4%)';
+                    resGrowthStatus.className = 'res-val text-gold';
+                } else {
+                    resGrowthStatus.textContent = currentLang === 'en' ? 'STAGNANT / INFLATION RISK (<5.0%)' : 'STAGNAN / RISIKO INFLASI (<5,0%)';
+                    resGrowthStatus.className = 'res-val text-crimson';
+                }
+            }
+        }
+
+        if (sliderMbg) {
+            sliderMbg.addEventListener('input', updateSim);
+            if (sliderInfra) sliderInfra.addEventListener('input', updateSim);
+            if (sliderLocal) sliderLocal.addEventListener('input', updateSim);
+            updateSim();
+        }
+
+        // 3. Language Toggle System
         let currentLang = 'id';
         let shiftChart = null;
         const langBtns = document.querySelectorAll('.lang-btn');
@@ -785,14 +908,17 @@
             btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
         });
 
+        // 4. Theme Toggle
         const themeBtn = document.getElementById('themeToggle');
-        themeBtn.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', nextTheme);
-            try { localStorage.setItem('theme', nextTheme); } catch (e) {}
-            updateChartTheme(nextTheme);
-        });
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', nextTheme);
+                try { localStorage.setItem('theme', nextTheme); } catch (e) {}
+                updateChartTheme(nextTheme);
+            });
+        }
 
         function updateChartTheme(theme) {
             if (!shiftChart) return;
@@ -807,136 +933,91 @@
             shiftChart.update();
         }
 
-        // Shift Chart
-        const ctx = document.getElementById('shiftChart').getContext('2d');
-        shiftChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['2022', '2023', '2024', '2025', '2026 (P)'],
-                datasets: [
-                    {
-                        label: currentLang === 'en' ? 'Infrastructure & Capital Spending (Rp T)' : 'Belanja Modal & Infrastruktur (Rp T)',
-                        data: [233.4, 308.3, 422.7, 400.3, 375.0],
-                        borderColor: '#38bdf8',
-                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                        fill: true,
-                        tension: 0.35,
-                        borderWidth: 2.5
-                    },
-                    {
-                        label: currentLang === 'en' ? 'Social Assistance & Welfare Transfers (Rp T)' : 'Bansos & Perlinsos (Rp T)',
-                        data: [460.6, 443.4, 496.8, 504.7, 520.0],
-                        borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245, 158, 11, 0.08)',
-                        fill: true,
-                        tension: 0.35,
-                        borderWidth: 2.5
-                    },
-                    {
-                        label: currentLang === 'en' ? 'Free Nutritious Meals / MBG (Rp T)' : 'Makan Bergizi Gratis / MBG (Rp T)',
-                        data: [0, 0, 0, 71.0, 180.0],
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                        fill: true,
-                        tension: 0.35,
-                        borderWidth: 3,
-                        pointRadius: 5
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#94a3b8',
-                            font: { family: "'Plus Jakarta Sans', sans-serif" }
+        // 5. Chart Initialization (Resilient)
+        function initCharts() {
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js not loaded yet.');
+                return;
+            }
+            try {
+                const ctxEl = document.getElementById('shiftChart');
+                if (ctxEl && !shiftChart) {
+                    const ctx = ctxEl.getContext('2d');
+                    shiftChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['2022', '2023', '2024', '2025', '2026 (P)'],
+                            datasets: [
+                                {
+                                    label: currentLang === 'en' ? 'Infrastructure & Capital Spending (Rp T)' : 'Belanja Modal & Infrastruktur (Rp T)',
+                                    data: [233.4, 308.3, 422.7, 400.3, 375.0],
+                                    borderColor: '#38bdf8',
+                                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                                    fill: true,
+                                    tension: 0.35,
+                                    borderWidth: 2.5
+                                },
+                                {
+                                    label: currentLang === 'en' ? 'Social Assistance & Welfare Transfers (Rp T)' : 'Bansos & Perlinsos (Rp T)',
+                                    data: [460.6, 443.4, 496.8, 504.7, 520.0],
+                                    borderColor: '#f59e0b',
+                                    backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                                    fill: true,
+                                    tension: 0.35,
+                                    borderWidth: 2.5
+                                },
+                                {
+                                    label: currentLang === 'en' ? 'Free Nutritious Meals / MBG (Rp T)' : 'Makan Bergizi Gratis / MBG (Rp T)',
+                                    data: [0, 0, 0, 71.0, 180.0],
+                                    borderColor: '#10b981',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                                    fill: true,
+                                    tension: 0.35,
+                                    borderWidth: 3,
+                                    pointRadius: 5
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: '#94a3b8',
+                                        font: { family: "'Plus Jakarta Sans', sans-serif" }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                                y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                            }
                         }
-                    }
-                },
-                scales: {
-                    x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    });
                 }
-            }
-        });
-
-        // Simulator Logic
-        const sliderMbg = document.getElementById('sliderMbg');
-        const sliderInfra = document.getElementById('sliderInfra');
-        const sliderLocal = document.getElementById('sliderLocal');
-
-        const valMbg = document.getElementById('valMbg');
-        const valInfra = document.getElementById('valInfra');
-        const valLocal = document.getElementById('valLocal');
-
-        const resMultiplier = document.getElementById('resMultiplier');
-        const resGdpStimulus = document.getElementById('resGdpStimulus');
-        const resImportLeak = document.getElementById('resImportLeak');
-        const resGrowthStatus = document.getElementById('resGrowthStatus');
-
-        function updateSim() {
-            const mbg = parseInt(sliderMbg.value, 10);
-            const infra = parseInt(sliderInfra.value, 10);
-            const local = parseInt(sliderLocal.value, 10);
-
-            valMbg.textContent = 'Rp ' + mbg + ' T';
-            valInfra.textContent = 'Rp ' + infra + ' T';
-            valLocal.textContent = local + '%';
-
-            const localRatio = local / 100;
-            const importRatio = 1 - localRatio;
-
-            // Multiplier for MBG adjusted for local vs import leakage
-            // Base local multiplier 0.85, imported fraction leaks out with multiplier 0.15
-            const mbgMultiplier = (localRatio * 0.88) + (importRatio * 0.20);
-            // CapEx infrastructure multiplier ~1.60
-            const infraMultiplier = 1.60;
-
-            const totalSpend = mbg + infra;
-            const weightedMult = ((mbg * mbgMultiplier) + (infra * infraMultiplier)) / totalSpend;
-            const netStimulus = (mbg * mbgMultiplier) + (infra * infraMultiplier);
-            const importLeakage = mbg * importRatio;
-
-            resMultiplier.textContent = weightedMult.toFixed(2) + 'x';
-            resGdpStimulus.textContent = 'Rp ' + netStimulus.toFixed(1) + ' T';
-            resImportLeak.textContent = 'Rp ' + importLeakage.toFixed(1) + ' T';
-
-            if (weightedMult >= 1.45) {
-                resGrowthStatus.textContent = currentLang === 'en' ? 'HIGH EFFICIENCY (5.8% - 6.4%)' : 'EFISIEN TINGGI (5,8% - 6,4%)';
-                resGrowthStatus.className = 'res-val text-emerald';
-            } else if (weightedMult >= 1.25) {
-                resGrowthStatus.textContent = currentLang === 'en' ? 'MODERATE (5.1% - 5.4%)' : 'MODERAT (5,1% - 5,4%)';
-                resGrowthStatus.className = 'res-val text-gold';
-            } else {
-                resGrowthStatus.textContent = currentLang === 'en' ? 'STAGNANT / INFLATION RISK (<5.0%)' : 'STAGNAN / RISIKO INFLASI (<5,0%)';
-                resGrowthStatus.className = 'res-val text-crimson';
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                updateChartTheme(currentTheme);
+            } catch (err) {
+                console.error('Failed to initialize chart:', err);
             }
         }
-
-        sliderMbg.addEventListener('input', updateSim);
-        sliderInfra.addEventListener('input', updateSim);
-        sliderLocal.addEventListener('input', updateSim);
-        updateSim();
-
-        // Scroll Animation (IntersectionObserver) - Silky Smooth & Hiccup-Free
-        if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { root: null, rootMargin: '0px 0px 80px 0px', threshold: 0 });
-
-            document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
-        } else {
-            document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('revealed'));
+        initCharts();
+        if (typeof Chart === 'undefined') {
+            window.addEventListener('load', initCharts);
+            let pollCount = 0;
+            const chartPoll = setInterval(() => {
+                pollCount++;
+                if (typeof Chart !== 'undefined') {
+                    clearInterval(chartPoll);
+                    initCharts();
+                } else if (pollCount >= 30) {
+                    clearInterval(chartPoll);
+                }
+            }, 100);
         }
 
-        // Restore Preferences
+        // 6. Restore Preferences
         try {
             const savedLang = localStorage.getItem('lolyeah_lang') || localStorage.getItem('pref_lang');
             if (savedLang && (savedLang === 'en' || savedLang === 'id')) {

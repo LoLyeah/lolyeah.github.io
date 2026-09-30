@@ -62,7 +62,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
@@ -132,6 +132,7 @@
         .reveal-on-scroll.is-visible {
             opacity: 1;
             transform: translateY(0);
+            will-change: auto;
             transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
@@ -159,6 +160,38 @@
                 transition-duration: 0.01ms !important;
                 transition-delay: 0ms !important;
             }
+        }
+
+        @media print {
+            .reveal-on-scroll,
+            .js .reveal-on-scroll {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+
+        /* Themed Browser Surfaces */
+        ::selection {
+            background: rgba(56, 189, 248, 0.25);
+            color: var(--azure);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-elevated);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--azure);
         }
 
         *, *::before, *::after {
@@ -752,100 +785,33 @@
     </main>
 
     <script>
-        let currentLang = 'id';
-        let middleClassChart = null;
-        const langBtns = document.querySelectorAll('.lang-btn');
-        
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            try { localStorage.setItem('lolyeah_lang', lang); localStorage.setItem('pref_lang', lang); } catch (e) {}
-            langBtns.forEach(btn => {
-                const isActive = btn.dataset.lang === lang;
-                btn.classList.toggle('active', isActive);
-                btn.setAttribute('aria-pressed', isActive);
-            });
-            document.querySelectorAll('[data-en][data-id]').forEach(el => {
-                el.innerHTML = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-id');
-            });
-            if (middleClassChart) {
-                middleClassChart.data.datasets[0].label = lang === 'en' ? 'Middle Class Population (Million People)' : 'Populasi Kelas Menengah BPS (Juta Jiwa)';
-                middleClassChart.data.datasets[1].label = lang === 'en' ? 'Aspiring Middle Class (Million People)' : 'Menuju Kelas Menengah (Juta Jiwa)';
-                middleClassChart.update();
-            }
-            updateSim();
-        }
-
-        langBtns.forEach(btn => {
-            btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
-        });
-
-        const themeBtn = document.getElementById('themeToggle');
-        themeBtn.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', nextTheme);
-            try { localStorage.setItem('theme', nextTheme); } catch (e) {}
-            updateChartTheme(nextTheme);
-        });
-
-        function updateChartTheme(theme) {
-            if (!middleClassChart) return;
-            const isDark = theme === 'dark';
-            const textColor = isDark ? '#94a3b8' : '#475569';
-            const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
-            middleClassChart.options.plugins.legend.labels.color = textColor;
-            middleClassChart.options.scales.x.ticks.color = textColor;
-            middleClassChart.options.scales.y.ticks.color = textColor;
-            middleClassChart.options.scales.x.grid.color = gridColor;
-            middleClassChart.options.scales.y.grid.color = gridColor;
-            middleClassChart.update();
-        }
-
-        // Chart
-        const ctx = document.getElementById('middleClassChart').getContext('2d');
-        middleClassChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['2019', '2021', '2022', '2023', '2024'],
-                datasets: [
-                    {
-                        label: currentLang === 'en' ? 'Middle Class Population (Million People)' : 'Populasi Kelas Menengah BPS (Juta Jiwa)',
-                        data: [57.33, 53.83, 49.51, 48.27, 47.85],
-                        backgroundColor: 'rgba(56, 189, 248, 0.75)',
-                        borderColor: '#38bdf8',
-                        borderWidth: 1.5,
-                        borderRadius: 6
-                    },
-                    {
-                        label: currentLang === 'en' ? 'Aspiring Middle Class (Million People)' : 'Menuju Kelas Menengah (Juta Jiwa)',
-                        data: [128.85, 130.82, 134.40, 136.92, 137.50],
-                        backgroundColor: 'rgba(245, 158, 11, 0.65)',
-                        borderColor: '#f59e0b',
-                        borderWidth: 1.5,
-                        borderRadius: 6
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#94a3b8',
-                            font: { family: "'Plus Jakarta Sans', sans-serif" }
+        // 1. Scroll Animation (IntersectionObserver) - Immediate & Resilient
+        function initScrollReveal() {
+            const revealEls = document.querySelectorAll('.reveal-on-scroll');
+            if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('revealed');
+                            observer.unobserve(entry.target);
                         }
-                    }
-                },
-                scales: {
-                    x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
-                }
-            }
-        });
+                    });
+                }, { root: null, rootMargin: '0px 0px 80px 0px', threshold: 0 });
 
-        // Simulator
+                revealEls.forEach(el => observer.observe(el));
+            } else {
+                revealEls.forEach(el => el.classList.add('revealed'));
+            }
+
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(el => {
+                    el.classList.add('revealed');
+                });
+            }, 1000);
+        }
+        initScrollReveal();
+
+        // 2. Interactive Simulator Logic
         const sliderIncome = document.getElementById('sliderIncome');
         const sliderVat = document.getElementById('sliderVat');
         const sliderSpend = document.getElementById('sliderSpend');
@@ -860,18 +826,19 @@
         const resEffectiveRate = document.getElementById('resEffectiveRate');
 
         function updateSim() {
+            if (!sliderIncome) return;
             const income = parseInt(sliderIncome.value, 10);
             const vatRate = parseInt(sliderVat.value, 10);
             const spendPct = parseInt(sliderSpend.value, 10);
 
-            valIncome.textContent = 'Rp ' + income.toLocaleString('id-ID');
+            if (valIncome) valIncome.textContent = 'Rp ' + income.toLocaleString('id-ID');
             const vatTag = vatRate === 12 
                 ? (currentLang === 'en' ? '(UU HPP Target)' : '(Target UU HPP)')
                 : vatRate === 11 
                     ? (currentLang === 'en' ? '(Current)' : '(Berlaku)')
                     : (currentLang === 'en' ? '(Legacy)' : '(Sebelumnya)');
-            valVatRate.textContent = vatRate + '% ' + vatTag;
-            valSpend.textContent = spendPct + '%';
+            if (valVatRate) valVatRate.textContent = vatRate + '% ' + vatTag;
+            if (valSpend) valSpend.textContent = spendPct + '%';
 
             const annualIncome = income * 12;
             const ptkp = 54000000; // TK/0 PTKP
@@ -898,34 +865,146 @@
             const totalTax = annualPph + annualVat;
             const effectiveRate = ((totalTax / annualIncome) * 100).toFixed(1);
 
-            resPph.textContent = 'Rp ' + Math.round(annualPph).toLocaleString('id-ID');
-            resPpnPaid.textContent = 'Rp ' + Math.round(annualVat).toLocaleString('id-ID');
-            resTotalTax.textContent = 'Rp ' + Math.round(totalTax).toLocaleString('id-ID');
-            resEffectiveRate.textContent = effectiveRate + '%';
+            if (resPph) resPph.textContent = 'Rp ' + Math.round(annualPph).toLocaleString('id-ID');
+            if (resPpnPaid) resPpnPaid.textContent = 'Rp ' + Math.round(annualVat).toLocaleString('id-ID');
+            if (resTotalTax) resTotalTax.textContent = 'Rp ' + Math.round(totalTax).toLocaleString('id-ID');
+            if (resEffectiveRate) resEffectiveRate.textContent = effectiveRate + '%';
         }
 
-        sliderIncome.addEventListener('input', updateSim);
-        sliderVat.addEventListener('input', updateSim);
-        sliderSpend.addEventListener('input', updateSim);
-        updateSim();
-
-        // Scroll Animation (IntersectionObserver) - Silky Smooth & Hiccup-Free
-        if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { root: null, rootMargin: '0px 0px 80px 0px', threshold: 0 });
-
-            document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
-        } else {
-            document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('revealed'));
+        if (sliderIncome) {
+            sliderIncome.addEventListener('input', updateSim);
+            if (sliderVat) sliderVat.addEventListener('input', updateSim);
+            if (sliderSpend) sliderSpend.addEventListener('input', updateSim);
+            updateSim();
         }
 
-        // Restore Preferences
+        // 3. Language Toggle System
+        let currentLang = 'id';
+        let middleClassChart = null;
+        const langBtns = document.querySelectorAll('.lang-btn');
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            try { localStorage.setItem('lolyeah_lang', lang); localStorage.setItem('pref_lang', lang); } catch (e) {}
+            langBtns.forEach(btn => {
+                const isActive = btn.dataset.lang === lang;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-pressed', isActive);
+            });
+            document.querySelectorAll('[data-en][data-id]').forEach(el => {
+                el.innerHTML = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-id');
+            });
+            if (middleClassChart) {
+                middleClassChart.data.datasets[0].label = lang === 'en' ? 'Middle Class Population (Million People)' : 'Populasi Kelas Menengah BPS (Juta Jiwa)';
+                middleClassChart.data.datasets[1].label = lang === 'en' ? 'Aspiring Middle Class (Million People)' : 'Menuju Kelas Menengah (Juta Jiwa)';
+                middleClassChart.update();
+            }
+            updateSim();
+        }
+
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+        });
+
+        // 4. Theme Toggle
+        function updateChartTheme(theme) {
+            if (!middleClassChart) return;
+            const isDark = theme === 'dark';
+            const textColor = isDark ? '#94a3b8' : '#475569';
+            const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+            middleClassChart.options.plugins.legend.labels.color = textColor;
+            middleClassChart.options.scales.x.ticks.color = textColor;
+            middleClassChart.options.scales.y.ticks.color = textColor;
+            middleClassChart.options.scales.x.grid.color = gridColor;
+            middleClassChart.options.scales.y.grid.color = gridColor;
+            middleClassChart.update();
+        }
+
+        const themeBtn = document.getElementById('themeToggle');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', nextTheme);
+                try { localStorage.setItem('theme', nextTheme); } catch (e) {}
+                updateChartTheme(nextTheme);
+            });
+        }
+
+        // 5. Chart Initialization (Resilient)
+        function initCharts() {
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js not loaded yet.');
+                return;
+            }
+            try {
+                const ctxEl = document.getElementById('middleClassChart');
+                if (ctxEl && !middleClassChart) {
+                    const ctx = ctxEl.getContext('2d');
+                    middleClassChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['2019', '2021', '2022', '2023', '2024'],
+                            datasets: [
+                                {
+                                    label: currentLang === 'en' ? 'Middle Class Population (Million People)' : 'Populasi Kelas Menengah BPS (Juta Jiwa)',
+                                    data: [57.33, 53.83, 49.51, 48.27, 47.85],
+                                    backgroundColor: 'rgba(56, 189, 248, 0.75)',
+                                    borderColor: '#38bdf8',
+                                    borderWidth: 1.5,
+                                    borderRadius: 6
+                                },
+                                {
+                                    label: currentLang === 'en' ? 'Aspiring Middle Class (Million People)' : 'Menuju Kelas Menengah (Juta Jiwa)',
+                                    data: [128.85, 130.82, 134.40, 136.92, 137.50],
+                                    backgroundColor: 'rgba(245, 158, 11, 0.65)',
+                                    borderColor: '#f59e0b',
+                                    borderWidth: 1.5,
+                                    borderRadius: 6
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: '#94a3b8',
+                                        font: { family: "'Plus Jakarta Sans', sans-serif" }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                                y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                            }
+                        }
+                    });
+                }
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                updateChartTheme(currentTheme);
+            } catch (err) {
+                console.error('Failed to initialize chart:', err);
+            }
+        }
+        initCharts();
+        if (typeof Chart === 'undefined') {
+            window.addEventListener('load', initCharts);
+            let pollCount = 0;
+            const chartPoll = setInterval(() => {
+                pollCount++;
+                if (typeof Chart !== 'undefined') {
+                    clearInterval(chartPoll);
+                    initCharts();
+                } else if (pollCount >= 30) {
+                    clearInterval(chartPoll);
+                }
+            }, 100);
+        }
+
+        // 6. Restore Preferences
         try {
             const savedLang = localStorage.getItem('lolyeah_lang') || localStorage.getItem('pref_lang');
             if (savedLang && (savedLang === 'en' || savedLang === 'id')) {

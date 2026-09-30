@@ -62,7 +62,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
@@ -137,6 +137,7 @@
         .reveal-on-scroll.is-visible {
             opacity: 1;
             transform: translateY(0);
+            will-change: auto;
             transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
@@ -164,6 +165,38 @@
                 transition-duration: 0.01ms !important;
                 transition-delay: 0ms !important;
             }
+        }
+
+        @media print {
+            .reveal-on-scroll,
+            .js .reveal-on-scroll {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+
+        /* Themed Browser Surfaces */
+        ::selection {
+            background: rgba(239, 68, 68, 0.25);
+            color: var(--crimson);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-elevated);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--crimson);
         }
 
         *, *::before, *::after {
@@ -832,7 +865,97 @@
     </main>
 
     <script>
-        // Language Toggle System
+        // 1. Scroll Animation (IntersectionObserver) - Immediate & Resilient
+        function initScrollReveal() {
+            const revealEls = document.querySelectorAll('.reveal-on-scroll');
+            if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('revealed');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { root: null, rootMargin: '0px 0px 80px 0px', threshold: 0 });
+
+                revealEls.forEach(el => observer.observe(el));
+            } else {
+                revealEls.forEach(el => el.classList.add('revealed'));
+            }
+
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(el => {
+                    el.classList.add('revealed');
+                });
+            }, 1000);
+        }
+        initScrollReveal();
+
+        // 2. Interactive Simulator Logic
+        const sliderYield = document.getElementById('sliderYield');
+        const sliderKurs = document.getElementById('sliderKurs');
+        const sliderDebtIssue = document.getElementById('sliderDebtIssue');
+        const valYield = document.getElementById('valYield');
+        const valKurs = document.getElementById('valKurs');
+        const valDebtIssue = document.getElementById('valDebtIssue');
+
+        const resInterest = document.getElementById('resInterest');
+        const resShare = document.getElementById('resShare');
+        const resHealthEquiv = document.getElementById('resHealthEquiv');
+        const resRiskBadge = document.getElementById('resRiskBadge');
+
+        function updateSim() {
+            if (!sliderYield) return;
+            const y = parseFloat(sliderYield.value);
+            const k = parseInt(sliderKurs.value, 10);
+            const d = parseInt(sliderDebtIssue.value, 10);
+
+            if (valYield) valYield.textContent = y.toFixed(2) + '%';
+            if (valKurs) valKurs.textContent = 'Rp ' + k.toLocaleString('id-ID');
+            if (valDebtIssue) valDebtIssue.textContent = 'Rp ' + d + ' T';
+
+            // Baseline: 552.9T at yield=6.85, kurs=16000, debt=775
+            // Valas portion is ~28% of debt
+            const yieldDelta = (y - 6.85);
+            const kursDelta = (k - 16000) / 16000;
+            const debtDelta = (d - 775);
+
+            // Each 100 bps yield increase adds approx Rp 24 T to annual debt servicing
+            // Each 10% currency depreciation adds approx Rp 15 T to valas debt interest
+            // Each Rp 100T new debt adds ~y% in interest
+            let calculatedInterest = 552.9 + (yieldDelta * 24.5) + (kursDelta * 150) + (debtDelta * (y / 100));
+            calculatedInterest = Math.max(350, Math.round(calculatedInterest * 10) / 10);
+
+            const centralSpend = 2701.4 + (calculatedInterest - 552.9);
+            const share = (calculatedInterest / centralSpend) * 100;
+            const healthEquiv = (calculatedInterest / 197.8).toFixed(1);
+
+            if (resInterest) resInterest.textContent = 'Rp ' + calculatedInterest.toFixed(1) + ' T';
+            if (resShare) resShare.textContent = share.toFixed(1) + '%';
+            if (resHealthEquiv) resHealthEquiv.textContent = `${healthEquiv}x ${currentLang === 'en' ? 'Total Health Budget' : 'Total Anggaran Kesehatan'}`;
+
+            if (resRiskBadge) {
+                if (calculatedInterest > 620 || share > 23.5) {
+                    resRiskBadge.textContent = currentLang === 'en' ? 'CRITICAL HIGH (Ceiling Danger)' : 'KRITIS TINGGI (Bahaya Pagu 3%)';
+                    resRiskBadge.className = 'res-val text-crimson';
+                } else if (calculatedInterest > 560 || share > 20.8) {
+                    resRiskBadge.textContent = currentLang === 'en' ? 'ELEVATED / VULNERABLE' : 'WASPADA / RENTAN';
+                    resRiskBadge.className = 'res-val text-gold';
+                } else {
+                    resRiskBadge.textContent = currentLang === 'en' ? 'MODERATE / STABLE' : 'MODERAT / STABIL';
+                    resRiskBadge.className = 'res-val text-emerald';
+                }
+            }
+        }
+
+        if (sliderYield) {
+            sliderYield.addEventListener('input', updateSim);
+            if (sliderKurs) sliderKurs.addEventListener('input', updateSim);
+            if (sliderDebtIssue) sliderDebtIssue.addEventListener('input', updateSim);
+            updateSim();
+        }
+
+        // 3. Language Toggle System
         let currentLang = 'id';
         let debtChart = null;
         const langBtns = document.querySelectorAll('.lang-btn');
@@ -861,16 +984,7 @@
             btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
         });
 
-        // Theme Toggle
-        const themeBtn = document.getElementById('themeToggle');
-        themeBtn.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', nextTheme);
-            try { localStorage.setItem('theme', nextTheme); } catch (e) {}
-            updateChartTheme(nextTheme);
-        });
-
+        // 4. Theme Toggle
         function updateChartTheme(theme) {
             if (!debtChart) return;
             const isDark = theme === 'dark';
@@ -884,131 +998,96 @@
             debtChart.update();
         }
 
-        // Chart Initialization
-        const ctx = document.getElementById('debtInterestChart').getContext('2d');
-        debtChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['2022', '2023', '2024', '2025', '2026 (P)'],
-                datasets: [
-                    {
-                        label: currentLang === 'en' ? 'Debt Interest Payment (Rp Trillion)' : 'Pembayaran Bunga Utang (Rp Triliun)',
-                        data: [386.3, 439.9, 497.3, 552.9, 585.0],
-                        backgroundColor: 'rgba(239, 68, 68, 0.75)',
-                        borderColor: '#ef4444',
-                        borderWidth: 1.5,
-                        borderRadius: 6
-                    },
-                    {
-                        label: currentLang === 'en' ? 'Capital / Infra CapEx (Rp Trillion)' : 'Belanja Modal / Infrastruktur (Rp Triliun)',
-                        data: [233.4, 308.3, 422.7, 400.3, 375.0],
-                        backgroundColor: 'rgba(56, 189, 248, 0.65)',
-                        borderColor: '#38bdf8',
-                        borderWidth: 1.5,
-                        borderRadius: 6
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#94a3b8',
-                            font: { family: "'Plus Jakarta Sans', sans-serif" }
+        const themeBtn = document.getElementById('themeToggle');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', nextTheme);
+                try { localStorage.setItem('theme', nextTheme); } catch (e) {}
+                updateChartTheme(nextTheme);
+            });
+        }
+
+        // 5. Chart Initialization (Resilient)
+        function initCharts() {
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js not loaded yet.');
+                return;
+            }
+            try {
+                const ctxEl = document.getElementById('debtInterestChart');
+                if (ctxEl && !debtChart) {
+                    const ctx = ctxEl.getContext('2d');
+                    debtChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['2022', '2023', '2024', '2025', '2026 (P)'],
+                            datasets: [
+                                {
+                                    label: currentLang === 'en' ? 'Debt Interest Payment (Rp Trillion)' : 'Pembayaran Bunga Utang (Rp Triliun)',
+                                    data: [386.3, 439.9, 497.3, 552.9, 585.0],
+                                    backgroundColor: 'rgba(239, 68, 68, 0.75)',
+                                    borderColor: '#ef4444',
+                                    borderWidth: 1.5,
+                                    borderRadius: 6
+                                },
+                                {
+                                    label: currentLang === 'en' ? 'Capital / Infra CapEx (Rp Trillion)' : 'Belanja Modal / Infrastruktur (Rp Triliun)',
+                                    data: [233.4, 308.3, 422.7, 400.3, 375.0],
+                                    backgroundColor: 'rgba(56, 189, 248, 0.65)',
+                                    borderColor: '#38bdf8',
+                                    borderWidth: 1.5,
+                                    borderRadius: 6
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: '#94a3b8',
+                                        font: { family: "'Plus Jakarta Sans', sans-serif" }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    ticks: { color: '#94a3b8' },
+                                    grid: { color: 'rgba(255,255,255,0.05)' }
+                                },
+                                y: {
+                                    ticks: { color: '#94a3b8' },
+                                    grid: { color: 'rgba(255,255,255,0.05)' }
+                                }
+                            }
                         }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: { color: '#94a3b8' },
-                        grid: { color: 'rgba(255,255,255,0.05)' }
-                    },
-                    y: {
-                        ticks: { color: '#94a3b8' },
-                        grid: { color: 'rgba(255,255,255,0.05)' }
-                    }
+                    });
                 }
-            }
-        });
-
-        // Interactive Simulator Logic
-        const sliderYield = document.getElementById('sliderYield');
-        const sliderKurs = document.getElementById('sliderKurs');
-        const sliderDebtIssue = document.getElementById('sliderDebtIssue');
-        const valYield = document.getElementById('valYield');
-        const valKurs = document.getElementById('valKurs');
-        const valDebtIssue = document.getElementById('valDebtIssue');
-
-        const resInterest = document.getElementById('resInterest');
-        const resShare = document.getElementById('resShare');
-        const resHealthEquiv = document.getElementById('resHealthEquiv');
-        const resRiskBadge = document.getElementById('resRiskBadge');
-
-        function updateSim() {
-            const y = parseFloat(sliderYield.value);
-            const k = parseInt(sliderKurs.value, 10);
-            const d = parseInt(sliderDebtIssue.value, 10);
-
-            valYield.textContent = y.toFixed(2) + '%';
-            valKurs.textContent = 'Rp ' + k.toLocaleString('id-ID');
-            valDebtIssue.textContent = 'Rp ' + d + ' T';
-
-            // Baseline: 552.9T at yield=6.85, kurs=16000, debt=775
-            // Valas portion is ~28% of debt
-            const yieldDelta = (y - 6.85);
-            const kursDelta = (k - 16000) / 16000;
-            const debtDelta = (d - 775);
-
-            // Each 100 bps yield increase adds approx Rp 24 T to annual debt servicing
-            // Each 10% currency depreciation adds approx Rp 15 T to valas debt interest
-            // Each Rp 100T new debt adds ~y% in interest
-            let calculatedInterest = 552.9 + (yieldDelta * 24.5) + (kursDelta * 150) + (debtDelta * (y / 100));
-            calculatedInterest = Math.max(350, Math.round(calculatedInterest * 10) / 10);
-
-            const centralSpend = 2701.4 + (calculatedInterest - 552.9);
-            const share = (calculatedInterest / centralSpend) * 100;
-            const healthEquiv = (calculatedInterest / 197.8).toFixed(1);
-
-            resInterest.textContent = 'Rp ' + calculatedInterest.toFixed(1) + ' T';
-            resShare.textContent = share.toFixed(1) + '%';
-            resHealthEquiv.textContent = `${healthEquiv}x ${currentLang === 'en' ? 'Total Health Budget' : 'Total Anggaran Kesehatan'}`;
-
-            if (calculatedInterest > 620 || share > 23.5) {
-                resRiskBadge.textContent = currentLang === 'en' ? 'CRITICAL HIGH (Ceiling Danger)' : 'KRITIS TINGGI (Bahaya Pagu 3%)';
-                resRiskBadge.className = 'res-val text-crimson';
-            } else if (calculatedInterest > 560 || share > 20.8) {
-                resRiskBadge.textContent = currentLang === 'en' ? 'ELEVATED / VULNERABLE' : 'WASPADA / RENTAN';
-                resRiskBadge.className = 'res-val text-gold';
-            } else {
-                resRiskBadge.textContent = currentLang === 'en' ? 'MODERATE / STABLE' : 'MODERAT / STABIL';
-                resRiskBadge.className = 'res-val text-emerald';
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                updateChartTheme(currentTheme);
+            } catch (err) {
+                console.error('Failed to initialize chart:', err);
             }
         }
-
-        sliderYield.addEventListener('input', updateSim);
-        sliderKurs.addEventListener('input', updateSim);
-        sliderDebtIssue.addEventListener('input', updateSim);
-        updateSim();
-
-        // Scroll Animation (IntersectionObserver) - Silky Smooth & Hiccup-Free
-        if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { root: null, rootMargin: '0px 0px 80px 0px', threshold: 0 });
-
-            document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
-        } else {
-            document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('revealed'));
+        initCharts();
+        if (typeof Chart === 'undefined') {
+            window.addEventListener('load', initCharts);
+            let pollCount = 0;
+            const chartPoll = setInterval(() => {
+                pollCount++;
+                if (typeof Chart !== 'undefined') {
+                    clearInterval(chartPoll);
+                    initCharts();
+                } else if (pollCount >= 30) {
+                    clearInterval(chartPoll);
+                }
+            }, 100);
         }
 
-        // Restore Preferences
+        // 6. Restore Preferences
         try {
             const savedLang = localStorage.getItem('lolyeah_lang') || localStorage.getItem('pref_lang');
             if (savedLang && (savedLang === 'en' || savedLang === 'id')) {
