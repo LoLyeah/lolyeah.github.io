@@ -4,6 +4,7 @@
     <!-- BEGIN ANTIGRAVITY SEO OPTIMIZATION -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>document.documentElement.classList.add('js');</script>
     <title>Ledakan Bunga Utang, Jatuh Tempo SBN & Ilusi Ruang Fiskal 2022–2026 | LoLyeah</title>
     <meta name="description" content="Analisis makroekonomi mendalam beban pembayaran bunga utang APBN 2022–2026: menembus rekor Rp 550T+, tembok jatuh tempo SBN era pandemi, perbandingan yield obligasi regional, dan fenomena crowding-out fiskal.">
     <meta name="keywords" content="Bunga Utang APBN, Jatuh Tempo SBN, Ruang Fiskal, Sri Mulyani, Yield Obligasi 10 Tahun, Debt Service Ratio, Crowding Out Fiskal, Burden Sharing BI, Utang Pemerintah Indonesia, LoLyeah">
@@ -61,7 +62,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
     <style>
         :root {
@@ -118,36 +119,50 @@
             outline-offset: 2px;
         }
 
+        /* Refined Scroll Reveal Motion */
         .reveal-on-scroll {
-            opacity: 0;
-            transform: translateY(18px);
-            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: opacity, transform;
-        }
-        .reveal-on-scroll.is-visible,
-        .reveal-on-scroll.revealed {
             opacity: 1;
-            transform: translateY(0);
+            transform: none;
         }
 
-        /* Staggered Grid Cascade */
-        .stat-grid > :nth-child(1) { transition-delay: 0.04s; }
-        .stat-grid > :nth-child(2) { transition-delay: 0.08s; }
-        .stat-grid > :nth-child(3) { transition-delay: 0.12s; }
-        .stat-grid > :nth-child(4) { transition-delay: 0.16s; }
+        .js .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(12px);
+            will-change: opacity, transform;
+            transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .js .reveal-on-scroll.revealed,
+        .reveal-on-scroll.revealed,
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Tactile hover elevation on interactive cards only, with immediate response */
+        @media (hover: hover) {
+            .js .reveal-on-scroll.stat-card:hover,
+            .stat-card:hover {
+                transform: translateY(-2px);
+                border-color: var(--crimson);
+                transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+            }
+        }
 
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
-            *, *::before, *::after {
-                animation-duration: 0.001ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.001ms !important;
-                transition-delay: 0ms !important;
-            }
-            .reveal-on-scroll {
+            .reveal-on-scroll,
+            .js .reveal-on-scroll {
                 opacity: 1 !important;
                 transform: none !important;
                 transition: none !important;
+            }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                transition-delay: 0ms !important;
             }
         }
 
@@ -343,7 +358,6 @@
             position: relative;
             overflow: hidden;
             transition: var(--transition);
-            backdrop-filter: blur(12px);
         }
         .stat-card:hover {
             border-color: var(--crimson);
@@ -398,7 +412,6 @@
             border-radius: var(--radius-lg);
             padding: 28px;
             margin-bottom: 24px;
-            backdrop-filter: blur(12px);
         }
         .card-panel p {
             margin-bottom: 16px;
@@ -827,7 +840,7 @@
         function setLanguage(lang) {
             currentLang = lang;
             document.documentElement.lang = lang;
-            try { localStorage.setItem('pref_lang', lang); } catch (e) {}
+            try { localStorage.setItem('lolyeah_lang', lang); localStorage.setItem('pref_lang', lang); } catch (e) {}
             langBtns.forEach(btn => {
                 const isActive = btn.dataset.lang === lang;
                 btn.classList.toggle('active', isActive);
@@ -979,24 +992,25 @@
         sliderDebtIssue.addEventListener('input', updateSim);
         updateSim();
 
-        // Scroll Observer
-        if ('IntersectionObserver' in window) {
+        // Scroll Animation (IntersectionObserver) - Silky Smooth & Hiccup-Free
+        if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible', 'revealed');
+                        entry.target.classList.add('revealed');
                         observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.1 });
+            }, { root: null, rootMargin: '0px 0px 80px 0px', threshold: 0 });
+
             document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
         } else {
-            document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('is-visible', 'revealed'));
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('revealed'));
         }
 
         // Restore Preferences
         try {
-            const savedLang = localStorage.getItem('pref_lang');
+            const savedLang = localStorage.getItem('lolyeah_lang') || localStorage.getItem('pref_lang');
             if (savedLang && (savedLang === 'en' || savedLang === 'id')) {
                 setLanguage(savedLang);
             }

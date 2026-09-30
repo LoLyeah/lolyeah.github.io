@@ -4,6 +4,7 @@
     <!-- BEGIN ANTIGRAVITY SEO OPTIMIZATION -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>document.documentElement.classList.add('js');</script>
     <title>Perbandingan RAPBN 5 Tahun Terakhir (2022–2026) &amp; Akibatnya | LoLyeah</title>
     <meta name="description" content="Kompendium investigasi makroekonomi dan simulator interaktif perbandingan RAPBN 5 tahun terakhir (2022–2026): ledakan bunga utang Rp 550T, pergeseran dari IKN ke MBG, squeeze pajak kelas menengah, dan ancaman batas defisit 3%.">
     <meta name="keywords" content="Perbandingan RAPBN 5 Tahun, APBN 2022 2023 2024 2025 2026, Sri Mulyani, Prabowo Subianto, Bunga Utang SBN, Makan Bergizi Gratis MBG, Anggaran IKN, PPN 12 Persen, Defisit APBN 3 Persen, Tax Ratio Indonesia, Danantara, LoLyeah">
@@ -61,7 +62,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Chart.js for High-Fidelity Data Curves -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
     <style>
         :root {
@@ -262,43 +263,53 @@
             outline-offset: 3px;
         }
 
-        /* Classy Scroll Animation & Motion */
+        /* Refined Scroll Reveal Motion */
         .reveal-on-scroll {
-            opacity: 0;
-            transform: translateY(18px);
-            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: opacity, transform;
+            opacity: 1;
+            transform: none;
         }
+
+        .js .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(12px);
+            will-change: opacity, transform;
+            transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .js .reveal-on-scroll.revealed,
         .reveal-on-scroll.revealed,
         .reveal-on-scroll.is-visible {
             opacity: 1;
             transform: translateY(0);
+            transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        /* Staggered Grid Cascade */
-        .stat-grid > :nth-child(1) { transition-delay: 0.04s; }
-        .stat-grid > :nth-child(2) { transition-delay: 0.08s; }
-        .stat-grid > :nth-child(3) { transition-delay: 0.12s; }
-        .stat-grid > :nth-child(4) { transition-delay: 0.16s; }
-        .stat-grid > :nth-child(5) { transition-delay: 0.20s; }
-
-        .subpages-grid > :nth-child(1) { transition-delay: 0.05s; }
-        .subpages-grid > :nth-child(2) { transition-delay: 0.10s; }
-        .subpages-grid > :nth-child(3) { transition-delay: 0.15s; }
-
-        .consequences-grid > :nth-child(1) { transition-delay: 0.04s; }
-        .consequences-grid > :nth-child(2) { transition-delay: 0.08s; }
-        .consequences-grid > :nth-child(3) { transition-delay: 0.12s; }
-        .consequences-grid > :nth-child(4) { transition-delay: 0.16s; }
-        .consequences-grid > :nth-child(5) { transition-delay: 0.20s; }
-        .consequences-grid > :nth-child(6) { transition-delay: 0.24s; }
-
-        .scenarios-grid > :nth-child(1) { transition-delay: 0.05s; }
-        .scenarios-grid > :nth-child(2) { transition-delay: 0.10s; }
-        .scenarios-grid > :nth-child(3) { transition-delay: 0.15s; }
+        /* Tactile hover elevation on interactive cards only, with immediate response */
+        @media (hover: hover) {
+            .js .reveal-on-scroll.subpage-card:hover,
+            .subpage-card:hover {
+                transform: translateY(-2px);
+                border-color: var(--gold);
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+                transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+            }
+            .js .reveal-on-scroll.stat-card:hover,
+            .stat-card:hover {
+                transform: translateY(-2px);
+                border-color: var(--gold);
+                transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+            }
+            .js .reveal-on-scroll.consequence-card:hover,
+            .consequence-card:hover {
+                transform: translateY(-2px);
+                border-color: var(--gold);
+                transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+            }
+        }
 
         @media (prefers-reduced-motion: reduce) {
-            .reveal-on-scroll {
+            .reveal-on-scroll,
+            .js .reveal-on-scroll {
                 opacity: 1 !important;
                 transform: none !important;
                 transition: none !important;
@@ -377,7 +388,6 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            backdrop-filter: blur(12px);
         }
         .jump-btn {
             font-family: var(--font-mono);
@@ -465,7 +475,6 @@
             padding: 20px 18px;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(12px);
             transition: var(--transition);
         }
         .stat-card:hover {
@@ -516,7 +525,6 @@
             border-radius: var(--radius-lg);
             padding: 28px;
             margin-bottom: 32px;
-            backdrop-filter: blur(12px);
         }
         .card-panel p {
             margin-bottom: 16px;
@@ -940,7 +948,7 @@
         <!-- Subpage Showcase Deck (Rule 3 AGENTS.md) -->
         <section id="subpages-deck" class="subpage-deck">
             <!-- Subpage 1 -->
-            <a href="./perbandingan-rapbn-5-tahun/analisis-bunga-utang-dan-fiscal-space.html" class="subpage-card">
+            <a href="./perbandingan-rapbn-5-tahun/analisis-bunga-utang-dan-fiscal-space.html" class="subpage-card reveal-on-scroll">
                 <div>
                     <div class="subpage-num" data-en="SUBPAGE 01 &bull; DEBT DYNAMICS" data-id="SUBHALAMAN 01 &bull; DINAMIKA UTANG">SUBHALAMAN 01 &bull; DINAMIKA UTANG</div>
                     <h2 class="subpage-title" data-en="The SBN Debt Maturity Wall &amp; Fiscal Space Collapse" data-id="Ledakan Bunga Utang, Jatuh Tempo SBN &amp; Ilusi Ruang Fiskal">Ledakan Bunga Utang, Jatuh Tempo SBN &amp; Ilusi Ruang Fiskal</h2>
@@ -952,7 +960,7 @@
             </a>
 
             <!-- Subpage 2 -->
-            <a href="./perbandingan-rapbn-5-tahun/pergeseran-belanja-mbg-vs-infrastruktur.html" class="subpage-card">
+            <a href="./perbandingan-rapbn-5-tahun/pergeseran-belanja-mbg-vs-infrastruktur.html" class="subpage-card reveal-on-scroll">
                 <div>
                     <div class="subpage-num" data-en="SUBPAGE 02 &bull; ALLOCATION PIVOT" data-id="SUBHALAMAN 02 &bull; PERGESERAN BELANJA">SUBHALAMAN 02 &bull; PERGESERAN BELANJA</div>
                     <h2 class="subpage-title" data-en="From IKN Megaprojects to Free Nutritious Meals (MBG)" data-id="Dari Megaproyek IKN ke MBG &amp; Penurunan Multiplier PDB">Dari Megaproyek IKN ke MBG &amp; Penurunan Multiplier PDB</h2>
@@ -964,7 +972,7 @@
             </a>
 
             <!-- Subpage 3 -->
-            <a href="./perbandingan-rapbn-5-tahun/dampak-pajak-kelas-menengah-dan-daya-beli.html" class="subpage-card">
+            <a href="./perbandingan-rapbn-5-tahun/dampak-pajak-kelas-menengah-dan-daya-beli.html" class="subpage-card reveal-on-scroll">
                 <div>
                     <div class="subpage-num" data-en="SUBPAGE 03 &bull; TAX &amp; PEOPLE" data-id="SUBHALAMAN 03 &bull; PAJAK &amp; RAKYAT">SUBHALAMAN 03 &bull; PAJAK &amp; RAKYAT</div>
                     <h2 class="subpage-title" data-en="Middle-Class Tax Squeeze &amp; Tax Ratio Stagnation" data-id="Squeeze Pajak Kelas Menengah &amp; Stagnasi Tax Ratio">Squeeze Pajak Kelas Menengah &amp; Stagnasi Tax Ratio</h2>
@@ -978,27 +986,27 @@
 
         <!-- KPI Stat Grid -->
         <div class="stat-grid">
-            <div class="stat-card">
+            <div class="stat-card reveal-on-scroll">
                 <div class="stat-label" data-en="APBN 2025 Total Spend" data-id="Total Belanja APBN 2025">Total Belanja APBN 2025</div>
                 <div class="stat-val text-gold">Rp&nbsp;3,621&nbsp;T</div>
                 <div class="stat-sub" data-en="All-time national record" data-id="Rekor tertinggi sepanjang sejarah">Rekor tertinggi sepanjang sejarah</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card reveal-on-scroll">
                 <div class="stat-label" data-en="Annual Debt Interest" data-id="Beban Bunga Utang 2025">Beban Bunga Utang 2025</div>
                 <div class="stat-val text-crimson">Rp&nbsp;552.9&nbsp;T</div>
                 <div class="stat-sub" data-en="20.5% of central gov budget" data-id="20,5% dari belanja pemerintah pusat">20,5% dari belanja pemerintah pusat</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card reveal-on-scroll">
                 <div class="stat-label" data-en="Tax Ratio to GDP" data-id="Rasio Pajak thd PDB">Rasio Pajak thd PDB</div>
                 <div class="stat-val text-azure">10.2%</div>
                 <div class="stat-sub" data-en="Stagnant below ASEAN (14.5%)" data-id="Mandek di bawah ASEAN (14,5%)">Mandek di bawah ASEAN (14,5%)</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card reveal-on-scroll">
                 <div class="stat-label" data-en="Middle Class Lost (BPS)" data-id="Kelas Menengah Turun Kelas">Kelas Menengah Turun Kelas</div>
                 <div class="stat-val text-crimson" data-en="-9.48&nbsp;Million" data-id="-9.48&nbsp;Juta">-9.48&nbsp;Juta</div>
                 <div class="stat-sub" data-en="Squeezed between 2019-2024" data-id="Menyusut dalam 5 tahun terakhir">Menyusut dalam 5 tahun terakhir</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card reveal-on-scroll">
                 <div class="stat-label" data-en="Deficit Margin to 3%" data-id="Bantalan Menuju Batas 3%">Bantalan Menuju Batas 3%</div>
                 <div class="stat-val text-gold" data-en="0.47%&nbsp;GDP" data-id="0.47%&nbsp;PDB">0.47%&nbsp;PDB</div>
                 <div class="stat-sub" data-en="Ultra-thin shock cushion" data-id="Bantalan krisis amat tipis">Bantalan krisis amat tipis</div>
@@ -1012,7 +1020,7 @@
                 <div class="section-desc" data-en="Explore the fiscal evolution across 5 fiscal years: revenue collection, central government expenditures, regional transfers, and debt balance." data-id="Eksplorasi evolusi pos-pos anggaran selama 5 tahun anggaran: penerimaan negara, belanja pusat, transfer daerah, dan neraca utang.">Eksplorasi evolusi pos-pos anggaran selama 5 tahun anggaran: penerimaan negara, belanja pusat, transfer daerah, dan neraca utang.</div>
             </div>
 
-            <div class="card-panel">
+            <div class="card-panel reveal-on-scroll">
                 <div class="view-controls">
                     <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); margin-right:4px;" data-en="Display Metric:" data-id="Metrik Tampilan:">Metrik Tampilan:</span>
                     <button class="control-btn active" data-metric="nominal" data-en="Nominal (IDR Trillion)" data-id="Nominal (Rp Triliun)">Nominal (Rp Triliun)</button>
@@ -1157,11 +1165,11 @@
             </div>
 
             <div class="chart-grid">
-                <div class="chart-box">
+                <div class="chart-box reveal-on-scroll">
                     <div class="chart-box-title" data-en="Revenue vs Expenditure vs Deficit (Rp Trillion)" data-id="Pendapatan vs Belanja vs Defisit (Rp Triliun)">Pendapatan vs Belanja vs Defisit (Rp Triliun)</div>
                     <canvas id="revExpChart"></canvas>
                 </div>
-                <div class="chart-box">
+                <div class="chart-box reveal-on-scroll">
                     <div class="chart-box-title" data-en="Spending Evolution: Debt Service vs CapEx vs MBG" data-id="Evolusi Belanja: Bunga Utang vs Modal vs MBG">Evolusi Belanja: Bunga Utang vs Modal vs MBG</div>
                     <canvas id="compChart"></canvas>
                 </div>
@@ -1175,7 +1183,7 @@
                 <div class="section-desc" data-en="A forensic decomposition of national tax revenues in the 2025/2026 fiscal baseline." data-id="Dekomposisi kas penerimaan pajak APBN pada baseline fiskal 2025/2026.">Dekomposisi kas penerimaan pajak APBN pada baseline fiskal 2025/2026.</div>
             </div>
 
-            <div class="flow-container">
+            <div class="flow-container reveal-on-scroll">
                 <p data-en="Of every Rp 100 collected by the state in tax revenue, mandatory debt service and rigid operational transfers absorb nearly 70%, leaving an astonishingly thin sliver for new capital creation, science, or industrial transformation." data-id="Dari setiap Rp 100 pajak yang disetor rakyat ke kas negara, kewajiban bunga utang dan belanja operasional rutin menyedot hampir 70%, menyisakan porsi yang sangat tipis untuk pembentukan modal baru, riset STEM, maupun industrialisasi.">Dari setiap Rp 100 pajak yang disetor rakyat ke kas negara, kewajiban bunga utang dan belanja operasional rutin menyedot hampir 70%, menyisakan porsi yang sangat tipis untuk pembentukan modal baru, riset STEM, maupun industrialisasi.</p>
 
                 <div class="flow-bars">
@@ -1241,42 +1249,42 @@
 
             <div class="consequences-grid">
                 <!-- 1 -->
-                <div class="consequence-card">
+                <div class="consequence-card reveal-on-scroll">
                     <span class="consequence-badge badge-crimson" data-en="CONSEQUENCE 01" data-id="AKIBAT 01">AKIBAT 01</span>
                     <h3 class="consequence-title" data-en="Debt Service Crowding-Out" data-id="Himpitan Bunga Utang Menghisap Belanja Publik">Himpitan Bunga Utang Menghisap Belanja Publik</h3>
                     <p class="consequence-text" data-en="Annual interest payments jumped 51% from Rp 386.3T to >Rp 552T, consuming over 22% of central tax collections. Every budget line for healthcare, universities, and STEM laboratories is systematically crowded out just to pay bondholders." data-id="Pembayaran bunga utang melonjak 51% dari Rp 386,3T menjadi lebih dari Rp 552T, menguras lebih dari 22% penerimaan pajak pusat. Setiap rupiah anggaran untuk rumah sakit, kampus vokasi, dan riset STEM tersingkir hanya untuk membayar kupon obligasi pemodal.">Pembayaran bunga utang melonjak 51% dari Rp 386,3T menjadi lebih dari Rp 552T, menguras lebih dari 22% penerimaan pajak pusat. Setiap rupiah anggaran untuk rumah sakit, kampus vokasi, dan riset STEM tersingkir hanya untuk membayar kupon obligasi pemodal.</p>
                 </div>
 
                 <!-- 2 -->
-                <div class="consequence-card">
+                <div class="consequence-card reveal-on-scroll">
                     <span class="consequence-badge badge-gold" data-en="CONSEQUENCE 02" data-id="AKIBAT 02">AKIBAT 02</span>
                     <h3 class="consequence-title" data-en="Multiplier Collapse: Physical Capital to Food Transfers" data-id="Runtuhnya Efek Pengganda: Dari Modal ke Konsumsi">Runtuhnya Efek Pengganda: Dari Modal ke Konsumsi</h3>
                     <p class="consequence-text" data-en="Redirecting budget room from high-multiplier infrastructure (1.6x) and IKN (-66% cut) into current meal consumption (MBG multiplier ~0.7x) threatens long-term aggregate supply. Target 8% growth becomes an illusion as physical connectivity investment slows down." data-id="Pengalihan ruang fiskal dari belanja modal infrastruktur ber-multiplier tinggi (1,6x) dan pemangkasan IKN 66% ke konsumsi makanan harian (MBG multiplier ~0,7x) mengancam kapasitas penawaran jangka panjang. Target pertumbuhan 8% kian mustahil karena fondasi fisik melambat.">Pengalihan ruang fiskal dari belanja modal infrastruktur ber-multiplier tinggi (1,6x) dan pemangkasan IKN 66% ke konsumsi makanan harian (MBG multiplier ~0,7x) mengancam kapasitas penawaran jangka panjang. Target pertumbuhan 8% kian mustahil karena fondasi fisik melambat.</p>
                 </div>
 
                 <!-- 3 -->
-                <div class="consequence-card">
+                <div class="consequence-card reveal-on-scroll">
                     <span class="consequence-badge badge-crimson" data-en="CONSEQUENCE 03" data-id="AKIBAT 03">AKIBAT 03</span>
                     <h3 class="consequence-title" data-en="The Middle-Class Squeeze &amp; 'Mantab' Shock" data-id="Squeeze Pajak Kelas Menengah &amp; Deplesi Tabungan">Squeeze Pajak Kelas Menengah &amp; Deplesi Tabungan</h3>
                     <p class="consequence-text" data-en="With tax ratio stuck at 10.2%, government aggressively targeted captive formal workers: VAT raised to 11%–12%, fringe benefits taxed, and CoreTax deployed. BPS confirmed 9.48 million people fell out of middle class into vulnerability, surviving by eating into savings (Mantab)." data-id="Dengan tax ratio macet di 10,2%, Kemenkeu memburu sasaran empuk: kenaikan tarif PPN 11-12%, pajak natura, dan CoreTax. BPS mencatat 9,48 juta kelas menengah terlempar ke jurang kerentanan, bertahan hidup dengan menggerus tabungan (Makan Tabungan / Mantab).">Dengan tax ratio macet di 10,2%, Kemenkeu memburu sasaran empuk: kenaikan tarif PPN 11-12%, pajak natura, dan CoreTax. BPS mencatat 9,48 juta kelas menengah terlempar ke jurang kerentanan, bertahan hidup dengan menggerus tabungan (Makan Tabungan / Mantab).</p>
                 </div>
 
                 <!-- 4 -->
-                <div class="consequence-card">
+                <div class="consequence-card reveal-on-scroll">
                     <span class="consequence-badge badge-azure" data-en="CONSEQUENCE 04" data-id="AKIBAT 04">AKIBAT 04</span>
                     <h3 class="consequence-title" data-en="The Subnational Fiscal Dependency Trap" data-id="Kemandulan Desentralisasi Fiskal (TKD Rp 900T)">Kemandulan Desentralisasi Fiskal (TKD Rp 900T)</h3>
                     <p class="consequence-text" data-en="Despite transferring over Rp 900 Trillion annually to local governments (TKD), over 80% of local budgets (APBD) are consumed by regional bureaucracy salaries and operational overhead, failing to spur local industrial capacity or endogenous revenue (PAD)." data-id="Meskipun mentransfer lebih dari Rp 900 Triliun per tahun ke daerah (TKD), lebih dari 80% APBD ludes untuk gaji birokrasi daerah dan operasional dinas, gagal menciptakan basis industri lokal maupun kemandirian Pendapatan Asli Daerah (PAD).">Meskipun mentransfer lebih dari Rp 900 Triliun per tahun ke daerah (TKD), lebih dari 80% APBD ludes untuk gaji birokrasi daerah dan operasional dinas, gagal menciptakan basis industri lokal maupun kemandirian Pendapatan Asli Daerah (PAD).</p>
                 </div>
 
                 <!-- 5 -->
-                <div class="consequence-card">
+                <div class="consequence-card reveal-on-scroll">
                     <span class="consequence-badge badge-crimson" data-en="CONSEQUENCE 05" data-id="AKIBAT 05">AKIBAT 05</span>
                     <h3 class="consequence-title" data-en="The 3% Deficit Cliff &amp; Downgrade Vulnerability" data-id="Kerapuhan Fiskal di Ambang Batas 3% &amp; Ancaman Rating">Kerapuhan Fiskal di Ambang Batas 3% &amp; Ancaman Rating</h3>
                     <p class="consequence-text" data-en="Running deficits at 2.53%–2.75% of GDP leaves almost zero margin against external shocks. A spike in global crude oil ($100/bbl) or Rupiah depreciation past Rp 16,800/USD will breach the legal 3% ceiling, triggering credit rating downgrade warnings from S&amp;P and Moody's." data-id="Menjalankan defisit di 2,53%–2,75% PDB menyisakan bantalan mendekati nol. Lonjakan minyak mentah ($100/barel) atau devaluasi rupiah melewati Rp 16.800/USD akan menjebol batas hukum 3%, memicu ancaman penurunan peringkat utang negara oleh Moody's dan S&P.">Menjalankan defisit di 2,53%–2,75% PDB menyisakan bantalan mendekati nol. Lonjakan minyak mentah ($100/barel) atau devaluasi rupiah melewati Rp 16.800/USD akan menjebol batas hukum 3%, memicu ancaman penurunan peringkat utang negara oleh Moody's dan S&P.</p>
                 </div>
 
                 <!-- 6 -->
-                <div class="consequence-card">
+                <div class="consequence-card reveal-on-scroll">
                     <span class="consequence-badge badge-gold" data-en="CONSEQUENCE 06" data-id="AKIBAT 06">AKIBAT 06</span>
                     <h3 class="consequence-title" data-en="Shadow Fiscalism &amp; BP Danantara Off-Budget Risk" data-id="Shadow Fiscalism &amp; Risiko Kuasi-Fiskal BP Danantara">Shadow Fiscalism &amp; Risiko Kuasi-Fiskal BP Danantara</h3>
                     <p class="consequence-text" data-en="To bypass formal deficit ceilings, megaproject financing is offloaded to SOEs and BP Danantara ($600B asset holding). While keeping APBN books clean on paper, it concentrates immense contingent liabilities inside state banks and public enterprises." data-id="Demi menghindari jebolnya batas defisit APBN, pembiayaan megaproyek dialihkan ke BUMN dan BP Danantara ($600B aset konsolidasi). Walau neraca APBN tampak selamat di atas kertas, risiko kontinjensi membengkak di bank Himbara dan korporasi pelat merah.">Demi menghindari jebolnya batas defisit APBN, pembiayaan megaproyek dialihkan ke BUMN dan BP Danantara ($600B aset konsolidasi). Walau neraca APBN tampak selamat di atas kertas, risiko kontinjensi membengkak di bank Himbara dan korporasi pelat merah.</p>
@@ -1291,7 +1299,7 @@
                 <div class="section-desc" data-en="Test policy trade-offs: adjust MBG scale, SBN yield costs, tax ratios, and legal deficit limits to observe sovereign stability in real-time." data-id="Uji trade-off kebijakan: atur skala MBG, beban yield SBN, rasio pajak, dan pagu defisit untuk melihat stabilitas fiskal secara langsung.">Uji trade-off kebijakan: atur skala MBG, beban yield SBN, rasio pajak, dan pagu defisit untuk melihat stabilitas fiskal secara langsung.</div>
             </div>
 
-            <div class="sim-box">
+            <div class="sim-box reveal-on-scroll">
                 <div class="sim-grid">
                     <div>
                         <div class="slider-group">
@@ -1361,7 +1369,7 @@
             </div>
 
             <div class="scenarios-grid">
-                <div class="scenario-card">
+                <div class="scenario-card reveal-on-scroll">
                     <span class="scenario-prob badge-gold" data-en="PROBABILITY: 45%" data-id="PROBABILITAS: 45%">PROBABILITAS: 45%</span>
                     <h3 class="scenario-name" data-en="Scenario A: Fiscal Orthodoxy Compromise" data-id="Skenario A: Kompromi Ortodoks &amp; Rasionalisasi MBG">Skenario A: Kompromi Ortodoks &amp; Rasionalisasi MBG</h3>
                     <ul class="scenario-list">
@@ -1371,7 +1379,7 @@
                     </ul>
                 </div>
 
-                <div class="scenario-card">
+                <div class="scenario-card reveal-on-scroll">
                     <span class="scenario-prob badge-crimson" data-en="PROBABILITY: 35%" data-id="PROBABILITAS: 35%">PROBABILITAS: 35%</span>
                     <h3 class="scenario-name" data-en="Scenario B: Aggressive Expansion &amp; Danantara Leverage" data-id="Skenario B: Ekspansi Ambisius &amp; Utang Kuasi-Danantara">Skenario B: Ekspansi Ambisius &amp; Utang Kuasi-Danantara</h3>
                     <ul class="scenario-list">
@@ -1381,7 +1389,7 @@
                     </ul>
                 </div>
 
-                <div class="scenario-card">
+                <div class="scenario-card reveal-on-scroll">
                     <span class="scenario-prob badge-azure" data-en="PROBABILITY: 20%" data-id="PROBABILITAS: 20%">PROBABILITAS: 20%</span>
                     <h3 class="scenario-name" data-en="Scenario C: Middle-Class Squeeze &amp; Stagflation" data-id="Skenario C: Squeeze Pajak Ekstrem &amp; Kelesuan Konsumsi">Skenario C: Squeeze Pajak Ekstrem &amp; Kelesuan Konsumsi</h3>
                     <ul class="scenario-list">
@@ -1400,7 +1408,7 @@
                 <div class="section-desc" data-en="All figures are extracted directly from official state publications and audited financial statements." data-id="Seluruh angka disarikan langsung dari dokumen resmi negara dan laporan keuangan teraudit.">Seluruh angka disarikan langsung dari dokumen resmi negara dan laporan keuangan teraudit.</div>
             </div>
 
-            <div class="card-panel">
+            <div class="card-panel reveal-on-scroll">
                 <p data-en="<strong>Primary State Documents:</strong> Kementerian Keuangan RI (Nota Keuangan beserta RAPBN Tahun Anggaran 2022, 2023, 2024, 2025, dan Kerangka Ekonomi Makro &amp; Pokok-Pokok Kebijakan Fiskal 2026); Badan Pemeriksa Keuangan RI (Laporan Keuangan Pemerintah Pusat / LKPP Audited 2022–2023); Bank Indonesia (Laporan Perekonomian Indonesia &amp; Indikator Stabilitas Moneter 2024–2025)." data-id="<strong>Dokumen Primer Negara:</strong> Kementerian Keuangan RI (Nota Keuangan beserta RAPBN Tahun Anggaran 2022, 2023, 2024, 2025, dan Kerangka Ekonomi Makro &amp; Pokok-Pokok Kebijakan Fiskal / KEM-PPKF 2026); Badan Pemeriksa Keuangan RI (Laporan Keuangan Pemerintah Pusat / LKPP Audited 2022–2023); Bank Indonesia (Laporan Perekonomian Indonesia &amp; Indikator Stabilitas Moneter 2024–2025)."><strong>Dokumen Primer Negara:</strong> Kementerian Keuangan RI (Nota Keuangan beserta RAPBN Tahun Anggaran 2022, 2023, 2024, 2025, dan Kerangka Ekonomi Makro &amp; Pokok-Pokok Kebijakan Fiskal / KEM-PPKF 2026); Badan Pemeriksa Keuangan RI (Laporan Keuangan Pemerintah Pusat / LKPP Audited 2022–2023); Bank Indonesia (Laporan Perekonomian Indonesia &amp; Indikator Stabilitas Moneter 2024–2025).</p>
                 <p data-en="<strong>Multilateral &amp; Academic References:</strong> International Monetary Fund (IMF Article IV Consultation Report on Indonesia 2024/2025); World Bank (Indonesia Economic Prospects: Staying the Course); OECD Economic Surveys Indonesia; LPEM FEB Universitas Indonesia (Kajian Kebijakan Fiskal &amp; Dinamika Ruang Anggaran)." data-id="<strong>Referensi Multilateral &amp; Akademis:</strong> International Monetary Fund (IMF Article IV Consultation Report on Indonesia 2024/2025); World Bank (Indonesia Economic Prospects: Staying the Course); OECD Economic Surveys Indonesia; Lembaga Penyelidikan Ekonomi dan Masyarakat (LPEM) FEB Universitas Indonesia (Kajian Kebijakan Fiskal &amp; Dinamika Ruang Anggaran)."><strong>Referensi Multilateral &amp; Akademis:</strong> International Monetary Fund (IMF Article IV Consultation Report on Indonesia 2024/2025); World Bank (Indonesia Economic Prospects: Staying the Course); OECD Economic Surveys Indonesia; Lembaga Penyelidikan Ekonomi dan Masyarakat (LPEM) FEB Universitas Indonesia (Kajian Kebijakan Fiskal &amp; Dinamika Ruang Anggaran).</p>
             </div>
@@ -1424,7 +1432,7 @@
         function setLanguage(lang) {
             currentLang = lang;
             document.documentElement.lang = lang;
-            try { localStorage.setItem('pref_lang', lang); } catch (e) {}
+            try { localStorage.setItem('lolyeah_lang', lang); localStorage.setItem('pref_lang', lang); } catch (e) {}
             langBtns.forEach(btn => {
                 const isActive = btn.dataset.lang === lang;
                 btn.classList.toggle('active', isActive);
@@ -1699,25 +1707,25 @@
         simSliderDefLimit.addEventListener('input', updateSim);
         updateSim();
 
-        // Scroll Animation (IntersectionObserver)
+        // Scroll Animation (IntersectionObserver) - Silky Smooth & Hiccup-Free
         if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed', 'is-visible');
+                        entry.target.classList.add('revealed');
                         observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.stat-card, .consequence-card, .scenario-card, .subpage-card, .chart-box, .sim-box, .flow-container').forEach(el => {
-                el.classList.add('reveal-on-scroll');
-                observer.observe(el);
-            });
+            }, { root: null, rootMargin: '0px 0px 80px 0px', threshold: 0 });
+
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+        } else {
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('revealed'));
         }
 
         // Restore Preferences
         try {
-            const savedLang = localStorage.getItem('pref_lang');
+            const savedLang = localStorage.getItem('lolyeah_lang') || localStorage.getItem('pref_lang');
             if (savedLang && (savedLang === 'en' || savedLang === 'id')) {
                 setLanguage(savedLang);
             }
