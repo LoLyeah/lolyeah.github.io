@@ -46,11 +46,11 @@ web
 
 ## Evidence on Hand
 
-- 40+ published standalone interactive guides and visual tools across four major domains:
+- 55+ published standalone interactive guides and visual tools across four major domains:
   - Clinical Medicine & Healthcare (`topics/acs-diagnostics.html`, `topics/stemi.html`, `topics/stroke.html`, `topics/adhd.html`, `topics/audhd-clinical-analysis.html`, `topics/antibiotics.html`, `topics/laxative-comparison.html`).
   - Automotive & Energy (`topics/indonesia-car-selector.html`, `topics/indonesia-hybrid-cars.html`, `topics/china-ev-brands.html`, `topics/ev-battery-vendors.html`, `topics/nuclear-reactors.html`, `topics/geothermal-energy.html`).
-  - Economics, Infrastructure & Policy (`topics/indonesia-middle-income-trap.html`, `topics/indoSEZ.html`, `topics/hsr-indonesia.html`, `topics/ikn-nusantara.html`, `topics/aviation-economics.html`, `topics/indonesia-gaji-kotor.html`).
-  - Science & Systems (`topics/radcompare.html`, `topics/foodborne-outbreak.html`, `topics/solar-system.html`, `topics/fetal-development.html`).
+  - Economics, Infrastructure & Policy (`topics/indonesia-middle-income-trap.html`, `topics/indoSEZ.html`, `topics/hsr-indonesia.html`, `topics/ikn-nusantara.html`, `topics/aviation-economics.html`, `topics/indonesia-gaji-kotor.html`, `topics/perbandingan-rapbn-5-tahun.html`, `topics/indonesia-2029-scenarios.html`).
+  - Science & Systems (`topics/gemstones.html`, `topics/radcompare.html`, `topics/foodborne-outbreak.html`, `topics/solar-system.html`, `topics/fetal-development.html`, `topics/el-nino-la-nina.html`).
 - Established design standards and widget contracts in `AGENTS.md` and topic-specific protocols (`topics/indonesia-car-selector/AGENTS.md`).
 
 ## Product Principles

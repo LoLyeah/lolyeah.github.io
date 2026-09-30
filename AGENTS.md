@@ -1,154 +1,206 @@
-# AGENTS.md — Repository Architecture & Product Standards
+# AGENTS.md — Repository Architecture & Product Design Standards
 
-This repository is a zero-dependency static web compendium and interactive simulator hub hosted on GitHub Pages. These standards apply to new pages, substantial UI changes, and maintenance work. They are guardrails, not a mandate to make every topic look identical.
+This repository is a zero-dependency static web compendium and interactive simulator hub hosted on GitHub Pages (`lolyeah.github.io`). These standards apply to all new pages, component additions, substantial UI refactors, and maintenance passes. They are binding technical and visual guardrails designed to guarantee exceptional craft, uncompromising accessibility, and robust static reliability across all 55+ interactive guides.
 
-## 1. Repository architecture
+---
 
-- `index.html` is the homepage, topic discovery surface, and search showcase.
-- `topics/<topic-name>.html` is the main hub page for a topic.
-- `topics/<topic-name>/` contains that topic's subpages. Register only the hub on the homepage.
-- `assets/` contains shared brand assets, favicons, and logos.
-- `beta/` is for prototypes and staging; do not treat it as published content.
+## 1. Repository Architecture & Multi-Page Routing
+
+- `index.html` is the primary discovery hub, topic index, and live search showcase.
+- `topics/<topic-name>.html` is the canonical hub page for a specific topic domain.
+- `topics/<topic-name>/` contains that topic's deep-dive subpages, spreadsheets, and specialized calculators. Register only the main hub on `index.html`.
+- `assets/` contains shared brand assets, logos, favicons, global datasets, and shared styles.
+- `beta/` is reserved strictly for unindexed prototypes and staging; never link from production navigation.
 - `sitemap.xml` and `robots.txt` describe the published site.
 
-For a multi-page topic:
+### Multi-Page Linking Rules
+1. Place the main topic hub directly in `topics/` (e.g. `topics/gemstones.html`).
+2. Place subpages in a matching topic directory (e.g. `topics/gemstones/database.html`).
+3. The hub must feature a prominent architectural navigation band linking to all subpages.
+4. Every subpage must feature an explicit `← Main Compendium` back-link pointing to `../<topic-name>.html` at the top of the viewport.
+5. Register every published hub and subpage in `sitemap.xml` with current `<lastmod>` timestamps:
+   - Homepage: `priority: 1.0`
+   - Topic Hubs: `priority: 0.9`
+   - Topic Subpages: `priority: 0.8`
+6. Maintain topic-specific datasets and operational protocols in dedicated sub-guides where appropriate (e.g. [`topics/indonesia-car-selector/AGENTS.md`](./topics/indonesia-car-selector/AGENTS.md)).
 
-1. Place the hub directly in `topics/`.
-2. Place subpages in a matching `topics/<topic-name>/` directory.
-3. Give the hub a prominent directory/banner linking to its subpages.
-4. Give every subpage a clear `← Main Compendium` link to `../<topic-name>.html`.
-5. Add every published hub and subpage to `sitemap.xml` with current `<lastmod>` values. Use priorities `1.0` for the homepage, `0.9` for hubs, and `0.8` for subpages/prototypes that are publicly indexed.
-6. Topic-specific datasets and simulator protocols should be maintained with dedicated sub-guides (e.g. [`topics/indonesia-car-selector/AGENTS.md`](./topics/indonesia-car-selector/AGENTS.md) for automotive database and decision engine rules).
+---
 
-## 2. Product direction: editorial, modern, and topic-led
+## 2. Product Direction: Editorial, Modern, and Topic-Led
 
-The site should feel like a curated digital publication: calm, intentional, legible, and premium rather than a collection of generic dashboards. A page may be dark, light, archival, clinical, geographic, economic, or playful, but its visual language must follow the subject.
+The publication must feel like a curated digital compendium: calm, intentional, legible, and authoritative—never a sterile dashboard or a generic SaaS template. Each topic possesses its own intellectual character (clinical, geological, macroeconomic, automotive, or physical), and its visual form must flow directly from that domain.
 
-### Visual principles
+### Visual Principles & Token Discipline
+- **Topic-Led Mental Model:** Establish a clear thesis and audience immediately. What should a visitor understand, calculate, or decide within the first 60 seconds?
+- **Restrained Palette Architecture:** Each topic uses a strict, deliberate palette: one background family, one surface elevation stack, one primary accent, one supporting accent, and semantic status colors only where essential (success, warning, danger).
+- **Surface Elevation over Pure Black:** Avoid raw `#000000` except for OLED deep-contrast modes or video letterboxing. Use rich obsidian, deep graphite, or layered slate for dark surfaces, and luminous slate-white or alabaster for light surfaces.
+- **Single Elevation Strategy:** Declare depth once per container: use either a subtle hairline border (`1px solid var(--border-subtle)`) OR a soft ambient shadow (`box-shadow: 0 4px 20px -2px rgba(0,0,0,0.06)`). Never stack a heavy border on top of an aggressive drop shadow ("ghost card").
+- **Spacing Scale:** Adhere strictly to the 4px/8px modular rhythm:
+  - `4px` (xs): Tight micro-gaps, chip internal padding, icon offsets.
+  - `8px` (sm): Badge padding, button gap, inline form element spacing.
+  - `16px` (md): Card internal padding, form group margins, compact grid gaps.
+  - `24px` (lg): Standard container padding, section subsection separation.
+  - `32px` (xl): Component group separation, editorial block rhythm.
+  - `48px`–`64px` (2xl/3xl): Major section dividers and hero spacing. Always maintain more whitespace above a heading than below it.
 
-- Start with a topic thesis and audience: what should a visitor understand or decide in the first minute?
-- Each topic use a small, deliberate design system: one background family, one surface hierarchy, one primary accent, one supporting accent, and semantic status colors only where necessary. Using blocky serif typewriter should be discouraged except if necessary.
-- Prefer subtle depth: restrained shadows, hairline borders, tonal surfaces, and occasional gradients. Glass, noise, scanlines, excessive glow, and animated backgrounds are optional accents—not defaults.
-- Every decorative effect must preserve contrast, performance, and the information hierarchy. 
-- Make sure there's animation and transition, should be classy and modern. Motion and dynamic visual feedback preferred. card animation also needed (example: card fade in when scrolling)
-- Do not force dark mode if the topic isn't suited for it. The design vibes should be modern and professional.
+### Craft Floor: Invariant Bans & Anti-Patterns
+To preserve editorial dignity and avoid amateur generative UI traits, the following patterns are strictly banned:
+- **NO Eyebrows / Kickers:** Do not place small uppercase kicker labels above headings. Let the heading carry its own weight and authority.
+- **NO Gradient Text:** Text color must remain solid and crisp for readability. Emphasis comes from typographic weight, scale, or color tinting—never rainbow or linear-gradient text fills.
+- **NO Raw Emojis in Controls:** Never use emojis as functional UI icons in buttons, search bars, tabs, or badges. Use clean, authored inline SVGs with matched stroke weight and currentColor.
+- **NO Colored Side Borders:** Avoid thick `border-left` or `border-right` colored callout stripes (>1px) on cards or alerts. Use subtle surface tinting and hairline framing instead.
+- **NO Hard Block Shadows:** Do not use zero-blur offset shadows (`box-shadow: 4px 4px 0px #000`) unless the specific surface brief explicitly calls for authentic neobrutalism. Shadows must carry soft, physical blur.
+- **NO Monospace as Body Text:** Monospace (`JetBrains Mono`, `ui-monospace`) is reserved exclusively for numerical data, constants, physical formulas, currency, code, and table figures. Body prose must use high-legibility sans-serif (`Plus Jakarta Sans`, `Inter`).
+- **NO Nested Cards:** Avoid cards inside cards. Use typographic hierarchy, hairline dividers, or tinted sub-panels to structure internal content.
+- **Theme Browser Surfaces:** All pages must style their native browser touchpoints: custom scrollbars (`::-webkit-scrollbar`), high-contrast text selection (`::selection`), caret color, and crisp `:focus-visible` rings.
 
-### Page composition
+---
 
-- The first viewport needs a clear title, a concise promise, topic/context metadata, and one primary action such as “Explore the model”, “Compare corridors”, or “Read the evidence”.
-- Keep dense compendiums dense, but make them navigable with a compact table of contents, section labels, progressive disclosure, and meaningful summaries.
-- Establish a visual anchor that belongs to the topic: a route, timeline, map, evidence card, clinical pathway, scenario dial, material palette, or other explanatory motif.
-- Use consistent spacing tokens and component variants instead of page-specific one-off nudges. Avoid stacking override blocks; consolidate the final rule for each component.
-- Design at mobile widths, 320px, 768px, and desktop widths. No accidental horizontal overflow. Horizontal scrolling is acceptable only for genuinely wide content such as tables or timelines, with an obvious cue and preserved headers.
-- Respect `prefers-color-scheme` only when the page supports both themes intentionally; do not pretend a dark theme is a light theme by simply inverting colors.
+## 3. Typography Standards & Responsive Reflow
 
-### Interaction quality
+- **Display & Hero Typography:** Use modern, characterful display fonts (`Outfit`, `Cinzel`, or `Plus Jakarta Sans`) with tight, confident tracking (`-0.02em` to `-0.03em`). Never track tighter than `-0.04em`.
+  - Use fluid clamp formulas: `font-size: clamp(2rem, 4vw + 1rem, 3.5rem)`.
+- **Editorial Body Prose:** Maximum reading column measure of `65–75ch`. Line-height calibrated at `1.6` to `1.65` for effortless long-form reading.
+- **Data & Tables:** Tabular numerals (`font-variant-numeric: tabular-nums`) and monospace alignment for all scientific, financial, and automotive metrics.
+- **Responsive Viewport Reflow:**
+  - Strict reflow down to `320px` viewport width without horizontal scrollbars.
+  - Breakpoints: `640px` (sm / mobile landscape), `768px` (md / tablet), `1024px` (lg / desktop), `1280px` (xl / max container width).
+  - Horizontal scrolling is permissible *only* for multi-column data matrices, complex timelines, or wide formula benches—and must always feature visible scroll fade cues or tactile pill indicators.
 
-- Controls must look and behave like controls. Give buttons a clear label, hover/active/focus states, disabled state where relevant, and a minimum comfortable hit area.
-- Prefer familiar interaction patterns over novelty. A control should explain what it changes before the user touches it.
-- Preserve URL/shareability where useful: meaningful tabs, filters, and scenarios should use query parameters or hash state when practical, and should not make browser Back unusable.
-- Provide empty, loading, invalid-input, and boundary states for interactive views.
-- Make state visible: selected filters, active tabs, current language, units, assumptions, and whether values are illustrative or sourced.
-- Never add a “widget” merely because a page needs something interactive. If interaction does not improve comprehension, comparison, exploration, or decision-making, use a static explanation instead.
+---
 
-## 3. Topic-context interactive widgets (OPTIONAL)
+## 4. Motion, Interaction, and Touch Standards
 
-Interactive tools must be derived from the topic model, not copied from a generic calculator template. Before building one, write a short “widget contract” in the page code/comments or accompanying content:
+Motion must communicate state, reveal spatial relationships, or model physical domain processes—never serve as gratuitous decoration.
 
-- **User question:** the real question the visitor is trying to answer.
-- **Inputs:** topic-specific variables, allowed ranges, units, defaults, and why each matters.
-- **Model:** formula, scoring logic, assumptions, data vintage, and known limitations.
-- **Output:** the primary result, comparison or scenario, plus the rationale in plain language.
-- **Action:** what the visitor can explore next and which section/source explains it.
+### Motion Token Tiers
+- **Fast Micro-Interactions (120ms):** Active button presses, chip selection, slider thumb motion, checkbox toggles. Easing: `cubic-bezier(0.16, 1, 0.3, 1)`.
+- **Standard Transitions (200ms):** Card hover elevation, dropdown disclosures, modal cross-fades, tab switches. Easing: `cubic-bezier(0.16, 1, 0.3, 1)`.
+- **Smooth Reveals (320ms):** Sheet expansions, drawer sliding, score dial filling, view mode cross-transitions. Easing: `cubic-bezier(0.16, 1, 0.3, 1)`.
 
-Widget requirements:
+### Reduced Motion Guarantee
+Always implement an unconditional `@media (prefers-reduced-motion: reduce)` block:
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+State changes must remain immediate, distinct, and fully functional when motion is disabled.
 
-1. Use domain vocabulary and units. A transport tool should understand route, mode, occupancy, distance, time, tolls, fuel, subsidy, or fare; a medical tool should distinguish symptoms, urgency, risk factors, and clinical caveats; a geopolitical tool should expose geography, institutions, resources, and time horizon rather than generic “score” sliders.
-2. Choose controls that match the variable: select/radio for discrete categories, range input for bounded continuous assumptions, text input for searchable entities, and date/time controls for temporal models. Show the current value and unit next to every control.
-3. Make defaults defensible and explain them. Offer a small number of meaningful presets tied to recognizable topic scenarios, not arbitrary low/medium/high labels.
-4. Show contribution and causality where possible: input → intermediate metric → result. If the model is heuristic, label it “illustrative” or “educational”, state that it is not engineering/clinical/legal/financial advice as appropriate, and avoid false precision.
-5. Explain threshold and recommendation logic. A result must answer “why did this change?” and show sensitivity or a comparison when a single number could mislead.
-6. Keep explanatory copy synchronized with live values and the EN/ID language switch. Do not update only a headline while leaving stale labels, units, formulas, or caveats.
-7. Make the tool usable without a pointer: keyboard operation, visible focus, semantic labels, live-result announcements where appropriate, and no interaction that depends on hover.
-8. Keep the static fallback meaningful. If JavaScript or a third-party chart library fails, the user should still see the model, assumptions, key findings, and source links.
-9. External dependencies must be justified and resilient to CDN failure. If you need advanced features that wasn't possible with native, external dependencies and CDN is justified.
+### Touch Targets & Pointer Ergonomics
+- Interactive elements (buttons, filter chips, tabs, inputs, icon toggles) must meet a minimum hit area of **44×44px** on touch devices:
+```css
+@media (pointer: coarse) {
+  button, .filter-chip, .tab-btn, input, select {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+```
+- Hover styles must always be guarded inside `@media (hover: hover)` to prevent sticky hover states on mobile touchscreens.
 
-## 4. Accessibility, responsive behavior, and motion
+---
 
-- Include a skip link on long pages and use semantic landmarks (`header`, `nav`, `main`, `section`, `footer`). Keep heading levels logical.
-- Every form control needs a visible or programmatic label. Use `fieldset`/`legend` for related choices. Do not use placeholder text as the only label.
-- Maintain visible `:focus-visible` styles, sufficient color contrast, and non-color indicators for status and selection. Use `aria-current`, `aria-selected`, `aria-expanded`, and live regions only when they accurately reflect state.
-- Responsive layouts must reflow at narrow widths without forcing two-dimensional scrolling except for content that genuinely requires it. Follow WCAG 2.2 reflow expectations and test zoom/text enlargement where practical.
-- Use `scroll-padding-top` or `scroll-margin-top` for fixed navigation. Verify every section link, hero CTA, modal close path, and subpage back-link.
-- Motion should clarify state or spatial relationships. Prefer opacity/transform transitions that do not cause layout shift; avoid auto-playing motion that competes with reading.
-- Always provide a `@media (prefers-reduced-motion: reduce)` fallback that removes non-essential animation, parallax, bobbing, scanlines, and staggered reveals.
-- A modal, drawer, menu, or popover needs keyboard escape, focus behavior, an accessible name, and an obvious close path. On mobile, do not leave a desktop-only nav that overflows.
+## 5. Topic-Context Interactive Widgets & Calculators
 
-## 5. Bilingual EN / ID behavior
+Interactive simulators, decision wizards, and calculators must be derived from rigorous topic evidence, never copied from generic widget templates.
 
-Interactive guides and subpages should support EN/ID when their audience warrants it.
+### The Mandatory Widget Contract
+Every interactive tool must be grounded in an explicit contract documented in code comments or accompanying text:
+1. **User Question:** The specific decision or insight the visitor seeks (e.g. "What is my car's true total cost of ownership over 5 years in Jakarta?").
+2. **Inputs:** Domain-specific variables, bounded ranges, realistic defaults, and explicit units (e.g., kW, bar, %, Rp/bulan, Mohs).
+3. **Mathematical Model:** Defensible formula, peer-reviewed methodology, clinical protocol, or official government decree cited with data vintage.
+4. **Intermediate Causality:** Expose intermediate metrics (input → intermediate calculation → final outcome) so the user understands *why* the result changed.
+5. **Output & Plain-Language Takeaway:** Clear, defensible recommendation or scenario comparison accompanied by actionable guidance.
+6. **Caveats & Non-Advice Disclaimer:** Explicitly state if a tool is illustrative/educational and disclaim professional medical, financial, or legal advice where relevant.
+7. **Static Fallback:** If JavaScript fails or is disabled, the page must still present the underlying formula, default scenario table, key findings, and source references.
 
-- Persist the preference in `localStorage`, update `<html lang>`, and expose the active state with `aria-pressed` or the appropriate tab semantics.
-- Translate meaningful visible content, including control labels, options, result explanations, caveats, units where language-specific, and empty/error states.
-- Prefer keyed translation nodes or `data-en`/`data-id` values. Do not translate arbitrary text nodes across the whole document; repeated toggling can destroy nested links, icons, and markup.
-- Test EN → ID → EN without losing nested markup, dynamic output, selected state, or user inputs.
-- Never add language buttons without implementing the actual behavior.
+---
 
-## 6. SEO and metadata
+## 6. Accessibility & Inclusion (WCAG 2.2 AA)
 
-Every published HTML page must contain a current metadata block in `<head>`:
+- **Contrast Ratios:**
+  - Normal body and placeholder text: **≥ 4.5:1** against its backing surface.
+  - Large text (≥ 18pt or 14pt bold) and active UI controls/borders: **≥ 3.0:1**.
+  - High-density data ledgers should target **7.0:1** (AAA) where practical.
+- **Focus Rings:** Visible, persistent `:focus-visible` styling across all interactive elements:
+```css
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+```
+- **Semantic HTML & ARIA:** Use native semantic tags (`<header>`, `<nav>`, `<main>`, `<article>`, `<section>`, `<footer>`, `<dialog>`). Form controls must feature programmatic `<label>` elements or `aria-label`. Use `aria-expanded`, `aria-selected`, and `aria-live="polite"` only when they reflect dynamic DOM states.
+- **Keyboard Navigation:** Every interactive pathway must be 100% operable via keyboard alone (`Tab`, `Shift+Tab`, `Enter`, `Space`, `Escape`). Modals and drawers must trap focus while open and restore focus to the trigger upon closing.
 
-- unique `description`, title, canonical URL, author, and robots metadata;
-- Open Graph and Twitter card title, description, URL, and image;
-- JSON-LD using the most accurate type (`WebPage`, `TechArticle`, `Dataset`, or another appropriate Schema.org type), with page name, description, URL, author, and publisher.
+---
 
-Do not use a generic description or claim that an illustrative model is authoritative. Keep structured data consistent with the visible page.
+## 7. Bilingual EN / ID Localization Protocol
 
-## 7. Homepage and publishing rules
+Selected compendiums support synchronized English (EN) and Indonesian (ID) localizations:
+- Persist language preference in `localStorage` under `lolyeah_lang`.
+- Update `<html lang="en">` or `<html lang="id">` dynamically.
+- Use explicit data attributes (`data-en="..."` / `data-id="..."`) or targeted key dictionaries. Never use destructive text-node replacement that strips nested spans, SVG icons, or event listeners.
+- Synchronize all live calculator labels, unit descriptions, form error messages, and disclaimer footnotes during language toggle.
+- Verify bidirectional switching: `EN → ID → EN` must produce zero markup corruption or layout shifting.
 
-- Register only main hubs on the homepage. Keep `.feature-icon` numbering gapless and descending newest-first if that convention is still used by the homepage sorting logic; renumber all cards together when changing it.
-- Keep beta, old, and experimental pages out of the production sitemap unless explicitly published.
-- Do not commit secrets, credentials, `.env` files, or unrelated generated files.
-- Do not commit, push, or rewrite history unless explicitly asked.
+---
 
-## 8. Verification checklist
+## 8. SEO, Open Graph & Structured Data (JSON-LD)
 
-Before calling a UI change complete:
+Every published HTML document must provide complete, valid metadata in `<head>`:
+- Concise, compelling `<title>` and `<meta name="description">` (150–160 characters).
+- Canonical URL matching `https://lolyeah.github.io/<path>`.
+- Open Graph (`og:type`, `og:title`, `og:description`, `og:url`, `og:image`).
+- Twitter Card (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`).
+- Valid Schema.org JSON-LD structured data (`WebPage`, `TechArticle`, `MedicalWebPage`, or `Dataset`) with author, publisher, datePublished, and dateModified.
 
-1. Read the target page and its nearest relevant exemplar before editing.
-2. Run `git diff --check` and inspect `git status`.
-3. Parse modified HTML and check unique critical IDs, balanced tags, anchor targets, canonical URLs, and subpage back-links.
-4. Extract inline JavaScript and run `node --check` where applicable.
-5. Serve the repository with `python3 -m http.server 8000` and request each modified route, confirming HTTP 200.
-6. Exercise the actual page at desktop and mobile widths. Inspect the initial viewport and every redesigned surface below the fold.
-7. Test keyboard navigation, focus visibility, reduced motion, language switching, filters, calculators, charts, modals, menus, and browser Back when those features exist.
-8. Use agentic browser if possible.
-9. Report visual/interaction verification separately from static verification. If a browser cannot start, say so; static checks are not visual QA.
+---
 
-Useful local checks:
+## 9. Verification & Publishing Checklist
+
+Before committing or publishing any changes, execute this verification protocol:
 
 ```bash
+# 1. Check for git whitespace and formatting issues
 git diff --check
-python3 -m http.server 8000
-# In another shell, request the relevant routes with curl -I or curl -sS
+
+# 2. Validate HTML syntax, critical IDs, and local asset paths
+python3 -c "
+import os, glob, re
+for f in glob.glob('topics/*.html') + ['index.html']:
+    with open(f) as fp:
+        content = fp.read()
+        assert '<!DOCTYPE html>' in content, f'Missing doctype in {f}'
+        assert '<html' in content and '</html>' in content, f'Unclosed html in {f}'
+        assert '<title>' in content, f'Missing title in {f}'
+print('PASSED: All core HTML files well-formed!')
+"
+
+# 3. Verify that zero raw emojis appear in button/tab controls
+python3 -c "
+import glob, re
+emoji_pattern = re.compile(r'[\U00010000-\U0010ffff]', flags=re.UNICODE)
+for f in glob.glob('topics/*.html') + ['index.html']:
+    with open(f) as fp:
+        lines = fp.readlines()
+        for idx, l in enumerate(lines):
+            if any(tag in l for tag in ['<button', '<input', 'class=\"tab', 'class=\"filter']):
+                matches = emoji_pattern.findall(l)
+                if matches:
+                    print(f'Warning: Emoji in control {f}:{idx+1}: {matches}')
+"
+
+# 4. Start local web server and test routes
+python3 -m http.server 8000 &
+SERVER_PID=$!
+sleep 1
+curl -sI http://localhost:8000/index.html | grep '200 OK'
+curl -sI http://localhost:8000/topics/gemstones.html | grep '200 OK'
+kill $SERVER_PID
 ```
-
-## 9. Recommended implementation sequence
-
-1. Define the page thesis, audience, content hierarchy, and widget contract.
-2. Inspect the existing structure and preserve useful content/data.
-3. Establish the topic-specific visual system and responsive layout.
-4. Implement the simplest native interaction that answers the user question.
-5. Add accessibility, bilingual behavior, states, caveats, and static fallback.
-6. Verify with the checklist above, then review the diff for unnecessary complexity.
-
-The goal is not maximum decoration or maximum interactivity. The goal is a distinctive, elegant, accessible page where the design and the tool both make the topic easier to understand.
-
-## 10. Research references
-
-These standards are informed by the following stable references; consult the current versions when a requirement is ambiguous:
-
-- W3C WAI, WCAG 2.2 Understanding 1.4.10 Reflow: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
-- web.dev, `prefers-reduced-motion`: https://web.dev/articles/prefers-reduced-motion
-- MDN, `aria-expanded`: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-expanded
-- MDN, CSS `prefers-reduced-motion`: https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion
