@@ -61,8 +61,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Chart.js for High-Fidelity Data Curves -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js CDN (Explicit Pinned UMD Bundle with cdnjs Fallback) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script>
+        if (typeof Chart === 'undefined') {
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/chart.umd.min.js"><\/script>');
+        }
+    </script>
 
     <style>
         :root {
@@ -672,6 +677,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 24px;
+            min-height: 380px;
             height: 380px;
             display: flex;
             flex-direction: column;
@@ -687,9 +693,26 @@
         }
         .chart-container-inner {
             position: relative;
-            flex: 1;
-            min-height: 0;
             width: 100%;
+            height: 290px;
+            min-height: 280px;
+            flex: 1 1 290px;
+        }
+        .chart-container-inner canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        @media (max-width: 640px) {
+            .chart-box {
+                padding: 16px;
+                min-height: 360px;
+                height: 360px;
+            }
+            .chart-container-inner {
+                height: 280px;
+                min-height: 260px;
+            }
         }
 
         /* Waterfall / Flow Display */
@@ -1477,6 +1500,11 @@
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             entry.target.classList.add('revealed');
+                            if (typeof Chart !== 'undefined') {
+                                if (revExpChart) revExpChart.resize();
+                                else initCharts();
+                                if (compChart) compChart.resize();
+                            }
                             observer.unobserve(entry.target);
                         }
                     });
@@ -1492,6 +1520,11 @@
                 document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(el => {
                     el.classList.add('revealed');
                 });
+                if (typeof Chart !== 'undefined') {
+                    if (revExpChart) revExpChart.resize();
+                    else initCharts();
+                    if (compChart) compChart.resize();
+                }
             }, 1000);
         }
         initScrollReveal();
@@ -1816,17 +1849,23 @@
         initCharts();
         if (typeof Chart === 'undefined') {
             window.addEventListener('load', initCharts);
+            document.addEventListener('DOMContentLoaded', initCharts);
             let pollCount = 0;
             const chartPoll = setInterval(() => {
                 pollCount++;
                 if (typeof Chart !== 'undefined') {
                     clearInterval(chartPoll);
                     initCharts();
-                } else if (pollCount >= 30) {
+                } else if (pollCount >= 100) {
                     clearInterval(chartPoll);
                 }
             }, 100);
         }
+
+        window.addEventListener('resize', () => {
+            if (revExpChart) revExpChart.resize();
+            if (compChart) compChart.resize();
+        });
 
         // 7. Restore Preferences
         try {

@@ -61,8 +61,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js CDN (Explicit Pinned UMD Bundle with cdnjs Fallback) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script>
+        if (typeof Chart === 'undefined') {
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/chart.umd.min.js"><\/script>');
+        }
+    </script>
 
     <style>
         :root {
@@ -464,9 +469,15 @@
 
         .chart-container {
             position: relative;
-            height: 350px;
             width: 100%;
+            height: 350px;
+            min-height: 320px;
             margin: 20px 0;
+        }
+        .chart-container canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
 
         .table-wrapper {
@@ -797,6 +808,10 @@
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             entry.target.classList.add('revealed');
+                            if (typeof Chart !== 'undefined') {
+                                if (shiftChart) shiftChart.resize();
+                                else initCharts();
+                            }
                             observer.unobserve(entry.target);
                         }
                     });
@@ -811,6 +826,10 @@
                 document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(el => {
                     el.classList.add('revealed');
                 });
+                if (typeof Chart !== 'undefined') {
+                    if (shiftChart) shiftChart.resize();
+                    else initCharts();
+                }
             }, 1000);
         }
         initScrollReveal();
@@ -1005,17 +1024,22 @@
         initCharts();
         if (typeof Chart === 'undefined') {
             window.addEventListener('load', initCharts);
+            document.addEventListener('DOMContentLoaded', initCharts);
             let pollCount = 0;
             const chartPoll = setInterval(() => {
                 pollCount++;
                 if (typeof Chart !== 'undefined') {
                     clearInterval(chartPoll);
                     initCharts();
-                } else if (pollCount >= 30) {
+                } else if (pollCount >= 100) {
                     clearInterval(chartPoll);
                 }
             }, 100);
         }
+
+        window.addEventListener('resize', () => {
+            if (shiftChart) shiftChart.resize();
+        });
 
         // 6. Restore Preferences
         try {
