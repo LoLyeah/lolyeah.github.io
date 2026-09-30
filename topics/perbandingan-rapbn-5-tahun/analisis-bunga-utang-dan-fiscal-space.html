@@ -61,11 +61,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Chart.js CDN (Explicit Pinned UMD Bundle with cdnjs Fallback) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <!-- Chart.js CDN (Explicit Pinned UMD Bundle with Modern Resilient Fallback) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"
+            onerror="if(typeof Chart==='undefined'){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/chart.umd.min.js';s.onload=function(){if(typeof initCharts==='function')initCharts();};document.head.appendChild(s);}"></script>
     <script>
         if (typeof Chart === 'undefined') {
-            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/chart.umd.min.js"><\/script>');
+            var s = document.createElement('script');
+            s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/chart.umd.min.js';
+            s.onload = function() {
+                if (typeof initCharts === 'function') initCharts();
+            };
+            document.head.appendChild(s);
         }
     </script>
 
@@ -526,6 +532,31 @@
             width: 100%;
             height: 100%;
         }
+        .chart-fallback {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            overflow-y: auto;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            gap: 6px;
+        }
+        .chart-fallback-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 4px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .chart-fallback-row:last-child {
+            border-bottom: none;
+        }
 
         /* Interactive Simulator Box */
         .sim-box {
@@ -685,6 +716,13 @@
 
                 <div class="chart-container">
                     <canvas id="debtInterestChart"></canvas>
+                    <div id="debtInterestFallback" class="chart-fallback">
+                        <div class="chart-fallback-row"><span>2022:</span><span class="text-crimson">Bunga Rp 386,3 T</span><span class="text-azure">Modal Rp 233,4 T</span></div>
+                        <div class="chart-fallback-row"><span>2023:</span><span class="text-crimson">Bunga Rp 439,9 T</span><span class="text-azure">Modal Rp 308,3 T</span></div>
+                        <div class="chart-fallback-row"><span>2024:</span><span class="text-crimson">Bunga Rp 497,3 T</span><span class="text-azure">Modal Rp 422,7 T</span></div>
+                        <div class="chart-fallback-row"><span>2025:</span><span class="text-crimson">Bunga Rp 552,9 T</span><span class="text-azure">Modal Rp 400,3 T</span></div>
+                        <div class="chart-fallback-row"><span>2026 (P):</span><span class="text-crimson">Bunga Rp 585,0 T</span><span class="text-azure">Modal Rp 375,0 T</span></div>
+                    </div>
                 </div>
 
                 <div class="table-wrapper">
@@ -1087,10 +1125,26 @@
                 }
                 const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
                 updateChartTheme(currentTheme);
+
+                // Hide fallback on successful chart initialization
+                const fb = document.getElementById('debtInterestFallback');
+                if (fb) fb.style.display = 'none';
+                if (ctxEl) ctxEl.style.display = 'block';
             } catch (err) {
                 console.error('Failed to initialize chart:', err);
+                showChartFallback();
             }
         }
+
+        function showChartFallback() {
+            if (!debtChart) {
+                const c = document.getElementById('debtInterestChart');
+                if (c) c.style.display = 'none';
+                const fb = document.getElementById('debtInterestFallback');
+                if (fb) fb.style.display = 'flex';
+            }
+        }
+
         initCharts();
         if (typeof Chart === 'undefined') {
             window.addEventListener('load', initCharts);
@@ -1101,8 +1155,9 @@
                 if (typeof Chart !== 'undefined') {
                     clearInterval(chartPoll);
                     initCharts();
-                } else if (pollCount >= 100) {
+                } else if (pollCount >= 30) {
                     clearInterval(chartPoll);
+                    showChartFallback();
                 }
             }, 100);
         }

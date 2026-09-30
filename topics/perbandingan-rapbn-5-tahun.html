@@ -61,11 +61,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Chart.js CDN (Explicit Pinned UMD Bundle with cdnjs Fallback) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <!-- Chart.js CDN (Explicit Pinned UMD Bundle with Modern Resilient Fallback) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"
+            onerror="if(typeof Chart==='undefined'){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/chart.umd.min.js';s.onload=function(){if(typeof initCharts==='function')initCharts();};document.head.appendChild(s);}"></script>
     <script>
         if (typeof Chart === 'undefined') {
-            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/chart.umd.min.js"><\/script>');
+            var s = document.createElement('script');
+            s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/chart.umd.min.js';
+            s.onload = function() {
+                if (typeof initCharts === 'function') initCharts();
+            };
+            document.head.appendChild(s);
         }
     </script>
 
@@ -678,7 +684,6 @@
             border-radius: var(--radius-lg);
             padding: 24px;
             min-height: 380px;
-            height: 380px;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -703,15 +708,43 @@
             width: 100%;
             height: 100%;
         }
+        .chart-fallback {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            overflow-y: auto;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            gap: 6px;
+        }
+        .chart-fallback-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 4px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .chart-fallback-row:last-child {
+            border-bottom: none;
+        }
         @media (max-width: 640px) {
             .chart-box {
                 padding: 16px;
                 min-height: 360px;
-                height: 360px;
             }
             .chart-container-inner {
                 height: 280px;
                 min-height: 260px;
+            }
+            .chart-fallback {
+                font-size: 10px;
+                padding: 8px;
             }
         }
 
@@ -1235,12 +1268,26 @@
                     <div class="chart-box-title" data-en="Revenue vs Expenditure vs Deficit (Rp Trillion)" data-id="Pendapatan vs Belanja vs Defisit (Rp Triliun)">Pendapatan vs Belanja vs Defisit (Rp Triliun)</div>
                     <div class="chart-container-inner">
                         <canvas id="revExpChart"></canvas>
+                        <div id="revExpFallback" class="chart-fallback">
+                            <div class="chart-fallback-row"><span>2022:</span><span class="text-emerald">Rev Rp 2.626,4 T</span><span class="text-gold">Exp Rp 3.090,8 T</span><span class="text-crimson">Def -Rp 464,4 T</span></div>
+                            <div class="chart-fallback-row"><span>2023:</span><span class="text-emerald">Rev Rp 2.775,3 T</span><span class="text-gold">Exp Rp 3.121,9 T</span><span class="text-crimson">Def -Rp 346,6 T</span></div>
+                            <div class="chart-fallback-row"><span>2024:</span><span class="text-emerald">Rev Rp 2.802,3 T</span><span class="text-gold">Exp Rp 3.325,1 T</span><span class="text-crimson">Def -Rp 522,8 T</span></div>
+                            <div class="chart-fallback-row"><span>2025:</span><span class="text-emerald">Rev Rp 3.005,1 T</span><span class="text-gold">Exp Rp 3.621,3 T</span><span class="text-crimson">Def -Rp 616,2 T</span></div>
+                            <div class="chart-fallback-row"><span>2026 (P):</span><span class="text-emerald">Rev Rp 3.210,0 T</span><span class="text-gold">Exp Rp 3.880,0 T</span><span class="text-crimson">Def -Rp 670,0 T</span></div>
+                        </div>
                     </div>
                 </div>
                 <div class="chart-box reveal-on-scroll">
                     <div class="chart-box-title" data-en="Spending Evolution: Debt Service vs CapEx vs MBG" data-id="Evolusi Belanja: Bunga Utang vs Modal vs MBG">Evolusi Belanja: Bunga Utang vs Modal vs MBG</div>
                     <div class="chart-container-inner">
                         <canvas id="compChart"></canvas>
+                        <div id="compFallback" class="chart-fallback">
+                            <div class="chart-fallback-row"><span>2022:</span><span class="text-crimson">Bunga Rp 386,3 T</span><span class="text-azure">Modal Rp 233,4 T</span><span class="text-emerald">MBG Rp 0 T</span></div>
+                            <div class="chart-fallback-row"><span>2023:</span><span class="text-crimson">Bunga Rp 439,9 T</span><span class="text-azure">Modal Rp 308,3 T</span><span class="text-emerald">MBG Rp 0 T</span></div>
+                            <div class="chart-fallback-row"><span>2024:</span><span class="text-crimson">Bunga Rp 497,3 T</span><span class="text-azure">Modal Rp 422,7 T</span><span class="text-emerald">MBG Rp 0 T</span></div>
+                            <div class="chart-fallback-row"><span>2025:</span><span class="text-crimson">Bunga Rp 552,9 T</span><span class="text-azure">Modal Rp 400,3 T</span><span class="text-emerald">MBG Rp 71,0 T</span></div>
+                            <div class="chart-fallback-row"><span>2026 (P):</span><span class="text-crimson">Bunga Rp 585,0 T</span><span class="text-azure">Modal Rp 375,0 T</span><span class="text-emerald">MBG Rp 180,0 T</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1842,10 +1889,35 @@
 
                 const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
                 updateChartThemes(currentTheme);
+
+                // Hide fallbacks on successful chart initialization
+                const fb1 = document.getElementById('revExpFallback');
+                if (fb1) fb1.style.display = 'none';
+                const fb2 = document.getElementById('compFallback');
+                if (fb2) fb2.style.display = 'none';
+                if (ctxRevExpEl) ctxRevExpEl.style.display = 'block';
+                if (ctxCompEl) ctxCompEl.style.display = 'block';
             } catch (err) {
                 console.error('Failed to initialize charts:', err);
+                showChartFallbacks();
             }
         }
+
+        function showChartFallbacks() {
+            if (!revExpChart) {
+                const c1 = document.getElementById('revExpChart');
+                if (c1) c1.style.display = 'none';
+                const fb1 = document.getElementById('revExpFallback');
+                if (fb1) fb1.style.display = 'flex';
+            }
+            if (!compChart) {
+                const c2 = document.getElementById('compChart');
+                if (c2) c2.style.display = 'none';
+                const fb2 = document.getElementById('compFallback');
+                if (fb2) fb2.style.display = 'flex';
+            }
+        }
+
         initCharts();
         if (typeof Chart === 'undefined') {
             window.addEventListener('load', initCharts);
@@ -1856,8 +1928,9 @@
                 if (typeof Chart !== 'undefined') {
                     clearInterval(chartPoll);
                     initCharts();
-                } else if (pollCount >= 100) {
+                } else if (pollCount >= 30) {
                     clearInterval(chartPoll);
+                    showChartFallbacks();
                 }
             }, 100);
         }
