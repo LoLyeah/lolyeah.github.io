@@ -837,41 +837,13 @@
     </main>
 
     <script>
-        // 1. Scroll Animation (IntersectionObserver) - Immediate & Resilient
-        function initScrollReveal() {
-            const revealEls = document.querySelectorAll('.reveal-on-scroll');
-            if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('revealed');
-                            if (typeof Chart !== 'undefined') {
-                                if (shiftChart) shiftChart.resize();
-                                else initCharts();
-                            }
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { root: null, rootMargin: '0px 0px 80px 0px', threshold: 0 });
+        // 1. Global State & DOM Element References
+        let currentLang = 'id';
+        let shiftChart = null;
 
-                revealEls.forEach(el => observer.observe(el));
-            } else {
-                revealEls.forEach(el => el.classList.add('revealed'));
-            }
+        const langBtns = document.querySelectorAll('.lang-btn');
+        const themeBtn = document.getElementById('themeToggle');
 
-            setTimeout(() => {
-                document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(el => {
-                    el.classList.add('revealed');
-                });
-                if (typeof Chart !== 'undefined') {
-                    if (shiftChart) shiftChart.resize();
-                    else initCharts();
-                }
-            }, 1000);
-        }
-        initScrollReveal();
-
-        // 2. Interactive Simulator Logic
         const sliderMbg = document.getElementById('sliderMbg');
         const sliderInfra = document.getElementById('sliderInfra');
         const sliderLocal = document.getElementById('sliderLocal');
@@ -885,6 +857,43 @@
         const resImportLeak = document.getElementById('resImportLeak');
         const resGrowthStatus = document.getElementById('resGrowthStatus');
 
+        // 2. Language Toggle System
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            try { localStorage.setItem('lolyeah_lang', lang); localStorage.setItem('pref_lang', lang); } catch (e) {}
+            langBtns.forEach(btn => {
+                const isActive = btn.dataset.lang === lang;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-pressed', isActive);
+            });
+            document.querySelectorAll('[data-en][data-id]').forEach(el => {
+                el.innerHTML = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-id');
+            });
+            if (shiftChart) {
+                shiftChart.data.datasets[0].label = lang === 'en' ? 'Infrastructure & Capital Spending (Rp T)' : 'Belanja Modal & Infrastruktur (Rp T)';
+                shiftChart.data.datasets[1].label = lang === 'en' ? 'Social Assistance & Welfare Transfers (Rp T)' : 'Bansos & Perlinsos (Rp T)';
+                shiftChart.data.datasets[2].label = lang === 'en' ? 'Free Nutritious Meals / MBG (Rp T)' : 'Makan Bergizi Gratis / MBG (Rp T)';
+                shiftChart.update();
+            }
+            updateSim();
+        }
+
+        // 3. Theme Toggle
+        function updateChartTheme(theme) {
+            if (!shiftChart) return;
+            const isDark = theme === 'dark';
+            const textColor = isDark ? '#94a3b8' : '#475569';
+            const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+            shiftChart.options.plugins.legend.labels.color = textColor;
+            shiftChart.options.scales.x.ticks.color = textColor;
+            shiftChart.options.scales.y.ticks.color = textColor;
+            shiftChart.options.scales.x.grid.color = gridColor;
+            shiftChart.options.scales.y.grid.color = gridColor;
+            shiftChart.update();
+        }
+
+        // 4. Interactive Simulator Logic
         function updateSim() {
             if (!sliderMbg) return;
             const mbg = parseInt(sliderMbg.value, 10);
@@ -898,10 +907,7 @@
             const localRatio = local / 100;
             const importRatio = 1 - localRatio;
 
-            // Multiplier for MBG adjusted for local vs import leakage
-            // Base local multiplier 0.85, imported fraction leaks out with multiplier 0.15
             const mbgMultiplier = (localRatio * 0.88) + (importRatio * 0.20);
-            // CapEx infrastructure multiplier ~1.60
             const infraMultiplier = 1.60;
 
             const totalSpend = mbg + infra;
@@ -927,72 +933,9 @@
             }
         }
 
-        if (sliderMbg) {
-            sliderMbg.addEventListener('input', updateSim);
-            if (sliderInfra) sliderInfra.addEventListener('input', updateSim);
-            if (sliderLocal) sliderLocal.addEventListener('input', updateSim);
-            updateSim();
-        }
-
-        // 3. Language Toggle System
-        let currentLang = 'id';
-        let shiftChart = null;
-        const langBtns = document.querySelectorAll('.lang-btn');
-        
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            try { localStorage.setItem('lolyeah_lang', lang); localStorage.setItem('pref_lang', lang); } catch (e) {}
-            langBtns.forEach(btn => {
-                const isActive = btn.dataset.lang === lang;
-                btn.classList.toggle('active', isActive);
-                btn.setAttribute('aria-pressed', isActive);
-            });
-            document.querySelectorAll('[data-en][data-id]').forEach(el => {
-                el.innerHTML = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-id');
-            });
-            if (shiftChart) {
-                shiftChart.data.datasets[0].label = lang === 'en' ? 'Infrastructure & Capital Spending (Rp T)' : 'Belanja Modal & Infrastruktur (Rp T)';
-                shiftChart.data.datasets[1].label = lang === 'en' ? 'Social Assistance & Welfare Transfers (Rp T)' : 'Bansos & Perlinsos (Rp T)';
-                shiftChart.data.datasets[2].label = lang === 'en' ? 'Free Nutritious Meals / MBG (Rp T)' : 'Makan Bergizi Gratis / MBG (Rp T)';
-                shiftChart.update();
-            }
-            updateSim();
-        }
-
-        langBtns.forEach(btn => {
-            btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
-        });
-
-        // 4. Theme Toggle
-        const themeBtn = document.getElementById('themeToggle');
-        if (themeBtn) {
-            themeBtn.addEventListener('click', () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-                const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', nextTheme);
-                try { localStorage.setItem('theme', nextTheme); } catch (e) {}
-                updateChartTheme(nextTheme);
-            });
-        }
-
-        function updateChartTheme(theme) {
-            if (!shiftChart) return;
-            const isDark = theme === 'dark';
-            const textColor = isDark ? '#94a3b8' : '#475569';
-            const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
-            shiftChart.options.plugins.legend.labels.color = textColor;
-            shiftChart.options.scales.x.ticks.color = textColor;
-            shiftChart.options.scales.y.ticks.color = textColor;
-            shiftChart.options.scales.x.grid.color = gridColor;
-            shiftChart.options.scales.y.grid.color = gridColor;
-            shiftChart.update();
-        }
-
         // 5. Chart Initialization (Resilient)
         function initCharts() {
             if (typeof Chart === 'undefined') {
-                console.warn('Chart.js not loaded yet.');
                 return;
             }
             try {
@@ -1074,7 +1017,85 @@
             }
         }
 
+        // 6. Scroll Animation (IntersectionObserver)
+        function initScrollReveal() {
+            const revealEls = document.querySelectorAll('.reveal-on-scroll');
+            if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('revealed');
+                            if (typeof Chart !== 'undefined') {
+                                if (shiftChart) shiftChart.resize();
+                                else initCharts();
+                            }
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { root: null, rootMargin: '0px 0px 80px 0px', threshold: 0 });
+
+                revealEls.forEach(el => observer.observe(el));
+            } else {
+                revealEls.forEach(el => el.classList.add('revealed'));
+            }
+
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(el => {
+                    el.classList.add('revealed');
+                });
+                if (typeof Chart !== 'undefined') {
+                    if (shiftChart) shiftChart.resize();
+                    else initCharts();
+                }
+            }, 1000);
+        }
+
+        // 7. Event Listeners & Bootstrapping
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+        });
+
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', nextTheme);
+                try { localStorage.setItem('theme', nextTheme); } catch (e) {}
+                updateChartTheme(nextTheme);
+            });
+        }
+
+        if (sliderMbg) {
+            sliderMbg.addEventListener('input', updateSim);
+            if (sliderInfra) sliderInfra.addEventListener('input', updateSim);
+            if (sliderLocal) sliderLocal.addEventListener('input', updateSim);
+        }
+
+        window.addEventListener('resize', () => {
+            if (shiftChart) shiftChart.resize();
+        });
+
+        // Restore Preferences
+        try {
+            const savedLang = localStorage.getItem('lolyeah_lang') || localStorage.getItem('pref_lang');
+            if (savedLang && (savedLang === 'en' || savedLang === 'id')) {
+                setLanguage(savedLang);
+            } else {
+                setLanguage('id');
+            }
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                updateChartTheme(savedTheme);
+            }
+        } catch (e) {}
+
+        // Initial Calculations & Chart Boot
+        updateSim();
         initCharts();
+        initScrollReveal();
+
+        // Chart.js async polling if not ready at script execution time
         if (typeof Chart === 'undefined') {
             window.addEventListener('load', initCharts);
             document.addEventListener('DOMContentLoaded', initCharts);
@@ -1090,23 +1111,6 @@
                 }
             }, 100);
         }
-
-        window.addEventListener('resize', () => {
-            if (shiftChart) shiftChart.resize();
-        });
-
-        // 6. Restore Preferences
-        try {
-            const savedLang = localStorage.getItem('lolyeah_lang') || localStorage.getItem('pref_lang');
-            if (savedLang && (savedLang === 'en' || savedLang === 'id')) {
-                setLanguage(savedLang);
-            }
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                updateChartTheme(savedTheme);
-            }
-        } catch (e) {}
     </script>
 </body>
 </html>

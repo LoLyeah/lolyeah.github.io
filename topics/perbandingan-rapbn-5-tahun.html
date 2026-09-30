@@ -1538,44 +1538,16 @@
     </main>
 
     <script>
-        // 1. Scroll Animation (IntersectionObserver) - Runs immediately and resiliently
-        function initScrollReveal() {
-            const revealEls = document.querySelectorAll('.reveal-on-scroll');
-            if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('revealed');
-                            if (typeof Chart !== 'undefined') {
-                                if (revExpChart) revExpChart.resize();
-                                else initCharts();
-                                if (compChart) compChart.resize();
-                            }
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { root: null, rootMargin: '0px 0px 80px 0px', threshold: 0 });
+        // 1. Global State & DOM Element References
+        let currentLang = 'id';
+        let currentMetric = 'nominal';
+        let revExpChart = null;
+        let compChart = null;
 
-                revealEls.forEach(el => observer.observe(el));
-            } else {
-                revealEls.forEach(el => el.classList.add('revealed'));
-            }
+        const langBtns = document.querySelectorAll('.lang-btn');
+        const themeBtn = document.getElementById('themeToggle');
+        const controlBtns = document.querySelectorAll('.control-btn');
 
-            // Defensive timeout: Ensure all cards reveal even if observer is delayed or obstructed
-            setTimeout(() => {
-                document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(el => {
-                    el.classList.add('revealed');
-                });
-                if (typeof Chart !== 'undefined') {
-                    if (revExpChart) revExpChart.resize();
-                    else initCharts();
-                    if (compChart) compChart.resize();
-                }
-            }, 1000);
-        }
-        initScrollReveal();
-
-        // 2. Interactive Simulator Logic
         const simSliderMbg = document.getElementById('simSliderMbg');
         const simSliderYield = document.getElementById('simSliderYield');
         const simSliderTax = document.getElementById('simSliderTax');
@@ -1592,6 +1564,92 @@
         const resGdpGrowth = document.getElementById('resGdpGrowth');
         const resRatingOutlook = document.getElementById('resRatingOutlook');
 
+        // 2. Language & Metric Systems
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            try { localStorage.setItem('lolyeah_lang', lang); localStorage.setItem('pref_lang', lang); } catch (e) {}
+            langBtns.forEach(btn => {
+                const isActive = btn.dataset.lang === lang;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-pressed', isActive);
+            });
+            document.querySelectorAll('[data-en][data-id]').forEach(el => {
+                el.innerHTML = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-id');
+            });
+            if (revExpChart) {
+                revExpChart.data.datasets[0].label = lang === 'en' ? 'State Revenues (IDR T)' : 'Pendapatan Negara (Rp T)';
+                revExpChart.data.datasets[1].label = lang === 'en' ? 'Total Expenditures (IDR T)' : 'Total Belanja Negara (Rp T)';
+                revExpChart.update();
+            }
+            if (compChart) {
+                compChart.data.datasets[0].label = lang === 'en' ? 'Debt Interest (IDR T)' : 'Bunga Utang (Rp T)';
+                compChart.data.datasets[1].label = lang === 'en' ? 'CapEx & Infra (IDR T)' : 'Modal & Infra (Rp T)';
+                compChart.data.datasets[2].label = lang === 'en' ? 'MBG Meal Program (IDR T)' : 'Makan Bergizi Gratis (Rp T)';
+                compChart.update();
+            }
+            updateLedgerTable();
+            updateSim();
+        }
+
+        // 3. Theme Updating
+        function updateChartThemes(theme) {
+            const textColor = theme === 'light' ? '#475569' : '#94a3b8';
+            const gridColor = theme === 'light' ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.05)';
+            [revExpChart, compChart].forEach(chart => {
+                if (!chart) return;
+                if (chart.options.plugins?.legend?.labels) {
+                    chart.options.plugins.legend.labels.color = textColor;
+                }
+                if (chart.options.scales?.x) {
+                    chart.options.scales.x.ticks.color = textColor;
+                    chart.options.scales.x.grid.color = gridColor;
+                }
+                if (chart.options.scales?.y) {
+                    chart.options.scales.y.ticks.color = textColor;
+                    chart.options.scales.y.grid.color = gridColor;
+                }
+                chart.update();
+            });
+        }
+
+        // 4. Ledger Table Calculation
+        function updateLedgerTable() {
+            const rows = document.querySelectorAll('#ledgerTable tbody tr[data-item]');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td.val-num');
+                const isBalanceRow = row.dataset.item === 'bal-prim' || row.dataset.item === 'bal-def';
+                cells.forEach(cell => {
+                    const nom = cell.getAttribute('data-nom');
+                    const spend = cell.getAttribute('data-spend');
+                    const gdp = cell.getAttribute('data-gdp');
+
+                    if (nom === null) return;
+
+                    const isPositive = isBalanceRow && cell.classList.contains('text-emerald');
+
+                    if (currentMetric === 'nominal') {
+                        const val = parseFloat(nom);
+                        const sign = val < 0 ? '-' : (isPositive && val > 0 ? '+' : '');
+                        const absVal = Math.abs(val);
+                        cell.textContent = `${sign}Rp ${absVal.toLocaleString(currentLang === 'en' ? 'en-US' : 'id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} T`;
+                    } else if (currentMetric === 'pct-spend') {
+                        const val = parseFloat(spend);
+                        const sign = val < 0 ? '-' : (isPositive && val > 0 ? '+' : '');
+                        const absVal = Math.abs(val);
+                        cell.textContent = `${sign}${absVal.toFixed(1)}%`;
+                    } else if (currentMetric === 'pct-gdp') {
+                        const val = parseFloat(gdp);
+                        const sign = val < 0 ? '-' : (isPositive && val > 0 ? '+' : '');
+                        const absVal = Math.abs(val);
+                        const unit = currentLang === 'en' ? '% GDP' : '% PDB';
+                        cell.textContent = `${sign}${absVal.toFixed(1)}${unit}`;
+                    }
+                });
+            });
+        }
+
+        // 5. Interactive Simulator Logic
         function updateSim() {
             if (!simSliderMbg) return;
             const mbg = parseInt(simSliderMbg.value, 10);
@@ -1666,134 +1724,9 @@
             }
         }
 
-        if (simSliderMbg) {
-            simSliderMbg.addEventListener('input', updateSim);
-            if (simSliderYield) simSliderYield.addEventListener('input', updateSim);
-            if (simSliderTax) simSliderTax.addEventListener('input', updateSim);
-            if (simSliderDefLimit) simSliderDefLimit.addEventListener('input', updateSim);
-            updateSim();
-        }
-
-        // 3. Language & Metric Systems
-        let currentLang = 'id';
-        let currentMetric = 'nominal';
-        let revExpChart = null;
-        let compChart = null;
-        const langBtns = document.querySelectorAll('.lang-btn');
-        
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            try { localStorage.setItem('lolyeah_lang', lang); localStorage.setItem('pref_lang', lang); } catch (e) {}
-            langBtns.forEach(btn => {
-                const isActive = btn.dataset.lang === lang;
-                btn.classList.toggle('active', isActive);
-                btn.setAttribute('aria-pressed', isActive);
-            });
-            document.querySelectorAll('[data-en][data-id]').forEach(el => {
-                el.innerHTML = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-id');
-            });
-            if (revExpChart) {
-                revExpChart.data.datasets[0].label = lang === 'en' ? 'State Revenues (IDR T)' : 'Pendapatan Negara (Rp T)';
-                revExpChart.data.datasets[1].label = lang === 'en' ? 'Total Expenditures (IDR T)' : 'Total Belanja Negara (Rp T)';
-                revExpChart.update();
-            }
-            if (compChart) {
-                compChart.data.datasets[0].label = lang === 'en' ? 'Debt Interest (IDR T)' : 'Bunga Utang (Rp T)';
-                compChart.data.datasets[1].label = lang === 'en' ? 'CapEx & Infra (IDR T)' : 'Modal & Infra (Rp T)';
-                compChart.data.datasets[2].label = lang === 'en' ? 'MBG Meal Program (IDR T)' : 'Makan Bergizi Gratis (Rp T)';
-                compChart.update();
-            }
-            updateLedgerTable();
-            updateSim();
-        }
-
-        langBtns.forEach(btn => {
-            btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
-        });
-
-        // 4. Theme Toggle
-        function updateChartThemes(theme) {
-            const textColor = theme === 'light' ? '#475569' : '#94a3b8';
-            const gridColor = theme === 'light' ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.05)';
-            [revExpChart, compChart].forEach(chart => {
-                if (!chart) return;
-                if (chart.options.plugins?.legend?.labels) {
-                    chart.options.plugins.legend.labels.color = textColor;
-                }
-                if (chart.options.scales?.x) {
-                    chart.options.scales.x.ticks.color = textColor;
-                    chart.options.scales.x.grid.color = gridColor;
-                }
-                if (chart.options.scales?.y) {
-                    chart.options.scales.y.ticks.color = textColor;
-                    chart.options.scales.y.grid.color = gridColor;
-                }
-                chart.update();
-            });
-        }
-
-        const themeBtn = document.getElementById('themeToggle');
-        if (themeBtn) {
-            themeBtn.addEventListener('click', () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-                const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', nextTheme);
-                try { localStorage.setItem('theme', nextTheme); } catch (e) {}
-                updateChartThemes(nextTheme);
-            });
-        }
-
-        // 5. Metric Toggle Logic for Ledger Table
-        const controlBtns = document.querySelectorAll('.control-btn');
-        controlBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                controlBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentMetric = btn.dataset.metric;
-                updateLedgerTable();
-            });
-        });
-
-        function updateLedgerTable() {
-            const rows = document.querySelectorAll('#ledgerTable tbody tr[data-item]');
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td.val-num');
-                const isBalanceRow = row.dataset.item === 'bal-prim' || row.dataset.item === 'bal-def';
-                cells.forEach(cell => {
-                    const nom = cell.getAttribute('data-nom');
-                    const spend = cell.getAttribute('data-spend');
-                    const gdp = cell.getAttribute('data-gdp');
-
-                    if (nom === null) return;
-
-                    const isPositive = isBalanceRow && cell.classList.contains('text-emerald');
-
-                    if (currentMetric === 'nominal') {
-                        const val = parseFloat(nom);
-                        const sign = val < 0 ? '-' : (isPositive && val > 0 ? '+' : '');
-                        const absVal = Math.abs(val);
-                        cell.textContent = `${sign}Rp ${absVal.toLocaleString(currentLang === 'en' ? 'en-US' : 'id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} T`;
-                    } else if (currentMetric === 'pct-spend') {
-                        const val = parseFloat(spend);
-                        const sign = val < 0 ? '-' : (isPositive && val > 0 ? '+' : '');
-                        const absVal = Math.abs(val);
-                        cell.textContent = `${sign}${absVal.toFixed(1)}%`;
-                    } else if (currentMetric === 'pct-gdp') {
-                        const val = parseFloat(gdp);
-                        const sign = val < 0 ? '-' : (isPositive && val > 0 ? '+' : '');
-                        const absVal = Math.abs(val);
-                        const unit = currentLang === 'en' ? '% GDP' : '% PDB';
-                        cell.textContent = `${sign}${absVal.toFixed(1)}${unit}`;
-                    }
-                });
-            });
-        }
-
-        // 6. Resilient Chart.js Initialization
+        // 6. Chart.js Initialization & Fallback
         function initCharts() {
             if (typeof Chart === 'undefined') {
-                console.warn('Chart.js not available yet.');
                 return;
             }
             try {
@@ -1917,7 +1850,100 @@
             }
         }
 
+        // 7. Scroll Animation (IntersectionObserver)
+        function initScrollReveal() {
+            const revealEls = document.querySelectorAll('.reveal-on-scroll');
+            if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('revealed');
+                            if (typeof Chart !== 'undefined') {
+                                if (revExpChart) revExpChart.resize();
+                                else initCharts();
+                                if (compChart) compChart.resize();
+                            }
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { root: null, rootMargin: '0px 0px 80px 0px', threshold: 0 });
+
+                revealEls.forEach(el => observer.observe(el));
+            } else {
+                revealEls.forEach(el => el.classList.add('revealed'));
+            }
+
+            // Defensive timeout: Ensure all cards reveal even if observer is delayed or obstructed
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(el => {
+                    el.classList.add('revealed');
+                });
+                if (typeof Chart !== 'undefined') {
+                    if (revExpChart) revExpChart.resize();
+                    else initCharts();
+                    if (compChart) compChart.resize();
+                }
+            }, 1000);
+        }
+
+        // 8. Event Listeners & Bootstrapping
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+        });
+
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', nextTheme);
+                try { localStorage.setItem('theme', nextTheme); } catch (e) {}
+                updateChartThemes(nextTheme);
+            });
+        }
+
+        controlBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                controlBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMetric = btn.dataset.metric;
+                updateLedgerTable();
+            });
+        });
+
+        if (simSliderMbg) {
+            simSliderMbg.addEventListener('input', updateSim);
+            if (simSliderYield) simSliderYield.addEventListener('input', updateSim);
+            if (simSliderTax) simSliderTax.addEventListener('input', updateSim);
+            if (simSliderDefLimit) simSliderDefLimit.addEventListener('input', updateSim);
+        }
+
+        window.addEventListener('resize', () => {
+            if (revExpChart) revExpChart.resize();
+            if (compChart) compChart.resize();
+        });
+
+        // Restore Preferences
+        try {
+            const savedLang = localStorage.getItem('lolyeah_lang') || localStorage.getItem('pref_lang');
+            if (savedLang && (savedLang === 'en' || savedLang === 'id')) {
+                setLanguage(savedLang);
+            } else {
+                setLanguage('id');
+            }
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                updateChartThemes(savedTheme);
+            }
+        } catch (e) {}
+
+        // Initial Calculations & Chart Boot
+        updateLedgerTable();
+        updateSim();
         initCharts();
+        initScrollReveal();
+
+        // Chart.js async polling if not ready at script execution time
         if (typeof Chart === 'undefined') {
             window.addEventListener('load', initCharts);
             document.addEventListener('DOMContentLoaded', initCharts);
@@ -1933,24 +1959,6 @@
                 }
             }, 100);
         }
-
-        window.addEventListener('resize', () => {
-            if (revExpChart) revExpChart.resize();
-            if (compChart) compChart.resize();
-        });
-
-        // 7. Restore Preferences
-        try {
-            const savedLang = localStorage.getItem('lolyeah_lang') || localStorage.getItem('pref_lang');
-            if (savedLang && (savedLang === 'en' || savedLang === 'id')) {
-                setLanguage(savedLang);
-            }
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                updateChartThemes(savedTheme);
-            }
-        } catch (e) {}
     </script>
 </body>
 </html>
