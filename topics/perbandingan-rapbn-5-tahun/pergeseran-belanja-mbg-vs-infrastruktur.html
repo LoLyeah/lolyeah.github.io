@@ -52,17 +52,17 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
-            --bg: #07090e;
-            --bg-elevated: #0f141f;
-            --bg-card: rgba(18, 25, 38, 0.78);
-            --bg-card-hover: rgba(26, 36, 54, 0.9);
+            --bg: #060911;
+            --bg-elevated: #0d1322;
+            --bg-card: rgba(15, 23, 40, 0.78);
+            --bg-card-hover: rgba(22, 34, 58, 0.9);
             --border: rgba(255, 255, 255, 0.08);
             --border-hover: rgba(245, 158, 11, 0.45);
             --border-subtle: rgba(255, 255, 255, 0.04);
@@ -77,17 +77,18 @@
             --azure-subtle: rgba(56, 189, 248, 0.1);
 
             --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
 
-            --font-serif: 'Crimson Pro', Georgia, serif;
-            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-display: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+            --font-sans: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
 
-            --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            --radius-sm: 6px;
-            --radius-md: 10px;
-            --radius-lg: 16px;
+            --transition: background 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 14px;
+            --radius-xl: 20px;
         }
 
         [data-theme="light"] {
@@ -100,7 +101,7 @@
             --border-subtle: rgba(0, 0, 0, 0.04);
             --text-primary: #0f172a;
             --text-secondary: #475569;
-            --text-muted: #94a3b8;
+            --text-muted: #64748b;
         }
 
         :focus-visible {
@@ -121,14 +122,14 @@
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
             *, *::before, *::after {
-                animation-duration: 0.01ms !important;
+                animation-duration: 0.001ms !important;
                 animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
+                transition-duration: 0.001ms !important;
             }
             .reveal-on-scroll {
                 opacity: 1 !important;
                 transform: none !important;
+                transition: none !important;
             }
         }
 
@@ -148,9 +149,8 @@
             background-color: var(--bg);
             color: var(--text-primary);
             font-family: var(--font-sans);
-            font-size: 16px;
+            font-size: 1rem;
             line-height: 1.75;
-            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             background-image: 
                 radial-gradient(ellipse 90% 50% at 50% 0%, rgba(245, 158, 11, 0.07), transparent 70%),
@@ -158,23 +158,16 @@
                 radial-gradient(ellipse 70% 50% at 10% 80%, rgba(239, 68, 68, 0.04), transparent 60%);
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 99;
-        }
-
         .skip-link {
             position: absolute;
             top: -60px;
             left: 20px;
             background: var(--gold);
-            color: #000;
-            padding: 8px 16px;
+            color: #0f172a;
+            padding: 10px 18px;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
             font-weight: 700;
             z-index: 1000;
             transition: top 0.2s;
@@ -196,7 +189,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 clamp(16px, 4vw, 40px);
-            background: rgba(7, 9, 14, 0.88);
+            background: rgba(6, 9, 17, 0.88);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
@@ -217,11 +210,11 @@
 
         .nav-back-link {
             font-family: var(--font-mono);
-            font-size: 12px;
+            font-size: 0.75rem;
             color: var(--gold);
             border: 1px solid rgba(245, 158, 11, 0.35);
-            padding: 6px 14px;
-            min-height: 36px;
+            padding: 8px 16px;
+            min-height: 44px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -232,8 +225,9 @@
             font-weight: 700;
         }
         .nav-back-link:hover, .nav-back-link:focus-visible {
-            background: var(--gold);
-            color: #000;
+            background: var(--gold-subtle);
+            color: var(--gold);
+            border-color: var(--gold);
             outline: none;
         }
 
@@ -249,16 +243,16 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             overflow: hidden;
-            min-height: 36px;
+            min-height: 44px;
         }
 
         .lang-btn {
             font-family: var(--font-mono);
-            font-size: 11px;
+            font-size: 0.75rem;
             font-weight: 700;
-            padding: 6px 12px;
-            min-width: 38px;
-            min-height: 36px;
+            padding: 8px 14px;
+            min-width: 44px;
+            min-height: 44px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -270,15 +264,17 @@
         }
         .lang-btn.active {
             background: var(--gold);
-            color: #000000;
+            color: #0f172a;
         }
 
         .theme-toggle {
             background: var(--bg-elevated);
             border: 1px solid var(--border);
             color: var(--text-primary);
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            min-height: 44px;
             border-radius: var(--radius-sm);
             display: inline-flex;
             align-items: center;
@@ -296,33 +292,18 @@
 
         /* Hero */
         .page-header {
-            margin-bottom: 48px;
-        }
-        .badge-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            font-weight: 700;
-            background: var(--gold-subtle);
-            color: var(--gold);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            margin-bottom: 16px;
+            margin-bottom: 40px;
         }
         .page-title {
-            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 2.5rem);
             font-weight: 800;
             line-height: 1.15;
             letter-spacing: -0.03em;
             margin-bottom: 16px;
         }
         .page-lead {
-            font-size: 1.15rem;
+            font-size: 1.125rem;
             color: var(--text-secondary);
             max-width: 860px;
             line-height: 1.7;
@@ -349,25 +330,16 @@
             border-color: var(--gold);
             transform: translateY(-2px);
         }
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--gold), transparent);
-        }
         .stat-label {
             font-family: var(--font-mono);
-            font-size: 11px;
+            font-size: 0.75rem;
             text-transform: uppercase;
             color: var(--text-muted);
             letter-spacing: 0.05em;
             margin-bottom: 8px;
         }
         .stat-value {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 800;
             font-family: var(--font-mono);
             color: var(--gold);
@@ -375,7 +347,7 @@
             margin-bottom: 6px;
         }
         .stat-sub {
-            font-size: 13px;
+            font-size: 0.875rem;
             color: var(--text-secondary);
         }
 
@@ -385,18 +357,17 @@
         }
         .section-header {
             margin-bottom: 24px;
-            border-left: 3px solid var(--gold);
-            padding-left: 16px;
         }
         .section-title {
-            font-size: 1.6rem;
+            font-family: var(--font-display);
+            font-size: 1.5rem;
             font-weight: 700;
             letter-spacing: -0.02em;
             margin-bottom: 6px;
         }
         .section-desc {
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-size: 0.875rem;
         }
 
         .card-panel {
@@ -416,11 +387,12 @@
         }
 
         .highlight-quote {
-            font-family: var(--font-serif);
-            font-size: 1.3rem;
+            font-family: var(--font-display);
+            font-size: 1.25rem;
             font-style: italic;
+            font-weight: 600;
             color: var(--text-primary);
-            border-left: 3px solid var(--gold);
+            border-left: 2px solid var(--gold);
             padding-left: 20px;
             margin: 24px 0;
             line-height: 1.6;
@@ -438,11 +410,12 @@
             border-radius: var(--radius-md);
             border: 1px solid var(--border);
             margin: 24px 0;
+            padding: 8px;
         }
         table.data-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
+            font-size: 0.875rem;
             text-align: left;
         }
         table.data-table th {
@@ -450,7 +423,7 @@
             color: var(--text-primary);
             padding: 12px 16px;
             font-family: var(--font-mono);
-            font-size: 12px;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.04em;
             border-bottom: 1px solid var(--border);
@@ -496,7 +469,7 @@
         .slider-label {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: 0.875rem;
             font-family: var(--font-mono);
             margin-bottom: 8px;
             color: var(--text-primary);
@@ -509,7 +482,7 @@
             width: 100%;
             accent-color: var(--gold);
             height: 6px;
-            border-radius: 3px;
+            border-radius: var(--radius-sm);
             background: var(--bg-elevated);
             outline: none;
             cursor: pointer;
@@ -534,24 +507,34 @@
             border-bottom: none;
         }
         .res-title {
-            font-size: 13px;
+            font-size: 0.875rem;
             color: var(--text-secondary);
         }
         .res-val {
             font-family: var(--font-mono);
             font-weight: 700;
-            font-size: 15px;
+            font-size: 1rem;
         }
 
         footer.page-footer {
             border-top: 1px solid var(--border);
             padding: 40px 0;
             color: var(--text-muted);
-            font-size: 13px;
+            font-size: 0.875rem;
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 16px;
+        }
+
+        @media (pointer: coarse) {
+            .nav-back-link, .lang-btn, .theme-toggle, button {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            input[type="range"] {
+                min-height: 44px;
+            }
         }
     </style>
 </head>
@@ -575,10 +558,6 @@
 
     <main class="container" id="main-content">
         <header class="page-header">
-            <div class="badge-tag">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>
-                <span data-en="Fiscal Deep-Dive 02" data-id="Bedah Fiskal Mendalam 02">Bedah Fiskal Mendalam 02</span>
-            </div>
             <h1 class="page-title" data-en="The Capital-to-Consumption Shift: From IKN Megaprojects to Free Meals (MBG)" data-id="Pergeseran Belanja: Dari Megaproyek IKN ke MBG &amp; Efek Multiplier PDB">Pergeseran Belanja: Dari Megaproyek IKN ke MBG &amp; Efek Multiplier PDB</h1>
             <p class="page-lead" data-en="Analyzing the structural pivot of state expenditure: how Indonesia shifted from Jokowi's decade of physical connectivity to Prabowo's flagship welfare transfers, and why economic multiplier effects diverge sharply between physical assets and daily food consumption." data-id="Menganalisis pergeseran struktural belanja negara: bagaimana Indonesia beralih dari satu dekade konektivitas fisik era Jokowi menuju program transfer pangan andalan Prabowo, serta mengapa angka pengganda (multiplier) ekonomi berbeda tajam antara aset modal fisik vs konsumsi pangan harian.">Menganalisis pergeseran struktural belanja negara: bagaimana Indonesia beralih dari satu dekade konektivitas fisik era Jokowi menuju program transfer pangan andalan Prabowo, serta mengapa angka pengganda (multiplier) ekonomi berbeda tajam antara aset modal fisik vs konsumsi pangan harian.</p>
         </header>
