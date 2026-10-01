@@ -1,0 +1,2592 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>suravidl: Media Downloader &amp; Stream Ingestion Engine | LoLyeah</title>
+    <meta name="description" content="An open-source media downloader and stream ingestion engine for Android and desktop systems. Built by LoLyeah with download queue management, MediaStore gallery sync, lossless FFmpeg muxing, SponsorBlock filtering, and liquid glass ergonomics.">
+    <meta name="keywords" content="suravidl, video downloader, audio downloader, android app, yt-dlp, media ingestion, stream archiver, ffmpeg muxing, 4k 8k video, lossless flac opus, liquid glass, lolyeah">
+    <meta name="author" content="LoLyeah">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lolyeah.github.io/topics/suravidl.html">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="suravidl: Media Downloader &amp; Stream Ingestion Engine | LoLyeah">
+    <meta property="og:description" content="An open-source media downloader and stream ingestion engine for Android and desktop systems. Built by LoLyeah with download queue management, MediaStore gallery sync, lossless FFmpeg muxing, SponsorBlock filtering, and liquid glass ergonomics.">
+    <meta property="og:url" content="https://lolyeah.github.io/topics/suravidl.html">
+    <meta property="og:site_name" content="LoLyeah Interactive Guides">
+    <meta property="og:image" content="https://lolyeah.github.io/assets/og-image.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="suravidl: Media Downloader &amp; Stream Ingestion Engine | LoLyeah">
+    <meta name="twitter:description" content="An open-source media downloader and stream ingestion engine for Android and desktop systems. Built by LoLyeah with download queue management, MediaStore gallery sync, lossless FFmpeg muxing, SponsorBlock filtering, and liquid glass ergonomics.">
+    <meta name="twitter:image" content="https://lolyeah.github.io/assets/og-image.png">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "suravidl",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Android, Linux, macOS, Windows",
+      "softwareVersion": "v0.32.0",
+      "description": "Open-source, privacy-first media downloader and stream ingestion application for Android and desktop systems with background queueing, gallery sync, lossless audio extraction, and SponsorBlock filtering.",
+      "url": "https://lolyeah.github.io/topics/suravidl.html",
+      "downloadUrl": "https://github.com/LoLyeah/suravidl/releases",
+      "license": "https://opensource.org/licenses/MIT",
+      "author": {
+        "@type": "Person",
+        "name": "LoLyeah",
+        "url": "https://github.com/LoLyeah"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "LoLyeah Interactive Guides",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://lolyeah.github.io/assets/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <!-- Google Fonts: Outfit, Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           Liquid Glass Design Tokens & Visual Hierarchy
+           Purpose: Authentic optical refraction, physical specular highlights,
+           and layered glass slabs for media engineering interfaces.
+           ========================================================================== */
+
+        :root {
+            /* Palette: Dark Liquid Obsidian (Default) */
+            --bg-canvas: #060810;
+            --bg-canvas-mesh:
+                radial-gradient(at 15% 15%, rgba(14, 165, 233, 0.16) 0px, transparent 50%),
+                radial-gradient(at 85% 20%, rgba(99, 102, 241, 0.18) 0px, transparent 52%),
+                radial-gradient(at 50% 85%, rgba(6, 182, 212, 0.12) 0px, transparent 60%);
+
+            --glass-surface: rgba(15, 23, 42, 0.65);
+            --glass-surface-hover: rgba(26, 38, 66, 0.75);
+            --glass-surface-elevated: rgba(20, 30, 55, 0.82);
+            --glass-surface-sunken: rgba(8, 12, 22, 0.60);
+
+            --glass-border: rgba(255, 255, 255, 0.10);
+            --glass-border-focus: rgba(56, 189, 248, 0.50);
+            --glass-border-hover: rgba(255, 255, 255, 0.20);
+            --glass-specular: inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
+            --glass-specular-bright: inset 0 1px 0 0 rgba(255, 255, 255, 0.35);
+
+            --glass-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.55);
+            --glass-shadow-hover: 0 20px 48px -6px rgba(0, 0, 0, 0.65);
+            --glass-shadow-subtle: 0 8px 24px -4px rgba(0, 0, 0, 0.40);
+
+            /* Typography & Foregrounds (WCAG AA Certified) */
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --text-dim: #94a3b8;
+
+            /* Accent Spectrum */
+            --accent-cyan: #38bdf8;
+            --accent-cyan-glow: rgba(56, 189, 248, 0.15);
+            --accent-indigo: #818cf8;
+            --accent-indigo-glow: rgba(129, 140, 248, 0.15);
+            --accent-emerald: #34d399;
+            --accent-amber: #fbbf24;
+            --accent-rose: #f43f5e;
+
+            /* Typography Stacks */
+            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-display: 'Outfit', var(--font-sans);
+            --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+
+            /* Border Radii */
+            --radius-xs: 6px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --ease-liquid: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: 120ms var(--ease-liquid);
+            --transition-normal: 200ms var(--ease-liquid);
+            --transition-smooth: 320ms var(--ease-liquid);
+        }
+
+        /* Light Theme: Alabaster Liquid Frost */
+        [data-theme="light"] {
+            --bg-canvas: #f8fafc;
+            --bg-canvas-mesh:
+                radial-gradient(at 15% 15%, rgba(14, 165, 233, 0.12) 0px, transparent 50%),
+                radial-gradient(at 85% 20%, rgba(99, 102, 241, 0.10) 0px, transparent 52%),
+                radial-gradient(at 50% 85%, rgba(6, 182, 212, 0.08) 0px, transparent 60%);
+
+            --glass-surface: rgba(255, 255, 255, 0.82);
+            --glass-surface-hover: rgba(255, 255, 255, 0.94);
+            --glass-surface-elevated: rgba(255, 255, 255, 0.98);
+            --glass-surface-sunken: rgba(241, 245, 249, 0.88);
+
+            --glass-border: rgba(15, 23, 42, 0.12);
+            --glass-border-focus: rgba(2, 132, 199, 0.65);
+            --glass-border-hover: rgba(15, 23, 42, 0.22);
+            --glass-specular: inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
+            --glass-specular-bright: inset 0 1px 0 0 #ffffff;
+
+            --glass-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.08);
+            --glass-shadow-hover: 0 18px 40px -4px rgba(15, 23, 42, 0.12);
+            --glass-shadow-subtle: 0 6px 20px -2px rgba(15, 23, 42, 0.05);
+
+            /* WCAG AA Certified Light Palette */
+            --text-primary: #090d16;
+            --text-secondary: #1e293b;
+            --text-muted: #475569;
+            --text-dim: #475569;
+
+            --accent-cyan: #0284c7;
+            --accent-cyan-glow: rgba(2, 132, 199, 0.14);
+            --accent-indigo: #4f46e5;
+            --accent-indigo-glow: rgba(79, 70, 229, 0.14);
+            --accent-emerald: #059669;
+            --accent-amber: #d97706;
+            --accent-rose: #e11d48;
+        }
+
+        /* Reset & Base */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 84px;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            background-image: var(--bg-canvas-mesh);
+            background-attachment: fixed;
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 15px;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            transition: background-color var(--transition-normal), color var(--transition-normal);
+        }
+
+        /* Themed Browser Surfaces */
+        ::selection {
+            background: rgba(56, 189, 248, 0.25);
+            color: var(--text-primary);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-canvas);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: var(--radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-cyan);
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--accent-cyan);
+            outline-offset: 2px;
+        }
+
+        /* Language Toggle Display Rules */
+        body.lang-en .id-only { display: none !important; }
+        body.lang-id .en-only { display: none !important; }
+
+        /* Structural Container */
+        .container {
+            width: 100%;
+            max-width: 1240px;
+            padding-left: clamp(1rem, 3.5vw, 2.5rem);
+            padding-right: clamp(1rem, 3.5vw, 2.5rem);
+            margin: 0 auto;
+        }
+
+        /* Header Navigation */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--glass-surface);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular);
+            height: 72px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            transition: background var(--transition-normal), border var(--transition-normal);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.25rem;
+            width: 100%;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: var(--radius-full);
+            background: var(--glass-surface-sunken);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular);
+            transition: var(--transition-fast);
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-mark {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #060810;
+            box-shadow: 0 4px 12px var(--accent-cyan-glow);
+        }
+
+        .brand-version {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: var(--radius-full);
+            background: var(--accent-cyan-glow);
+            color: var(--accent-cyan);
+            border: 1px solid var(--glass-border);
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-md);
+            transition: var(--transition-fast);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            height: 38px;
+            padding: 0 14px;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-surface);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--text-primary);
+            box-shadow: var(--glass-specular);
+            transition: var(--transition-fast);
+        }
+
+        .action-btn.primary {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            color: #060810;
+            font-weight: 700;
+        }
+
+        .icon-btn {
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            border-radius: var(--radius-full);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            box-shadow: var(--glass-specular);
+            transition: var(--transition-fast);
+        }
+
+        /* Theme Toggle Icon Switching Rules */
+        [data-theme="dark"] #theme-toggle-btn .sun-icon { display: block; }
+        [data-theme="dark"] #theme-toggle-btn .moon-icon { display: none; }
+        [data-theme="light"] #theme-toggle-btn .sun-icon { display: none; }
+        [data-theme="light"] #theme-toggle-btn .moon-icon { display: block; }
+
+        /* Guarded Hover Styles (AGENTS.md Section 4) */
+        @media (hover: hover) {
+            .back-link:hover {
+                color: var(--text-primary);
+                border-color: var(--accent-cyan);
+                transform: translateX(-2px);
+            }
+            .nav-item:hover {
+                color: var(--text-primary);
+                background: var(--glass-surface-hover);
+            }
+            .action-btn:hover {
+                background: var(--glass-surface-hover);
+                border-color: var(--glass-border-hover);
+            }
+            .action-btn.primary:hover {
+                opacity: 0.95;
+                box-shadow: 0 6px 20px var(--accent-cyan-glow);
+                transform: translateY(-1px);
+            }
+            .icon-btn:hover {
+                color: var(--text-primary);
+                border-color: var(--accent-cyan);
+            }
+            .copy-chip-btn:hover {
+                color: var(--text-primary);
+                border-color: var(--accent-cyan);
+                background: var(--glass-surface-hover);
+            }
+            .pill-choice-btn:hover {
+                color: var(--text-primary);
+                border-color: var(--glass-border-hover);
+                background: var(--glass-surface-hover);
+            }
+            .toggle-card:hover {
+                border-color: var(--glass-border-hover);
+            }
+            .copy-output-btn:hover {
+                background: var(--accent-cyan);
+                color: #060810;
+            }
+            .arch-card:hover {
+                border-color: var(--glass-border-hover);
+                transform: translateY(-2px);
+            }
+            .bench-tab-btn:hover {
+                color: var(--text-primary);
+                border-color: var(--glass-border-hover);
+            }
+            .format-chip-btn:hover {
+                color: var(--text-primary);
+                border-color: var(--glass-border-hover);
+            }
+            .cli-flag-row:hover {
+                border-color: var(--glass-border-hover);
+                background: var(--glass-surface-hover);
+            }
+            .inst-tab-btn:hover {
+                color: var(--text-primary);
+            }
+            .footer-link:hover {
+                color: var(--accent-cyan);
+            }
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: clamp(3.5rem, 7vw, 6rem) 0 clamp(2.5rem, 5vw, 4rem);
+            position: relative;
+        }
+
+        .hero-glass-slab {
+            background: var(--glass-surface);
+            backdrop-filter: blur(24px) saturate(190%);
+            -webkit-backdrop-filter: blur(24px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow), var(--glass-specular-bright);
+            border-radius: var(--radius-xl);
+            padding: clamp(2rem, 5vw, 3.5rem);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-top-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .spec-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.76rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            background: var(--glass-surface-sunken);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+        }
+
+        .spec-chip.cyan {
+            color: var(--accent-cyan);
+            border-color: rgba(56, 189, 248, 0.25);
+            background: var(--accent-cyan-glow);
+        }
+
+        .spec-chip.emerald {
+            color: var(--accent-emerald);
+            border-color: rgba(52, 211, 153, 0.25);
+            background: rgba(52, 211, 153, 0.08);
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 5vw + 1rem, 3.8rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            margin-bottom: 1.25rem;
+            max-width: 26ch;
+        }
+
+        .hero-lead {
+            font-size: clamp(1.05rem, 1.2vw + 0.5rem, 1.25rem);
+            color: var(--text-secondary);
+            max-width: 70ch;
+            line-height: 1.6;
+            margin-bottom: 2.25rem;
+        }
+
+        .hero-actions-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2.5rem;
+        }
+
+        .install-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--glass-surface-sunken);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            padding: 6px 8px 6px 14px;
+            box-shadow: var(--glass-specular);
+        }
+
+        .install-chip code {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+        }
+
+        .copy-chip-btn {
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            border-radius: var(--radius-full);
+            padding: 6px 12px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition-fast);
+        }
+
+        /* Engineering Metrics Ribbon */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .metric-card {
+            background: var(--glass-surface-sunken);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            box-shadow: var(--glass-specular);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            transition: var(--transition-fast);
+        }
+
+        .metric-val {
+            font-family: var(--font-mono);
+            font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .metric-sub {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+        }
+
+        /* Section Containers */
+        .section-block {
+            padding: clamp(3rem, 6vw, 5rem) 0;
+            position: relative;
+        }
+
+        .section-header {
+            margin-bottom: 2.25rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-desc {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 70ch;
+        }
+
+        /* Liquid Glass Panel Container */
+        .glass-panel {
+            background: var(--glass-surface);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--glass-shadow), var(--glass-specular);
+            padding: clamp(1.5rem, 3.5vw, 2.5rem);
+            transition: border var(--transition-normal), box-shadow var(--transition-normal);
+        }
+
+        /* Interactive Studio Layout */
+        .studio-layout {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 1.75rem;
+            align-items: start;
+        }
+
+        .controls-pane {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .control-label-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .control-title {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .control-hint {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+        }
+
+        .pill-select-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 8px;
+        }
+
+        .pill-choice-btn {
+            background: var(--glass-surface-sunken);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 10px 12px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            box-shadow: var(--glass-specular);
+            transition: var(--transition-fast);
+        }
+
+        .pill-choice-btn.active {
+            background: rgba(56, 189, 248, 0.12);
+            border-color: var(--accent-cyan);
+            color: var(--text-primary);
+            box-shadow: 0 4px 16px var(--accent-cyan-glow), var(--glass-specular);
+        }
+
+        .pill-sub {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+        }
+
+        .pill-choice-btn.active .pill-sub {
+            color: var(--accent-cyan);
+        }
+
+        /* Toggle Switches Matrix */
+        .toggles-matrix {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .toggle-card {
+            background: var(--glass-surface-sunken);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: var(--glass-specular);
+            transition: var(--transition-fast);
+            user-select: none;
+        }
+
+        .toggle-card.active {
+            border-color: rgba(56, 189, 248, 0.4);
+            background: rgba(56, 189, 248, 0.08);
+        }
+
+        .toggle-text {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .toggle-name {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .toggle-desc {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .switch-indicator {
+            width: 36px;
+            height: 20px;
+            border-radius: var(--radius-full);
+            background: rgba(148, 163, 184, 0.25);
+            position: relative;
+            transition: var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .switch-indicator::after {
+            content: '';
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--text-dim);
+            transition: var(--transition-fast);
+        }
+
+        .toggle-card.active .switch-indicator {
+            background: var(--accent-cyan);
+        }
+
+        .toggle-card.active .switch-indicator::after {
+            left: 18px;
+            background: #060810;
+        }
+
+        /* Terminal & Studio Output Pane */
+        .output-pane {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .terminal-box {
+            background: #090d16;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--glass-shadow-subtle), var(--glass-specular);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .terminal-header {
+            background: #111827;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .terminal-dots {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .terminal-title {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .terminal-body {
+            padding: 1.25rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .cmd-line {
+            display: flex;
+            gap: 8px;
+            color: #38bdf8;
+            word-break: break-all;
+        }
+
+        .cmd-prompt {
+            color: #818cf8;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .copy-output-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #f8fafc;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        /* Execution Flow Breakdown */
+        .flow-breakdown {
+            background: var(--glass-surface-sunken);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            box-shadow: var(--glass-specular);
+        }
+
+        .flow-header {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .flow-step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .step-num {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            background: var(--accent-cyan-glow);
+            padding: 2px 6px;
+            border-radius: var(--radius-xs);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* 4-Stage Architecture Grid */
+        .arch-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .arch-card {
+            background: var(--glass-surface);
+            backdrop-filter: blur(18px) saturate(180%);
+            -webkit-backdrop-filter: blur(18px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 1.75rem;
+            box-shadow: var(--glass-shadow), var(--glass-specular);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: var(--transition-fast);
+        }
+
+        .arch-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .arch-stage-tag {
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            background: var(--accent-cyan-glow);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .arch-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .arch-card p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .arch-spec-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 0.75rem;
+        }
+
+        .arch-spec-item {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .arch-spec-item::before {
+            content: '•';
+            color: var(--accent-cyan);
+        }
+
+        /* Benchmark Tabs Bar */
+        .bench-tabs-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .bench-tab-btn {
+            background: var(--glass-surface-sunken);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            border-radius: var(--radius-full);
+            padding: 8px 18px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--glass-specular);
+            transition: var(--transition-fast);
+        }
+
+        .bench-tab-btn.active {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            color: #060810;
+            box-shadow: 0 4px 16px var(--accent-cyan-glow);
+        }
+
+        .table-responsive-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            background: var(--glass-surface-sunken);
+            box-shadow: var(--glass-shadow-subtle), var(--glass-specular);
+        }
+
+        .bench-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        .bench-table th {
+            padding: 14px 18px;
+            background: rgba(15, 23, 42, 0.45);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.82rem;
+            border-bottom: 1px solid var(--glass-border);
+            white-space: nowrap;
+        }
+
+        .bench-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .bench-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .bench-table tr.highlight-row {
+            background: rgba(56, 189, 248, 0.08);
+        }
+
+        .bench-table tr.highlight-row td {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .badge-winner {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--accent-emerald);
+            background: rgba(52, 211, 153, 0.12);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(52, 211, 153, 0.25);
+        }
+
+        .badge-neutral {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: rgba(148, 163, 184, 0.10);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Format Matrix Filters & Search */
+        .format-controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .format-filter-chips {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .format-chip-btn {
+            background: var(--glass-surface-sunken);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            border-radius: var(--radius-full);
+            padding: 6px 14px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--glass-specular);
+            transition: var(--transition-fast);
+        }
+
+        .format-chip-btn.active {
+            background: var(--accent-indigo);
+            border-color: var(--accent-indigo);
+            color: #ffffff;
+            box-shadow: 0 4px 14px var(--accent-indigo-glow);
+        }
+
+        .search-glass-input {
+            height: 38px;
+            padding: 0 14px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--glass-border);
+            background: var(--glass-surface-sunken);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            width: 280px;
+            max-width: 100%;
+            outline: none;
+            box-shadow: var(--glass-specular);
+            transition: var(--transition-fast);
+        }
+
+        .search-glass-input:focus {
+            border-color: var(--accent-cyan);
+            background: var(--glass-surface);
+            box-shadow: 0 0 0 3px var(--accent-cyan-glow);
+        }
+
+        .search-glass-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        /* CLI Reference Section (No nested cards, clean ledger rows) */
+        .cli-ledger-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .cli-flag-row {
+            background: var(--glass-surface-sunken);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            display: grid;
+            grid-template-columns: 200px 160px 1fr;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--glass-specular);
+            transition: var(--transition-fast);
+        }
+
+        .flag-mono {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .flag-arg {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--accent-indigo);
+        }
+
+        .flag-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Quick Start & Install Deck */
+        .install-header-tabs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .inst-tab-btn {
+            background: var(--glass-surface-sunken);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            border-radius: var(--radius-md);
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .inst-tab-btn.active {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .install-instruction-text {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .site-footer {
+            margin-top: 5rem;
+            border-top: 1px solid var(--glass-border);
+            background: var(--glass-surface-sunken);
+            backdrop-filter: blur(16px);
+            padding: 3.5rem 0 2.5rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .footer-brand h4 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-brand p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            max-width: 44ch;
+        }
+
+        .footer-col h5 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.85rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-link {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+
+        .footer-bottom-bar {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Notification Toast */
+        .toast-notify {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--accent-cyan);
+            border-radius: var(--radius-full);
+            padding: 10px 20px;
+            color: #f8fafc;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-cyan-glow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transform: translateY(12px);
+            pointer-events: none;
+            transition: opacity 200ms ease, transform 200ms ease;
+        }
+
+        .toast-notify.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Coarse Pointer Hit Areas (AGENTS.md Section 4) */
+        @media (pointer: coarse) {
+            button, .action-btn, .pill-choice-btn, .toggle-card, .bench-tab-btn, .format-chip-btn, .inst-tab-btn, input {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .studio-layout {
+                grid-template-columns: 1fr;
+            }
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .arch-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .cli-flag-row {
+                grid-template-columns: 180px 140px 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-center {
+                display: none;
+            }
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            .toggles-matrix {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .cli-flag-row {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand-badge span.app-name {
+                display: none;
+            }
+            .search-glass-input {
+                width: 100%;
+            }
+        }
+
+        /* Reduced Motion Guarantee (AGENTS.md Section 4) */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body class="lang-en">
+
+    <!-- Header Navigation -->
+    <header class="site-header">
+        <div class="container">
+            <div class="nav-inner">
+                <div class="nav-left">
+                    <a href="../index.html" class="back-link" title="Return to Main Compendium">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        <span class="en-only">Main Compendium</span>
+                        <span class="id-only">Kompendium Utama</span>
+                    </a>
+                    <a href="#hero" class="brand-badge">
+                        <div class="brand-mark">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
+                        <span class="app-name">suravidl</span>
+                        <span class="brand-version">v0.32.0</span>
+                    </a>
+                </div>
+
+                <nav class="nav-center" aria-label="Topic Section Navigation">
+                    <a href="#studio" class="nav-item">
+                        <span class="en-only">Command Studio</span>
+                        <span class="id-only">Studio Perintah</span>
+                    </a>
+                    <a href="#features" class="nav-item">
+                        <span class="en-only">Core Features</span>
+                        <span class="id-only">Fitur Utama</span>
+                    </a>
+                    <a href="#architecture" class="nav-item">
+                        <span class="en-only">Engine Architecture</span>
+                        <span class="id-only">Arsitektur Mesin</span>
+                    </a>
+                    <a href="#formats" class="nav-item">
+                        <span class="en-only">Format Ledger</span>
+                        <span class="id-only">Ledger Format</span>
+                    </a>
+                    <a href="#flags" class="nav-item">
+                        <span class="en-only">CLI Reference</span>
+                        <span class="id-only">Referensi CLI</span>
+                    </a>
+                    <a href="#install" class="nav-item">
+                        <span class="en-only">Get App</span>
+                        <span class="id-only">Unduh Aplikasi</span>
+                    </a>
+                </nav>
+
+                <div class="nav-right">
+                    <!-- Language Toggle -->
+                    <button class="icon-btn" id="lang-toggle-btn" aria-label="Toggle language between English and Indonesian" title="Toggle Language">
+                        <span id="lang-indicator" style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;">ID</span>
+                    </button>
+
+                    <!-- Theme Toggle (Clean SVG icons switched by [data-theme]) -->
+                    <button class="icon-btn" id="theme-toggle-btn" aria-label="Toggle dark and light liquid glass themes" title="Toggle Liquid Glass Theme">
+                        <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+
+                    <!-- GitHub Repository Link -->
+                    <a href="https://github.com/LoLyeah/suravidl" target="_blank" rel="noopener noreferrer" class="action-btn" title="View Source on GitHub">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero Vista Section -->
+        <section id="hero" class="hero-section">
+            <div class="container">
+                <div class="hero-glass-slab">
+                    <div class="hero-top-badge-row">
+                        <span class="spec-chip cyan">
+                            <span class="en-only">Open-Source Media App</span>
+                            <span class="id-only">Aplikasi Media Sumber Terbuka</span>
+                        </span>
+                        <span class="spec-chip">MIT License</span>
+                        <span class="spec-chip emerald">
+                            <span class="en-only">Android &amp; Desktop</span>
+                            <span class="id-only">Android &amp; Desktop</span>
+                        </span>
+                        <span class="spec-chip">100% Local (Zero Telemetry)</span>
+                    </div>
+
+                    <h1 class="hero-title">
+                        <span class="en-only">High-performance media ingestion, built for speed and privacy.</span>
+                        <span class="id-only">Ingesti media berkecepatan tinggi, dirancang untuk kecepatan dan privasi.</span>
+                    </h1>
+
+                    <p class="hero-lead">
+                        <span class="en-only">suravidl is an open-source media downloading application and stream extraction engine created by LoLyeah. Combining an ergonomic Android mobile interface with a high-performance Python ingestion core, it delivers queue management, automatic gallery indexing, granular format selection, and SponsorBlock filtering with complete privacy.</span>
+                        <span class="id-only">suravidl adalah aplikasi pengunduh media dan mesin ekstraksi stream sumber terbuka yang dikembangkan oleh LoLyeah. Menggabungkan antarmuka mobile Android yang ergonomis dengan inti ingesti Python berkinerja tinggi, aplikasi ini menyediakan manajemen antrean, indeks galeri otomatis, pemilihan format granular, dan filter SponsorBlock dengan privasi penuh.</span>
+                    </p>
+
+                    <div class="hero-actions-bar">
+                        <a href="https://github.com/LoLyeah/suravidl/releases" target="_blank" rel="noopener noreferrer" class="action-btn primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span class="en-only">Download Releases (.apk)</span>
+                            <span class="id-only">Unduh Rilis (.apk)</span>
+                        </a>
+
+                        <a href="https://github.com/LoLyeah/suravidl" target="_blank" rel="noopener noreferrer" class="action-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                            </svg>
+                            <span class="en-only">Source Code on GitHub</span>
+                            <span class="id-only">Kode Sumber di GitHub</span>
+                        </a>
+
+                        <div class="install-chip">
+                            <code>git clone https://github.com/LoLyeah/suravidl.git</code>
+                            <button class="copy-chip-btn" onclick="copySnippet('git clone https://github.com/LoLyeah/suravidl.git', this);" aria-label="Copy git clone command">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                <span class="en-only">Copy</span>
+                                <span class="id-only">Salin</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Core Architecture & Feature Highlights Ribbon -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-val">v0.32.0</span>
+                            <span class="metric-label">
+                                <span class="en-only">Active Version Track</span>
+                                <span class="id-only">Jalur Versi Aktif</span>
+                            </span>
+                            <span class="metric-sub">Android &amp; Engine Core</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-val">Queue + Sync</span>
+                            <span class="metric-label">
+                                <span class="en-only">MediaStore Integration</span>
+                                <span class="id-only">Integrasi MediaStore</span>
+                            </span>
+                            <span class="metric-sub">Keep-in-gallery auto index</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-val">0.00%</span>
+                            <span class="metric-label">
+                                <span class="en-only">Zero Telemetry</span>
+                                <span class="id-only">Tanpa Telemetri</span>
+                            </span>
+                            <span class="metric-sub">100% on-device processing</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-val">8K / Lossless</span>
+                            <span class="metric-label">
+                                <span class="en-only">Format Quality Range</span>
+                                <span class="id-only">Rentang Mutu Format</span>
+                            </span>
+                            <span class="metric-sub">AV1, VP9, HEVC, FLAC, Opus</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Command Studio Section -->
+        <section id="studio" class="section-block">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="en-only">Liquid Command Studio</span>
+                        <span class="id-only">Studio Perintah Liquid</span>
+                    </h2>
+                    <p class="section-desc">
+                        <span class="en-only">Configure ingestion parameters in real time. Generate production-ready suravidl CLI commands, JSON configurations, and review the execution flow with zero overhead.</span>
+                        <span class="id-only">Konfigurasikan parameter ingesti secara real-time. Hasilkan perintah suravidl CLI siap pakai, konfigurasi JSON, dan tinjau alur eksekusi tanpa beban komputasi.</span>
+                    </p>
+                </div>
+
+                <div class="glass-panel">
+                    <div class="studio-layout">
+                        <!-- Controls Form Pane -->
+                        <div class="controls-pane">
+                            <!-- Ingestion Target Mode -->
+                            <div class="control-group">
+                                <div class="control-label-row">
+                                    <span class="control-title">
+                                        <span class="en-only">1. Ingestion Profile</span>
+                                        <span class="id-only">1. Profil Ingesti</span>
+                                    </span>
+                                    <span class="control-hint">--profile</span>
+                                </div>
+                                <div class="pill-select-grid" id="profile-selector">
+                                    <button class="pill-choice-btn active" data-profile="video" onclick="setProfile('video');">
+                                        <strong class="en-only">Video (Single)</strong>
+                                        <strong class="id-only">Video (Tunggal)</strong>
+                                        <span class="pill-sub en-only">Full stream mux</span>
+                                        <span class="pill-sub id-only">Mux stream lengkap</span>
+                                    </button>
+                                    <button class="pill-choice-btn" data-profile="audio" onclick="setProfile('audio');">
+                                        <strong class="en-only">Audio Only</strong>
+                                        <strong class="id-only">Hanya Audio</strong>
+                                        <span class="pill-sub en-only">Lossless extraction</span>
+                                        <span class="pill-sub id-only">Ekstraksi lossless</span>
+                                    </button>
+                                    <button class="pill-choice-btn" data-profile="playlist" onclick="setProfile('playlist');">
+                                        <strong class="en-only">Batch Playlist</strong>
+                                        <strong class="id-only">Daftar Putar</strong>
+                                        <span class="pill-sub en-only">Queue multi-item</span>
+                                        <span class="pill-sub id-only">Antrean multi-item</span>
+                                    </button>
+                                    <button class="pill-choice-btn" data-profile="livestream" onclick="setProfile('livestream');">
+                                        <strong class="en-only">Live Stream</strong>
+                                        <strong class="id-only">Siaran Langsung</strong>
+                                        <span class="pill-sub en-only">Segment capture</span>
+                                        <span class="pill-sub id-only">Perekaman segmen</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Resolution / Codec Choice -->
+                            <div class="control-group" id="res-group">
+                                <div class="control-label-row">
+                                    <span class="control-title">
+                                        <span class="en-only">2. Video Resolution</span>
+                                        <span class="id-only">2. Resolusi Video</span>
+                                    </span>
+                                    <span class="control-hint">--format</span>
+                                </div>
+                                <div class="pill-select-grid" id="res-selector">
+                                    <button class="pill-choice-btn active" data-res="best" onclick="setResolution('best');">
+                                        <strong>Best (8K/4K)</strong>
+                                        <span class="pill-sub en-only">Highest available</span>
+                                        <span class="pill-sub id-only">Tertinggi tersedia</span>
+                                    </button>
+                                    <button class="pill-choice-btn" data-res="1080p" onclick="setResolution('1080p');">
+                                        <strong>1080p (FHD)</strong>
+                                        <span class="pill-sub en-only">Universal H.264</span>
+                                        <span class="pill-sub id-only">Universal H.264</span>
+                                    </button>
+                                    <button class="pill-choice-btn" data-res="720p" onclick="setResolution('720p');">
+                                        <strong>720p (HD)</strong>
+                                        <span class="pill-sub en-only">Efficient storage</span>
+                                        <span class="pill-sub id-only">Hemat penyimpanan</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Audio Encoding Tier -->
+                            <div class="control-group">
+                                <div class="control-label-row">
+                                    <span class="control-title">
+                                        <span class="en-only">3. Audio Codec</span>
+                                        <span class="id-only">3. Kodek Audio</span>
+                                    </span>
+                                    <span class="control-hint">--audio-codec</span>
+                                </div>
+                                <div class="pill-select-grid" id="audio-selector">
+                                    <button class="pill-choice-btn active" data-audio="opus" onclick="setAudioFormat('opus');">
+                                        <strong>Opus (VBR)</strong>
+                                        <span class="pill-sub en-only">High fidelity</span>
+                                        <span class="pill-sub id-only">Fidelitas tinggi</span>
+                                    </button>
+                                    <button class="pill-choice-btn" data-audio="flac" onclick="setAudioFormat('flac');">
+                                        <strong>FLAC</strong>
+                                        <span class="pill-sub en-only">Lossless PCM</span>
+                                        <span class="pill-sub id-only">Lossless PCM</span>
+                                    </button>
+                                    <button class="pill-choice-btn" data-audio="mp3" onclick="setAudioFormat('mp3');">
+                                        <strong>MP3 (320k)</strong>
+                                        <span class="pill-sub en-only">Universal legacy</span>
+                                        <span class="pill-sub id-only">Warisan universal</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Post-Processing Feature Toggles -->
+                            <div class="control-group">
+                                <div class="control-label-row">
+                                    <span class="control-title">
+                                        <span class="en-only">4. Features &amp; Post-Processing</span>
+                                        <span class="id-only">4. Fitur &amp; Pasca-Pemrosesan</span>
+                                    </span>
+                                    <span class="control-hint">--options</span>
+                                </div>
+                                <div class="toggles-matrix">
+                                    <div class="toggle-card active" id="toggle-sponsorblock" onclick="toggleFeature('sponsorblock');">
+                                        <div class="toggle-text">
+                                            <span class="toggle-name">SponsorBlock</span>
+                                            <span class="toggle-desc en-only">Skip sponsored parts</span>
+                                            <span class="toggle-desc id-only">Lewati bagian sponsor</span>
+                                        </div>
+                                        <div class="switch-indicator"></div>
+                                    </div>
+                                    <div class="toggle-card active" id="toggle-subs" onclick="toggleFeature('subs');">
+                                        <div class="toggle-text">
+                                            <span class="toggle-name en-only">Subtitles</span>
+                                            <span class="toggle-name id-only">Teks Terjemahan</span>
+                                            <span class="toggle-desc en-only">Embed soft subtitles</span>
+                                            <span class="toggle-desc id-only">Sematkan subtitle</span>
+                                        </div>
+                                        <div class="switch-indicator"></div>
+                                    </div>
+                                    <div class="toggle-card active" id="toggle-meta" onclick="toggleFeature('meta');">
+                                        <div class="toggle-text">
+                                            <span class="toggle-name en-only">Metadata &amp; Cover</span>
+                                            <span class="toggle-name id-only">Metadata &amp; Gambar</span>
+                                            <span class="toggle-desc en-only">Write tags &amp; art</span>
+                                            <span class="toggle-desc id-only">Tulis label &amp; sampul</span>
+                                        </div>
+                                        <div class="switch-indicator"></div>
+                                    </div>
+                                    <div class="toggle-card active" id="toggle-gallery" onclick="toggleFeature('gallery');">
+                                        <div class="toggle-text">
+                                            <span class="toggle-name en-only">Gallery Index</span>
+                                            <span class="toggle-name id-only">Indeks Galeri</span>
+                                            <span class="toggle-desc en-only">Keep in Android Media</span>
+                                            <span class="toggle-desc id-only">Simpan di Media Android</span>
+                                        </div>
+                                        <div class="switch-indicator"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reactive Output Pane -->
+                        <div class="output-pane">
+                            <!-- Terminal Block (Crisp High-Contrast in Both Modes) -->
+                            <div class="terminal-box">
+                                <div class="terminal-header">
+                                    <div class="terminal-dots">
+                                        <div class="terminal-dot" style="background: #ef4444;"></div>
+                                        <div class="terminal-dot" style="background: #eab308;"></div>
+                                        <div class="terminal-dot" style="background: #22c55e;"></div>
+                                    </div>
+                                    <span class="terminal-title">suravidl-cli - interactive session</span>
+                                    <button class="copy-output-btn" onclick="copyCurrentCommand();">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <span class="en-only">Copy Command</span>
+                                        <span class="id-only">Salin Perintah</span>
+                                    </button>
+                                </div>
+                                <div class="terminal-body">
+                                    <div class="cmd-line">
+                                        <span class="cmd-prompt">$</span>
+                                        <span id="rendered-command">suravidl "https://youtu.be/dQw4w9WgXcQ" --format "bv*[ext=mp4]+ba[ext=m4a]/b" --sponsorblock-remove "sponsor,intro" --embed-subs --embed-metadata</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Execution Pipeline Breakdown -->
+                            <div class="flow-breakdown">
+                                <div class="flow-header">
+                                    <span class="en-only">Execution Stage Breakdown</span>
+                                    <span class="id-only">Tahapan Eksekusi Internal</span>
+                                    <span class="spec-chip cyan" id="mux-container-badge">Container: MP4</span>
+                                </div>
+                                <div class="flow-steps">
+                                    <div class="flow-step-item">
+                                        <span class="step-num">01</span>
+                                        <span id="flow-step-1">HTTP Range probing initiated with user-configured headers.</span>
+                                    </div>
+                                    <div class="flow-step-item">
+                                        <span class="step-num">02</span>
+                                        <span id="flow-step-2">Queue manager coordinates chunk workers across boundaries.</span>
+                                    </div>
+                                    <div class="flow-step-item">
+                                        <span class="step-num">03</span>
+                                        <span id="flow-step-3">Native FFmpeg stream packaging into destination container.</span>
+                                    </div>
+                                    <div class="flow-step-item">
+                                        <span class="step-num">04</span>
+                                        <span id="flow-step-4">SponsorBlock markers parsed and Android MediaStore sync updated.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Config JSON Preview -->
+                            <div class="terminal-box">
+                                <div class="terminal-header">
+                                    <span class="terminal-title">suravidl.config.json</span>
+                                    <span class="spec-chip">Active Config</span>
+                                </div>
+                                <div class="terminal-body" style="font-size: 0.78rem; max-height: 150px;">
+                                    <pre id="json-config-preview" style="margin: 0; color: #818cf8;">{}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core App Features Section -->
+        <section id="features" class="section-block">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="en-only">App Capabilities &amp; Design Architecture</span>
+                        <span class="id-only">Kemampuan Aplikasi &amp; Arsitektur Desain</span>
+                    </h2>
+                    <p class="section-desc">
+                        <span class="en-only">Key functional pillars that power suravidl on Android mobile devices and desktop workstations.</span>
+                        <span class="id-only">Pilar fungsional utama yang menggerakkan suravidl pada perangkat Android dan workstation desktop.</span>
+                    </p>
+                </div>
+
+                <div class="arch-grid">
+                    <!-- Feature 1 -->
+                    <div class="arch-card">
+                        <div class="arch-header">
+                            <span class="arch-stage-tag">App Core</span>
+                            <span class="spec-chip">Android Queue</span>
+                        </div>
+                        <h3>
+                            <span class="en-only">Download Queue Management</span>
+                            <span class="id-only">Manajemen Antrean Unduhan</span>
+                        </h3>
+                        <p>
+                            <span class="en-only">Queue multiple videos, whole playlists, or audio streams without device locking. Features pause, resume, and sequential processing so network connections remain stable without dropping partially fetched payloads.</span>
+                            <span class="id-only">Mengantrekan beberapa video, seluruh daftar putar, atau stream audio tanpa mengunci perangkat. Dilengkapi jeda, lanjut, dan pemrosesan berurutan agar koneksi internet tetap stabil tanpa kehilangan data parsial.</span>
+                        </p>
+                        <div class="arch-spec-list">
+                            <div class="arch-spec-item en-only">Multi-item background processing queue</div>
+                            <div class="arch-spec-item id-only">Antrean pemrosesan latar belakang multi-item</div>
+                            <div class="arch-spec-item en-only">Non-blocking UI thread with real-time progress</div>
+                            <div class="arch-spec-item id-only">Thread UI responsif dengan progres real-time</div>
+                            <div class="arch-spec-item en-only">Automatic failure recovery and retry backoff</div>
+                            <div class="arch-spec-item id-only">Pemulihan kegagalan otomatis dengan retry backoff</div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="arch-card">
+                        <div class="arch-header">
+                            <span class="arch-stage-tag">Storage</span>
+                            <span class="spec-chip">MediaStore Sync</span>
+                        </div>
+                        <h3>
+                            <span class="en-only">Keep-in-Gallery Integration</span>
+                            <span class="id-only">Integrasi Simpan di Galeri</span>
+                        </h3>
+                        <p>
+                            <span class="en-only">Downloaded media files automatically register with Android's MediaStore provider. Video and audio recordings appear immediately in Google Photos and native gallery applications without requiring manual file moves.</span>
+                            <span class="id-only">File media yang telah diunduh otomatis didaftarkan ke penyedia MediaStore Android. Rekaman video dan audio langsung muncul di Google Photos dan aplikasi galeri bawaan tanpa perlu pemindahan file manual.</span>
+                        </p>
+                        <div class="arch-spec-list">
+                            <div class="arch-spec-item en-only">Direct Android MediaStore broadcast triggering</div>
+                            <div class="arch-spec-item id-only">Pemicu siaran MediaStore Android langsung</div>
+                            <div class="arch-spec-item en-only">Custom download directory and SD card support</div>
+                            <div class="arch-spec-item id-only">Dukungan folder unduhan kustom dan kartu SD</div>
+                            <div class="arch-spec-item en-only">Preserved timestamps and original media metadata</div>
+                            <div class="arch-spec-item id-only">Preservasi stempel waktu dan metadata asli</div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="arch-card">
+                        <div class="arch-header">
+                            <span class="arch-stage-tag">Storage Hygiene</span>
+                            <span class="spec-chip">Cache Clean</span>
+                        </div>
+                        <h3>
+                            <span class="en-only">In-App Scratch &amp; Cache Cleaning</span>
+                            <span class="id-only">Pembersihan Cache &amp; File Sementara</span>
+                        </h3>
+                        <p>
+                            <span class="en-only">Dedicated cache controls allow users to inspect and purge temporary stream chunks, orphaned fragments, and extractor cache files directly within the application to conserve internal flash storage.</span>
+                            <span class="id-only">Kontrol cache khusus memungkinkan pengguna memeriksa dan membersihkan pecahan stream sementara, fragmen terputus, dan cache extractor langsung di dalam aplikasi untuk menghemat memori.</span>
+                        </p>
+                        <div class="arch-spec-list">
+                            <div class="arch-spec-item en-only">One-tap storage reclamation</div>
+                            <div class="arch-spec-item id-only">Pembersihan ruang penyimpanan satu ketukan</div>
+                            <div class="arch-spec-item en-only">Safe purge of completed staging directories</div>
+                            <div class="arch-spec-item id-only">Pembersihan aman direktori staging selesai</div>
+                            <div class="arch-spec-item en-only">Detailed storage breakdown per category</div>
+                            <div class="arch-spec-item id-only">Rincian penggunaan memori per kategori</div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="arch-card">
+                        <div class="arch-header">
+                            <span class="arch-stage-tag">Post-Process</span>
+                            <span class="spec-chip">SponsorBlock</span>
+                        </div>
+                        <h3>
+                            <span class="en-only">SponsorBlock &amp; Track Embedding</span>
+                            <span class="id-only">SponsorBlock &amp; Penyematan Trek</span>
+                        </h3>
+                        <p>
+                            <span class="en-only">Integrates with community-verified SponsorBlock data to slice out promotions, intro sequences, and outro filler on keyframes. Subtitles (.srt, .vtt) and album artwork are embedded directly into the final container.</span>
+                            <span class="id-only">Terintegrasi dengan data SponsorBlock untuk memotong promosi, intro berulang, dan outro penutup pada keyframe. Teks subtitle (.srt, .vtt) dan cover album disematkan langsung ke file akhir.</span>
+                        </p>
+                        <div class="arch-spec-list">
+                            <div class="arch-spec-item en-only">Lossless stream copy muxing (-c copy)</div>
+                            <div class="arch-spec-item id-only">Muxing stream copy lossless (-c copy)</div>
+                            <div class="arch-spec-item en-only">Bilingual subtitle track inclusion</div>
+                            <div class="arch-spec-item id-only">Penyertaan trek teks multibahasa</div>
+                            <div class="arch-spec-item en-only">Precise cut markers without quality degradation</div>
+                            <div class="arch-spec-item id-only">Pemotongan presisi tanpa penurunan mutu</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Format & Container Compatibility Matrix -->
+        <section id="formats" class="section-block">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="en-only">Container &amp; Codec Compatibility Matrix</span>
+                        <span class="id-only">Matriks Kompatibilitas Kontainer &amp; Kodek</span>
+                    </h2>
+                    <p class="section-desc">
+                        <span class="en-only">Supported video containers, audio bitrates, and hardware decoding capabilities across mobile and desktop environments.</span>
+                        <span class="id-only">Kontainer video, bitrate audio, dan kemampuan decoding perangkat keras yang didukung pada lingkungan mobile dan desktop.</span>
+                    </p>
+                </div>
+
+                <div class="glass-panel">
+                    <div class="format-controls-bar">
+                        <div class="format-filter-chips">
+                            <button class="format-chip-btn active" data-type="all" onclick="filterFormats('all');">
+                                <span class="en-only">All Formats</span>
+                                <span class="id-only">Semua Format</span>
+                            </button>
+                            <button class="format-chip-btn" data-type="video" onclick="filterFormats('video');">
+                                <span class="en-only">Video Containers</span>
+                                <span class="id-only">Kontainer Video</span>
+                            </button>
+                            <button class="format-chip-btn" data-type="audio" onclick="filterFormats('audio');">
+                                <span class="en-only">Audio Codecs</span>
+                                <span class="id-only">Kodek Audio</span>
+                            </button>
+                            <button class="format-chip-btn" data-type="stream" onclick="filterFormats('stream');">
+                                <span class="en-only">Live Protocols</span>
+                                <span class="id-only">Protokol Live</span>
+                            </button>
+                        </div>
+                        <input type="text" class="search-glass-input" id="format-search-input" placeholder="Search formats, codecs, or extensions..." aria-label="Search formats and codecs" oninput="searchFormats(this.value);">
+                    </div>
+
+                    <div class="table-responsive-wrapper">
+                        <table class="bench-table" id="formats-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <span class="en-only">Format / Standard</span>
+                                        <span class="id-only">Format / Standar</span>
+                                    </th>
+                                    <th>
+                                        <span class="en-only">Container Ext</span>
+                                        <span class="id-only">Ekstensi</span>
+                                    </th>
+                                    <th>
+                                        <span class="en-only">Encoding Standards</span>
+                                        <span class="id-only">Standar Pengodean</span>
+                                    </th>
+                                    <th>
+                                        <span class="en-only">Max Bitrate / Depth</span>
+                                        <span class="id-only">Maks Bitrate / Kedalaman</span>
+                                    </th>
+                                    <th>
+                                        <span class="en-only">Hardware Acceleration</span>
+                                        <span class="id-only">Akselerasi Perangkat Keras</span>
+                                    </th>
+                                    <th>
+                                        <span class="en-only">Target Use Case</span>
+                                        <span class="id-only">Kegunaan Utama</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="formats-tbody">
+                                <tr data-type="video">
+                                    <td><strong>MPEG-4 Part 14</strong></td>
+                                    <td><code>.mp4</code></td>
+                                    <td>H.264 / AVC, H.265 / HEVC, AV01</td>
+                                    <td>Up to 150 Mbps (8K)</td>
+                                    <td><span class="badge-winner">Universal (Snapdragon, Apple, NVENC)</span></td>
+                                    <td>Consumer devices, mobile gallery, web players</td>
+                                </tr>
+                                <tr data-type="video">
+                                    <td><strong>Matroska Video</strong></td>
+                                    <td><code>.mkv</code></td>
+                                    <td>VP9, AV1, HEVC, ProRes, any codec</td>
+                                    <td>Unlimited / 12-bit HDR</td>
+                                    <td><span class="badge-winner">Full GPU Passthrough</span></td>
+                                    <td>Archival preservation with soft subtitles</td>
+                                </tr>
+                                <tr data-type="video">
+                                    <td><strong>WebM Open Media</strong></td>
+                                    <td><code>.webm</code></td>
+                                    <td>VP9, AV1 with Opus Audio</td>
+                                    <td>Up to 80 Mbps (4K 60fps)</td>
+                                    <td>Modern GPUs and mobile chipsets</td>
+                                    <td>Open-source playback ecosystems</td>
+                                </tr>
+                                <tr data-type="audio">
+                                    <td><strong>Opus Audio</strong></td>
+                                    <td><code>.opus</code></td>
+                                    <td>RFC 6716 VBR Speech/Music Core</td>
+                                    <td>6 to 510 kbps (VBR)</td>
+                                    <td>Zero overhead native CPU decode</td>
+                                    <td>Highest acoustic fidelity at compact sizes</td>
+                                </tr>
+                                <tr data-type="audio">
+                                    <td><strong>Free Lossless Audio</strong></td>
+                                    <td><code>.flac</code></td>
+                                    <td>Lossless PCM Audio Compression</td>
+                                    <td>Up to 24-bit / 192 kHz</td>
+                                    <td>Instantaneous software decoding</td>
+                                    <td>Audiophile music archiving and mastering</td>
+                                </tr>
+                                <tr data-type="audio">
+                                    <td><strong>MPEG-1 Audio Layer III</strong></td>
+                                    <td><code>.mp3</code></td>
+                                    <td>Fraunhofer / LAME Encoder</td>
+                                    <td>Up to 320 kbps (CBR/VBR)</td>
+                                    <td>100% legacy silicon hardware support</td>
+                                    <td>Legacy vehicle decks and offline MP3 players</td>
+                                </tr>
+                                <tr data-type="stream">
+                                    <td><strong>DASH (ISO/IEC 23009-1)</strong></td>
+                                    <td><code>.mpd</code></td>
+                                    <td>Dynamic Adaptive Streaming HTTP</td>
+                                    <td>Dynamic chunk fragmentation</td>
+                                    <td>Parallel range thread demuxing</td>
+                                    <td>Modern video on demand platforms</td>
+                                </tr>
+                                <tr data-type="stream">
+                                    <td><strong>HLS (RFC 8216)</strong></td>
+                                    <td><code>.m3u8</code></td>
+                                    <td>HTTP Live Streaming</td>
+                                    <td>MPEG-TS or fMP4 slice streams</td>
+                                    <td>Real-time buffer catchup</td>
+                                    <td>Live broadcasts and continuous feeds</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Searchable CLI Reference Section (No nested cards) -->
+        <section id="flags" class="section-block">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="en-only">CLI Flags &amp; Engine Options</span>
+                        <span class="id-only">Argumen CLI &amp; Opsi Mesin</span>
+                    </h2>
+                    <p class="section-desc">
+                        <span class="en-only">Reference parameters for the underlying suravidl_engine and command-line execution. Filter options instantly with the search bar.</span>
+                        <span class="id-only">Referensi parameter untuk inti suravidl_engine dan eksekusi command-line. Saring opsi secara instan dengan bilah pencarian.</span>
+                    </p>
+                </div>
+
+                <div class="glass-panel">
+                    <div style="margin-bottom: 1.5rem;">
+                        <input type="text" class="search-glass-input" id="cli-search-input" placeholder="Search flags (e.g. format, audio, sponsor, subs)..." aria-label="Search CLI flags" oninput="searchFlags(this.value);" style="width: 100%;">
+                    </div>
+
+                    <div class="cli-ledger-container" id="cli-ledger-container">
+                        <div class="cli-flag-row">
+                            <span class="flag-mono">-f, --format</span>
+                            <span class="flag-arg">&lt;SPEC&gt;</span>
+                            <p class="flag-desc en-only">Selects video and audio stream quality (e.g. "bv*[height&lt;=1080]+ba/b").</p>
+                            <p class="flag-desc id-only">Memilih kualitas video dan audio yang akan diunduh.</p>
+                        </div>
+                        <div class="cli-flag-row">
+                            <span class="flag-mono">--sponsorblock-remove</span>
+                            <span class="flag-arg">&lt;CATEGORIES&gt;</span>
+                            <p class="flag-desc en-only">Segment types to cut on keyframes: sponsor, intro, outro, selfpromo.</p>
+                            <p class="flag-desc id-only">Kategori segmen video yang dipotong pada keyframe: sponsor, intro, outro.</p>
+                        </div>
+                        <div class="cli-flag-row">
+                            <span class="flag-mono">-x, --extract-audio</span>
+                            <span class="flag-arg">--audio-format &lt;opus|flac|mp3&gt;</span>
+                            <p class="flag-desc en-only">Discards video stream and extracts standalone lossless audio track.</p>
+                            <p class="flag-desc id-only">Membuang trek video dan mengekstrak audio berkualitas tinggi.</p>
+                        </div>
+                        <div class="cli-flag-row">
+                            <span class="flag-mono">--embed-subs</span>
+                            <span class="flag-arg">--sub-langs &lt;LANGS&gt;</span>
+                            <p class="flag-desc en-only">Downloads timed subtitle tracks and muxes them as soft streams into MP4/MKV.</p>
+                            <p class="flag-desc id-only">Mengunduh file subtitle dan menyematkannya ke dalam kontainer video.</p>
+                        </div>
+                        <div class="cli-flag-row">
+                            <span class="flag-mono">-o, --output</span>
+                            <span class="flag-arg">&lt;TEMPLATE&gt;</span>
+                            <p class="flag-desc en-only">Custom directory and filename template for saved media files.</p>
+                            <p class="flag-desc id-only">Templat direktori dan penamaan file untuk media yang disimpan.</p>
+                        </div>
+                        <div class="cli-flag-row">
+                            <span class="flag-mono">--embed-metadata</span>
+                            <span class="flag-arg">--embed-thumbnail</span>
+                            <p class="flag-desc en-only">Embeds chapter marks, uploader details, and high-DPI album art into container atoms.</p>
+                            <p class="flag-desc id-only">Menyematkan penanda bab, informasi pembuat, dan gambar cover ke file.</p>
+                        </div>
+                        <div class="cli-flag-row">
+                            <span class="flag-mono">--limit-rate</span>
+                            <span class="flag-arg">&lt;RATE&gt;</span>
+                            <p class="flag-desc en-only">Bandwidth ceiling (e.g. "5M", "500K") to prevent saturating shared connections.</p>
+                            <p class="flag-desc id-only">Batas kecepatan unduh agar tidak menghabiskan bandwidth jaringan bersama.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Start & Installation Deck -->
+        <section id="install" class="section-block">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="en-only">Get suravidl</span>
+                        <span class="id-only">Unduh &amp; Pasang suravidl</span>
+                    </h2>
+                    <p class="section-desc">
+                        <span class="en-only">Download the Android application APK directly or install the underlying Python engine for terminal workflows.</span>
+                        <span class="id-only">Unduh langsung APK aplikasi Android atau pasang mesin Python untuk penggunaan di terminal.</span>
+                    </p>
+                </div>
+
+                <div class="glass-panel">
+                    <div class="install-header-tabs">
+                        <button class="inst-tab-btn active" data-pkg="android" onclick="setInstallTab('android');">
+                            <span class="en-only">Android APK (Mobile)</span>
+                            <span class="id-only">Android APK (Ponsel)</span>
+                        </button>
+                        <button class="inst-tab-btn" data-pkg="engine" onclick="setInstallTab('engine');">
+                            <span class="en-only">Python Engine (Source)</span>
+                            <span class="id-only">Mesin Python (Sumber)</span>
+                        </button>
+                        <button class="inst-tab-btn" data-pkg="desktop" onclick="setInstallTab('desktop');">
+                            <span class="en-only">Desktop Releases</span>
+                            <span class="id-only">Rilis Desktop</span>
+                        </button>
+                    </div>
+
+                    <p class="install-instruction-text" id="install-instruction-text">
+                        Download the latest signed Android APK directly from GitHub Releases and install on any modern Android device.
+                    </p>
+
+                    <div class="terminal-box">
+                        <div class="terminal-header">
+                            <span class="terminal-title" id="install-box-title">Android APK Release Package</span>
+                            <button class="copy-output-btn" onclick="copyInstallCmd();">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                <span class="en-only">Copy</span>
+                                <span class="id-only">Salin</span>
+                            </button>
+                        </div>
+                        <div class="terminal-body">
+                            <div class="cmd-line">
+                                <span class="cmd-prompt">&gt;</span>
+                                <span id="install-command-text">https://github.com/LoLyeah/suravidl/releases</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">
+                            <span class="en-only">Visit the official GitHub repository for source code, issues, and release notes:</span>
+                            <span class="id-only">Kunjungi repositori GitHub resmi untuk kode sumber, issue, dan catatan rilis:</span>
+                        </span>
+                        <a href="https://github.com/LoLyeah/suravidl/releases" target="_blank" rel="noopener noreferrer" class="action-btn primary">
+                            <span class="en-only">Open GitHub Releases</span>
+                            <span class="id-only">Buka Rilis GitHub</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h4>suravidl</h4>
+                    <p>
+                        <span class="en-only">An independent, open-source media downloading application and stream engine designed and curated by LoLyeah. Focused on on-device privacy, stream integrity, and liquid glass ergonomics.</span>
+                        <span class="id-only">Aplikasi pengunduh media dan mesin stream sumber terbuka yang dirancang dan dikurasi oleh LoLyeah. Berfokus pada privasi pada perangkat, integritas stream, dan ergonomi liquid glass.</span>
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h5>Navigation</h5>
+                    <div class="footer-links">
+                        <a href="../index.html" class="footer-link">← All Interactive Guides</a>
+                        <a href="#studio" class="footer-link">Command Studio</a>
+                        <a href="#features" class="footer-link">Core Features</a>
+                        <a href="#formats" class="footer-link">Format Ledger</a>
+                        <a href="#install" class="footer-link">Get App</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h5>Open Source</h5>
+                    <div class="footer-links">
+                        <a href="https://github.com/LoLyeah/suravidl" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Repository</a>
+                        <a href="https://github.com/LoLyeah/suravidl/releases" target="_blank" rel="noopener noreferrer" class="footer-link">Releases</a>
+                        <a href="https://github.com/LoLyeah/suravidl/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="footer-link">MIT License</a>
+                        <a href="https://github.com/LoLyeah" target="_blank" rel="noopener noreferrer" class="footer-link">Author Profile</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom-bar">
+                <span>&copy; 2026 LoLyeah. Open-source under MIT License. Zero telemetry policy.</span>
+                <span>Part of LoLyeah Interactive Guides Compendium</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Toast Notification -->
+    <div class="toast-notify" id="toast-notify" role="status" aria-live="polite">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span id="toast-text">Command copied to clipboard!</span>
+    </div>
+
+    <!-- Client Script: Command Generator, State Management & Interactivity -->
+    <script>
+        // --- State Configuration ---
+        const studioState = {
+            profile: 'video',
+            resolution: 'best',
+            audio: 'opus',
+            sponsorblock: true,
+            subs: true,
+            meta: true,
+            gallery: true,
+            lang: 'en'
+        };
+
+        // --- Toast Function ---
+        let toastTimer = null;
+        function showToast(message) {
+            const toast = document.getElementById('toast-notify');
+            const toastText = document.getElementById('toast-text');
+            if (!toast || !toastText) return;
+            toastText.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2200);
+        }
+
+        function copySnippet(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(studioState.lang === 'id' ? 'Disalin ke papan klip!' : 'Copied to clipboard!');
+            }).catch(() => {
+                showToast('Copy failed');
+            });
+        }
+
+        // --- Studio Parameter Setters ---
+        function setProfile(profile) {
+            studioState.profile = profile;
+            document.querySelectorAll('#profile-selector .pill-choice-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.profile === profile);
+            });
+            const resGroup = document.getElementById('res-group');
+            if (resGroup) {
+                resGroup.style.display = profile === 'audio' ? 'none' : 'flex';
+            }
+            updateStudio();
+        }
+
+        function setResolution(res) {
+            studioState.resolution = res;
+            document.querySelectorAll('#res-selector .pill-choice-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.res === res);
+            });
+            updateStudio();
+        }
+
+        function setAudioFormat(audio) {
+            studioState.audio = audio;
+            document.querySelectorAll('#audio-selector .pill-choice-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.audio === audio);
+            });
+            updateStudio();
+        }
+
+        function toggleFeature(feature) {
+            studioState[feature] = !studioState[feature];
+            const el = document.getElementById(`toggle-${feature}`);
+            if (el) {
+                el.classList.toggle('active', studioState[feature]);
+            }
+            updateStudio();
+        }
+
+        // --- Dynamic Command & Pipeline Generator ---
+        function updateStudio() {
+            let cmd = 'suravidl ';
+            let url = 'https://youtu.be/dQw4w9WgXcQ';
+            let container = 'MP4';
+            const isId = studioState.lang === 'id';
+
+            let flow1 = isId ? 'Probing HTTP Range dimulai dengan header konfigurasi pengguna.' : 'HTTP Range probing initiated with user-configured headers.';
+            let flow2 = isId ? 'Pengelola antrean mengoordinasikan alur chunk stream.' : 'Queue manager coordinates chunk workers across boundaries.';
+            let flow3 = '';
+            let flow4 = '';
+
+            const configObj = {
+                app: "suravidl",
+                version: "0.32.0",
+                profile: studioState.profile,
+                engine: {
+                    protocol: "http2_range",
+                    cache_mb: 64
+                },
+                post_process: {}
+            };
+
+            if (studioState.profile === 'audio') {
+                container = studioState.audio.toUpperCase();
+                cmd += `"${url}" --extract-audio --audio-format ${studioState.audio} --audio-quality 0 `;
+                flow3 = isId ? `Demuxing: Trek audio diekstrak langsung ke format ${studioState.audio.toUpperCase()}.` : `Demuxing: Audio track extracted directly into bit-perfect ${studioState.audio.toUpperCase()}.`;
+                configObj.audio_only = true;
+                configObj.codec = studioState.audio;
+            } else if (studioState.profile === 'playlist') {
+                container = 'MKV';
+                url = 'https://youtube.com/playlist?list=PLw-VjHDlEOgvtnnnqWlTqByAtC7tXbm6D';
+                cmd += `"${url}" --yes-playlist --format "bv*[ext=mp4]+ba[ext=m4a]/b" `;
+                flow3 = isId ? 'Pengelola Antrean: Muxing berurutan dengan penghindaran tabrakan nama file.' : 'Queue Manager: Iterative stream multiplexing with automatic collision avoidance.';
+                configObj.batch_queue = true;
+            } else if (studioState.profile === 'livestream') {
+                container = 'MKV';
+                url = 'https://twitch.tv/example_stream';
+                cmd += `"${url}" --live-from-start --hls-use-mpegts `;
+                flow3 = isId ? 'Perekaman DVR: Penangkapan segmen fMP4 secara terus-menerus.' : 'DVR buffer: Continuous fMP4 slice capture with keyframe alignment.';
+                configObj.livestream_dvr = true;
+            } else {
+                // Video single
+                if (studioState.resolution === 'best') {
+                    container = 'MKV';
+                    cmd += `"${url}" --format "bv*[ext=mp4]+ba/b" `;
+                    flow3 = isId ? 'Zero-Copy Muxing: Video resolusi terbaik digabungkan dengan audio Opus bitrate tinggi.' : 'Zero-Copy Muxing: Pristine AV1/VP9 video paired with high-bitrate Opus stream.';
+                    configObj.resolution = "highest_available";
+                } else if (studioState.resolution === '1080p') {
+                    container = 'MP4';
+                    cmd += `"${url}" --format "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b" `;
+                    flow3 = isId ? 'Passthrough Muxing: Video H.264 standar dikemas rapi dalam kontainer MP4.' : 'Passthrough Muxing: Standard H.264 video packaged cleanly in MP4 container.';
+                    configObj.resolution = "1080p_standard";
+                } else {
+                    container = 'MP4';
+                    cmd += `"${url}" --format "bv*[height<=720]+ba/b" `;
+                    flow3 = isId ? 'Lightweight Muxing: Stream hemat penyimpanan untuk perangkat mobile.' : 'Lightweight Muxing: Fast mobile stream with low bandwidth demands.';
+                    configObj.resolution = "720p_lightweight";
+                }
+            }
+
+            if (studioState.sponsorblock) {
+                cmd += '--sponsorblock-remove "sponsor,intro" ';
+                flow4 += isId ? 'Segmen SponsorBlock dipotong pada keyframe. ' : 'SponsorBlock cut on keyframe boundaries. ';
+                configObj.post_process.sponsorblock = ["sponsor", "intro"];
+            }
+
+            if (studioState.subs) {
+                cmd += '--embed-subs --sub-langs "en,id" ';
+                flow4 += isId ? 'Teks subtitle disematkan ke kontainer. ' : 'Timed soft subtitles muxed into container. ';
+                configObj.post_process.subtitles = ["en", "id"];
+            }
+
+            if (studioState.meta) {
+                cmd += '--embed-metadata ';
+                flow4 += isId ? 'Tag metadata dan sampul album ditulis. ' : 'Metadata tags and cover art embedded. ';
+                configObj.post_process.embed_metadata = true;
+            }
+
+            if (studioState.gallery) {
+                cmd += '--keep-in-gallery ';
+                flow4 += isId ? 'Indeks MediaStore Android diperbarui.' : 'Android MediaStore broadcast updated.';
+                configObj.post_process.keep_in_gallery = true;
+            }
+
+            // Update DOM Elements
+            const cmdEl = document.getElementById('rendered-command');
+            if (cmdEl) cmdEl.textContent = cmd.trim();
+
+            const badgeEl = document.getElementById('mux-container-badge');
+            if (badgeEl) badgeEl.textContent = `Container: ${container}`;
+
+            const f1 = document.getElementById('flow-step-1');
+            const f2 = document.getElementById('flow-step-2');
+            const f3 = document.getElementById('flow-step-3');
+            const f4 = document.getElementById('flow-step-4');
+
+            if (f1) f1.textContent = flow1;
+            if (f2) f2.textContent = flow2;
+            if (f3) f3.textContent = flow3;
+            if (f4) f4.textContent = flow4 || (isId ? 'Penulisan file dan tagging standar.' : 'Standard file tagging and output finalization.');
+
+            const jsonPreview = document.getElementById('json-config-preview');
+            if (jsonPreview) jsonPreview.textContent = JSON.stringify(configObj, null, 2);
+        }
+
+        function copyCurrentCommand() {
+            const cmdEl = document.getElementById('rendered-command');
+            if (cmdEl) {
+                copySnippet(cmdEl.textContent, null);
+            }
+        }
+
+        // --- Format Matrix Filtering ---
+        function filterFormats(type) {
+            document.querySelectorAll('.format-chip-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.type === type);
+            });
+            const rows = document.querySelectorAll('#formats-tbody tr');
+            rows.forEach(r => {
+                if (type === 'all' || r.dataset.type === type) {
+                    r.style.display = '';
+                } else {
+                    r.style.display = 'none';
+                }
+            });
+        }
+
+        function searchFormats(query) {
+            const q = query.toLowerCase().trim();
+            const rows = document.querySelectorAll('#formats-tbody tr');
+            rows.forEach(r => {
+                const text = r.textContent.toLowerCase();
+                r.style.display = text.includes(q) ? '' : 'none';
+            });
+        }
+
+        // --- CLI Flag Search ---
+        function searchFlags(query) {
+            const q = query.toLowerCase().trim();
+            const rows = document.querySelectorAll('#cli-ledger-container .cli-flag-row');
+            rows.forEach(r => {
+                const text = r.textContent.toLowerCase();
+                r.style.display = text.includes(q) ? 'grid' : 'none';
+            });
+        }
+
+        // --- Installation Tabs ---
+        const installData = {
+            android: {
+                titleEn: 'Android APK Release Package',
+                titleId: 'Paket Rilis Android APK',
+                descEn: 'Download the latest signed Android APK directly from GitHub Releases and install on your Android device with unknown sources permitted.',
+                descId: 'Unduh file APK Android resmi langsung dari GitHub Releases dan pasang di perangkat Android Anda.',
+                cmd: 'https://github.com/LoLyeah/suravidl/releases'
+            },
+            engine: {
+                titleEn: 'Python Ingestion Engine Source',
+                titleId: 'Sumber Mesin Ingesti Python',
+                descEn: 'Clone the repository and install the development package locally using pip to execute suravidl from your terminal workstation.',
+                descId: 'Klon repositori dan pasang paket pengembangan secara lokal menggunakan pip untuk menjalankan suravidl dari terminal.',
+                cmd: 'git clone https://github.com/LoLyeah/suravidl.git && cd suravidl && pip install -e .'
+            },
+            desktop: {
+                titleEn: 'Desktop Pre-Compiled Binaries',
+                titleId: 'Biner Terkompilasi Desktop',
+                descEn: 'Download pre-compiled binaries for Linux and Windows from the GitHub Releases page with embedded engine dependencies.',
+                descId: 'Unduh biner terkompilasi untuk Linux dan Windows dari halaman GitHub Releases.',
+                cmd: 'https://github.com/LoLyeah/suravidl/releases'
+            }
+        };
+
+        let currentInstallPkg = 'android';
+
+        function setInstallTab(pkg) {
+            currentInstallPkg = pkg;
+            document.querySelectorAll('.inst-tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.pkg === pkg);
+            });
+            const data = installData[pkg];
+            if (!data) return;
+
+            const isId = studioState.lang === 'id';
+            const cmdText = document.getElementById('install-command-text');
+            const descText = document.getElementById('install-instruction-text');
+            const boxTitle = document.getElementById('install-box-title');
+
+            if (cmdText) cmdText.textContent = data.cmd;
+            if (descText) descText.textContent = isId ? data.descId : data.descEn;
+            if (boxTitle) boxTitle.textContent = isId ? data.titleId : data.titleEn;
+        }
+
+        function copyInstallCmd() {
+            const cmdText = document.getElementById('install-command-text');
+            if (cmdText) {
+                copySnippet(cmdText.textContent, null);
+            }
+        }
+
+        // --- Theme Management ---
+        function initTheme() {
+            let savedTheme = 'dark';
+            try {
+                savedTheme = localStorage.getItem('theme') || 'dark';
+            } catch (e) {}
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        document.getElementById('theme-toggle-btn')?.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            try { localStorage.setItem('theme', next); } catch (e) {}
+            showToast(next === 'dark' ? 'Liquid Obsidian Theme' : 'Liquid Alabaster Theme');
+        });
+
+        // --- Language Toggle (Sync with lolyeah_lang and pref_lang) ---
+        function initLang() {
+            let savedLang = 'en';
+            try {
+                savedLang = localStorage.getItem('lolyeah_lang') || localStorage.getItem('pref_lang') || 'en';
+            } catch (e) {}
+            setLang(savedLang);
+        }
+
+        function setLang(lang) {
+            studioState.lang = lang;
+            document.body.classList.remove('lang-en', 'lang-id');
+            document.body.classList.add(`lang-${lang}`);
+            document.documentElement.lang = lang;
+            try {
+                localStorage.setItem('lolyeah_lang', lang);
+                localStorage.setItem('pref_lang', lang);
+            } catch (e) {}
+
+            const indicator = document.getElementById('lang-indicator');
+            if (indicator) {
+                indicator.textContent = lang === 'en' ? 'ID' : 'EN';
+            }
+            updateStudio();
+            setInstallTab(currentInstallPkg);
+        }
+
+        document.getElementById('lang-toggle-btn')?.addEventListener('click', () => {
+            const next = studioState.lang === 'en' ? 'id' : 'en';
+            setLang(next);
+            showToast(next === 'en' ? 'English (EN) Active' : 'Bahasa Indonesia (ID) Aktif');
+        });
+
+        // --- Bootstrap ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            initLang();
+            updateStudio();
+        });
+    </script>
+</body>
+</html>
