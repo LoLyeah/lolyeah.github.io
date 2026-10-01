@@ -114,12 +114,22 @@
 
         [data-theme="light"] {
             --bg: #f8fafc;
-            --bg-elevated: #ffffff;
-            --bg-card: rgba(255, 255, 255, 0.92);
-            --bg-card-hover: rgba(241, 245, 249, 0.98);
-            --border: rgba(0, 0, 0, 0.09);
-            --border-hover: rgba(245, 158, 11, 0.6);
+            --bg-elevated: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f1f5f9;
+            --border: rgba(0, 0, 0, 0.08);
+            --border-hover: rgba(180, 83, 9, 0.5);
             --border-subtle: rgba(0, 0, 0, 0.04);
+            --gold: #b45309;
+            --gold-glow: rgba(180, 83, 9, 0.2);
+            --gold-subtle: rgba(180, 83, 9, 0.08);
+            --emerald: #059669;
+            --emerald-subtle: rgba(5, 150, 105, 0.1);
+            --crimson: #dc2626;
+            --crimson-glow: rgba(220, 38, 38, 0.2);
+            --crimson-subtle: rgba(220, 38, 38, 0.1);
+            --azure: #0369a1;
+            --azure-subtle: rgba(3, 105, 161, 0.1);
             --text-primary: #0f172a;
             --text-secondary: #475569;
             --text-muted: #64748b;
@@ -859,11 +869,12 @@
 
         /* Interactive Simulator Box */
         .sim-box {
-            background: linear-gradient(145deg, rgba(245, 158, 11, 0.06), rgba(15, 23, 42, 0.95));
-            border: 1px solid rgba(245, 158, 11, 0.3);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: var(--radius-xl);
             padding: 32px;
             margin: 40px 0;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
         }
         .sim-grid {
             display: grid;
@@ -895,7 +906,7 @@
             accent-color: var(--gold);
             height: 6px;
             border-radius: 3px;
-            background: var(--bg-elevated);
+            background: var(--border);
             outline: none;
             cursor: pointer;
         }
@@ -914,6 +925,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 12px;
         }
         .sim-res-row:last-child {
             border-bottom: none;
@@ -925,7 +937,8 @@
         .sim-res-val {
             font-family: var(--font-mono);
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
+            text-align: right;
         }
 
         /* Scenarios Matrix */
@@ -1453,12 +1466,12 @@
 
                     <div class="sim-results-panel">
                         <div class="sim-res-row">
-                            <div class="sim-res-label" data-en="Remaining Discretionary Headroom:" data-id="Sisa Ruang Fiskal Bebas (Diskresioner):">Sisa Ruang Fiskal Bebas (Diskresioner):</div>
-                            <div class="sim-res-val text-gold" id="resHeadroom">Rp 312.4 T</div>
+                            <div class="sim-res-label" data-en="Deficit Target Headroom:" data-id="Bantalan thd Target Defisit:">Bantalan thd Target Defisit:</div>
+                            <div class="sim-res-val text-gold" id="resHeadroom">+Rp 0.0 T</div>
                         </div>
                         <div class="sim-res-row">
                             <div class="sim-res-label" data-en="Real Deficit Projection (% GDP):" data-id="Proyeksi Defisit Riil (% PDB):">Proyeksi Defisit Riil (% PDB):</div>
-                            <div class="sim-res-val text-crimson" id="resDeficitPct">2.53% PDB</div>
+                            <div class="sim-res-val text-emerald" id="resDeficitPct">2.53% PDB</div>
                         </div>
                         <div class="sim-res-row">
                             <div class="sim-res-label" data-en="3% Legal Ceiling Warning:" data-id="Status Batas Hukum 3% UU 17/2003:">Status Batas Hukum 3% UU 17/2003:</div>
@@ -1466,7 +1479,7 @@
                         </div>
                         <div class="sim-res-row">
                             <div class="sim-res-label" data-en="Estimated Real GDP Growth Rate:" data-id="Estimasi Pertumbuhan PDB Riil:">Estimasi Pertumbuhan PDB Riil:</div>
-                            <div class="sim-res-val text-azure" id="resGdpGrowth">5.15% (Jauh dari 8%)</div>
+                            <div class="sim-res-val text-azure" id="resGdpGrowth">5.19% (Fatamorgana 8%)</div>
                         </div>
                         <div class="sim-res-row">
                             <div class="sim-res-label" data-en="Sovereign Credit Rating Outlook:" data-id="Outlook Peringkat Utang S&amp;P/Moody's:">Outlook Peringkat Utang S&amp;P/Moody's:</div>
@@ -1662,50 +1675,54 @@
             if (simValTax) simValTax.textContent = tax.toFixed(1) + '%';
             if (simValDefLimit) simValDefLimit.textContent = defLimit.toFixed(2) + (currentLang === 'en' ? '% GDP' : '% PDB');
 
-            // Baseline assumptions: 2025 GDP = Rp 24,400 Trillion
+            // Baseline assumptions: UU APBN 2025 Nominal GDP = Rp 24,400 Trillion
             const gdpNominal = 24400;
-            // Baseline revenues at 10.2% = Rp 2,488.8 T taxes + ~Rp 516 T PNBP = Rp 3,005 T
+
+            // Revenues: Tax ratio slider (baseline 10.2% = Rp 2,488.8 T) + PNBP/grants (Rp 515.2 T) = Rp 3,004.0 T
             const taxRevenue = gdpNominal * (tax / 100);
-            const totalRevenue = taxRevenue + 514;
+            const totalRevenue = taxRevenue + 515.2;
 
-            // Baseline debt interest at yield 6.85% = Rp 552.9 T
-            // Delta yield adds/subtracts debt servicing
+            // Expenditures: Baseline UU APBN 2025 Total Spending = Rp 3,621.3 Trillion
+            // 1. Debt Interest Baseline: Rp 552.9 T at 6.85% yield (shifts ~Rp 24.5 T per 100 bps)
             const interestSpend = 552.9 + ((y - 6.85) * 24.5);
+            // 2. Base other mandatory & programmatic expenditures (TKD Rp 919.9 T, Routine/Personnel, CapEx Rp 400.3 T, Subsidies)
+            //    3621.3 - 552.9 (interest) - 71.0 (baseline MBG) = 2,997.4 T
+            const baseOtherExpenditure = 2997.4;
+            // 3. Total active expenditure:
+            const totalExpenditure = baseOtherExpenditure + interestSpend + mbg;
 
-            // Mandatory non-discretionary baseline spending:
-            // TKD ~Rp 920 T, Personnel & Routine ~Rp 550 T, Energy Subsidies ~Rp 394 T, Bansos baseline ~Rp 505 T
-            const mandatoryBaseline = 920 + 550 + 394 + 505; // ~Rp 2,369 T
+            // Real Deficit:
+            const currentDeficit = totalExpenditure - totalRevenue;
+            const currentDeficitPct = (currentDeficit / gdpNominal) * 100;
 
-            const totalCommittedExpenditure = mandatoryBaseline + interestSpend + mbg;
-            const maxAllowedExpenditure = totalRevenue + (gdpNominal * (defLimit / 100));
-
-            const remainingHeadroom = Math.round((maxAllowedExpenditure - totalCommittedExpenditure) * 10) / 10;
-            const currentDeficit = totalCommittedExpenditure - totalRevenue;
-            const currentDeficitPct = ((currentDeficit / gdpNominal) * 100);
+            // Headroom vs user-selected target deficit limit:
+            const maxTargetExpenditure = totalRevenue + (gdpNominal * (defLimit / 100));
+            const remainingHeadroom = Math.round((maxTargetExpenditure - totalExpenditure) * 10) / 10;
 
             if (resHeadroom) {
-                resHeadroom.textContent = (remainingHeadroom >= 0 ? '+' : '') + 'Rp ' + remainingHeadroom.toFixed(1) + ' T';
-                resHeadroom.className = 'sim-res-val ' + (remainingHeadroom >= 200 ? 'text-emerald' : remainingHeadroom >= 50 ? 'text-gold' : 'text-crimson');
+                const sign = remainingHeadroom > 0 ? '+' : '';
+                resHeadroom.textContent = sign + 'Rp ' + remainingHeadroom.toFixed(1) + ' T';
+                resHeadroom.className = 'sim-res-val ' + (remainingHeadroom >= 20 ? 'text-emerald' : remainingHeadroom >= -20 ? 'text-gold' : 'text-crimson');
             }
 
             if (resDeficitPct) {
                 resDeficitPct.textContent = currentDeficitPct.toFixed(2) + (currentLang === 'en' ? '% GDP' : '% PDB');
+                resDeficitPct.className = 'sim-res-val ' + (currentDeficitPct > 3.00 ? 'text-crimson' : currentDeficitPct > 2.70 ? 'text-gold' : 'text-emerald');
             }
 
             if (resCeilingStatus && resRatingOutlook) {
+                const cushion = (3.00 - currentDeficitPct).toFixed(2);
                 if (currentDeficitPct > 3.00) {
-                    resCeilingStatus.textContent = currentLang === 'en' ? 'BREACHED (>3.00% ILLEGAL)' : 'JEBOL (>3,00% MELANGGAR UU)';
+                    resCeilingStatus.textContent = currentLang === 'en' ? `BREACHED (${cushion}%)` : `JEBOL (${cushion}% MELANGGAR UU)`;
                     resCeilingStatus.className = 'sim-res-val text-crimson';
                     resRatingOutlook.textContent = currentLang === 'en' ? 'BBB- / NEGATIVE WATCH' : 'BBB- / OUTLOOK NEGATIF (RISIKO DOWNGRADE)';
                     resRatingOutlook.className = 'sim-res-val text-crimson';
                 } else if (currentDeficitPct > 2.70) {
-                    const cushion = (3.00 - currentDeficitPct).toFixed(2);
                     resCeilingStatus.textContent = currentLang === 'en' ? `DANGER ZONE (Buffer ${cushion}%)` : `ZONA BAHAYA (Bantalan ${cushion}%)`;
                     resCeilingStatus.className = 'sim-res-val text-gold';
                     resRatingOutlook.textContent = currentLang === 'en' ? 'BBB / STABLE (ELEVATED RISK)' : 'BBB / STABIL DENGAN PENGAWASAN';
                     resRatingOutlook.className = 'sim-res-val text-gold';
                 } else {
-                    const cushion = (3.00 - currentDeficitPct).toFixed(2);
                     resCeilingStatus.textContent = currentLang === 'en' ? `SAFE (Buffer ${cushion}%)` : `AMAN (Bantalan ${cushion}%)`;
                     resCeilingStatus.className = 'sim-res-val text-emerald';
                     resRatingOutlook.textContent = currentLang === 'en' ? 'BBB / STABLE' : 'BBB / STABIL';
@@ -1713,13 +1730,15 @@
                 }
             }
 
-            // Real GDP Growth estimation based on fiscal composition
+            // Real GDP Growth estimation based on fiscal stimulus and fiscal space crowding
             if (resGdpGrowth) {
-                const capExEst = Math.max(100, remainingHeadroom + 200);
-                const growthEst = 4.8 + ((mbg * 0.75 + capExEst * 1.50) / gdpNominal * 5);
+                const capExBaseline = 400.3;
+                const capExActual = Math.max(150, capExBaseline + Math.min(100, remainingHeadroom));
+                const stimulusMultiplier = ((mbg * 0.75) + (capExActual * 1.60)) / gdpNominal;
+                const growthEst = 4.40 + (stimulusMultiplier * 100 * 0.42);
                 const growthTag = currentLang === 'en'
-                    ? (growthEst >= 7.0 ? '(Target 8% Accessible)' : '(8% Target Mirage)')
-                    : (growthEst >= 7.0 ? '(Target 8% Dekat)' : '(Fatamorgana 8%)');
+                    ? (growthEst >= 7.0 ? '(Target 8% Accessible)' : growthEst >= 5.5 ? '(Moderate Growth)' : '(8% Target Mirage)')
+                    : (growthEst >= 7.0 ? '(Target 8% Dekat)' : growthEst >= 5.5 ? '(Pertumbuhan Moderat)' : '(Fatamorgana 8%)');
                 resGdpGrowth.textContent = growthEst.toFixed(2) + '% ' + growthTag;
             }
         }
