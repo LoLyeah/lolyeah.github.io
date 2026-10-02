@@ -130,6 +130,67 @@
             box-sizing: border-box;
         }
 
+        /* Skip Link */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 1.5rem;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            padding: 0.75rem 1.25rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 6px;
+            z-index: 10001;
+            text-decoration: none;
+            transition: top 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .skip-link:focus {
+            top: 1rem;
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 2px;
+        }
+
+        /* Screen Reader Only Utility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Theme Browser Surfaces & Focus Outlines */
+        ::selection {
+            background-color: var(--accent-primary);
+            color: #ffffff;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 4px;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 2px;
+        }
+
         body {
             font-family: var(--font-sans);
             background-color: var(--bg-primary);
@@ -206,10 +267,6 @@
             background-image: url('/assets/logo-dark.svg');
         }
 
-        .logo:hover .logo-placeholder {
-            transform: scale(1.14) rotate(6deg);
-        }
-
         .nav-controls {
             display: flex;
             align-items: center;
@@ -224,10 +281,6 @@
             cursor: pointer;
             color: var(--text-secondary);
             transition: color 0.2s ease;
-        }
-
-        .nav-controls button:hover {
-            color: var(--text-primary);
         }
 
         .lang-switcher button.active {
@@ -247,10 +300,6 @@
             padding: 0.25rem 0.5rem;
             border: 1px solid var(--border-light);
             transition: all 0.3s ease;
-        }
-
-        #theme-toggle:hover {
-            border-color: var(--text-primary);
         }
 
         /* Hero Section */
@@ -283,12 +332,12 @@
             max-width: 800px;
         }
 
-        .hero-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border: 1px solid var(--border-dark);
-            margin-bottom: 2rem;
-            transition: border-color 0.3s ease;
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            max-width: 650px;
+            line-height: 1.6;
         }
 
         .hero h1 {
@@ -296,9 +345,7 @@
             line-height: 1.1;
             margin-bottom: 1rem;
             min-height: 1.2em;
-            background: linear-gradient(135deg, var(--text-primary) 65%, var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--text-primary);
             padding-bottom: 0.1em;
         }
 
@@ -353,6 +400,18 @@
             margin: 0 auto;
         }
 
+        @media (max-width: 640px) {
+            .topics {
+                padding: 0 1rem 4rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .topics {
+                padding: 0 0.5rem 3rem;
+            }
+        }
+
         .section-header {
             padding: 4rem 0 2rem;
         }
@@ -379,11 +438,6 @@
             display: inline-flex;
             align-items: center;
             gap: 0.35rem;
-        }
-
-        .filter-btn:hover {
-            border-color: var(--border-dark);
-            color: var(--text-primary);
         }
 
         .filter-btn.active {
@@ -476,12 +530,6 @@
             z-index: 2;
         }
 
-        .search-clear-btn:hover {
-            color: var(--text-primary);
-            background: var(--hover-glow);
-            border-color: var(--search-border-focus);
-        }
-
         .search-clear-btn svg {
             width: 12px;
             height: 12px;
@@ -490,7 +538,7 @@
         /* Features 1px Technical Grid Layout */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
             gap: 1px;
             background-color: var(--border-light);
             border: 1px solid var(--border-light);
@@ -501,6 +549,13 @@
         @media (min-width: 1440px) {
             .features-grid {
                 grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .feature-card {
+                padding: 1.75rem 1.25rem;
+                min-height: 240px;
             }
         }
 
@@ -517,6 +572,11 @@
             cursor: pointer;
             outline: none;
             transition: background-color 0.3s ease;
+        }
+
+        .feature-card[data-slug="suravidl"] {
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, transparent 60%), var(--bg-primary);
         }
 
         .feature-card:focus-visible {
@@ -537,10 +597,6 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
-        }
-
-        .feature-card:hover::before {
-            opacity: 1;
         }
 
         .feature-card-content {
@@ -585,11 +641,6 @@
             z-index: 6;
         }
 
-        .bookmark-btn:hover {
-            color: #f59e0b;
-            transform: scale(1.15);
-        }
-
         .bookmark-btn.active {
             color: #f59e0b;
         }
@@ -615,11 +666,6 @@
             z-index: 6;
             transition: all 0.2s ease;
             white-space: nowrap;
-        }
-
-        .card-tag:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
 
         .tag-clinical, .tag-science, .tag-ecology {
@@ -733,12 +779,6 @@
             transition: all 0.2s ease;
         }
 
-        .subpage-chip:hover {
-            border-color: var(--border-dark);
-            color: var(--text-primary);
-            background: var(--hover-glow);
-        }
-
         /* Card Footer Row with Link & Copy Button */
         .card-footer-row {
             display: flex;
@@ -761,10 +801,6 @@
             transition: gap 0.2s ease, color 0.3s ease;
         }
 
-        .feature-card:hover .card-link {
-            gap: 0.8rem;
-        }
-
         .copy-link-btn {
             background: transparent;
             border: 1px solid var(--border-light);
@@ -777,12 +813,6 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s ease;
-        }
-
-        .copy-link-btn:hover {
-            border-color: var(--border-dark);
-            color: var(--text-primary);
-            background: var(--hover-glow);
         }
 
         /* Toast Notification */
@@ -862,12 +892,6 @@
             color: var(--text-secondary);
         }
 
-        #reset-search-btn:hover {
-            border-color: var(--border-dark);
-            color: var(--text-primary);
-            background: var(--hover-glow);
-        }
-
         /* Pagination Controls */
         .pagination-controls {
             display: flex;
@@ -882,13 +906,15 @@
         .pagination-buttons {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         .pagination-btn {
             background: transparent;
             border: 1px solid var(--border-light);
-            padding: 0.6rem 1.2rem;
+            padding: 0.6rem 1.1rem;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -898,15 +924,9 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 42px;
-            height: 42px;
+            min-width: 40px;
+            height: 40px;
             user-select: none;
-        }
-
-        .pagination-btn:hover:not(:disabled) {
-            border-color: var(--border-dark);
-            color: var(--text-primary);
-            background: var(--hover-glow);
         }
 
         .pagination-btn.active {
@@ -923,7 +943,22 @@
         .pagination-pages {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.4rem;
+        }
+
+        @media (max-width: 480px) {
+            .pagination-buttons {
+                gap: 0.35rem;
+            }
+            .pagination-pages {
+                gap: 0.25rem;
+            }
+            .pagination-btn {
+                padding: 0.4rem 0.6rem;
+                min-width: 36px;
+                height: 36px;
+                font-size: 0.8rem;
+            }
         }
 
         .pagination-info {
@@ -938,18 +973,21 @@
             max-height: 0;
             opacity: 0;
             overflow: hidden;
+            visibility: hidden;
             background: radial-gradient(circle at bottom right, var(--accent-glow) 0%, transparent 60%);
             border-top: 1px solid transparent;
             padding: 0 5%;
             transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
                         opacity 0.5s ease,
                         padding 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                        border-color 0.3s ease;
+                        border-color 0.3s ease,
+                        visibility 0.5s ease;
         }
 
         .about-section.expanded {
             max-height: 1000px;
             opacity: 1;
+            visibility: visible;
             padding: 6rem 5% 4rem;
             border-top: 1px solid var(--border-light);
         }
@@ -985,17 +1023,6 @@
             overflow: hidden;
         }
 
-        .dev-terminal::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 10;
-            background-size: 100% 4px, 6px 100%;
-            pointer-events: none;
-        }
-
         .terminal-header {
             display: flex;
             justify-content: space-between;
@@ -1005,24 +1032,25 @@
             margin-bottom: 1.5rem;
         }
 
-        .terminal-dots {
-            display: flex;
-            gap: 0.4rem;
-        }
-
-        .t-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .t-dot.red { background-color: #ef4444; }
-        .t-dot.yellow { background-color: #eab308; }
-        .t-dot.green { background-color: #22c55e; }
-
         .terminal-title {
             color: #71717a;
             font-size: 0.75rem;
+        }
+
+        .terminal-close-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #a1a1aa;
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            line-height: 1;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .terminal-avatar-block {
@@ -1127,11 +1155,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .action-button:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
-        }
-
         .action-button svg {
             width: 20px;
             height: 20px;
@@ -1168,10 +1191,6 @@
             letter-spacing: 0.05em;
         }
 
-        .nav-btn:hover {
-            color: var(--accent-primary);
-        }
-
         /* Scroll to Top - Minimalist */
         .scroll-top {
             position: fixed;
@@ -1198,20 +1217,118 @@
             transform: translateY(0);
         }
 
-        .scroll-top:hover {
-            background: var(--text-primary);
-            color: var(--bg-primary);
-        }
-
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
             footer { flex-direction: column; gap: 1rem; text-align: center; }
             .footer-right { flex-direction: column; gap: 0.5rem; }
             .nav-controls { gap: 0.75rem; }
         }
+
+        /* Guarded Hover States (AGENTS.md Section 4) */
+        @media (hover: hover) {
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--text-secondary);
+            }
+            .logo:hover .logo-placeholder {
+                transform: scale(1.14) rotate(6deg);
+            }
+            .nav-controls button:hover {
+                color: var(--text-primary);
+            }
+            #theme-toggle:hover {
+                border-color: var(--text-primary);
+            }
+            .filter-btn:hover {
+                border-color: var(--border-dark);
+                color: var(--text-primary);
+            }
+            .search-clear-btn:hover {
+                color: var(--text-primary);
+                background: var(--hover-glow);
+                border-color: var(--search-border-focus);
+            }
+            .feature-card:hover::before {
+                opacity: 1;
+            }
+            .feature-card:hover .card-link {
+                gap: 0.8rem;
+            }
+            .bookmark-btn:hover {
+                color: #f59e0b;
+                transform: scale(1.15);
+            }
+            .card-tag:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            }
+            .subpage-chip:hover {
+                border-color: var(--border-dark);
+                color: var(--text-primary);
+                background: var(--hover-glow);
+            }
+            .copy-link-btn:hover {
+                border-color: var(--border-dark);
+                color: var(--text-primary);
+                background: var(--hover-glow);
+            }
+            #reset-search-btn:hover {
+                border-color: var(--border-dark);
+                color: var(--text-primary);
+                background: var(--hover-glow);
+            }
+            .pagination-btn:hover:not(:disabled) {
+                border-color: var(--border-dark);
+                color: var(--text-primary);
+                background: var(--hover-glow);
+            }
+            .action-button:hover {
+                transform: translateY(-2px);
+                opacity: 0.9;
+            }
+            .nav-btn:hover {
+                color: var(--accent-primary);
+            }
+            .scroll-top:hover {
+                background: var(--text-primary);
+                color: var(--bg-primary);
+            }
+            .terminal-close-btn:hover {
+                color: #ffffff;
+                border-color: rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        /* Coarse pointer tap target accessibility (44x44px minimum) */
+        @media (pointer: coarse) {
+            button,
+            .filter-btn,
+            .nav-btn,
+            .pagination-btn,
+            .search-clear-btn,
+            .bookmark-btn,
+            .card-tag,
+            .subpage-chip,
+            .action-button,
+            .scroll-top,
+            .terminal-close-btn {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+
+        /* Reduced motion guarantee */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
     </style>
 </head>
 <body>
+    <a href="#main-content" class="skip-link" data-translate-key="skipLink">Skip to main content</a>
 
     <nav>
         <div class="logo">
@@ -1234,8 +1351,8 @@
 
     <header class="hero">
         <div class="hero-content">
-            <div class="hero-badge mono" data-translate-key="headerSubtitle">An evolving collection of deep dives into various topics.</div>
             <h1 id="typewriter-title" data-translate-key="headerTitle">LoLyeah Interactive Guides</h1>
+            <p class="hero-subtitle" data-translate-key="headerSubtitle">An evolving collection of deep dives into various topics.</p>
             <div class="status-badge last-update">
                 <span class="status-dot"></span>
                 <span id="last-update-text" data-translate-key="lastUpdate">Last Update: May 25, 2026</span>
@@ -1243,17 +1360,18 @@
         </div>
     </header>
 
-    <section class="topics">
+    <main class="topics" id="main-content">
 
         <!-- Search Bar -->
-        <div class="search-container">
+        <div class="search-container" role="search">
             <div class="search-wrapper">
                 <svg class="search-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <circle cx="11" cy="11" r="8"></circle>
                     <path d="M21 21l-4.35-4.35"></path>
                 </svg>
 
-                <input type="text" id="search-input" class="search-input" data-translate-key="searchPlaceholder" placeholder="Search topics..." autocomplete="off" spellcheck="false">
+                <label for="search-input" class="sr-only" data-translate-key="searchLabel">Search topics</label>
+                <input type="text" id="search-input" class="search-input" data-translate-key="searchPlaceholder" placeholder="Search topics..." aria-label="Search topics" autocomplete="off" spellcheck="false">
 
                 <button id="search-clear" class="search-clear-btn" aria-label="Clear search">
                     <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -1266,24 +1384,53 @@
         </div>
 
         <!-- Filter Bar with Saved Bookmarks Pill -->
-        <div class="filter-bar" role="tablist">
-            <button class="filter-btn active" data-category="all" data-translate-key="filterAll">All</button>
-            <button class="filter-btn" data-category="saved" id="saved-filter-btn">★ <span data-translate-key="filterSaved">Saved</span> (<span id="saved-count">0</span>)</button>
-            <button class="filter-btn" data-category="clinical" data-translate-key="filterClinical">Clinical</button>
-            <button class="filter-btn" data-category="economics" data-translate-key="filterEconomics">Economics</button>
-            <button class="filter-btn" data-category="transport" data-translate-key="filterTransport">Transport</button>
-            <button class="filter-btn" data-category="energy" data-translate-key="filterEnergy">Energy</button>
-            <button class="filter-btn" data-category="simulators" data-translate-key="filterSimulators">Simulators</button>
+        <div class="filter-bar" role="tablist" aria-label="Topic categories">
+            <button class="filter-btn active" role="tab" aria-selected="true" data-category="all" data-translate-key="filterAll">All</button>
+            <button class="filter-btn" role="tab" aria-selected="false" data-category="saved" id="saved-filter-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" aria-hidden="true" style="margin-right:2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><span data-translate-key="filterSaved">Saved</span> (<span id="saved-count">0</span>)</button>
+            <button class="filter-btn" role="tab" aria-selected="false" data-category="science" data-translate-key="filterScience">Science</button>
+            <button class="filter-btn" role="tab" aria-selected="false" data-category="clinical" data-translate-key="filterClinical">Clinical</button>
+            <button class="filter-btn" role="tab" aria-selected="false" data-category="economics" data-translate-key="filterEconomics">Economics</button>
+            <button class="filter-btn" role="tab" aria-selected="false" data-category="transport" data-translate-key="filterTransport">Transport</button>
+            <button class="filter-btn" role="tab" aria-selected="false" data-category="energy" data-translate-key="filterEnergy">Energy</button>
+            <button class="filter-btn" role="tab" aria-selected="false" data-category="simulators" data-translate-key="filterSimulators">Simulators</button>
         </div>
+
+        <h2 class="sr-only" data-translate-key="mainTitle">Explore a Topic</h2>
 
         <!-- 1px Technical Grid Layout with all 61 topics -->
         <div class="features-grid" id="features">
-            <!-- 01: Perbandingan RAPBN 5 Tahun Terakhir & Akibatnya -->
+            <!-- 61: suravidl: Open-Source Media Downloader & Ingestion Engine (v0.39.8) -->
+            <div class="feature-card" data-url="./topics/suravidl.html" data-slug="suravidl" data-category="engineering simulators" data-keywords="suravidl, video downloader, audio downloader, android apk, media downloader, yt-dlp, media ingestion, ffmpeg muxing, 4k 8k video, stream archiver, lossless flac opus, liquid glass, lolyeah, v0.39.8" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Engineering, Rekayasa, Android, Media, Video Downloader, Audio, Open Source, Liquid Glass, v0.39.8">
+                <div class="feature-card-content">
+                    <div class="card-header">
+                        <div class="header-left">
+                            <div class="feature-icon mono">61</div>
+                            <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('suravidl', this, event);">
+                                <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                            </button>
+                        </div>
+                        <span class="card-tag tag-engineering" onclick="filterByCategory('simulators', event);" data-translate-key="tagEngineering">Engineering</span>
+                    </div>
+                    <h3 data-translate-key="suravidlCardTitle">suravidl: Open-Source Media Downloader &amp; Ingestion Engine (v0.39.8)</h3>
+                    <p data-translate-key="suravidlCardDesc">A privacy-first media downloading application and stream ingestion engine for Android and desktop: download queue manager, MediaStore gallery integration, lossless audio extraction, SponsorBlock filtering, and liquid glass ergonomics.</p>
+                    <div class="subpage-chips-deck">
+                        <a href="./topics/suravidl.html#studio" class="subpage-chip" onclick="event.stopPropagation();" data-translate-key="subpageSuravidlStudio"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>Command Studio</a>
+                        <a href="./topics/suravidl.html#calculator" class="subpage-chip" onclick="event.stopPropagation();" data-translate-key="subpageSuravidlCalc"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M8 18h.01M12 18h.01"></path></svg>Storage &amp; Bitrate Calc</a>
+                        <a href="./topics/suravidl.html#features" class="subpage-chip" onclick="event.stopPropagation();" data-translate-key="subpageSuravidlArch"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>v0.39.8 Architecture</a>
+                    </div>
+                    <div class="card-footer-row">
+                        <a href="./topics/suravidl.html" class="card-link" onclick="event.stopPropagation();" data-translate-key="guideCardLink">View Guide &rarr;</a>
+                        <button class="copy-link-btn" aria-label="Copy topic link" onclick="copyTopicLink(this, './topics/suravidl.html', event);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 60: Perbandingan RAPBN 5 Tahun Terakhir & Akibatnya -->
             <div class="feature-card" data-url="./topics/perbandingan-rapbn-5-tahun.html" data-slug="perbandingan-rapbn-5-tahun" data-category="economics simulators" data-keywords="rapbn, apbn, perbandingan apbn 5 tahun, bunga utang sbn, defisit apbn 3 persen, mbg makan bergizi gratis, anggaran ikn, pajak kelas menengah, pph 21 ter, ppn 12, dana alokasi transfer daerah tkd, bp danantara, fiscal space, belanja modal, belanja pegawai" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Economics & Macro, Ekonomi & Makro, Economics, Ekonomi, RAPBN, APBN, Bunga Utang, Fiskal">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">01</div>
+                            <div class="feature-icon mono">60</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('perbandingan-rapbn-5-tahun', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1304,12 +1451,12 @@
                 </div>
             </div>
 
-            <!-- 02: El Niño, La Niña & The Super ENSO Era -->
+            <!-- 59: El Niño, La Niña & The Super ENSO Era -->
             <div class="feature-card" data-url="./topics/el-nino-la-nina.html" data-slug="el-nino-la-nina" data-category="science simulators" data-keywords="el nino, la nina, super el nino, enso, walker circulation, ocean heat anomaly, kelvin waves, global warming, coral bleaching, amazon drought, peru floods, food security, bmkg, noaa" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Earth Science &amp; Climate, Ilmu Kebumian &amp; Iklim, Simulators, Simulator, Science, Sains, Meteorology, Meteorologi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">02</div>
+                            <div class="feature-icon mono">59</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('el-nino-la-nina', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1331,12 +1478,12 @@
                 </div>
             </div>
 
-            <!-- 03: Skenario Kubu Jokowi & Prabowo Menuju 2029 dan Masa Depan Indonesia -->
+            <!-- 58: Skenario Kubu Jokowi & Prabowo Menuju 2029 dan Masa Depan Indonesia -->
             <div class="feature-card" data-url="./topics/indonesia-2029-scenarios.html" data-slug="indonesia-2029-scenarios" data-category="economics simulators" data-keywords="bocor alus tempo, prabowo subianto, joko widodo, gibran rakabuming raka, ahy, agus harimurti yudhoyono, partai demokrat, sugiono, sudaryono, teddy indra wijaya, dedi mulyadi, bahlil lahadalia, psi, pilpres 2029, koalisi indonesia maju, masa depan indonesia, makan bergizi gratis, mbg, ikn nusantara, bp danantara, defisit apbn, dwifungsi abri, akmil magelang" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Politics &amp; Geopolitics, Politik &amp; Geopolitik, Analysis, Analisis, Pilpres 2029, Bocor Alus, Future of Indonesia">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">03</div>
+                            <div class="feature-icon mono">58</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('indonesia-2029-scenarios', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1357,12 +1504,12 @@
                 </div>
             </div>
 
-            <!-- 04: Borderline Personality Disorder (BPD): Clinical Compendium & Treatment Architecture -->
+            <!-- 57: Borderline Personality Disorder (BPD): Clinical Compendium & Treatment Architecture -->
             <div class="feature-card" data-url="./topics/bpd.html" data-slug="bpd" data-category="clinical simulators" data-keywords="borderline personality disorder, bpd, gangguan kepribadian ambang, dbt, mbt, schema therapy, tfp, gpm, fronto-limbic, biosocial model, stanley brown safety plan, zanarini remission, emotion dysregulation, psychiatric diagnostics, dsm-5-tr, icd-11" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Psychiatry & Neuroscience, Psikiatri & Neurosains, Neuroscience, Neurosains, Psychiatry, Psikiatri">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">04</div>
+                            <div class="feature-icon mono">57</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('bpd', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1384,12 +1531,12 @@
                 </div>
             </div>
 
-            <!-- 05: Kebijakan Baru BPJS Kesehatan 2026: Transformasi Mutu Layanan & Value-Based Healthcare -->
+            <!-- 56: Kebijakan Baru BPJS Kesehatan 2026: Transformasi Mutu Layanan & Value-Based Healthcare -->
             <div class="feature-card" data-url="./topics/bpjs-kebijakan-baru-2026.html" data-slug="bpjs-kebijakan-baru-2026" data-category="clinical simulators economics" data-keywords="bpjs kesehatan 2026, kebijakan baru bpjs, pernas faskes 2026, seva paramahita award 2026, value based healthcare bpjs, kris bpjs, perpres 59 2024, bpjs satu, i-care jkn, janji layanan jkn, aturan kontrol bpjs, penghapusan kelas 1 2 3, denda rawat inap 45 hari, analisis kebijakan kesehatan, health policy analysis, perpres 59 2024 kritik, vbhc lancet who, fiscal sustainability bpjs" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Health Policy & Systems, Kebijakan & Sistem Kesehatan, Health Policy, Kebijakan Kesehatan, Systems, Sistem Kesehatan, Policy, Kebijakan">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">05</div>
+                            <div class="feature-icon mono">56</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('bpjs-kebijakan-baru-2026', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1411,12 +1558,12 @@
                 </div>
             </div>
 
-            <!-- 06: Masa Depan Dokter Spesialis Radiologi di Indonesia (2026–2035) -->
+            <!-- 55: Masa Depan Dokter Spesialis Radiologi di Indonesia (2026–2035) -->
             <div class="feature-card" data-url="./topics/future-radiologist-indonesia.html" data-slug="future-radiologist-indonesia" data-category="clinical simulators economics" data-keywords="radiologi, spesialis radiologi, masa depan radiologi indonesia, ai radiologi, ppds hospital based, rsp-pu, uu 17 2023, kjsu kemenkes, radiologi intervensi, satusehat dicom, defisit radiolog, teleradiologi, stroke ct, tbscreen ai" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical & Diagnostics, Klinis & Diagnostik, Diagnostics, Diagnostik, Clinical, Klinis, Radiology, Radiologi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">06</div>
+                            <div class="feature-icon mono">55</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('future-radiologist-indonesia', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1437,12 +1584,12 @@
                 </div>
             </div>
 
-            <!-- 07: Spesialis KKLP di Indonesia: Dokter Keluarga, Sejarah, Urgensi & Masa Depan -->
+            <!-- 54: Spesialis KKLP di Indonesia: Dokter Keluarga, Sejarah, Urgensi & Masa Depan -->
             <div class="feature-card" data-url="./topics/spesialis-kklp.html" data-slug="spesialis-kklp" data-category="clinical simulators" data-keywords="spesialis kklp, sp.kklp, dokter keluarga, dokter layanan primer, dlp, kolegium kedokteran keluarga, uu kesehatan 17 2023, permenkes 17 2024, bpjs gatekeeper, integrasi layanan primer, ilp puskesmas, prolanis, family medicine indonesia" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical & Health Systems, Klinis & Sistem Kesehatan, Health Systems, Sistem Kesehatan, Family Medicine, Primary Care, Clinical, Klinis">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">07</div>
+                            <div class="feature-icon mono">54</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('spesialis-kklp', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1463,12 +1610,12 @@
             </div>
 
 
-            <!-- 08: Total Cost of Ownership (TCO) Simulator: ICE vs MHEV vs HEV vs PHEV vs EREV vs BEV -->
+            <!-- 53: Total Cost of Ownership (TCO) Simulator: ICE vs MHEV vs HEV vs PHEV vs EREV vs BEV -->
             <div class="feature-card" data-url="./topics/tco-powertrain-comparison.html" data-slug="tco-powertrain-comparison" data-category="transport economics simulators" data-keywords="total cost of ownership, tco mobil indonesia, perbandingan tco ice mhev hev phev erev bev, biaya servis mobil listrik vs hybrid, breakeven avanza vs veloz hybrid, pajak pkb mobil listrik permendagri 6 2023, ppnbm pp 74 2021, umur baterai mobil hybrid, biaya operasional mobil, konsumsi bbm vs kwh, keausan ban ev" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Automotive & Economics, Otomotif & Finansial, Economics, Finansial, TCO, Powertrain, Automotive, Otomotif">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">08</div>
+                            <div class="feature-icon mono">53</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('tco-powertrain-comparison', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1488,12 +1635,12 @@
                 </div>
             </div>
 
-            <!-- 09: Socotra: The Lost Continent & Island of Dragon's Blood -->
+            <!-- 52: Socotra: The Lost Continent & Island of Dragon's Blood -->
             <div class="feature-card" data-url="./topics/socotra.html" data-slug="socotra" data-category="science" data-keywords="socotra, dracaena cinnabari, dragon blood tree, pulau darah naga, yemen, adenium socotranum, bottle tree, dendrosicyos, hoq cave, dixam, frankincense, boswellia, gondwana, soqotri language, ancient trade" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Ecology & Evolution, Ekologi & Evolusi, Evolution, Evolusi, Botany, Nature, Ecology, Ekologi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">09</div>
+                            <div class="feature-icon mono">52</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('socotra', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1514,19 +1661,19 @@
             </div>
 
 
-            <!-- 10: Why in Medicine 24-Hour Shifts Are Normalized -->
+            <!-- 51: Why in Medicine 24-Hour Shifts Are Normalized -->
             <div class="feature-card" data-url="./topics/medical-24h-shifts.html" data-slug="medical-24h-shifts" data-category="clinical simulators" data-keywords="24 hour shifts, shift 24 jam dokter, ppds indonesia, resident duty hours, william halsted, doctor sleep deprivation, ipass, acgme, ewtd, kurikulum tersembunyi, medical error rate, fatigue simulator" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical & Patient Safety, Klinis & Keselamatan Pasien, Patient Safety, Keselamatan Pasien, Medical Shifts, Clinical, Klinis">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">10</div>
+                            <div class="feature-icon mono">51</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('medical-24h-shifts', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
                         <span class="card-tag tag-clinical" onclick="filterByCategory('clinical', event);" data-translate-key="tagMedical24h">Clinical</span>
                     </div>
-                    <h3 data-translate-key="medical24hCardTitle">Why Medicine Normalized 24-Hour Shifts — And How to Fix It</h3>
+                    <h3 data-translate-key="medical24hCardTitle">Why Medicine Normalized 24-Hour Shifts: And How to Fix It</h3>
                     <p data-translate-key="medical24hCardDesc">Clinical systemic compendium &amp; cognitive fatigue simulator: Halsted's cocaine-fueled residency origins, 0.08% BAC sleep loss equivalence, I-PASS handover protocols, and Indonesia PPDS cross-border comparison.</p>
                     <div class="subpage-chips-deck">
                         <a href="./topics/medical-24h-shifts/indonesia-vs-the-world.html" class="subpage-chip" onclick="event.stopPropagation();" data-translate-key="subpageMedicalIndoVsWorld">🇮🇩 Indonesia vs. The World Subpage</a>
@@ -1539,12 +1686,12 @@
             </div>
 
 
-            <!-- 11: World Biomes & Ecological Gradients -->
+            <!-- 50: World Biomes & Ecological Gradients -->
             <div class="feature-card" data-url="./topics/world-biomes.html" data-slug="world-biomes" data-category="science simulators" data-keywords="world biomes, bioma dunia, whittaker diagram, climograph, tropical rainforest, savanna, desert, temperate forest, taiga, tundra, marine biomes, coral reefs, blue carbon, atmospheric circulation, hadley cell, net primary productivity, ecology simulator" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Ecology & Biosphere, Ekologi & Biosfer, Ecology, Ekologi, Biosphere, Biosfer, Climograph">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">11</div>
+                            <div class="feature-icon mono">50</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('world-biomes', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1565,12 +1712,12 @@
                 </div>
             </div>
 
-            <!-- 12: Geothermal Power Plants & Indonesian PLTP -->
+            <!-- 49: Geothermal Power Plants & Indonesian PLTP -->
             <div class="feature-card" data-url="./topics/geothermal-energy.html" data-slug="geothermal-energy" data-category="energy simulators" data-keywords="geothermal energy, geothermal power plant, pltp indonesia, panas bumi, thermodynamic cycle, flash steam, binary orc, carnot efficiency, kamojang, sarulla, salak, dieng, green baseload, net zero 2060" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Energy, Energi, Geothermal, PLTP, Panas Bumi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">12</div>
+                            <div class="feature-icon mono">49</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('geothermal-energy', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1589,12 +1736,12 @@
                 </div>
             </div>
 
-            <!-- 13: Indonesian Car Selector & Centralized Database -->
+            <!-- 48: Indonesian Car Selector & Centralized Database -->
             <div class="feature-card" data-url="./topics/indonesia-car-selector.html" data-slug="indonesia-car-selector" data-category="transport simulators" data-keywords="mobil indonesia, kuesioner mobil, panduan beli mobil, mobil bensin, diesel, hybrid, phev, ev, mobil listrik, suv, mpv, city car, kei car, sedan, mobil sport, innova zenix, fortuner, pajero sport, brio, avanza, xpander, byd seal, wuling air ev, tco bbm" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Automotive & Decision Engine, Otomotif & Kuesioner Cerdas, Decision Engine, Car Selector, Automotive, Otomotif">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">13</div>
+                            <div class="feature-icon mono">48</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('indonesia-car-selector', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1614,12 +1761,12 @@
                 </div>
             </div>
 
-            <!-- 14: Fetal Development & In-Utero Life -->
+            <!-- 47: Fetal Development & In-Utero Life -->
             <div class="feature-card" data-url="./topics/fetal-development.html" data-slug="fetal-development" data-category="clinical simulators" data-keywords="fetal development, what fetus do in pregnancy, intrauterine life, apa yang dilakukan janin, fetal hiccups, breathing practice, amniotic taste, fetal REM sleep, Nijhuis states, Cardiff kick count, obstetrics, embryology" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical & Embryology, Klinis & Embriologi, Clinical, Klinis, Pregnancy, Fetal, Embryology, Embriologi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">14</div>
+                            <div class="feature-icon mono">47</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('fetal-development', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1639,19 +1786,19 @@
                 </div>
             </div>
 
-            <!-- 15: Gemstones Compendium -->
-            <div class="feature-card" data-url="./topics/gemstones.html" data-slug="gemstones" data-category="clinical" data-keywords="gemstones, most beautiful gemstones, diamond, ruby, sapphire, emerald, spinel, tsavorite, alexandrite, benitoite, tanzanite, paraiba tourmaline, grandidierite, labradorite, mohs hardness, gemstone database, optical dispersion, pleochroism, gemology guide" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Science & Minerals, Sains & Alam, Science & Nature, Minerals, Mineral, Gemology, Science, Sains">
+            <!-- 46: Gemstones Compendium -->
+            <div class="feature-card" data-url="./topics/gemstones.html" data-slug="gemstones" data-category="science simulators" data-keywords="gemstones, most beautiful gemstones, diamond, ruby, sapphire, emerald, spinel, tsavorite, alexandrite, benitoite, tanzanite, paraiba tourmaline, grandidierite, labradorite, mohs hardness, gemstone database, optical dispersion, pleochroism, gemology guide" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Science & Minerals, Sains & Alam, Science & Nature, Minerals, Mineral, Gemology, Science, Sains">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">15</div>
+                            <div class="feature-icon mono">46</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('gemstones', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
-                        <span class="card-tag tag-neurodiversity" onclick="filterByCategory('clinical', event);" data-translate-key="tagScience">Science</span>
+                        <span class="card-tag tag-science" onclick="filterByCategory('science', event);" data-translate-key="tagScience">Science</span>
                     </div>
-                    <h3 data-translate-key="gemstonesCardTitle">The Anatomy of Allure — Earth's Most Beautiful Gemstones</h3>
+                    <h3 data-translate-key="gemstonesCardTitle">The Anatomy of Allure: Earth's Most Beautiful Gemstones</h3>
                     <p data-translate-key="gemstonesCardDesc">Master compendium and optical physics explorer across 6 categories: Most Popular, Most Underrated, Hidden Gems, Most Overrated, The Most Cheapest, and Ultra-Expensive. Real photography, light dispersion ray tracer, and 40+ mineral database.</p>
                     <div class="subpage-chips-deck">
                         <a href="./topics/gemstones/categories.html" class="subpage-chip" onclick="event.stopPropagation();" data-translate-key="subpageGemCategories">💎 6 Categories Showcase</a>
@@ -1664,12 +1811,12 @@
                 </div>
             </div>
 
-            <!-- 16: Indonesia Hybrid Cars -->
+            <!-- 45: Indonesia Hybrid Cars -->
             <div class="feature-card" data-url="./topics/indonesia-hybrid-cars.html" data-slug="indonesia-hybrid-cars" data-category="transport" data-keywords="hybrid, mhev, hev, erev, phev, mild hybrid, zenix hybrid, yaris cross, cr-v e:hev, ertiga hybrid, xl7 hybrid, nissan e-power, serena, byd sealion 6 dmi, denza d9, bbm tco simulator" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Transport, Transportasi, Hybrid, HEV, PHEV, MHEV, Otomotif">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">16</div>
+                            <div class="feature-icon mono">45</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('indonesia-hybrid-cars', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1688,12 +1835,12 @@
                 </div>
             </div>
 
-            <!-- 17: Civil-Militarization -->
+            <!-- 44: Civil-Militarization -->
             <div class="feature-card" data-url="./topics/civil-militarization.html" data-slug="civil-militarization" data-category="economics" data-keywords="civil militarization, militerisasi, akmil magelang, sppi, koperasi merah putih, dwifungsi abri, prabowo subianto, cynthia enloe, huntington" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Economics, Military, Militerisasi, Sipil">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">17</div>
+                            <div class="feature-icon mono">44</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('civil-militarization', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1712,12 +1859,12 @@
                 </div>
             </div>
 
-            <!-- 18: China EV Brands -->
+            <!-- 43: China EV Brands -->
             <div class="feature-card" data-url="./topics/china-ev-brands.html" data-slug="china-ev-brands" data-category="transport" data-keywords="china ev, byd, geely, chery, saic, changan, gwm, dongfeng, xiaomi su7, nio, xpeng, li auto, hima, huawei, aito, luxeed, avatr, zeekr, yangwang" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Automotive & EV, Otomotif & EV, EV, Electric Vehicles, Automotive, Otomotif, China EV">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">18</div>
+                            <div class="feature-icon mono">43</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('china-ev-brands', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1739,19 +1886,19 @@
                 </div>
             </div>
 
-            <!-- 19: Indonesia Middle Income Trap -->
+            <!-- 42: Indonesia Middle Income Trap -->
             <div class="feature-card" data-url="./topics/indonesia-middle-income-trap.html" data-slug="indonesia-middle-income-trap" data-category="economics" data-keywords="middle income trap, mit, deindustrialisasi, uu 13/2003, megawati, sby commodity boom, hilirisasi nikel, indonesia emas 2045, reddit fact-check" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Economics, Middle Income Trap, MIT, Ekonomi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">19</div>
+                            <div class="feature-icon mono">42</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('indonesia-middle-income-trap', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
                         <span class="card-tag tag-analysis" onclick="filterByCategory('economics', event);" data-translate-key="tagAnalysis">Analysis</span>
                     </div>
-                    <h3 data-translate-key="middleIncomeCardTitle">Is Indonesia Too Late for Developed Status? — Fact-Check &amp; MIT Simulator</h3>
+                    <h3 data-translate-key="middleIncomeCardTitle">Is Indonesia Too Late for Developed Status? Fact-Check &amp; MIT Simulator</h3>
                     <p data-translate-key="middleIncomeCardDesc">A rigorous empirical fact-check of the viral Reddit debate on deindustrialization, Megawati's UU 13/2003, SBY's lost commodity windfall, hilirisasi, and an interactive 2045 Middle-Income Trap simulator.</p>
                     <div class="subpage-chips-deck">
                         <a href="./topics/indonesia-middle-income-trap/historical-roots.html" class="subpage-chip" onclick="event.stopPropagation();" data-translate-key="subpageMitRoots">Historical Roots</a>
@@ -1765,12 +1912,12 @@
                 </div>
             </div>
 
-            <!-- 20: EV Battery Vendors -->
+            <!-- 41: EV Battery Vendors -->
             <div class="feature-card" data-url="./topics/ev-battery-vendors.html" data-slug="ev-battery-vendors" data-category="transport energy" data-keywords="ev battery, catl, byd blade, lges, panasonic, calb, lfp, nmc, sodium-ion, solid-state, c-rate, ibc, morowali, weda bay, nikel" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Engineering, Teknik, Energy, Battery, Baterai, EV, Nikel">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">20</div>
+                            <div class="feature-icon mono">41</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('ev-battery-vendors', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1789,12 +1936,12 @@
                 </div>
             </div>
 
-            <!-- 21: Gaji Kotor -->
+            <!-- 40: Gaji Kotor -->
             <div class="feature-card" data-url="./topics/indonesia-gaji-kotor.html" data-slug="indonesia-gaji-kotor" data-category="economics simulators" data-keywords="gaji kotor, pph 21, ter, bpjs kesehatan, bpjs ketenagakerjaan, jht, jp, tapera, gaji bersih, slip gaji indonesia" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Simulator, Gaji, Payroll, PPh 21, TER, BPJS">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">21</div>
+                            <div class="feature-icon mono">40</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('indonesia-gaji-kotor', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1810,12 +1957,12 @@
                 </div>
             </div>
 
-            <!-- 22: GIIAS 2026 -->
+            <!-- 39: GIIAS 2026 -->
             <div class="feature-card" data-url="./topics/giias-2026-cheapest-cars.html" data-slug="giias-2026-cheapest-cars" data-category="transport" data-keywords="giias 2026, mobil murah, entry car, ayla, agya, brio, wuling air ev, byd dolphin, neta, chery omoda, adas, suspensi" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Automotive & EV, Otomotif & EV, EV, Electric Vehicles, Automotive, Otomotif, Mobil Murah, GIIAS">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">22</div>
+                            <div class="feature-icon mono">39</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('giias-2026-cheapest-cars', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1836,12 +1983,12 @@
                 </div>
             </div>
 
-            <!-- 23: Car Suspension -->
+            <!-- 38: Car Suspension -->
             <div class="feature-card" data-url="./topics/car-suspension.html" data-slug="car-suspension" data-category="transport energy" data-keywords="car suspension, macpherson, multi-link, double wishbone, torsion beam, air suspension, porsche par, byd disus, clearmotion" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Engineering, Teknik, Suspension, Suspensi, Otomotif">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">23</div>
+                            <div class="feature-icon mono">38</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('car-suspension', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1862,12 +2009,12 @@
                 </div>
             </div>
 
-            <!-- 24: Pedestrian Infrastructure -->
-            <div class="feature-card" data-url="./topics/pedestrian-infrastructure-indonesia.html" data-slug="pedestrian-infrastructure-indonesia" data-category="transport economics" data-keywords="pedestrian, jpo, pelican crossing, jakarta, pwk, trotoar, integrasi tj, mrt, zebra cross" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event); mobileKeydown(this, event);" data-tags="Analysis, Analisis, Transport, Pedestrian, Trotoar, JPO">
+            <!-- 37: Pedestrian Infrastructure -->
+            <div class="feature-card" data-url="./topics/pedestrian-infrastructure-indonesia.html" data-slug="pedestrian-infrastructure-indonesia" data-category="transport economics" data-keywords="pedestrian, jpo, pelican crossing, jakarta, pwk, trotoar, integrasi tj, mrt, zebra cross" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Transport, Pedestrian, Trotoar, JPO">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">24</div>
+                            <div class="feature-icon mono">37</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('pedestrian-infrastructure-indonesia', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1888,19 +2035,19 @@
                 </div>
             </div>
 
-            <!-- 25: Train & Bus Economics -->
+            <!-- 36: Train & Bus Economics -->
             <div class="feature-card" data-url="./topics/train-bus-economics.html" data-slug="train-bus-economics" data-category="transport economics" data-keywords="kai, bus akap, trans jawa, tol sumatera, tarif kereta, subsidi pso, solar, bus malam" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Transport, Kereta, Bus, KAI">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">25</div>
+                            <div class="feature-icon mono">36</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('train-bus-economics', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
                         <span class="card-tag tag-analysis" onclick="filterByCategory('economics', event);" data-translate-key="tagAnalysis">Analysis</span>
                     </div>
-                    <h3 data-translate-key="trainBusCardTitle">Train &amp; Bus Economics — Java and Sumatra</h3>
+                    <h3 data-translate-key="trainBusCardTitle">Train &amp; Bus Economics: Java and Sumatra</h3>
                     <p data-translate-key="trainBusCardDesc">An interactive guide to fares, occupancy, tolls, fuel, subsidies, and the different economics of passenger transport across Java and Sumatra.</p>
                     <div class="card-footer-row">
                         <a href="./topics/train-bus-economics.html" class="card-link" onclick="event.stopPropagation();" data-translate-key="analysisCardLink">View Analysis &rarr;</a>
@@ -1909,19 +2056,19 @@
                 </div>
             </div>
 
-            <!-- 26: IKN Nusantara -->
+            <!-- 35: IKN Nusantara -->
             <div class="feature-card" data-url="./topics/ikn-nusantara.html" data-slug="ikn-nusantara" data-category="economics" data-keywords="ikn, nusantara, ibu kota negara, kalimantan timur, smart forest city, oikn, apbn ikn, relokasi asn" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Economics, IKN, Nusantara, Ibu Kota">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">26</div>
+                            <div class="feature-icon mono">35</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('ikn-nusantara', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
                         <span class="card-tag tag-analysis" onclick="filterByCategory('economics', event);" data-translate-key="tagAnalysis">Analysis</span>
                     </div>
-                    <h3 data-translate-key="iknCardTitle">IKN Nusantara — Roadmap &amp; Future</h3>
+                    <h3 data-translate-key="iknCardTitle">IKN Nusantara: Roadmap &amp; Future</h3>
                     <p data-translate-key="iknCardDesc">An interactive assessment of Ibu Kota Nusantara's developmental roadmap, infrastructure progress, challenges, and the 2045 Smart Forest City vision.</p>
                     <div class="card-footer-row">
                         <a href="./topics/ikn-nusantara.html" class="card-link" onclick="event.stopPropagation();" data-translate-key="analysisCardLink">View Analysis &rarr;</a>
@@ -1930,20 +2077,20 @@
                 </div>
             </div>
 
-            <!-- 27: IndoSEZ -->
+            <!-- 34: IndoSEZ -->
             <div class="feature-card" data-url="./topics/indoSEZ.html" data-slug="indoSEZ" data-category="economics" data-keywords="kek, sez, kawasan ekonomi khusus, sei mangkei, galang batang, mandalika, singhasari, insentif pajak" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Economics, KEK, SEZ, Kawasan Ekonomi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">27</div>
+                            <div class="feature-icon mono">34</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('indoSEZ', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
                         <span class="card-tag tag-analysis" onclick="filterByCategory('economics', event);" data-translate-key="tagAnalysis">Analysis</span>
                     </div>
-                    <h3 data-translate-key="sezCardTitle">Indonesia's Special Economic Zones — Strategic Evaluation</h3>
-                    <p data-translate-key="sezCardDesc">An interactive ranking and performance audit of all 25 KEK zones — investment data, zone comparison tool, interactive map, and revocation risk analysis.</p>
+                    <h3 data-translate-key="sezCardTitle">Indonesia's Special Economic Zones: Strategic Evaluation</h3>
+                    <p data-translate-key="sezCardDesc">An interactive ranking and performance audit of all 25 KEK zones: investment data, zone comparison tool, interactive map, and revocation risk analysis.</p>
                     <div class="card-footer-row">
                         <a href="./topics/indoSEZ.html" class="card-link" onclick="event.stopPropagation();" data-translate-key="analysisCardLink">View Analysis &rarr;</a>
                         <button class="copy-link-btn" aria-label="Copy topic link" onclick="copyTopicLink(this, './topics/indoSEZ.html', event);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
@@ -1951,12 +2098,12 @@
                 </div>
             </div>
 
-            <!-- 28: MedMarket 2026 -->
+            <!-- 33: MedMarket 2026 -->
             <div class="feature-card" data-url="./topics/medMarket-2026.html" data-slug="medMarket-2026" data-category="clinical economics" data-keywords="dokter spesialis, kjsu, kemenkes, residency, hospital based, distribusi dokter, defisit spesialis" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, Economics, MedMarket, Dokter Spesialis">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">28</div>
+                            <div class="feature-icon mono">33</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('medMarket-2026', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -1972,20 +2119,20 @@
                 </div>
             </div>
 
-            <!-- 29: HSR Indonesia -->
+            <!-- 32: HSR Indonesia -->
             <div class="feature-card" data-url="./topics/hsr-indonesia.html" data-slug="hsr-indonesia" data-category="transport" data-keywords="hsr, whoosh, kcic, kereta cepat jakarta bandung, kcjb, jakarta surabaya, tegalluar, halim" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Transport, Transportasi, HSR, Whoosh, Kereta Cepat">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">29</div>
+                            <div class="feature-icon mono">32</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('hsr-indonesia', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
                         <span class="card-tag tag-transport" onclick="filterByCategory('transport', event);" data-translate-key="tagTransport">Transport</span>
                     </div>
-                    <h3 data-translate-key="hsrIdCardTitle">HSR in Indonesia — Railway Revolution Deep Dive</h3>
-                    <p data-translate-key="hsrIdCardDesc">A companion deep dive into Indonesia's railway transformation — from colonial heritage to Whoosh, Jakarta–Surabaya corridor analysis, station city profiles, and 2045 vision.</p>
+                    <h3 data-translate-key="hsrIdCardTitle">HSR in Indonesia: Railway Revolution Deep Dive</h3>
+                    <p data-translate-key="hsrIdCardDesc">A companion deep dive into Indonesia's railway transformation: from colonial heritage to Whoosh, Jakarta–Surabaya corridor analysis, station city profiles, and 2045 vision.</p>
                     <div class="card-footer-row">
                         <a href="./topics/hsr-indonesia.html" class="card-link" onclick="event.stopPropagation();" data-translate-key="guideCardLink">View Guide &rarr;</a>
                         <button class="copy-link-btn" aria-label="Copy topic link" onclick="copyTopicLink(this, './topics/hsr-indonesia.html', event);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
@@ -1993,20 +2140,20 @@
                 </div>
             </div>
 
-            <!-- 30: High Speed Rail -->
+            <!-- 31: High Speed Rail -->
             <div class="feature-card" data-url="./topics/high-speed-rail.html" data-slug="high-speed-rail" data-category="transport" data-keywords="high speed rail, shinkansen, tgv, fuxing, ice germany, eurostar, ave spain, maglev, bullet train" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Transport, Transportasi, HSR, Shinkansen, TGV, Bullet Train">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">30</div>
+                            <div class="feature-icon mono">31</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('high-speed-rail', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
                         <span class="card-tag tag-transport" onclick="filterByCategory('transport', event);" data-translate-key="tagTransport">Transport</span>
                     </div>
-                    <h3 data-translate-key="hsrCardTitle">High Speed Rail Compendium — Every System Compared</h3>
-                    <p data-translate-key="hsrCardDesc">An interactive compendium of HSR systems worldwide — Shinkansen, TGV, Maglev, Fuxing, and more. Compare speeds, costs, and tech specs.</p>
+                    <h3 data-translate-key="hsrCardTitle">High Speed Rail Compendium: Every System Compared</h3>
+                    <p data-translate-key="hsrCardDesc">An interactive compendium of HSR systems worldwide: Shinkansen, TGV, Maglev, Fuxing, and more. Compare speeds, costs, and tech specs.</p>
                     <div class="card-footer-row">
                         <a href="./topics/high-speed-rail.html" class="card-link" onclick="event.stopPropagation();" data-translate-key="guideCardLink">View Guide &rarr;</a>
                         <button class="copy-link-btn" aria-label="Copy topic link" onclick="copyTopicLink(this, './topics/high-speed-rail.html', event);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
@@ -2014,12 +2161,12 @@
                 </div>
             </div>
 
-            <!-- 31: LoLyeah Dump -->
+            <!-- 30: LoLyeah Dump -->
             <div class="feature-card" data-url="./dump/" data-slug="dump" data-category="simulators" data-keywords="dump, laboratory, experimental, scratchpad, code, scripts, prototypes" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Experimental, Eksperimental, Lab, Code, Scripts">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">31</div>
+                            <div class="feature-icon mono">30</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('dump', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2035,12 +2182,12 @@
                 </div>
             </div>
 
-            <!-- 32: Aviation Economics -->
+            <!-- 29: Aviation Economics -->
             <div class="feature-card" data-url="./topics/aviation-economics.html" data-slug="aviation-economics" data-category="transport economics" data-keywords="aviation, tiket pesawat, tba, tbb, avtur pertamina, ppn ganda, garuda, lion air, asean open skies" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Transport, Aviation, Penerbangan, Pesawat">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">32</div>
+                            <div class="feature-icon mono">29</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('aviation-economics', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2056,20 +2203,20 @@
                 </div>
             </div>
 
-            <!-- 33: Nuclear Reactors -->
+            <!-- 28: Nuclear Reactors -->
             <div class="feature-card" data-url="./topics/nuclear-reactors.html" data-slug="nuclear-reactors" data-category="energy" data-keywords="nuclear, pwr, bwr, candu, smr, gen iv, fast breeder, molten salt msr, vhtr, tokamak fusion" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Energy, Energi, Nuclear, Reaktor Nuklir, SMR">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">33</div>
+                            <div class="feature-icon mono">28</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('nuclear-reactors', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
                         <span class="card-tag tag-energy" onclick="filterByCategory('energy', event);" data-translate-key="tagEnergy">Energy</span>
                     </div>
-                    <h3 data-translate-key="nuclearReactorsCardTitle">Nuclear Reactors Compendium — Every Type Compared</h3>
-                    <p data-translate-key="nuclearReactorsCardDesc">An interactive compendium of every type of nuclear reactor — from PWRs and Gen IV fast breeders to SMRs, microreactors, fusion tokamaks, and research reactors.</p>
+                    <h3 data-translate-key="nuclearReactorsCardTitle">Nuclear Reactors Compendium: Every Type Compared</h3>
+                    <p data-translate-key="nuclearReactorsCardDesc">An interactive compendium of every type of nuclear reactor: from PWRs and Gen IV fast breeders to SMRs, microreactors, fusion tokamaks, and research reactors.</p>
                     <div class="card-footer-row">
                         <a href="./topics/nuclear-reactors.html" class="card-link" onclick="event.stopPropagation();" data-translate-key="guideCardLink">View Guide &rarr;</a>
                         <button class="copy-link-btn" aria-label="Copy topic link" onclick="copyTopicLink(this, './topics/nuclear-reactors.html', event);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
@@ -2077,12 +2224,12 @@
                 </div>
             </div>
 
-            <!-- 34: Solar Panel Guide -->
+            <!-- 27: Solar Panel Guide -->
             <div class="feature-card" data-url="./topics/solar-panel-guide.html" data-slug="solar-panel-guide" data-category="energy" data-keywords="solar panel, plts atap, off-grid, hybrid, inverter, pln net metering, lifepo4 battery, panel surya rumah" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Energy, Energi, Solar, Panel Surya, PLTS">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">34</div>
+                            <div class="feature-icon mono">27</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('solar-panel-guide', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2090,7 +2237,7 @@
                         <span class="card-tag tag-energy" onclick="filterByCategory('energy', event);" data-translate-key="tagEnergy">Energy</span>
                     </div>
                     <h3 data-translate-key="solarPanelCardTitle">Solar Panel Guide: Off-Grid &amp; Hybrid for Indonesian Homes</h3>
-                    <p data-translate-key="solarPanelCardDesc">Complete guide to powering your Indonesian home with solar panels — off-grid or hybrid systems, cost analysis, and interactive calculator.</p>
+                    <p data-translate-key="solarPanelCardDesc">Complete guide to powering your Indonesian home with solar panels: off-grid or hybrid systems, cost analysis, and interactive calculator.</p>
                     <div class="card-footer-row">
                         <a href="./topics/solar-panel-guide.html" class="card-link" onclick="event.stopPropagation();" data-translate-key="guideCardLink">View Guide &rarr;</a>
                         <button class="copy-link-btn" aria-label="Copy topic link" onclick="copyTopicLink(this, './topics/solar-panel-guide.html', event);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
@@ -2098,12 +2245,12 @@
                 </div>
             </div>
 
-            <!-- 35: Hondana -->
+            <!-- 26: Hondana -->
             <div class="feature-card" data-url="https://hondana-pi.vercel.app/" data-target="_blank" data-slug="hondana" data-category="simulators" data-keywords="hondana, tpa, tbi, toefl, bumn, cpns, exam prep, psikotes" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Simulator, TPA, TOEFL, Exam, CPNS, BUMN">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">35</div>
+                            <div class="feature-icon mono">26</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('hondana', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2119,12 +2266,12 @@
                 </div>
             </div>
 
-            <!-- 36: ACS Diagnostics -->
+            <!-- 25: ACS Diagnostics -->
             <div class="feature-card" data-url="./topics/acs-diagnostics.html" data-slug="acs-diagnostics" data-category="clinical" data-keywords="acs, acute coronary syndrome, sindrom koroner akut, ecg, ekg, nstemi, stemi, uap, troponin" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, ACS, Cardiology, Sindrom Koroner, Jantung">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">36</div>
+                            <div class="feature-icon mono">25</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('acs-diagnostics', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2140,12 +2287,12 @@
                 </div>
             </div>
 
-            <!-- 37: Anesthesia Clinical Assistant -->
+            <!-- 24: Anesthesia Clinical Assistant -->
             <div class="feature-card" data-url="https://rizqihan.netlify.app/" data-target="_blank" data-slug="anesthesia" data-category="clinical simulators" data-keywords="anesthesia, anestesi, dosis obat, kalkulator cairan, mallampati, intubasi" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Simulator, Clinical, Klinis, Anestesi, Anesthesia, Dosis">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">37</div>
+                            <div class="feature-icon mono">24</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('anesthesia', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2161,12 +2308,12 @@
                 </div>
             </div>
 
-            <!-- 38: ADHD Dossier -->
+            <!-- 23: ADHD Dossier -->
             <div class="feature-card" data-url="./topics/adhd.html" data-slug="adhd" data-category="clinical" data-keywords="adhd, asrs v1.1, default mode network, dopamin, prefrontal cortex, methylphenidate" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Neurodiversity, Neurodiversitas, ADHD, Dopamin, Psikiatri">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">38</div>
+                            <div class="feature-icon mono">23</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('adhd', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2182,12 +2329,12 @@
                 </div>
             </div>
 
-            <!-- 39: STEMI -->
+            <!-- 22: STEMI -->
             <div class="feature-card" data-url="./topics/stemi.html" data-slug="stemi" data-category="clinical" data-keywords="stemi, infark miokard, killip class, pci primer, fibrinolitik, ekg st elevasi, door to balloon" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, STEMI, Cardiology, EKG, Infark Miokard">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">39</div>
+                            <div class="feature-icon mono">22</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('stemi', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2203,12 +2350,12 @@
                 </div>
             </div>
 
-            <!-- 40: AuDHD -->
+            <!-- 21: AuDHD -->
             <div class="feature-card" data-url="./topics/audhd-clinical-analysis.html" data-slug="audhd-clinical-analysis" data-category="clinical" data-keywords="audhd, asd, adhd, autisme, sensory overload, masking, executive dysfunction" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, AuDHD, Autism, ADHD, Autisme">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">40</div>
+                            <div class="feature-icon mono">21</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('audhd-clinical-analysis', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2224,12 +2371,12 @@
                 </div>
             </div>
 
-            <!-- 41: MedQuiz AI -->
+            <!-- 20: MedQuiz AI -->
             <div class="feature-card" data-url="https://lolyeah.netlify.app/" data-target="_blank" data-slug="medquiz" data-category="clinical simulators" data-keywords="medquiz, quiz kedokteran, clinical case, ukmppd, osce, cbt, studi kasus klinis" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Simulator, Clinical, Klinis, Quiz, UKMPPD, OSCE">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">41</div>
+                            <div class="feature-icon mono">20</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('medquiz', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2245,12 +2392,12 @@
                 </div>
             </div>
 
-            <!-- 42: Scoliosis -->
+            <!-- 19: Scoliosis -->
             <div class="feature-card" data-url="./topics/scoliosis.html" data-slug="scoliosis" data-category="clinical" data-keywords="scoliosis, skoliosis dewasa, cobb angle, bracing, schroth method, fusi spinal" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, Scoliosis, Skoliosis, Spine, Ortopedi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">42</div>
+                            <div class="feature-icon mono">19</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('scoliosis', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2266,12 +2413,12 @@
                 </div>
             </div>
 
-            <!-- 43: Resource -->
+            <!-- 18: Resource -->
             <div class="feature-card" data-url="./topics/resource.html" data-slug="resource" data-category="energy economics" data-keywords="resource, nikel, batubara, gas alam, emas, tembaga, bauksit, tanah jarang, cadangan migas" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Energy, Mining, Nikel, Tambang">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">43</div>
+                            <div class="feature-icon mono">18</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('resource', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2287,12 +2434,12 @@
                 </div>
             </div>
 
-            <!-- 44: Antibiotics -->
+            <!-- 17: Antibiotics -->
             <div class="feature-card" data-url="./topics/antibiotics.html" data-slug="antibiotics" data-category="clinical" data-keywords="antibiotik, antibiotic spectrum, beta laktam, sefalosporin, makrolida, fluorokuinolon, mrsa" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, Antibiotics, Antibiotik, Farmakologi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">44</div>
+                            <div class="feature-icon mono">17</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('antibiotics', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2308,12 +2455,12 @@
                 </div>
             </div>
 
-            <!-- 45: RadCompare -->
+            <!-- 16: RadCompare -->
             <div class="feature-card" data-url="./topics/radcompare.html" data-slug="radcompare" data-category="clinical economics" data-keywords="radiologi, radcompare, ct scan, mri, spesialis radiologi, tarif bpjs radiologi" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Radiology, Radiologi, CT Scan, MRI">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">45</div>
+                            <div class="feature-icon mono">16</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('radcompare', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2329,12 +2476,12 @@
                 </div>
             </div>
 
-            <!-- 46: Specialist Compared -->
+            <!-- 15: Specialist Compared -->
             <div class="feature-card" data-url="./topics/specialist-compared.html" data-slug="specialist-compared" data-category="clinical" data-keywords="spesialis, bedah, penyakit dalam, anak, obgyn, saraf, psikiatri, gaji dokter spesialis" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, Specialist, Dokter Spesialis, Gaji Dokter">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">46</div>
+                            <div class="feature-icon mono">15</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('specialist-compared', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2350,12 +2497,12 @@
                 </div>
             </div>
 
-            <!-- 47: Economic Outlook 2026 -->
+            <!-- 14: Economic Outlook 2026 -->
             <div class="feature-card" data-url="./topics/econ-outlook-2026.html" data-slug="econ-outlook-2026" data-category="economics" data-keywords="outlook ekonomi 2026, pib, pertumbuhan ekonomi, suku bunga bi, inflasi, defisit fiskal" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Economics, Inflasi, GDP, BI Rate">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">47</div>
+                            <div class="feature-icon mono">14</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('econ-outlook-2026', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2371,12 +2518,12 @@
                 </div>
             </div>
 
-            <!-- 48: Bottle Up -->
+            <!-- 13: Bottle Up -->
             <div class="feature-card" data-url="./topics/bottle-up.html" data-slug="bottle-up" data-category="clinical" data-keywords="bottle up, supresi emosi, memori episodik, hippocampus, amigdala, regulasi emosi" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, Psychology, Emosi, Supresi Emosi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">48</div>
+                            <div class="feature-icon mono">13</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('bottle-up', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2392,12 +2539,12 @@
                 </div>
             </div>
 
-            <!-- 49: ART 2026 -->
+            <!-- 12: ART 2026 -->
             <div class="feature-card" data-url="./topics/art2026.html" data-slug="art2026" data-category="economics" data-keywords="art 2026, reciprocal trade, tarif as indonesia, ekspor impor, gsp, nikel cpo tekstil" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Economics, Trade, Perdagangan, Tarif">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">49</div>
+                            <div class="feature-icon mono">12</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('art2026', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2413,12 +2560,12 @@
                 </div>
             </div>
 
-            <!-- 50: A -->
+            <!-- 11: A -->
             <div class="feature-card" data-url="./topics/a.html" data-slug="a" data-category="simulators" data-keywords="痛い, japanese, experimental, visual artifact, web art" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Experimental, Eksperimental, Art, Web Art, Visual">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">50</div>
+                            <div class="feature-icon mono">11</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('a', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2434,12 +2581,12 @@
                 </div>
             </div>
 
-            <!-- 51: Upper Gastro -->
+            <!-- 10: Upper Gastro -->
             <div class="feature-card" data-url="./topics/upper-gastro.html" data-slug="upper-gastro" data-category="clinical" data-keywords="gastritis, gerd, peptic ulcer, tukak lambung, ppi, omeprazole, h pylori, endoskopi" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, Gastro, Lambung, GERD, Gastritis">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">51</div>
+                            <div class="feature-icon mono">10</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('upper-gastro', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2455,12 +2602,12 @@
                 </div>
             </div>
 
-            <!-- 52: Solar System -->
+            <!-- 09: Solar System -->
             <div class="feature-card" data-url="./topics/solar-system.html" data-slug="solar-system" data-category="energy simulators" data-keywords="solar system, tata surya, orbit planet, orbit physics, gravitational simulation, canvas 3d" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Simulator, Space, Astronomi, Tata Surya, Planet">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">52</div>
+                            <div class="feature-icon mono">09</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('solar-system', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2476,12 +2623,12 @@
                 </div>
             </div>
 
-            <!-- 53: What If Nusantara -->
+            <!-- 08: What If Nusantara -->
             <div class="feature-card" data-url="./topics/what-if-nusantara.html" data-slug="what-if-nusantara" data-category="economics" data-keywords="what if nusantara, kemerdekaan provinsi, pdrb provinsi, papua, aceh, riau, kaltim, bali" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Geopolitik, Nusantara, Provinsi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">53</div>
+                            <div class="feature-icon mono">08</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('what-if-nusantara', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2497,19 +2644,19 @@
                 </div>
             </div>
 
-            <!-- 54: USI -->
+            <!-- 07: USI -->
             <div class="feature-card" data-url="./topics/USI.html" data-slug="USI" data-category="economics" data-keywords="usi, federalisme indonesia, negara bagian, ris, otonomi daerah, nkri, desentralisasi fiskal" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Analysis, Analisis, Geopolitik, Federalisme, NKRI">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">54</div>
+                            <div class="feature-icon mono">07</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('USI', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
                         <span class="card-tag tag-analysis" onclick="filterByCategory('economics', event);" data-translate-key="tagAnalysis">Analysis</span>
                     </div>
-                    <h3 data-translate-key="usiCardTitle">The Federal Scenario — Indonesian Federalism vs NKRI</h3>
+                    <h3 data-translate-key="usiCardTitle">The Federal Scenario: Indonesian Federalism vs NKRI</h3>
                     <p data-translate-key="usiCardDesc">An interactive geopolitical and fiscal scenario exploring federal governance models against the unitary republic framework in Indonesia.</p>
                     <div class="card-footer-row">
                         <a href="./topics/USI.html" class="card-link" onclick="event.stopPropagation();" data-translate-key="analysisCardLink">View Analysis &rarr;</a>
@@ -2518,12 +2665,12 @@
                 </div>
             </div>
 
-            <!-- 55: Ship Class -->
+            <!-- 06: Ship Class -->
             <div class="feature-card" data-url="./topics/ship-class.html" data-slug="ship-class" data-category="transport" data-keywords="kapal perang, destroyer, frigate, corvette, aircraft carrier, submarine, tni al" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Engineering, Teknik, Naval, Kapal Perang, Militer">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">55</div>
+                            <div class="feature-icon mono">06</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('ship-class', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2539,12 +2686,12 @@
                 </div>
             </div>
 
-            <!-- 56: Laxative Comparison -->
+            <!-- 05: Laxative Comparison -->
             <div class="feature-card" data-url="./topics/laxative-comparison.html" data-slug="laxative-comparison" data-category="clinical" data-keywords="laksatif, konstipasi, pencahar, dulcolax, bisacodyl, lactulose, microlax" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, Laxatives, Pencahar, Laksatif, Konstipasi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">56</div>
+                            <div class="feature-icon mono">05</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('laxative-comparison', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2560,12 +2707,12 @@
                 </div>
             </div>
 
-            <!-- 57: Foodborne Outbreak -->
+            <!-- 04: Foodborne Outbreak -->
             <div class="feature-card" data-url="./topics/foodborne-outbreak.html" data-slug="foodborne-outbreak" data-category="clinical" data-keywords="foodborne outbreak, keracunan makanan, salmonella, e coli, botulisme, diare akut" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, Foodborne, Keracunan Makanan, Outbreak">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">57</div>
+                            <div class="feature-icon mono">04</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('foodborne-outbreak', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2581,12 +2728,12 @@
                 </div>
             </div>
 
-            <!-- 58: Diabetes Guide -->
+            <!-- 03: Diabetes Guide -->
             <div class="feature-card" data-url="./topics/diabetes-guide.html" data-slug="diabetes-guide" data-category="clinical" data-keywords="diabetes melitus, dm tipe 2, hba1c, metformin, insulin, diet diabetes" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, Diabetes, DM Tipe 2, Insulin">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">58</div>
+                            <div class="feature-icon mono">03</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('diabetes-guide', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2602,12 +2749,12 @@
                 </div>
             </div>
 
-            <!-- 59: Stroke -->
+            <!-- 02: Stroke -->
             <div class="feature-card" data-url="./topics/stroke.html" data-slug="stroke" data-category="clinical" data-keywords="stroke iskemik, stroke hemoragik, fast, rtpa trombolisis, ct scan kepala" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Clinical, Klinis, Stroke, Neurologi, FAST">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">59</div>
+                            <div class="feature-icon mono">02</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('stroke', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2623,12 +2770,12 @@
                 </div>
             </div>
 
-            <!-- 60: ADHD Diet Guide -->
+            <!-- 01: ADHD Diet Guide -->
             <div class="feature-card" data-url="./topics/adhd-diet-guide.html" data-slug="adhd-diet-guide" data-category="clinical" data-keywords="adhd diet, nutrisi adhd, few foods diet, omega 3, gula buatan, pewarna makanan" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Neurodiversity, Neurodiversitas, ADHD, Diet, Nutrisi">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
-                            <div class="feature-icon mono">60</div>
+                            <div class="feature-icon mono">01</div>
                             <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('adhd-diet-guide', this, event);">
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
@@ -2643,28 +2790,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 61: suravidl -->
-            <div class="feature-card" data-url="./topics/suravidl.html" data-slug="suravidl" data-category="engineering" data-keywords="suravidl, video downloader, audio downloader, android apk, media downloader, yt-dlp, media ingestion, ffmpeg muxing, 4k 8k video, stream archiver, lossless flac opus, liquid glass, lolyeah" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Engineering, Rekayasa, Android, Media, Video Downloader, Audio, Open Source, Liquid Glass">
-                <div class="feature-card-content">
-                    <div class="card-header">
-                        <div class="header-left">
-                            <div class="feature-icon mono">61</div>
-                            <button class="bookmark-btn" aria-label="Save to reading list" onclick="toggleBookmark('suravidl', this, event);">
-                                <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                            </button>
-                        </div>
-                        <span class="card-tag tag-engineering" onclick="filterByCategory('all', event);" data-translate-key="tagEngineering">Engineering</span>
-                    </div>
-                    <h3 data-translate-key="suravidlCardTitle">suravidl: Open-Source Media Downloader &amp; Ingestion Engine</h3>
-                    <p data-translate-key="suravidlCardDesc">A privacy-first media downloading application and stream ingestion engine for Android and desktop: download queue manager, MediaStore gallery integration, lossless audio extraction, SponsorBlock filtering, and liquid glass ergonomics.</p>
-                    <div class="card-footer-row">
-                        <a href="./topics/suravidl.html" class="card-link" onclick="event.stopPropagation();" data-translate-key="guideCardLink">View Guide &rarr;</a>
-                        <button class="copy-link-btn" aria-label="Copy topic link" onclick="copyTopicLink(this, './topics/suravidl.html', event);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
         <!-- Pagination Controls -->
@@ -2674,11 +2799,11 @@
                 <div class="pagination-pages" id="page-numbers"></div>
                 <button class="pagination-btn" id="next-page" aria-label="Next Page">Next &raquo;</button>
             </div>
-            <div class="pagination-info" id="pagination-info">Showing 1–9 of 61 topics</div>
+            <div class="pagination-info" id="pagination-info" role="status" aria-live="polite">Showing 1–9 of 61 topics</div>
         </div>
 
         <!-- Empty State -->
-        <div id="no-results" class="no-results-container">
+        <div id="no-results" class="no-results-container" role="status" aria-live="polite">
             <svg class="no-results-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="8"></circle>
                 <path d="M21 21l-4.35-4.35M11 8v6M8 11h6"></path>
@@ -2687,19 +2812,15 @@
             <p data-translate-key="noResultsDesc">We couldn't find any guides matching your query. Try searching for a different keyword or resetting filters.</p>
             <button id="reset-search-btn" data-translate-key="clearSearchBtn">Clear Search</button>
         </div>
-    </section>
+    </main>
 
     <!-- Collapsible About Section -->
-    <section class="about-section" id="about">
+    <section class="about-section" id="about" inert>
         <div class="about-inner">
             <div class="dev-terminal">
                 <div class="terminal-header">
-                    <div class="terminal-dots">
-                        <span class="t-dot red"></span>
-                        <span class="t-dot yellow"></span>
-                        <span class="t-dot green"></span>
-                    </div>
                     <span class="terminal-title">lolyeah_telemetry.sys</span>
+                    <button id="about-close-btn" class="terminal-close-btn" aria-label="Close about section" data-translate-key="aboutCloseBtn">&times;</button>
                 </div>
                 <div class="terminal-avatar-block">
                     <div class="avatar-mesh">
@@ -2721,7 +2842,7 @@
                     </div>
                     <div class="log-row">
                         <span class="log-tag">STATUS //</span>
-                        <span class="log-val">SYSTEM OPERATIONAL // 59 TOPICS</span>
+                        <span class="log-val">SYSTEM OPERATIONAL // 61 TOPICS</span>
                     </div>
                 </div>
             </div>
@@ -2746,7 +2867,7 @@
             LoLyeah
         </div>
         <div class="footer-right">
-            <button id="about-toggle" class="nav-btn mono" data-translate-key="aboutBtn">ABOUT</button>
+            <button id="about-toggle" class="nav-btn mono" data-translate-key="aboutBtn" aria-expanded="false" aria-controls="about">ABOUT</button>
             <span class="separator">/</span>
             <span data-translate-key="footerText">&copy; 2026 LoLyeah. All Rights Reserved.</span>
         </div>
@@ -2757,7 +2878,7 @@
         <span id="toast-message" data-translate-key="toastCopied">Link copied to clipboard!</span>
     </div>
 
-    <button class="scroll-top" id="scrollTop">UP</button>
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top" data-translate-key="scrollTop">UP</button>
 
     <script>
         // --- Translations ---
@@ -2832,7 +2953,7 @@
                 subpageSocotraFlora: "🌿 307+ Endemic Flora & Resins",
                 subpageSocotraGeology: "🌋 Gondwana Geology & Hoq Cave",
                 tagMedical24h: "Clinical",
-                medical24hCardTitle: "Why Medicine Normalized 24-Hour Shifts — And How to Fix It",
+                medical24hCardTitle: "Why Medicine Normalized 24-Hour Shifts: And How to Fix It",
                 medical24hCardDesc: "Clinical systemic compendium & cognitive fatigue simulator: Halsted's cocaine-fueled residency origins, 0.08% BAC sleep loss equivalence, I-PASS handover protocols, and Indonesia PPDS cross-border comparison.",
                 subpageMedicalIndoVsWorld: "🇮🇩 Indonesia vs. The World Subpage",
                 tagBiomes: "Biosphere",
@@ -2851,7 +2972,7 @@
                 subpageCarBody: "🚗 Body Types & Engines Guide",
                 subpageFetalSensory: "👂 Sensory & Hearing Subpage",
                 subpageFetalBehavior: "🧠 1F–4F Nijhuis States & BPP",
-                gemstonesCardTitle: "The Anatomy of Allure — Earth's Most Beautiful Gemstones",
+                gemstonesCardTitle: "The Anatomy of Allure: Earth's Most Beautiful Gemstones",
                 gemstonesCardDesc: "Master compendium and optical physics explorer across 6 categories: Most Popular, Most Underrated, Hidden Gems, Most Overrated, The Most Cheapest, and Ultra-Expensive. Real photography, light dispersion ray tracer, and 40+ mineral database.",
                 subpageGemCategories: "💎 6 Categories Showcase",
                 subpageGemDatabase: "📊 Mineral Database (40+)",
@@ -2861,6 +2982,7 @@
                 filterEconomics: "Economics",
                 filterTransport: "Transport",
                 filterEnergy: "Energy",
+                filterScience: "Science",
                 filterSimulators: "Simulators",
                 searchPlaceholder: "Search topics...",
                 clearSearchBtn: "Clear Search",
@@ -2869,10 +2991,14 @@
                 showingInfo: "Showing {start}–{end} of {total} topics",
                 toastCopied: "Link copied to clipboard!",
                 aboutBtn: "ABOUT",
+                aboutCloseBtn: "&times;",
                 aboutMeta: "Clinical Architect",
                 aboutBioTitle: "Synthesizing Systemic Complexity",
                 aboutBioDesc: "I design and deploy clean, clinical reference frameworks, spatial simulations, and multi-dimensional analysis dashboards. Each topic in this archive represents a deep structural dive into complex systemic mechanics.",
                 footerText: "&copy; 2026 LoLyeah. All Rights Reserved.",
+                skipLink: "Skip to main content",
+                searchLabel: "Search topics",
+                scrollTop: "UP",
 
                 // Card Links
                 guideCardLink: "View Guide &rarr;",
@@ -2917,11 +3043,11 @@
                 civilMilitarizationCardDesc: "Critical analysis of civil-military relations under Prabowo Subianto: Akmil Magelang cabinet retreats, SPPI village cooperatives, New Order Dwifungsi ABRI comparison, Cynthia Enloe & Samuel Huntington frameworks.",
                 chinaEvCardTitle: "China EV Brands & Corporate Holdings",
                 chinaEvCardDesc: "Exhaustive landscape of Chinese electric vehicle conglomerates, parent holdings, state SOEs, private giants, foreign JVs, and Huawei HIMA tech alliances.",
-                middleIncomeCardTitle: "Is Indonesia Too Late for Developed Status? — Fact-Check & MIT Simulator",
+                middleIncomeCardTitle: "Is Indonesia Too Late for Developed Status? Fact-Check & MIT Simulator",
                 middleIncomeCardDesc: "A rigorous empirical fact-check of the viral Reddit debate on deindustrialization, Megawati's UU 13/2003, SBY's lost commodity windfall, hilirisasi, and an interactive 2045 Middle-Income Trap simulator.",
                 evBatteryCardTitle: "Global & Indonesia EV Battery Compendium",
                 evBatteryCardDesc: "An interactive technical compendium and benchmark hub analyzing global battery vendors (CATL, BYD, LGES, Panasonic), chemistries (LFP, NMC, Sodium-Ion, Solid-State), fast-charge C-rates, pack simulators, and Indonesia's nickel-to-battery ecosystem.",
-                gajiKotorCardTitle: "Reverse Gross Salary Calculator — Indonesia",
+                gajiKotorCardTitle: "Reverse Gross Salary Calculator: Indonesia",
                 gajiKotorCardDesc: "An interactive reverse-engineering simulator and compendium demystifying Indonesian payslip deductions (BPJS Kes, BPJS TK JHT & JP, PPh 21 TER, Tapera, and formal corporate slips).",
                 giiasCardTitle: "GIIAS 2026 Entry Car Compendium",
                 giiasCardDesc: "An interactive side-by-side comparison simulator evaluating all 26 cheapest brand booth entry car models featured at GIIAS 2026: Prices, Powertrain, Suspension, ADAS, Pros & Cons.",
@@ -2929,26 +3055,26 @@
                 carSuspensionCardDesc: "An interactive technical compendium covering mechanical, air, and 2024-2026 active suspensions (Porsche PAR, BYD DiSus, ClearMotion) for ICE and EV vehicles, with Indonesian car listings.",
                 pedestrianCardTitle: "Pedestrian Infrastructure & Indonesian Urbanism",
                 pedestrianCardDesc: "Compare JPOs, pelican crossings, and contextual urban policy in Jakarta with an interactive crossing decision tool.",
-                trainBusCardTitle: "Train & Bus Economics — Java and Sumatra",
+                trainBusCardTitle: "Train & Bus Economics: Java and Sumatra",
                 trainBusCardDesc: "An interactive guide to fares, occupancy, tolls, fuel, subsidies, and the different economics of passenger transport across Java and Sumatra.",
-                iknCardTitle: "IKN Nusantara — Roadmap & Future",
+                iknCardTitle: "IKN Nusantara: Roadmap & Future",
                 iknCardDesc: "An interactive assessment of Ibu Kota Nusantara's developmental roadmap, infrastructure progress, challenges, and the 2045 Smart Forest City vision.",
-                sezCardTitle: "Indonesia's Special Economic Zones — Strategic Evaluation",
-                sezCardDesc: "An interactive ranking and performance audit of all 25 KEK zones — investment data, zone comparison tool, interactive map, and revocation risk analysis.",
+                sezCardTitle: "Indonesia's Special Economic Zones: Strategic Evaluation",
+                sezCardDesc: "An interactive ranking and performance audit of all 25 KEK zones: investment data, zone comparison tool, interactive map, and revocation risk analysis.",
                 medMarketCardTitle: "The Indonesian Medical Specialist Market",
                 medMarketCardDesc: "An interactive strategic assessment of doctor deficits, Kemenkes KJSU priority networks, spatial distribution mapping, and systemic training reforms.",
-                hsrIdCardTitle: "HSR in Indonesia — Railway Revolution Deep Dive",
-                hsrIdCardDesc: "A companion deep dive into Indonesia's railway transformation — from colonial heritage to the Whoosh era. Jakarta–Surabaya corridor analysis, station city profiles, Trans-Sumatra plans, and the 2045 national vision.",
-                hsrCardTitle: "High Speed Rail Compendium — Every System Compared",
-                hsrCardDesc: "An interactive compendium of HSR systems worldwide — Shinkansen, TGV, Maglev, Fuxing, and more. Compare speeds, costs, and tech specs, plus a deep dive into Indonesia's HSR future.",
+                hsrIdCardTitle: "HSR in Indonesia: Railway Revolution Deep Dive",
+                hsrIdCardDesc: "A companion deep dive into Indonesia's railway transformation: from colonial heritage to the Whoosh era. Jakarta–Surabaya corridor analysis, station city profiles, Trans-Sumatra plans, and the 2045 national vision.",
+                hsrCardTitle: "High Speed Rail Compendium: Every System Compared",
+                hsrCardDesc: "An interactive compendium of HSR systems worldwide: Shinkansen, TGV, Maglev, Fuxing, and more. Compare speeds, costs, and tech specs, plus a deep dive into Indonesia's HSR future.",
                 dumpCardTitle: "LoLyeah Dump",
                 dumpCardDesc: "A personal repository of random experiments, utilities, reference notes, and scratchpad scripts.",
                 aviationCardTitle: "Domestic Flight Cost Analysis",
                 aviationCardDesc: "An interactive analysis of Indonesia's domestic flight tariff anomalies, high-cost structures, double taxation, and comparisons with global models (US, EU, and ASEAN Open Skies).",
-                nuclearReactorsCardTitle: "Nuclear Reactors Compendium — Every Type Compared",
-                nuclearReactorsCardDesc: "An interactive compendium of every type of nuclear reactor — from PWRs and Gen IV fast breeders to SMRs, microreactors, fusion tokamaks, and research reactors. Compare cost, pros/cons, and tech specs.",
+                nuclearReactorsCardTitle: "Nuclear Reactors Compendium: Every Type Compared",
+                nuclearReactorsCardDesc: "An interactive compendium of every type of nuclear reactor: from PWRs and Gen IV fast breeders to SMRs, microreactors, fusion tokamaks, and research reactors. Compare cost, pros/cons, and tech specs.",
                 solarPanelCardTitle: "Solar Panel Guide: Off-Grid & Hybrid for Indonesian Homes",
-                solarPanelCardDesc: "Complete guide to powering your Indonesian home with solar panels — off-grid or hybrid systems, cost analysis, and interactive calculator.",
+                solarPanelCardDesc: "Complete guide to powering your Indonesian home with solar panels: off-grid or hybrid systems, cost analysis, and interactive calculator.",
                 hondanaCardTitle: "Hondana: AI-Powered Exam Prep",
                 hondanaCardDesc: "Interactive Academic Potential (TPA) and English (TBI/TOEFL) exam preparation suite with AI-powered analysis for job recruitment selection.",
                 acsCardTitle: "Acute Coronary Syndrome (ACS) Diagnostics",
@@ -2987,7 +3113,7 @@
                 solarCardDesc: "Solar System simulation and planetary orbit dynamics rendered natively right in your browser.",
                 nusantaraCardTitle: "What If Nusantara - Indonesian Provincial Independence Analysis",
                 nusantaraCardDesc: "A comparison between every province in Indonesia if every one of them become a sovereign state.",
-                usiCardTitle: "The Federal Scenario — Indonesian Federalism vs NKRI",
+                usiCardTitle: "The Federal Scenario: Indonesian Federalism vs NKRI",
                 usiCardDesc: "An interactive geopolitical and fiscal scenario exploring federal governance models against the unitary republic framework in Indonesia.",
                 navalCardTitle: "Naval Ship Class Comparison",
                 navalCardDesc: "A comparison between naval ship class in a nutshell.",
@@ -3001,8 +3127,11 @@
                 strokeCardDesc: "A visual guide to the causes, immediate actions, treatments, and recovery journey of stroke.",
                 adhdCardTitle: "An Interactive Guide to Diet and ADHD",
                 adhdCardDesc: "Explore the evidence-based connections between nutrition, dietary patterns, and the management of ADHD symptoms through an interactive, bilingual guide.",
-                suravidlCardTitle: "suravidl: Open-Source Media Downloader & Ingestion Engine",
-                suravidlCardDesc: "A privacy-first media downloading application and stream ingestion engine for Android and desktop: download queue manager, MediaStore gallery integration, lossless audio extraction, SponsorBlock filtering, and liquid glass ergonomics."
+                suravidlCardTitle: "suravidl: Open-Source Media Downloader & Ingestion Engine (v0.39.8)",
+                suravidlCardDesc: "A privacy-first media downloading application and stream ingestion engine for Android and desktop: download queue manager, MediaStore gallery integration, lossless audio extraction, SponsorBlock filtering, and liquid glass ergonomics.",
+                subpageSuravidlStudio: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>Command Studio',
+                subpageSuravidlCalc: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M8 18h.01M12 18h.01"></path></svg>Storage &amp; Bitrate Calc',
+                subpageSuravidlArch: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>v0.39.8 Architecture'
             },
             id: {
                 headerTitle: "Panduan Interaktif LoLyeah",
@@ -3048,6 +3177,7 @@
                 filterEconomics: "Ekonomi",
                 filterTransport: "Transportasi",
                 filterEnergy: "Energi",
+                filterScience: "Sains",
                 filterSimulators: "Simulator",
                 searchPlaceholder: "Cari topik...",
                 clearSearchBtn: "Hapus Pencarian",
@@ -3056,10 +3186,14 @@
                 showingInfo: "Menampilkan {start}–{end} dari {total} topik",
                 toastCopied: "Tautan berhasil disalin!",
                 aboutBtn: "TENTANG",
+                aboutCloseBtn: "&times;",
                 aboutMeta: "Arsitek Klinis",
                 aboutBioTitle: "Menyintesis Kompleksitas Sistemik",
                 aboutBioDesc: "Saya merancang dan menerapkan kerangka referensi klinis yang bersih, simulasi spasial, dan dasbor analisis multi-dimensi. Setiap topik dalam arsip ini merepresentasikan pembahasan struktural yang mendalam tentang mekanisme sistemik yang kompleks.",
                 footerText: "&copy; 2026 LoLyeah. Hak Cipta Dilindungi.",
+                skipLink: "Lewati ke konten utama",
+                searchLabel: "Cari topik",
+                scrollTop: "UP",
 
                 // Card Links
                 guideCardLink: "Lihat Panduan &rarr;",
@@ -3125,7 +3259,7 @@
                 subpageSocotraFlora: "🌿 307+ Flora Endemik & Kemenyan",
                 subpageSocotraGeology: "🌋 Geologi Gondwana & Gua Hoq",
                 tagMedical24h: "Klinis",
-                medical24hCardTitle: "Mengapa Shift 24 Jam Dinormalisasi dalam Medis — dan Cara Memperbaikinya",
+                medical24hCardTitle: "Mengapa Shift 24 Jam Dinormalisasi dalam Medis: dan Cara Memperbaikinya",
                 medical24hCardDesc: "Kompensium klinis sistemik & simulator kelelahan kognitif: asal-usul residensi kokain Halsted, penurunan kognitif setara 0,08% alkohol darah, protokol operan I-PASS, dan komparasi mendalam PPDS Indonesia.",
                 subpageMedicalIndoVsWorld: "🇮🇩 Sub-Kajian Indonesia vs Dunia",
                 tagBiomes: "Biosfer",
@@ -3138,7 +3272,7 @@
                 geothermalCardDesc: "Kompensium teknis interaktif & simulator siklus termodinamika: sistem flash & binary ORC, batas efisiensi Carnot, neraca pro-kontra, dan dampak perubahan iklim siklus hidup.",
                 subpageGeothermalIndo: "🌋 Sub-Kajian PLTP Indonesia (24+ GW)",
                 tagCarSelector: "Otomotif",
-                carSelectorCardTitle: "Mobil Tipe Apa yang Cocok Buat Anda di Indonesia? — Kuesioner Interaktif & Database 200+ Model",
+                carSelectorCardTitle: "Mobil Tipe Apa yang Cocok Buat Anda di Indonesia? Kuesioner Interaktif & Database 200+ Model",
                 carSelectorCardDesc: "Kuesioner cerdas penentu tipe mobil & database terpusat 200+ mobil di Indonesia: Bensin, Turbodiesel, Hybrid, PHEV, Mobil Listrik (BEV), LCGC, MPV, SUV, Sedan, hingga Mobil Sport lengkap dengan spesifikasi, simulator TCO, link Wikipedia & situs resmi.",
                 subpageCarDb: "📊 Master Database (200+ Mobil)",
                 subpageCarBody: "🚗 Panduan Bodi & Powertrain",
@@ -3151,7 +3285,7 @@
                 tagFetalDevelopment: "Embriologi",
                 fetalCardTitle: "Kehidupan Rahasia di Dalam Rahim: Aktivitas Janin Selama Kehamilan",
                 fetalCardDesc: "Kompensium klinis interaktif & simulator janin 4D: lab rasa cairan ketuban, synthesizer audio rahim, jam sirkadian 24 jam janin, penghitung gerakan Cardiff, dan perkembangan refleks motorik.",
-                gemstonesCardTitle: "Anatomi Daya Tarik — Batu Permata Terindah di Bumi",
+                gemstonesCardTitle: "Anatomi Daya Tarik: Batu Permata Terindah di Bumi",
                 gemstonesCardDesc: "Kompendium master dan penjelajah fisika optik dalam 6 kategori: Paling Populer, Paling Underrated, Permata Tersembunyi, Paling Overrated, Paling Murah, dan Ultra-Mewah. Lengkap dengan foto asli, simulasi dispersi cahaya, dan database 40+ mineral.",
                 hybridCarsCardTitle: "Kompendium Mobil Hybrid di Indonesia & Realitas Mild Hybrid (2026)",
                 hybridCarsCardDesc: "Panduan definitif New Energy Vehicle (NEV) Hybrid di Indonesia: bedah arsitektur MHEV, HEV (Full Hybrid), EREV (Series), PHEV (Plug-in), kritik efisiensi Mild Hybrid di kemacetan Jakarta, direktori model, dan simulator TCO BBM.",
@@ -3159,7 +3293,7 @@
                 civilMilitarizationCardDesc: "Analisis kritis relasi sipil-militer era Prabowo Subianto: retret Akmil Magelang, manajer SPPI Koperasi Merah Putih, komparasi Dwifungsi ABRI Orde Baru, teori Cynthia Enloe & Samuel Huntington.",
                 chinaEvCardTitle: "China EV Brands & Corporate Holdings",
                 chinaEvCardDesc: "Panduan komprehensif lanskap New Energy Vehicle Tiongkok, struktur kepemilikan holding, BUMN & swasta, joint venture global, serta aliansi cerdas Huawei HIMA.",
-                middleIncomeCardTitle: "Apakah Indonesia Terlambat Jadi Negara Maju? — Cek Fakta & Simulator MIT 2045",
+                middleIncomeCardTitle: "Apakah Indonesia Terlambat Jadi Negara Maju? Cek Fakta & Simulator MIT 2045",
                 middleIncomeCardDesc: "Cek fakta empiris mendalam atas wacana viral seputar deindustrialisasi dini, UU 13/2003, windfall komoditas era SBY, hilirisasi nikel, serta simulator interaktif Middle-Income Trap 2045.",
                 evBatteryCardTitle: "Kompendium Baterai EV Global & Indonesia",
                 evBatteryCardDesc: "Kompendium teknis & hub tolok ukur interaktif menganalisis produsen baterai global (CATL, BYD, LGES, Panasonic), kimia sel (LFP, NMC, Sodium-Ion, Solid-State), fast-charge C-rate, simulator baterai, dan ekosistem nikel-ke-baterai Indonesia.",
@@ -3171,26 +3305,26 @@
                 carSuspensionCardDesc: "Kompendium teknis interaktif mencakup suspensi mekanis, udara, dan aktif 2024-2026 (Porsche PAR, BYD DiSus, ClearMotion) untuk kendaraan ICE dan EV, lengkap dengan daftar mobil Indonesia.",
                 pedestrianCardTitle: "Infrastruktur Pejalan Kaki & Urbanisme Indonesia",
                 pedestrianCardDesc: "Bandingkan JPO, pelican crossing, dan kebijakan urban kontekstual di Jakarta dengan alat keputusan penyeberangan interaktif.",
-                trainBusCardTitle: "Ekonomi Kereta & Bus — Jawa dan Sumatra",
+                trainBusCardTitle: "Ekonomi Kereta & Bus: Jawa dan Sumatra",
                 trainBusCardDesc: "Panduan interaktif mengenai tarif, okupansi, tol, bahan bakar, subsidi, dan perbedaan ekonomi transportasi penumpang di Jawa dan Sumatra.",
-                iknCardTitle: "IKN Nusantara — Peta Jalan & Masa Depan",
+                iknCardTitle: "IKN Nusantara: Peta Jalan & Masa Depan",
                 iknCardDesc: "Kajian interaktif peta jalan pembangunan Ibu Kota Nusantara, progres infrastruktur, tantangan, dan visi Smart Forest City 2045.",
-                sezCardTitle: "Kawasan Ekonomi Khusus Indonesia — Evaluasi Strategis",
-                sezCardDesc: "Pemeringkatan interaktif dan audit kinerja 25 KEK — data investasi, alat perbandingan zona, peta interaktif, dan analisis risiko pencabutan status.",
+                sezCardTitle: "Kawasan Ekonomi Khusus Indonesia: Evaluasi Strategis",
+                sezCardDesc: "Pemeringkatan interaktif dan audit kinerja 25 KEK: data investasi, alat perbandingan zona, peta interaktif, dan analisis risiko pencabutan status.",
                 medMarketCardTitle: "Pasar Dokter Spesialis Indonesia",
                 medMarketCardDesc: "Analisis strategis interaktif tentang defisit dokter, jejaring prioritas KJSU Kemenkes, pemetaan distribusi spasial, dan reformasi pelatihan sistemik.",
-                hsrIdCardTitle: "HSR di Indonesia — Revolusi Perkeretaapian",
-                hsrIdCardDesc: "Analisis mendalam tentang transformasi perkeretaapian Indonesia — dari warisan kolonial hingga era Whoosh. Analisis koridor Jakarta–Surabaya, profil kota stasiun, rencana Trans-Sumatera, dan visi nasional 2045.",
-                hsrCardTitle: "Kompendium Kereta Cepat — Semua Sistem Dibandingkan",
-                hsrCardDesc: "Kompendium interaktif sistem kereta cepat di seluruh dunia — Shinkansen, TGV, Maglev, Fuxing, dan lainnya. Bandingkan kecepatan, biaya, dan spesifikasi teknologi, serta analisis mendalam masa depan HSR Indonesia.",
+                hsrIdCardTitle: "HSR di Indonesia: Revolusi Perkeretaapian",
+                hsrIdCardDesc: "Analisis mendalam tentang transformasi perkeretaapian Indonesia: dari warisan kolonial hingga era Whoosh. Analisis koridor Jakarta–Surabaya, profil kota stasiun, rencana Trans-Sumatera, dan visi nasional 2045.",
+                hsrCardTitle: "Kompendium Kereta Cepat: Semua Sistem Dibandingkan",
+                hsrCardDesc: "Kompendium interaktif sistem kereta cepat di seluruh dunia: Shinkansen, TGV, Maglev, Fuxing, dan lainnya. Bandingkan kecepatan, biaya, dan spesifikasi teknologi, serta analisis mendalam masa depan HSR Indonesia.",
                 dumpCardTitle: "LoLyeah Dump",
                 dumpCardDesc: "Repositori pribadi berisi eksperimen acak, utilitas, catatan referensi, dan skrip coretan.",
                 aviationCardTitle: "Analisis Tarif Penerbangan Domestik",
                 aviationCardDesc: "Analisis interaktif anomali tarif penerbangan domestik Indonesia, struktur biaya tinggi, pajak berganda, dan perbandingan dengan model global (AS, UE, dan ASEAN Open Skies).",
-                nuclearReactorsCardTitle: "Kompendium Reaktor Nuklir — Semua Jenis Dibandingkan",
-                nuclearReactorsCardDesc: "Kompendium interaktif setiap jenis reaktor nuklir — dari PWR dan pemulia cepat Gen IV hingga SMR, mikroreaktor, tokamak fusi, dan reaktor riset. Bandingkan biaya, pro/kontra, dan spesifikasi.",
+                nuclearReactorsCardTitle: "Kompendium Reaktor Nuklir: Semua Jenis Dibandingkan",
+                nuclearReactorsCardDesc: "Kompendium interaktif setiap jenis reaktor nuklir: dari PWR dan pemulia cepat Gen IV hingga SMR, mikroreaktor, tokamak fusi, dan reaktor riset. Bandingkan biaya, pro/kontra, dan spesifikasi.",
                 solarPanelCardTitle: "Panduan Panel Surya: Off-Grid & Hybrid untuk Rumah Indonesia",
-                solarPanelCardDesc: "Panduan lengkap untuk membuat rumah Indonesia mandiri listrik dengan panel surya — sistem off-grid atau hybrid, analisis biaya, dan kalkulator interaktif.",
+                solarPanelCardDesc: "Panduan lengkap untuk membuat rumah Indonesia mandiri listrik dengan panel surya: sistem off-grid atau hybrid, analisis biaya, dan kalkulator interaktif.",
                 hondanaCardTitle: "Hondana: Persiapan Ujian Berbasis AI",
                 hondanaCardDesc: "Aplikasi latihan ujian TPA dan TBI (TOEFL) interaktif dengan analisis AI untuk kelulusan BUMN, CPNS, dan seleksi kerja.",
                 acsCardTitle: "Diagnosis Sindrom Koroner Akut (SKA)",
@@ -3229,7 +3363,7 @@
                 solarCardDesc: "Simulasi Tata Surya dan dinamika orbit planet interaktif langsung di peramban Anda.",
                 nusantaraCardTitle: "Apa Jika Nusantara - Analisis Kemerdekaan Provinsi",
                 nusantaraCardDesc: "Perbandingan dan analisis mendalam jika setiap provinsi di Indonesia menjadi negara berdaulat.",
-                usiCardTitle: "Skenario Federal — Federalisme Indonesia vs NKRI",
+                usiCardTitle: "Skenario Federal: Federalisme Indonesia vs NKRI",
                 usiCardDesc: "Skenario geopolitik dan fiskal interaktif mengeksplorasi model tata kelola federal versus kerangka negara kesatuan (NKRI) di Indonesia.",
                 navalCardTitle: "Perbandingan Kelas Kapal Perang",
                 navalCardDesc: "Perbandingan struktural komprehensif antara kapal tempur permukaan dan kapal pendukung angkatan laut modern.",
@@ -3243,8 +3377,11 @@
                 strokeCardDesc: "Panduan visual tentang penyebab stroke (iskemik vs hemoragik), tindakan segera FAST, trombolisis akut, dan perjalanan pemulihan.",
                 adhdCardTitle: "Panduan Interaktif Diet dan ADHD",
                 adhdCardDesc: "Jelajahi hubungan berbasis bukti antara nutrisi, pola makan eliminasi, mikronutrien, dan regulasi gejala ADHD melalui panduan interaktif.",
-                suravidlCardTitle: "suravidl: Aplikasi Unduh Media & Mesin Ingesti Sumber Terbuka",
-                suravidlCardDesc: "Aplikasi pengunduh media dan mesin ingesti stream berbasis privasi untuk Android dan desktop: pengelola antrean unduhan, integrasi galeri MediaStore, ekstraksi audio lossless, filter SponsorBlock, dan ergonomi liquid glass."
+                suravidlCardTitle: "suravidl: Aplikasi Unduh Media & Mesin Ingesti Sumber Terbuka (v0.39.8)",
+                suravidlCardDesc: "Aplikasi pengunduh media dan mesin ingesti stream berbasis privasi untuk Android dan desktop: pengelola antrean unduhan, integrasi galeri MediaStore, ekstraksi audio lossless, filter SponsorBlock, dan ergonomi liquid glass.",
+                subpageSuravidlStudio: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>Studio Perintah',
+                subpageSuravidlCalc: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M8 18h.01M12 18h.01"></path></svg>Kalkulator Bitrate',
+                subpageSuravidlArch: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>Arsitektur v0.39.8'
             }
         };
 
@@ -3365,7 +3502,9 @@
             currentCategory = category;
             currentPage = 1;
             document.querySelectorAll('.filter-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.category === category);
+                const isActive = b.dataset.category === category;
+                b.classList.toggle('active', isActive);
+                b.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
             applyFilterAndSearch();
             scrollToTopics();
@@ -3375,7 +3514,10 @@
         function setLanguage(lang) {
             currentLang = lang;
             document.documentElement.lang = lang;
-            try { localStorage.setItem('pref_lang', lang); } catch (e) {}
+            try {
+                localStorage.setItem('pref_lang', lang);
+                localStorage.setItem('lolyeah_lang', lang);
+            } catch (e) {}
 
             document.querySelectorAll('[data-translate-key]').forEach(el => {
                 const key = el.dataset.translateKey;
@@ -3387,6 +3529,11 @@
                     }
                 }
             });
+
+            if (translations[lang] && translations[lang].searchLabel) {
+                const searchInp = document.getElementById('search-input');
+                if (searchInp) searchInp.setAttribute('aria-label', translations[lang].searchLabel);
+            }
 
             document.getElementById('lang-en').classList.toggle('active', lang === 'en');
             document.getElementById('lang-id').classList.toggle('active', lang === 'id');
@@ -3461,14 +3608,17 @@
         function initCardCatalog() {
             const grid = document.getElementById('features');
             const cards = Array.from(grid.children).filter(el => el.classList.contains('feature-card'));
+            const total = cards.length;
 
-            // Number cards gaplessly in DOM
+            // Number cards gaplessly descending (newest card = highest number)
             cards.forEach((card, idx) => {
+                const num = total - idx;
+                const numStr = num.toString().padStart(2, '0');
                 const iconEl = card.querySelector('.feature-icon');
                 if (iconEl) {
-                    iconEl.textContent = (idx + 1).toString().padStart(2, '0');
+                    iconEl.textContent = numStr;
                 }
-                card.dataset.indexNumber = (idx + 1).toString().padStart(2, '0');
+                card.dataset.indexNumber = numStr;
                 card.dataset.originalIndex = idx;
             });
 
@@ -3599,7 +3749,16 @@
             nextBtn.disabled = currentPage === totalPages;
 
             pageNumbersContainer.innerHTML = '';
-            for (let i = 1; i <= totalPages; i++) {
+            const isMobile = window.innerWidth < 640;
+            const maxPageButtons = isMobile ? 5 : 7;
+            let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+            let endPage = startPage + maxPageButtons - 1;
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - maxPageButtons + 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
                 const btn = document.createElement('button');
                 btn.className = 'pagination-btn' + (i === currentPage ? ' active' : '');
                 btn.textContent = i;
@@ -3656,7 +3815,11 @@
                 searchInput.value = '';
                 searchQuery = '';
                 currentCategory = 'all';
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.category === 'all'));
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    const isAll = b.dataset.category === 'all';
+                    b.classList.toggle('active', isAll);
+                    b.setAttribute('aria-selected', isAll ? 'true' : 'false');
+                });
                 currentPage = 1;
                 applyFilterAndSearch();
             });
@@ -3664,8 +3827,12 @@
             // Filter Buttons
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        b.classList.remove('active');
+                        b.setAttribute('aria-selected', 'false');
+                    });
                     btn.classList.add('active');
+                    btn.setAttribute('aria-selected', 'true');
                     currentCategory = btn.dataset.category;
                     currentPage = 1;
                     applyFilterAndSearch();
@@ -3711,20 +3878,45 @@
             // About Drawer
             const aboutToggle = document.getElementById('about-toggle');
             const aboutSection = document.getElementById('about');
-            aboutToggle.addEventListener('click', () => {
-                const isExpanded = aboutSection.classList.toggle('expanded');
-                if (isExpanded) {
-                    setTimeout(() => {
-                        aboutSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 100);
+
+            function openAbout() {
+                aboutSection.classList.add('expanded');
+                aboutSection.removeAttribute('inert');
+                aboutToggle.setAttribute('aria-expanded', 'true');
+                setTimeout(() => {
+                    aboutSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const focusable = aboutSection.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                    if (focusable) focusable.focus();
+                }, 100);
+            }
+
+            function closeAbout(restoreFocus = true) {
+                aboutSection.classList.remove('expanded');
+                aboutSection.setAttribute('inert', '');
+                aboutToggle.setAttribute('aria-expanded', 'false');
+                if (restoreFocus) {
+                    aboutToggle.focus();
                 }
+            }
+
+            aboutToggle.addEventListener('click', () => {
+                if (aboutSection.classList.contains('expanded')) {
+                    closeAbout(true);
+                } else {
+                    openAbout();
+                }
+            });
+
+            document.getElementById('about-close-btn')?.addEventListener('click', () => {
+                closeAbout(true);
             });
 
             // Mouse tracking hover glow
             const featuresGrid = document.getElementById('features');
             featuresGrid.addEventListener('mousemove', e => {
-                const cards = document.getElementsByClassName('feature-card');
-                for (const card of cards) {
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                const card = e.target.closest('.feature-card');
+                if (card) {
                     const rect = card.getBoundingClientRect();
                     const x = e.clientX - rect.left;
                     const y = e.clientY - rect.top;
@@ -3754,7 +3946,7 @@
                         searchInput.blur();
                     }
                     if (aboutSection.classList.contains('expanded')) {
-                        aboutSection.classList.remove('expanded');
+                        closeAbout(true);
                     }
                 }
             });
@@ -3768,7 +3960,7 @@
             setupEventListeners();
 
             let savedLang = 'en';
-            try { savedLang = localStorage.getItem('pref_lang') || 'en'; } catch (e) {}
+            try { savedLang = localStorage.getItem('lolyeah_lang') || localStorage.getItem('pref_lang') || 'en'; } catch (e) {}
             setLanguage(savedLang);
 
             fetchLastCommitDate();
