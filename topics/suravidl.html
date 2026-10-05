@@ -566,6 +566,7 @@
         }
 
         .copy-chip-btn {
+            position: relative;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--text-secondary);
@@ -576,8 +577,57 @@
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            transition: var(--transition-fast);
+            gap: 6px;
+            user-select: none;
+            overflow: hidden;
+            transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .copy-chip-btn:active {
+            transform: scale(0.96);
+        }
+
+        .icon-morph-wrap {
+            position: relative;
+            width: 13px;
+            height: 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .icon-morph-copy, .icon-morph-check {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), opacity 150ms ease;
+        }
+
+        .icon-morph-check {
+            opacity: 0;
+            transform: scale(0.4);
+            stroke-dasharray: 24;
+            stroke-dashoffset: 24;
+        }
+
+        .is-copied .icon-morph-copy {
+            opacity: 0;
+            transform: scale(0.4);
+        }
+
+        .is-copied .icon-morph-check {
+            opacity: 1;
+            transform: scale(1);
+            stroke-dashoffset: 0;
+            color: var(--accent-emerald, #10b981);
+        }
+
+        .copy-chip-btn.is-copied, .copy-output-btn.is-copied {
+            border-color: var(--accent-emerald, #10b981) !important;
+            color: var(--accent-emerald, #10b981) !important;
         }
 
         /* 4-Metric Milestone Ribbon (Architectural Specimen Grid) */
@@ -893,6 +943,7 @@
         }
 
         .copy-output-btn {
+            position: relative;
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -904,7 +955,13 @@
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: #f8fafc;
             cursor: pointer;
-            transition: var(--transition-fast);
+            user-select: none;
+            overflow: hidden;
+            transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .copy-output-btn:active {
+            transform: scale(0.96);
         }
 
         [data-theme="light"] .terminal-box {
@@ -1256,31 +1313,65 @@
         }
 
         .format-filter-chips {
-            display: flex;
+            position: relative;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
+            gap: 4px;
+            background: var(--glass-bg-sunken);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            padding: 4px;
+            max-width: 100%;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .format-filter-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chip-sliding-indicator {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 0;
+            background: var(--accent-cyan);
+            border-radius: var(--radius-full);
+            pointer-events: none;
+            z-index: 1;
+            transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+                        width 220ms cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, width;
         }
 
         .format-chip-btn {
-            background: var(--glass-bg-sunken);
-            border: 1px solid var(--glass-border);
+            position: relative;
+            z-index: 2;
+            background: transparent;
+            border: none;
             color: var(--text-muted);
             border-radius: var(--radius-full);
             padding: 6px 14px;
             font-size: 0.82rem;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition-fast);
+            white-space: nowrap;
+            transition: color 150ms ease;
+        }
+
+        .format-chip-btn:hover {
+            color: var(--text-primary);
         }
 
         .format-chip-btn.active {
-            background: var(--accent-cyan);
-            border-color: var(--accent-cyan);
+            background: transparent;
+            border: none;
             color: #060810;
         }
 
         [data-theme="light"] .format-chip-btn.active {
+            background: transparent;
+            border: none;
             color: #ffffff;
         }
 
@@ -1386,36 +1477,75 @@
             line-height: 1.5;
         }
 
-        /* Quick Start & Installation Deck */
+        /* Quick Start & Installation Deck - Fluid Pill Tabs */
         .install-header-tabs {
-            display: flex;
+            position: relative;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             margin-bottom: 1.25rem;
-            flex-wrap: wrap;
+            background: var(--glass-bg-sunken);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            max-width: 100%;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .install-header-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .install-tab-indicator {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 0;
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid var(--accent-cyan);
+            border-radius: calc(var(--radius-md) - 2px);
+            pointer-events: none;
+            z-index: 1;
+            transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+                        width 220ms cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, width;
+        }
+
+        [data-theme="light"] .install-tab-indicator {
+            background: rgba(3, 105, 161, 0.10);
+            border-color: var(--accent-cyan);
         }
 
         .inst-tab-btn {
-            background: var(--glass-bg-sunken);
-            border: 1px solid var(--glass-border);
+            position: relative;
+            z-index: 2;
+            background: transparent;
+            border: none;
             color: var(--text-muted);
-            border-radius: var(--radius-md);
+            border-radius: calc(var(--radius-md) - 2px);
             padding: 8px 16px;
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition-fast);
+            white-space: nowrap;
+            transition: color 150ms ease;
+        }
+
+        .inst-tab-btn:hover {
+            color: var(--text-primary);
         }
 
         .inst-tab-btn.active {
-            background: rgba(56, 189, 248, 0.15);
-            border-color: var(--accent-cyan);
+            background: transparent;
+            border: none;
             color: var(--accent-cyan);
         }
 
         [data-theme="light"] .inst-tab-btn.active {
-            background: rgba(3, 105, 161, 0.10);
-            border-color: var(--accent-cyan);
+            background: transparent;
+            border: none;
+            color: var(--accent-cyan);
         }
 
         .install-instruction-text {
@@ -1985,12 +2115,17 @@
                         <div class="install-chip">
                             <code>git clone https://github.com/LoLyeah/suravidl.git</code>
                             <button class="copy-chip-btn" onclick="copySnippet('git clone https://github.com/LoLyeah/suravidl.git', this);" aria-label="Copy git clone command">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                </svg>
-                                <span class="en-only">Copy</span>
-                                <span class="id-only">Salin</span>
+                                <span class="icon-morph-wrap" aria-hidden="true">
+                                    <svg class="icon-morph-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                    <svg class="icon-morph-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                                <span class="copy-label-text en-only">Copy</span>
+                                <span class="copy-label-text id-only">Salin</span>
                             </button>
                         </div>
                     </div>
@@ -2248,22 +2383,32 @@
                             <div class="terminal-box">
                                 <div class="terminal-header">
                                     <span class="terminal-title">suravidl-cli session (v0.39.8)</span>
-                                    <div style="display: flex; align-items: center; gap: 6px;">
-                                        <button class="copy-output-btn" onclick="copyCurrentCommand();">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                            </svg>
-                                            <span class="en-only">Copy Command</span>
-                                            <span class="id-only">Salin Perintah</span>
+                                     <div style="display: flex; align-items: center; gap: 6px;">
+                                        <button class="copy-output-btn" onclick="copyCurrentCommand(this);">
+                                            <span class="icon-morph-wrap" aria-hidden="true">
+                                                <svg class="icon-morph-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                                </svg>
+                                                <svg class="icon-morph-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                                </svg>
+                                            </span>
+                                            <span class="copy-label-text en-only">Copy Command</span>
+                                            <span class="copy-label-text id-only">Salin Perintah</span>
                                         </button>
-                                        <button class="copy-output-btn" onclick="copyCurrentFlags();" title="Copy CLI options only (without binary name and URL)">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <polyline points="4 17 10 11 4 5"></polyline>
-                                                <line x1="12" y1="19" x2="20" y2="19"></line>
-                                            </svg>
-                                            <span class="en-only">Flags Only</span>
-                                            <span class="id-only">Opsi Saja</span>
+                                        <button class="copy-output-btn" onclick="copyCurrentFlags(this);" title="Copy CLI options only (without binary name and URL)">
+                                            <span class="icon-morph-wrap" aria-hidden="true">
+                                                <svg class="icon-morph-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="4 17 10 11 4 5"></polyline>
+                                                    <line x1="12" y1="19" x2="20" y2="19"></line>
+                                                </svg>
+                                                <svg class="icon-morph-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                                </svg>
+                                            </span>
+                                            <span class="copy-label-text en-only">Flags Only</span>
+                                            <span class="copy-label-text id-only">Opsi Saja</span>
                                         </button>
                                     </div>
                                 </div>
@@ -2662,10 +2807,11 @@
                 <div class="glass-panel">
                     <div class="format-controls-bar">
                         <div class="format-filter-chips">
-                            <button class="format-chip-btn active" data-type="all" onclick="filterFormats('all');"><span class="en-only">All Formats</span><span class="id-only">Semua Format</span></button>
-                            <button class="format-chip-btn" data-type="video" onclick="filterFormats('video');"><span class="en-only">Video Containers</span><span class="id-only">Kontainer Video</span></button>
-                            <button class="format-chip-btn" data-type="audio" onclick="filterFormats('audio');"><span class="en-only">Lossless Audio</span><span class="id-only">Audio Lossless</span></button>
-                            <button class="format-chip-btn" data-type="stream" onclick="filterFormats('stream');"><span class="en-only">Adaptive Streaming</span><span class="id-only">Streaming Adaptif</span></button>
+                            <div class="chip-sliding-indicator" id="format-chip-indicator" aria-hidden="true"></div>
+                            <button class="format-chip-btn active" data-type="all" onclick="filterFormats('all', this);"><span class="en-only">All Formats</span><span class="id-only">Semua Format</span></button>
+                            <button class="format-chip-btn" data-type="video" onclick="filterFormats('video', this);"><span class="en-only">Video Containers</span><span class="id-only">Kontainer Video</span></button>
+                            <button class="format-chip-btn" data-type="audio" onclick="filterFormats('audio', this);"><span class="en-only">Lossless Audio</span><span class="id-only">Audio Lossless</span></button>
+                            <button class="format-chip-btn" data-type="stream" onclick="filterFormats('stream', this);"><span class="en-only">Adaptive Streaming</span><span class="id-only">Streaming Adaptif</span></button>
                         </div>
                         <input type="text" class="search-glass-input" id="format-search-input" placeholder="Search format or codec..." data-en-placeholder="Search format or codec..." data-id-placeholder="Cari format atau kodek..." aria-label="Search formats" oninput="searchFormats(this.value);">
                     </div>
@@ -2883,15 +3029,16 @@
 
                 <div class="glass-panel">
                     <div class="install-header-tabs">
-                        <button class="inst-tab-btn active" data-pkg="android" onclick="setInstallTab('android');">
+                        <div class="install-tab-indicator" id="install-tab-indicator" aria-hidden="true"></div>
+                        <button class="inst-tab-btn active" data-pkg="android" onclick="setInstallTab('android', this);">
                             <span class="en-only">Android APK (Mobile)</span>
                             <span class="id-only">Android APK (Ponsel)</span>
                         </button>
-                        <button class="inst-tab-btn" data-pkg="engine" onclick="setInstallTab('engine');">
+                        <button class="inst-tab-btn" data-pkg="engine" onclick="setInstallTab('engine', this);">
                             <span class="en-only">Python Engine (Source)</span>
                             <span class="id-only">Mesin Python (Sumber)</span>
                         </button>
-                        <button class="inst-tab-btn" data-pkg="desktop" onclick="setInstallTab('desktop');">
+                        <button class="inst-tab-btn" data-pkg="desktop" onclick="setInstallTab('desktop', this);">
                             <span class="en-only">Desktop Releases</span>
                             <span class="id-only">Rilis Desktop</span>
                         </button>
@@ -2973,13 +3120,18 @@
                         <div class="terminal-box">
                             <div class="terminal-header">
                                 <span class="terminal-title" id="install-box-title">Python Engine Source (v0.39.8)</span>
-                                <button class="copy-output-btn" onclick="copyInstallCmd();">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                    </svg>
-                                    <span class="en-only">Copy</span>
-                                    <span class="id-only">Salin</span>
+                                <button class="copy-output-btn" onclick="copyInstallCmd(this);">
+                                    <span class="icon-morph-wrap" aria-hidden="true">
+                                        <svg class="icon-morph-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <svg class="icon-morph-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </span>
+                                    <span class="copy-label-text en-only">Copy</span>
+                                    <span class="copy-label-text id-only">Salin</span>
                                 </button>
                             </div>
                             <div class="terminal-body">
@@ -3091,9 +3243,31 @@
             }, 2200);
         }
 
-        function copySnippet(text, message) {
+        function copySnippet(text, triggerEl, message) {
+            let btn = null;
+            let msg = message;
+            if (triggerEl && typeof triggerEl === 'object' && triggerEl.nodeType) {
+                btn = triggerEl;
+            } else if (typeof triggerEl === 'string') {
+                msg = triggerEl;
+            }
+
             navigator.clipboard.writeText(text).then(() => {
-                showToast(message || (studioState.lang === 'id' ? 'Disalin ke papan klip!' : 'Copied to clipboard!'));
+                showToast(msg || (studioState.lang === 'id' ? 'Disalin ke papan klip!' : 'Copied to clipboard!'));
+                if (btn) {
+                    btn.classList.add('is-copied');
+                    const textEn = btn.querySelector('.copy-label-text.en-only');
+                    const textId = btn.querySelector('.copy-label-text.id-only');
+                    const origEn = textEn ? textEn.textContent : null;
+                    const origId = textId ? textId.textContent : null;
+                    if (textEn) textEn.textContent = 'Copied!';
+                    if (textId) textId.textContent = 'Tersalin!';
+                    setTimeout(() => {
+                        btn.classList.remove('is-copied');
+                        if (textEn && origEn) textEn.textContent = origEn;
+                        if (textId && origId) textId.textContent = origId;
+                    }, 1800);
+                }
             }).catch(() => {
                 showToast('Copy failed');
             });
@@ -3135,11 +3309,11 @@
             setStudioUrl('', null);
         }
 
-        function copyCurrentFlags() {
+        function copyCurrentFlags(btn) {
             const fullCmd = document.getElementById('rendered-command')?.textContent || '';
             const match = fullCmd.match(/^suravidl\s+"[^"]*"\s+(.*)$/);
             const flags = match ? match[1] : fullCmd;
-            copySnippet(flags, studioState.lang === 'id' ? 'Opsi CLI disalin!' : 'CLI flags copied to clipboard!');
+            copySnippet(flags, btn, studioState.lang === 'id' ? 'Opsi CLI disalin!' : 'CLI flags copied to clipboard!');
         }
 
         function resetFormatSearch() {
@@ -3317,11 +3491,43 @@
             if (jsonPreview) jsonPreview.textContent = JSON.stringify(configObj, null, 2);
         }
 
-        function copyCurrentCommand() {
+        function copyCurrentCommand(btn) {
             const cmdEl = document.getElementById('rendered-command');
             if (cmdEl) {
-                copySnippet(cmdEl.textContent, null);
+                copySnippet(cmdEl.textContent, btn, null);
             }
+        }
+
+        // --- Animate UI Micro-Interaction: Spring Number Ticker ---
+        function animateNumber(element, targetNum, formatFn, duration = 280) {
+            if (!element) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                element.textContent = formatFn(targetNum);
+                return;
+            }
+            const currentRaw = element.getAttribute('data-raw-val');
+            const startNum = currentRaw !== null ? parseFloat(currentRaw) : targetNum;
+            if (isNaN(startNum) || Math.abs(startNum - targetNum) < 0.001) {
+                element.textContent = formatFn(targetNum);
+                element.setAttribute('data-raw-val', targetNum);
+                return;
+            }
+            const startTime = performance.now();
+            function tick(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                // Ease out cubic (Animate UI curve)
+                const ease = 1 - Math.pow(1 - progress, 3);
+                const val = startNum + (targetNum - startNum) * ease;
+                element.textContent = formatFn(val);
+                if (progress < 1) {
+                    requestAnimationFrame(tick);
+                } else {
+                    element.textContent = formatFn(targetNum);
+                    element.setAttribute('data-raw-val', targetNum);
+                }
+            }
+            requestAnimationFrame(tick);
         }
 
         // --- Interactive Widget 2: Storage & Bandwidth Calculator ---
@@ -3392,7 +3598,7 @@
             // Staging Buffer
             const bufferMB = Math.min(Math.max(Math.round(totalMegaBytes * 0.05), 32), 256);
 
-            // DOM Updates
+            // DOM Updates with Spring Number Ticker
             const totalSizeEl = document.getElementById('res-total-size');
             const splitEl = document.getElementById('res-stream-split');
             const speedEl = document.getElementById('res-effective-speed');
@@ -3404,11 +3610,23 @@
             const bandwidthBadge = document.getElementById('calc-bandwidth-badge');
             const workersBadge = document.getElementById('calc-workers-badge');
 
-            if (totalSizeEl) totalSizeEl.textContent = totalSizeStr;
+            if (totalSizeEl) {
+                animateNumber(totalSizeEl, totalMegaBytes, (val) => {
+                    return val >= 1024 ? (val / 1024).toFixed(2) + ' GB' : val.toFixed(1) + ' MB';
+                });
+            }
             if (splitEl) splitEl.textContent = preset.videoBitrate > 0 ? `${videoStr} / ${audioStr}` : `Audio Only: ${audioStr}`;
-            if (speedEl) speedEl.textContent = `${effectiveSpeedMbps.toFixed(1)} Mbps (${Math.round(concurrencyFactor * 100)}% util)`;
+            if (speedEl) {
+                animateNumber(speedEl, effectiveSpeedMbps, (val) => {
+                    return `${val.toFixed(1)} Mbps (${Math.round(concurrencyFactor * 100)}% util)`;
+                });
+            }
             if (timeEl) timeEl.textContent = timeStr;
-            if (bufferEl) bufferEl.textContent = `${bufferMB} MB (Safe Scoped)`;
+            if (bufferEl) {
+                animateNumber(bufferEl, bufferMB, (val) => {
+                    return `${Math.round(val)} MB (Safe Scoped)`;
+                });
+            }
             if (presetBadge) presetBadge.textContent = `~${totalBitrateMbps.toFixed(1)} Mbps`;
             if (durationBadge) durationBadge.textContent = isId ? `${Math.round(durationSec / 60)} menit` : `${Math.round(durationSec / 60)} minutes`;
             if (bandwidthBadge) bandwidthBadge.textContent = `${bandwidthMbps} Mbps`;
@@ -3507,11 +3725,25 @@
         // --- Format Matrix Filtering ---
         let currentFormatType = 'all';
 
-        function filterFormats(type) {
+        function updateChipIndicator(activeBtn) {
+            const container = document.querySelector('.format-filter-chips');
+            const indicator = document.getElementById('format-chip-indicator');
+            const btn = activeBtn || container?.querySelector('.format-chip-btn.active');
+            if (!container || !indicator || !btn) return;
+            const cRect = container.getBoundingClientRect();
+            const bRect = btn.getBoundingClientRect();
+            const left = bRect.left - cRect.left + container.scrollLeft;
+            indicator.style.transform = `translateX(${left}px)`;
+            indicator.style.width = `${bRect.width}px`;
+        }
+
+        function filterFormats(type, btnEl) {
             currentFormatType = type;
+            const targetBtn = btnEl || document.querySelector(`.format-chip-btn[data-type="${type}"]`);
             document.querySelectorAll('.format-chip-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.type === type);
+                btn.classList.toggle('active', btn === targetBtn);
             });
+            updateChipIndicator(targetBtn);
             applyFormatFilters();
         }
 
@@ -3583,11 +3815,25 @@
 
         let currentInstallPkg = 'android';
 
-        function setInstallTab(pkg) {
+        function updateInstallIndicator(activeBtn) {
+            const container = document.querySelector('.install-header-tabs');
+            const indicator = document.getElementById('install-tab-indicator');
+            const btn = activeBtn || container?.querySelector('.inst-tab-btn.active');
+            if (!container || !indicator || !btn) return;
+            const cRect = container.getBoundingClientRect();
+            const bRect = btn.getBoundingClientRect();
+            const left = bRect.left - cRect.left + container.scrollLeft;
+            indicator.style.transform = `translateX(${left}px)`;
+            indicator.style.width = `${bRect.width}px`;
+        }
+
+        function setInstallTab(pkg, btnEl) {
             currentInstallPkg = pkg;
+            const targetBtn = btnEl || document.querySelector(`.inst-tab-btn[data-pkg="${pkg}"]`);
             document.querySelectorAll('.inst-tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.pkg === pkg);
+                btn.classList.toggle('active', btn === targetBtn);
             });
+            updateInstallIndicator(targetBtn);
             const isId = studioState.lang === 'id';
             const androidDeck = document.getElementById('install-android-deck');
             const terminalDeck = document.getElementById('install-terminal-deck');
@@ -3612,10 +3858,10 @@
             }
         }
 
-        function copyInstallCmd() {
+        function copyInstallCmd(btn) {
             const cmdText = document.getElementById('install-command-text');
             if (cmdText) {
-                copySnippet(cmdText.textContent, null);
+                copySnippet(cmdText.textContent, btn, null);
             }
         }
 
@@ -3684,6 +3930,15 @@
             initLang();
             updateStudio();
             runCalculator();
+            setTimeout(() => {
+                updateChipIndicator();
+                updateInstallIndicator();
+            }, 60);
+        });
+
+        window.addEventListener('resize', () => {
+            updateChipIndicator();
+            updateInstallIndicator();
         });
     </script>
 </body>

@@ -602,26 +602,67 @@
         .view-controls {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 12px;
             margin-bottom: 16px;
             align-items: center;
         }
+
+        .view-controls-pill-group {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 3px;
+            max-width: 100%;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .view-controls-pill-group::-webkit-scrollbar {
+            display: none;
+        }
+
+        .control-pill-indicator {
+            position: absolute;
+            top: 3px;
+            bottom: 3px;
+            left: 0;
+            background: var(--gold);
+            border-radius: calc(var(--radius-sm) - 1px);
+            pointer-events: none;
+            z-index: 1;
+            transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+                        width 220ms cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, width;
+        }
+
         .control-btn {
+            position: relative;
+            z-index: 2;
             font-family: var(--font-mono);
             font-size: 11px;
             font-weight: 700;
             padding: 6px 14px;
-            border-radius: var(--radius-sm);
-            background: var(--bg-elevated);
+            border-radius: calc(var(--radius-sm) - 1px);
+            background: transparent;
             color: var(--text-secondary);
-            border: 1px solid var(--border);
+            border: none;
             cursor: pointer;
-            transition: var(--transition);
+            white-space: nowrap;
+            transition: color 150ms ease;
         }
+
+        .control-btn:hover {
+            color: var(--text-primary);
+        }
+
         .control-btn.active {
-            background: var(--gold);
+            background: transparent;
             color: #000;
-            border-color: var(--gold);
+            border: none;
         }
 
         .table-responsive {
@@ -1134,9 +1175,12 @@
             <div class="card-panel reveal-on-scroll">
                 <div class="view-controls">
                     <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); margin-right:4px;" data-en="Display Metric:" data-id="Metrik Tampilan:">Metrik Tampilan:</span>
-                    <button class="control-btn active" data-metric="nominal" data-en="Nominal (IDR Trillion)" data-id="Nominal (Rp Triliun)">Nominal (Rp Triliun)</button>
-                    <button class="control-btn" data-metric="pct-spend" data-en="% Total Spend" data-id="% Total Belanja">% Total Belanja</button>
-                    <button class="control-btn" data-metric="pct-gdp" data-en="% of GDP" data-id="% PDB">% PDB</button>
+                    <div class="view-controls-pill-group">
+                        <div class="control-pill-indicator" id="controlPillIndicator" aria-hidden="true"></div>
+                        <button class="control-btn active" data-metric="nominal" data-en="Nominal (IDR Trillion)" data-id="Nominal (Rp Triliun)">Nominal (Rp Triliun)</button>
+                        <button class="control-btn" data-metric="pct-spend" data-en="% Total Spend" data-id="% Total Belanja">% Total Belanja</button>
+                        <button class="control-btn" data-metric="pct-gdp" data-en="% of GDP" data-id="% PDB">% PDB</button>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -1662,6 +1706,38 @@
             });
         }
 
+        // --- Animate UI Micro-Interaction: Spring Number Ticker ---
+        function animateNumber(element, targetNum, formatFn, duration = 240) {
+            if (!element) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                element.textContent = formatFn(targetNum);
+                return;
+            }
+            const currentRaw = element.getAttribute('data-raw-val');
+            const startNum = currentRaw !== null ? parseFloat(currentRaw) : targetNum;
+            if (isNaN(startNum) || Math.abs(startNum - targetNum) < 0.001) {
+                element.textContent = formatFn(targetNum);
+                element.setAttribute('data-raw-val', targetNum);
+                return;
+            }
+            const startTime = performance.now();
+            function tick(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                // Ease out cubic (Animate UI curve)
+                const ease = 1 - Math.pow(1 - progress, 3);
+                const val = startNum + (targetNum - startNum) * ease;
+                element.textContent = formatFn(val);
+                if (progress < 1) {
+                    requestAnimationFrame(tick);
+                } else {
+                    element.textContent = formatFn(targetNum);
+                    element.setAttribute('data-raw-val', targetNum);
+                }
+            }
+            requestAnimationFrame(tick);
+        }
+
         // 5. Interactive Simulator Logic
         function updateSim() {
             if (!simSliderMbg) return;
@@ -1700,13 +1776,17 @@
             const remainingHeadroom = Math.round((maxTargetExpenditure - totalExpenditure) * 10) / 10;
 
             if (resHeadroom) {
-                const sign = remainingHeadroom > 0 ? '+' : '';
-                resHeadroom.textContent = sign + 'Rp ' + remainingHeadroom.toFixed(1) + ' T';
+                animateNumber(resHeadroom, remainingHeadroom, (val) => {
+                    const sign = val > 0 ? '+' : '';
+                    return sign + 'Rp ' + val.toFixed(1) + ' T';
+                });
                 resHeadroom.className = 'sim-res-val ' + (remainingHeadroom >= 20 ? 'text-emerald' : remainingHeadroom >= -20 ? 'text-gold' : 'text-crimson');
             }
 
             if (resDeficitPct) {
-                resDeficitPct.textContent = currentDeficitPct.toFixed(2) + (currentLang === 'en' ? '% GDP' : '% PDB');
+                animateNumber(resDeficitPct, currentDeficitPct, (val) => {
+                    return val.toFixed(2) + (currentLang === 'en' ? '% GDP' : '% PDB');
+                });
                 resDeficitPct.className = 'sim-res-val ' + (currentDeficitPct > 3.00 ? 'text-crimson' : currentDeficitPct > 2.70 ? 'text-gold' : 'text-emerald');
             }
 
@@ -1739,7 +1819,9 @@
                 const growthTag = currentLang === 'en'
                     ? (growthEst >= 7.0 ? '(Target 8% Accessible)' : growthEst >= 5.5 ? '(Moderate Growth)' : '(8% Target Mirage)')
                     : (growthEst >= 7.0 ? '(Target 8% Dekat)' : growthEst >= 5.5 ? '(Pertumbuhan Moderat)' : '(Fatamorgana 8%)');
-                resGdpGrowth.textContent = growthEst.toFixed(2) + '% ' + growthTag;
+                animateNumber(resGdpGrowth, growthEst, (val) => {
+                    return val.toFixed(2) + '% ' + growthTag;
+                });
             }
         }
 
@@ -1920,10 +2002,23 @@
             });
         }
 
+        function updateMetricIndicator(activeBtn) {
+            const container = document.querySelector('.view-controls-pill-group');
+            const indicator = document.getElementById('controlPillIndicator');
+            const btn = activeBtn || container?.querySelector('.control-btn.active');
+            if (!container || !indicator || !btn) return;
+            const cRect = container.getBoundingClientRect();
+            const bRect = btn.getBoundingClientRect();
+            const left = bRect.left - cRect.left + container.scrollLeft;
+            indicator.style.transform = `translateX(${left}px)`;
+            indicator.style.width = `${bRect.width}px`;
+        }
+
         controlBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 controlBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
+                updateMetricIndicator(btn);
                 currentMetric = btn.dataset.metric;
                 updateLedgerTable();
             });
@@ -1939,6 +2034,7 @@
         window.addEventListener('resize', () => {
             if (revExpChart) revExpChart.resize();
             if (compChart) compChart.resize();
+            updateMetricIndicator();
         });
 
         // Restore Preferences
@@ -1961,6 +2057,7 @@
         updateSim();
         initCharts();
         initScrollReveal();
+        setTimeout(updateMetricIndicator, 60);
 
         // Chart.js async polling if not ready at script execution time
         if (typeof Chart === 'undefined') {
