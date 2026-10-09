@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frontier AI Hardware &amp; Scaling Laws: Clusters, Quantization &amp; Systems | LoLyeah</title>
-    <meta name="description" content="Technical compendium on AI supercomputer clusters, GPU memory hierarchy (HBM vs SRAM), Chinchilla scaling laws, FlashAttention tiling, and FP8/INT4 quantization.">
+    <meta name="description" content="Technical compendium on AI supercomputer clusters, GPU memory hierarchy (HBM vs SRAM), Chinchilla scaling laws, FlashAttention tiling, and FP8/FP4 microscaling quantization.">
     <meta name="author" content="LoLyeah">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://lolyeah.github.io/topics/neural-networks/hardware-scaling.html">
@@ -361,6 +361,7 @@
         /* Technical Tables */
         .table-scroller {
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
             background: var(--bg-surface);
@@ -566,7 +567,122 @@
             </div>
         </section>
 
-        <!-- Section 4: Silicon Accelerator Comparison Ledger -->
+        <!-- Section 4: Precision Quantization, Microscaling & Activation Kurtosis -->
+        <section class="section-block">
+            <h2 class="section-heading">Numerical Precision, Microscaling (MXFP4) &amp; Activation Kurtosis</h2>
+            <p class="section-subtext">The physics of sub-byte quantization: how Open Compute Project microscaling formats, SwiGLU activation outlier dynamics, and block-level Hadamard rotations circumvent the precision floor.</p>
+
+            <div class="grid-cards">
+                <div class="hw-card">
+                    <h3 class="hw-card-title">1. Sub-Byte Formats: FP4 &amp; OCP Microscaling (MX)</h3>
+                    <p>Standard IEEE 754 float representations allocate fixed bit fields for sign, exponent, and mantissa. In <strong>FP4 (E2M1)</strong>, the numerical budget shrinks to just 4 bits (1 sign, 2 exponent, 1 mantissa), representing only <strong>16 discrete real numbers</strong>:</p>
+                    <div class="math-box">
+                        S_{\text{E2M1}} = \pm \{0, \, 0.5, \, 1.0, \, 1.5, \, 2.0, \, 3.0, \, 4.0, \, 6.0\}
+                    </div>
+                    <p>With an effective dynamic range of only ~24 dB, global tensor-wide quantization collapses when scaling models. The <strong>OCP Microscaling (MX)</strong> specification standardizes block-level micro-scaling: grouping 32 consecutive scalar elements into a micro-block sharing an 8-bit scale factor (E8M0 unbiased exponent):</p>
+                    <div class="math-box">
+                        \text{Effective Bitwidth} = 4 \text{ bits} + \frac{8 \text{ bits}}{32 \text{ elements}} = 4.25 \text{ bits/parameter}
+                    </div>
+                    <p>Microscaling is natively accelerated by 5th-Gen Tensor Cores in NVIDIA Blackwell (B200) and AMD MI350 silicon, doubling computational density to 9,000 TFLOPs while maintaining pretraining numerical stability.</p>
+                </div>
+
+                <div class="hw-card">
+                    <h3 class="hw-card-title">2. Activation Kurtosis &amp; Channel Outliers in SwiGLU</h3>
+                    <p>While trained neural weights follow well-behaved, bounded distributions, forward activations in modern frontier LLMs suffer from severe <strong>excess kurtosis</strong> ($\kappa = \frac{\mu_4}{\sigma^4} - 3$):</p>
+                    <div class="math-box">
+                        \kappa_{\text{weights}} \approx 3 - 8 \quad \text{vs.} \quad \kappa_{\text{activations}} &gt; 10^3 - 10^5
+                    </div>
+                    <p>In SwiGLU layers ($x W_1 \odot \text{SiLU}(x W_2)$) and attention heads, coordinate magnitudes along isolated feature channels routinely exceed $100\times$ the mean activation energy. In Sparse MoE architectures (Mixtral, DeepSeek-V3), router softmax gating generates heavy token-dependent burstiness.</p>
+                    <p><strong>The Quantization Trap:</strong> Under global or row-wise scaling $S = \frac{\max(|X|)}{V_{\max}}$, a single outlier channel forces scale factor $S$ to inflate drastically, squashing 99.9% of regular channel signals into 0 or 1 quantization bins, causing immediate perplexity explosion.</p>
+                </div>
+
+                <div class="hw-card">
+                    <h3 class="hw-card-title">3. Block Scaling &amp; Orthogonal Rotations (SmoothQuant / QuaRot)</h3>
+                    <p>Frontier training architectures eliminate outlier distortion through localized tiling and algebraic rotations:</p>
+                    <p><strong>Decoupled Block Tiling:</strong> DeepSeek-V3 partitions activation matrices into $1 \times 128$ channel tiles and weight matrices into $128 \times 128$ blocks, each with isolated scaling factors, isolating outlier coordinates to bounded micro-tiles.</p>
+                    <p><strong>SmoothQuant Migration:</strong> Shifts the burden of activation outliers into weights via diagonal scaling matrices:</p>
+                    <div class="math-box">
+                        Y = (X \cdot \text{diag}(s)^{-1}) \cdot (\text{diag}(s) \cdot W) \quad \text{where } s_j = \frac{\max_i |X_{ij}|^\alpha}{\max_k |W_{jk}|^{1-\alpha}}
+                    </div>
+                    <p><strong>QuaRot Randomized Hadamard Rotation:</strong> Applies orthogonal Walsh-Hadamard matrices $H$ ($H^T H = I$) to activations and weights ($X' = X H$, $W' = H^T W$). The mathematical product is identically preserved, while the rotation distributes concentrated outlier energy uniformly across all dimensions, collapsing activation kurtosis from $10^4$ to $&lt; 5$.</p>
+                </div>
+            </div>
+
+            <!-- Precision Format Specification Matrix -->
+            <div class="table-scroller">
+                <table class="hw-table">
+                    <thead>
+                        <tr>
+                            <th>Format</th>
+                            <th>Total Bits</th>
+                            <th>Exponent / Mantissa</th>
+                            <th>Dynamic Range</th>
+                            <th>Hardware Support</th>
+                            <th>Kurtosis Resistance</th>
+                            <th>Primary Lifecycle Workload</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>FP32</strong></td>
+                            <td>32 bits</td>
+                            <td>8 exp / 23 man</td>
+                            <td><span class="mono">~166 dB</span></td>
+                            <td>Universal CPU/GPU</td>
+                            <td>Absolute (Full Precision)</td>
+                            <td>Master weight accumulators, loss scale</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BF16</strong></td>
+                            <td>16 bits</td>
+                            <td>8 exp / 7 man</td>
+                            <td><span class="mono">~166 dB</span></td>
+                            <td>A100, H100, TPU v4/v5, MI300</td>
+                            <td>Very High (Preserves FP32 range)</td>
+                            <td>De facto standard for foundation training</td>
+                        </tr>
+                        <tr>
+                            <td><strong>FP8 (E4M3)</strong></td>
+                            <td>8 bits</td>
+                            <td>4 exp / 3 man</td>
+                            <td><span class="mono">~48 dB</span></td>
+                            <td>H100, B200, TPU v6, MI300</td>
+                            <td>Moderate (Requires delayed scaling)</td>
+                            <td>Forward GEMMs, KV cache, weight inference</td>
+                        </tr>
+                        <tr>
+                            <td><strong>FP8 (E5M2)</strong></td>
+                            <td>8 bits</td>
+                            <td>5 exp / 2 man</td>
+                            <td><span class="mono">~96 dB</span></td>
+                            <td>H100, B200, TPU v6, MI300</td>
+                            <td>High (Broader exponent headroom)</td>
+                            <td>Backward gradient passes, sensitive activations</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MXFP4 (E2M1)</strong></td>
+                            <td>4.25 bits</td>
+                            <td>2 exp / 1 man + 8b block</td>
+                            <td><span class="mono">~24 dB local (OCP MX)</span></td>
+                            <td>Blackwell B200, AMD MI350</td>
+                            <td>High (Confined to 32-element micro-block)</td>
+                            <td>Frontier sub-byte pretraining &amp; hyperscale inference</td>
+                        </tr>
+                        <tr>
+                            <td><strong>INT4 (AWQ/GPTQ)</strong></td>
+                            <td>4.12 bits</td>
+                            <td>0 exp / 4 int + 16b group</td>
+                            <td><span class="mono">Linear grid</span></td>
+                            <td>Turing, Ampere, Ada, Hopper</td>
+                            <td>Requires salient weight protection (AWQ)</td>
+                            <td>Edge and datacenter post-training inference</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 5: Silicon Accelerator Comparison Ledger -->
         <section class="section-block">
             <h2 class="section-heading">Frontier AI Silicon Architecture Ledger</h2>
             <p class="section-subtext">Hardware specifications of leading enterprise training and inference accelerators.</p>
@@ -581,6 +697,7 @@
                             <th>Memory Bandwidth</th>
                             <th>Peak Dense FP16 / BF16</th>
                             <th>Peak Dense FP8</th>
+                            <th>Peak Dense FP4 (Microscaled)</th>
                             <th>TDP Thermal Power</th>
                         </tr>
                     </thead>
@@ -592,6 +709,7 @@
                             <td><span class="mono">3.35 TB/s</span></td>
                             <td><span class="mono">989 TFLOPs</span></td>
                             <td><span class="mono">1,979 TFLOPs</span></td>
+                            <td><span class="mono">— (FP8 Native)</span></td>
                             <td>700 W</td>
                         </tr>
                         <tr>
@@ -601,6 +719,7 @@
                             <td><span class="mono">4.80 TB/s</span></td>
                             <td><span class="mono">989 TFLOPs</span></td>
                             <td><span class="mono">1,979 TFLOPs</span></td>
+                            <td><span class="mono">— (FP8 Native)</span></td>
                             <td>700 W</td>
                         </tr>
                         <tr>
@@ -610,6 +729,7 @@
                             <td><span class="mono">8.00 TB/s</span></td>
                             <td><span class="mono">2,250 TFLOPs</span></td>
                             <td><span class="mono">4,500 TFLOPs</span></td>
+                            <td><span class="mono" style="color:#34d399; font-weight:700;">9,000 TFLOPs</span></td>
                             <td>1,000 W</td>
                         </tr>
                         <tr>
@@ -619,6 +739,7 @@
                             <td><span class="mono">2.76 TB/s</span></td>
                             <td><span class="mono">459 TFLOPs</span></td>
                             <td><span class="mono">918 TFLOPs</span></td>
+                            <td><span class="mono">— (BF16 / INT8)</span></td>
                             <td>450 W</td>
                         </tr>
                         <tr>
@@ -628,6 +749,7 @@
                             <td><span class="mono">4.20 TB/s</span></td>
                             <td><span class="mono">1,020 TFLOPs</span></td>
                             <td><span class="mono">2,040 TFLOPs</span></td>
+                            <td><span class="mono">2,040 TFLOPs (MXFP8)</span></td>
                             <td>550 W</td>
                         </tr>
                         <tr>
@@ -637,6 +759,7 @@
                             <td><span class="mono">5.30 TB/s</span></td>
                             <td><span class="mono">1,307 TFLOPs</span></td>
                             <td><span class="mono">2,614 TFLOPs</span></td>
+                            <td><span class="mono">— (FP8 Native)</span></td>
                             <td>750 W</td>
                         </tr>
                     </tbody>

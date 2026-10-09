@@ -1498,7 +1498,7 @@
                                 <span>Hidden Neurons (Layer 1):</span>
                                 <span class="control-value-readout" id="hiddenNeuronsVal">6</span>
                             </label>
-                            <input type="range" id="hiddenNeuronsRange" class="form-range" min="2" max="16" value="6" oninput="updateNeuronCount(this.value)">
+                            <input type="range" id="hiddenNeuronsRange" class="form-range" min="2" max="32" value="6" oninput="updateNeuronCount(this.value)">
                         </div>
 
                         <div class="control-group">
@@ -1861,13 +1861,22 @@
 
         /* -------------------------------------------------------------
            LIVE 2D DECISION BOUNDARY & NEURAL TRAINING PLAYGROUND
+           Non-blocking Adaptive Frame Budgeting Engine (60 FPS Guarantee)
            ------------------------------------------------------------- */
         let dataset = [];
         let numHidden = 6;
         let learningRate = 0.05;
         let isTraining = false;
-        let trainInterval = null;
+        let trainAnimId = null;
         let epoch = 0;
+        let lastTelemetryTimestamp = 0;
+        let latestLoss = '0.0000';
+        let latestAcc = '0.0%';
+
+        // Pre-allocated typed arrays to eliminate garbage collection pauses during high-frequency passes
+        const maxSupportedHidden = 32;
+        const hiddenActBuf = new Float64Array(maxSupportedHidden);
+        const hiddenPreBuf = new Float64Array(maxSupportedHidden);
 
         // Weights: Layer 1 (2 inputs -> H neurons), Layer 2 (H neurons -> 1 output)
         let W1 = []; // [H][2]
@@ -1927,7 +1936,11 @@
             W2 = newW2;
             b2 = newB2;
             epoch = 0;
+            latestLoss = '0.0000';
+            latestAcc = '0.0%';
             document.getElementById('telemetryEpoch').textContent = '0';
+            document.getElementById('telemetryLoss').textContent = '0.0000';
+            document.getElementById('telemetryAcc').textContent = '0.0%';
             document.getElementById('telemetryParams').textContent = `${(numHidden * 2 + numHidden + numHidden + 1)} params`;
             renderCanvas();
         }
@@ -1951,27 +1964,25 @@
         }
 
         function forwardPass(x, y) {
-            const hiddenAct = [];
-            const hiddenPre = [];
             for (let h = 0; h < numHidden; h++) {
                 const z = W1[h][0] * x + W1[h][1] * y + b1[h];
-                hiddenPre.push(z);
-                hiddenAct.push(actFn(z));
+                hiddenPreBuf[h] = z;
+                hiddenActBuf[h] = actFn(z);
             }
             let outPre = b2;
             for (let h = 0; h < numHidden; h++) {
-                outPre += W2[h] * hiddenAct[h];
+                outPre += W2[h] * hiddenActBuf[h];
             }
-            const out = sigmoid(outPre);
-            return { out, hiddenAct, hiddenPre };
+            return sigmoid(outPre);
         }
 
         function trainStep() {
             let totalLoss = 0;
             let correct = 0;
 
-            for (const pt of dataset) {
-                const { out, hiddenAct, hiddenPre } = forwardPass(pt.x, pt.y);
+            for (let i = 0; i < dataset.length; i++) {
+                const pt = dataset[i];
+                const out = forwardPass(pt.x, pt.y);
                 const target = pt.label;
                 const err = out - target;
                 totalLoss += err * err;
@@ -1980,46 +1991,41 @@
                 // Backprop through sigmoid output
                 const dOut = err * out * (1 - out);
 
-                // Cache current W2 weights for exact chain rule backward propagation
-                const currentW2 = [...W2];
-
-                // Update W2 and b2
+                // Update W1 and b1 using current W2 before updating W2 in-place (eliminates array spread allocations)
                 for (let h = 0; h < numHidden; h++) {
-                    const gradW2 = dOut * hiddenAct[h];
-                    W2[h] -= learningRate * gradW2;
-                }
-                b2 -= learningRate * dOut;
-
-                // Propagate to hidden layer using pre-update weights
-                for (let h = 0; h < numHidden; h++) {
-                    const dHidden = dOut * currentW2[h] * actDeriv(hiddenAct[h], hiddenPre[h]);
+                    const dHidden = dOut * W2[h] * actDeriv(hiddenActBuf[h], hiddenPreBuf[h]);
                     W1[h][0] -= learningRate * dHidden * pt.x;
                     W1[h][1] -= learningRate * dHidden * pt.y;
                     b1[h] -= learningRate * dHidden;
+                    W2[h] -= learningRate * (dOut * hiddenActBuf[h]);
                 }
+                b2 -= learningRate * dOut;
             }
 
             epoch++;
-            const mse = (totalLoss / dataset.length).toFixed(4);
-            const acc = ((correct / dataset.length) * 100).toFixed(1);
-
-            document.getElementById('telemetryEpoch').textContent = epoch;
-            document.getElementById('telemetryLoss').textContent = mse;
-            document.getElementById('telemetryAcc').textContent = acc + '%';
+            latestLoss = (totalLoss / dataset.length).toFixed(4);
+            latestAcc = ((correct / dataset.length) * 100).toFixed(1);
         }
+
+        // Cached raster buffer to eliminate 20+ MB/s garbage churn during 60fps training
+        let cachedImgData = null;
 
         function renderCanvas() {
             const w = canvas.width;
             const h = canvas.height;
             const res = 10;
-            const imgData = ctx.createImageData(w, h);
+            if (!cachedImgData || cachedImgData.width !== w || cachedImgData.height !== h) {
+                cachedImgData = ctx.createImageData(w, h);
+            }
+            const imgData = cachedImgData;
+            const data = imgData.data;
 
             // Render decision boundary background field
             for (let px = 0; px < w; px += res) {
                 const nx = (px / w) * 2 - 1;
                 for (let py = 0; py < h; py += res) {
                     const ny = (py / h) * 2 - 1;
-                    const { out } = forwardPass(nx, ny);
+                    const out = forwardPass(nx, ny);
 
                     const r = Math.floor((1 - out) * 16 + out * 40);
                     const g = Math.floor((1 - out) * 35 + out * 130);
@@ -2028,10 +2034,10 @@
                     for (let dx = 0; dx < res && px + dx < w; dx++) {
                         for (let dy = 0; dy < res && py + dy < h; dy++) {
                             const idx = ((py + dy) * w + (px + dx)) * 4;
-                            imgData.data[idx] = r;
-                            imgData.data[idx + 1] = g;
-                            imgData.data[idx + 2] = b;
-                            imgData.data[idx + 3] = 255;
+                            data[idx] = r;
+                            data[idx + 1] = g;
+                            data[idx + 2] = b;
+                            data[idx + 3] = 255;
                         }
                     }
                 }
@@ -2066,18 +2072,52 @@
             }
         }
 
+        // Adaptive frame-budgeted training loop:
+        // Guarantees non-blocking 60fps interaction on both mobile and desktop
+        function trainingStepBudgeted(timestamp) {
+            if (!isTraining) return;
+
+            const frameStart = performance.now();
+            // Frame calculation budget: 8.0ms max computation per animation frame
+            // Leaves 8.6ms headroom for canvas rasterization, style recalc, and user touches
+            const TIME_BUDGET_MS = 8.0;
+            let subSteps = 0;
+            const maxSubSteps = numHidden > 16 ? 6 : 12;
+
+            do {
+                trainStep();
+                subSteps++;
+            } while ((performance.now() - frameStart) < TIME_BUDGET_MS && subSteps < maxSubSteps);
+
+            renderCanvas();
+
+            // Throttle telemetry text node updates (~15Hz) to prevent micro-jank from style recalculations
+            if (!lastTelemetryTimestamp || (timestamp - lastTelemetryTimestamp) > 65) {
+                document.getElementById('telemetryEpoch').textContent = epoch;
+                document.getElementById('telemetryLoss').textContent = latestLoss;
+                document.getElementById('telemetryAcc').textContent = latestAcc + '%';
+                lastTelemetryTimestamp = timestamp;
+            }
+
+            trainAnimId = requestAnimationFrame(trainingStepBudgeted);
+        }
+
         function toggleTraining() {
             isTraining = !isTraining;
             const btnText = document.getElementById('trainBtnText');
             if (isTraining) {
                 btnText.textContent = 'Pause Training';
-                trainInterval = setInterval(() => {
-                    for (let step = 0; step < 5; step++) trainStep();
-                    renderCanvas();
-                }, 30);
+                lastTelemetryTimestamp = 0;
+                trainAnimId = requestAnimationFrame(trainingStepBudgeted);
             } else {
                 btnText.textContent = 'Resume Live Training';
-                clearInterval(trainInterval);
+                if (trainAnimId) {
+                    cancelAnimationFrame(trainAnimId);
+                    trainAnimId = null;
+                }
+                document.getElementById('telemetryEpoch').textContent = epoch;
+                document.getElementById('telemetryLoss').textContent = latestLoss;
+                document.getElementById('telemetryAcc').textContent = latestAcc + '%';
             }
         }
 

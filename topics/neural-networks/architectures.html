@@ -267,12 +267,81 @@
             border-color: var(--accent-primary);
         }
 
-        /* Table */
+        /* Ledger Toolbar & View Mode Switch */
+        .ledger-controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .view-mode-toggle {
+            display: inline-flex;
+            align-items: center;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-full);
+            padding: 3px;
+            gap: 4px;
+        }
+
+        .view-toggle-btn {
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-full);
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all var(--motion-fast) var(--ease-out);
+        }
+
+        .view-toggle-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .view-toggle-btn.active {
+            background: var(--accent-primary);
+            color: #ffffff;
+        }
+
+        @media (pointer: coarse) {
+            .view-toggle-btn,
+            .filter-chip-btn {
+                min-height: 44px;
+                min-width: 44px;
+                padding: 10px 16px;
+            }
+        }
+
+        .badge-year {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--accent-bright);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            letter-spacing: 0.02em;
+        }
+
+        /* Table & Card Mode */
         .table-scroller {
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
             background: var(--bg-surface);
+            transition: border-color var(--motion-normal) var(--ease-out);
         }
 
         .matrix-table {
@@ -300,6 +369,111 @@
 
         .matrix-table tr:hover td {
             background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Responsive Compact Card Mode */
+        .table-scroller.card-view {
+            overflow-x: visible;
+            background: transparent;
+            border: none;
+        }
+
+        .table-scroller.card-view .matrix-table {
+            display: block;
+            min-width: 0 !important;
+            width: 100%;
+        }
+
+        .table-scroller.card-view .matrix-table thead {
+            display: none;
+        }
+
+        .table-scroller.card-view .matrix-table tbody {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .table-scroller.card-view .matrix-table tbody {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .table-scroller.card-view .matrix-table tr {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 16px 18px;
+            gap: 10px;
+            box-sizing: border-box;
+            transition: border-color var(--motion-normal) var(--ease-out), transform var(--motion-normal) var(--ease-out);
+        }
+
+        @media (hover: hover) {
+            .table-scroller.card-view .matrix-table tr:hover {
+                border-color: var(--border-hover);
+                transform: translateY(-2px);
+            }
+        }
+
+        .table-scroller.card-view .matrix-table td {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 6px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.07);
+            font-size: 0.86rem;
+        }
+
+        .table-scroller.card-view .matrix-table td:last-child {
+            border-bottom: none;
+        }
+
+        .table-scroller.card-view .matrix-table td::before {
+            content: attr(data-label);
+            font-size: 0.74rem;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-right: 12px;
+        }
+
+        .table-scroller.card-view .matrix-table td.col-model {
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 8px;
+            margin-bottom: 2px;
+            align-items: center;
+        }
+
+        .table-scroller.card-view .matrix-table td.col-model::before {
+            display: none;
+        }
+
+        .table-scroller.card-view .matrix-table td.col-model strong {
+            font-size: 1.05rem;
+            color: var(--text-primary);
+        }
+
+        .table-scroller.card-view .matrix-table td.col-innovators,
+        .table-scroller.card-view .matrix-table td.col-modality,
+        .table-scroller.card-view .matrix-table td.col-bias {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+
+        .table-scroller.card-view .matrix-table td.col-innovators::before,
+        .table-scroller.card-view .matrix-table td.col-modality::before,
+        .table-scroller.card-view .matrix-table td.col-bias::before {
+            margin-bottom: 2px;
         }
 
         .mono-code {
@@ -467,15 +641,27 @@
                 </figcaption>
             </figure>
 
-            <div class="filter-toolbar">
-                <button class="filter-chip-btn active" onclick="filterArch('all', this)">All (20)</button>
-                <button class="filter-chip-btn" onclick="filterArch('vision', this)">Vision &amp; Spatial</button>
-                <button class="filter-chip-btn" onclick="filterArch('sequence', this)">Language &amp; Sequence</button>
-                <button class="filter-chip-btn" onclick="filterArch('generative', this)">Generative &amp; Diffusion</button>
-                <button class="filter-chip-btn" onclick="filterArch('frontier', this)">Frontier (2024–2026)</button>
+            <div class="ledger-controls-row">
+                <div class="filter-toolbar">
+                    <button class="filter-chip-btn active" onclick="filterArch('all', this)">All (20)</button>
+                    <button class="filter-chip-btn" onclick="filterArch('vision', this)">Vision &amp; Spatial</button>
+                    <button class="filter-chip-btn" onclick="filterArch('sequence', this)">Language &amp; Sequence</button>
+                    <button class="filter-chip-btn" onclick="filterArch('generative', this)">Generative &amp; Diffusion</button>
+                    <button class="filter-chip-btn" onclick="filterArch('frontier', this)">Frontier (2024–2026)</button>
+                </div>
+                <div class="view-mode-toggle" role="group" aria-label="Ledger Display Format">
+                    <button id="viewBtnTable" class="view-toggle-btn active" onclick="setLedgerView('table', true)" aria-label="Matrix Table View" aria-pressed="true">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/></svg>
+                        <span>Matrix Table</span>
+                    </button>
+                    <button id="viewBtnCards" class="view-toggle-btn" onclick="setLedgerView('cards', true)" aria-label="Compact Mobile Cards View" aria-pressed="false">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        <span>Mobile Cards</span>
+                    </button>
+                </div>
             </div>
 
-            <div class="table-scroller">
+            <div class="table-scroller" id="archTableContainer">
                 <table class="matrix-table" id="archTable">
                     <thead>
                         <tr>
@@ -489,164 +675,164 @@
                     </thead>
                     <tbody id="archTableBody">
                         <tr data-cat="sequence">
-                            <td><strong>Mark I Perceptron</strong></td>
-                            <td>1958</td>
-                            <td>Frank Rosenblatt</td>
-                            <td>Binary Vector</td>
-                            <td><span class="mono-code">O(d)</span></td>
-                            <td>Linear hyperplane separation</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>Mark I Perceptron</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">1958</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Frank Rosenblatt</td>
+                            <td data-label="Primary Modality" class="col-modality">Binary Vector</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(d)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Linear hyperplane separation</td>
                         </tr>
                         <tr data-cat="sequence">
-                            <td><strong>Multi-Layer Perceptron (Backprop)</strong></td>
-                            <td>1986</td>
-                            <td>Rumelhart, Hinton, Williams</td>
-                            <td>Tabular / Numeric</td>
-                            <td><span class="mono-code">O(d²·L)</span></td>
-                            <td>Hierarchical composition</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>Multi-Layer Perceptron (Backprop)</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">1986</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Rumelhart, Hinton, Williams</td>
+                            <td data-label="Primary Modality" class="col-modality">Tabular / Numeric</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(d²·L)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Hierarchical composition</td>
                         </tr>
                         <tr data-cat="vision">
-                            <td><strong>LeNet-5</strong></td>
-                            <td>1998</td>
-                            <td>Yann LeCun</td>
-                            <td>Digit Images (28×28)</td>
-                            <td><span class="mono-code">O(C·K²·HW)</span></td>
-                            <td>Local spatial translation equivariance</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>LeNet-5</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">1998</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Yann LeCun</td>
+                            <td data-label="Primary Modality" class="col-modality">Digit Images (28×28)</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(C·K²·HW)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Local spatial translation equivariance</td>
                         </tr>
                         <tr data-cat="sequence">
-                            <td><strong>LSTM (Long Short-Term Memory)</strong></td>
-                            <td>1997</td>
-                            <td>Hochreiter &amp; Schmidhuber</td>
-                            <td>Sequential Time Series</td>
-                            <td><span class="mono-code">O(T·d²)</span></td>
-                            <td>Constant error carousel (gated linear memory)</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>LSTM (Long Short-Term Memory)</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">1997</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Hochreiter &amp; Schmidhuber</td>
+                            <td data-label="Primary Modality" class="col-modality">Sequential Time Series</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(T·d²)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Constant error carousel (gated linear memory)</td>
                         </tr>
                         <tr data-cat="vision">
-                            <td><strong>AlexNet</strong></td>
-                            <td>2012</td>
-                            <td>Krizhevsky, Sutskever, Hinton</td>
-                            <td>ImageNet (RGB)</td>
-                            <td><span class="mono-code">O(Params)</span></td>
-                            <td>Deep convolution + ReLU + Dropout on GPU</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>AlexNet</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2012</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Krizhevsky, Sutskever, Hinton</td>
+                            <td data-label="Primary Modality" class="col-modality">ImageNet (RGB)</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(Params)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Deep convolution + ReLU + Dropout on GPU</td>
                         </tr>
                         <tr data-cat="vision">
-                            <td><strong>VGG-16</strong></td>
-                            <td>2014</td>
-                            <td>Simonyan &amp; Zisserman</td>
-                            <td>Image Classification</td>
-                            <td><span class="mono-code">O(Params)</span></td>
-                            <td>Homogeneous 3×3 receptive field stacking</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>VGG-16</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2014</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Simonyan &amp; Zisserman</td>
+                            <td data-label="Primary Modality" class="col-modality">Image Classification</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(Params)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Homogeneous 3×3 receptive field stacking</td>
                         </tr>
                         <tr data-cat="vision">
-                            <td><strong>ResNet-50</strong></td>
-                            <td>2015</td>
-                            <td>Kaiming He et al.</td>
-                            <td>High-Res Images</td>
-                            <td><span class="mono-code">O(Params)</span></td>
-                            <td>Identity shortcut highways (F(x) + x)</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>ResNet-50</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2015</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Kaiming He et al.</td>
+                            <td data-label="Primary Modality" class="col-modality">High-Res Images</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(Params)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Identity shortcut highways (F(x) + x)</td>
                         </tr>
                         <tr data-cat="vision">
-                            <td><strong>U-Net</strong></td>
-                            <td>2015</td>
-                            <td>Ronneberger et al.</td>
-                            <td>Biomedical Segmentation</td>
-                            <td><span class="mono-code">O(HW)</span></td>
-                            <td>Encoder-decoder skip connections across scales</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>U-Net</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2015</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Ronneberger et al.</td>
+                            <td data-label="Primary Modality" class="col-modality">Biomedical Segmentation</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(HW)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Encoder-decoder skip connections across scales</td>
                         </tr>
                         <tr data-cat="sequence">
-                            <td><strong>Transformer (Attention)</strong></td>
-                            <td>2017</td>
-                            <td>Vaswani et al.</td>
-                            <td>Text Sequences</td>
-                            <td><span class="mono-code">O(T²·d)</span></td>
-                            <td>Permutation equivariance, pairwise relations</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>Transformer (Attention)</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2017</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Vaswani et al.</td>
+                            <td data-label="Primary Modality" class="col-modality">Text Sequences</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(T²·d)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Permutation equivariance, pairwise relations</td>
                         </tr>
                         <tr data-cat="sequence">
-                            <td><strong>BERT (Bidirectional Encoder)</strong></td>
-                            <td>2018</td>
-                            <td>Devlin et al. (Google)</td>
-                            <td>Masked Text LM</td>
-                            <td><span class="mono-code">O(T²·d)</span></td>
-                            <td>Bidirectional contextual representation</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>BERT (Bidirectional Encoder)</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2018</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Devlin et al. (Google)</td>
+                            <td data-label="Primary Modality" class="col-modality">Masked Text LM</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(T²·d)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Bidirectional contextual representation</td>
                         </tr>
                         <tr data-cat="sequence">
-                            <td><strong>GPT-3 (Autoregressive Decoder)</strong></td>
-                            <td>2020</td>
-                            <td>Brown et al. (OpenAI)</td>
-                            <td>Causal Text LM</td>
-                            <td><span class="mono-code">O(T²·d)</span></td>
-                            <td>Causal next-token prediction scaling laws</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>GPT-3 (Autoregressive Decoder)</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2020</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Brown et al. (OpenAI)</td>
+                            <td data-label="Primary Modality" class="col-modality">Causal Text LM</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(T²·d)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Causal next-token prediction scaling laws</td>
                         </tr>
                         <tr data-cat="vision">
-                            <td><strong>Vision Transformer (ViT)</strong></td>
-                            <td>2020</td>
-                            <td>Dosovitskiy et al.</td>
-                            <td>Images as Patches</td>
-                            <td><span class="mono-code">O((HW/P²)²·d)</span></td>
-                            <td>Minimal inductive bias; pure self-attention over patches</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>Vision Transformer (ViT)</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2020</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Dosovitskiy et al.</td>
+                            <td data-label="Primary Modality" class="col-modality">Images as Patches</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O((HW/P²)²·d)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Minimal inductive bias; pure self-attention over patches</td>
                         </tr>
                         <tr data-cat="generative">
-                            <td><strong>DDPM (Denoising Diffusion)</strong></td>
-                            <td>2020</td>
-                            <td>Jonathan Ho et al.</td>
-                            <td>Image Generation</td>
-                            <td><span class="mono-code">O(Steps·UNet)</span></td>
-                            <td>Continuous Gaussian noise reversal SDE</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>DDPM (Denoising Diffusion)</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2020</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Jonathan Ho et al.</td>
+                            <td data-label="Primary Modality" class="col-modality">Image Generation</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(Steps·UNet)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Continuous Gaussian noise reversal SDE</td>
                         </tr>
                         <tr data-cat="generative">
-                            <td><strong>Latent Diffusion (Stable Diffusion)</strong></td>
-                            <td>2022</td>
-                            <td>Rombach et al.</td>
-                            <td>Text-to-Image / Video</td>
-                            <td><span class="mono-code">O(Steps·Latent)</span></td>
-                            <td>Cross-attention conditioning in compressed latent space</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>Latent Diffusion (Stable Diffusion)</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2022</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Rombach et al.</td>
+                            <td data-label="Primary Modality" class="col-modality">Text-to-Image / Video</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(Steps·Latent)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Cross-attention conditioning in compressed latent space</td>
                         </tr>
                         <tr data-cat="sequence">
-                            <td><strong>Chinchilla Scaling Laws</strong></td>
-                            <td>2022</td>
-                            <td>Hoffmann et al. (DeepMind)</td>
-                            <td>Compute Allocation</td>
-                            <td><span class="mono-code">FLOPs ∝ N·D</span></td>
-                            <td>Equal scaling of parameter count and training tokens</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>Chinchilla Scaling Laws</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2022</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Hoffmann et al. (DeepMind)</td>
+                            <td data-label="Primary Modality" class="col-modality">Compute Allocation</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">FLOPs ∝ N·D</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Equal scaling of parameter count and training tokens</td>
                         </tr>
                         <tr data-cat="sequence">
-                            <td><strong>LLaMA-3</strong></td>
-                            <td>2024</td>
-                            <td>Meta AI Research</td>
-                            <td>Open Foundation LM</td>
-                            <td><span class="mono-code">O(T²·d)</span></td>
-                            <td>Grouped-Query Attention (GQA), RoPE, 15T tokens</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>LLaMA-3</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2024</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Meta AI Research</td>
+                            <td data-label="Primary Modality" class="col-modality">Open Foundation LM</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(T²·d)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Grouped-Query Attention (GQA), RoPE, 15T tokens</td>
                         </tr>
                         <tr data-cat="frontier">
-                            <td><strong>Mamba-2 (State Space Duality)</strong></td>
-                            <td>2024</td>
-                            <td>Dao &amp; Gu</td>
-                            <td>Long Sequences / Multi-modal</td>
-                            <td><span class="mono-code">O(T·d)</span></td>
-                            <td>Selective state space mapped to structured masked attention</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>Mamba-2 (State Space Duality)</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2024</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">Dao &amp; Gu</td>
+                            <td data-label="Primary Modality" class="col-modality">Long Sequences / Multi-modal</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(T·d)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Selective state space mapped to structured masked attention</td>
                         </tr>
                         <tr data-cat="frontier">
-                            <td><strong>DeepSeek-V3 (MLA + MoE)</strong></td>
-                            <td>2024</td>
-                            <td>DeepSeek-AI</td>
-                            <td>Hyperscale LLM (671B)</td>
-                            <td><span class="mono-code">O(37B active)</span></td>
-                            <td>Multi-head latent KV compression + 256 fine-grained MoE</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>DeepSeek-V3 (MLA + MoE)</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2024</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">DeepSeek-AI</td>
+                            <td data-label="Primary Modality" class="col-modality">Hyperscale LLM (671B)</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">O(37B active)</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Multi-head latent KV compression + 256 fine-grained MoE</td>
                         </tr>
                         <tr data-cat="frontier">
-                            <td><strong>OpenAI o1 / o3</strong></td>
-                            <td>2024–2025</td>
-                            <td>OpenAI</td>
-                            <td>Complex Reasoning / Math</td>
-                            <td><span class="mono-code">Dynamic CoT</span></td>
-                            <td>Reinforcement learning on verifiable search chains</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>OpenAI o1 / o3</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2024–2025</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">OpenAI</td>
+                            <td data-label="Primary Modality" class="col-modality">Complex Reasoning / Math</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">Dynamic CoT</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Reinforcement learning on verifiable search chains</td>
                         </tr>
                         <tr data-cat="frontier">
-                            <td><strong>DeepSeek-R1</strong></td>
-                            <td>2025–2026</td>
-                            <td>DeepSeek-AI</td>
-                            <td>Open Reasoning Architecture</td>
-                            <td><span class="mono-code">Dynamic CoT</span></td>
-                            <td>Pure RL cold-start reasoning with test-time compute scaling</td>
+                            <td data-label="Model / Architecture" class="col-model"><strong>DeepSeek-R1</strong></td>
+                            <td data-label="Year" class="col-year"><span class="badge-year">2025–2026</span></td>
+                            <td data-label="Key Innovators" class="col-innovators">DeepSeek-AI</td>
+                            <td data-label="Primary Modality" class="col-modality">Open Reasoning Architecture</td>
+                            <td data-label="Complexity" class="col-complexity"><span class="mono-code">Dynamic CoT</span></td>
+                            <td data-label="Inductive Bias" class="col-bias">Pure RL cold-start reasoning with test-time compute scaling</td>
                         </tr>
                     </tbody>
                 </table>
@@ -676,6 +862,46 @@
                 }
             });
         }
+
+        let userExplicitView = null;
+
+        function setLedgerView(mode, isUserAction = false) {
+            const scroller = document.getElementById('archTableContainer');
+            const btnTable = document.getElementById('viewBtnTable');
+            const btnCards = document.getElementById('viewBtnCards');
+            if (!scroller || !btnTable || !btnCards) return;
+
+            if (isUserAction) {
+                userExplicitView = mode;
+            }
+
+            if (mode === 'cards') {
+                scroller.classList.add('card-view');
+                btnCards.classList.add('active');
+                btnCards.setAttribute('aria-pressed', 'true');
+                btnTable.classList.remove('active');
+                btnTable.setAttribute('aria-pressed', 'false');
+            } else {
+                scroller.classList.remove('card-view');
+                btnTable.classList.add('active');
+                btnTable.setAttribute('aria-pressed', 'true');
+                btnCards.classList.remove('active');
+                btnCards.setAttribute('aria-pressed', 'false');
+            }
+        }
+
+        // Initialize and synchronize responsive view preference based on viewport width
+        function syncResponsiveView() {
+            if (userExplicitView) return;
+            if (window.innerWidth <= 768) {
+                setLedgerView('cards');
+            } else {
+                setLedgerView('table');
+            }
+        }
+
+        syncResponsiveView();
+        window.addEventListener('resize', syncResponsiveView);
     </script>
 </body>
 </html>

@@ -341,6 +341,7 @@
         /* Optimizer Comparison Table */
         .table-scroller {
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
             background: var(--bg-surface);
@@ -374,6 +375,96 @@
             font-family: var(--font-mono);
             font-size: 0.82rem;
             color: var(--accent-bright);
+        }
+
+        /* Second-Order Curvature Diagram & Architecture Cards */
+        .curvature-visual-bench {
+            background: #070a13;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .curvature-svg-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: var(--radius-lg);
+            background: #040711;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px;
+        }
+
+        .curvature-svg-container svg {
+            width: 100%;
+            min-width: 680px;
+            height: auto;
+            display: block;
+        }
+
+        .curvature-scroll-hint {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            padding: 3px 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-full);
+            width: fit-content;
+        }
+
+        @media (max-width: 720px) {
+            .curvature-scroll-hint {
+                display: inline-flex;
+            }
+        }
+
+        .curvature-legend-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 24px;
+            padding: 12px 16px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .curvature-legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-indicator-line {
+            width: 24px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .legend-indicator-line.euclidean {
+            background: #f43f5e;
+            border-top: 1px dashed #fb7185;
+        }
+
+        .legend-indicator-line.second-order {
+            background: #06b6d4;
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+        }
+
+        .legend-indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            border: 1.5px solid #ffffff;
         }
 
         .site-footer {
@@ -483,6 +574,242 @@
                         <div>f'(x) derivative: <strong id="readoutDeriv">0.250</strong></div>
                         <div>Gradient Status: <strong id="readoutStatus" style="color:#34d399;">Peak Sensitivity</strong></div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dedicated Section: Second-Order Optimization & Loss Curvature -->
+        <section class="section-block">
+            <h2 class="section-heading">Second-Order Optimization &amp; Loss Curvature</h2>
+            <p class="section-subtext">Navigating ill-conditioned ravines, the Riemannian geometry of the Fisher Information Matrix, and 2025–2026 Newton-Schulz matrix orthogonalization (Muon).</p>
+
+            <!-- Curvature Visual Bench: Authored SVG Trajectory Comparison -->
+            <div class="curvature-visual-bench">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                    <div>
+                        <strong style="color:var(--text-primary); font-size:1.05rem;">Loss Landscape Curvature: Euclidean Zig-Zag vs. Natural / Curvature Trajectory</strong>
+                        <div style="font-size:0.84rem; color:var(--text-muted); margin-top:2px;">Elongated quadratic basin with severe condition number $\kappa(H) \gg 1$. Standard gradient descent oscillates across steep walls, while second-order &amp; Muon steps follow the Riemannian curvature geodesic.</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span class="curvature-scroll-hint">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            <span>Scroll horizontally</span>
+                        </span>
+                        <span style="font-family:var(--font-mono); font-size:0.75rem; background:rgba(6, 182, 212, 0.12); color:var(--accent-cyan); border:1px solid rgba(6, 182, 212, 0.25); padding:3px 10px; border-radius:var(--radius-full); font-weight:700;">RIEMANNIAN GEODESIC VS EUCLIDEAN</span>
+                    </div>
+                </div>
+
+                <div class="curvature-svg-container">
+                    <svg viewBox="0 0 880 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vector diagram of loss curvature comparing Euclidean gradient descent zig-zagging against second-order preconditioned trajectory in an ill-conditioned valley">
+                        <defs>
+                            <!-- Arrowhead Markers -->
+                            <marker id="arrowRed" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#f43f5e" />
+                            </marker>
+                            <marker id="arrowCyan" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#06b6d4" />
+                            </marker>
+                            <marker id="arrowEmerald" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981" />
+                            </marker>
+                            <!-- Glow Filter -->
+                            <filter id="cyanGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+
+                        <!-- Background Grid -->
+                        <g stroke="rgba(255, 255, 255, 0.04)" stroke-width="1">
+                            <line x1="40" y1="60" x2="840" y2="60" />
+                            <line x1="40" y1="120" x2="840" y2="120" />
+                            <line x1="40" y1="180" x2="840" y2="180" />
+                            <line x1="40" y1="240" x2="840" y2="240" />
+                            <line x1="40" y1="300" x2="840" y2="300" />
+                            <line x1="40" y1="360" x2="840" y2="360" />
+                            <line x1="120" y1="40" x2="120" y2="400" />
+                            <line x1="240" y1="40" x2="240" y2="400" />
+                            <line x1="360" y1="40" x2="360" y2="400" />
+                            <line x1="480" y1="40" x2="480" y2="400" />
+                            <line x1="600" y1="40" x2="600" y2="400" />
+                            <line x1="720" y1="40" x2="720" y2="400" />
+                        </g>
+
+                        <!-- Coordinate Axes -->
+                        <line x1="60" y1="390" x2="820" y2="390" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.5" />
+                        <line x1="60" y1="390" x2="60" y2="40" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.5" />
+                        <text x="825" y="394" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">θ₁ (Flat Direction v₂)</text>
+                        <text x="65" y="35" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">θ₂ (Stiff Direction v₁)</text>
+
+                        <!-- Anisotropic Loss Basin Elliptical Contours (Rotated by -16 degrees) -->
+                        <g transform="translate(580, 220) rotate(-16)" fill="none">
+                            <!-- Outer Contours -->
+                            <ellipse cx="0" cy="0" rx="350" ry="62" stroke="rgba(59, 130, 246, 0.12)" stroke-width="1.5" />
+                            <ellipse cx="0" cy="0" rx="280" ry="48" stroke="rgba(59, 130, 246, 0.18)" stroke-width="1.5" />
+                            <ellipse cx="0" cy="0" rx="210" ry="36" stroke="rgba(59, 130, 246, 0.28)" stroke-width="1.5" />
+                            <ellipse cx="0" cy="0" rx="140" ry="24" stroke="rgba(6, 182, 212, 0.38)" stroke-width="1.5" />
+                            <ellipse cx="0" cy="0" rx="75" ry="14" stroke="rgba(6, 182, 212, 0.55)" stroke-width="1.5" />
+                            <ellipse cx="0" cy="0" rx="28" ry="6" stroke="rgba(16, 185, 129, 0.7)" stroke-width="1.5" />
+                        </g>
+
+                        <!-- Contour Labels -->
+                        <text x="260" y="360" fill="#475569" font-family="'JetBrains Mono', monospace" font-size="10">ℒ = 100</text>
+                        <text x="325" y="325" fill="#475569" font-family="'JetBrains Mono', monospace" font-size="10">ℒ = 60</text>
+                        <text x="395" y="295" fill="#475569" font-family="'JetBrains Mono', monospace" font-size="10">ℒ = 30</text>
+                        <text x="465" y="270" fill="#0284c7" font-family="'JetBrains Mono', monospace" font-size="10">ℒ = 10</text>
+
+                        <!-- Eigenvector Axis Rays at Optimum (580, 220) -->
+                        <g stroke-linecap="round">
+                            <!-- v2 flat eigenvector along valley length -->
+                            <line x1="280" y1="305" x2="800" y2="155" stroke="rgba(59, 130, 246, 0.35)" stroke-dasharray="4,4" stroke-width="1.5" />
+                            <text x="740" y="142" fill="#60a5fa" font-family="'JetBrains Mono', monospace" font-size="10">Eigenvector v₂ (λ_min = 1.0)</text>
+
+                            <!-- v1 steep eigenvector across valley width -->
+                            <line x1="555" y1="130" x2="605" y2="310" stroke="rgba(244, 63, 94, 0.35)" stroke-dasharray="4,4" stroke-width="1.5" />
+                            <text x="615" y="318" fill="#fb7185" font-family="'JetBrains Mono', monospace" font-size="10">Eigenvector v₁ (λ_max = 50.0)</text>
+                        </g>
+
+                        <!-- Trajectory 1: Standard Euclidean Gradient Descent (Pathological Zig-Zag) -->
+                        <!-- Points bounce sharply between steep ravine walls due to condition number disparity -->
+                        <polyline points="
+                            140,75
+                            185,345
+                            225,105
+                            265,325
+                            305,125
+                            345,305
+                            380,140
+                            415,290
+                            445,155
+                            475,275
+                            505,170
+                            530,255
+                            555,195
+                            570,235
+                            580,220"
+                            fill="none" stroke="#f43f5e" stroke-width="2" stroke-dasharray="5,4" />
+
+                        <!-- Euclidean Step Marker Dots -->
+                        <g fill="#f43f5e">
+                            <circle cx="140" cy="75" r="4" />
+                            <circle cx="185" cy="345" r="3" />
+                            <circle cx="225" cy="105" r="3" />
+                            <circle cx="265" cy="325" r="3" />
+                            <circle cx="305" cy="125" r="3" />
+                            <circle cx="345" cy="305" r="3" />
+                            <circle cx="380" cy="140" r="3" />
+                            <circle cx="415" cy="290" r="3" />
+                            <circle cx="445" cy="155" r="3" />
+                            <circle cx="475" cy="275" r="3" />
+                            <circle cx="505" cy="170" r="3" />
+                            <circle cx="530" cy="255" r="3" />
+                        </g>
+
+                        <!-- Trajectory 2: Curvature-Adjusted / Natural Gradient / Muon Orthogonalized Path -->
+                        <!-- Preconditioned by H^-1 / F^-1 or Newton-Schulz singular value normalization -->
+                        <path d="M 140,75 Q 320,185 490,212 L 580,220"
+                              fill="none" stroke="#06b6d4" stroke-width="3.5" filter="url(#cyanGlow)" stroke-linecap="round" />
+
+                        <!-- Step milestones on Curvature Path -->
+                        <circle cx="140" cy="75" r="5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
+                        <circle cx="330" cy="186" r="4.5" fill="#06b6d4" stroke="#ffffff" stroke-width="1.5" />
+                        <circle cx="490" cy="212" r="4.5" fill="#10b981" stroke="#ffffff" stroke-width="1.5" />
+
+                        <!-- Arrowheads along Curvature Trajectory -->
+                        <line x1="315" y1="181" x2="335" y2="187" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrowCyan)" />
+                        <line x1="470" y1="209" x2="495" y2="213" stroke="#10b981" stroke-width="2" marker-end="url(#arrowEmerald)" />
+
+                        <!-- Local Gradient Vectors at Starting Point θ_0 (140, 75) -->
+                        <!-- 1. Euclidean Negative Gradient (steep wall pull) -->
+                        <line x1="140" y1="75" x2="160" y2="175" stroke="#f43f5e" stroke-width="2.5" marker-end="url(#arrowRed)" />
+                        <text x="170" y="150" fill="#fb7185" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">−∇ℒ(θ) [Steep Wall Pull]</text>
+
+                        <!-- 2. Newton / Natural Gradient Vector (pointing down ravine floor) -->
+                        <line x1="140" y1="75" x2="270" y2="135" stroke="#06b6d4" stroke-width="2.5" marker-end="url(#arrowCyan)" />
+                        <text x="210" y="105" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">−H⁻¹∇ℒ / Muon Vector</text>
+
+                        <!-- Global Minimum Target Marker θ* (580, 220) -->
+                        <circle cx="580" cy="220" r="16" fill="rgba(16, 185, 129, 0.2)" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3,3" />
+                        <circle cx="580" cy="220" r="6" fill="#10b981" stroke="#ffffff" stroke-width="1.5" />
+                        <text x="580" y="250" fill="#34d399" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700" text-anchor="middle">θ* (Optimal Minimum)</text>
+
+                        <!-- Starting Point Label θ_0 -->
+                        <text x="110" y="65" fill="#f8fafc" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700">Initial θ₀</text>
+
+                        <!-- Condition Number Metric Badge -->
+                        <g transform="translate(640, 50)">
+                            <rect x="0" y="0" width="180" height="64" rx="8" fill="#111726" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1" />
+                            <text x="12" y="24" fill="#94a3b8" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="600">CONDITION NUMBER</text>
+                            <text x="12" y="46" fill="#f8fafc" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700">κ(H) = 50.0 ≫ 1</text>
+                            <text x="12" y="58" fill="#f43f5e" font-family="'JetBrains Mono', monospace" font-size="9">Ill-conditioned Ravine</text>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- Authored Legend -->
+                <div class="curvature-legend-bar">
+                    <div class="curvature-legend-item">
+                        <span class="legend-indicator-line euclidean"></span>
+                        <span><strong>Standard Euclidean Descent:</strong> Pathological oscillations bounded by $\eta &lt; 2/\lambda_{\max}$. Step size along shallow floor crawls at $\mathcal{O}(2/\kappa(H))$.</span>
+                    </div>
+                    <div class="curvature-legend-item">
+                        <span class="legend-indicator-line second-order"></span>
+                        <span><strong>Curvature-Adjusted / Muon:</strong> Preconditioned by $H^{-1}, F^{-1}$, or Newton-Schulz matrix polar factor, following the Riemannian geodesic directly to $\theta^*$.</span>
+                    </div>
+                    <div class="curvature-legend-item">
+                        <span class="legend-indicator-dot"></span>
+                        <span><strong>$\theta^*$ Optimum Basin:</strong> Zero-gradient minimum of quadratic loss approximation.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deep Technical Cards: Curvature, FIM, and Muon -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px; margin-top:24px;">
+                <!-- Card 1: Hessian & Ill-conditioned Valleys -->
+                <div class="derivation-card" style="margin-bottom:0;">
+                    <h3 class="derivation-title">1. The Hessian Matrix &amp; Condition Number $\kappa(H)$</h3>
+                    <p style="font-size:0.91rem; color:var(--text-secondary); line-height:1.6;">Taylor expansion around local parameter vector $\theta$ expresses loss curvature in terms of the symmetric second-order partial derivative matrix $H \in \mathbb{R}^{P \times P}$:</p>
+                    <div class="derivation-math">
+                        ℒ(θ + Δθ) ≈ ℒ(θ) + ∇ℒ(θ)ᵀ Δθ + ½ Δθᵀ H Δθ <br>
+                        H_ij ≡ ∂²ℒ / (∂θ_i ∂θ_j)
+                    </div>
+                    <p style="font-size:0.91rem; color:var(--text-secondary); line-height:1.6;">The spectral decomposition $H = \sum_{k=1}^P \lambda_k q_k q_k^T$ defines the <strong>condition number</strong>:</p>
+                    <div class="derivation-math">
+                        κ(H) = λ_max(H) / λ_min(H)
+                    </div>
+                    <p style="font-size:0.91rem; color:var(--text-secondary); line-height:1.6;">In deep neural networks, $\kappa(H)$ frequently spans $10^4$ to $10^8$. To prevent divergent exploding updates along the stiff eigenvector $q_{\max}$, gradient descent step sizes must satisfy $\eta &lt; 2/\lambda_{\max}$. Consequently, velocity along the shallow valley floor $q_{\min}$ is choked to $\eta \lambda_{\min} \le 2/\kappa(H) \ll 10^{-4}$, causing severe pathological oscillations across ravine walls.</p>
+                </div>
+
+                <!-- Card 2: Natural Gradient & FIM -->
+                <div class="derivation-card" style="margin-bottom:0;">
+                    <h3 class="derivation-title">2. Natural Gradient Descent &amp; Fisher Information</h3>
+                    <p style="font-size:0.91rem; color:var(--text-secondary); line-height:1.6;">Amari (1998) proved that Euclidean distance $\|\Delta\theta\|_2^2 = \sum \Delta\theta_i^2$ is an arbitrary artifact of parameterization. Rescaling weights changes Euclidean gradients without altering network output behavior.</p>
+                    <p style="font-size:0.91rem; color:var(--text-secondary); line-height:1.6;">Natural Gradient defines distance on the Riemannian statistical manifold of probability distributions $p_\theta(y \mid x)$ using Kullback-Leibler (KL) divergence:</p>
+                    <div class="derivation-math">
+                        D_KL(p_θ ‖ p_{θ + dθ}) ≈ ½ dθᵀ F dθ <br>
+                        F = 𝔼_{x, y ~ p_θ}[ ∇_θ log p_θ(y|x) · (∇_θ log p_θ(y|x))ᵀ ]
+                    </div>
+                    <p style="font-size:0.91rem; color:var(--text-secondary); line-height:1.6;">The Natural Gradient update direction is invariant to reparameterization:</p>
+                    <div class="derivation-math">
+                        Δθ_Nat = -η F⁻¹ ∇ℒ(θ)
+                    </div>
+                    <p style="font-size:0.91rem; color:var(--text-secondary); line-height:1.6;">Under negative log-likelihood loss, $F$ equals the expected Hessian $\mathbb{E}[H]$. Practical algorithms like <strong>K-FAC</strong> factor $F$ into layer Kronecker products $A_{l-1} \otimes S_l$, enabling tractable inversion without $O(P^3)$ computational scaling.</p>
+                </div>
+
+                <!-- Card 3: Modern Muon Optimizer (2024-2026) -->
+                <div class="derivation-card" style="margin-bottom:0;">
+                    <h3 class="derivation-title">3. Frontier 2025–2026 Matrix Optimization: Muon</h3>
+                    <p style="font-size:0.91rem; color:var(--text-secondary); line-height:1.6;">While AdamW normalizes updates coordinate-by-coordinate as independent 1D scalars ($\hat{m}_t / \sqrt{\hat{v}_t}$), neural weights are 2D linear operators $W \in \mathbb{R}^{d_{\text{out}} \times d_{\text{in}}}$. Coordinate-wise scaling ignores singular value spectrum geometry.</p>
+                    <p style="font-size:0.91rem; color:var(--text-secondary); line-height:1.6;"><strong>Muon</strong> (Jordan, Bernstein et al., 2024–2026) maintains momentum $M_t = \beta M_{t-1} + (1-\beta)G_t$, but normalizes the entire matrix to the <strong>nearest orthogonal matrix</strong> (polar factor):</p>
+                    <div class="derivation-math">
+                        𝒪(M) = M (Mᵀ M)⁻¹/²  ⟹  ∀i: σᵢ(𝒪(M)) = 1
+                    </div>
+                    <p style="font-size:0.91rem; color:var(--text-secondary); line-height:1.6;">To bypass costly $O(d^3)$ SVD decompositions, Muon evaluates 5 iterations of Quintic Newton-Schulz polynomial iterations on GPU Tensor Cores:</p>
+                    <div class="derivation-math">
+                        X_{k+1} = a X_k + b (X_k X_kᵀ) X_k + c (X_k X_kᵀ)² X_k <br>
+                        a = 3.4445,  b = -4.7750,  c = 2.0315
+                    </div>
+                    <p style="font-size:0.91rem; color:var(--text-secondary); line-height:1.6;">Because Newton-Schulz consists purely of GEMMs running at &gt;80% MFU with zero cross-socket synchronization stalls, Muon accelerates LLM pretraining convergence by ~30–40% over AdamW in frontier recipes.</p>
                 </div>
             </div>
         </section>
