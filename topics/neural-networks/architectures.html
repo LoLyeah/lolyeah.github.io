@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Architectural Taxonomy: From MLPs to Mamba &amp; Mixture of Experts | LoLyeah</title>
+    <meta name="description" content="In-depth scientific taxonomy of neural network architectures: inductive biases, attention tensors, sparse MoE routing, state-space models (Mamba), and 20 milestone models.">
+    <meta name="author" content="LoLyeah">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lolyeah.github.io/topics/neural-networks/architectures.html">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Deep Architectural Taxonomy: From MLPs to Mamba &amp; Mixture of Experts">
+    <meta property="og:description" content="Detailed comparative taxonomy of 20 milestone neural architectures with mathematical formulation, tensor diagrams, and inductive bias analysis.">
+    <meta property="og:url" content="https://lolyeah.github.io/topics/neural-networks/architectures.html">
+    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/1/1a/330-PSA-80-60_%28USN_710739%29_%2820897323365%29.jpg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Deep Architectural Taxonomy: From MLPs to Mamba &amp; Mixture of Experts">
+    <meta name="twitter:description" content="Filterable architecture matrix, QKV attention equations, and sparse MoE routing analysis.">
+    <meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/1/1a/330-PSA-80-60_%28USN_710739%29_%2820897323365%29.jpg">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../../assets/neural-networks.css">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Deep Architectural Taxonomy: From MLPs to Mamba & Mixture of Experts",
+      "description": "Comprehensive taxonomic breakdown of modern neural network architectures from convolutional nets and residual highways to transformers, state space models, and sparse mixture of experts.",
+      "url": "https://lolyeah.github.io/topics/neural-networks/architectures.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "LoLyeah Interactive Guides",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://lolyeah.github.io/assets/logo.png"
+        }
+      },
+      "author": {
+        "@type": "Person",
+        "name": "LoLyeah"
+      },
+      "datePublished": "2026-10-09",
+      "dateModified": "2026-10-09"
+    }
+    </script>
+
+    <!-- Typography: Plus Jakarta Sans, Outfit & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-canvas: #0b0f19;
+            --bg-surface: #111726;
+            --bg-surface-elevated: #182238;
+            --bg-surface-subtle: #141c2e;
+            --border-subtle: #1e293b;
+            --border-hover: rgba(59, 130, 246, 0.45);
+
+            --accent-primary: #3b82f6;
+            --accent-bright: #60a5fa;
+            --accent-indigo: #6366f1;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-display: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Monaco, Consolas, monospace;
+
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+
+            --motion-fast: 120ms;
+            --motion-normal: 200ms;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            background-image:
+                radial-gradient(at 20% 10%, rgba(59, 130, 246, 0.07) 0px, transparent 55%),
+                radial-gradient(at 80% 20%, rgba(99, 102, 241, 0.05) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 15px;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::selection { background: rgba(59, 130, 246, 0.35); color: #ffffff; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-canvas); }
+        ::-webkit-scrollbar-thumb { background: #25334d; border-radius: var(--radius-full); }
+        :focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding-left: clamp(1.25rem, 3.5vw, 2.5rem);
+            padding-right: clamp(1.25rem, 3.5vw, 2.5rem);
+        }
+
+        /* Site Header with Explicit Back Link */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            height: 68px;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            transition: color var(--motion-fast) var(--ease-out), background-color var(--motion-fast) var(--ease-out);
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-surface-elevated);
+        }
+
+        .page-badge {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--accent-bright);
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+        }
+
+        /* Hero */
+        .hero {
+            padding: clamp(2.5rem, 5vw, 4rem) 0 2rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw + 0.5rem, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            line-height: 1.15;
+            margin-bottom: 1rem;
+        }
+
+        .hero-p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 72ch;
+            line-height: 1.65;
+        }
+
+        /* Section Layout */
+        .section-block {
+            padding: 48px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .section-heading {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtext {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 75ch;
+            margin-bottom: 2rem;
+        }
+
+        /* Interactive Filter Matrix */
+        .filter-toolbar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-chip-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--motion-fast) var(--ease-out);
+        }
+
+        .filter-chip-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-bright);
+        }
+
+        .filter-chip-btn.active {
+            background: var(--accent-primary);
+            color: #ffffff;
+            border-color: var(--accent-primary);
+        }
+
+        /* Table */
+        .table-scroller {
+            overflow-x: auto;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            background: var(--bg-surface);
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            min-width: 860px;
+            text-align: left;
+        }
+
+        .matrix-table th {
+            background: var(--bg-surface-elevated);
+            color: var(--text-primary);
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .matrix-table td {
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+
+        .matrix-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .mono-code {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--accent-bright);
+        }
+
+        /* Architectural Diagram Frame */
+        .diag-frame {
+            background: #090d16;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .diag-caption {
+            padding: 12px 18px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        /* Footer */
+        .site-footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 0.84rem;
+            color: var(--text-dim);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="../neural-networks.html" class="back-link" aria-label="Back to Neural Networks main compendium">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <span>&larr; Main Compendium</span>
+            </a>
+            <span class="page-badge">ARCHITECTURAL TAXONOMY</span>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero -->
+        <section class="hero">
+            <h1>The Deep Architectural Spectrum</h1>
+            <p class="hero-p">From spatial convolutions and recurrent memory gates to pairwise self-attention, sparse Mixture of Experts, and continuous State Space Duality. A rigorous inspection of mathematical form, inductive biases, and computational complexities.</p>
+        </section>
+
+        <!-- Technical Deep-Dive 1: Transformer & Attention Mechanics -->
+        <section class="section-block">
+            <h2 class="section-heading">Multi-Head Scaled Dot-Product Attention</h2>
+            <p class="section-subtext">The core engine of modern foundation models. Vaswani et al. (2017) discarded recurrence in favor of permutation-equivariant pairwise token routing modulated by learned query, key, and value matrices.</p>
+
+            <div class="diag-frame">
+                <svg viewBox="0 0 1100 420" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; font-family:'Plus Jakarta Sans',sans-serif;">
+                    <defs>
+                        <linearGradient id="qGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+                        <linearGradient id="kGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="#0284c7"/></linearGradient>
+                        <linearGradient id="vGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient>
+                        <linearGradient id="softGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#6d28d9"/></linearGradient>
+                    </defs>
+
+                    <!-- Input Embedding Tensor -->
+                    <rect x="50" y="160" width="100" height="100" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+                    <text x="100" y="205" fill="#f8fafc" font-size="14" font-weight="700" text-anchor="middle">X ∈ ℝ^(T×d)</text>
+                    <text x="100" y="230" fill="#94a3b8" font-size="11" font-family="'JetBrains Mono',monospace" text-anchor="middle">Input Tokens</text>
+
+                    <!-- Split Arrows to Linear Projections -->
+                    <path d="M150,210 C200,210 200,90 250,90" stroke="#f59e0b" stroke-width="2" fill="none"/>
+                    <path d="M150,210 C200,210 200,210 250,210" stroke="#06b6d4" stroke-width="2" fill="none"/>
+                    <path d="M150,210 C200,210 200,330 250,330" stroke="#3b82f6" stroke-width="2" fill="none"/>
+
+                    <!-- Projections: Q, K, V -->
+                    <rect x="250" y="55" width="110" height="70" rx="8" fill="url(#qGrad)"/>
+                    <text x="305" y="90" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">Q = X W_Q</text>
+                    <text x="305" y="110" fill="#fef3c7" font-size="11" text-anchor="middle">Queries</text>
+
+                    <rect x="250" y="175" width="110" height="70" rx="8" fill="url(#kGrad)"/>
+                    <text x="305" y="210" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">K = X W_K</text>
+                    <text x="305" y="230" fill="#cffafe" font-size="11" text-anchor="middle">Keys</text>
+
+                    <rect x="250" y="295" width="110" height="70" rx="8" fill="url(#vGrad)"/>
+                    <text x="305" y="330" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">V = X W_V</text>
+                    <text x="305" y="350" fill="#dbeafe" font-size="11" text-anchor="middle">Values</text>
+
+                    <!-- MatMul Q and K^T -->
+                    <line x1="360" y1="90" x2="430" y2="135" stroke="#f59e0b" stroke-width="2"/>
+                    <line x1="360" y1="210" x2="430" y2="165" stroke="#06b6d4" stroke-width="2"/>
+
+                    <circle cx="450" cy="150" r="24" fill="#1e293b" stroke="#818cf8" stroke-width="2"/>
+                    <text x="450" y="156" fill="#f8fafc" font-size="14" font-weight="700" text-anchor="middle">Q Kᵀ</text>
+
+                    <!-- Scale Factor 1/sqrt(d_k) -->
+                    <line x1="474" y1="150" x2="540" y2="150" stroke="#818cf8" stroke-width="2"/>
+                    <rect x="540" y="125" width="80" height="50" rx="6" fill="#1e293b" stroke="#818cf8" stroke-width="1.5"/>
+                    <text x="580" y="155" fill="#c7d2fe" font-family="'JetBrains Mono',monospace" font-size="12" text-anchor="middle">÷ √d_k</text>
+
+                    <!-- Softmax Normalization -->
+                    <line x1="620" y1="150" x2="680" y2="150" stroke="#818cf8" stroke-width="2"/>
+                    <rect x="680" y="115" width="100" height="70" rx="8" fill="url(#softGrad)"/>
+                    <text x="730" y="148" fill="#fff" font-size="13" font-weight="700" text-anchor="middle">Softmax</text>
+                    <text x="730" y="168" fill="#ede9fe" font-size="10" text-anchor="middle">Weights A</text>
+
+                    <!-- MatMul with V -->
+                    <path d="M360,330 C550,330 650,230 790,200" stroke="#3b82f6" stroke-width="2" fill="none"/>
+                    <circle cx="810" cy="180" r="24" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                    <text x="810" y="186" fill="#38bdf8" font-size="13" font-weight="700" text-anchor="middle">A × V</text>
+
+                    <!-- Projection Output W_O -->
+                    <line x1="834" y1="180" x2="910" y2="180" stroke="#38bdf8" stroke-width="2"/>
+                    <rect x="910" y="145" width="130" height="70" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+                    <text x="975" y="178" fill="#34d399" font-size="14" font-weight="700" text-anchor="middle">Output Head</text>
+                    <text x="975" y="198" fill="#94a3b8" font-family="'JetBrains Mono',monospace" font-size="11" text-anchor="middle">Head_i · W_O</text>
+                </svg>
+                <div class="diag-caption">
+                    Figure A-1: Scaled Dot-Product Multi-Head Attention computation graph showing Query-Key interaction and Value weighting.
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Deep-Dive 2: State Space Models (Mamba) & MoE -->
+        <section class="section-block">
+            <h2 class="section-heading">State Space Models (Mamba) &amp; Sparse Mixture of Experts</h2>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px;">
+                <div style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:24px;">
+                    <h3 style="font-size:1.2rem; color:var(--text-primary); margin-bottom:10px;">Continuous LTI to Selective SSM (Mamba)</h3>
+                    <p style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">Continuous state-space equations map 1D sequence $x(t)$ to hidden state $h(t)$ via differential equations:</p>
+                    <div style="background:#090d16; padding:12px; border-radius:6px; font-family:var(--font-mono); font-size:0.85rem; color:#93c5fd; margin:12px 0;">
+                        h'(t) = A h(t) + B x(t) <br>
+                        y(t) = C h(t)
+                    </div>
+                    <p style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">Albert Gu and Tri Dao (2023) introduced <em>Selective State Spaces</em> by making $B, C,$ and step size $\Delta$ input-dependent functions of token $x_t$. This breaks linear time-invariance, allowing the model to selectively remember relevant tokens and forget noise with <strong>linear $O(T)$ inference memory</strong>.</p>
+                </div>
+
+                <div style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:24px;">
+                    <h3 style="font-size:1.2rem; color:var(--text-primary); margin-bottom:10px;">Sparse Mixture of Experts (MoE)</h3>
+                    <p style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">Rather than activating all feedforward parameters per token, MoE replaces the dense FFN block with $E$ parallel sub-networks, routed by a softmax gating network:</p>
+                    <div style="background:#090d16; padding:12px; border-radius:6px; font-family:var(--font-mono); font-size:0.85rem; color:#93c5fd; margin:12px 0;">
+                        y = \sum_{i \in \text{TopK}} \text{Softmax}(x W_g)_i \cdot \text{FFN}_i(x)
+                    </div>
+                    <p style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">In DeepSeek-V3, 671 billion total parameters are distributed across 256 fine-grained routed experts plus 1 shared expert. Each token activates only <strong>37 billion active parameters</strong>, achieving frontier reasoning capabilities at a fraction of dense inference FLOPs.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Milestone Matrix of 20 Architectures -->
+        <section class="section-block">
+            <h2 class="section-heading">The 20 Milestone Architectural Ledger</h2>
+            <p class="section-subtext">Filterable catalog of landmark neural network designs across historical epochs.</p>
+
+            <!-- Real Hardware Archival Figure -->
+            <figure class="real-media-frame" style="margin-bottom: 24px;">
+                <div class="img-container" style="height: 300px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/330-PSA-80-60_%28USN_710739%29_%2820897323365%29.jpg" alt="Dr. Frank Rosenblatt with the Mark I Perceptron at Cornell Aeronautical Laboratory (1960)" loading="lazy" class="real-specimen-img" onerror="this.parentElement.innerHTML='<div style=\'padding:60px 20px;text-align:center;color:var(--text-muted);font-family:var(--font-mono);font-size:0.85rem;\'>[Historical Archive: Mark I Perceptron (1960)]</div>';">
+                </div>
+                <figcaption class="real-media-caption">
+                    <span><strong>Historical Archival Hardware:</strong> Dr. Frank Rosenblatt beside the Mark I Perceptron at Cornell Aeronautical Laboratory (1960). The machine implemented 400 optical cadmium sulfide photoreceptors connected to motorized potentiometer weights via patch cords.</span>
+                    <span class="caption-tag-pill">ARCHIVAL PHOTOGRAPHY</span>
+                </figcaption>
+            </figure>
+
+            <div class="filter-toolbar">
+                <button class="filter-chip-btn active" onclick="filterArch('all', this)">All (20)</button>
+                <button class="filter-chip-btn" onclick="filterArch('vision', this)">Vision &amp; Spatial</button>
+                <button class="filter-chip-btn" onclick="filterArch('sequence', this)">Language &amp; Sequence</button>
+                <button class="filter-chip-btn" onclick="filterArch('generative', this)">Generative &amp; Diffusion</button>
+                <button class="filter-chip-btn" onclick="filterArch('frontier', this)">Frontier (2024–2026)</button>
+            </div>
+
+            <div class="table-scroller">
+                <table class="matrix-table" id="archTable">
+                    <thead>
+                        <tr>
+                            <th>Model / Architecture</th>
+                            <th>Year</th>
+                            <th>Key Innovators</th>
+                            <th>Primary Modality</th>
+                            <th>Complexity</th>
+                            <th>Inductive Bias</th>
+                        </tr>
+                    </thead>
+                    <tbody id="archTableBody">
+                        <tr data-cat="sequence">
+                            <td><strong>Mark I Perceptron</strong></td>
+                            <td>1958</td>
+                            <td>Frank Rosenblatt</td>
+                            <td>Binary Vector</td>
+                            <td><span class="mono-code">O(d)</span></td>
+                            <td>Linear hyperplane separation</td>
+                        </tr>
+                        <tr data-cat="sequence">
+                            <td><strong>Multi-Layer Perceptron (Backprop)</strong></td>
+                            <td>1986</td>
+                            <td>Rumelhart, Hinton, Williams</td>
+                            <td>Tabular / Numeric</td>
+                            <td><span class="mono-code">O(d²·L)</span></td>
+                            <td>Hierarchical composition</td>
+                        </tr>
+                        <tr data-cat="vision">
+                            <td><strong>LeNet-5</strong></td>
+                            <td>1998</td>
+                            <td>Yann LeCun</td>
+                            <td>Digit Images (28×28)</td>
+                            <td><span class="mono-code">O(C·K²·HW)</span></td>
+                            <td>Local spatial translation equivariance</td>
+                        </tr>
+                        <tr data-cat="sequence">
+                            <td><strong>LSTM (Long Short-Term Memory)</strong></td>
+                            <td>1997</td>
+                            <td>Hochreiter &amp; Schmidhuber</td>
+                            <td>Sequential Time Series</td>
+                            <td><span class="mono-code">O(T·d²)</span></td>
+                            <td>Constant error carousel (gated linear memory)</td>
+                        </tr>
+                        <tr data-cat="vision">
+                            <td><strong>AlexNet</strong></td>
+                            <td>2012</td>
+                            <td>Krizhevsky, Sutskever, Hinton</td>
+                            <td>ImageNet (RGB)</td>
+                            <td><span class="mono-code">O(Params)</span></td>
+                            <td>Deep convolution + ReLU + Dropout on GPU</td>
+                        </tr>
+                        <tr data-cat="vision">
+                            <td><strong>VGG-16</strong></td>
+                            <td>2014</td>
+                            <td>Simonyan &amp; Zisserman</td>
+                            <td>Image Classification</td>
+                            <td><span class="mono-code">O(Params)</span></td>
+                            <td>Homogeneous 3×3 receptive field stacking</td>
+                        </tr>
+                        <tr data-cat="vision">
+                            <td><strong>ResNet-50</strong></td>
+                            <td>2015</td>
+                            <td>Kaiming He et al.</td>
+                            <td>High-Res Images</td>
+                            <td><span class="mono-code">O(Params)</span></td>
+                            <td>Identity shortcut highways (F(x) + x)</td>
+                        </tr>
+                        <tr data-cat="vision">
+                            <td><strong>U-Net</strong></td>
+                            <td>2015</td>
+                            <td>Ronneberger et al.</td>
+                            <td>Biomedical Segmentation</td>
+                            <td><span class="mono-code">O(HW)</span></td>
+                            <td>Encoder-decoder skip connections across scales</td>
+                        </tr>
+                        <tr data-cat="sequence">
+                            <td><strong>Transformer (Attention)</strong></td>
+                            <td>2017</td>
+                            <td>Vaswani et al.</td>
+                            <td>Text Sequences</td>
+                            <td><span class="mono-code">O(T²·d)</span></td>
+                            <td>Permutation equivariance, pairwise relations</td>
+                        </tr>
+                        <tr data-cat="sequence">
+                            <td><strong>BERT (Bidirectional Encoder)</strong></td>
+                            <td>2018</td>
+                            <td>Devlin et al. (Google)</td>
+                            <td>Masked Text LM</td>
+                            <td><span class="mono-code">O(T²·d)</span></td>
+                            <td>Bidirectional contextual representation</td>
+                        </tr>
+                        <tr data-cat="sequence">
+                            <td><strong>GPT-3 (Autoregressive Decoder)</strong></td>
+                            <td>2020</td>
+                            <td>Brown et al. (OpenAI)</td>
+                            <td>Causal Text LM</td>
+                            <td><span class="mono-code">O(T²·d)</span></td>
+                            <td>Causal next-token prediction scaling laws</td>
+                        </tr>
+                        <tr data-cat="vision">
+                            <td><strong>Vision Transformer (ViT)</strong></td>
+                            <td>2020</td>
+                            <td>Dosovitskiy et al.</td>
+                            <td>Images as Patches</td>
+                            <td><span class="mono-code">O((HW/P²)²·d)</span></td>
+                            <td>Minimal inductive bias; pure self-attention over patches</td>
+                        </tr>
+                        <tr data-cat="generative">
+                            <td><strong>DDPM (Denoising Diffusion)</strong></td>
+                            <td>2020</td>
+                            <td>Jonathan Ho et al.</td>
+                            <td>Image Generation</td>
+                            <td><span class="mono-code">O(Steps·UNet)</span></td>
+                            <td>Continuous Gaussian noise reversal SDE</td>
+                        </tr>
+                        <tr data-cat="generative">
+                            <td><strong>Latent Diffusion (Stable Diffusion)</strong></td>
+                            <td>2022</td>
+                            <td>Rombach et al.</td>
+                            <td>Text-to-Image / Video</td>
+                            <td><span class="mono-code">O(Steps·Latent)</span></td>
+                            <td>Cross-attention conditioning in compressed latent space</td>
+                        </tr>
+                        <tr data-cat="sequence">
+                            <td><strong>Chinchilla Scaling Laws</strong></td>
+                            <td>2022</td>
+                            <td>Hoffmann et al. (DeepMind)</td>
+                            <td>Compute Allocation</td>
+                            <td><span class="mono-code">FLOPs ∝ N·D</span></td>
+                            <td>Equal scaling of parameter count and training tokens</td>
+                        </tr>
+                        <tr data-cat="sequence">
+                            <td><strong>LLaMA-3</strong></td>
+                            <td>2024</td>
+                            <td>Meta AI Research</td>
+                            <td>Open Foundation LM</td>
+                            <td><span class="mono-code">O(T²·d)</span></td>
+                            <td>Grouped-Query Attention (GQA), RoPE, 15T tokens</td>
+                        </tr>
+                        <tr data-cat="frontier">
+                            <td><strong>Mamba-2 (State Space Duality)</strong></td>
+                            <td>2024</td>
+                            <td>Dao &amp; Gu</td>
+                            <td>Long Sequences / Multi-modal</td>
+                            <td><span class="mono-code">O(T·d)</span></td>
+                            <td>Selective state space mapped to structured masked attention</td>
+                        </tr>
+                        <tr data-cat="frontier">
+                            <td><strong>DeepSeek-V3 (MLA + MoE)</strong></td>
+                            <td>2024</td>
+                            <td>DeepSeek-AI</td>
+                            <td>Hyperscale LLM (671B)</td>
+                            <td><span class="mono-code">O(37B active)</span></td>
+                            <td>Multi-head latent KV compression + 256 fine-grained MoE</td>
+                        </tr>
+                        <tr data-cat="frontier">
+                            <td><strong>OpenAI o1 / o3</strong></td>
+                            <td>2024–2025</td>
+                            <td>OpenAI</td>
+                            <td>Complex Reasoning / Math</td>
+                            <td><span class="mono-code">Dynamic CoT</span></td>
+                            <td>Reinforcement learning on verifiable search chains</td>
+                        </tr>
+                        <tr data-cat="frontier">
+                            <td><strong>DeepSeek-R1</strong></td>
+                            <td>2025–2026</td>
+                            <td>DeepSeek-AI</td>
+                            <td>Open Reasoning Architecture</td>
+                            <td><span class="mono-code">Dynamic CoT</span></td>
+                            <td>Pure RL cold-start reasoning with test-time compute scaling</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            LoLyeah Interactive Guides &bull; Architectural Subpage Reference &bull; 2026
+        </div>
+    </footer>
+
+    <script>
+        function filterArch(cat, btn) {
+            document.querySelectorAll('.filter-chip-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const rows = document.querySelectorAll('#archTableBody tr');
+            rows.forEach(r => {
+                if (cat === 'all') {
+                    r.style.display = '';
+                } else if (r.getAttribute('data-cat') === cat) {
+                    r.style.display = '';
+                } else {
+                    r.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontier AI Hardware &amp; Scaling Laws: Clusters, Quantization &amp; Systems | LoLyeah</title>
+    <meta name="description" content="Technical compendium on AI supercomputer clusters, GPU memory hierarchy (HBM vs SRAM), Chinchilla scaling laws, FlashAttention tiling, and FP8/INT4 quantization.">
+    <meta name="author" content="LoLyeah">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lolyeah.github.io/topics/neural-networks/hardware-scaling.html">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Frontier AI Hardware &amp; Scaling Laws: Clusters, Quantization &amp; Systems">
+    <meta property="og:description" content="Chinchilla compute-optimal frontiers, FlashAttention IO-aware memory tiling, Blackwell B200 specs, and cluster TCO calculator.">
+    <meta property="og:url" content="https://lolyeah.github.io/topics/neural-networks/hardware-scaling.html">
+    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/b/be/Tensor_Processing_Unit_3.0.jpg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Frontier AI Hardware &amp; Scaling Laws: Clusters, Quantization &amp; Systems">
+    <meta name="twitter:description" content="Chinchilla compute-optimal frontiers, FlashAttention IO-aware memory tiling, Blackwell B200 specs, and cluster TCO calculator.">
+    <meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/b/be/Tensor_Processing_Unit_3.0.jpg">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../../assets/neural-networks.css">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Frontier AI Hardware & Scaling Laws: Clusters, Quantization & Systems",
+      "description": "Exhaustive engineering analysis of distributed AI training infrastructure: NVLink 5 fabric, FlashAttention kernel tiling, memory wall limits, and numerical quantization formats.",
+      "url": "https://lolyeah.github.io/topics/neural-networks/hardware-scaling.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "LoLyeah Interactive Guides",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://lolyeah.github.io/assets/logo.png"
+        }
+      },
+      "author": {
+        "@type": "Person",
+        "name": "LoLyeah"
+      },
+      "datePublished": "2026-10-09",
+      "dateModified": "2026-10-09"
+    }
+    </script>
+
+    <!-- Typography: Plus Jakarta Sans, Outfit & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-canvas: #0b0f19;
+            --bg-surface: #111726;
+            --bg-surface-elevated: #182238;
+            --bg-surface-subtle: #141c2e;
+            --border-subtle: #1e293b;
+            --border-hover: rgba(59, 130, 246, 0.45);
+
+            --accent-primary: #3b82f6;
+            --accent-bright: #60a5fa;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-cyan: #06b6d4;
+
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-display: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Monaco, Consolas, monospace;
+
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+
+            --motion-fast: 120ms;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            background-image:
+                radial-gradient(at 15% 15%, rgba(16, 185, 129, 0.06) 0px, transparent 55%),
+                radial-gradient(at 85% 20%, rgba(59, 130, 246, 0.06) 0px, transparent 55%);
+            background-attachment: fixed;
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 15px;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::selection { background: rgba(16, 185, 129, 0.35); color: #ffffff; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-canvas); }
+        ::-webkit-scrollbar-thumb { background: #25334d; border-radius: var(--radius-full); }
+        :focus-visible { outline: 2px solid var(--accent-emerald); outline-offset: 2px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding-left: clamp(1.25rem, 3.5vw, 2.5rem);
+            padding-right: clamp(1.25rem, 3.5vw, 2.5rem);
+        }
+
+        /* Site Header */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            height: 68px;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            transition: color var(--motion-fast) var(--ease-out), background-color var(--motion-fast) var(--ease-out);
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-surface-elevated);
+        }
+
+        .page-badge {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--accent-emerald);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+        }
+
+        /* Hero */
+        .hero {
+            padding: clamp(2.5rem, 5vw, 4rem) 0 2rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw + 0.5rem, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            line-height: 1.15;
+            margin-bottom: 1rem;
+        }
+
+        .hero-p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 72ch;
+            line-height: 1.65;
+        }
+
+        /* Section Block */
+        .section-block {
+            padding: 48px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .section-heading {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtext {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 75ch;
+            margin-bottom: 2rem;
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 2rem;
+        }
+
+        .hw-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+        }
+
+        .hw-card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .hw-card p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .math-box {
+            background: #090e1a;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #6ee7b7;
+            margin: 12px 0;
+            overflow-x: auto;
+        }
+
+        /* Interactive Cluster Simulator */
+        .bench-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            margin: 2rem 0;
+        }
+
+        .bench-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 28px;
+        }
+
+        @media (max-width: 900px) {
+            .bench-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bench-group {
+            margin-bottom: 16px;
+        }
+
+        .bench-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .bench-select, .bench-input {
+            width: 100%;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 9px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.86rem;
+            font-family: var(--font-sans);
+        }
+
+        .bench-select:focus, .bench-input:focus {
+            border-color: var(--accent-emerald);
+            outline: none;
+        }
+
+        .metric-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .metric-card {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 18px;
+        }
+
+        .metric-tag {
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .metric-num {
+            font-family: var(--font-mono);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #34d399;
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+
+        .metric-note {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Technical Tables */
+        .table-scroller {
+            overflow-x: auto;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            background: var(--bg-surface);
+            margin: 2rem 0;
+        }
+
+        .hw-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            text-align: left;
+            min-width: 860px;
+        }
+
+        .hw-table th {
+            background: var(--bg-surface-elevated);
+            color: var(--text-primary);
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .hw-table td {
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+
+        .mono {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--accent-bright);
+        }
+
+        .site-footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 0.84rem;
+            color: var(--text-dim);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="../neural-networks.html" class="back-link" aria-label="Return to neural networks main page">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <span>&larr; Main Compendium</span>
+            </a>
+            <span class="page-badge">HARDWARE &amp; SCALING LAWS</span>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero -->
+        <section class="hero">
+            <h1>Frontier AI Hardware &amp; Scaling Systems</h1>
+            <p class="hero-p">Understanding compute-optimal scaling (Chinchilla), IO-aware memory access (FlashAttention), NVLink 5 cluster topology, and numerical precision formats across modern AI accelerators.</p>
+        </section>
+
+        <!-- Section 1: Scaling Laws -->
+        <section class="section-block">
+            <h2 class="section-heading">Chinchilla &amp; Inference-Optimal Scaling Laws</h2>
+            <p class="section-subtext">The mathematical relationship balancing parameters $N$, dataset tokens $D$, and compute budget $C$.</p>
+
+            <div class="grid-cards">
+                <div class="hw-card">
+                    <h3 class="hw-card-title">Chinchilla Compute-Optimal Frontier</h3>
+                    <p>Hoffmann et al. (DeepMind 2022) proved that for a given compute budget $C \approx 6 N D$, model parameters and training tokens should scale in equal proportion:</p>
+                    <div class="math-box">
+                        N_{opt} \propto C^{0.5}, \quad D_{opt} \propto C^{0.5} \implies D \approx 20 \times N
+                    </div>
+                    <p>Prior models like GPT-3 (175B parameters trained on only 300B tokens = 1.7 tokens/param) were severely compute-suboptimal and parameter-bloated.</p>
+                </div>
+
+                <div class="hw-card">
+                    <h3 class="hw-card-title">Inference-Optimal Over-Training</h3>
+                    <p>While Chinchilla optimizes <em>training compute</em>, real-world deployment is dominated by <em>inference serving costs</em>. Models like LLaMA-3 8B trained on 15 Trillion tokens (~1,875 tokens/param) deliberately violate Chinchilla to minimize parameter size and serving VRAM.</p>
+                    <div class="math-box">
+                        \text{Cost}_{total} = \text{Cost}_{train}(N, D) + Q_{queries} \times \text{Cost}_{infer}(N)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Memory Wall & FlashAttention -->
+        <section class="section-block">
+            <h2 class="section-heading">The Memory Wall &amp; IO-Aware Kernel Tiling</h2>
+            <p class="section-subtext">Why modern GPUs spend more time waiting for memory transfer than performing mathematical matrix multiplication.</p>
+
+            <div class="hw-card">
+                <h3 class="hw-card-title">FlashAttention-1, 2, 3 Mechanics (Tri Dao)</h3>
+                <p>Standard attention materializes intermediate matrices $S = Q K^T$ and $P = \text{Softmax}(S)$ in High Bandwidth Memory (HBM), resulting in $O(T^2)$ memory reads and writes. FlashAttention tiles the computation across fast on-chip SRAM cache ($~100 \text{ TB/s}$ bandwidth) using the online softmax trick:</p>
+                <div class="math-box">
+                    m_{new} = \max(m_{prev}, m_{curr}), \quad \ell_{new} = e^{m_{prev}-m_{new}}\ell_{prev} + e^{m_{curr}-m_{new}}\ell_{curr}
+                </div>
+                <p>By computing softmax incrementally without ever writing the $T \times T$ attention matrix back to HBM, FlashAttention reduces memory reads/writes from $O(T^2)$ to $O(T)$, yielding a <strong>3× to 5× wall-clock speedup</strong> and enabling 128K+ context lengths.</p>
+            </div>
+
+            <!-- Real AI Hardware Photography -->
+            <figure class="real-media-frame" style="margin-top: 24px;">
+                <div class="img-container" style="height: 320px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Tensor_Processing_Unit_3.0.jpg" alt="Google Tensor Processing Unit (TPU 3.0) enterprise AI accelerator board" loading="lazy" class="real-specimen-img" onerror="this.parentElement.innerHTML='<div style=\'padding:60px 20px;text-align:center;color:var(--text-muted);font-family:var(--font-mono);font-size:0.85rem;\'>[Enterprise Silicon: Google TPU 3.0 Board]</div>';">
+                </div>
+                <figcaption class="real-media-caption">
+                    <span><strong>Enterprise Silicon Substrate:</strong> Google TPU 3.0 liquid-cooled accelerator board. Custom high-bandwidth interconnects and direct liquid cold plates allow clusters to sustain petawatts of matrix multiplication without thermal throttling.</span>
+                    <span class="caption-tag-pill">AI HARDWARE SILICON</span>
+                </figcaption>
+            </figure>
+        </section>
+
+        <!-- Section 3: Interactive Supercomputer Training Simulator -->
+        <section class="section-block">
+            <h2 class="section-heading">Frontier AI Cluster Training &amp; Energy Sizer</h2>
+            <p class="section-subtext">Model the GPU cluster count, training duration in days, electrical power demand, and Megawatt-hour consumption for any frontier training run.</p>
+
+            <div class="bench-box">
+                <div class="bench-layout">
+                    <!-- Controls -->
+                    <div>
+                        <div class="bench-group">
+                            <label class="bench-label" for="simModelScale">
+                                <span>Training FLOPs Target:</span>
+                            </label>
+                            <select id="simModelScale" class="bench-select" onchange="runClusterSimulation()">
+                                <option value="1e24">1.0 × 10²⁴ FLOPs (LLaMA-3 8B scale)</option>
+                                <option value="3e25" selected>3.0 × 10²⁵ FLOPs (LLaMA-3 70B scale)</option>
+                                <option value="3e26">3.0 × 10²⁶ FLOPs (Frontier 405B / GPT-4 scale)</option>
+                                <option value="1e27">1.0 × 10²⁷ FLOPs (Next-Gen 2026 Frontier)</option>
+                            </select>
+                        </div>
+
+                        <div class="bench-group">
+                            <label class="bench-label" for="simGpuArch">
+                                <span>Target Accelerator Silicon:</span>
+                            </label>
+                            <select id="simGpuArch" class="bench-select" onchange="runClusterSimulation()">
+                                <option value="h100" selected>NVIDIA H100 SXM5 (989 TFLOPs FP16 / 700W)</option>
+                                <option value="b200">NVIDIA Blackwell B200 (2,250 TFLOPs FP16 / 1000W)</option>
+                                <option value="tpu-v5p">Google TPU v5p (459 TFLOPs BF16 / 450W)</option>
+                            </select>
+                        </div>
+
+                        <div class="bench-group">
+                            <label class="bench-label" for="simClusterSize">
+                                <span>Cluster GPU Count:</span>
+                                <span id="clusterCountReadout" style="color:#34d399; font-family:var(--font-mono);">4,096 GPUs</span>
+                            </label>
+                            <select id="simClusterSize" class="bench-select" onchange="runClusterSimulation()">
+                                <option value="512">512 Accelerators</option>
+                                <option value="1024">1,024 Accelerators</option>
+                                <option value="4096" selected>4,096 Accelerators</option>
+                                <option value="16384">16,384 Accelerators</option>
+                                <option value="32768">32,768 Accelerators (Hyperscale)</option>
+                            </select>
+                        </div>
+
+                        <div class="bench-group">
+                            <label class="bench-label" for="simMfu">
+                                <span>Model FLOPs Utilization (MFU):</span>
+                                <span id="mfuReadout" style="color:#60a5fa; font-family:var(--font-mono);">45%</span>
+                            </label>
+                            <input type="range" id="simMfu" class="form-range" min="30" max="60" value="45" style="width:100%; accent-color:#10b981;" oninput="runClusterSimulation()">
+                        </div>
+                    </div>
+
+                    <!-- Metrics Outputs -->
+                    <div>
+                        <div class="metric-cards-grid">
+                            <div class="metric-card">
+                                <div class="metric-tag">Training Duration</div>
+                                <div class="metric-num" id="outDuration">19.2 Days</div>
+                                <div class="metric-note">Continuous active training time</div>
+                            </div>
+
+                            <div class="metric-card">
+                                <div class="metric-tag">Cluster Power Draw</div>
+                                <div class="metric-num" style="color:#f59e0b;" id="outPower">3.7 Megawatts</div>
+                                <div class="metric-note">Including 1.3 PUE cooling overhead</div>
+                            </div>
+
+                            <div class="metric-card">
+                                <div class="metric-tag">Total Energy Consumed</div>
+                                <div class="metric-num" style="color:#60a5fa;" id="outEnergy">1,712 MWh</div>
+                                <div class="metric-note">Full datacenter electricity consumption</div>
+                            </div>
+
+                            <div class="metric-card">
+                                <div class="metric-tag">Estimated Electricity Cost</div>
+                                <div class="metric-num" style="color:#38bdf8;" id="outCost">$136,960</div>
+                                <div class="metric-note">At $0.08 per kilowatt-hour</div>
+                            </div>
+                        </div>
+
+                        <div style="background:rgba(16, 185, 129, 0.08); border:1px solid rgba(16, 185, 129, 0.25); border-radius:var(--radius-md); padding:16px; margin-top:20px; font-size:0.84rem; color:var(--text-secondary);">
+                            <strong>Cluster Architecture Model:</strong> Duration is derived from $\text{Days} = \frac{\text{Target FLOPs}}{\text{GPUs} \times \text{Peak FLOPs/sec} \times \text{MFU} \times 86,400}$. Total energy factors in compute socket wattage plus a Data Center Infrastructure Efficiency (PUE) factor of $1.3$.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Silicon Accelerator Comparison Ledger -->
+        <section class="section-block">
+            <h2 class="section-heading">Frontier AI Silicon Architecture Ledger</h2>
+            <p class="section-subtext">Hardware specifications of leading enterprise training and inference accelerators.</p>
+
+            <div class="table-scroller">
+                <table class="hw-table">
+                    <thead>
+                        <tr>
+                            <th>Accelerator</th>
+                            <th>Fabricator</th>
+                            <th>VRAM Capacity</th>
+                            <th>Memory Bandwidth</th>
+                            <th>Peak Dense FP16 / BF16</th>
+                            <th>Peak Dense FP8</th>
+                            <th>TDP Thermal Power</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>NVIDIA H100 SXM5</strong></td>
+                            <td>TSMC 4N</td>
+                            <td><span class="mono">80 GB HBM3</span></td>
+                            <td><span class="mono">3.35 TB/s</span></td>
+                            <td><span class="mono">989 TFLOPs</span></td>
+                            <td><span class="mono">1,979 TFLOPs</span></td>
+                            <td>700 W</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NVIDIA H200 SXM5</strong></td>
+                            <td>TSMC 4N</td>
+                            <td><span class="mono">141 GB HBM3e</span></td>
+                            <td><span class="mono">4.80 TB/s</span></td>
+                            <td><span class="mono">989 TFLOPs</span></td>
+                            <td><span class="mono">1,979 TFLOPs</span></td>
+                            <td>700 W</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NVIDIA Blackwell B200</strong></td>
+                            <td>TSMC 4NP</td>
+                            <td><span class="mono">192 GB HBM3e</span></td>
+                            <td><span class="mono">8.00 TB/s</span></td>
+                            <td><span class="mono">2,250 TFLOPs</span></td>
+                            <td><span class="mono">4,500 TFLOPs</span></td>
+                            <td>1,000 W</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Google TPU v5p</strong></td>
+                            <td>TSMC 5nm</td>
+                            <td><span class="mono">95 GB HBM3</span></td>
+                            <td><span class="mono">2.76 TB/s</span></td>
+                            <td><span class="mono">459 TFLOPs</span></td>
+                            <td><span class="mono">918 TFLOPs</span></td>
+                            <td>450 W</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Google TPU v6 (Trillium)</strong></td>
+                            <td>TSMC 4N</td>
+                            <td><span class="mono">128 GB HBM3e</span></td>
+                            <td><span class="mono">4.20 TB/s</span></td>
+                            <td><span class="mono">1,020 TFLOPs</span></td>
+                            <td><span class="mono">2,040 TFLOPs</span></td>
+                            <td>550 W</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AMD Instinct MI300X</strong></td>
+                            <td>TSMC 5/6nm</td>
+                            <td><span class="mono">192 GB HBM3</span></td>
+                            <td><span class="mono">5.30 TB/s</span></td>
+                            <td><span class="mono">1,307 TFLOPs</span></td>
+                            <td><span class="mono">2,614 TFLOPs</span></td>
+                            <td>750 W</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            LoLyeah Interactive Guides &bull; Frontier AI Hardware &bull; 2026
+        </div>
+    </footer>
+
+    <script>
+        function runClusterSimulation() {
+            const targetFlops = parseFloat(document.getElementById('simModelScale').value);
+            const gpuType = document.getElementById('simGpuArch').value;
+            const clusterGpus = parseInt(document.getElementById('simClusterSize').value, 10);
+            const mfuPercent = parseInt(document.getElementById('simMfu').value, 10);
+
+            document.getElementById('clusterCountReadout').textContent = clusterGpus.toLocaleString() + ' GPUs';
+            document.getElementById('mfuReadout').textContent = mfuPercent + '%';
+
+            let peakFlops = 989e12; // H100 default
+            let powerWatts = 700;
+
+            if (gpuType === 'b200') {
+                peakFlops = 2250e12;
+                powerWatts = 1000;
+            } else if (gpuType === 'tpu-v5p') {
+                peakFlops = 459e12;
+                powerWatts = 450;
+            }
+
+            const mfu = mfuPercent / 100;
+            const effectiveFlopsPerSec = clusterGpus * peakFlops * mfu;
+            const totalSeconds = targetFlops / effectiveFlopsPerSec;
+            const days = (totalSeconds / 86400).toFixed(1);
+
+            // Power: (Cluster * Watts * 1.3 PUE) in MW
+            const totalKw = (clusterGpus * powerWatts * 1.3) / 1000;
+            const totalMw = (totalKw / 1000).toFixed(2);
+
+            // Energy: MW * hours
+            const totalHours = totalSeconds / 3600;
+            const totalMwh = Math.round(parseFloat(totalMw) * totalHours);
+
+            // Cost at $0.08 / kWh
+            const totalCost = Math.round(totalMwh * 1000 * 0.08);
+
+            document.getElementById('outDuration').textContent = days + ' Days';
+            document.getElementById('outPower').textContent = totalMw + ' MW';
+            document.getElementById('outEnergy').textContent = totalMwh.toLocaleString() + ' MWh';
+            document.getElementById('outCost').textContent = '$' + totalCost.toLocaleString();
+        }
+
+        // Initialize simulation
+        runClusterSimulation();
+    </script>
+</body>
+</html>

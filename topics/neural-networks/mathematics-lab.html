@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Mathematics Lab: Calculus, Backpropagation &amp; Loss Topology | LoLyeah</title>
+    <meta name="description" content="Rigorous mathematical derivations of neural network backpropagation, multivariable matrix calculus, Hessian loss landscapes, and modern optimizers like AdamW and Muon.">
+    <meta name="author" content="LoLyeah">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lolyeah.github.io/topics/neural-networks/mathematics-lab.html">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Neural Network Mathematics Lab: Calculus, Backpropagation &amp; Loss Topology">
+    <meta property="og:description" content="Step-by-step vector calculus derivations, interactive activation derivative curves, and optimizer mechanics.">
+    <meta property="og:url" content="https://lolyeah.github.io/topics/neural-networks/mathematics-lab.html">
+    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/d/d0/Neurone_pyramidal.jpg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Neural Network Mathematics Lab: Calculus, Backpropagation &amp; Loss Topology">
+    <meta name="twitter:description" content="Step-by-step vector calculus derivations, interactive activation derivative curves, and optimizer mechanics.">
+    <meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/d/d0/Neurone_pyramidal.jpg">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../../assets/neural-networks.css">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Neural Network Mathematics Lab: Calculus, Backpropagation & Loss Topology",
+      "description": "Comprehensive mathematical guide to neural network optimization: matrix gradients, the backpropagation recurrence, Hessian loss curvature, and Newton-Schulz orthogonalization.",
+      "url": "https://lolyeah.github.io/topics/neural-networks/mathematics-lab.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "LoLyeah Interactive Guides",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://lolyeah.github.io/assets/logo.png"
+        }
+      },
+      "author": {
+        "@type": "Person",
+        "name": "LoLyeah"
+      },
+      "datePublished": "2026-10-09",
+      "dateModified": "2026-10-09"
+    }
+    </script>
+
+    <!-- Typography: Plus Jakarta Sans, Outfit & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-canvas: #0b0f19;
+            --bg-surface: #111726;
+            --bg-surface-elevated: #182238;
+            --bg-surface-subtle: #141c2e;
+            --border-subtle: #1e293b;
+            --border-hover: rgba(59, 130, 246, 0.45);
+
+            --accent-primary: #3b82f6;
+            --accent-bright: #60a5fa;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-display: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Monaco, Consolas, monospace;
+
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+
+            --motion-fast: 120ms;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            background-image:
+                radial-gradient(at 15% 15%, rgba(6, 182, 212, 0.06) 0px, transparent 55%),
+                radial-gradient(at 85% 20%, rgba(59, 130, 246, 0.06) 0px, transparent 55%);
+            background-attachment: fixed;
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 15px;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::selection { background: rgba(6, 182, 212, 0.35); color: #ffffff; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-canvas); }
+        ::-webkit-scrollbar-thumb { background: #25334d; border-radius: var(--radius-full); }
+        :focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 2px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding-left: clamp(1.25rem, 3.5vw, 2.5rem);
+            padding-right: clamp(1.25rem, 3.5vw, 2.5rem);
+        }
+
+        /* Site Header */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            height: 68px;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            transition: color var(--motion-fast) var(--ease-out), background-color var(--motion-fast) var(--ease-out);
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-surface-elevated);
+        }
+
+        .page-badge {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.25);
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+        }
+
+        /* Hero */
+        .hero {
+            padding: clamp(2.5rem, 5vw, 4rem) 0 2rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw + 0.5rem, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            line-height: 1.15;
+            margin-bottom: 1rem;
+        }
+
+        .hero-p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 72ch;
+            line-height: 1.65;
+        }
+
+        /* Editorial Sections */
+        .section-block {
+            padding: 48px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .section-heading {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtext {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 75ch;
+            margin-bottom: 2rem;
+        }
+
+        /* Derivation Boxes */
+        .derivation-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .derivation-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .derivation-math {
+            background: #090e1a;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            color: #93c5fd;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+
+        .derivation-math span.comment {
+            color: #64748b;
+        }
+
+        /* Interactive Grapher */
+        .grapher-bench {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            margin: 2rem 0;
+        }
+
+        .grapher-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .grapher-btn {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--motion-fast) var(--ease-out);
+        }
+
+        .grapher-btn.active {
+            background: var(--accent-cyan);
+            color: #0b0f19;
+            font-weight: 700;
+            border-color: var(--accent-cyan);
+        }
+
+        .canvas-frame {
+            background: #070a13;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #actGraphCanvas {
+            width: 100%;
+            max-width: 720px;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            display: block;
+        }
+
+        .graph-telemetry {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .graph-telemetry strong {
+            color: var(--accent-cyan);
+        }
+
+        /* Optimizer Comparison Table */
+        .table-scroller {
+            overflow-x: auto;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            background: var(--bg-surface);
+            margin-top: 1.5rem;
+        }
+
+        .math-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            text-align: left;
+            min-width: 800px;
+        }
+
+        .math-table th {
+            background: var(--bg-surface-elevated);
+            color: var(--text-primary);
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .math-table td {
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+
+        .mono {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--accent-bright);
+        }
+
+        .site-footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 0.84rem;
+            color: var(--text-dim);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="../neural-networks.html" class="back-link" aria-label="Return to neural networks hub">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <span>&larr; Main Compendium</span>
+            </a>
+            <span class="page-badge">MATHEMATICS &amp; CALCULUS LAB</span>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero -->
+        <section class="hero">
+            <h1>The Mathematical Foundation of Optimization</h1>
+            <p class="hero-p">Matrix calculus derivations of automatic differentiation, sensitivity recurrence across computational graphs, Hessian condition numbers, and second-moment adaptive optimizers from AdamW to 2026 Muon.</p>
+        </section>
+
+        <!-- Derivation 1: Exact Backpropagation -->
+        <section class="section-block">
+            <h2 class="section-heading">Step-by-Step Backpropagation Derivation</h2>
+            <p class="section-subtext">A rigorous multivariable calculus walkthrough from scalar loss to batched weight tensor updates.</p>
+
+            <div class="derivation-card">
+                <h3 class="derivation-title">1. Layer Forward Propagation (Vector Form)</h3>
+                <p>For layer $l \in \{1, \dots, L\}$ with weight matrix $W^{[l]} \in \mathbb{R}^{n_l \times n_{l-1}}$ and bias vector $b^{[l]} \in \mathbb{R}^{n_l}$:</p>
+                <div class="derivation-math">
+                    z^{[l]} = W^{[l]} a^{[l-1]} + b^{[l]} <br>
+                    a^{[l]} = \sigma^{[l]}\left(z^{[l]}\right)
+                </div>
+            </div>
+
+            <div class="derivation-card">
+                <h3 class="derivation-title">2. Output Sensitivity Definition ($\delta^{[L]}$)</h3>
+                <p>We define the error sensitivity vector $\delta^{[l]} \equiv \frac{\partial \mathcal{L}}{\partial z^{[l]}}$. For output layer $L$ under Mean Squared Error loss $\mathcal{L} = \frac{1}{2}\|a^{[L]} - y\|^2$:</p>
+                <div class="derivation-math">
+                    \delta^{[L]} = \frac{\partial \mathcal{L}}{\partial a^{[L]}} \odot \sigma'\left(z^{[L]}\right) = \left(a^{[L]} - y\right) \odot \sigma'\left(z^{[L]}\right)
+                </div>
+                <p>Under Categorical Cross-Entropy loss with Softmax activation $\mathcal{L} = -\sum y_k \log a_k^{[L]}$, the Jacobian and derivative simplify elegantly to:</p>
+                <div class="derivation-math">
+                    \delta^{[L]} = a^{[L]} - y \quad <span class="comment">(Softmax + Cross-Entropy gradient cancellation)</span>
+                </div>
+            </div>
+
+            <div class="derivation-card">
+                <h3 class="derivation-title">3. Recursive Backward Sensitivity ($\delta^{[l]}$)</h3>
+                <p>Applying the multivariable chain rule backwards through layer $l+1$ to pre-activation $z^{[l]}$:</p>
+                <div class="derivation-math">
+                    \delta^{[l]} = \left(\frac{\partial z^{[l+1]}}{\partial a^{[l]}}\right)^T \frac{\partial \mathcal{L}}{\partial z^{[l+1]}} \odot \sigma'\left(z^{[l]}\right) = \left((W^{[l+1]})^T \delta^{[l+1]}\right) \odot \sigma'\left(z^{[l]}\right)
+                </div>
+                <p>The transpose $(W^{[l+1]})^T$ projects error gradients from dimension $n_{l+1}$ back to dimension $n_l$.</p>
+            </div>
+
+            <div class="derivation-card">
+                <h3 class="derivation-title">4. Parameter Gradients &amp; Mini-Batch Accumulation</h3>
+                <p>Differentiating with respect to the trainable weight tensors and biases across a mini-batch of $m$ training samples:</p>
+                <div class="derivation-math">
+                    \frac{\partial \mathcal{L}}{\partial W^{[l]}} = \frac{1}{m} \delta^{[l]} \left(a^{[l-1]}\right)^T \quad \in \mathbb{R}^{n_l \times n_{l-1}} <br>
+                    \frac{\partial \mathcal{L}}{\partial b^{[l]}} = \frac{1}{m} \sum_{i=1}^m \delta^{[l](i)} \quad \in \mathbb{R}^{n_l}
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Activation & Derivative Curve Grapher -->
+        <section class="section-block">
+            <h2 class="section-heading">Interactive Activation Function &amp; Derivative Lab</h2>
+            <p class="section-subtext">Observe the continuous transfer curve $f(x)$ (solid blue) alongside its instantaneous gradient $f'(x)$ (cyan dashed). Hover or touch the graph to inspect exact numerical coordinates.</p>
+
+            <!-- Real Biological Physical Analogue -->
+            <figure class="real-media-frame" style="margin-bottom: 24px;">
+                <div class="img-container" style="height: 280px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Neurone_pyramidal.jpg" alt="Cortical pyramidal neuron expressing GFP under fluorescence confocal microscopy" loading="lazy" class="real-specimen-img" onerror="this.parentElement.innerHTML='<div style=\'padding:60px 20px;text-align:center;color:var(--text-muted);font-family:var(--font-mono);font-size:0.85rem;\'>[Biological Specimen: Pyramidal Neuron Micrograph]</div>';">
+                </div>
+                <figcaption class="real-media-caption">
+                    <span><strong>Biological Nonlinearity:</strong> Pyramidal neuron dendritic arbor under confocal fluorescence microscopy. Biological threshold firing (all-or-none action potentials) inspired artificial mathematical non-linear transfer functions.</span>
+                    <span class="caption-tag-pill">REAL MICROGRAPH</span>
+                </figcaption>
+            </figure>
+
+            <div class="grapher-bench">
+                <div class="grapher-controls">
+                    <button class="grapher-btn active" onclick="selectGraph('sigmoid', this)">Sigmoid</button>
+                    <button class="grapher-btn" onclick="selectGraph('tanh', this)">Tanh</button>
+                    <button class="grapher-btn" onclick="selectGraph('relu', this)">ReLU</button>
+                    <button class="grapher-btn" onclick="selectGraph('leaky', this)">LeakyReLU (α=0.1)</button>
+                    <button class="grapher-btn" onclick="selectGraph('gelu', this)">GELU (Gaussian)</button>
+                    <button class="grapher-btn" onclick="selectGraph('silu', this)">SiLU / Swish</button>
+                </div>
+
+                <div class="canvas-frame">
+                    <canvas id="actGraphCanvas" width="700" height="380"></canvas>
+                    <div class="graph-telemetry">
+                        <div>Inspected x: <strong id="readoutX">0.00</strong></div>
+                        <div>f(x) value: <strong id="readoutY">0.500</strong></div>
+                        <div>f'(x) derivative: <strong id="readoutDeriv">0.250</strong></div>
+                        <div>Gradient Status: <strong id="readoutStatus" style="color:#34d399;">Peak Sensitivity</strong></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Optimizer Comparison Matrix -->
+        <section class="section-block">
+            <h2 class="section-heading">Optimization Algorithms Taxonomy</h2>
+            <p class="section-subtext">How modern optimizers mitigate ill-conditioned curvature and high-dimensional saddle points.</p>
+
+            <div class="table-scroller">
+                <table class="math-table">
+                    <thead>
+                        <tr>
+                            <th>Optimizer</th>
+                            <th>Update Equation</th>
+                            <th>Memory per Parameter</th>
+                            <th>Core Mathematical Mechanism</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Vanilla SGD</strong></td>
+                            <td><span class="mono">\theta_{t+1} = \theta_t - \eta g_t</span></td>
+                            <td><span class="mono">0 extra bytes</span></td>
+                            <td>Raw negative gradient descent. Highly vulnerable to pathological ravines and oscillations.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SGD + Momentum</strong></td>
+                            <td><span class="mono">v_t = \beta v_{t-1} + (1-\beta)g_t</span></td>
+                            <td><span class="mono">+4 bytes (FP32 velocity)</span></td>
+                            <td>Exponential moving average of first moments dampens high-frequency oscillations across ravines.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RMSprop</strong></td>
+                            <td><span class="mono">s_t = \gamma s_{t-1} + (1-\gamma)g_t^2</span></td>
+                            <td><span class="mono">+4 bytes (squared scale)</span></td>
+                            <td>Normalizes learning rate per parameter by root-mean-square gradient magnitude, preventing exploding steps.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AdamW (Decoupled)</strong></td>
+                            <td><span class="mono">\theta_{t+1} = (1-\eta\lambda)\theta_t - \eta \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}</span></td>
+                            <td><span class="mono">+8 bytes (m_t and v_t)</span></td>
+                            <td>Decoupled weight decay regularization fixes weight decay interaction with adaptive second moments. De facto standard for LLMs.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Muon (2024–2026)</strong></td>
+                            <td><span class="mono">G \leftarrow \text{NewtonSchulz}(G); \theta \leftarrow \theta - \eta G</span></td>
+                            <td><span class="mono">Matrix Orthogonalization</span></td>
+                            <td>Applies Newton-Schulz iteration to orthogonalize the momentum matrix, bounding all singular values to 1. Accelerates transformer convergence by ~30%.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            LoLyeah Interactive Guides &bull; Neural Network Mathematics Lab &bull; 2026
+        </div>
+    </footer>
+
+    <script>
+        let currentGraph = 'sigmoid';
+        const canvas = document.getElementById('actGraphCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function evaluateFunction(name, x) {
+            if (name === 'sigmoid') {
+                const s = 1 / (1 + Math.exp(-Math.max(-15, Math.min(15, x))));
+                return { y: s, dy: s * (1 - s) };
+            }
+            if (name === 'tanh') {
+                const t = Math.tanh(x);
+                return { y: t, dy: 1 - t * t };
+            }
+            if (name === 'relu') {
+                return { y: Math.max(0, x), dy: x > 0 ? 1 : 0 };
+            }
+            if (name === 'leaky') {
+                return { y: x >= 0 ? x : 0.1 * x, dy: x >= 0 ? 1 : 0.1 };
+            }
+            if (name === 'gelu') {
+                // Approximate formula: 0.5 * x * (1 + tanh(sqrt(2/pi) * (x + 0.044715 * x^3)))
+                const c = Math.sqrt(2 / Math.PI);
+                const u = c * (x + 0.044715 * Math.pow(x, 3));
+                const t = Math.tanh(u);
+                const y = 0.5 * x * (1 + t);
+                const du = c * (1 + 3 * 0.044715 * x * x);
+                const dy = 0.5 * (1 + t) + 0.5 * x * (1 - t * t) * du;
+                return { y, dy };
+            }
+            if (name === 'silu') { // SiLU / Swish: x * sigmoid(x)
+                const s = 1 / (1 + Math.exp(-x));
+                const y = x * s;
+                const dy = s + x * s * (1 - s);
+                return { y, dy };
+            }
+            return { y: 0, dy: 0 };
+        }
+
+        function drawGraph(inspectedX = 0) {
+            const w = canvas.width;
+            const h = canvas.height;
+            ctx.clearRect(0, 0, w, h);
+
+            // Coordinate bounds: x from -5 to +5, y from -2 to +3
+            const minX = -5, maxX = 5;
+            const minY = -1.5, maxY = 2.5;
+
+            function toScreenX(x) { return ((x - minX) / (maxX - minX)) * w; }
+            function toScreenY(y) { return h - ((y - minY) / (maxY - minY)) * h; }
+
+            // Grid lines
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+            ctx.lineWidth = 1;
+            for (let x = -5; x <= 5; x += 1) {
+                ctx.beginPath();
+                ctx.moveTo(toScreenX(x), 0);
+                ctx.lineTo(toScreenX(x), h);
+                ctx.stroke();
+            }
+            for (let y = -1; y <= 2; y += 1) {
+                ctx.beginPath();
+                ctx.moveTo(0, toScreenY(y));
+                ctx.lineTo(w, toScreenY(y));
+                ctx.stroke();
+            }
+
+            // Axis lines
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(0, toScreenY(0)); ctx.lineTo(w, toScreenY(0));
+            ctx.moveTo(toScreenX(0), 0); ctx.lineTo(toScreenX(0), h);
+            ctx.stroke();
+
+            // Draw f(x) curve (solid blue)
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let px = 0; px <= w; px += 2) {
+                const mathX = minX + (px / w) * (maxX - minX);
+                const { y } = evaluateFunction(currentGraph, mathX);
+                const py = toScreenY(y);
+                if (px === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            // Draw f'(x) derivative curve (cyan dashed)
+            ctx.strokeStyle = '#06b6d4';
+            ctx.lineWidth = 2.2;
+            ctx.setLineDash([5, 4]);
+            ctx.beginPath();
+            for (let px = 0; px <= w; px += 2) {
+                const mathX = minX + (px / w) * (maxX - minX);
+                const { dy } = evaluateFunction(currentGraph, mathX);
+                const py = toScreenY(dy);
+                if (px === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw inspected cursor point
+            const { y, dy } = evaluateFunction(currentGraph, inspectedX);
+            const curPx = toScreenX(inspectedX);
+            const curPyFunc = toScreenY(y);
+            const curPyDeriv = toScreenY(dy);
+
+            // Vertical indicator line
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 3]);
+            ctx.beginPath();
+            ctx.moveTo(curPx, 0); ctx.lineTo(curPx, h);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Dot on f(x)
+            ctx.beginPath();
+            ctx.arc(curPx, curPyFunc, 6, 0, Math.PI * 2);
+            ctx.fillStyle = '#3b82f6';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.fill(); ctx.stroke();
+
+            // Dot on f'(x)
+            ctx.beginPath();
+            ctx.arc(curPx, curPyDeriv, 6, 0, Math.PI * 2);
+            ctx.fillStyle = '#06b6d4';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.fill(); ctx.stroke();
+
+            // Update readouts
+            document.getElementById('readoutX').textContent = inspectedX.toFixed(2);
+            document.getElementById('readoutY').textContent = y.toFixed(3);
+            document.getElementById('readoutDeriv').textContent = dy.toFixed(3);
+
+            const statusEl = document.getElementById('readoutStatus');
+            if (dy < 0.05) {
+                statusEl.textContent = 'Vanishing Gradient Hazard';
+                statusEl.style.color = '#f43f5e';
+            } else if (dy >= 0.9) {
+                statusEl.textContent = 'Linear Highway / Non-Saturating';
+                statusEl.style.color = '#34d399';
+            } else {
+                statusEl.textContent = 'Active Non-Linear Zone';
+                statusEl.style.color = '#60a5fa';
+            }
+        }
+
+        function selectGraph(name, btn) {
+            document.querySelectorAll('.grapher-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentGraph = name;
+            drawGraph(0);
+        }
+
+        // Mouse and touch interaction
+        function handleInputCoordinate(clientX) {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = clientX - rect.left;
+            const normX = mouseX / rect.width;
+            const mathX = -5 + normX * 10;
+            drawGraph(Math.max(-5, Math.min(5, mathX)));
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            handleInputCoordinate(e.clientX);
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (e.touches && e.touches.length > 0) {
+                handleInputCoordinate(e.touches[0].clientX);
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        canvas.addEventListener('touchstart', (e) => {
+            if (e.touches && e.touches.length > 0) {
+                handleInputCoordinate(e.touches[0].clientX);
+            }
+        }, { passive: true });
+
+        // Initialize graph
+        drawGraph(0);
+    </script>
+</body>
+</html>
