@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Land vs. Water Logistics: The Physics, Economics &amp; Friction of Global Freight | LoLyeah</title>
+    <meta name="description" content="Is land logistics inefficient compared to water? Explore freight thermodynamics, specific energy per ton-km, rolling friction, landed cost formulas, and archipelago economics.">
+    <meta name="keywords" content="land vs water logistics, freight efficiency, maritime transport, rail freight economics, trucking vs shipping, specific energy ton-km, Archimedes buoyancy logistics, Tol Laut Indonesia">
+    <meta name="author" content="LoLyeah">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lolyeah.github.io/topics/land-vs-water-logistics.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Land vs. Water Logistics: The Physics, Economics &amp; Friction of Global Freight">
+    <meta property="og:description" content="Is land logistics truly inefficient compared to water? A rigorous breakdown of thermodynamics, rolling resistance, line-haul costs, and the speed-value paradox.">
+    <meta property="og:url" content="https://lolyeah.github.io/topics/land-vs-water-logistics.html">
+    <meta property="og:site_name" content="LoLyeah Interactive Guides">
+    <meta property="og:image" content="https://lolyeah.github.io/assets/og-image.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Land vs. Water Logistics: The Physics, Economics &amp; Friction of Global Freight">
+    <meta name="twitter:description" content="A comprehensive analysis comparing maritime, rail, and road freight efficiency, with an interactive landed cost and emissions simulator.">
+    <meta name="twitter:image" content="https://lolyeah.github.io/assets/og-image.png">
+
+    <!-- Structured Data JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Land vs. Water Logistics: The Physics, Economics & Friction of Global Freight",
+      "description": "Comprehensive comparative monograph examining energy efficiency, hydrodynamic vs rolling friction, monetary cost per ton-kilometer, and the inventory holding paradox across maritime and land-based freight modes.",
+      "url": "https://lolyeah.github.io/topics/land-vs-water-logistics.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "LoLyeah Interactive Guides",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://lolyeah.github.io/assets/logo.png"
+        }
+      },
+      "author": {
+        "@type": "Person",
+        "name": "LoLyeah"
+      },
+      "datePublished": "2026-10-11",
+      "dateModified": "2026-10-11"
+    }
+    </script>
+
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../assets/land-vs-water-logistics.css">
+
+    <style>
+        /* Topic-Specific Surface Calibration */
+        .hero-section {
+            padding: clamp(3rem, 7vw, 5.5rem) 0 clamp(2rem, 4vw, 3.5rem);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.025em;
+            color: var(--text-primary);
+            margin-bottom: 1.25rem;
+            max-width: 980px;
+        }
+
+        .hero-lead {
+            font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+            line-height: 1.65;
+            color: var(--text-secondary);
+            max-width: 820px;
+            margin-bottom: 2rem;
+        }
+
+        /* Verdict Box */
+        .verdict-banner {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: clamp(1.25rem, 2.5vw, 2rem);
+            margin-bottom: 2.5rem;
+        }
+
+        .verdict-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .verdict-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .verdict-badge {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            background: rgba(14, 165, 233, 0.15);
+            color: var(--accent-bright);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+        }
+
+        .verdict-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .verdict-item {
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+        }
+
+        .verdict-item-label {
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .verdict-status-true {
+            color: var(--status-success);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+        }
+
+        .verdict-status-false {
+            color: var(--accent-amber-bright);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+        }
+
+        .verdict-item-desc {
+            font-size: 0.86rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        /* Stat Strip */
+        .stat-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 2.5rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+        }
+
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .stat-subtext {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            margin-top: 0.35rem;
+        }
+
+        /* Section Layouts */
+        .topic-section {
+            padding: clamp(2.5rem, 5vw, 4.5rem) 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .section-heading {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 780px;
+            margin-bottom: 2rem;
+            line-height: 1.65;
+        }
+
+        /* Interactive Simulator Layout */
+        .sim-container {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: clamp(1.25rem, 3vw, 2.25rem);
+            margin: 2rem 0;
+        }
+
+        .sim-controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .sim-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sim-label {
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sim-input, .sim-select {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font-mono);
+        }
+
+        .sim-input:focus, .sim-select:focus {
+            outline: 2px solid var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .sim-presets-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 1.75rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .sim-preset-btn {
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--motion-fast) var(--ease-out);
+        }
+
+        .sim-preset-btn.active {
+            background: var(--bg-surface-elevated);
+            color: var(--text-primary);
+            border-color: var(--accent-primary);
+        }
+
+        @media (hover: hover) {
+            .sim-preset-btn:hover {
+                background: var(--bg-surface-elevated);
+                color: var(--text-primary);
+                border-color: var(--accent-primary);
+            }
+        }
+
+        /* Results Matrix */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .mode-result-card {
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            position: relative;
+        }
+
+        .mode-result-card.highlight {
+            border-color: rgba(14, 165, 233, 0.5);
+            background: rgba(14, 165, 233, 0.04);
+        }
+
+        .mode-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mode-title {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-cost-main {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .mode-cost-breakdown {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 0.5rem;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2px;
+        }
+
+        .mode-metrics-bar {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.78rem;
+            font-family: var(--font-mono);
+            color: var(--text-dim);
+            margin-top: 0.25rem;
+        }
+
+        /* Deep Explanatory Panels */
+        .editorial-prose {
+            max-width: 72ch;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .editorial-prose p {
+            margin-bottom: 1.2rem;
+        }
+
+        .editorial-prose strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Subpage Vitrine Cards */
+        .subpage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .subpage-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all var(--motion-normal) var(--ease-out);
+        }
+
+        @media (hover: hover) {
+            .subpage-card:hover {
+                border-color: var(--accent-primary);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-subtle);
+            }
+        }
+
+        .subpage-card-title {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .subpage-card-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .subpage-card-link-text {
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--accent-bright);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+    </style>
+</head>
+<body class="lang-en">
+
+    <!-- Header Navigation -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="header-left">
+                <a href="../index.html" class="back-hub-btn" aria-label="Return to Discover Index">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    <span class="en-only">All Topics</span>
+                    <span class="id-only">Semua Topik</span>
+                </a>
+                <a href="../index.html" class="brand-link">
+                    <svg class="brand-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    <span>LoLyeah</span>
+                </a>
+            </div>
+
+            <nav class="nav-links" aria-label="Main Navigation">
+                <a href="#verdict" class="nav-item-btn en-only">Verdict</a>
+                <a href="#verdict" class="nav-item-btn id-only">Kesimpulan</a>
+                <a href="#physics" class="nav-item-btn en-only">Physics</a>
+                <a href="#physics" class="nav-item-btn id-only">Fisika</a>
+                <a href="#simulator" class="nav-item-btn en-only">Simulator</a>
+                <a href="#simulator" class="nav-item-btn id-only">Simulator</a>
+                <a href="#economics" class="nav-item-btn en-only">Economics</a>
+                <a href="#economics" class="nav-item-btn id-only">Ekonomi</a>
+                <a href="#deep-dives" class="nav-item-btn en-only">Deep Dives</a>
+                <a href="#deep-dives" class="nav-item-btn id-only">Kajian Khusus</a>
+            </nav>
+
+            <div class="header-actions">
+                <button class="lang-toggle-btn" id="langToggleBtn" onclick="toggleLanguage();" aria-label="Switch Language EN/ID">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    <span id="langLabel">EN / ID</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Architectural Navigation Band Linking Subpages -->
+    <div class="arch-nav-band" aria-label="Subpage Architecture">
+        <div class="container">
+            <div class="arch-nav-list">
+                <a href="land-vs-water-logistics/physics-and-thermodynamics.html" class="arch-nav-link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m4.93 4.93 4.24 4.24"></path><path d="m14.83 9.17 4.24-4.24"></path><path d="m14.83 14.83 4.24 4.24"></path><path d="m9.17 14.83-4.24 4.24"></path></svg>
+                    <span class="en-only">1. Physics &amp; Specific Energy</span>
+                    <span class="id-only">1. Fisika &amp; Energi Spesifik</span>
+                </a>
+                <a href="land-vs-water-logistics/modal-split-calculator.html" class="arch-nav-link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M8 18h.01M12 18h.01"></path></svg>
+                    <span class="en-only">2. Interactive Modal Split Calculator</span>
+                    <span class="id-only">2. Kalkulator Modal Split Interaktif</span>
+                </a>
+                <a href="land-vs-water-logistics/geography-and-chokepoints.html" class="arch-nav-link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                    <span class="en-only">3. Geography, Chokepoints &amp; Tol Laut</span>
+                    <span class="id-only">3. Geografi, Chokepoint &amp; Tol Laut</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title en-only">Land vs. Water Logistics: The Physics, Economics &amp; Operational Truth</h1>
+            <h1 class="hero-title id-only">Logistik Darat vs. Air: Fisika, Ekonomi &amp; Realitas Operasional</h1>
+
+            <p class="hero-lead en-only">
+                Is land-based logistics inefficient compared to water-based freight? In raw energy thermodynamics, moving cargo by water is up to 50 times more efficient than road trucking and 4 times more efficient than rail. Yet in real-world supply chains, water logistics frequently loses. This compendium resolves the physical law against the economic friction.
+            </p>
+            <p class="hero-lead id-only">
+                Benarkah logistik darat jauh lebih tidak efisien dibandingkan logistik berbasis air? Dari sisi termodinamika energi murni, memindahkan kargo via air 10 hingga 50 kali lebih hemat energi dibanding truk dan 4 kali lebih hemat dibanding kereta api. Namun di rantai pasok nyata, logistik air sering kali kalah. Kompendium ini membedah hukum fisika melawan friksi ekonomi.
+            </p>
+
+            <!-- Forensic Verdict Module -->
+            <div class="verdict-banner" id="verdict">
+                <div class="verdict-header">
+                    <span class="verdict-title en-only">The Direct Verdict: Is It True?</span>
+                    <span class="verdict-title id-only">Kesimpulan Lugas: Apakah Benar?</span>
+                    <span class="verdict-badge en-only">MULTI-DIMENSIONAL VERDICT</span>
+                    <span class="verdict-badge id-only">KESIMPULAN MULTIDIMENSI</span>
+                </div>
+                <div class="verdict-grid">
+                    <div class="verdict-item">
+                        <div class="verdict-item-label">
+                            <span class="en-only">Energy &amp; Emissions</span>
+                            <span class="id-only">Energi &amp; Emisi Karbon</span>
+                            <span class="verdict-status-true">TRUE (10x–50x)</span>
+                        </div>
+                        <div class="verdict-item-desc en-only">
+                            Archimedes' buoyancy eliminates mechanical rolling friction. Moving 1 ton of freight by container ship burns ~15–25 kJ/km, compared to ~800–1,400 kJ/km for a diesel semi-truck.
+                        </div>
+                        <div class="verdict-item-desc id-only">
+                            Gaya apung Archimedes meniadakan friksi mekanis vertikal. Mengangkut 1 ton muatan dengan kapal kontainer hanya membakar ~15–25 kJ/km, berbanding ~800–1.400 kJ/km pada truk diesel berat.
+                        </div>
+                    </div>
+
+                    <div class="verdict-item">
+                        <div class="verdict-item-label">
+                            <span class="en-only">Line-Haul Monetary Cost</span>
+                            <span class="id-only">Biaya Angkut Jarak Jauh</span>
+                            <span class="verdict-status-true">TRUE (~$0.01/t-km)</span>
+                        </div>
+                        <div class="verdict-item-desc en-only">
+                            Ultra-large container vessels (ULCVs) operate at $0.008–$0.015 per ton-km, compared to $0.035–$0.055 for unit rail and $0.15–$0.25 for long-haul highway trucks.
+                        </div>
+                        <div class="verdict-item-desc id-only">
+                            Kapal kontainer ultra-besar (ULCV) beroperasi di kisaran $0,008–$0,015 per ton-km, jauh di bawah kereta barang ($0,035–$0,055) dan truk jalan raya ($0,15–$0,25).
+                        </div>
+                    </div>
+
+                    <div class="verdict-item">
+                        <div class="verdict-item-label">
+                            <span class="en-only">Speed &amp; Inventory Carrying</span>
+                            <span class="id-only">Kecepatan &amp; Biaya Persediaan</span>
+                            <span class="verdict-status-false">FALSE (Water is Slow)</span>
+                        </div>
+                        <div class="verdict-item-desc en-only">
+                            Ships sail at 14–20 knots (26–37 km/h) with multi-day port dwell. For high-value goods ($20k+/ton), the working capital interest and depreciation eclipse fuel cost savings.
+                        </div>
+                        <div class="verdict-item-desc id-only">
+                            Kapal berlayar 14–20 knot (26–37 km/jam) plus waktu sandar pelabuhan berhari-hari. Untuk barang bernilai tinggi ($20.000+/ton), bunga modal dan depresiasi menenggelamkan hemat bahan bakar.
+                        </div>
+                    </div>
+
+                    <div class="verdict-item">
+                        <div class="verdict-item-label">
+                            <span class="en-only">Door-to-Door Accessibility</span>
+                            <span class="id-only">Aksesibilitas Titik-ke-Titik</span>
+                            <span class="verdict-status-false">FALSE (High Drayage)</span>
+                        </div>
+                        <div class="verdict-item-desc en-only">
+                            Waterways do not reach factory loading docks. Cranes, terminal handling (THC), and first/last-mile trucking add $300–$600 per container in fixed intermodal penalty.
+                        </div>
+                        <div class="verdict-item-desc id-only">
+                            Jalur air tidak mencapai dok pabrik. Biaya crane, bongkar muat (THC), dan angkutan truk first/last-mile menambah penalti tetap $300–$600 per kontainer.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quantitative Stat Strip -->
+            <div class="stat-strip">
+                <div class="stat-card">
+                    <div class="stat-value">15–25 kJ</div>
+                    <div class="stat-label en-only">Ship Specific Energy</div>
+                    <div class="stat-label id-only">Energi Spesifik Kapal</div>
+                    <div class="stat-subtext en-only">Per ton-kilometer (ULCV 20k+ TEU)</div>
+                    <div class="stat-subtext id-only">Per ton-kilometer (Kapal 20rb+ TEU)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">1,100 kJ</div>
+                    <div class="stat-label en-only">Heavy Truck Energy</div>
+                    <div class="stat-label id-only">Energi Truk Berat</div>
+                    <div class="stat-subtext en-only">Per ton-kilometer (~45x higher than ship)</div>
+                    <div class="stat-subtext id-only">Per ton-km (~45x lebih boros dari kapal)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">80%</div>
+                    <div class="stat-label en-only">Vessel Deadweight Ratio</div>
+                    <div class="stat-label id-only">Rasio Muatan Bersih Kapal</div>
+                    <div class="stat-subtext en-only">Cargo mass vs. total displacement</div>
+                    <div class="stat-subtext id-only">Massa kargo vs. total displasemen</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">500 km</div>
+                    <div class="stat-label en-only">Break-Even Distance</div>
+                    <div class="stat-label id-only">Jarak Impas Ekonomi</div>
+                    <div class="stat-subtext en-only">Where water line-haul overcomes port fees</div>
+                    <div class="stat-subtext id-only">Titik laut mengalahkan biaya drayage darat</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Area -->
+    <main class="container">
+
+        <!-- Section 1: The Physics Foundation -->
+        <section class="topic-section" id="physics">
+            <h2 class="section-heading en-only">Why Archimedes Beats Friction: The Physics of Buoyant Freight</h2>
+            <h2 class="section-heading id-only">Mengapa Archimedes Mengalahkan Gesekan: Fisika Angkutan Terapung</h2>
+            
+            <div class="editorial-prose">
+                <p class="en-only">
+                    The staggering energy disparity between water and land logistics boils down to basic physical constants: <strong>gravitational load support</strong> and <strong>contact friction</strong>. On land, every kilogram of freight must be supported against gravity by physical structural materials. In a tractor-trailer, 40 tonnes rest on 18 pneumatic rubber tires. As those tires rotate at 90 km/h under 8 bar of pressure, the rubber continuously deforms and relaxes, causing severe <em>hysteretic heat loss</em> with a rolling friction coefficient ($C_{rr}$) of 0.007 to 0.010.
+                </p>
+                <p class="id-only">
+                    Kesenjangan energi dramatis antara logistik air dan darat berakar pada konstanta fisika fundamental: <strong>penopang beban gravitasi</strong> dan <strong>gesekan kontak</strong>. Di darat, setiap kilogram muatan harus ditopang melawan gravitasi oleh material struktural fisik. Pada truk tronton atau semi-trailer, 40 ton bobot bertumpu pada 18 ban karet pneumatik. Saat ban berputar pada kecepatan 90 km/jam di bawah tekanan 8 bar, karet terus mengalami deformasi dan relaksasi siklik yang memicu kehilangan panas histeresis dengan koefisien gesek ($C_{rr}$) 0,007 hingga 0,010.
+                </p>
+
+                <p class="en-only">
+                    Freight rail dramatically improves on this: hard steel wheels on hardened steel rails reduce rolling resistance to $C_{rr} \approx 0.0015$, an 80% friction reduction over trucks. Yet rail must still fight track bed deflection and mechanical axle journal resistance.
+                </p>
+                <p class="id-only">
+                    Kereta api barang secara signifikan memperbaiki ini: roda baja keras di atas rel baja keras menekan tahanan gelinding menjadi $C_{rr} \approx 0,0015$, penurunan friksi sebesar 80% dibanding truk. Namun kereta api tetap harus menanggung defleksi bantalan rel dan friksi bantalan gandar mekanis.
+                </p>
+
+                <p class="en-only">
+                    By contrast, a water vessel pays <strong>zero mechanical energy to support its vertical mass</strong>. By Archimedes' principle ($F_b = \rho g \nabla$), the displaced seawater counterbalances the entire displacement for free. The ship faces only hydrodynamic resistance: viscous boundary layer skin friction governed by the ITTC-1957 correlation, and wave-making drag. Because wave drag scales with the fourth power of the Froude number ($Fn = v / \sqrt{gL}$), modern 400-meter container ships operating at slow-steaming speeds of 14–17 knots maintain a Froude number below 0.15, where wave-making resistance is almost negligible.
+                </p>
+                <p class="id-only">
+                    Sebaliknya, kapal air membayar <strong>nol energi mekanis untuk menopang massa vertikalnya</strong>. Berdasarkan hukum Archimedes ($F_b = \rho g \nabla$), air laut yang dipindahkan menyeimbangkan seluruh bobot kapal secara gratis. Hambatan kapal murni berupa resistansi hidrodinamika: gesekan batas viskos fluida (skin friction ITTC-1957) dan gelombang haluan. Karena hambatan gelombang berskala eksponensial terhadap angka Froude ($Fn = v / \sqrt{gL}$), kapal kontainer 400 meter berlayar hemat (slow steaming 14–17 knot) memiliki angka Froude di bawah 0,15, di mana pembentukan gelombang hampir tidak memakan energi.
+                </p>
+            </div>
+
+            <!-- Comparative Technical Ledger -->
+            <div class="data-table-wrapper">
+                <table class="data-table" aria-label="Modal Physics & Engineering Comparison">
+                    <thead>
+                        <tr>
+                            <th class="en-only">Freight Transport Mode</th>
+                            <th class="id-only">Moda Transportasi Kargo</th>
+                            <th class="en-only">Specific Energy (kJ / t-km)</th>
+                            <th class="id-only">Energi Spesifik (kJ / t-km)</th>
+                            <th class="en-only">CO₂ Intensity (g / t-km)</th>
+                            <th class="id-only">Intensitas CO₂ (g / t-km)</th>
+                            <th class="en-only">Payload / Tare Fraction</th>
+                            <th class="id-only">Fraksi Muatan / Tara</th>
+                            <th class="en-only">Max Single Unit Payload</th>
+                            <th class="id-only">Kapasitas Maksimal 1 Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong class="en-only">Ultra Large Container Ship (ULCV 24k TEU)</strong>
+                                <strong class="id-only">Kapal Kontainer Ultra Besar (ULCV 24rb TEU)</strong>
+                            </td>
+                            <td class="num">15 – 22 kJ</td>
+                            <td class="num">10 – 16 g</td>
+                            <td class="num">82% / 18%</td>
+                            <td class="num">
+                                <span class="en-only">220,000 tonnes</span>
+                                <span class="id-only">220.000 ton</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong class="en-only">Capesize Dry Bulk Vessel (180k DWT)</strong>
+                                <strong class="id-only">Kapal Curah Kering Capesize (180rb DWT)</strong>
+                            </td>
+                            <td class="num">10 – 16 kJ</td>
+                            <td class="num">5 – 9 g</td>
+                            <td class="num">88% / 12%</td>
+                            <td class="num">
+                                <span class="en-only">180,000 tonnes</span>
+                                <span class="id-only">180.000 ton</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong class="en-only">Inland Pushed Barge Convoy (4-Barge)</strong>
+                                <strong class="id-only">Konvoi Tongkang Dorong Sungai (4 Tongkang)</strong>
+                            </td>
+                            <td class="num">32 – 45 kJ</td>
+                            <td class="num">24 – 35 g</td>
+                            <td class="num">78% / 22%</td>
+                            <td class="num">
+                                <span class="en-only">7,200 tonnes</span>
+                                <span class="id-only">7.200 ton</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong class="en-only">Heavy Freight Train (100 Wagons, Double-Stack)</strong>
+                                <strong class="id-only">Kereta Barang Panjang (100 Gerbong, Tumpuk Dua)</strong>
+                            </td>
+                            <td class="num">75 – 110 kJ</td>
+                            <td class="num">25 – 42 g</td>
+                            <td class="num">68% / 32%</td>
+                            <td class="num">
+                                <span class="en-only">6,500 tonnes</span>
+                                <span class="id-only">6.500 ton</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong class="en-only">Heavy Semi-Truck (Class 8 / Tronton 40t)</strong>
+                                <strong class="id-only">Truk Tronton Berat (40 ton)</strong>
+                            </td>
+                            <td class="num">850 – 1,350 kJ</td>
+                            <td class="num">85 – 140 g</td>
+                            <td class="num">62% / 38%</td>
+                            <td class="num">
+                                <span class="en-only">25 tonnes</span>
+                                <span class="id-only">25 ton</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong class="en-only">Dedicated Air Cargo (Boeing 777F)</strong>
+                                <strong class="id-only">Pesawat Kargo Khusus (Boeing 777F)</strong>
+                            </td>
+                            <td class="num">8,500 – 11,500 kJ</td>
+                            <td class="num">600 – 950 g</td>
+                            <td class="num">42% / 58%</td>
+                            <td class="num">
+                                <span class="en-only">102 tonnes</span>
+                                <span class="id-only">102 ton</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 2: Interactive Modal Freight Simulator -->
+        <section class="topic-section" id="simulator">
+            <h2 class="section-heading en-only">Interactive Multi-Modal Freight Simulator</h2>
+            <h2 class="section-heading id-only">Simulator Kargo Multi-Moda Interaktif</h2>
+            <p class="section-desc en-only">
+                Compare line-haul freight rates, terminal drayage penalties, transit speed, inventory carrying cost, and lifecycle CO₂ emissions across real-world trade scenarios.
+            </p>
+            <p class="section-desc id-only">
+                Bandingkan tarif angkut jarak jauh, penalti drayage pelabuhan, kecepatan transit, biaya modal persediaan, dan emisi CO₂ pada berbagai skenario rantai pasok nyata.
+            </p>
+
+            <div class="sim-container">
+                <!-- Preset Corridors -->
+                <div class="sim-presets-bar">
+                    <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">
+                        <span class="en-only">Corridor Presets:</span>
+                        <span class="id-only">Preset Koridor:</span>
+                    </span>
+                    <button class="sim-preset-btn active" onclick="loadPreset('transpacific');" id="preset-transpacific">
+                        <span class="en-only">Trans-Pacific (Shanghai &rarr; LA: 10,500 km)</span>
+                        <span class="id-only">Trans-Pasifik (Shanghai &rarr; LA: 10.500 km)</span>
+                    </button>
+                    <button class="sim-preset-btn" onclick="loadPreset('rhine');" id="preset-rhine">
+                        <span class="en-only">Rhine River (Rotterdam &rarr; Duisburg: 230 km)</span>
+                        <span class="id-only">Sungai Rhine (Rotterdam &rarr; Duisburg: 230 km)</span>
+                    </button>
+                    <button class="sim-preset-btn" onclick="loadPreset('java');" id="preset-java">
+                        <span class="en-only">Java Corridor (Jakarta &rarr; Surabaya: 785 km)</span>
+                        <span class="id-only">Koridor Jawa (Jakarta &rarr; Surabaya: 785 km)</span>
+                    </button>
+                    <button class="sim-preset-btn" onclick="loadPreset('bulk');" id="preset-bulk">
+                        <span class="en-only">Bulk Ore (Port Hedland &rarr; Qingdao: 6,400 km)</span>
+                        <span class="id-only">Bijih Curah (Port Hedland &rarr; Qingdao: 6.400 km)</span>
+                    </button>
+                </div>
+
+                <!-- Input Controls Grid -->
+                <div class="sim-controls-grid">
+                    <div class="sim-form-group">
+                        <label class="sim-label" for="cargoValueSelect">
+                            <span class="en-only">Cargo Value Tier</span>
+                            <span class="id-only">Nilai Komoditas Kargo</span>
+                            <span class="metric-badge" id="cargoValueDisplay">$3,000 / t</span>
+                        </label>
+                        <select class="sim-select" id="cargoValueSelect" onchange="handleValueTierChange();">
+                            <option value="150">Low Bulk (Coal, Ore, Grain: $150 / ton)</option>
+                            <option value="3000" selected>General Manufactured (Apparel, Parts: $3,000 / ton)</option>
+                            <option value="25000">High-Tech &amp; Electronics ($25,000 / ton)</option>
+                            <option value="custom">Custom Value...</option>
+                        </select>
+                        <div id="customValueGroup" style="display:none; margin-top:8px;">
+                            <label for="customValueInput" class="sim-label" style="font-size:0.8rem; margin-bottom:4px;">
+                                <span class="en-only">Custom Value ($ / ton):</span>
+                                <span class="id-only">Nilai Kustom ($ / ton):</span>
+                            </label>
+                            <input type="number" id="customValueInput" class="sim-input" min="10" max="500000" step="100" value="5000" oninput="calculateSimulator();">
+                        </div>
+                    </div>
+
+                    <div class="sim-form-group">
+                        <label class="sim-label" for="simDistanceInput">
+                            <span class="en-only">Corridor Distance (km)</span>
+                            <span class="id-only">Jarak Koridor (km)</span>
+                            <span class="metric-badge" id="distanceValDisplay">10,500 km</span>
+                        </label>
+                        <input type="number" id="simDistanceInput" class="sim-input" min="10" max="30000" step="50" value="10500" oninput="calculateSimulator();">
+                    </div>
+
+                    <div class="sim-form-group">
+                        <label class="sim-label" for="simWeightInput">
+                            <span class="en-only">Shipment Mass (Tonnes)</span>
+                            <span class="id-only">Massa Pengiriman (Ton)</span>
+                            <span class="metric-badge" id="weightValDisplay">500 t</span>
+                        </label>
+                        <input type="number" id="simWeightInput" class="sim-input" min="1" max="100000" step="10" value="500" oninput="calculateSimulator();">
+                    </div>
+
+                    <div class="sim-form-group">
+                        <label class="sim-label" for="simWaccInput">
+                            <span class="en-only">Cost of Capital / WACC (% / yr)</span>
+                            <span class="id-only">Biaya Bunga Modal (% / thn)</span>
+                            <span class="metric-badge" id="waccValDisplay">10.0%</span>
+                        </label>
+                        <input type="number" id="simWaccInput" class="sim-input" min="0" max="40" step="0.5" value="10.0" oninput="calculateSimulator();">
+                    </div>
+                </div>
+
+                <!-- Simulation Results Deck -->
+                <div class="results-grid" id="resultsGrid">
+                    <!-- Maritime Result Card -->
+                    <div class="mode-result-card highlight" id="card-ocean">
+                        <div class="mode-header">
+                            <span class="mode-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20a2.4 2.4 0 0 0 2 1 2.4 2.4 0 0 0 2-1 2.4 2.4 0 0 1 2-1 2.4 2.4 0 0 1 2 1 2.4 2.4 0 0 0 2 1 2.4 2.4 0 0 0 2-1 2.4 2.4 0 0 1 2-1 2.4 2.4 0 0 1 2 1 2.4 2.4 0 0 0 2 1 2.4 2.4 0 0 0 2-1"></path><path d="M4 18l2-8h12l2 8"></path><path d="M12 10V4"></path><path d="M10 7h4"></path></svg>
+                                <span class="en-only">Maritime ULCV</span>
+                                <span class="id-only">Kapal Laut Kontainer</span>
+                            </span>
+                            <span class="metric-badge" id="ocean-speed-badge">16 kts (30 km/h)</span>
+                        </div>
+                        <div class="mode-cost-main" id="ocean-total-cost">$82,450</div>
+                        <div style="font-size: 0.82rem; color: var(--text-dim);" id="ocean-per-ton">$164.90 / tonne</div>
+                        
+                        <div class="mode-cost-breakdown">
+                            <div class="breakdown-row">
+                                <span class="en-only">Line-Haul Freight:</span>
+                                <span class="id-only">Biaya Angkut Pelayaran:</span>
+                                <strong id="ocean-linehaul">$57,750</strong>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="en-only">Terminal &amp; Drayage:</span>
+                                <span class="id-only">Bongkar Muat &amp; Drayage:</span>
+                                <strong id="ocean-terminal">$14,500</strong>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="en-only">Inventory Financing:</span>
+                                <span class="id-only">Bunga Modal Selama Transit:</span>
+                                <strong id="ocean-holding">$10,200</strong>
+                            </div>
+                        </div>
+
+                        <div class="mode-metrics-bar">
+                            <span id="ocean-transit-days">16.4 Days</span>
+                            <span id="ocean-emissions">68.2 t CO₂</span>
+                        </div>
+                    </div>
+
+                    <!-- Inland Barge Result Card -->
+                    <div class="mode-result-card" id="card-barge">
+                        <div class="mode-header">
+                            <span class="mode-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 17h20M4 17l2-5h12l2 5M12 12V6M9 9h6"></path></svg>
+                                <span class="en-only">Inland River Barge</span>
+                                <span class="id-only">Tongkang Sungai / Kanal</span>
+                            </span>
+                            <span class="metric-badge" id="barge-speed-badge">8 kts (14 km/h)</span>
+                        </div>
+                        <div class="mode-cost-main" id="barge-total-cost">$0</div>
+                        <div style="font-size: 0.82rem; color: var(--text-dim);" id="barge-per-ton">$0.00 / tonne</div>
+                        
+                        <div class="mode-cost-breakdown">
+                            <div class="breakdown-row">
+                                <span class="en-only">Line-Haul Freight:</span>
+                                <span class="id-only">Biaya Angkut Lintasan:</span>
+                                <strong id="barge-linehaul">$0</strong>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="en-only">Terminal &amp; Drayage:</span>
+                                <span class="id-only">Bongkar Muat &amp; Drayage:</span>
+                                <strong id="barge-terminal">$0</strong>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="en-only">Inventory Financing:</span>
+                                <span class="id-only">Bunga Modal Selama Transit:</span>
+                                <strong id="barge-holding">$0</strong>
+                            </div>
+                        </div>
+
+                        <div class="mode-metrics-bar">
+                            <span id="barge-transit-days">0.0 Days</span>
+                            <span id="barge-emissions">0 t CO₂</span>
+                        </div>
+                    </div>
+
+                    <!-- Rail Result Card -->
+                    <div class="mode-result-card" id="card-rail">
+                        <div class="mode-header">
+                            <span class="mode-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="16" rx="2"></rect><path d="M4 11h16"></path><path d="M12 3v8"></path><path d="M8 19l-3 3"></path><path d="M16 19l3 3"></path></svg>
+                                <span class="en-only">Freight Rail (Unit Train)</span>
+                                <span class="id-only">Kereta Api Barang</span>
+                            </span>
+                            <span class="metric-badge" id="rail-speed-badge">45 km/h</span>
+                        </div>
+                        <div class="mode-cost-main" id="rail-total-cost">$238,100</div>
+                        <div style="font-size: 0.82rem; color: var(--text-dim);" id="rail-per-ton">$476.20 / tonne</div>
+
+                        <div class="mode-cost-breakdown">
+                            <div class="breakdown-row">
+                                <span class="en-only">Line-Haul Freight:</span>
+                                <span class="id-only">Biaya Rel Jarak Jauh:</span>
+                                <strong id="rail-linehaul">$210,000</strong>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="en-only">Ramp &amp; First/Last Mile:</span>
+                                <span class="id-only">Bongkar Muat &amp; Truk Lokal:</span>
+                                <strong id="rail-terminal">$18,500</strong>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="en-only">Inventory Financing:</span>
+                                <span class="id-only">Bunga Modal Selama Transit:</span>
+                                <strong id="rail-holding">$9,600</strong>
+                            </div>
+                        </div>
+
+                        <div class="mode-metrics-bar">
+                            <span id="rail-transit-days">11.2 Days</span>
+                            <span id="rail-emissions">168 t CO₂</span>
+                        </div>
+                    </div>
+
+                    <!-- Heavy Truck Result Card -->
+                    <div class="mode-result-card" id="card-truck">
+                        <div class="mode-header">
+                            <span class="mode-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1z"></path><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                                <span class="en-only">Heavy Road Semi-Truck</span>
+                                <span class="id-only">Truk Tronton Jalan Raya</span>
+                            </span>
+                            <span class="metric-badge" id="truck-speed-badge">75 km/h</span>
+                        </div>
+                        <div class="mode-cost-main" id="truck-total-cost">$948,000</div>
+                        <div style="font-size: 0.82rem; color: var(--text-dim);" id="truck-per-ton">$1,896.00 / tonne</div>
+
+                        <div class="mode-cost-breakdown">
+                            <div class="breakdown-row">
+                                <span class="en-only">Line-Haul Highway Fuel/Tolls:</span>
+                                <span class="id-only">BBM &amp; Tol Jalan Raya:</span>
+                                <strong id="truck-linehaul">$945,000</strong>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="en-only">Direct Dock Handling:</span>
+                                <span class="id-only">Biaya Dok Langsung:</span>
+                                <strong id="truck-terminal">$0</strong>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="en-only">Inventory Financing:</span>
+                                <span class="id-only">Bunga Modal Selama Transit:</span>
+                                <strong id="truck-holding">$3,000</strong>
+                            </div>
+                        </div>
+
+                        <div class="mode-metrics-bar">
+                            <span id="truck-transit-days">5.9 Days</span>
+                            <span id="truck-emissions">551 t CO₂</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mathematical Contract Annotation -->
+                <div class="academic-disclaimer">
+                    <strong class="en-only">Mandatory Methodology Contract &amp; Data Vintage:</strong>
+                    <strong class="id-only">Kontrak Metodologi &amp; Sumber Data:</strong>
+                    <span class="en-only">
+                        Landed logistics cost models derived from the IMO 4th Greenhouse Gas Study (2020), International Council on Clean Transportation (ICCT) freight carbon benchmarks, U.S. Bureau of Transportation Statistics (BTS), and World Bank Logistics Performance Index (2023). Total Cost formula: $C = C_{\text{fixed}} + (c_{\text{mode}} \cdot d \cdot W) + (W \cdot V \cdot \frac{r}{365} \cdot t_{\text{transit}})$.
+                    </span>
+                    <span class="id-only">
+                        Model biaya logistik landed diturunkan dari IMO 4th GHG Study (2020), tolok ukur emisi ICCT, Biro Statistik Transportasi AS (BTS), dan Indeks Kinerja Logistik Bank Dunia (2023). Rumus Biaya Total: $C = C_{\text{tetap}} + (c_{\text{moda}} \cdot d \cdot W) + (W \cdot V \cdot \frac{r}{365} \cdot t_{\text{transit}})$.
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The Economic Paradox & Drayage Friction -->
+        <section class="topic-section" id="economics">
+            <h2 class="section-heading en-only">The Economic Paradox: Why Trucks Win at Short Distances</h2>
+            <h2 class="section-heading id-only">Paradoks Ekonomi: Mengapa Truk Menang pada Jarak Dekat</h2>
+
+            <div class="editorial-prose">
+                <p class="en-only">
+                    If water transport is up to 50 times more energy-efficient and 15 times cheaper per line-haul ton-kilometer, why are highways clogged with freight trucks while coastal barges sit underutilized? This is the central economic paradox of transport geography, governed by <strong>fixed intermodal transfer costs</strong> and <strong>inventory carrying speed</strong>.
+                </p>
+                <p class="id-only">
+                    Jika angkutan air hingga 50 kali lebih hemat energi dan 15 kali lebih murah per ton-km pelayaran, mengapa jalan tol tetap dipadati truk barang sementara tongkang pesisir kurang dimanfaatkan? Inilah paradoks ekonomi utama geografi transportasi, yang dikendalikan oleh <strong>biaya tetap alih moda (intermodal penalty)</strong> dan <strong>kecepatan perputaran modal barang</strong>.
+                </p>
+
+                <p class="en-only">
+                    A road truck provides seamless point-to-point service: it backs up to the factory loading dock in Karawang, loads 20 tonnes of goods, and drives directly to a distribution center in Cikarang or Bandung. There is <em>zero modal transshipment</em>.
+                </p>
+                <p class="id-only">
+                    Truk jalan raya menyediakan layanan mulus dari pintu ke pintu: mundur langsung ke dok muat pabrik di Karawang, memuat 20 ton barang, dan melaju langsung ke pusat distribusi di Cikarang atau Bandung. Tidak ada <em>alih muat antarmoda</em> sama sekali.
+                </p>
+
+                <p class="en-only">
+                    To move those same goods by coastal ship or barge requires:
+                </p>
+                <p class="id-only">
+                    Untuk memindahkan barang yang sama menggunakan kapal pesisir atau tongkang, prosesnya memerlukan:
+                </p>
+
+                <ul style="margin-left: 1.5rem; margin-bottom: 1.25rem; font-size: 0.92rem; line-height: 1.7;">
+                    <li class="en-only">First-mile drayage trucking from factory to seaport ($100–$250)</li>
+                    <li class="id-only">Angkutan drayage truk first-mile dari pabrik ke pelabuhan ($100–$250)</li>
+                    <li class="en-only">Terminal Handling Charge (THC) and container crane gantry lifts ($120–$220)</li>
+                    <li class="id-only">Biaya bongkar muat kontainer (THC) dan gantry crane ($120–$220)</li>
+                    <li class="en-only">Vessel loading, stowage planning, customs clearance, and port dwell waiting time (24–72 hours)</li>
+                    <li class="id-only">Pemuatan kapal, stowage plan, bea cukai, dan waktu tunggu sandar pelabuhan (24–72 jam)</li>
+                    <li class="en-only">Discharge crane lift at destination port plus last-mile drayage truck to warehouse ($200–$350)</li>
+                    <li class="id-only">Bongkar crane di pelabuhan tujuan plus truk last-mile ke gudang tujuan ($200–$350)</li>
+                </ul>
+
+                <p class="en-only">
+                    This creates a large fixed cost hurdle ($C_{\text{terminal}} \approx \$450 - \$800$ per container). Below the break-even distance of approximately <strong>300 to 500 kilometers</strong>, the variable fuel savings of ocean freight are completely overwhelmed by the fixed intermodal transfer penalty.
+                </p>
+                <p class="id-only">
+                    Ini menciptakan dinding biaya tetap yang tinggi ($C_{\text{terminal}} \approx \$450 - \$800$ per kontainer). Di bawah jarak impas sekitar <strong>300 hingga 500 kilometer</strong>, penghematan bahan bakar pelayaran sepenuhnya ditelan oleh penalti alih moda tersebut.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: Deep Dive Subpages Vitrine -->
+        <section class="topic-section" id="deep-dives">
+            <h2 class="section-heading en-only">Comprehensive Architectural Sub-Guides</h2>
+            <h2 class="section-heading id-only">Panduan Kajian Mendalam Terstruktur</h2>
+            <p class="section-desc en-only">
+                Examine specific engineering proofs, interactive multi-modal cost calculators, and maritime chokepoints in dedicated specialized compendiums.
+            </p>
+            <p class="section-desc id-only">
+                Telusuri pembuktian teknik termodinamika, kalkulator landed cost multi-moda lengkap, serta analisis chokepoint maritim pada sub-halaman khusus berikut.
+            </p>
+
+            <div class="subpage-grid">
+                <a href="land-vs-water-logistics/physics-and-thermodynamics.html" class="subpage-card">
+                    <div>
+                        <div class="subpage-card-title">
+                            <span class="en-only">Physics &amp; Thermodynamics</span>
+                            <span class="id-only">Fisika &amp; Termodinamika</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </div>
+                        <p class="subpage-card-desc en-only">
+                            Rigorous mathematical breakdown of Archimedes buoyancy vs. rolling friction, ITTC-1957 skin drag, Froude wave physics, and specific energy consumption (kJ/ton-km).
+                        </p>
+                        <p class="subpage-card-desc id-only">
+                            Pembuktian matematis gaya apung Archimedes vs. friksi gelinding, hambatan batas ITTC-1957, fisika gelombang Froude, dan konsumsi energi spesifik (kJ/ton-km).
+                        </p>
+                    </div>
+                    <span class="subpage-card-link-text en-only">Read Physics Monograph &rarr;</span>
+                    <span class="subpage-card-link-text id-only">Baca Monograf Fisika &rarr;</span>
+                </a>
+
+                <a href="land-vs-water-logistics/modal-split-calculator.html" class="subpage-card">
+                    <div>
+                        <div class="subpage-card-title">
+                            <span class="en-only">Modal Split Calculator</span>
+                            <span class="id-only">Kalkulator Modal Split</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </div>
+                        <p class="subpage-card-desc en-only">
+                            Full-scale decision bench calculating landed door-to-door freight cost, break-even distances, cargo holding capital depreciation, and carbon footprint comparisons.
+                        </p>
+                        <p class="subpage-card-desc id-only">
+                            Simulasi keputusan menyeluruh: kalkulasi landed cost door-to-door, jarak impas ekonomis, depresiasi modal kargo transit, dan komparasi emisi karbon.
+                        </p>
+                    </div>
+                    <span class="subpage-card-link-text en-only">Open Decision Bench &rarr;</span>
+                    <span class="subpage-card-link-text id-only">Buka Simulator Keputusan &rarr;</span>
+                </a>
+
+                <a href="land-vs-water-logistics/geography-and-chokepoints.html" class="subpage-card">
+                    <div>
+                        <div class="subpage-card-title">
+                            <span class="en-only">Geography, Chokepoints &amp; Tol Laut</span>
+                            <span class="id-only">Geografi, Chokepoint &amp; Tol Laut</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </div>
+                        <p class="subpage-card-desc en-only">
+                            Maritime route circuity penalties, canal choke crises (Suez, Panama, Malacca), and the Indonesian archipelago dilemma: Tol Laut and the empty backhaul trap.
+                        </p>
+                        <p class="subpage-card-desc id-only">
+                            Faktor sirkuitas rute laut, krisis terusan (Suez, Panama, Selat Malaka), serta dilema kepulauan Indonesia: Tol Laut dan jebakan muatan balik kosong.
+                        </p>
+                    </div>
+                    <span class="subpage-card-link-text en-only">Explore Geography &amp; Trade &rarr;</span>
+                    <span class="subpage-card-link-text id-only">Pelajari Geografi &amp; Tol Laut &rarr;</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer style="border-top: 1px solid var(--border-subtle); padding: 3rem 0; margin-top: 4rem; background: var(--bg-surface);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.84rem; color: var(--text-muted);">
+            <div>
+                &copy; 2026 LoLyeah Interactive Guides &bull; Static zero-dependency architecture.
+            </div>
+            <div>
+                <a href="../sitemap.xml" style="color: var(--text-secondary); text-decoration: none; margin-right: 1rem;">Sitemap</a>
+                <a href="../index.html" style="color: var(--text-secondary); text-decoration: none;">Index Hub</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Simulator Logic & Bilingual State -->
+    <script>
+        // Preset Scenarios
+        const PRESETS = {
+            transpacific: { dist: 10500, val: 3000, weight: 500, wacc: 10.0 },
+            rhine: { dist: 230, val: 600, weight: 1200, wacc: 8.0 },
+            java: { dist: 785, val: 2500, weight: 120, wacc: 11.0 },
+            bulk: { dist: 6400, val: 150, weight: 25000, wacc: 6.0 }
+        };
+
+        const CARGO_TIER_TEXTS = {
+            en: {
+                '150': 'Low Bulk (Coal, Ore, Grain: $150 / ton)',
+                '3000': 'General Manufactured (Apparel, Parts: $3,000 / ton)',
+                '25000': 'High-Tech & Electronics ($25,000 / ton)',
+                'custom': 'Custom Value...'
+            },
+            id: {
+                '150': 'Curah Rendah (Batubara, Bijih, Gandum: $150 / ton)',
+                '3000': 'Manufaktur Umum (Pakaian, Suku Cadang: $3.000 / ton)',
+                '25000': 'Teknologi Tinggi & Elektronik ($25.000 / ton)',
+                'custom': 'Nilai Kustom...'
+            }
+        };
+
+        function updateSelectLabels(lang) {
+            const select = document.getElementById('cargoValueSelect');
+            if (!select) return;
+            const dict = CARGO_TIER_TEXTS[lang] || CARGO_TIER_TEXTS.en;
+            for (let opt of select.options) {
+                if (dict[opt.value]) {
+                    opt.textContent = dict[opt.value];
+                }
+            }
+        }
+
+        function loadPreset(name) {
+            const p = PRESETS[name];
+            if (!p) return;
+
+            document.querySelectorAll('.sim-preset-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById('preset-' + name);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            document.getElementById('simDistanceInput').value = p.dist;
+            document.getElementById('simWeightInput').value = p.weight;
+            document.getElementById('simWaccInput').value = p.wacc;
+
+            const select = document.getElementById('cargoValueSelect');
+            let found = false;
+            for (let opt of select.options) {
+                if (opt.value == p.val) {
+                    select.value = opt.value;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                select.value = 'custom';
+                const customInput = document.getElementById('customValueInput');
+                if (customInput) customInput.value = p.val;
+            }
+            handleValueTierChange();
+        }
+
+        function handleValueTierChange() {
+            const select = document.getElementById('cargoValueSelect');
+            const customGroup = document.getElementById('customValueGroup');
+            if (select.value === 'custom') {
+                if (customGroup) customGroup.style.display = 'block';
+            } else {
+                if (customGroup) customGroup.style.display = 'none';
+            }
+            calculateSimulator();
+        }
+
+        function calculateSimulator() {
+            const distRaw = parseFloat(document.getElementById('simDistanceInput').value);
+            const dist = isNaN(distRaw) || distRaw <= 0 ? 1000 : Math.min(distRaw, 50000);
+
+            const weightRaw = parseFloat(document.getElementById('simWeightInput').value);
+            const weight = isNaN(weightRaw) || weightRaw <= 0 ? 100 : Math.min(weightRaw, 500000);
+
+            const waccRaw = parseFloat(document.getElementById('simWaccInput').value);
+            const wacc = (isNaN(waccRaw) || waccRaw < 0 ? 10 : Math.min(waccRaw, 100)) / 100;
+
+            const select = document.getElementById('cargoValueSelect');
+            let valuePerTon = 3000;
+            if (select.value === 'custom') {
+                const customInput = document.getElementById('customValueInput');
+                const customVal = customInput ? parseFloat(customInput.value) : 5000;
+                valuePerTon = isNaN(customVal) || customVal <= 0 ? 5000 : customVal;
+            } else {
+                valuePerTon = parseFloat(select.value) || 3000;
+            }
+
+            const isId = document.body.classList.contains('lang-id');
+            const dayUnit = isId ? 'Hari' : 'Days';
+            const tonUnit = isId ? '/ ton' : '/ tonne';
+
+            // Update Metric Displays
+            document.getElementById('cargoValueDisplay').textContent = `$${valuePerTon.toLocaleString()} / t`;
+            document.getElementById('distanceValDisplay').textContent = `${dist.toLocaleString()} km`;
+            document.getElementById('weightValDisplay').textContent = `${weight.toLocaleString()} t`;
+            document.getElementById('waccValDisplay').textContent = `${(wacc * 100).toFixed(1)}%`;
+
+            // Operational Parameters
+            // 1. Ocean ULCV: Rate $0.011/t-km, speed 30 km/h, dwell 72h, handling $29/t, 13 g CO2/t-km
+            const oceanHours = (dist / 30) + 72;
+            const oceanLinehaul = dist * weight * 0.011;
+            const oceanTerminal = weight * 29;
+            const oceanHolding = weight * valuePerTon * (wacc / 365) * (oceanHours / 24);
+            const oceanTotal = oceanLinehaul + oceanTerminal + oceanHolding;
+            const oceanCO2 = (dist * weight * 13) / 1000000;
+
+            // 2. Inland Barge: Rate $0.032/t-km, speed 14 km/h, dwell 24h, handling $16/t, 29 g CO2/t-km
+            const bargeHours = (dist / 14) + 24;
+            const bargeLinehaul = dist * weight * 0.032;
+            const bargeTerminal = weight * 16;
+            const bargeHolding = weight * valuePerTon * (wacc / 365) * (bargeHours / 24);
+            const bargeTotal = bargeLinehaul + bargeTerminal + bargeHolding;
+            const bargeCO2 = (dist * weight * 29) / 1000000;
+
+            // 3. Rail Unit Train: Rate $0.040/t-km, speed 45 km/h, yard dwell 36h, handling $18/t, 32 g CO2/t-km
+            const railHours = (dist / 45) + 36;
+            const railLinehaul = dist * weight * 0.040;
+            const railTerminal = weight * 18;
+            const railHolding = weight * valuePerTon * (wacc / 365) * (railHours / 24);
+            const railTotal = railLinehaul + railTerminal + railHolding;
+            const railCO2 = (dist * weight * 32) / 1000000;
+
+            // 4. Heavy Truck: Rate $0.180/t-km, speed 75 km/h, dock dwell 4h, handling $0, 105 g CO2/t-km
+            const truckHours = (dist / 75) + 4;
+            const truckLinehaul = dist * weight * 0.180;
+            const truckTerminal = 0;
+            const truckHolding = weight * valuePerTon * (wacc / 365) * (truckHours / 24);
+            const truckTotal = truckLinehaul + truckTerminal + truckHolding;
+            const truckCO2 = (dist * weight * 105) / 1000000;
+
+            // Render Ocean
+            document.getElementById('ocean-total-cost').textContent = `$${Math.round(oceanTotal).toLocaleString()}`;
+            document.getElementById('ocean-per-ton').textContent = `$${(oceanTotal / weight).toFixed(2)} ${tonUnit}`;
+            document.getElementById('ocean-linehaul').textContent = `$${Math.round(oceanLinehaul).toLocaleString()}`;
+            document.getElementById('ocean-terminal').textContent = `$${Math.round(oceanTerminal).toLocaleString()}`;
+            document.getElementById('ocean-holding').textContent = `$${Math.round(oceanHolding).toLocaleString()}`;
+            document.getElementById('ocean-transit-days').textContent = `${(oceanHours / 24).toFixed(1)} ${dayUnit}`;
+            document.getElementById('ocean-emissions').textContent = `${oceanCO2.toFixed(1)} t CO₂`;
+
+            // Render Barge
+            document.getElementById('barge-total-cost').textContent = `$${Math.round(bargeTotal).toLocaleString()}`;
+            document.getElementById('barge-per-ton').textContent = `$${(bargeTotal / weight).toFixed(2)} ${tonUnit}`;
+            document.getElementById('barge-linehaul').textContent = `$${Math.round(bargeLinehaul).toLocaleString()}`;
+            document.getElementById('barge-terminal').textContent = `$${Math.round(bargeTerminal).toLocaleString()}`;
+            document.getElementById('barge-holding').textContent = `$${Math.round(bargeHolding).toLocaleString()}`;
+            document.getElementById('barge-transit-days').textContent = `${(bargeHours / 24).toFixed(1)} ${dayUnit}`;
+            document.getElementById('barge-emissions').textContent = `${bargeCO2.toFixed(1)} t CO₂`;
+
+            // Render Rail
+            document.getElementById('rail-total-cost').textContent = `$${Math.round(railTotal).toLocaleString()}`;
+            document.getElementById('rail-per-ton').textContent = `$${(railTotal / weight).toFixed(2)} ${tonUnit}`;
+            document.getElementById('rail-linehaul').textContent = `$${Math.round(railLinehaul).toLocaleString()}`;
+            document.getElementById('rail-terminal').textContent = `$${Math.round(railTerminal).toLocaleString()}`;
+            document.getElementById('rail-holding').textContent = `$${Math.round(railHolding).toLocaleString()}`;
+            document.getElementById('rail-transit-days').textContent = `${(railHours / 24).toFixed(1)} ${dayUnit}`;
+            document.getElementById('rail-emissions').textContent = `${railCO2.toFixed(1)} t CO₂`;
+
+            // Render Truck
+            document.getElementById('truck-total-cost').textContent = `$${Math.round(truckTotal).toLocaleString()}`;
+            document.getElementById('truck-per-ton').textContent = `$${(truckTotal / weight).toFixed(2)} ${tonUnit}`;
+            document.getElementById('truck-linehaul').textContent = `$${Math.round(truckLinehaulCost = truckLinehaul).toLocaleString()}`;
+            document.getElementById('truck-terminal').textContent = `$${Math.round(truckTerminal).toLocaleString()}`;
+            document.getElementById('truck-holding').textContent = `$${Math.round(truckHolding).toLocaleString()}`;
+            document.getElementById('truck-transit-days').textContent = `${(truckHours / 24).toFixed(1)} ${dayUnit}`;
+            document.getElementById('truck-emissions').textContent = `${truckCO2.toFixed(1)} t CO₂`;
+
+            // Highlight Lowest Cost
+            const cards = [
+                { id: 'card-ocean', cost: oceanTotal },
+                { id: 'card-barge', cost: bargeTotal },
+                { id: 'card-rail', cost: railTotal },
+                { id: 'card-truck', cost: truckTotal }
+            ];
+            cards.sort((a, b) => a.cost - b.cost);
+            cards.forEach((c, idx) => {
+                const el = document.getElementById(c.id);
+                if (el) {
+                    if (idx === 0) {
+                        el.classList.add('highlight');
+                    } else {
+                        el.classList.remove('highlight');
+                    }
+                }
+            });
+        }
+
+        // Language Toggle Functionality
+        function toggleLanguage() {
+            const body = document.body;
+            const isEnglish = body.classList.contains('lang-en');
+            if (isEnglish) {
+                body.classList.remove('lang-en');
+                body.classList.add('lang-id');
+                document.documentElement.lang = 'id';
+                document.getElementById('langLabel').textContent = 'ID / EN';
+                localStorage.setItem('lolyeah_lang', 'id');
+                updateSelectLabels('id');
+            } else {
+                body.classList.remove('lang-id');
+                body.classList.add('lang-en');
+                document.documentElement.lang = 'en';
+                document.getElementById('langLabel').textContent = 'EN / ID';
+                localStorage.setItem('lolyeah_lang', 'en');
+                updateSelectLabels('en');
+            }
+            calculateSimulator();
+        }
+
+        // Initialize Language and Simulator
+        (function init() {
+            const savedLang = localStorage.getItem('lolyeah_lang');
+            if (savedLang === 'id') {
+                document.body.classList.remove('lang-en');
+                document.body.classList.add('lang-id');
+                document.documentElement.lang = 'id';
+                const label = document.getElementById('langLabel');
+                if (label) label.textContent = 'ID / EN';
+                updateSelectLabels('id');
+            } else {
+                updateSelectLabels('en');
+            }
+            calculateSimulator();
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,399 @@
+/* ==========================================================================
+   LAND VS. WATER LOGISTICS: SHARED COMPENDIUM STYLES
+   lolyeah.github.io - Design System & Token Discipline
+   Strict WCAG 2.2 AA Compliance, Responsive Reflow (320px+), No AI Slop
+   ========================================================================== */
+
+:root {
+    /* Palette Architecture - Maritime & Industrial Logistics */
+    --bg-canvas: #070d18;
+    --bg-surface: #0d1527;
+    --bg-surface-elevated: #131f38;
+    --bg-surface-subtle: #0f192e;
+    --border-subtle: #1e293b;
+    --border-hover: rgba(14, 165, 233, 0.45);
+
+    /* Primary Accent: Ocean Cyan / Deep Maritime */
+    --accent-primary: #0284c7;
+    --accent-bright: #38bdf8;
+    --accent-teal: #0d9488;
+    
+    /* Supporting Accent: Cargo Amber / Rail Steel */
+    --accent-amber: #d97706;
+    --accent-amber-bright: #fbbf24;
+    --accent-rail: #64748b;
+    --accent-truck: #ea580c;
+
+    /* Semantic Status */
+    --status-success: #10b981;
+    --status-warning: #f59e0b;
+    --status-danger: #ef4444;
+
+    /* Text Tiers */
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+
+    /* Typography */
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Outfit', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Monaco, Consolas, monospace;
+
+    /* Modular Spacing Scale (4px / 8px Rhythm) */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+
+    /* Radii & Shadows */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    --radius-full: 9999px;
+
+    --shadow-subtle: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
+    --shadow-float: 0 12px 36px -4px rgba(0, 0, 0, 0.6);
+
+    /* Motion */
+    --motion-fast: 120ms;
+    --motion-normal: 200ms;
+    --motion-smooth: 320ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Reset & Box Sizing */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 84px;
+}
+
+body {
+    background-color: var(--bg-canvas);
+    background-image:
+        radial-gradient(at 15% 15%, rgba(2, 132, 199, 0.08) 0px, transparent 60%),
+        radial-gradient(at 85% 20%, rgba(13, 148, 136, 0.06) 0px, transparent 55%),
+        radial-gradient(at 50% 85%, rgba(217, 119, 6, 0.04) 0px, transparent 65%);
+    background-attachment: fixed;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* Themed Browser Surfaces */
+::selection {
+    background: rgba(2, 132, 199, 0.35);
+    color: #ffffff;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-canvas);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-primary);
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* Accessibility: Reduced Motion Guarantee */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Container Constraint */
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-left: clamp(1.25rem, 3.5vw, 2.5rem);
+    padding-right: clamp(1.25rem, 3.5vw, 2.5rem);
+}
+
+/* Bilingual Language Toggling */
+body.lang-id .en-only { display: none !important; }
+body.lang-en .id-only { display: none !important; }
+
+/* Sticky Navigation Header */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(7, 13, 24, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-subtle);
+    height: 68px;
+    display: flex;
+    align-items: center;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.brand-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.brand-logo-icon {
+    width: 22px;
+    height: 22px;
+    color: var(--accent-primary);
+}
+
+.back-hub-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    transition: color var(--motion-fast) var(--ease-out), background-color var(--motion-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+    .back-hub-btn:hover {
+        color: var(--text-primary);
+        background: var(--bg-surface-elevated);
+    }
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-item-btn {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    transition: color var(--motion-fast) var(--ease-out), background-color var(--motion-fast) var(--ease-out);
+}
+
+.nav-item-btn.active {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+@media (hover: hover) {
+    .nav-item-btn:hover {
+        color: var(--text-primary);
+        background: rgba(255, 255, 255, 0.05);
+    }
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.lang-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--motion-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+    .lang-toggle-btn:hover {
+        color: var(--text-primary);
+        border-color: var(--accent-primary);
+    }
+}
+
+/* Touch Targets for pointer: coarse (Strict 44px ergonomics) */
+@media (pointer: coarse) {
+    button, .filter-chip, .tab-btn, .lang-toggle-btn, .nav-item-btn, .back-hub-btn, .arch-nav-link, .sim-preset-btn, .route-btn, input, select {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* Architectural Navigation Band (Hub Header) */
+.arch-nav-band {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 12px 0;
+}
+
+.arch-nav-list {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+}
+
+.arch-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    background: var(--bg-surface-subtle);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-size: 0.84rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all var(--motion-fast) var(--ease-out);
+}
+
+.arch-nav-link.active {
+    color: var(--text-primary);
+    background: var(--bg-surface-elevated);
+    border-color: var(--accent-primary);
+}
+
+@media (hover: hover) {
+    .arch-nav-link:hover {
+        color: var(--text-primary);
+        background: var(--bg-surface-elevated);
+        border-color: var(--accent-primary);
+    }
+}
+
+.arch-nav-link svg {
+    color: var(--accent-bright);
+}
+
+/* Data Tables */
+.data-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    margin: 1.5rem 0;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    text-align: left;
+}
+
+.data-table th, .data-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.data-table th {
+    background: var(--bg-surface-elevated);
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table td.num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Monospace Metrics Block */
+.metric-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    background: rgba(2, 132, 199, 0.12);
+    border: 1px solid rgba(2, 132, 199, 0.25);
+    color: var(--accent-bright);
+}
+
+/* Non-advice / Academic Disclaimer */
+.academic-disclaimer {
+    background: var(--bg-surface-subtle);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 2.5rem;
+}
+
+.academic-disclaimer strong {
+    color: var(--text-secondary);
+}

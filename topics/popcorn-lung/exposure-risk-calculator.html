@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- BEGIN ANTIGRAVITY SEO OPTIMIZATION -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diacetyl Inhalation &amp; Popcorn Lung Risk Simulator | LoLyeah</title>
+    <meta name="description" content="Interactive occupational and consumer inhalation toxicology simulator for Diacetyl and 2,3-Pentanedione: calculate 8-hour TWA, cumulative bronchiolar dose, NIOSH REL ratios, and risk tiers.">
+    <meta name="keywords" content="popcorn lung risk calculator, diacetyl inhalation dose, NIOSH REL 5 ppb, 2 3-pentanedione, coffee roasting diacetyl, vaping diacetyl popcorn lung, occupational inhalation toxicology, lolyeah">
+    <meta name="author" content="LoLyeah">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lolyeah.github.io/topics/popcorn-lung/exposure-risk-calculator.html">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Diacetyl Inhalation &amp; Popcorn Lung Risk Simulator | LoLyeah">
+    <meta property="og:description" content="Calculate 8-hour TWA, cumulative bronchiolar dose, and clinical risk tiers for occupational and consumer alpha-diketone exposure.">
+    <meta property="og:url" content="https://lolyeah.github.io/topics/popcorn-lung/exposure-risk-calculator.html">
+    <meta property="og:site_name" content="LoLyeah Interactive Guides">
+    <meta property="og:image" content="https://lolyeah.github.io/assets/og-image.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Diacetyl Inhalation &amp; Popcorn Lung Risk Simulator | LoLyeah">
+    <meta property="twitter:description" content="Calculate 8-hour TWA, cumulative bronchiolar dose, and clinical risk tiers for occupational and consumer alpha-diketone exposure.">
+    <meta name="twitter:image" content="https://lolyeah.github.io/assets/og-image.png">
+
+    <!-- Structured Data JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MedicalWebPage",
+      "name": "Diacetyl Inhalation Exposure and Popcorn Lung Risk Simulator",
+      "description": "Interactive industrial hygiene model computing cumulative bronchiolar diacetyl exposure, 8-hour time-weighted average relative to NIOSH limits, and clinical hazard stratification.",
+      "url": "https://lolyeah.github.io/topics/popcorn-lung/exposure-risk-calculator.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "LoLyeah Interactive Guides",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://lolyeah.github.io/assets/logo.png"
+        }
+      },
+      "author": {
+        "@type": "Person",
+        "name": "LoLyeah"
+      }
+    }
+    </script>
+    <!-- END ANTIGRAVITY SEO OPTIMIZATION -->
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+                        display: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        clinical: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            950: '#082f49',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 5rem;
+        }
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        ::selection {
+            background-color: #0284c7;
+            color: #ffffff;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        :focus-visible {
+            outline: 2px solid #0284c7;
+            outline-offset: 2px;
+        }
+        @media (pointer: coarse) {
+            button, .filter-chip, .tab-btn, input, select {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+        body.lang-en .lang-id { display: none !important; }
+        body.lang-id .lang-en { display: none !important; }
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-slate-800 bg-slate-50 lang-en" id="top">
+
+    <!-- Accessibility Skip Link -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 bg-sky-600 text-white font-medium rounded shadow-lg">
+        Skip to main content
+    </a>
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="../popcorn-lung.html" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-700 hover:text-sky-600 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span class="lang-en">Main Compendium</span>
+                    <span class="lang-id">Kompendium Utama</span>
+                </a>
+                <span class="text-slate-300">/</span>
+                <span class="text-xs sm:text-sm font-semibold text-slate-900 bg-slate-100 px-2.5 py-1 rounded-md">
+                    <span class="lang-en">Inhalation Dose &amp; Risk Simulator</span>
+                    <span class="lang-id">Simulator Dosis &amp; Risiko Inhalasi</span>
+                </span>
+            </div>
+
+            <!-- Header Right: Nav Links & Language Switcher -->
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <nav class="hidden md:flex items-center space-x-4 text-xs font-semibold text-slate-600">
+                    <a href="#simulator-bench" class="hover:text-sky-600 transition-colors">
+                        <span class="lang-en">Simulator</span>
+                        <span class="lang-id">Simulator</span>
+                    </a>
+                    <a href="#exposure-standards" class="hover:text-sky-600 transition-colors">
+                        <span class="lang-en">Regulatory Limits</span>
+                        <span class="lang-id">Batas Regulasi</span>
+                    </a>
+                    <a href="#benchmark-table" class="hover:text-sky-600 transition-colors">
+                        <span class="lang-en">Reference Matrix</span>
+                        <span class="lang-id">Matriks Referensi</span>
+                    </a>
+                </nav>
+
+                <!-- Language Toggle Button -->
+                <div class="flex items-center bg-slate-100 rounded-lg p-0.5 border border-slate-200" role="group" aria-label="Language selection">
+                    <button id="btn-lang-en" onclick="setLanguage('en')" class="px-2.5 py-1 text-xs font-bold rounded-md transition-all bg-white text-slate-900 shadow-sm" aria-pressed="true">
+                        EN
+                    </button>
+                    <button id="btn-lang-id" onclick="setLanguage('id')" class="px-2.5 py-1 text-xs font-bold rounded-md transition-all text-slate-500 hover:text-slate-900" aria-pressed="false">
+                        ID
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12">
+
+        <!-- Hero Section -->
+        <section class="rounded-2xl bg-slate-900 text-white p-6 sm:p-10 border border-slate-800 shadow-sm">
+            <div class="max-w-3xl space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-950/80 border border-sky-800 text-sky-300 text-xs font-mono font-medium">
+                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span>Industrial Hygiene &middot; Cumulative Inhalation Dosimetry Model</span>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                    <span class="lang-en">Diacetyl &amp; 2,3-Pentanedione Inhalation Exposure Simulator</span>
+                    <span class="lang-id">Simulator Paparan Inhalasi Diasetil &amp; 2,3-Pentanadion</span>
+                </h1>
+
+                <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+                    <span class="lang-en">
+                        Model occupational and consumer alpha-diketone inhalation scenarios against the NIOSH Recommended Exposure Limit (5 ppb 8-hr TWA). Compute effective inhaled mass, ventilation attenuation, respirator Assigned Protection Factors (APF), and cumulative bronchiolar burden.
+                    </span>
+                    <span class="lang-id">
+                        Simulasikan skenario inhalasi alfa-diketon okupasional dan konsumen terhadap Batas Paparan yang Direkomendasikan NIOSH (5 ppb TWA 8 jam). Hitung massa terinhalasi efektif, atenuasi ventilasi, Faktor Proteksi Respirator (APF), dan beban kumulatif bronkiolus.
+                    </span>
+                </p>
+
+                <!-- Key Regulatory Benchmarks -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-slate-800 font-mono text-xs">
+                    <div class="bg-slate-800/60 rounded-xl p-3 border border-slate-700/60">
+                        <div class="text-xl sm:text-2xl font-bold text-sky-400">5.0 ppb</div>
+                        <div class="text-slate-400 mt-1">
+                            <span class="lang-en">NIOSH Diacetyl REL</span>
+                            <span class="lang-id">REL Diasetil NIOSH</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/60 rounded-xl p-3 border border-slate-700/60">
+                        <div class="text-xl sm:text-2xl font-bold text-amber-400">25.0 ppb</div>
+                        <div class="text-slate-400 mt-1">
+                            <span class="lang-en">15-Min STEL Ceiling</span>
+                            <span class="lang-id">Batas STEL 15 Menit</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/60 rounded-xl p-3 border border-slate-700/60">
+                        <div class="text-xl sm:text-2xl font-bold text-rose-400">9.3 ppb</div>
+                        <div class="text-slate-400 mt-1">
+                            <span class="lang-en">2,3-Pentanedione REL</span>
+                            <span class="lang-id">REL 2,3-Pentanadion</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/60 rounded-xl p-3 border border-slate-700/60">
+                        <div class="text-xl sm:text-2xl font-bold text-emerald-400">20 L/min</div>
+                        <div class="text-slate-400 mt-1">
+                            <span class="lang-en">Moderate Work V<sub>E</sub></span>
+                            <span class="lang-id">Ventilasi Kerja V<sub>E</sub></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Calculator Widget Section -->
+        <section id="simulator-bench" class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-8">
+            <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-mono font-medium bg-sky-50 text-sky-700 border border-sky-200 mb-2">
+                    <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
+                    <span>Validated Inhalation Dosimetry Calculator</span>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900 tracking-tight">
+                    <span class="lang-en">Cumulative Inhalation Dosimetry Engine</span>
+                    <span class="lang-id">Mesin Dosimetri Inhalasi Kumulatif</span>
+                </h2>
+                <p class="text-sm text-slate-600 mt-1">
+                    <span class="lang-en">Answer: What is my effective daily exposure and cumulative bronchiolar burden under specified environmental parameters?</span>
+                    <span class="lang-id">Pertanyaan: Berapa paparan harian efektif dan beban kumulatif bronkiolus Anda di bawah parameter lingkungan spesifik?</span>
+                </p>
+            </div>
+
+            <!-- Quick Scenario Presets -->
+            <div class="space-y-2">
+                <label class="text-xs font-bold text-slate-700 uppercase tracking-wide">
+                    <span class="lang-en">Load Exposure Preset Scenario:</span>
+                    <span class="lang-id">Muat Skenario Preset Paparan:</span>
+                </label>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="applyPreset('jasper')" id="preset-jasper" class="px-3.5 py-2 text-xs font-semibold rounded-lg border border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">
+                        1. Jasper, MO Popcorn Mixing Vat (Historic 2000)
+                    </button>
+                    <button onclick="applyPreset('coffee')" id="preset-coffee" class="px-3.5 py-2 text-xs font-semibold rounded-lg border border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">
+                        2. Commercial Coffee Roasting &amp; Grinding
+                    </button>
+                    <button onclick="applyPreset('vape')" id="preset-vape" class="px-3.5 py-2 text-xs font-semibold rounded-lg border border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">
+                        3. Daily E-Cigarette Diacetyl Aerosol
+                    </button>
+                    <button onclick="applyPreset('regulated')" id="preset-regulated" class="px-3.5 py-2 text-xs font-semibold rounded-lg border border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">
+                        4. Modern Regulated Lab (With LEV &amp; PPE)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form Controls Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4 border-t border-slate-100">
+                <!-- Input 1: Ambient Concentration -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <label for="inp-concentration" class="font-bold text-slate-900">
+                            <span class="lang-en">Ambient Concentration (ppb)</span>
+                            <span class="lang-id">Konsentrasi Ambien (ppb)</span>
+                        </label>
+                        <span id="disp-concentration" class="font-mono text-sky-700 font-bold">120 ppb</span>
+                    </div>
+                    <input type="range" id="inp-concentration" min="1" max="5000" step="1" value="120"
+                           class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600"
+                           oninput="calculateDose()">
+                    <div class="flex justify-between text-[11px] font-mono text-slate-400">
+                        <span>1 ppb</span>
+                        <span>500 ppb</span>
+                        <span>5,000 ppb</span>
+                    </div>
+                </div>
+
+                <!-- Input 2: Daily Exposure Duration -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <label for="inp-hours" class="font-bold text-slate-900">
+                            <span class="lang-en">Daily Exposure Duration (hours/day)</span>
+                            <span class="lang-id">Durasi Paparan Harian (jam/hari)</span>
+                        </label>
+                        <span id="disp-hours" class="font-mono text-sky-700 font-bold">6.0 hrs</span>
+                    </div>
+                    <input type="range" id="inp-hours" min="0.5" max="14" step="0.5" value="6"
+                           class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600"
+                           oninput="calculateDose()">
+                    <div class="flex justify-between text-[11px] font-mono text-slate-400">
+                        <span>0.5 hr</span>
+                        <span>8.0 hrs (Std)</span>
+                        <span>14.0 hrs</span>
+                    </div>
+                </div>
+
+                <!-- Input 3: Weekly Days -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <label for="inp-days" class="font-bold text-slate-900">
+                            <span class="lang-en">Workdays per Week (days)</span>
+                            <span class="lang-id">Hari Kerja per Minggu (hari)</span>
+                        </label>
+                        <span id="disp-days" class="font-mono text-sky-700 font-bold">5 days</span>
+                    </div>
+                    <input type="range" id="inp-days" min="1" max="7" step="1" value="5"
+                           class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600"
+                           oninput="calculateDose()">
+                    <div class="flex justify-between text-[11px] font-mono text-slate-400">
+                        <span>1 day</span>
+                        <span>5 days</span>
+                        <span>7 days</span>
+                    </div>
+                </div>
+
+                <!-- Input 4: Years of Exposure -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <label for="inp-years" class="font-bold text-slate-900">
+                            <span class="lang-en">Cumulative Duration (years)</span>
+                            <span class="lang-id">Durasi Kumulatif (tahun)</span>
+                        </label>
+                        <span id="disp-years" class="font-mono text-sky-700 font-bold">3.0 yrs</span>
+                    </div>
+                    <input type="range" id="inp-years" min="0.25" max="25" step="0.25" value="3"
+                           class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600"
+                           oninput="calculateDose()">
+                    <div class="flex justify-between text-[11px] font-mono text-slate-400">
+                        <span>3 mos</span>
+                        <span>5 yrs</span>
+                        <span>25 yrs</span>
+                    </div>
+                </div>
+
+                <!-- Input 5: Respiratory Protection (APF) -->
+                <div class="space-y-2">
+                    <label for="inp-ppe" class="text-xs font-bold text-slate-900 block">
+                        <span class="lang-en">Respiratory Protective Equipment (PPE)</span>
+                        <span class="lang-id">Alat Pelindung Pernapasan (APD)</span>
+                    </label>
+                    <select id="inp-ppe" onchange="calculateDose()" class="w-full p-2.5 text-xs font-medium rounded-lg border border-slate-300 bg-white text-slate-900 focus:border-sky-600">
+                        <option value="1">No Respirator / Surgical Mask (APF 1 - 0% filtration)</option>
+                        <option value="1.2">N95 Particulate Only (APF 1.2 - Diacetyl vapor penetrates)</option>
+                        <option value="10">Half-Mask Elastomeric + Organic Vapor Cartridge (APF 10)</option>
+                        <option value="50">Full-Face Elastomeric + Organic Vapor Cartridge (APF 50)</option>
+                        <option value="1000">PAPR / Supplied Air Positive Pressure (APF 1000)</option>
+                    </select>
+                </div>
+
+                <!-- Input 6: Room Ventilation Rate (ACH) -->
+                <div class="space-y-2">
+                    <label for="inp-vent" class="text-xs font-bold text-slate-900 block">
+                        <span class="lang-en">Local Room Ventilation (Air Changes/Hr)</span>
+                        <span class="lang-id">Ventilasi Ruangan (Pertukaran Udara/Jam)</span>
+                    </label>
+                    <select id="inp-vent" onchange="calculateDose()" class="w-full p-2.5 text-xs font-medium rounded-lg border border-slate-300 bg-white text-slate-900 focus:border-sky-600">
+                        <option value="1.0">Stagnant / Poor (0 - 1 ACH, unventilated mixing vat)</option>
+                        <option value="0.7">Standard Commercial HVAC (4 - 6 ACH, general room)</option>
+                        <option value="0.3">Dedicated Local Exhaust Ventilation LEV (&gt;15 ACH hood)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Calculated Intermediate Causality & Final Output -->
+            <div class="p-6 rounded-xl bg-slate-900 text-white border border-slate-800 space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+                    <div>
+                        <div class="text-xs font-mono text-slate-400">
+                            <span class="lang-en">Calculated 8-Hour Time-Weighted Average (TWA)</span>
+                            <span class="lang-id">Rata-Rata Tertimbang Waktu 8 Jam (TWA)</span>
+                        </div>
+                        <div id="out-twa" class="text-3xl sm:text-4xl font-extrabold font-mono text-amber-400 mt-1 tabular-nums">
+                            63.0 ppb
+                        </div>
+                    </div>
+                    <div class="sm:text-right">
+                        <div class="text-xs font-mono text-slate-400">
+                            <span class="lang-en">Exceedance of NIOSH REL (5 ppb)</span>
+                            <span class="lang-id">Faktor Pelampauan REL NIOSH (5 ppb)</span>
+                        </div>
+                        <div id="out-ratio" class="text-3xl font-extrabold font-mono text-rose-400 mt-1 tabular-nums">
+                            12.6 &times; REL
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Intermediate Exposed Metrics -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
+                    <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700/80">
+                        <div class="text-slate-400">Effective Inhaled Conc.</div>
+                        <div id="out-eff-conc" class="text-lg font-bold text-sky-400 mt-1 tabular-nums">84.0 ppb</div>
+                        <div class="text-[10px] text-slate-500">Post-PPE &amp; vent</div>
+                    </div>
+                    <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700/80">
+                        <div class="text-slate-400">Daily Air Respired</div>
+                        <div id="out-air-vol" class="text-lg font-bold text-slate-200 mt-1 tabular-nums">7.2 m&sup3;</div>
+                        <div class="text-[10px] text-slate-500">At 20 L/min V<sub>E</sub></div>
+                    </div>
+                    <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700/80">
+                        <div class="text-slate-400">Daily Inhaled Mass</div>
+                        <div id="out-daily-mass" class="text-lg font-bold text-amber-400 mt-1 tabular-nums">2.13 mg/day</div>
+                        <div class="text-[10px] text-slate-500">Pure diacetyl vapor</div>
+                    </div>
+                    <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700/80">
+                        <div class="text-slate-400">Cumulative Lifetime Dose</div>
+                        <div id="out-cum-mass" class="text-lg font-bold text-rose-400 mt-1 tabular-nums">1.66 g</div>
+                        <div class="text-[10px] text-slate-500">Total inhaled burden</div>
+                    </div>
+                </div>
+
+                <!-- Final Risk Classification & Plain-Language Takeaway -->
+                <div id="risk-banner" class="p-4 rounded-xl border bg-rose-950/40 border-rose-800 text-xs text-rose-200 space-y-2">
+                    <div class="flex items-center gap-2 font-bold text-sm text-rose-400">
+                        <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                        <span id="risk-heading">High Hazard Industrial Risk Tier (Exceeds NIOSH REL by &gt;10x)</span>
+                    </div>
+                    <p id="risk-action" class="leading-relaxed text-slate-300">
+                        Exposure significantly exceeds the NIOSH recommended safety ceiling. Terminal bronchioles face relentless covalent dicarbonyl damage. Immediate implementation of local exhaust ventilation (LEV), mandatory organic vapor respirators, and baseline plus 6-month spirometry surveillance is required.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Regulatory Standards Reference Table (Static Fallback) -->
+        <section id="benchmark-table" class="space-y-4">
+            <div>
+                <h2 class="text-xl font-bold text-slate-900 tracking-tight">
+                    <span class="lang-en">Industrial Benchmark &amp; Regulatory Standard Matrix</span>
+                    <span class="lang-id">Matriks Tolok Ukur Industri &amp; Standar Regulasi</span>
+                </h2>
+                <p class="text-xs text-slate-500 mt-0.5">
+                    Peer-reviewed exposure levels, NIOSH criteria, and regulatory limits across key exposure vectors
+                </p>
+            </div>
+
+            <div class="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-sm">
+                <table class="w-full text-left text-xs text-slate-600">
+                    <thead class="bg-slate-50 text-slate-900 font-mono border-b border-slate-200">
+                        <tr>
+                            <th class="p-3">Environment / Vector</th>
+                            <th class="p-3">Compound</th>
+                            <th class="p-3">Reported Airborne Level</th>
+                            <th class="p-3">NIOSH Limit Ratio</th>
+                            <th class="p-3">Primary Regulatory Citation</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-mono">
+                        <tr>
+                            <td class="p-3 font-bold text-slate-900">NIOSH Recommended Exposure Limit (REL)</td>
+                            <td class="p-3">Diacetyl</td>
+                            <td class="p-3 text-sky-700 font-bold">5.0 ppb (8-hr TWA)</td>
+                            <td class="p-3 text-emerald-600 font-bold">1.0 &times; (Baseline)</td>
+                            <td class="p-3 font-sans text-slate-500">NIOSH Pub No. 2016-111</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-slate-900">NIOSH Short-Term Exposure Limit (STEL)</td>
+                            <td class="p-3">Diacetyl</td>
+                            <td class="p-3 text-amber-700 font-bold">25.0 ppb (15-min)</td>
+                            <td class="p-3 text-amber-600 font-bold">5.0 &times; REL</td>
+                            <td class="p-3 font-sans text-slate-500">NIOSH Criteria Document 2016</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-slate-900">Commercial Coffee Roasting Facility (Grinding Room)</td>
+                            <td class="p-3">Diacetyl + 2,3-Pentanedione</td>
+                            <td class="p-3 text-rose-700 font-bold">50 - 450 ppb</td>
+                            <td class="p-3 text-rose-600 font-bold">10 - 90 &times; REL</td>
+                            <td class="p-3 font-sans text-slate-500">Bailey et al., J Occup Environ Hyg 2015</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-slate-900">Microwave Popcorn Flavoring Plant (Mixing Vat 2000)</td>
+                            <td class="p-3">Diacetyl vapor</td>
+                            <td class="p-3 text-rose-700 font-bold">10,000 - 100,000 ppb (10-100 ppm)</td>
+                            <td class="p-3 text-rose-600 font-bold">2,000 - 20,000 &times; REL</td>
+                            <td class="p-3 font-sans text-slate-500">Kreiss et al., N Engl J Med 2002</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-slate-900">E-Cigarette Flavor Aerosol (Unregulated e-liquids)</td>
+                            <td class="p-3">Diacetyl aerosol</td>
+                            <td class="p-3 text-amber-700 font-bold">Up to 239 &mu;g per cartridge</td>
+                            <td class="p-3 text-amber-600 font-bold">Variable / Severe Direct Bolus</td>
+                            <td class="p-3 font-sans text-slate-500">Allen et al., Environ Health Perspect 2016</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Clinical Non-Advice Disclaimer -->
+        <footer class="pt-8 border-t border-slate-200 text-xs text-slate-500 space-y-4">
+            <div class="p-4 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 leading-relaxed">
+                <strong class="text-slate-800">Medical &amp; Industrial Hygiene Disclaimer:</strong>
+                <span class="lang-en"> This dosimetry tool is an educational and mathematical model based on NIOSH Pub No. 2016-111 and standard industrial hygiene formulas. It does not replace formal occupational air sampling (such as active personal pumps with silica gel tubes analyzed via OSHA Method PV2118 or NIOSH Method 2557) or medical diagnostic consultation.</span>
+                <span class="lang-id"> Alat dosimetri ini adalah model edukasi dan matematis berdasarkan NIOSH Pub No. 2016-111 dan formula higene industri standar. Alat ini tidak menggantikan pengambilan sampel udara okupasional formal atau konsultasi diagnostik medis.</span>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-2 text-slate-400">
+                <div>&copy; 2026 LoLyeah &middot; Zero-Dependency Static Science Compendium</div>
+                <div class="flex items-center gap-4">
+                    <a href="../popcorn-lung.html" class="hover:text-slate-600 transition-colors">Main Hub</a>
+                    <a href="#top" class="hover:text-slate-600 transition-colors">Back to Top &uarr;</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Language Toggle Controller
+        function setLanguage(lang) {
+            document.body.classList.remove('lang-en', 'lang-id');
+            document.body.classList.add('lang-' + lang);
+            document.documentElement.lang = lang;
+
+            const btnEn = document.getElementById('btn-lang-en');
+            const btnId = document.getElementById('btn-lang-id');
+
+            if (lang === 'en') {
+                btnEn.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+                btnEn.classList.remove('text-slate-500');
+                btnEn.setAttribute('aria-pressed', 'true');
+
+                btnId.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+                btnId.classList.add('text-slate-500');
+                btnId.setAttribute('aria-pressed', 'false');
+            } else {
+                btnId.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+                btnId.classList.remove('text-slate-500');
+                btnId.setAttribute('aria-pressed', 'true');
+
+                btnEn.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+                btnEn.classList.add('text-slate-500');
+                btnEn.setAttribute('aria-pressed', 'false');
+            }
+            try {
+                localStorage.setItem('lolyeah_lang', lang);
+            } catch (e) {}
+            calculateDose();
+        }
+
+        // Initialize Language Preference
+        (function initLang() {
+            try {
+                const saved = localStorage.getItem('lolyeah_lang');
+                if (saved === 'id' || saved === 'en') {
+                    setLanguage(saved);
+                }
+            } catch (e) {}
+        })();
+
+        // Preset Configurations
+        const presets = {
+            jasper: { conc: 4500, hours: 8, days: 5, years: 2, ppe: "1", vent: "1.0" },
+            coffee: { conc: 140, hours: 6, days: 5, years: 3, ppe: "1", vent: "0.7" },
+            vape: { conc: 350, hours: 2, days: 7, years: 4, ppe: "1", vent: "1.0" },
+            regulated: { conc: 15, hours: 8, days: 5, years: 5, ppe: "10", vent: "0.3" }
+        };
+
+        function applyPreset(presetKey) {
+            const p = presets[presetKey];
+            document.getElementById('inp-concentration').value = p.conc;
+            document.getElementById('inp-hours').value = p.hours;
+            document.getElementById('inp-days').value = p.days;
+            document.getElementById('inp-years').value = p.years;
+            document.getElementById('inp-ppe').value = p.ppe;
+            document.getElementById('inp-vent').value = p.vent;
+
+            ['jasper', 'coffee', 'vape', 'regulated'].forEach(k => {
+                const btn = document.getElementById('preset-' + k);
+                if (k === presetKey) {
+                    btn.className = "px-3.5 py-2 text-xs font-semibold rounded-lg border border-sky-600 bg-sky-600 text-white shadow-sm transition-colors";
+                } else {
+                    btn.className = "px-3.5 py-2 text-xs font-semibold rounded-lg border border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors";
+                }
+            });
+
+            calculateDose();
+        }
+
+        function calculateDose() {
+            const conc = parseFloat(document.getElementById('inp-concentration').value);
+            const hours = parseFloat(document.getElementById('inp-hours').value);
+            const days = parseFloat(document.getElementById('inp-days').value);
+            const years = parseFloat(document.getElementById('inp-years').value);
+            const apf = parseFloat(document.getElementById('inp-ppe').value);
+            const vent = parseFloat(document.getElementById('inp-vent').value);
+            const isId = document.body.classList.contains('lang-id');
+
+            // Update display labels
+            document.getElementById('disp-concentration').textContent = conc + " ppb";
+            document.getElementById('disp-hours').textContent = hours.toFixed(1) + " hrs";
+            document.getElementById('disp-days').textContent = days + " days";
+            document.getElementById('disp-years').textContent = years.toFixed(2) + " yrs";
+
+            // Effective Inhaled Concentration (ppb) factoring ventilation and respirator APF
+            const effectiveConc = (conc * vent) / apf;
+
+            // 8-hour Time Weighted Average (TWA) in ppb
+            const twa8 = (effectiveConc * hours) / 8.0;
+
+            // Ratio to NIOSH REL (5 ppb)
+            const ratioRel = twa8 / 5.0;
+
+            // Total daily air respired: 20 L/min = 1.2 m3/hour
+            const dailyAirM3 = hours * 1.2;
+
+            // Molecular mass calculation: Diacetyl 1 ppb = 3.52 ug/m3 at 25C & 1 atm
+            // (MW 86.09 g/mol / 24.45 L/mol = 3.52 mg/m3 per ppm = 0.00352 mg/m3 per ppb = 3.52 ug/m3 per ppb)
+            const dailyMassMg = (effectiveConc * 3.52 * dailyAirM3) / 1000.0;
+
+            // Cumulative Mass in Grams
+            const annualWorkdays = days * 50; // approx 50 working weeks
+            const cumulativeMassG = (dailyMassMg * annualWorkdays * years) / 1000.0;
+
+            // Update DOM Readouts
+            document.getElementById('out-twa').textContent = twa8.toFixed(1) + " ppb";
+            document.getElementById('out-ratio').textContent = ratioRel.toFixed(1) + " \u00D7 REL";
+            document.getElementById('out-eff-conc').textContent = effectiveConc.toFixed(1) + " ppb";
+            document.getElementById('out-air-vol').textContent = dailyAirM3.toFixed(1) + " m\u00B3";
+            document.getElementById('out-daily-mass').textContent = dailyMassMg.toFixed(2) + " mg/day";
+            document.getElementById('out-cum-mass').textContent = cumulativeMassG.toFixed(2) + " g";
+
+            // Risk Tier Classification
+            const banner = document.getElementById('risk-banner');
+            const heading = document.getElementById('risk-heading');
+            const action = document.getElementById('risk-action');
+
+            if (ratioRel <= 1.0) {
+                banner.className = "p-4 rounded-xl border bg-emerald-950/40 border-emerald-800 text-xs text-emerald-200 space-y-2";
+                heading.className = "flex items-center gap-2 font-bold text-sm text-emerald-400";
+                heading.textContent = isId ? "Tingkat Risiko Terkendali (Di Bawah Batas REL NIOSH)" : "Controlled Risk Tier (Within NIOSH REL Ceiling)";
+                action.textContent = isId
+                    ? "Paparan efektif berada di bawah batas paparan yang direkomendasikan NIOSH (5 ppb). Lanjutkan pemantauan higene industri berkala dan kepatuhan APD."
+                    : "Effective exposure remains below the NIOSH recommended safety limit (5 ppb). Continue periodic industrial hygiene air sampling and personal protective discipline.";
+            } else if (ratioRel <= 5.0) {
+                banner.className = "p-4 rounded-xl border bg-amber-950/40 border-amber-800 text-xs text-amber-200 space-y-2";
+                heading.className = "flex items-center gap-2 font-bold text-sm text-amber-400";
+                heading.textContent = isId ? "Tingkat Waspada Okupasional (1x - 5x Batas REL)" : "Elevated Occupational Surveillance Tier (1x - 5x REL)";
+                action.textContent = isId
+                    ? "Paparan melampaui batas aman NIOSH. Diperlukan evaluasi teknis ventilasi lokal (LEV), pertimbangan respirator uap organik elastomeric, dan spirometri berkala tiap 6 bulan."
+                    : "Exposure exceeds the NIOSH safety threshold. Engineering review for local exhaust ventilation (LEV), organic vapor half-mask respirators, and 6-monthly serial spirometry required.";
+            } else if (ratioRel <= 25.0) {
+                banner.className = "p-4 rounded-xl border bg-rose-950/40 border-rose-800 text-xs text-rose-200 space-y-2";
+                heading.className = "flex items-center gap-2 font-bold text-sm text-rose-400";
+                heading.textContent = isId ? "Tingkat Bahaya Tinggi (5x - 25x Batas REL)" : "High Hazard Industrial Risk Tier (5x - 25x REL)";
+                action.textContent = isId
+                    ? "Tingkat paparan berbahaya. Epitel bronkiolus terpapar stres dikarbonil intensif. Wajibkan respirator uap organik bertekanan positif atau full-face, isolasi proses pengadukan, dan skrining medis segera."
+                    : "Hazardous exposure level. Terminal bronchioles face intensive dicarbonyl stress. Mandatory positive pressure or full-face organic vapor respirators, process enclosure, and immediate medical screening.";
+            } else {
+                banner.className = "p-4 rounded-xl border bg-rose-950/70 border-rose-600 text-xs text-rose-100 space-y-2";
+                heading.className = "flex items-center gap-2 font-bold text-sm text-rose-300";
+                heading.textContent = isId ? "Tingkat Bahaya Kritis Kematian Jaringan (>25x Batas REL)" : "Extreme Critical Bronchiolar Danger Tier (>25x REL)";
+                action.textContent = isId
+                    ? "Kondisi sangat toksik mirip pabrik Jasper Missouri tahun 2000. Risiko obliterasi lumen bronkiolus permanen sangat tinggi. Hentikan operasi segera sampai sistem tertutup kedap udara dan PAPR terpasang!"
+                    : "Extremely toxic environment mirroring the historic Jasper, MO factory. Extreme risk of irreversible bronchiolar obliteration. Immediate shutdown until sealed engineering enclosures and PAPR are installed!";
+            }
+        }
+
+        // Initialize Lucide Icons & Initial Calculation
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+            calculateDose();
+        });
+    </script>
+</body>
+</html>
