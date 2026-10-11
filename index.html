@@ -58,19 +58,22 @@
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Design Tokens & Design System Variables -->
+    <link rel="stylesheet" href="assets/css/tokens.css">
 
     <style>
-        /* Base Variables - Light Mode */
+        /* Base Variables - Light Mode (Harmonized with assets/css/tokens.css) */
         :root {
             --bg-primary: #ffffff;
-            --bg-secondary: #f4f4f4;
-            --text-primary: #000000;
-            --text-secondary: #555555;
-            --border-light: #e0e0e0;
-            --border-dark: #000000;
-            --hover-glow: rgba(0, 0, 0, 0.05);
-            --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --bg-secondary: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border-light: #e2e8f0;
+            --border-dark: #1e293b;
+            --hover-glow: rgba(15, 23, 42, 0.04);
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             --font-display: 'Outfit', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
 
@@ -81,14 +84,14 @@
             --spring-transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 
             /* Glassmorphic Search Tokens - Light Mode */
-            --search-bg: rgba(255, 255, 255, 0.45);
-            --search-bg-focus: rgba(255, 255, 255, 0.7);
-            --search-border: rgba(0, 0, 0, 0.08);
-            --search-border-focus: var(--border-dark);
-            --search-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.03);
-            --search-shadow-focus: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
-            --search-shortcut-bg: rgba(0, 0, 0, 0.04);
-            --search-shortcut-border: rgba(0, 0, 0, 0.06);
+            --search-bg: rgba(255, 255, 255, 0.65);
+            --search-bg-focus: rgba(255, 255, 255, 0.9);
+            --search-border: #e2e8f0;
+            --search-border-focus: var(--accent-primary);
+            --search-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+            --search-shadow-focus: 0 8px 24px rgba(15, 23, 42, 0.08);
+            --search-shortcut-bg: rgba(15, 23, 42, 0.04);
+            --search-shortcut-border: rgba(15, 23, 42, 0.08);
 
             --highlight-bg: #fef08a;
             --highlight-text: #854d0e;
@@ -96,13 +99,13 @@
 
         /* Variables - Dark Mode */
         [data-theme="dark"] {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --text-primary: #ffffff;
-            --text-secondary: #999999;
-            --border-light: #222222;
-            --border-dark: #ffffff;
-            --hover-glow: rgba(255, 255, 255, 0.06);
+            --bg-primary: #111726;
+            --bg-secondary: #0a0a0a;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-light: #1e293b;
+            --border-dark: #cbd5e1;
+            --hover-glow: rgba(255, 255, 255, 0.05);
 
             /* Accent Palettes - Dark Mode */
             --accent-primary: #10b981;
@@ -110,10 +113,10 @@
             --accent-glow: rgba(99, 102, 241, 0.15);
 
             /* Glassmorphic Search Tokens - Dark Mode */
-            --search-bg: rgba(10, 10, 10, 0.55);
-            --search-bg-focus: rgba(10, 10, 10, 0.8);
-            --search-border: rgba(255, 255, 255, 0.08);
-            --search-border-focus: var(--border-dark);
+            --search-bg: rgba(17, 23, 38, 0.7);
+            --search-bg-focus: rgba(17, 23, 38, 0.95);
+            --search-border: rgba(255, 255, 255, 0.1);
+            --search-border-focus: var(--accent-primary);
             --search-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
             --search-shadow-focus: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
             --search-shortcut-bg: rgba(255, 255, 255, 0.06);
@@ -197,7 +200,6 @@
             color: var(--text-primary);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
@@ -224,7 +226,7 @@
             background-color: var(--highlight-bg);
             color: var(--highlight-text);
             padding: 0.1em 0.25em;
-            border-radius: 3px;
+            border-radius: var(--radius-xs, 4px);
             font-weight: 600;
         }
 
@@ -309,80 +311,55 @@
             line-height: 0;
         }
 
-        /* Hero Section */
+        /* Hero Section - Serene Swiss Modernist Editorial */
         .hero {
             padding: 6rem 5% 4rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
             position: relative;
-            background-image: linear-gradient(var(--border-light) 1px, transparent 1px),
-                              linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
-            background-size: 40px 40px;
-            background-position: center center;
+            background: var(--bg-secondary);
             border-bottom: 1px solid var(--border-light);
-            transition: border-color 0.3s ease;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at center, transparent 0%, var(--bg-primary) 80%);
-            pointer-events: none;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .hero-content {
             position: relative;
             z-index: 10;
-            max-width: 800px;
+            max-width: 840px;
         }
 
         .hero-subtitle {
             font-size: 1.15rem;
             color: var(--text-secondary);
             margin-bottom: 1.5rem;
-            max-width: 650px;
+            max-width: 680px;
             line-height: 1.6;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            line-height: 1.1;
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 5vw, 3.6rem);
+            font-weight: 700;
+            line-height: 1.12;
+            letter-spacing: -0.025em;
             margin-bottom: 1rem;
-            min-height: 1.2em;
             color: var(--text-primary);
-            padding-bottom: 0.1em;
-        }
-
-        .cursor {
-            display: inline-block;
-            width: 0.5em;
-            height: 1em;
-            background-color: var(--text-primary);
-            vertical-align: text-bottom;
-            animation: blink 1s step-end infinite;
-            margin-left: 6px;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
         }
 
         .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: var(--hover-glow);
+            background: var(--bg-primary);
             border: 1px solid var(--border-light);
             padding: 0.4rem 0.8rem;
-            border-radius: 8px;
+            border-radius: var(--radius-full, 9999px);
             font-family: var(--font-mono);
-            font-size: 0.75rem;
+            font-size: var(--text-xs, 0.75rem);
             color: var(--text-secondary);
             margin-top: 1.5rem;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
             transition: all 0.3s ease;
         }
 
@@ -391,13 +368,7 @@
             height: 6px;
             background-color: var(--accent-primary);
             border-radius: 50%;
-            box-shadow: 0 0 8px var(--accent-primary);
-            animation: pulse-dot 2s infinite ease-in-out;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 0.4; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.1); }
+            display: inline-block;
         }
 
         /* Topics Section */
@@ -663,7 +634,7 @@
             padding: 0.25rem 0.65rem;
             border-radius: 6px;
             font-family: var(--font-mono);
-            font-size: 0.65rem;
+            font-size: var(--text-xs, 0.75rem);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -706,9 +677,9 @@
             color: #c2410c;
         }
         .tag-engineering, .tag-tech, .tag-transport {
-            background: rgba(0, 212, 255, 0.08);
-            border-color: rgba(0, 212, 255, 0.15);
-            color: #0284c7;
+            background: var(--badge-engineering-bg, rgba(3, 105, 161, 0.08));
+            border-color: rgba(3, 105, 161, 0.15);
+            color: var(--badge-engineering-text, #0369a1);
         }
 
         /* Dark Theme Overrides */
@@ -776,7 +747,7 @@
             display: inline-flex;
             align-items: center;
             font-family: var(--font-mono);
-            font-size: 0.65rem;
+            font-size: var(--text-xs, 0.75rem);
             color: var(--text-secondary);
             background: var(--bg-secondary);
             border: 1px solid var(--border-light);
@@ -853,9 +824,9 @@
         /* Empty State */
         .no-results-container {
             text-align: center;
-            padding: 5rem 2rem;
+            padding: 3.25rem 2rem;
             border: 1px dashed var(--search-border);
-            border-radius: 12px;
+            border-radius: var(--radius-lg, 14px);
             background: var(--search-bg);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
@@ -981,31 +952,32 @@
 
         /* Cinematic Collapsible About Section */
         .about-section {
-            max-height: 0;
+            display: grid;
+            grid-template-rows: 0fr;
             opacity: 0;
             overflow: hidden;
             visibility: hidden;
             background: radial-gradient(circle at bottom right, var(--accent-glow) 0%, transparent 60%);
             border-top: 1px solid transparent;
-            padding: 0 5%;
-            transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                        opacity 0.5s ease,
-                        padding 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+            transition: grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.4s ease,
                         border-color 0.3s ease,
-                        visibility 0.5s ease;
+                        visibility 0.4s ease;
         }
 
         .about-section.expanded {
-            max-height: 1000px;
+            grid-template-rows: 1fr;
             opacity: 1;
             visibility: visible;
-            padding: 6rem 5% 4rem;
             border-top: 1px solid var(--border-light);
         }
 
         .about-inner {
+            min-height: 0;
+            overflow: hidden;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 6rem 5% 4rem;
             display: grid;
             grid-template-columns: 1.1fr 1.9fr;
             gap: 4rem;
@@ -1016,47 +988,49 @@
             .about-inner {
                 grid-template-columns: 1fr;
                 gap: 3rem;
-            }
-            .about-section.expanded {
                 padding: 4rem 5% 3rem;
             }
         }
 
-        /* Developer Console Terminal */
+        /* Editorial Colophon Card */
         .dev-terminal {
-            background: rgba(10, 10, 12, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 2rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl, 20px);
+            padding: 2.25rem;
             font-family: var(--font-mono);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow-card-hover);
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
         }
 
         .terminal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid var(--border-subtle);
             padding-bottom: 1rem;
             margin-bottom: 1.5rem;
         }
 
         .terminal-title {
-            color: #71717a;
+            color: var(--text-muted);
             font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 600;
         }
 
         .terminal-close-btn {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #a1a1aa;
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
             font-family: var(--font-mono);
             font-size: 1.1rem;
             line-height: 1;
             padding: 0.25rem 0.6rem;
-            border-radius: 6px;
+            border-radius: var(--radius-sm, 4px);
             cursor: pointer;
             transition: all 0.2s ease;
             display: inline-flex;
@@ -1064,72 +1038,74 @@
             justify-content: center;
         }
 
+        .terminal-close-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--border-dark);
+        }
+
         .terminal-avatar-block {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1.25rem;
             margin-bottom: 1.75rem;
         }
 
         .avatar-mesh {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
-            border-radius: 16px;
+            width: 56px;
+            height: 56px;
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg, 14px);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #ffffff;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            color: var(--accent-primary);
             position: relative;
         }
 
-        .avatar-mesh::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border: 1px solid var(--accent-primary);
-            border-radius: 20px;
-            animation: pulse-border 2s infinite ease-in-out;
-        }
-
-        @keyframes pulse-border {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
         .avatar-meta h4 {
-            color: #ffffff;
-            font-size: 1.1rem;
+            color: var(--text-primary);
+            font-size: 1.15rem;
             font-family: var(--font-display);
             font-weight: 700;
+            letter-spacing: -0.01em;
         }
 
         .avatar-meta p {
             color: var(--accent-primary);
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             margin-top: 0.15rem;
+            font-weight: 500;
         }
 
         .terminal-log {
             font-size: 0.8rem;
-            color: #d4d4d8;
+            color: var(--text-secondary);
             line-height: 1.8;
+            background: var(--bg-surface-subtle);
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-md, 8px);
+            border: 1px solid var(--border-subtle);
         }
 
         .log-row {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             display: flex;
         }
 
+        .log-row:last-child {
+            margin-bottom: 0;
+        }
+
         .log-tag {
-            color: #3b82f6;
+            color: var(--accent-secondary);
             margin-right: 0.75rem;
             flex-shrink: 0;
+            font-weight: 600;
         }
 
         .log-val {
-            color: #10b981;
+            color: var(--text-primary);
         }
 
         .about-bio h2 {
@@ -1249,9 +1225,13 @@
             #theme-toggle:hover {
                 border-color: var(--text-primary);
             }
-            .filter-btn:hover {
+            .filter-btn:hover:not(.active) {
                 border-color: var(--border-dark);
                 color: var(--text-primary);
+            }
+            .filter-btn.active:hover {
+                color: var(--bg-primary);
+                opacity: 0.92;
             }
             .search-clear-btn:hover {
                 color: var(--text-primary);
@@ -1304,8 +1284,8 @@
                 color: var(--bg-primary);
             }
             .terminal-close-btn:hover {
-                color: #ffffff;
-                border-color: rgba(255, 255, 255, 0.4);
+                color: var(--text-primary);
+                border-color: var(--border-dark);
             }
         }
 
@@ -1402,6 +1382,7 @@
             <button class="filter-btn" role="tab" aria-selected="false" data-category="clinical" data-translate-key="filterClinical">Clinical</button>
             <button class="filter-btn" role="tab" aria-selected="false" data-category="economics" data-translate-key="filterEconomics">Economics</button>
             <button class="filter-btn" role="tab" aria-selected="false" data-category="transport" data-translate-key="filterTransport">Transport</button>
+            <button class="filter-btn" role="tab" aria-selected="false" data-category="engineering" data-translate-key="filterEngineering">Engineering</button>
             <button class="filter-btn" role="tab" aria-selected="false" data-category="energy" data-translate-key="filterEnergy">Energy</button>
             <button class="filter-btn" role="tab" aria-selected="false" data-category="simulators" data-translate-key="filterSimulators">Simulators</button>
         </div>
@@ -1473,7 +1454,7 @@
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
-                        <span class="card-tag tag-engineering" onclick="filterByCategory('simulators', event);" data-translate-key="tagEngineering">Engineering</span>
+                        <span class="card-tag tag-engineering" onclick="filterByCategory('engineering', event);" data-translate-key="tagEngineering">Engineering</span>
                     </div>
                     <h3 data-translate-key="neuralNetworksCardTitle">Neural Networks: From Perceptrons to Frontier Reasoning Architectures</h3>
                     <p data-translate-key="neuralNetworksCardDesc">Comprehensive scientific compendium: biological vs artificial nodes, calculus of backpropagation, 12-paradigm architectural taxonomy, interactive live training lab, and 2026 frontier inference scaling calculator.</p>
@@ -1499,7 +1480,7 @@
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
-                        <span class="card-tag tag-engineering" onclick="filterByCategory('simulators', event);" data-translate-key="tagEngineering">Engineering</span>
+                        <span class="card-tag tag-engineering" onclick="filterByCategory('engineering', event);" data-translate-key="tagEngineering">Engineering</span>
                     </div>
                     <h3 data-translate-key="suravidlCardTitle">suravidl: Open-Source Media Downloader &amp; Ingestion Engine (v0.39.8)</h3>
                     <p data-translate-key="suravidlCardDesc">A privacy-first media downloading application and stream ingestion engine for Android and desktop: download queue manager, MediaStore gallery integration, lossless audio extraction, SponsorBlock filtering, and liquid glass ergonomics.</p>
@@ -2003,7 +1984,7 @@
             </div>
 
             <!-- 41: EV Battery Vendors -->
-            <div class="feature-card" data-url="./topics/ev-battery-vendors.html" data-slug="ev-battery-vendors" data-category="transport energy" data-keywords="ev battery, catl, byd blade, lges, panasonic, calb, lfp, nmc, sodium-ion, solid-state, c-rate, ibc, morowali, weda bay, nikel" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Engineering, Teknik, Energy, Battery, Baterai, EV, Nikel">
+            <div class="feature-card" data-url="./topics/ev-battery-vendors.html" data-slug="ev-battery-vendors" data-category="transport energy engineering" data-keywords="ev battery, catl, byd blade, lges, panasonic, calb, lfp, nmc, sodium-ion, solid-state, c-rate, ibc, morowali, weda bay, nikel" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Engineering, Teknik, Energy, Battery, Baterai, EV, Nikel">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
@@ -2012,7 +1993,7 @@
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
-                        <span class="card-tag tag-engineering" onclick="filterByCategory('energy', event);" data-translate-key="tagEngineering">Engineering</span>
+                        <span class="card-tag tag-engineering" onclick="filterByCategory('engineering', event);" data-translate-key="tagEngineering">Engineering</span>
                     </div>
                     <h3 data-translate-key="evBatteryCardTitle">Global &amp; Indonesia EV Battery Compendium</h3>
                     <p data-translate-key="evBatteryCardDesc">An interactive technical compendium and benchmark hub analyzing global battery vendors (CATL, BYD, LGES, Panasonic), chemistries (LFP, NMC, Sodium-Ion, Solid-State), fast-charge C-rates, pack simulators, and Indonesia's nickel-to-battery ecosystem.</p>
@@ -2074,7 +2055,7 @@
             </div>
 
             <!-- 38: Car Suspension -->
-            <div class="feature-card" data-url="./topics/car-suspension.html" data-slug="car-suspension" data-category="transport energy" data-keywords="car suspension, macpherson, multi-link, double wishbone, torsion beam, air suspension, porsche par, byd disus, clearmotion" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Engineering, Teknik, Suspension, Suspensi, Otomotif">
+            <div class="feature-card" data-url="./topics/car-suspension.html" data-slug="car-suspension" data-category="transport engineering" data-keywords="car suspension, macpherson, multi-link, double wishbone, torsion beam, air suspension, porsche par, byd disus, clearmotion" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Engineering, Teknik, Suspension, Suspensi, Otomotif">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
@@ -2083,7 +2064,7 @@
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
-                        <span class="card-tag tag-engineering" onclick="filterByCategory('energy', event);" data-translate-key="tagEngineering">Engineering</span>
+                        <span class="card-tag tag-engineering" onclick="filterByCategory('engineering', event);" data-translate-key="tagEngineering">Engineering</span>
                     </div>
                     <h3 data-translate-key="carSuspensionCardTitle">Modern Car Suspension Compendium</h3>
                     <p data-translate-key="carSuspensionCardDesc">An interactive technical compendium covering mechanical, air, and 2024-2026 active suspensions (Porsche PAR, BYD DiSus, ClearMotion) for ICE and EV vehicles, with Indonesian car listings.</p>
@@ -2756,7 +2737,7 @@
             </div>
 
             <!-- 06: Ship Class -->
-            <div class="feature-card" data-url="./topics/ship-class.html" data-slug="ship-class" data-category="transport" data-keywords="kapal perang, destroyer, frigate, corvette, aircraft carrier, submarine, tni al" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Engineering, Teknik, Naval, Kapal Perang, Militer">
+            <div class="feature-card" data-url="./topics/ship-class.html" data-slug="ship-class" data-category="transport engineering" data-keywords="kapal perang, destroyer, frigate, corvette, aircraft carrier, submarine, tni al" role="link" tabindex="0" onclick="handleCardClick(this, event);" onkeydown="handleCardKeydown(this, event);" data-tags="Engineering, Teknik, Naval, Kapal Perang, Militer">
                 <div class="feature-card-content">
                     <div class="card-header">
                         <div class="header-left">
@@ -2765,7 +2746,7 @@
                                 <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </button>
                         </div>
-                        <span class="card-tag tag-engineering" onclick="filterByCategory('transport', event);" data-translate-key="tagEngineering">Engineering</span>
+                        <span class="card-tag tag-engineering" onclick="filterByCategory('engineering', event);" data-translate-key="tagEngineering">Engineering</span>
                     </div>
                     <h3 data-translate-key="navalCardTitle">Naval Ship Class Comparison</h3>
                     <p data-translate-key="navalCardDesc">A comparison between naval ship class in a nutshell.</p>
@@ -2894,12 +2875,14 @@
 
         <!-- Empty State -->
         <div id="no-results" class="no-results-container" role="status" aria-live="polite">
-            <svg class="no-results-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="M21 21l-4.35-4.35M11 8v6M8 11h6"></path>
-            </svg>
-            <h3 data-translate-key="noResultsTitle">No topics found</h3>
-            <p data-translate-key="noResultsDesc">We couldn't find any guides matching your query. Try searching for a different keyword or resetting filters.</p>
+            <div id="no-results-icon-wrap">
+                <svg class="no-results-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="M21 21l-4.35-4.35M11 8v6M8 11h6"></path>
+                </svg>
+            </div>
+            <h3 id="no-results-title" data-translate-key="noResultsTitle">No topics found</h3>
+            <p id="no-results-desc" data-translate-key="noResultsDesc">We couldn't find any guides matching your query. Try searching for a different keyword or resetting filters.</p>
             <button id="reset-search-btn" data-translate-key="clearSearchBtn">Clear Search</button>
         </div>
     </main>
@@ -2909,30 +2892,30 @@
         <div class="about-inner">
             <div class="dev-terminal">
                 <div class="terminal-header">
-                    <span class="terminal-title">lolyeah_telemetry.sys</span>
+                    <span class="terminal-title">PUBLICATION COLOPHON</span>
                     <button id="about-close-btn" class="terminal-close-btn" aria-label="Close about section" data-translate-key="aboutCloseBtn">&times;</button>
                 </div>
                 <div class="terminal-avatar-block">
                     <div class="avatar-mesh">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     </div>
                     <div class="avatar-meta">
                         <h4>LoLyeah</h4>
-                        <p class="mono" id="about-meta-tag" data-translate-key="aboutMeta">Clinical Architect</p>
+                        <p class="mono" id="about-meta-tag" data-translate-key="aboutMeta">Clinical & Systems Architect</p>
                     </div>
                 </div>
                 <div class="terminal-log">
                     <div class="log-row">
-                        <span class="log-tag">LOCATION //</span>
+                        <span class="log-tag">ORIGIN //</span>
                         <span class="log-val">INDONESIA [WIB]</span>
                     </div>
                     <div class="log-row">
-                        <span class="log-tag">STACK //</span>
-                        <span class="log-val">VANILLA JS / MODERN CSS / PYTHON / MD</span>
+                        <span class="log-tag">ARCHITECTURE //</span>
+                        <span class="log-val">ZERO-DEPENDENCY STATIC COMPENDIUM</span>
                     </div>
                     <div class="log-row">
-                        <span class="log-tag">STATUS //</span>
-                        <span class="log-val">SYSTEM OPERATIONAL // 64 TOPICS</span>
+                        <span class="log-tag">ARCHIVE //</span>
+                        <span class="log-val">64 TOPIC MONOGRAPHS &amp; SIMULATORS</span>
                     </div>
                 </div>
             </div>
@@ -3071,13 +3054,17 @@
                 filterClinical: "Clinical",
                 filterEconomics: "Economics",
                 filterTransport: "Transport",
+                filterEngineering: "Engineering",
                 filterEnergy: "Energy",
                 filterScience: "Science",
                 filterSimulators: "Simulators",
                 searchPlaceholder: "Search topics...",
                 clearSearchBtn: "Clear Search",
+                browseAllBtn: "Explore All Topics",
                 noResultsTitle: "No topics found",
                 noResultsDesc: "We couldn't find any guides matching your query. Try searching for a different keyword or resetting filters.",
+                noSavedTitle: "No saved topics yet",
+                noSavedDesc: "Click the star icon (☆) on any topic card to bookmark it for quick offline reading or future reference.",
                 showingInfo: "Showing {start}–{end} of {total} topics",
                 toastCopied: "Link copied to clipboard!",
                 aboutBtn: "ABOUT",
@@ -3276,13 +3263,17 @@
                 filterClinical: "Klinis",
                 filterEconomics: "Ekonomi",
                 filterTransport: "Transportasi",
+                filterEngineering: "Teknik",
                 filterEnergy: "Energi",
                 filterScience: "Sains",
                 filterSimulators: "Simulator",
                 searchPlaceholder: "Cari topik...",
                 clearSearchBtn: "Hapus Pencarian",
+                browseAllBtn: "Jelajahi Semua Topik",
                 noResultsTitle: "Topik tidak ditemukan",
                 noResultsDesc: "Kami tidak menemukan panduan yang cocok dengan pencarian Anda. Coba kata kunci lain atau reset filter.",
+                noSavedTitle: "Belum ada topik tersimpan",
+                noSavedDesc: "Klik ikon bintang (☆) pada kartu topik mana pun untuk menyimpannya sebagai daftar referensi cepat.",
                 showingInfo: "Menampilkan {start}–{end} dari {total} topik",
                 toastCopied: "Tautan berhasil disalin!",
                 aboutBtn: "TENTANG",
@@ -3795,6 +3786,110 @@
 
             renderCards();
             renderPagination(totalPages);
+            syncUrlState();
+        }
+
+        function updateEmptyState() {
+            const iconWrap = document.getElementById('no-results-icon-wrap');
+            const titleEl = document.getElementById('no-results-title');
+            const descEl = document.getElementById('no-results-desc');
+            const btnEl = document.getElementById('reset-search-btn');
+
+            if (currentCategory === 'saved' && !searchQuery) {
+                if (iconWrap) {
+                    iconWrap.innerHTML = '<svg class="no-results-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>';
+                }
+                if (titleEl) {
+                    titleEl.dataset.translateKey = 'noSavedTitle';
+                    titleEl.textContent = translations[currentLang].noSavedTitle;
+                }
+                if (descEl) {
+                    descEl.dataset.translateKey = 'noSavedDesc';
+                    descEl.textContent = translations[currentLang].noSavedDesc;
+                }
+                if (btnEl) {
+                    btnEl.dataset.translateKey = 'browseAllBtn';
+                    btnEl.textContent = translations[currentLang].browseAllBtn;
+                }
+            } else {
+                if (iconWrap) {
+                    iconWrap.innerHTML = '<svg class="no-results-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"></path></svg>';
+                }
+                if (titleEl) {
+                    titleEl.dataset.translateKey = 'noResultsTitle';
+                    titleEl.textContent = translations[currentLang].noResultsTitle;
+                }
+                if (descEl) {
+                    descEl.dataset.translateKey = 'noResultsDesc';
+                    descEl.textContent = translations[currentLang].noResultsDesc;
+                }
+                if (btnEl) {
+                    btnEl.dataset.translateKey = 'clearSearchBtn';
+                    btnEl.textContent = translations[currentLang].clearSearchBtn;
+                }
+            }
+        }
+
+        function syncUrlState() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                if (searchQuery && searchQuery.trim()) {
+                    params.set('q', searchQuery.trim());
+                } else {
+                    params.delete('q');
+                }
+
+                if (currentCategory && currentCategory !== 'all') {
+                    params.set('category', currentCategory);
+                } else {
+                    params.delete('category');
+                }
+
+                if (currentPage > 1) {
+                    params.set('p', currentPage.toString());
+                } else {
+                    params.delete('p');
+                }
+
+                const qs = params.toString();
+                const newRelativePathQuery = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+                const currentRelativePathQuery = `${window.location.pathname}${window.location.search}`;
+
+                if (newRelativePathQuery !== currentRelativePathQuery) {
+                    history.replaceState({ q: searchQuery, category: currentCategory, p: currentPage }, '', newRelativePathQuery);
+                }
+            } catch (e) {}
+        }
+
+        function loadUrlState() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const q = params.get('q');
+                const cat = params.get('category');
+                const p = parseInt(params.get('p'), 10);
+
+                if (q) {
+                    searchQuery = q;
+                    const searchInput = document.getElementById('search-input');
+                    if (searchInput) searchInput.value = q;
+                }
+
+                if (cat) {
+                    const validBtn = document.querySelector(`.filter-btn[data-category="${cat}"]`);
+                    if (validBtn) {
+                        currentCategory = cat;
+                        document.querySelectorAll('.filter-btn').forEach(b => {
+                            const isActive = b.dataset.category === cat;
+                            b.classList.toggle('active', isActive);
+                            b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                        });
+                    }
+                }
+
+                if (p && !isNaN(p) && p > 1) {
+                    currentPage = p;
+                }
+            } catch (e) {}
         }
 
         function renderCards() {
@@ -3806,6 +3901,7 @@
                 grid.style.display = 'none';
                 noResults.style.display = 'flex';
                 if (paginationEl) paginationEl.style.display = 'none';
+                updateEmptyState();
                 return;
             }
 
@@ -3881,6 +3977,7 @@
                     currentPage = i;
                     renderCards();
                     renderPagination(totalPages);
+                    syncUrlState();
                     scrollToTopics();
                 });
                 pageNumbersContainer.appendChild(btn);
@@ -3961,6 +4058,7 @@
                     const totalPages = Math.ceil(filteredCardElements.length / cardsPerPage);
                     renderCards();
                     renderPagination(totalPages);
+                    syncUrlState();
                     scrollToTopics();
                 }
             });
@@ -3972,6 +4070,7 @@
                     currentPage++;
                     renderCards();
                     renderPagination(totalPages);
+                    syncUrlState();
                     scrollToTopics();
                 }
             });
@@ -4064,6 +4163,12 @@
                     }
                 }
             });
+
+            // Browser Back / Forward History Navigation
+            window.addEventListener('popstate', () => {
+                loadUrlState();
+                applyFilterAndSearch();
+            });
         }
 
         // --- Initialization ---
@@ -4071,6 +4176,7 @@
             initTheme();
             initCardCatalog();
             initBookmarks();
+            loadUrlState();
             setupEventListeners();
 
             let savedLang = 'en';

@@ -10,19 +10,21 @@ This repository is a zero-dependency static web compendium and interactive simul
 - `topics/<topic-name>.html` is the canonical hub page for a specific topic domain.
 - `topics/<topic-name>/` contains that topic's deep-dive subpages, spreadsheets, and specialized calculators. Register only the main hub on `index.html`.
 - `assets/` contains shared brand assets, logos, favicons, global datasets, and shared styles.
+- `assets/css/tokens.css` is the canonical, single source of truth for design tokens and CSS custom properties across the entire publication.
 - `beta/` is reserved strictly for unindexed prototypes and staging; never link from production navigation.
 - `sitemap.xml` and `robots.txt` describe the published site.
 
 ### Multi-Page Linking Rules
 1. Place the main topic hub directly in `topics/` (e.g. `topics/gemstones.html`).
 2. Place subpages in a matching topic directory (e.g. `topics/gemstones/database.html`).
-3. The hub must feature a prominent architectural navigation band linking to all subpages.
-4. Every subpage must feature an explicit `← Main Compendium` back-link pointing to `../<topic-name>.html` at the top of the viewport.
-5. Register every published hub and subpage in `sitemap.xml` with current `<lastmod>` timestamps:
+3. Every HTML document (`index.html`, topic hubs, and subpages) must link `assets/css/tokens.css` (or `../assets/css/tokens.css` for subpages) in `<head>` before local page stylesheets to guarantee token consistency.
+4. The hub must feature a prominent architectural navigation band linking to all subpages.
+5. Every subpage must feature an explicit `← Main Compendium` back-link pointing to `../<topic-name>.html` at the top of the viewport.
+6. Register every published hub and subpage in `sitemap.xml` with current `<lastmod>` timestamps:
    - Homepage: `priority: 1.0`
    - Topic Hubs: `priority: 0.9`
    - Topic Subpages: `priority: 0.8`
-6. Maintain topic-specific datasets and operational protocols in dedicated sub-guides where appropriate (e.g. [`topics/indonesia-car-selector/AGENTS.md`](./topics/indonesia-car-selector/AGENTS.md)).
+7. Maintain topic-specific datasets and operational protocols in dedicated sub-guides where appropriate (e.g. [`topics/indonesia-car-selector/AGENTS.md`](./topics/indonesia-car-selector/AGENTS.md)).
 
 ---
 
@@ -33,7 +35,8 @@ The publication must feel like a curated digital compendium: calm, intentional, 
 ### Visual Principles & Token Discipline
 - **Topic-Led Mental Model:** Establish a clear thesis and audience immediately. What should a visitor understand, calculate, or decide within the first 60 seconds?
 - **Restrained Palette Architecture:** Each topic uses a strict, deliberate palette: one background family, one surface elevation stack, one primary accent, one supporting accent, and semantic status colors only where essential (success, warning, danger).
-- **Surface Elevation over Pure Black:** Avoid raw `#000000` except for OLED deep-contrast modes or video letterboxing. Use rich obsidian, deep graphite, or layered slate for dark surfaces, and luminous slate-white or alabaster for light surfaces.
+- **Surface Elevation over Pure Black:** Avoid raw `#000000` text or backgrounds (except OLED deep-contrast modes or video letterboxing). Use `--text-primary: #0f172a` from `assets/css/tokens.css`, rich obsidian (`#0a0a0a`) / deep graphite (`#111726`) for dark surfaces, and luminous slate-white (`#f8fafc`) for light surfaces.
+- **Tokens Invariant:** Never declare ad-hoc hardcoded hex colors, arbitrary font sizes, or non-scale border radii in local stylesheets. All shared properties must be mapped to the CSS custom properties in `assets/css/tokens.css`.
 - **Single Elevation Strategy:** Declare depth once per container: use either a subtle hairline border (`1px solid var(--border-subtle)`) OR a soft ambient shadow (`box-shadow: 0 4px 20px -2px rgba(0,0,0,0.06)`). Never stack a heavy border on top of an aggressive drop shadow ("ghost card").
 - **Spacing Scale:** Adhere strictly to the 4px/8px modular rhythm:
   - `4px` (xs): Tight micro-gaps, chip internal padding, icon offsets.
@@ -119,6 +122,7 @@ Every interactive tool must be grounded in an explicit contract documented in co
 5. **Output & Plain-Language Takeaway:** Clear, defensible recommendation or scenario comparison accompanied by actionable guidance.
 6. **Caveats & Non-Advice Disclaimer:** Explicitly state if a tool is illustrative/educational and disclaim professional medical, financial, or legal advice where relevant.
 7. **Static Fallback:** If JavaScript fails or is disabled, the page must still present the underlying formula, default scenario table, key findings, and source references.
+8. **State Synchronization & Deep-Linking:** All interactive calculators and multi-parameter simulators must synchronize their input state to the browser URL (via `URLSearchParams` or hash anchors) using `history.replaceState`. This guarantees that researchers, clinicians, and analysts can bookmark, cite, and share specific calculation outcomes with exact fidelity.
 
 ---
 
