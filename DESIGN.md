@@ -39,12 +39,22 @@ typography:
     fontWeight: 700
     lineHeight: 1.25
     letterSpacing: "-0.02em"
+  title:
+    fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif"
+    fontSize: "1.15rem"
+    fontWeight: 600
+    lineHeight: 1.35
   body:
     fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif"
     fontSize: "0.95rem"
     fontWeight: 400
     lineHeight: 1.65
     letterSpacing: "normal"
+  label:
+    fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif"
+    fontSize: "0.78rem"
+    fontWeight: 500
+    letterSpacing: "0.04em"
   mono:
     fontFamily: "'JetBrains Mono', ui-monospace, monospace"
     fontSize: "0.82rem"
