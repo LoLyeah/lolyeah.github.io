@@ -5,13 +5,14 @@
    ========================================================================== */
 
 :root {
-    /* Palette Architecture - Maritime & Industrial Logistics */
-    --bg-canvas: #070d18;
-    --bg-surface: #0d1527;
-    --bg-surface-elevated: #131f38;
-    --bg-surface-subtle: #0f192e;
-    --border-subtle: #1e293b;
-    --border-hover: rgba(14, 165, 233, 0.45);
+    /* Palette Architecture - Option A: Obsidian & Titanium */
+    --bg-canvas: #090a0f;
+    --bg-surface: #12141c;
+    --bg-surface-elevated: #1e222d;
+    --bg-surface-subtle: #171a23;
+    --border-subtle: #1f232e;
+    --border-muted: #282e3c;
+    --border-hover: rgba(56, 189, 248, 0.45);
 
     /* Primary Accent: Ocean Cyan / Deep Maritime */
     --accent-primary: #0284c7;
@@ -80,10 +81,7 @@ html {
 
 body {
     background-color: var(--bg-canvas);
-    background-image:
-        radial-gradient(at 15% 15%, rgba(2, 132, 199, 0.08) 0px, transparent 60%),
-        radial-gradient(at 85% 20%, rgba(13, 148, 136, 0.06) 0px, transparent 55%),
-        radial-gradient(at 50% 85%, rgba(217, 119, 6, 0.04) 0px, transparent 65%);
+    background-image: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.035) 0%, transparent 60%);
     background-attachment: fixed;
     color: var(--text-secondary);
     font-family: var(--font-sans);
@@ -272,7 +270,7 @@ body.lang-en .id-only { display: none !important; }
 
 /* Touch Targets for pointer: coarse (Strict 44px ergonomics) */
 @media (pointer: coarse) {
-    button, .filter-chip, .tab-btn, .lang-toggle-btn, .nav-item-btn, .back-hub-btn, .arch-nav-link, .sim-preset-btn, .route-btn, input, select {
+    button, .filter-chip, .tab-btn, .lang-toggle-btn, .nav-item-btn, .back-hub-btn, .arch-nav-link, .sim-preset-btn, .route-btn, input:not([type="range"]), select {
         min-height: 44px;
         min-width: 44px;
     }
@@ -443,30 +441,98 @@ body.lang-en .id-only { display: none !important; }
 }
 
 /* ==========================================================================
-   TACTILE DUAL-CONTROL SCRUBBERS & PRESET CHIPS
+   TACTILE REFINED SLIDERS & PILL INPUT SCRUBBERS
    ========================================================================== */
-.sim-dual-control {
+.sim-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sim-control-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+.sim-control-label {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.sim-pill-input-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-muted);
+    border-radius: var(--radius-full);
+    padding: 3px 10px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--accent-bright);
+    transition: border-color var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out);
+}
+
+.sim-pill-input-box:focus-within {
+    border-color: var(--accent-bright);
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+.sim-pill-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #f8fafc;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: right;
+    padding: 0;
+    margin: 0;
+    width: 62px;
+    -moz-appearance: textfield;
+}
+
+.sim-pill-input::-webkit-outer-spin-button,
+.sim-pill-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.sim-pill-prefix,
+.sim-pill-suffix {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+    user-select: none;
 }
 
 .sim-slider-wrap {
-    flex: 1;
+    width: 100%;
     position: relative;
     display: flex;
     align-items: center;
+    padding: 10px 0;
+    touch-action: pan-y;
 }
 
 .sim-slider {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 6px;
+    height: 4px !important;
+    min-height: 4px !important;
+    max-height: 4px !important;
     border-radius: var(--radius-full);
-    background: #1e293b;
+    background: #1f232e;
     outline: none;
+    margin: 0;
+    padding: 0;
+    border: none;
     cursor: pointer;
     transition: background var(--motion-fast) var(--ease-out);
 }
@@ -475,12 +541,12 @@ body.lang-en .id-only { display: none !important; }
 .sim-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: var(--accent-bright);
-    border: 3px solid var(--bg-canvas);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+    border: 2px solid var(--bg-canvas);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
     cursor: grab;
     transition: transform var(--motion-fast) var(--ease-out), background-color var(--motion-fast) var(--ease-out);
 }
@@ -493,12 +559,12 @@ body.lang-en .id-only { display: none !important; }
 
 /* Firefox Range Thumb */
 .sim-slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: var(--accent-bright);
-    border: 3px solid var(--bg-canvas);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+    border: 2px solid var(--bg-canvas);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
     cursor: grab;
     transition: transform var(--motion-fast) var(--ease-out);
 }
@@ -507,26 +573,6 @@ body.lang-en .id-only { display: none !important; }
     cursor: grabbing;
     transform: scale(1.15);
     background: #ffffff;
-}
-
-.sim-num-input {
-    width: 105px;
-    flex-shrink: 0;
-    padding: 8px 10px;
-    background: var(--bg-surface-subtle);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    color: var(--text-primary);
-    font-family: var(--font-mono);
-    font-size: 0.88rem;
-    font-variant-numeric: tabular-nums;
-    text-align: right;
-    transition: border-color var(--motion-fast) var(--ease-out);
-}
-
-.sim-num-input:focus {
-    outline: 2px solid var(--accent-primary);
-    border-color: var(--accent-bright);
 }
 
 /* Quick Cargo Preset Chips */
@@ -621,7 +667,7 @@ body.lang-en .id-only { display: none !important; }
 .crossover-chart-wrap {
     width: 100%;
     position: relative;
-    background: rgba(7, 13, 24, 0.6);
+    background: #0d0f15;
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
     padding: 8px 12px 14px;
@@ -663,6 +709,20 @@ body.lang-en .id-only { display: none !important; }
 .legend-swatch.rail { background: #818cf8; }
 .legend-swatch.barge { background: #10b981; }
 
+.crossover-corridor-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    color: #38bdf8;
+}
+
 /* ==========================================================================
    STACKED COST BREAKDOWN BARS IN MODE CARDS
    ========================================================================== */
@@ -686,7 +746,7 @@ body.lang-en .id-only { display: none !important; }
 
 .stacked-bar-container {
     width: 100%;
-    height: 9px;
+    height: 8px;
     border-radius: var(--radius-full);
     background: rgba(255, 255, 255, 0.05);
     display: flex;
@@ -701,15 +761,15 @@ body.lang-en .id-only { display: none !important; }
 }
 
 .bar-linehaul {
-    background: #0284c7;
+    background: #38bdf8;
 }
 
 .bar-terminal {
-    background: #d97706;
+    background: #a78bfa;
 }
 
 .bar-holding {
-    background: #fbbf24;
+    background: #f59e0b;
 }
 
 .cost-dist-pills {
@@ -736,9 +796,197 @@ body.lang-en .id-only { display: none !important; }
     display: inline-block;
 }
 
-.pill-dot.linehaul { background: #0284c7; }
-.pill-dot.terminal { background: #d97706; }
-.pill-dot.holding { background: #fbbf24; }
+.pill-dot.linehaul { background: #38bdf8; }
+.pill-dot.terminal { background: #a78bfa; }
+.pill-dot.holding { background: #f59e0b; }
+
+/* ==========================================================================
+   EXECUTIVE VERDICT LEDGER (Option A)
+   ========================================================================== */
+.verdict-banner {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.verdict-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    flex-wrap: wrap;
+}
+
+.verdict-kicker {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #38bdf8;
+    margin-bottom: 4px;
+}
+
+.verdict-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.verdict-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    background: rgba(56, 189, 248, 0.1);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.verdict-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #38bdf8;
+}
+
+.verdict-ledger {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+}
+
+.verdict-col {
+    padding: 0 1.25rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+}
+
+.verdict-col:first-child {
+    padding-left: 0;
+}
+
+.verdict-col:last-child {
+    padding-right: 0;
+    border-right: none;
+}
+
+.verdict-col-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.verdict-col-title {
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.verdict-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+    align-self: flex-start;
+}
+
+.pill-water-win {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #34d399;
+}
+
+.pill-land-win {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
+}
+
+.verdict-col-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* ==========================================================================
+   MODE CARDS CRAFTSMANSHIP
+   ========================================================================== */
+.mode-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mode-icon-box {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #38bdf8;
+    flex-shrink: 0;
+}
+
+.mode-result-card.highlight .mode-icon-box {
+    background: rgba(56, 189, 248, 0.15);
+    border-color: rgba(56, 189, 248, 0.3);
+    color: #38bdf8;
+}
+
+.mode-rank-badge {
+    position: absolute;
+    top: -10px;
+    right: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    background: #0284c7;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.04em;
+}
+
+.mode-rank-badge .rank-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #ffffff;
+}
 
 /* ==========================================================================
    NAUTICAL FEASIBILITY BADGES
@@ -811,8 +1059,20 @@ body.lang-en .id-only { display: none !important; }
         gap: 1.25rem;
     }
 
-    .verdict-grid {
+    .verdict-ledger {
         grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .verdict-col {
+        padding: 0 0 1.25rem 0;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .verdict-col:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
     }
 
     .stat-strip {
@@ -860,17 +1120,6 @@ body.lang-en .id-only { display: none !important; }
 
     .stat-strip {
         grid-template-columns: 1fr;
-    }
-
-    .sim-dual-control {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-    }
-
-    .sim-num-input {
-        width: 100%;
-        text-align: left;
     }
 
     .crossover-section {

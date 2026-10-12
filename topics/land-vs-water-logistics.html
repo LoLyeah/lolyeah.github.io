@@ -89,8 +89,9 @@
             background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
-            padding: clamp(1.25rem, 2.5vw, 2rem);
+            padding: clamp(1.25rem, 2.5vw, 1.75rem);
             margin-bottom: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         }
 
         .verdict-header {
@@ -98,9 +99,21 @@
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
             border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+        }
+
+        .verdict-kicker {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #38bdf8;
+            margin-bottom: 4px;
         }
 
         .verdict-title {
@@ -108,58 +121,99 @@
             font-size: 1.25rem;
             font-weight: 700;
             color: var(--text-primary);
+            margin: 0;
         }
 
         .verdict-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             font-family: var(--font-mono);
-            font-size: 0.8rem;
+            font-size: 0.74rem;
             font-weight: 600;
             padding: 4px 10px;
-            border-radius: var(--radius-sm);
-            background: rgba(14, 165, 233, 0.15);
-            color: var(--accent-bright);
-            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: var(--radius-full);
+            background: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.25);
         }
 
-        .verdict-grid {
+        .verdict-badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #38bdf8;
+        }
+
+        .verdict-ledger {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.25rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
         }
 
-        .verdict-item {
-            background: var(--bg-surface-subtle);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: 1rem 1.25rem;
-        }
-
-        .verdict-item-label {
-            font-weight: 700;
-            font-size: 0.92rem;
-            color: var(--text-primary);
-            margin-bottom: 0.35rem;
+        .verdict-col {
+            padding: 0 1.25rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
             display: flex;
+            flex-direction: column;
+        }
+
+        .verdict-col:first-child {
+            padding-left: 0;
+        }
+
+        .verdict-col:last-child {
+            padding-right: 0;
+            border-right: none;
+        }
+
+        .verdict-col-kicker {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .verdict-col-title {
+            font-family: var(--font-display);
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .verdict-pill {
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-        }
-
-        .verdict-status-true {
-            color: var(--status-success);
+            gap: 5px;
             font-family: var(--font-mono);
-            font-size: 0.8rem;
+            font-size: 0.74rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+            align-self: flex-start;
         }
 
-        .verdict-status-false {
-            color: var(--accent-amber-bright);
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
+        .pill-water-win {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
         }
 
-        .verdict-item-desc {
-            font-size: 0.86rem;
+        .pill-land-win {
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+        }
+
+        .verdict-col-desc {
+            font-size: 0.82rem;
             color: var(--text-muted);
             line-height: 1.55;
+            margin: 0;
         }
 
         /* Stat Strip */
@@ -524,69 +578,92 @@
                 Benarkah logistik darat jauh lebih tidak efisien dibandingkan logistik berbasis air? Dari sisi termodinamika energi murni, memindahkan kargo via air 10 hingga 50 kali lebih hemat energi dibanding truk dan 4 kali lebih hemat dibanding kereta api. Namun di rantai pasok nyata, logistik air sering kali kalah. Kompendium ini membedah hukum fisika melawan friksi ekonomi.
             </p>
 
-            <!-- Forensic Verdict Module -->
+            <!-- Executive Verdict Ledger -->
             <div class="verdict-banner" id="verdict">
                 <div class="verdict-header">
-                    <span class="verdict-title en-only">The Direct Verdict: Is It True?</span>
-                    <span class="verdict-title id-only">Kesimpulan Lugas: Apakah Benar?</span>
-                    <span class="verdict-badge en-only">MULTI-DIMENSIONAL VERDICT</span>
-                    <span class="verdict-badge id-only">KESIMPULAN MULTIDIMENSI</span>
+                    <div class="verdict-title-group">
+                        <span class="verdict-kicker en-only">SYNTHESIS &bull; EMPIRICAL VERDICT</span>
+                        <span class="verdict-kicker id-only">SINTESIS &bull; KESIMPULAN EMPIRIS</span>
+                        <h2 class="verdict-title en-only">Is Land Logistics Inefficient Compared to Water?</h2>
+                        <h2 class="verdict-title id-only">Apakah Logistik Darat Tidak Efisien Dibanding Air?</h2>
+                    </div>
+                    <div class="verdict-badge">
+                        <span class="verdict-badge-dot"></span>
+                        <span class="en-only">PHYSICS VS. ECONOMICS</span>
+                        <span class="id-only">FISIKA VS. EKONOMI</span>
+                    </div>
                 </div>
-                <div class="verdict-grid">
-                    <div class="verdict-item">
-                        <div class="verdict-item-label">
-                            <span class="en-only">Energy &amp; Emissions</span>
-                            <span class="id-only">Energi &amp; Emisi Karbon</span>
-                            <span class="verdict-status-true">TRUE (10x–50x)</span>
+                <div class="verdict-ledger">
+                    <!-- Dimension 1: Energy -->
+                    <div class="verdict-col">
+                        <div class="verdict-col-kicker en-only">PHYSICAL LAW</div>
+                        <div class="verdict-col-kicker id-only">HUKUM FISIKA</div>
+                        <div class="verdict-col-title en-only">Energy &amp; Emissions</div>
+                        <div class="verdict-col-title id-only">Energi &amp; Emisi</div>
+                        <div class="verdict-pill pill-water-win">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Water Wins &bull; 50&times;</span>
                         </div>
-                        <div class="verdict-item-desc en-only">
-                            Archimedes' buoyancy eliminates mechanical rolling friction. Moving 1 ton of freight by container ship burns ~15–25 kJ/km, compared to ~800–1,400 kJ/km for a diesel semi-truck.
-                        </div>
-                        <div class="verdict-item-desc id-only">
-                            Gaya apung Archimedes meniadakan friksi mekanis vertikal. Mengangkut 1 ton muatan dengan kapal kontainer hanya membakar ~15–25 kJ/km, berbanding ~800–1.400 kJ/km pada truk diesel berat.
-                        </div>
+                        <p class="verdict-col-desc en-only">
+                            Archimedes' buoyancy eliminates vertical rolling friction. ULCV ships burn ~15–25 kJ/t-km versus ~1,100 kJ/t-km for heavy highway diesel trucks.
+                        </p>
+                        <p class="verdict-col-desc id-only">
+                            Gaya apung Archimedes meniadakan friksi gelinding vertikal. Kapal ULCV hanya membakar ~15–25 kJ/t-km vs ~1.100 kJ/t-km pada truk diesel berat.
+                        </p>
                     </div>
 
-                    <div class="verdict-item">
-                        <div class="verdict-item-label">
-                            <span class="en-only">Line-Haul Monetary Cost</span>
-                            <span class="id-only">Biaya Angkut Jarak Jauh</span>
-                            <span class="verdict-status-true">TRUE (~$0.01/t-km)</span>
+                    <!-- Dimension 2: Monetary Cost -->
+                    <div class="verdict-col">
+                        <div class="verdict-col-kicker en-only">LINE-HAUL SCALE</div>
+                        <div class="verdict-col-kicker id-only">SKALA LINTAS</div>
+                        <div class="verdict-col-title en-only">Line-Haul Freight Cost</div>
+                        <div class="verdict-col-title id-only">Biaya Angkut Lintasan</div>
+                        <div class="verdict-pill pill-water-win">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Water Wins &bull; ~$0.01/t-km</span>
                         </div>
-                        <div class="verdict-item-desc en-only">
-                            Ultra-large container vessels (ULCVs) operate at $0.008–$0.015 per ton-km, compared to $0.035–$0.055 for unit rail and $0.15–$0.25 for long-haul highway trucks.
-                        </div>
-                        <div class="verdict-item-desc id-only">
-                            Kapal kontainer ultra-besar (ULCV) beroperasi di kisaran $0,008–$0,015 per ton-km, jauh di bawah kereta barang ($0,035–$0,055) dan truk jalan raya ($0,15–$0,25).
-                        </div>
+                        <p class="verdict-col-desc en-only">
+                            Gigantic vessel scale yields line-haul rates of $0.008–$0.015/t-km, beating unit rail ($0.040) and highway trucking ($0.180).
+                        </p>
+                        <p class="verdict-col-desc id-only">
+                            Skala raksasa menekan tarif lintasan ke $0,008–$0,015/t-km, mengalahkan kereta barang ($0,040) dan truk jalan raya ($0,180).
+                        </p>
                     </div>
 
-                    <div class="verdict-item">
-                        <div class="verdict-item-label">
-                            <span class="en-only">Speed &amp; Inventory Carrying</span>
-                            <span class="id-only">Kecepatan &amp; Biaya Persediaan</span>
-                            <span class="verdict-status-false">FALSE (Water is Slow)</span>
+                    <!-- Dimension 3: Speed & Carrying Cost -->
+                    <div class="verdict-col">
+                        <div class="verdict-col-kicker en-only">INVENTORY VELOCITY</div>
+                        <div class="verdict-col-kicker id-only">KECEPATAN MODAL</div>
+                        <div class="verdict-col-title en-only">Speed &amp; Carrying Cost</div>
+                        <div class="verdict-col-title id-only">Kecepatan &amp; Bunga Modal</div>
+                        <div class="verdict-pill pill-land-win">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Land Wins &bull; 5&times; Faster</span>
                         </div>
-                        <div class="verdict-item-desc en-only">
-                            Ships sail at 14–20 knots (26–37 km/h) with multi-day port dwell. For high-value goods ($20k+/ton), the working capital interest and depreciation eclipse fuel cost savings.
-                        </div>
-                        <div class="verdict-item-desc id-only">
-                            Kapal berlayar 14–20 knot (26–37 km/jam) plus waktu sandar pelabuhan berhari-hari. Untuk barang bernilai tinggi ($20.000+/ton), bunga modal dan depresiasi menenggelamkan hemat bahan bakar.
-                        </div>
+                        <p class="verdict-col-desc en-only">
+                            Waterways are slow (14–20 kts) with 3+ day port dwell. For high-value cargo ($20k+/t), inventory financing eclipses maritime fuel savings.
+                        </p>
+                        <p class="verdict-col-desc id-only">
+                            Jalur laut lambat (14–20 knot) plus 3+ hari sandar pelabuhan. Untuk kargo mahal ($20rb+/t), bunga modal menenggelamkan hemat solar.
+                        </p>
                     </div>
 
-                    <div class="verdict-item">
-                        <div class="verdict-item-label">
-                            <span class="en-only">Door-to-Door Accessibility</span>
-                            <span class="id-only">Aksesibilitas Titik-ke-Titik</span>
-                            <span class="verdict-status-false">FALSE (High Drayage)</span>
+                    <!-- Dimension 4: Accessibility -->
+                    <div class="verdict-col">
+                        <div class="verdict-col-kicker en-only">LAST-MILE FRICTION</div>
+                        <div class="verdict-col-kicker id-only">FRIKSI TITIK AKHIR</div>
+                        <div class="verdict-col-title en-only">Door-to-Door Drayage</div>
+                        <div class="verdict-col-title id-only">Akses Titik-ke-Titik</div>
+                        <div class="verdict-pill pill-land-win">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Land Wins &bull; Zero Drayage</span>
                         </div>
-                        <div class="verdict-item-desc en-only">
-                            Waterways do not reach factory loading docks. Cranes, terminal handling (THC), and first/last-mile trucking add $300–$600 per container in fixed intermodal penalty.
-                        </div>
-                        <div class="verdict-item-desc id-only">
-                            Jalur air tidak mencapai dok pabrik. Biaya crane, bongkar muat (THC), dan angkutan truk first/last-mile menambah penalti tetap $300–$600 per kontainer.
-                        </div>
+                        <p class="verdict-col-desc en-only">
+                            Ports require terminal handling (THC) and drayage trucks ($300–$600/box). Trucks load directly at factory docks without intermodal transfer.
+                        </p>
+                        <p class="verdict-col-desc id-only">
+                            Pelabuhan memungut THC dan truk first/last-mile ($300–$600/kontainer). Truk memuat langsung di dok pabrik tanpa bongkar muat ganda.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -793,20 +870,23 @@
                     </button>
                 </div>
 
-                <!-- Input Controls Grid with Fluid Dual-Control Scrubbers -->
+                <!-- Input Controls Grid with Fluid Inline Scrubbers -->
                 <div class="sim-controls-grid">
                     <!-- Cargo Value -->
                     <div class="sim-form-group">
-                        <label class="sim-label" for="simCargoValInput">
-                            <span class="en-only">Cargo Value per Tonne</span>
-                            <span class="id-only">Nilai Komoditas Kargo per Ton</span>
-                            <span class="metric-badge" id="cargoValueDisplay">$3,000 / t</span>
-                        </label>
-                        <div class="sim-dual-control">
-                            <div class="sim-slider-wrap">
-                                <input type="range" class="sim-slider" id="simCargoValSlider" min="50" max="30000" step="50" value="3000" aria-label="Cargo Value Slider" oninput="syncCargoVal(this.value, 'slider');">
+                        <div class="sim-control-header">
+                            <label class="sim-control-label" for="simCargoValInput">
+                                <span class="en-only">Cargo Value per Tonne</span>
+                                <span class="id-only">Nilai Komoditas Kargo per Ton</span>
+                            </label>
+                            <div class="sim-pill-input-box">
+                                <span class="sim-pill-prefix">$</span>
+                                <input type="number" id="simCargoValInput" class="sim-pill-input" min="10" max="100000" step="50" value="3000" aria-label="Cargo Value ($/t)" oninput="syncCargoVal(this.value, 'input');">
+                                <span class="sim-pill-suffix">/ t</span>
                             </div>
-                            <input type="number" id="simCargoValInput" class="sim-num-input" min="10" max="100000" step="50" value="3000" aria-label="Cargo Value ($/t)" oninput="syncCargoVal(this.value, 'input');">
+                        </div>
+                        <div class="sim-slider-wrap">
+                            <input type="range" class="sim-slider" id="simCargoValSlider" min="50" max="30000" step="50" value="3000" aria-label="Cargo Value Slider" oninput="syncCargoVal(this.value, 'slider');">
                         </div>
                         <div class="cargo-chips-row">
                             <button type="button" class="cargo-chip" id="chip-150" onclick="setCargoTier(150);">
@@ -826,46 +906,52 @@
 
                     <!-- Corridor Distance -->
                     <div class="sim-form-group">
-                        <label class="sim-label" for="simDistanceInput">
-                            <span class="en-only">Corridor Distance (km)</span>
-                            <span class="id-only">Jarak Koridor (km)</span>
-                            <span class="metric-badge" id="distanceValDisplay">10,500 km</span>
-                        </label>
-                        <div class="sim-dual-control">
-                            <div class="sim-slider-wrap">
-                                <input type="range" class="sim-slider" id="simDistanceSlider" min="50" max="25000" step="50" value="10500" aria-label="Distance Slider" oninput="syncDistance(this.value, 'slider');">
+                        <div class="sim-control-header">
+                            <label class="sim-control-label" for="simDistanceInput">
+                                <span class="en-only">Corridor Distance</span>
+                                <span class="id-only">Jarak Koridor</span>
+                            </label>
+                            <div class="sim-pill-input-box">
+                                <input type="number" id="simDistanceInput" class="sim-pill-input" min="10" max="40000" step="50" value="10500" aria-label="Corridor Distance (km)" oninput="syncDistance(this.value, 'input');">
+                                <span class="sim-pill-suffix">km</span>
                             </div>
-                            <input type="number" id="simDistanceInput" class="sim-num-input" min="10" max="40000" step="50" value="10500" aria-label="Distance (km)" oninput="syncDistance(this.value, 'input');">
+                        </div>
+                        <div class="sim-slider-wrap">
+                            <input type="range" class="sim-slider" id="simDistanceSlider" min="50" max="25000" step="50" value="10500" aria-label="Distance Slider" oninput="syncDistance(this.value, 'slider');">
                         </div>
                     </div>
 
                     <!-- Shipment Mass -->
                     <div class="sim-form-group">
-                        <label class="sim-label" for="simWeightInput">
-                            <span class="en-only">Shipment Mass (Tonnes)</span>
-                            <span class="id-only">Massa Pengiriman (Ton)</span>
-                            <span class="metric-badge" id="weightValDisplay">500 t</span>
-                        </label>
-                        <div class="sim-dual-control">
-                            <div class="sim-slider-wrap">
-                                <input type="range" class="sim-slider" id="simWeightSlider" min="10" max="25000" step="10" value="500" aria-label="Mass Slider" oninput="syncWeight(this.value, 'slider');">
+                        <div class="sim-control-header">
+                            <label class="sim-control-label" for="simWeightInput">
+                                <span class="en-only">Shipment Mass</span>
+                                <span class="id-only">Massa Pengiriman</span>
+                            </label>
+                            <div class="sim-pill-input-box">
+                                <input type="number" id="simWeightInput" class="sim-pill-input" min="10" max="100000" step="10" value="500" aria-label="Shipment Mass (Tonnes)" oninput="syncWeight(this.value, 'input');">
+                                <span class="sim-pill-suffix">tonnes</span>
                             </div>
-                            <input type="number" id="simWeightInput" class="sim-num-input" min="1" max="100000" step="10" value="500" aria-label="Mass (Tonnes)" oninput="syncWeight(this.value, 'input');">
+                        </div>
+                        <div class="sim-slider-wrap">
+                            <input type="range" class="sim-slider" id="simWeightSlider" min="10" max="25000" step="10" value="500" aria-label="Mass Slider" oninput="syncWeight(this.value, 'slider');">
                         </div>
                     </div>
 
                     <!-- Cost of Capital / WACC -->
                     <div class="sim-form-group">
-                        <label class="sim-label" for="simWaccInput">
-                            <span class="en-only">Cost of Capital / WACC (% / yr)</span>
-                            <span class="id-only">Biaya Bunga Modal (% / thn)</span>
-                            <span class="metric-badge" id="waccValDisplay">10.0%</span>
-                        </label>
-                        <div class="sim-dual-control">
-                            <div class="sim-slider-wrap">
-                                <input type="range" class="sim-slider" id="simWaccSlider" min="0" max="30" step="0.5" value="10.0" aria-label="WACC Slider" oninput="syncWacc(this.value, 'slider');">
+                        <div class="sim-control-header">
+                            <label class="sim-control-label" for="simWaccInput">
+                                <span class="en-only">Capital Cost (WACC)</span>
+                                <span class="id-only">Biaya Modal (WACC)</span>
+                            </label>
+                            <div class="sim-pill-input-box">
+                                <input type="number" id="simWaccInput" class="sim-pill-input" min="0" max="50" step="0.5" value="10.0" aria-label="WACC (%)" oninput="syncWacc(this.value, 'input');">
+                                <span class="sim-pill-suffix">% / yr</span>
                             </div>
-                            <input type="number" id="simWaccInput" class="sim-num-input" min="0" max="50" step="0.5" value="10.0" aria-label="WACC (%)" oninput="syncWacc(this.value, 'input');">
+                        </div>
+                        <div class="sim-slider-wrap">
+                            <input type="range" class="sim-slider" id="simWaccSlider" min="0" max="30" step="0.5" value="10.0" aria-label="WACC Slider" oninput="syncWacc(this.value, 'slider');">
                         </div>
                     </div>
                 </div>
@@ -879,9 +965,12 @@
                             <p class="crossover-subtitle en-only">Landed cost per tonne ($/t) as distance expands. Watch curves intersect as cargo value and capital costs shift.</p>
                             <p class="crossover-subtitle id-only">Biaya landed per ton ($/t) seiring bertambahnya jarak. Perhatikan titik temu bergeser saat nilai kargo dan bunga modal berubah.</p>
                         </div>
-                        <div class="crossover-badge" id="crossoverPill">
-                            <span class="en-only">Break-Even Crossover: <strong id="crossoverPointVal">342 km</strong> (Truck &harr; Ocean)</span>
-                            <span class="id-only">Titik Impas Crossover: <strong id="crossoverPointValId">342 km</strong> (Truk &harr; Kapal)</span>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                            <div class="crossover-badge" id="crossoverPill">
+                                <span class="en-only">Break-Even Crossover: <strong id="crossoverPointVal">342 km</strong> (Truck &harr; Ocean)</span>
+                                <span class="id-only">Titik Impas Crossover: <strong id="crossoverPointValId">342 km</strong> (Truk &harr; Kapal)</span>
+                            </div>
+                            <div id="crossoverCorridorBadge" class="crossover-corridor-pill" style="display: none;"></div>
                         </div>
                     </div>
                     <div class="crossover-chart-wrap">
@@ -900,12 +989,17 @@
                 <div class="results-grid" id="resultsGrid">
                     <!-- Maritime Result Card -->
                     <div class="mode-result-card highlight" id="card-ocean">
+                        <div class="mode-rank-badge" id="ocean-rank-badge" style="display: none;"><span class="rank-dot"></span> <span class="en-only">#1 LOWEST COST</span><span class="id-only">#1 BIAYA TERENDAH</span></div>
                         <div class="mode-header">
-                            <span class="mode-title">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20a2.4 2.4 0 0 0 2 1 2.4 2.4 0 0 0 2-1 2.4 2.4 0 0 1 2-1 2.4 2.4 0 0 1 2 1 2.4 2.4 0 0 0 2 1 2.4 2.4 0 0 0 2-1 2.4 2.4 0 0 1 2-1 2.4 2.4 0 0 1 2 1 2.4 2.4 0 0 0 2 1 2.4 2.4 0 0 0 2-1"></path><path d="M4 18l2-8h12l2 8"></path><path d="M12 10V4"></path><path d="M10 7h4"></path></svg>
-                                <span class="en-only">Maritime ULCV</span>
-                                <span class="id-only">Kapal Laut Kontainer</span>
-                            </span>
+                            <div class="mode-title-wrap">
+                                <div class="mode-icon-box">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20a2.4 2.4 0 0 0 2 1 2.4 2.4 0 0 0 2-1 2.4 2.4 0 0 1 2-1 2.4 2.4 0 0 1 2 1 2.4 2.4 0 0 0 2 1 2.4 2.4 0 0 0 2-1 2.4 2.4 0 0 1 2-1 2.4 2.4 0 0 1 2 1 2.4 2.4 0 0 0 2 1 2.4 2.4 0 0 0 2-1"></path><path d="M4 18l2-8h12l2 8"></path><path d="M12 10V4"></path><path d="M10 7h4"></path></svg>
+                                </div>
+                                <span class="mode-title">
+                                    <span class="en-only">Maritime ULCV</span>
+                                    <span class="id-only">Kapal Laut Kontainer</span>
+                                </span>
+                            </div>
                             <span class="metric-badge" id="ocean-speed-badge">16 kts (30 km/h)</span>
                         </div>
                         <div class="mode-cost-main" id="ocean-total-cost">$82,450</div>
@@ -956,12 +1050,17 @@
 
                     <!-- Inland Barge Result Card -->
                     <div class="mode-result-card" id="card-barge">
+                        <div class="mode-rank-badge" id="barge-rank-badge" style="display: none;"><span class="rank-dot"></span> <span class="en-only">#1 LOWEST COST</span><span class="id-only">#1 BIAYA TERENDAH</span></div>
                         <div class="mode-header">
-                            <span class="mode-title">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 17h20M4 17l2-5h12l2 5M12 12V6M9 9h6"></path></svg>
-                                <span class="en-only">Inland River Barge</span>
-                                <span class="id-only">Tongkang Sungai / Kanal</span>
-                            </span>
+                            <div class="mode-title-wrap">
+                                <div class="mode-icon-box">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 17h20M4 17l2-5h12l2 5M12 12V6M9 9h6"></path></svg>
+                                </div>
+                                <span class="mode-title">
+                                    <span class="en-only">Inland River Barge</span>
+                                    <span class="id-only">Tongkang Sungai / Kanal</span>
+                                </span>
+                            </div>
                             <span class="metric-badge" id="barge-speed-badge">8 kts (14 km/h)</span>
                         </div>
                         <div class="mode-cost-main" id="barge-total-cost">$0</div>
@@ -1019,12 +1118,17 @@
 
                     <!-- Rail Result Card -->
                     <div class="mode-result-card" id="card-rail">
+                        <div class="mode-rank-badge" id="rail-rank-badge" style="display: none;"><span class="rank-dot"></span> <span class="en-only">#1 LOWEST COST</span><span class="id-only">#1 BIAYA TERENDAH</span></div>
                         <div class="mode-header">
-                            <span class="mode-title">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="16" rx="2"></rect><path d="M4 11h16"></path><path d="M12 3v8"></path><path d="M8 19l-3 3"></path><path d="M16 19l3 3"></path></svg>
-                                <span class="en-only">Freight Rail (Unit Train)</span>
-                                <span class="id-only">Kereta Api Barang</span>
-                            </span>
+                            <div class="mode-title-wrap">
+                                <div class="mode-icon-box">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="16" rx="2"></rect><path d="M4 11h16"></path><path d="M12 3v8"></path><path d="M8 19l-3 3"></path><path d="M16 19l3 3"></path></svg>
+                                </div>
+                                <span class="mode-title">
+                                    <span class="en-only">Freight Rail (Unit Train)</span>
+                                    <span class="id-only">Kereta Api Barang</span>
+                                </span>
+                            </div>
                             <span class="metric-badge" id="rail-speed-badge">45 km/h</span>
                         </div>
                         <div class="mode-cost-main" id="rail-total-cost">$238,100</div>
@@ -1075,12 +1179,17 @@
 
                     <!-- Heavy Truck Result Card -->
                     <div class="mode-result-card" id="card-truck">
+                        <div class="mode-rank-badge" id="truck-rank-badge" style="display: none;"><span class="rank-dot"></span> <span class="en-only">#1 LOWEST COST</span><span class="id-only">#1 BIAYA TERENDAH</span></div>
                         <div class="mode-header">
-                            <span class="mode-title">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1z"></path><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                                <span class="en-only">Heavy Road Semi-Truck</span>
-                                <span class="id-only">Truk Tronton Jalan Raya</span>
-                            </span>
+                            <div class="mode-title-wrap">
+                                <div class="mode-icon-box">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1z"></path><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                                </div>
+                                <span class="mode-title">
+                                    <span class="en-only">Heavy Road Semi-Truck</span>
+                                    <span class="id-only">Truk Tronton Jalan Raya</span>
+                                </span>
+                            </div>
                             <span class="metric-badge" id="truck-speed-badge">75 km/h</span>
                         </div>
                         <div class="mode-cost-main" id="truck-total-cost">$948,000</div>
@@ -1295,7 +1404,7 @@
             const max = parseFloat(slider.max) || 100;
             const val = parseFloat(slider.value) || 0;
             const pct = Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100));
-            slider.style.background = `linear-gradient(to right, #0284c7 0%, #38bdf8 ${pct}%, #1e293b ${pct}%)`;
+            slider.style.background = `linear-gradient(to right, #0284c7 0%, #38bdf8 ${pct}%, #1f232e ${pct}%, #1f232e 100%)`;
         }
 
         function setCargoTier(val) {
@@ -1465,7 +1574,9 @@
             const svg = document.getElementById('crossoverSvg');
             if (!svg) return;
 
+            const isId = document.body.classList.contains('lang-id');
             const r = wacc;
+
             // Cost per Ton functions: F + S * x
             // Ocean: rate 0.011, speed 30, dwell 72h, handling $29/t
             const F_ocean = 29 + (valuePerTon * (r / 365) * 3);
@@ -1489,7 +1600,7 @@
                 crossoverX = (F_ocean - F_truck) / (S_truck - S_ocean);
             }
 
-            // Update Crossover Pill
+            // Update Crossover Pill in Header
             const pillEn = document.getElementById('crossoverPointVal');
             const pillId = document.getElementById('crossoverPointValId');
             if (crossoverX > 0 && crossoverX < 50000) {
@@ -1498,10 +1609,30 @@
                 if (pillId) pillId.textContent = roundedX;
             } else if (crossoverX <= 0) {
                 if (pillEn) pillEn.textContent = '0 km (Ocean Cheaper Everywhere)';
-                if (pillId) pillId.textContent = '0 km (Kapal Laut Lebih Murah di Semua Jarak)';
+                if (pillId) pillId.textContent = '0 km (Laut Lebih Murah di Semua Jarak)';
             } else {
-                if (pillEn) pillEn.textContent = 'None (Truck Dominates due to High Cargo Value)';
-                if (pillId) pillId.textContent = 'Tidak Ada (Truk Menang Karena Nilai Kargo Tinggi)';
+                if (pillEn) pillEn.textContent = 'None (Truck Dominates)';
+                if (pillId) pillId.textContent = 'Tidak Ada (Truk Menang)';
+            }
+
+            // Focused Regional Decision Window (0 - 2,000 km)
+            let maxVisibleDist = 2000;
+            if (crossoverX > 600) {
+                maxVisibleDist = Math.min(Math.ceil((crossoverX * 2.2) / 500) * 500, 3500);
+            }
+
+            // Update Selected Corridor Pill (if dist > maxVisibleDist)
+            const corridorBadge = document.getElementById('crossoverCorridorBadge');
+            if (corridorBadge) {
+                if (dist > maxVisibleDist) {
+                    const oceanSave = (F_truck + S_truck * dist) - (F_ocean + S_ocean * dist);
+                    corridorBadge.style.display = 'inline-flex';
+                    corridorBadge.innerHTML = isId ?
+                        `Koridor: <strong>${Math.round(dist).toLocaleString()} km</strong> &bull; Kapal Hemat $${Math.round(oceanSave).toLocaleString()}/t &rarr;` :
+                        `Corridor: <strong>${Math.round(dist).toLocaleString()} km</strong> &bull; Ocean Saves $${Math.round(oceanSave).toLocaleString()}/t &rarr;`;
+                } else {
+                    corridorBadge.style.display = 'none';
+                }
             }
 
             // SVG Geometry Dimensions
@@ -1514,45 +1645,47 @@
             const plotW = svgWidth - padLeft - padRight;
             const plotH = svgHeight - padTop - padBottom;
 
-            // Compute Domain & Range
-            const maxVisibleDist = Math.max(Math.min(dist * 1.35, 25000), Math.max(crossoverX * 1.6, 1200));
-            // Sample Y max across modes
-            const testDists = [0, maxVisibleDist * 0.5, maxVisibleDist];
-            let maxCost = 50;
-            testDists.forEach(x => {
-                const cOcean = F_ocean + S_ocean * x;
-                const cTruck = F_truck + S_truck * Math.min(x, 4000);
-                const cRail = F_rail + S_rail * x;
-                maxCost = Math.max(maxCost, cOcean, cTruck, cRail);
-            });
-            maxCost = Math.ceil((maxCost * 1.15) / 50) * 50;
+            // Compute Y Max at maxVisibleDist without artificial flattening
+            const costTruckEnd = F_truck + S_truck * maxVisibleDist;
+            let maxCost = Math.ceil(costTruckEnd / 50) * 50;
+            if (maxCost < 100) maxCost = 100;
 
             const scaleX = x => padLeft + (Math.max(0, Math.min(x, maxVisibleDist)) / maxVisibleDist) * plotW;
             const scaleY = y => padTop + plotH - (Math.max(0, Math.min(y, maxCost)) / maxCost) * plotH;
 
-            // Build SVG Inner Elements
-            let markup = '';
+            // Build SVG Defs & ClipPath
+            let markup = `
+                <defs>
+                    <clipPath id="chartClip">
+                        <rect x="${padLeft}" y="${padTop}" width="${plotW}" height="${plotH}" />
+                    </clipPath>
+                    <linearGradient id="oceanGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.12" />
+                        <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
+                    </linearGradient>
+                </defs>
+            `;
 
             // Gridlines & Axis Ticks
             const yTicks = 4;
             for (let i = 0; i <= yTicks; i++) {
                 const tickVal = Math.round((maxCost / yTicks) * i);
                 const yPos = scaleY(tickVal);
-                markup += `<line x1="${padLeft}" y1="${yPos}" x2="${padLeft + plotW}" y2="${yPos}" stroke="#1e293b" stroke-dasharray="3 3" />`;
-                markup += `<text x="${padLeft - 8}" y="${yPos + 4}" fill="#9aa9bf" font-size="10" font-family="var(--font-mono)" text-anchor="end">$${tickVal}</text>`;
+                markup += `<line x1="${padLeft}" y1="${yPos}" x2="${padLeft + plotW}" y2="${yPos}" stroke="#1f232e" stroke-dasharray="3 3" />`;
+                markup += `<text x="${padLeft - 8}" y="${yPos + 4}" fill="#64748b" font-size="10" font-family="var(--font-mono)" text-anchor="end">$${tickVal}</text>`;
             }
 
             const xTicks = 4;
             for (let i = 0; i <= xTicks; i++) {
                 const tickDist = Math.round((maxVisibleDist / xTicks) * i);
                 const xPos = scaleX(tickDist);
-                markup += `<line x1="${xPos}" y1="${padTop}" x2="${xPos}" y2="${padTop + plotH}" stroke="#1e293b" stroke-dasharray="3 3" />`;
-                markup += `<text x="${xPos}" y="${padTop + plotH + 18}" fill="#9aa9bf" font-size="10" font-family="var(--font-mono)" text-anchor="middle">${tickDist.toLocaleString()} km</text>`;
+                markup += `<line x1="${xPos}" y1="${padTop}" x2="${xPos}" y2="${padTop + plotH}" stroke="#1f232e" stroke-dasharray="3 3" />`;
+                markup += `<text x="${xPos}" y="${padTop + plotH + 18}" fill="#64748b" font-size="10" font-family="var(--font-mono)" text-anchor="middle">${tickDist.toLocaleString()} km</text>`;
             }
 
             // Curve Generator Helper
             function makePath(fnF, fnS, maxLimit = maxVisibleDist) {
-                const steps = 24;
+                const steps = 30;
                 let dStr = '';
                 const endX = Math.min(maxVisibleDist, maxLimit);
                 for (let s = 0; s <= steps; s++) {
@@ -1565,34 +1698,42 @@
                 return dStr;
             }
 
+            // Curve Area Fill under Ocean
+            const oceanPath = makePath(F_ocean, S_ocean);
+            const x0 = scaleX(0).toFixed(1);
+            const xEnd = scaleX(maxVisibleDist).toFixed(1);
+            const yBase = (padTop + plotH).toFixed(1);
+            markup += `<path d="${oceanPath} L ${xEnd} ${yBase} L ${x0} ${yBase} Z" fill="url(#oceanGradient)" clip-path="url(#chartClip)" />`;
+
             // 1. Inland Barge Curve (emerald)
-            markup += `<path d="${makePath(F_barge, S_barge, 2500)}" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" opacity="0.8" />`;
+            markup += `<path d="${makePath(F_barge, S_barge, 1500)}" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" opacity="0.85" clip-path="url(#chartClip)" />`;
 
             // 2. Freight Rail Curve (indigo dashed)
-            markup += `<path d="${makePath(F_rail, S_rail)}" fill="none" stroke="#818cf8" stroke-width="2.2" stroke-dasharray="5 3" stroke-linecap="round" />`;
+            markup += `<path d="${makePath(F_rail, S_rail)}" fill="none" stroke="#818cf8" stroke-width="2.2" stroke-dasharray="5 3" stroke-linecap="round" clip-path="url(#chartClip)" />`;
 
-            // 3. Maritime Ocean Curve (cyan glow)
-            markup += `<path d="${makePath(F_ocean, S_ocean)}" fill="none" stroke="#38bdf8" stroke-width="2.6" stroke-linecap="round" />`;
+            // 3. Maritime Ocean Curve (cyan luminous)
+            markup += `<path d="${oceanPath}" fill="none" stroke="#38bdf8" stroke-width="2.6" stroke-linecap="round" clip-path="url(#chartClip)" />`;
 
             // 4. Heavy Truck Curve (orange)
-            markup += `<path d="${makePath(F_truck, S_truck)}" fill="none" stroke="#ea580c" stroke-width="2.6" stroke-linecap="round" />`;
+            markup += `<path d="${makePath(F_truck, S_truck)}" fill="none" stroke="#ea580c" stroke-width="2.6" stroke-linecap="round" clip-path="url(#chartClip)" />`;
 
-            // Draw Break-Even Crossover Vertical Marker
+            // Draw Break-Even Crossover Vertical Marker & Bead
             if (crossoverX > 0 && crossoverX < maxVisibleDist) {
                 const crossPx = scaleX(crossoverX);
                 const crossPy = scaleY(F_ocean + S_ocean * crossoverX);
                 markup += `<line x1="${crossPx}" y1="${padTop}" x2="${crossPx}" y2="${padTop + plotH}" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="4 2" />`;
-                markup += `<circle cx="${crossPx}" cy="${crossPy}" r="5" fill="#fbbf24" stroke="#070d18" stroke-width="2" />`;
+                markup += `<circle cx="${crossPx}" cy="${crossPy}" r="5" fill="#fbbf24" stroke="#090a0f" stroke-width="2" />`;
                 markup += `<text x="${crossPx + 6}" y="${padTop + 14}" fill="#fbbf24" font-size="9.5" font-weight="600" font-family="var(--font-mono)">${Math.round(crossoverX)} km Crossover</text>`;
             }
 
-            // Draw Current Distance Vertical Marker
+            // Draw Current Selected Distance Marker (if inside domain)
             if (dist <= maxVisibleDist) {
                 const curPx = scaleX(dist);
                 const curOceanCost = F_ocean + S_ocean * dist;
                 const curPy = scaleY(curOceanCost);
-                markup += `<line x1="${curPx}" y1="${padTop}" x2="${curPx}" y2="${padTop + plotH}" stroke="#38bdf8" stroke-width="1.8" opacity="0.65" />`;
+                markup += `<line x1="${curPx}" y1="${padTop}" x2="${curPx}" y2="${padTop + plotH}" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="3 2" opacity="0.75" />`;
                 markup += `<circle cx="${curPx}" cy="${curPy}" r="6" fill="#38bdf8" stroke="#ffffff" stroke-width="2" />`;
+                markup += `<text x="${Math.min(curPx + 6, padLeft + plotW - 80)}" y="${curPy - 8}" fill="#38bdf8" font-size="9" font-weight="600" font-family="var(--font-mono)">${Math.round(dist)} km</text>`;
             }
 
             svg.innerHTML = markup;
@@ -1616,11 +1757,15 @@
             const dayUnit = isId ? 'Hari' : 'Days';
             const tonUnit = isId ? '/ ton' : '/ tonne';
 
-            // Update Metric Displays
-            document.getElementById('cargoValueDisplay').textContent = `$${Math.round(valuePerTon).toLocaleString()} / t`;
-            document.getElementById('distanceValDisplay').textContent = `${Math.round(dist).toLocaleString()} km`;
-            document.getElementById('weightValDisplay').textContent = `${Math.round(weight).toLocaleString()} t`;
-            document.getElementById('waccValDisplay').textContent = `${(wacc * 100).toFixed(1)}%`;
+            // Sync Inputs with active values if not currently focused
+            const inpVal = document.getElementById('simCargoValInput');
+            if (inpVal && document.activeElement !== inpVal) inpVal.value = Math.round(valuePerTon);
+            const inpDist = document.getElementById('simDistanceInput');
+            if (inpDist && document.activeElement !== inpDist) inpDist.value = Math.round(dist);
+            const inpWeight = document.getElementById('simWeightInput');
+            if (inpWeight && document.activeElement !== inpWeight) inpWeight.value = Math.round(weight);
+            const inpWacc = document.getElementById('simWaccInput');
+            if (inpWacc && document.activeElement !== inpWacc) inpWacc.value = (wacc * 100).toFixed(1);
 
             // Operational Parameters
             // 1. Ocean ULCV: Rate $0.011/t-km, speed 30 km/h, dwell 72h, handling $29/t, 13 g CO2/t-km
@@ -1754,7 +1899,7 @@
             document.getElementById('truck-pct-holding').textContent = `${Math.round(pctTruckHold)}%`;
             document.getElementById('truck-holding-pct').textContent = isId ? `Bunga Modal: ${Math.round(pctTruckHold)}%` : `Holding: ${Math.round(pctTruckHold)}%`;
 
-            // Highlight Lowest Cost (excluding infeasible barge on open sea)
+            // Highlight Lowest Cost (excluding infeasible barge on open sea) & Set Rank Badge
             const cards = [
                 { id: 'card-ocean', cost: oceanTotal },
                 { id: 'card-rail', cost: railTotal },
@@ -1766,13 +1911,23 @@
             cards.sort((a, b) => a.cost - b.cost);
             ['card-ocean', 'card-barge', 'card-rail', 'card-truck'].forEach(cid => {
                 const el = document.getElementById(cid);
+                const badgeId = cid.replace('card-', '') + '-rank-badge';
+                const badgeEl = document.getElementById(badgeId);
                 if (el) {
                     if (cid === cards[0].id) {
                         el.classList.add('highlight');
+                        if (badgeEl) badgeEl.style.display = 'inline-flex';
                     } else {
                         el.classList.remove('highlight');
+                        if (badgeEl) badgeEl.style.display = 'none';
                     }
                 }
+            });
+
+            // Update Sliders visual tracks
+            ['simCargoValSlider', 'simDistanceSlider', 'simWeightSlider', 'simWaccSlider'].forEach(id => {
+                const sl = document.getElementById(id);
+                if (sl) updateSliderTrack(sl);
             });
 
             // Render Dynamic 2D SVG Break-Even Curve
