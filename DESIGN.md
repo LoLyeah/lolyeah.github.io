@@ -5,20 +5,15 @@ colors:
   bg-canvas: "#f8fafc"
   bg-surface: "#ffffff"
   bg-surface-subtle: "#f1f5f9"
-  bg-dark-canvas: "#090a0f"
-  bg-dark-surface: "#12141c"
-  bg-dark-subtle: "#171a23"
-  bg-dark-elevated: "#1e222d"
+  bg-dark-canvas: "#0a0a0a"
+  bg-dark-surface: "#111726"
   border-subtle: "#e2e8f0"
-  border-dark: "#1f232e"
-  border-dark-strong: "#333a4c"
+  border-dark: "#1e293b"
   text-primary: "#0f172a"
   text-secondary: "#475569"
   text-muted: "#64748b"
   text-dark-primary: "#f8fafc"
-  text-dark-secondary: "#94a3b8"
-  text-dark-muted: "#64748b"
-  text-dark-on-accent: "#022c1b"
+  text-dark-muted: "#94a3b8"
   accent-primary: "#059669"
   accent-primary-hover: "#047857"
   accent-secondary: "#4f46e5"
@@ -130,10 +125,10 @@ The core compendium palette is anchored in an airy slate-white foundation for li
 ### Neutral
 - **Alabaster Canvas (`#f8fafc`):** Primary page background in light mode; subtle, luminous, and glare-free.
 - **Pristine Surface (`#ffffff`):** Base elevation layer for compendium cards, modal sheets, and search inputs.
-- **Deep Obsidian Canvas (`#090a0f`):** Dark mode background foundation; rich monochromatic obsidian without muddy blue tints.
-- **Layered Charcoal Surface (`#12141c` / `#171a23`):** Elevated cards, darkroom vitrines, and data matrix surfaces in dark mode.
-- **Slate Text Hierarchy (`#0f172a` primary, `#475569` secondary, `#64748b` muted; `#f8fafc` dark primary, `#94a3b8` dark secondary):** Calibrated for effortless contrast and long-form reading comfort.
-- **Hairline Border (`#e2e8f0` light / `#1f232e` dark):** Clean 1px framing that defines structural edges without visual noise.
+- **Deep Obsidian Canvas (`#0a0a0a` / `#06090e`):** Dark mode background foundation; rich and deep without harsh blue tints.
+- **Layered Basalt Surface (`#111726` / `#0d1219`):** Elevated cards, darkroom vitrines, and data matrix surfaces in dark mode.
+- **Slate Text Hierarchy (`#0f172a` primary, `#475569` secondary, `#64748b` muted):** Calibrated for effortless contrast and long-form reading comfort.
+- **Hairline Border (`#e2e8f0` light / `#1e293b` dark):** Clean 1px framing that defines structural edges without visual noise.
 
 ### Named Rules
 **The Scarcity Rule.** The primary accent is used on ≤ 10% of any given surface. Its rarity and restraint are what make interactive points immediately legible.
