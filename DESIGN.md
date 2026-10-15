@@ -27,6 +27,11 @@ colors:
   status-warning: "#f59e0b"
   status-danger: "#ef4444"
 typography:
+  serif:
+    fontFamily: "'Newsreader', 'Cormorant Garamond', 'Playfair Display', Georgia, serif"
+    fontSize: "clamp(2.5rem, 5vw, 4rem)"
+    fontWeight: 400
+    lineHeight: 1.05
   display:
     fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif"
     fontSize: "clamp(2.2rem, 4.5vw, 3.8rem)"
