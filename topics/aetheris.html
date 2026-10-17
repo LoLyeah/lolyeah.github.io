@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aetheris: Real-Time WebGPU Ocean Simulation &amp; Hydrodynamics Hub — LoLyeah</title>
+  <meta name="description" content="Explore real-time WebGPU ocean simulation architectures. Compare Argon (v1) analytical JONSWAP wave dispersion with Aetheris (v2) 6-cascade FFT, CDLOD quadtrees, and physical atmosphere.">
+  <meta name="keywords" content="WebGPU, ocean simulation, FFT ocean, JONSWAP spectrum, WGSL compute shaders, computer graphics, fluid dynamics, CDLOD, AgX tone mapping">
+  <meta name="author" content="LoLyeah">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://lolyeah.github.io/topics/aetheris.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Aetheris: Real-Time WebGPU Ocean Simulation & Hydrodynamics Hub">
+  <meta property="og:description" content="Choose between Argon (v1) analytical JONSWAP simulation and Aetheris (v2) 6-cascade FFT ocean engine with physical atmosphere and AgX HDR.">
+  <meta property="og:url" content="https://lolyeah.github.io/topics/aetheris.html">
+  <meta property="og:site_name" content="LoLyeah Compendium">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Aetheris: Real-Time WebGPU Ocean Simulation & Hydrodynamics Hub">
+  <meta name="twitter:description" content="Choose between Argon (v1) analytical JONSWAP simulation and Aetheris (v2) 6-cascade FFT ocean engine with physical atmosphere.">
+
+  <!-- Structured Data JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Aetheris: Real-Time WebGPU Ocean Simulation & Hydrodynamics Hub",
+    "description": "Comparative architecture and interactive launch gateway for two real-time ocean simulations: Argon (v1) analytical JONSWAP with WebGL2 fallback, and Aetheris (v2) 6-cascade FFT compute shaders with physical radiative atmosphere.",
+    "url": "https://lolyeah.github.io/topics/aetheris.html",
+    "author": {
+      "@type": "Person",
+      "name": "LoLyeah"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "LoLyeah Compendium"
+    }
+  }
+  </script>
+
+  <!-- Typography & Tokens -->
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
+  <style>
+    :root {
+      --bg-dark-deep: #060911;
+      --bg-dark-card: #0d121f;
+      --border-dark-subtle: rgba(148, 163, 184, 0.14);
+      --border-dark-hover: rgba(56, 189, 248, 0.35);
+      --font-display: 'Outfit', sans-serif;
+      --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-dark-deep);
+      color: #f1f5f9;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.65;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    /* Bilingual display rules */
+    html[lang="en"] .id-only { display: none !important; }
+    html[lang="id"] .en-only { display: none !important; }
+
+    .font-display { font-family: var(--font-display); }
+    .font-mono-code { font-family: var(--font-mono); }
+
+    .editorial-container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .glass-nav {
+      background: rgba(6, 9, 17, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-dark-subtle);
+    }
+
+    .version-card {
+      background: linear-gradient(180deg, rgba(13, 18, 31, 0.95) 0%, rgba(8, 12, 22, 0.98) 100%);
+      border: 1px solid var(--border-dark-subtle);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .version-card:hover {
+      border-color: var(--border-dark-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.6);
+    }
+
+    .matrix-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border-dark-subtle);
+    }
+
+    .matrix-table th {
+      background: #0f1626;
+      padding: 12px 18px;
+      text-align: left;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+      border-bottom: 1px solid var(--border-dark-subtle);
+    }
+
+    .matrix-table td {
+      padding: 14px 18px;
+      font-size: 0.95rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+      vertical-align: top;
+    }
+
+    .matrix-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .matrix-table tr:nth-child(even) td {
+      background: rgba(15, 22, 38, 0.35);
+    }
+
+    .formula-card {
+      background: #0b101c;
+      border: 1px solid var(--border-dark-subtle);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+  </style>
+</head>
+<body class="selection:bg-cyan-500/30 selection:text-cyan-200">
+
+  <!-- Top Navigation Header -->
+  <header class="glass-nav fixed top-0 left-0 right-0 z-30 py-3.5">
+    <div class="editorial-container flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="../index.html" class="flex items-center gap-2 text-slate-300 hover:text-white transition-colors text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-slate-800/60 border border-slate-700/40">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span class="en-only">LoLyeah Compendium</span>
+          <span class="id-only">Kompendium LoLyeah</span>
+        </a>
+        <span class="text-slate-600 hidden sm:inline">•</span>
+        <span class="text-slate-400 text-xs hidden sm:inline font-mono">Topic 66</span>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Language Switcher -->
+        <button id="lang-btn" type="button" class="text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-slate-600/40 transition-colors" title="Toggle Language (EN / ID)">
+          <span id="lang-indicator">EN / ID</span>
+        </button>
+
+        <!-- Direct links -->
+        <a href="./aetheris/argon-v1.html" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-sky-950/60 hover:bg-sky-900/60 text-sky-300 border border-sky-600/40 transition-colors hidden md:inline-flex items-center gap-1">
+          <span>Argon (v1)</span>
+        </a>
+        <a href="./aetheris/aetheris-v2.html" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-950/60 hover:bg-amber-900/60 text-amber-300 border border-amber-600/40 transition-colors hidden md:inline-flex items-center gap-1">
+          <span>Aetheris (v2)</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Hero Section -->
+  <main class="pt-28 pb-20">
+    <div class="editorial-container">
+      
+      <!-- Eyebrow & Badges -->
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        <span class="pill-badge bg-cyan-950/70 text-cyan-300 border border-cyan-700/40 font-mono-code text-xs">
+          TOPIC 66
+        </span>
+        <span class="pill-badge bg-blue-950/70 text-blue-300 border border-blue-700/40">
+          <span class="en-only">GRAPHICS ENGINEERING</span>
+          <span class="id-only">REKAYASA GRAFIKA</span>
+        </span>
+        <span class="pill-badge bg-emerald-950/70 text-emerald-300 border border-emerald-700/40">
+          <span class="en-only">HYDRODYNAMICS</span>
+          <span class="id-only">HIDRODINAMIKA</span>
+        </span>
+        <span class="pill-badge bg-purple-950/70 text-purple-300 border border-purple-700/40">
+          WEBGPU NATIVE
+        </span>
+      </div>
+
+      <!-- Main Title & Hook -->
+      <h1 class="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-5 leading-tight">
+        Aetheris: Real-Time WebGPU Ocean Simulation
+      </h1>
+
+      <p class="text-slate-300 text-base sm:text-xl max-w-4xl font-normal leading-relaxed mb-10">
+        <span class="en-only">
+          Explore two distinct generations of real-time marine graphics engineering: from analytical directional trochoid synthesis on concentric radial meshes with Archimedes 6-DOF buoy physics, to 6-cascade GPU Fast Fourier Transforms paired with CDLOD quadtrees and Sébastien Hillaire multiscattering skies.
+        </span>
+        <span class="id-only">
+          Jelajahi dua generasi rekayasa grafika kelautan waktu-nyata: mulai dari sintesis trokoid terarah analitis pada mesh radial konsentris dengan fisika pelampung Archimedes 6-DOF, hingga 6-cascade GPU Fast Fourier Transform yang dipadukan dengan quadtree CDLOD dan langit radiatif multiscattering Sébastien Hillaire.
+        </span>
+      </p>
+
+      <!-- DUAL VERSION SELECTOR: The Core Choice -->
+      <section class="mb-16">
+        <div class="text-center sm:text-left mb-6">
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-white mb-1.5">
+            <span class="en-only">Select Simulation Engine</span>
+            <span class="id-only">Pilih Mesin Simulasi</span>
+          </h2>
+          <p class="text-slate-400 text-sm">
+            <span class="en-only">Choose between the analytical spectral engine (v1) or the 6-cascade FFT compute engine (v2).</span>
+            <span class="id-only">Pilih antara mesin spektral analitis (v1) atau mesin compute FFT 6-cascade (v2).</span>
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- VERSION 1: ARGON (v1) -->
+          <div class="version-card group border-sky-900/40 hover:border-sky-500/50">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="pill-badge bg-sky-950 text-sky-300 border border-sky-600/40 font-mono-code text-xs">
+                  VERSION 1.0 • ARGON
+                </span>
+                <span class="text-xs text-slate-400 font-medium">Universal WebGL2 Fallback</span>
+              </div>
+
+              <h3 class="font-display text-2xl font-bold text-white mb-2 group-hover:text-sky-300 transition-colors">
+                Argon (v1): Analytical JONSWAP Ocean
+              </h3>
+
+              <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                <span class="en-only">
+                  A high-efficiency real-time ocean simulator utilizing an analytical JONSWAP spectrum projected onto a camera-anchored radial polar concentric mesh. Features full 6-DOF Archimedes buoyancy coupling on an interactive weather buoy, underwater refraction acoustics, and seamless fallback between WebGPU WGSL and WebGL2 GLSL.
+                </span>
+                <span class="id-only">
+                  Simulator samudra waktu-nyata berefisiensi tinggi yang memanfaatkan spektrum JONSWAP analitis yang diproyeksikan ke mesh polar radial terpusat kamera. Dilengkapi kopling apung Archimedes 6-DOF pada pelampung oseanografi interaktif, akustik refraksi bawah air, dan fallback mulus WebGPU WGSL ke WebGL2 GLSL.
+                </span>
+              </p>
+
+              <!-- Feature Bullets -->
+              <div class="space-y-2.5 mb-6 text-xs text-slate-300">
+                <div class="flex items-start gap-2.5">
+                  <div class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <strong class="text-white">Radial Projected Grid:</strong>
+                    <span class="en-only"> Concentric geometric rings distribute tessellation density logarithmically from viewer eye to the horizon.</span>
+                    <span class="id-only"> Cincin geometris konsentris mendistribusikan kerapatan tessellation secara logaritmik dari mata ke cakrawala.</span>
+                  </div>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <strong class="text-white">6-DOF Weather Buoy:</strong>
+                    <span class="en-only"> Rigorous Archimedes vertical displacement with restoring righting moments and wave tilt coupling.</span>
+                    <span class="id-only"> Pergeseran vertikal Archimedes nyata dengan momen penegak dan kopling kemiringan gelombang.</span>
+                  </div>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <strong class="text-white">Hardware Universal:</strong>
+                    <span class="en-only"> Runs at 60 FPS on nearly every mobile and desktop device with zero install via WebGPU or WebGL2.</span>
+                    <span class="id-only"> Berjalan 60 FPS di hampir semua perangkat seluler dan desktop tanpa instalasi melalui WebGPU atau WebGL2.</span>
+                  </div>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <strong class="text-white">Procedural Web Audio:</strong>
+                    <span class="en-only"> Dual white-noise bandpass filters modulate surf roar and subsurface acoustic muffling in real time.</span>
+                    <span class="id-only"> Filter bandpass derau putih ganda memodulasi deru ombak dan redaman akustik bawah air waktu-nyata.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Area -->
+            <div class="pt-4 border-t border-slate-800/80">
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-3 font-mono-code">
+                <span>Mesh: 120,000 Vertices</span>
+                <span>Latency: ~2.4 ms</span>
+              </div>
+              <a href="./aetheris/argon-v1.html" class="w-full inline-flex items-center justify-center gap-2 py-3 px-5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-sm tracking-wide transition-all shadow-md">
+                <span class="en-only">Launch Argon (v1) Simulation &rarr;</span>
+                <span class="id-only">Buka Simulasi Argon (v1) &rarr;</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- VERSION 2: AETHERIS (v2) -->
+          <div class="version-card group border-amber-900/40 hover:border-amber-500/50">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="pill-badge bg-amber-950 text-amber-300 border border-amber-600/40 font-mono-code text-xs">
+                  VERSION 2.0 • AETHERIS
+                </span>
+                <span class="text-xs text-amber-400/90 font-medium font-mono-code">WebGPU Compute Shaders</span>
+              </div>
+
+              <h3 class="font-display text-2xl font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">
+                Aetheris (v2): 6-Cascade FFT &amp; Hillaire Sky
+              </h3>
+
+              <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                <span class="en-only">
+                  A WebGPU compute hydrodynamics engine. Six parallel GPU compute FFT cascades synthesize gravity and capillary waves across scales from 0.26 m to 1,103 m. Features CDLOD quadtree morphing, Sébastien Hillaire (2020) multiscattering physical skies, Jacobian folding whitecap foam, and AgX HDR tone mapping.
+                </span>
+                <span class="id-only">
+                  Mesin hidrodinamika komputasi WebGPU. Enam cascade compute FFT GPU paralel menyintesis gelombang gravitasi dan kapiler di seluruh skala dari 0,26 m hingga 1.103 m. Dilengkapi quadtree morphing CDLOD, langit fisik multiscattering Sébastien Hillaire (2020), busa putih lipatan Jacobian, dan tone mapping AgX HDR.
+                </span>
+              </p>
+
+              <!-- Feature Bullets -->
+              <div class="space-y-2.5 mb-6 text-xs text-slate-300">
+                <div class="flex items-start gap-2.5">
+                  <div class="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <strong class="text-white">6-Cascade Inverse FFT:</strong>
+                    <span class="en-only"> Simulates ocean swell and micro-ripples across 12 octaves of spatial frequencies on GPU compute.</span>
+                    <span class="id-only"> Mensimulasikan alun samudra dan riak kapiler mikro melintasi 12 oktaf frekuensi spasial pada GPU compute.</span>
+                  </div>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <strong class="text-white">CDLOD Quadtree:</strong>
+                    <span class="en-only"> Continuous Distance Level of Detail eliminates visual popping with smooth geodesic vertex morphing.</span>
+                    <span class="id-only"> Continuous Distance Level of Detail meniadakan loncatan visual dengan pergeseran verteks geodesik mulus.</span>
+                  </div>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <strong class="text-white">Hillaire (2020) Sky:</strong>
+                    <span class="en-only"> Physical raymarching of Rayleigh/Mie molecular scattering and ozone absorption with precomputed LUTs.</span>
+                    <span class="id-only"> Raymarching fisik hamburan molekuler Rayleigh/Mie dan serapan ozon dengan LUT terhitung sebelumnya.</span>
+                  </div>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <strong class="text-white">Jacobian Foam & AgX:</strong>
+                    <span class="en-only"> Eigenvalue crest folding (det(J) &lt; 0) advects persistent foam clipmaps mapped into wide-gamut AgX HDR.</span>
+                    <span class="id-only"> Lipatan puncak eigenvalue (det(J) &lt; 0) mengadveksi peta busa persisten yang dipetakan ke AgX HDR gamut lebar.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Area -->
+            <div class="pt-4 border-t border-slate-800/80">
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-3 font-mono-code">
+                <span>FFT Res: 6 &times; 256&sup2;</span>
+                <span>Requirement: WebGPU</span>
+              </div>
+              <a href="./aetheris/aetheris-v2.html" class="w-full inline-flex items-center justify-center gap-2 py-3 px-5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm tracking-wide transition-all shadow-md">
+                <span class="en-only">Launch Aetheris (v2) Simulation &rarr;</span>
+                <span class="id-only">Buka Simulasi Aetheris (v2) &rarr;</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- COMPARATIVE ARCHITECTURE MATRIX -->
+      <section class="mb-16">
+        <div class="mb-6">
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-white mb-1.5">
+            <span class="en-only">Comparative Engineering Matrix</span>
+            <span class="id-only">Matriks Rekayasa Komparatif</span>
+          </h2>
+          <p class="text-slate-400 text-sm">
+            <span class="en-only">Deep technical side-by-side comparison across 9 physical and rendering subsystems.</span>
+            <span class="id-only">Perbandingan teknis mendalam berdampingan di 9 subsistem fisik dan rendering.</span>
+          </p>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th style="width: 26%;">
+                  <span class="en-only">Subsystem / Dimension</span>
+                  <span class="id-only">Subsistem / Dimensi</span>
+                </th>
+                <th style="width: 37%;" class="text-sky-300">Argon (v1)</th>
+                <th style="width: 37%;" class="text-amber-300">Aetheris (v2)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-semibold text-white">
+                  <span class="en-only">Wave Synthesis Algorithm</span>
+                  <span class="id-only">Algoritma Sintesis Gelombang</span>
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-sky-200">Analytical JONSWAP Sum:</strong> Directional superposition of empirical spectrum trochoids evaluated directly in vertex shader.
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-amber-200">6-Cascade Inverse FFT:</strong> Statistical Phillips &amp; JONSWAP spectrum evaluated via Radix-2 1D Stockham FFT compute pipelines.
+                </td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">
+                  <span class="en-only">Spatial Grid Tessellation</span>
+                  <span class="id-only">Tessellation Grid Spasial</span>
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-sky-200">Radial Projected Mesh:</strong> Logarithmically spaced concentric polar rings anchored to the camera origin.
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-amber-200">CDLOD Quadtree Grid:</strong> Continuous Distance LOD quadtree with spherical planetary geodesic vertex morphing.
+                </td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">
+                  <span class="en-only">Atmospheric Sky Model</span>
+                  <span class="id-only">Model Langit Atmosferik</span>
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-sky-200">Analytical Optical Depth:</strong> Closed-form Rayleigh/Mie approximation with dynamic sun disc and turbidity parameters.
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-amber-200">S&eacute;bastien Hillaire (2020):</strong> Real-time multiscattering LUTs with ozone absorption and transmittance parameterization.
+                </td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">
+                  <span class="en-only">Breaking Foam Mechanics</span>
+                  <span class="id-only">Mekanika Busa Pecah</span>
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-sky-200">Crest-Slope Thresholding:</strong> Empirical wave height and slope gradient thresholding with procedural turbulence texturing.
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-amber-200">Jacobian Inversion Det(J) &lt; 0:</strong> Eigenvalue folding detects wave chop self-intersection, injecting persistent advected foam.
+                </td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">
+                  <span class="en-only">Surface Optics &amp; Glitter</span>
+                  <span class="id-only">Optik Permukaan &amp; Kilau</span>
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-sky-200">Schlick Fresnel &amp; Blinn-Phong:</strong> Two-layer specular lobe with analytical sun glint and subsurface scattering tint.
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-amber-200">LEAN Anisotropic Microfacet:</strong> Linear Efficient Antialiased Normal maps with slope covariance glitter highlights.
+                </td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">
+                  <span class="en-only">Color &amp; Tone Mapping</span>
+                  <span class="id-only">Pewarnaan &amp; Tone Mapping</span>
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-sky-200">ACES Approximation:</strong> Fitted curve tonemapping with underwater Beer-Lambert absorption attenuation.
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-amber-200">AgX HDR Pipeline:</strong> Wide-gamut color preservation with physical exposure controls and dual-pass gaussian bloom.
+                </td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">
+                  <span class="en-only">Buoyancy Physics</span>
+                  <span class="id-only">Fisika Daya Apung</span>
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-sky-200">6-DOF Weather Buoy:</strong> Archimedes vertical buoyancy, hydrostatic righting moments, and wave torque damping.
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-amber-200">Coupled Floating Eye:</strong> Wave height query with smooth pitch/roll camera inertial damping and drift locking.
+                </td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">
+                  <span class="en-only">Acoustic Engine</span>
+                  <span class="id-only">Mesin Akustik</span>
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-sky-200">Procedural Web Audio:</strong> White-noise buffers passed through dynamic Biquad bandpass filters tied to wave speed.
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-amber-200">Spectral Wave Audio:</strong> Synthesized multi-oscillator swells with low-pass submersion cutoff when camera dips below surface.
+                </td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">
+                  <span class="en-only">API &amp; Hardware Support</span>
+                  <span class="id-only">API &amp; Dukungan Perangkat</span>
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-sky-200">WebGPU + WebGL2 Fallback:</strong> Universal execution across desktops, tablets, and smartphones.
+                </td>
+                <td class="text-slate-300">
+                  <strong class="text-amber-200">WebGPU Compute Shaders:</strong> Requires modern WebGPU browser support (Chrome 113+, Safari 18+, Firefox Nightly).
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- HYDRODYNAMIC & OPTICAL FORMULATIONS -->
+      <section class="mb-16">
+        <div class="mb-6">
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-white mb-1.5">
+            <span class="en-only">Mathematical Foundations</span>
+            <span class="id-only">Fondasi Matematis</span>
+          </h2>
+          <p class="text-slate-400 text-sm">
+            <span class="en-only">Core equations governing wave kinematics, dispersion, foam generation, and underwater light absorption.</span>
+            <span class="id-only">Persamaan inti yang mengatur kinematika gelombang, dispersi, pembentukan busa, dan serapan cahaya bawah air.</span>
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <div class="formula-card">
+            <span class="text-xs font-mono-code text-cyan-400 font-semibold uppercase tracking-wider block mb-1">
+              Dispersion Kinematics
+            </span>
+            <h3 class="font-display text-base font-bold text-white mb-2">Deep-Water Dispersion Relation</h3>
+            <div class="p-3 bg-black/40 rounded-lg font-mono-code text-sm text-cyan-200 mb-3 border border-slate-800">
+              &omega;&sup2;(k) = g &bull; k &bull; tanh(k &bull; d) &approx; g &bull; k
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <span class="en-only">
+                In deep water where depth \(d\) exceeds half the wavelength (\(d &gt; \lambda/2\)), phase velocity \(c = \omega / k = \sqrt{g / k}\) increases with wavelength, causing long storm swells to outrun short choppy wind waves.
+              </span>
+              <span class="id-only">
+                Pada perairan dalam di mana kedalaman \(d\) melebihi setengah panjang gelombang (\(d &gt; \lambda/2\)), kecepatan fase \(c = \omega / k = \sqrt{g / k}\) bertambah seiring panjang gelombang, menyebabkan alun badai panjang mendahului ombak angin pendek.
+              </span>
+            </p>
+          </div>
+
+          <div class="formula-card">
+            <span class="text-xs font-mono-code text-amber-400 font-semibold uppercase tracking-wider block mb-1">
+              Jacobian Eigenvalues
+            </span>
+            <h3 class="font-display text-base font-bold text-white mb-2">Wave Crest Folding &amp; Foam</h3>
+            <div class="p-3 bg-black/40 rounded-lg font-mono-code text-sm text-amber-200 mb-3 border border-slate-800">
+              det(J) = (1 - &lambda;&part;D_x/&part;x)(1 - &lambda;&part;D_z/&part;z) - &lambda;&sup2;(&part;D_x/&part;z)(&part;D_z/&part;x) &lt; 0
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <span class="en-only">
+                When horizontal choppiness displacement causes the surface transformation Jacobian determinant to become negative, wave crests self-intersect and break. Aetheris (v2) detects this threshold to spawn persistent whitecap foam.
+              </span>
+              <span class="id-only">
+                Ketika pergeseran horizontal menyebabkan determinan Jacobian transformasi permukaan bernilai negatif, puncak gelombang saling berpotongan dan pecah. Aetheris (v2) mendeteksi ambang batas ini untuk menghasilkan busa putih persisten.
+              </span>
+            </p>
+          </div>
+
+          <div class="formula-card">
+            <span class="text-xs font-mono-code text-emerald-400 font-semibold uppercase tracking-wider block mb-1">
+              Radiative Transfer
+            </span>
+            <h3 class="font-display text-base font-bold text-white mb-2">Beer-Lambert Water Extinction</h3>
+            <div class="p-3 bg-black/40 rounded-lg font-mono-code text-sm text-emerald-200 mb-3 border border-slate-800">
+              I(&lambda;, d) = I_0(&lambda;) &bull; exp(-&sigma;_ext(&lambda;) &bull; d)
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <span class="en-only">
+                Red light (\(\lambda pprox 700	ext{ nm}\)) attenuates rapidly within 5 meters, leaving deep sapphire-cyan tones. Subsurface scattering is approximated by forward-scattering phase functions near wave crests.
+              </span>
+              <span class="id-only">
+                Cahaya merah (\(\lambda pprox 700	ext{ nm}\)) melemah dengan cepat dalam kedalaman 5 meter, menyisakan warna safir-sian yang dalam. Hamburan bawah air diaproksimasi melalui fungsi fase hamburan maju di sekitar puncak gelombang.
+              </span>
+            </p>
+          </div>
+
+          <div class="formula-card">
+            <span class="text-xs font-mono-code text-purple-400 font-semibold uppercase tracking-wider block mb-1">
+              Empirical Energy
+            </span>
+            <h3 class="font-display text-base font-bold text-white mb-2">JONSWAP Spectral Distribution</h3>
+            <div class="p-3 bg-black/40 rounded-lg font-mono-code text-sm text-purple-200 mb-3 border border-slate-800">
+              S(f) = &alpha; g&sup2; (2&pi;)&minus;&sup4; f&minus;&sup5; exp[-1.25(f_p/f)&sup4;] &bull; &gamma;^exp[-(f - f_p)&sup2; / (2&sigma;&sup2; f_p&sup2;)]
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <span class="en-only">
+                The Joint North Sea Wave Project (JONSWAP) enhances the Pierson-Moskowitz spectrum with a peak enhancement factor \(\gamma pprox 3.3\), capturing realistic fetch-limited growing seas.
+              </span>
+              <span class="id-only">
+                Joint North Sea Wave Project (JONSWAP) menyempurnakan spektrum Pierson-Moskowitz dengan faktor penguat puncak \(\gamma pprox 3.3\), menangkap realitas gelombang laut yang terus berkembang dengan jarak hembus terbatas.
+              </span>
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- CROSS-COMPENDIUM NAVIGATION -->
+      <section class="border-t border-slate-800/80 pt-10">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h3 class="font-display text-lg font-bold text-white">
+              <span class="en-only">Related Topics in LoLyeah</span>
+              <span class="id-only">Topik Terkait di LoLyeah</span>
+            </h3>
+            <p class="text-xs text-slate-400">
+              <span class="en-only">Explore adjacent physics, engineering, and digital interactive models.</span>
+              <span class="id-only">Jelajahi model fisika, rekayasa, dan simulasi interaktif digital lainnya.</span>
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <a href="./land-vs-water-logistics.html" class="text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-800/70 hover:bg-slate-700 text-slate-200 border border-slate-700/50 transition-colors">
+              &larr; Land vs. Water Logistics
+            </a>
+            <a href="./gummy-bears.html" class="text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-800/70 hover:bg-slate-700 text-slate-200 border border-slate-700/50 transition-colors">
+              Gummy Bears Soft-Body Physics
+            </a>
+            <a href="./suravidl.html" class="text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-800/70 hover:bg-slate-700 text-slate-200 border border-slate-700/50 transition-colors">
+              SuraviDL Stream Engine &rarr;
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      "use strict";
+      const langBtn = document.getElementById("lang-btn");
+      const langIndicator = document.getElementById("lang-indicator");
+      
+      let currentLang = localStorage.getItem("lolyeah_lang") || "en";
+
+      function setLang(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+        localStorage.setItem("lolyeah_lang", lang);
+        if (langIndicator) {
+          langIndicator.textContent = lang === "id" ? "ID / EN" : "EN / ID";
+        }
+      }
+
+      if (langBtn) {
+        langBtn.addEventListener("click", () => {
+          setLang(currentLang === "en" ? "id" : "en");
+        });
+      }
+
+      setLang(currentLang);
+    })();
+  </script>
+</body>
+</html>
