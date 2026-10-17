@@ -386,8 +386,8 @@
     </div>
   </aside>
 
-  <!-- On-Screen Dual Touch Controls (Auto-shown on touch devices & toggleable on Desktop) -->
-  <div id="touch-controls-container" class="fixed bottom-4 left-4 right-4 z-20 pointer-events-none flex items-end justify-between">
+  <!-- On-Screen Dual Touch Controls (HIDDEN BY DEFAULT; toggle via Joysticks button) -->
+  <div id="touch-controls-container" class="fixed bottom-4 left-4 right-4 z-20 pointer-events-none flex items-end justify-between hidden">
     <!-- Left Virtual Joystick: Move Forward/Back/Strafe -->
     <div class="flex flex-col items-center gap-1.5 pointer-events-auto">
       <span class="text-[10px] uppercase tracking-wider font-semibold text-sky-300/80 bg-slate-900/60 px-2 py-0.5 rounded-full border border-sky-400/20">Move / Drift</span>
@@ -418,6 +418,9 @@
   <script>
     (function () {
       "use strict";
+
+      // Bilingual Language State (LoLyeah Standards)
+      let currentLang = localStorage.getItem('lolyeah_lang') || 'en';
 
       // =========================================================================
       // 1. SIMULATION STATE & JONSWAP DIRECTIONAL SPECTRUM
@@ -2157,8 +2160,16 @@
       });
 
       const touchContainer = document.getElementById("touch-controls-container");
+      const touchUiLabel = document.getElementById("touch-ui-label");
       document.getElementById("btn-touch-ui").addEventListener("click", () => {
-        touchContainer.classList.toggle("hidden");
+        const isHidden = touchContainer.classList.toggle("hidden");
+        if (touchUiLabel) {
+          if (currentLang === 'id') {
+            touchUiLabel.textContent = isHidden ? "Tuas: MATI" : "Tuas: NYALA";
+          } else {
+            touchUiLabel.textContent = isHidden ? "Joysticks: OFF" : "Joysticks: ON";
+          }
+        }
       });
 
       document.getElementById("btn-audio").addEventListener("click", () => {
@@ -2360,7 +2371,6 @@
 
       
       // Bilingual Language Switcher (LoLyeah Standards)
-      let currentLang = localStorage.getItem('lolyeah_lang') || 'en';
       function applyLanguage(lang) {
         currentLang = lang;
         document.documentElement.lang = lang;
