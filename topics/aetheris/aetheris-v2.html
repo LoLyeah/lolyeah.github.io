@@ -264,25 +264,33 @@
           <span class="en-only">🌊 Glassy Dawn</span>
           <span class="id-only">🌊 Fajar Kaca</span>
         </button>
-        <button type="button" data-preset="ethereal" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-stone-700/70 bg-stone-800/40 text-xs font-medium text-indigo-200 transition-all">
-          <span class="en-only">✨ Ethereal Night</span>
-          <span class="id-only">✨ Malam Eteris</span>
-        </button>
-        <button type="button" data-preset="golden" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-stone-700/70 bg-stone-800/40 text-xs font-medium text-stone-200 transition-all">
-          <span class="en-only">🌅 Golden Swell</span>
+        <button type="button" data-preset="golden" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-stone-700/70 bg-stone-800/40 text-xs font-medium text-amber-300 transition-all">
+          <span class="en-only">🌅 Golden Hour</span>
           <span class="id-only">🌅 Alun Keemasan</span>
         </button>
-        <button type="button" data-preset="tropical" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-stone-700/70 bg-stone-800/40 text-xs font-medium text-stone-200 transition-all">
+        <button type="button" data-preset="sunset" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-stone-700/70 bg-stone-800/40 text-xs font-medium text-orange-300 transition-all">
+          <span class="en-only">🌇 Crimson Sunset</span>
+          <span class="id-only">🌇 Terbenam Kirmizi</span>
+        </button>
+        <button type="button" data-preset="dusk" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-stone-700/70 bg-stone-800/40 text-xs font-medium text-purple-300 transition-all">
+          <span class="en-only">🌆 Twilight Dusk</span>
+          <span class="id-only">🌆 Senja Lembayung</span>
+        </button>
+        <button type="button" data-preset="tropical" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-stone-700/70 bg-stone-800/40 text-xs font-medium text-emerald-300 transition-all">
           <span class="en-only">🏝️ Tropical Noon</span>
           <span class="id-only">🏝️ Siang Tropis</span>
         </button>
-        <button type="button" data-preset="storm" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-stone-700/70 bg-stone-800/40 text-xs font-medium text-stone-200 transition-all">
+        <button type="button" data-preset="storm" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-stone-700/70 bg-stone-800/40 text-xs font-medium text-stone-300 transition-all">
           <span class="en-only">⛈️ Atlantic Gale</span>
           <span class="id-only">⛈️ Badai Atlantik</span>
         </button>
-        <button type="button" data-preset="moonlit" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-stone-700/70 bg-stone-800/40 text-xs font-medium text-stone-200 transition-all">
+        <button type="button" data-preset="moonlit" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-stone-700/70 bg-stone-800/40 text-xs font-medium text-sky-200 transition-all">
           <span class="en-only">🌙 Moonlit Biolum</span>
           <span class="id-only">🌙 Pendar Rembulan</span>
+        </button>
+        <button type="button" data-preset="ethereal" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-stone-700/70 bg-stone-800/40 text-xs font-medium text-indigo-200 transition-all">
+          <span class="en-only">✨ Ethereal Night</span>
+          <span class="id-only">✨ Malam Eteris</span>
         </button>
       </div>
     </div>
@@ -393,7 +401,7 @@
           <span class="text-stone-300"><span class="en-only">AgX Exposure</span><span class="id-only">Eksposur AgX</span></span>
           <span id="val-exposure" class="mono text-stone-300">1.35</span>
         </div>
-        <input id="slider-exposure" type="range" min="0.2" max="3.5" step="0.02" value="1.35" />
+        <input id="slider-exposure" type="range" min="0.2" max="3.5" step="0.01" value="1.35" />
       </div>
     </div>
 
@@ -1259,7 +1267,8 @@ fn sunIlluminance() -> vec3f {
   let nightMode = F.windP[1].x;
   if (nightMode > 0.001) {
     let lum = dot(rawSolar, vec3f(0.2126, 0.7152, 0.0722));
-    let lunarCol = vec3f(0.54, 0.75, 1.05) * (lum * 1.15 + 0.18 * F.sunDir.w * smoothstep(-0.02, 0.25, F.sunDir.y));
+    // Soft, realistic nocturnal lunar illuminance (subtle silvery-blue, ~0.04 of solar irradiance)
+    let lunarCol = vec3f(0.35, 0.52, 0.82) * (lum * 0.038 + 0.012 * F.sunDir.w * smoothstep(-0.02, 0.25, F.sunDir.y));
     return mix(rawSolar, lunarCol, nightMode);
   }
   return rawSolar;
@@ -1298,12 +1307,12 @@ fn skyAtmo(dir: vec3f) -> vec3f {
   if (nightMode > 0.001) {
     let lum = dot(rawAtmo, vec3f(0.2126, 0.7152, 0.0722));
     let upY = max(dir.y, 0.0);
-    let nightZenith = vec3f(0.006, 0.016, 0.048);
-    let nightHorizon = vec3f(0.025, 0.068, 0.155);
+    let nightZenith = vec3f(0.0025, 0.0065, 0.018);
+    let nightHorizon = vec3f(0.009, 0.024, 0.055);
     let airglow = mix(nightHorizon, nightZenith, pow(upY, 0.55));
     let cosM = max(dot(dir, F.sunDir.xyz), 0.0);
-    let moonHalo = vec3f(0.22, 0.42, 0.78) * (pow(cosM, 12.0) * 0.14 + pow(cosM, 80.0) * 0.38);
-    let nightAtmo = vec3f(0.38, 0.62, 1.0) * lum * 0.65 + airglow + moonHalo;
+    let moonHalo = vec3f(0.10, 0.20, 0.40) * (pow(cosM, 16.0) * 0.05 + pow(cosM, 85.0) * 0.15);
+    let nightAtmo = vec3f(0.25, 0.42, 0.75) * lum * 0.022 + airglow + moonHalo;
     return mix(rawAtmo, nightAtmo, nightMode);
   }
   return rawAtmo;
@@ -1373,7 +1382,8 @@ fn shadeLayer(dir: vec3f, h: CloudHit, hc: f32, d: f32, s1: f32, s2: f32, s3: f3
   var sunC = sampleTrans(RG + hc, dot(h.up, F.sunDir.xyz)) * F.sunDir.w;
   if (F.windP[1].x > 0.001) {
     let sLum = dot(sunC, vec3f(0.2126, 0.7152, 0.0722));
-    sunC = mix(sunC, vec3f(0.48, 0.72, 1.05) * (sLum + 0.22 * F.sunDir.w), F.windP[1].x);
+    let lunarCloud = vec3f(0.30, 0.45, 0.72) * (sLum * 0.035 + 0.010 * F.sunDir.w);
+    sunC = mix(sunC, lunarCloud, F.windP[1].x);
   }
   let cosT = dot(dir, F.sunDir.xyz);
   let ph = mix(phaseHG(cosT, g), phaseHG(cosT, -0.2), 0.25);
@@ -1515,7 +1525,7 @@ fn sunDisk(dir: vec3f) -> vec3f {
     let ty = cross(tx, F.sunDir.xyz);
     let mUV = vec2f(dot(dir, tx), dot(dir, ty)) / discR;
     let maria = 0.78 + 0.22 * gnoise(mUV * 3.2 + vec2f(1.4, -0.8)) + 0.08 * gnoise(mUV * 8.5);
-    let lunarDisk = vec3f(0.75, 0.88, 1.08) * rad * 0.045 * maria * (0.65 + 0.35 * mu) * edge;
+    let lunarDisk = vec3f(0.68, 0.82, 1.02) * rad * 0.012 * maria * (0.65 + 0.35 * mu) * edge;
     return mix(solarDisk, lunarDisk, nightMode);
   }
   return solarDisk;
@@ -2057,51 +2067,74 @@ fn ign(p: vec2f) -> f32 { return fract(52.9829189 * fract(dot(p, vec2f(0.0671105
           starGlow: 0.0,
           warmth: -0.19,
         },
-        ethereal: {
-          windSpeed: 5.8,
-          windDir: 112,
-          fetchKm: 85,
-          swellHs: 1.50,
-          swellDir: 92,
-          swellLength: 130,
-          swellSpread: 52,
-          choppy: 1.20,
-          turbidity: 1.85,
-          foam: 1.15,
-          sunElev: 9.5,
-          sunAzim: -6.0,
-          exposure: 1.62,
-          haze: 2.1,
-          clouds: 0.22,
-          veil: 0.24,
-          bloom: 0.15,
-          nightMode: 1.0,
-          bioGlow: 1.65,
-          starGlow: 1.45,
-          warmth: -0.26,
-        },
         golden: {
-          windSpeed: 7.5,
+          windSpeed: 7.0,
           windDir: 118,
           fetchKm: 95,
-          swellHs: 1.90,
+          swellHs: 1.75,
           swellDir: 94,
-          swellLength: 120,
+          swellLength: 122,
           swellSpread: 48,
-          choppy: 1.26,
-          turbidity: 1.65,
-          foam: 1.10,
-          sunElev: 3.4,
-          sunAzim: 6.0,
+          choppy: 1.24,
+          turbidity: 1.70,
+          foam: 1.05,
+          sunElev: 3.2,
+          sunAzim: 5.5,
           exposure: 1.35,
-          haze: 3.2,
-          clouds: 0.42,
+          haze: 3.4,
+          clouds: 0.40,
           veil: 0.38,
-          bloom: 0.11,
+          bloom: 0.12,
           nightMode: 0.0,
           bioGlow: 0.0,
           starGlow: 0.0,
-          warmth: -0.16,
+          warmth: 0.12,
+        },
+        sunset: {
+          windSpeed: 5.4,
+          windDir: 114,
+          fetchKm: 85,
+          swellHs: 1.40,
+          swellDir: 92,
+          swellLength: 125,
+          swellSpread: 50,
+          choppy: 1.18,
+          turbidity: 1.95,
+          foam: 0.85,
+          sunElev: 0.8,
+          sunAzim: 2.5,
+          exposure: 1.38,
+          haze: 4.8,
+          clouds: 0.38,
+          veil: 0.45,
+          bloom: 0.16,
+          nightMode: 0.0,
+          bioGlow: 0.0,
+          starGlow: 0.0,
+          warmth: 0.32,
+        },
+        dusk: {
+          windSpeed: 4.8,
+          windDir: 108,
+          fetchKm: 80,
+          swellHs: 1.25,
+          swellDir: 90,
+          swellLength: 130,
+          swellSpread: 52,
+          choppy: 1.14,
+          turbidity: 2.10,
+          foam: 0.65,
+          sunElev: -0.8,
+          sunAzim: 0.0,
+          exposure: 1.46,
+          haze: 3.6,
+          clouds: 0.30,
+          veil: 0.52,
+          bloom: 0.14,
+          nightMode: 0.20,
+          bioGlow: 0.25,
+          starGlow: 0.40,
+          warmth: 0.08,
         },
         tropical: {
           windSpeed: 6.4,
@@ -2162,15 +2195,38 @@ fn ign(p: vec2f) -> f32 { return fract(52.9829189 * fract(dot(p, vec2f(0.0671105
           foam: 1.15,
           sunElev: 5.5,
           sunAzim: 3.0,
-          exposure: 1.52,
-          haze: 2.5,
+          exposure: 1.25,
+          haze: 2.2,
           clouds: 0.30,
           veil: 0.28,
-          bloom: 0.13,
+          bloom: 0.10,
           nightMode: 0.85,
           bioGlow: 0.95,
           starGlow: 0.85,
           warmth: -0.24,
+        },
+        ethereal: {
+          windSpeed: 5.8,
+          windDir: 112,
+          fetchKm: 85,
+          swellHs: 1.50,
+          swellDir: 92,
+          swellLength: 130,
+          swellSpread: 52,
+          choppy: 1.20,
+          turbidity: 1.85,
+          foam: 1.15,
+          sunElev: 9.5,
+          sunAzim: -6.0,
+          exposure: 1.28,
+          haze: 1.9,
+          clouds: 0.22,
+          veil: 0.24,
+          bloom: 0.12,
+          nightMode: 1.0,
+          bioGlow: 1.65,
+          starGlow: 1.45,
+          warmth: -0.26,
         },
       };
 
