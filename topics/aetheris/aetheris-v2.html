@@ -137,6 +137,27 @@
       color: #fffbeb;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
     }
+    /* UI Layer Transitions & Zen Mode (Hide UI) */
+    .ui-layer {
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    body.ui-hidden .ui-layer {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      user-select: none !important;
+    }
+    body.ui-hidden .ui-layer * {
+      pointer-events: none !important;
+    }
+    body.ui-hidden header.ui-layer {
+      transform: translateY(-14px);
+    }
+    body.ui-hidden aside.ui-layer {
+      transform: translateX(18px);
+    }
+    body.ui-hidden #touch-controls-container.ui-layer {
+      transform: translateY(18px);
+    }
   </style>
 </head>
 <body>
@@ -149,7 +170,7 @@
   <div id="waterline-overlay"></div>
 
   <!-- Top Telemetry & Action Bar -->
-  <header class="fixed top-0 left-0 right-0 z-20 p-2.5 sm:p-4 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+  <header class="ui-layer fixed top-0 left-0 right-0 z-20 p-2.5 sm:p-4 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
     <!-- Brand & Navigation & GPU Status -->
     <div class="flex items-center gap-2 pointer-events-auto flex-wrap">
       <a href="../aetheris.html" class="glass-pill hover:bg-stone-800/60 active:scale-95 transition-all rounded-xl px-3 py-2 text-xs font-semibold flex items-center gap-1.5 text-stone-100 border border-stone-600/30" title="Return to Aetheris Topic Hub">
@@ -232,6 +253,17 @@
         <span class="hidden sm:inline" id="audio-label">Sound Off</span>
       </button>
 
+      <!-- Hide UI / Zen Mode Button -->
+      <button id="btn-hide-ui" type="button" class="glass-pill hover:bg-stone-700/50 active:scale-95 transition-all rounded-xl px-2.5 py-2 text-xs font-medium flex items-center gap-1.5 text-stone-200" title="Hide UI (Zen Mode - Click/touch anywhere to restore)">
+        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/>
+        </svg>
+        <span class="hidden sm:inline" id="hide-ui-label">
+          <span class="en-only">Hide UI</span>
+          <span class="id-only">Sembunyi UI</span>
+        </span>
+      </button>
+
       <!-- Settings Drawer Toggle -->
       <button id="btn-toggle-panel" type="button" class="glass-pill hover:bg-amber-500/20 active:scale-95 transition-all rounded-xl px-3 py-2 text-xs font-semibold flex items-center gap-1.5 text-stone-100 border border-stone-500/30">
         <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -243,7 +275,7 @@
   </header>
 
   <!-- Collapsible Right-Side Ocean & Atmosphere Control Panel -->
-  <aside id="control-panel" class="fixed top-16 right-2.5 sm:right-4 z-20 w-[calc(100vw-20px)] max-w-[340px] max-h-[calc(100vh-86px)] glass-panel rounded-2xl p-4 flex flex-col gap-3 overflow-y-auto custom-scroll transition-all duration-300">
+  <aside id="control-panel" class="ui-layer fixed top-16 right-2.5 sm:right-4 z-20 w-[calc(100vw-20px)] max-w-[340px] max-h-[calc(100vh-86px)] glass-panel rounded-2xl p-4 flex flex-col gap-3 overflow-y-auto custom-scroll transition-all duration-300">
     <div class="flex items-center justify-between border-b border-stone-700/60 pb-2">
       <div>
         <h2 class="text-xs font-semibold uppercase tracking-wider text-amber-400">6-Cascade FFT & Hillaire Sky</h2>
@@ -447,7 +479,7 @@
   </aside>
 
   <!-- On-Screen Dual Touch Controls (HIDDEN BY DEFAULT; toggle via Joysticks button) -->
-  <div id="touch-controls-container" class="fixed bottom-4 left-4 right-4 z-20 pointer-events-none flex items-end justify-between hidden">
+  <div id="touch-controls-container" class="ui-layer fixed bottom-4 left-4 right-4 z-20 pointer-events-none flex items-end justify-between hidden">
     <!-- Left Virtual Joystick: Move Forward/Back/Strafe -->
     <div class="flex flex-col items-center gap-1.5 pointer-events-auto">
       <span class="text-[10px] uppercase tracking-wider font-semibold text-amber-200/90 bg-stone-900/70 px-2 py-0.5 rounded-full border border-amber-400/25"><span class="en-only">Move / Drift</span><span class="id-only">Gerak / Hanyut</span></span>
@@ -2503,9 +2535,50 @@ fn ign(p: vec2f) -> f32 { return fract(52.9829189 * fract(dot(p, vec2f(0.0671105
         document.getElementById("panel-toggle-text").textContent = "Show Controls";
       }
 
+      // =========================================================================
+      // Zen Mode (Hide UI / Clean View)
+      // =========================================================================
+      let isUIHidden = false;
+      let hideTimestamp = 0;
+
+      function hideUI() {
+        if (isUIHidden) return;
+        isUIHidden = true;
+        hideTimestamp = performance.now();
+        document.body.classList.add("ui-hidden");
+      }
+
+      function showUI() {
+        if (!isUIHidden) return;
+        isUIHidden = false;
+        document.body.classList.remove("ui-hidden");
+      }
+
+      const btnHideUi = document.getElementById("btn-hide-ui");
+      if (btnHideUi) {
+        btnHideUi.addEventListener("click", (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          hideUI();
+        });
+      }
+
+      function handleRestoreInteraction(e) {
+        if (!isUIHidden) return;
+        if (performance.now() - hideTimestamp < 150) return;
+        showUI();
+      }
+
+      window.addEventListener("pointerdown", handleRestoreInteraction, { capture: true });
+      window.addEventListener("touchstart", handleRestoreInteraction, { capture: true, passive: true });
+
       // Keyboard Input
       window.addEventListener("keydown", (e) => {
         input.keys[e.code] = true;
+        if (isUIHidden && (e.code === "Escape" || e.code === "KeyH")) {
+          showUI();
+          return;
+        }
         if (e.code === "KeyH") toggleControlPanel();
       });
       window.addEventListener("keyup", (e) => {
@@ -3578,6 +3651,13 @@ fn ign(p: vec2f) -> f32 { return fract(52.9829189 * fract(dot(p, vec2f(0.0671105
           } else {
             depthState.textContent = lang === 'id' ? 'TERBANG BEBAS' : 'FREE FLIGHT';
           }
+        }
+
+        const btnHideUi = document.getElementById('btn-hide-ui');
+        if (btnHideUi) {
+          btnHideUi.title = lang === 'id'
+            ? 'Sembunyikan UI (Mode Zen - Klik di mana saja untuk menampilkan kembali)'
+            : 'Hide UI (Zen Mode - Click/touch anywhere to restore)';
         }
       }
 
