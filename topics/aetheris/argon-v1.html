@@ -620,11 +620,11 @@
         if (audioEnabled) {
           onIcon.classList.remove("hidden");
           offIcon.classList.add("hidden");
-          label.textContent = "Sound On";
+          label.textContent = currentLang === "id" ? "Suara Nyala" : "Sound On";
         } else {
           onIcon.classList.add("hidden");
           offIcon.classList.remove("hidden");
-          label.textContent = "Sound Off";
+          label.textContent = currentLang === "id" ? "Suara Mati" : "Sound Off";
           if (surfGainNode && audioCtx) {
             surfGainNode.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.15);
             deepGainNode.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.15);
@@ -2142,7 +2142,7 @@
       document.getElementById("btn-cam-mode").addEventListener("click", () => {
         state.floatingMode = !state.floatingMode;
         const lbl = document.getElementById("cam-mode-label");
-        lbl.textContent = state.floatingMode ? "Floating Cam: ON" : "Free-Fly Cam: ON";
+        lbl.textContent = state.floatingMode ? (currentLang === "id" ? "Kamera Apung: AKTIF" : "Floating Cam: ON") : (currentLang === "id" ? "Terbang Bebas: AKTIF" : "Free-Fly Cam: ON");
       });
 
       document.getElementById("btn-reset-cam").addEventListener("click", () => {
@@ -2371,7 +2371,7 @@
 
         const camModeLabel = document.getElementById('cam-mode-label');
         if (camModeLabel) {
-          if (state.camMode === 0) {
+          if (state.floatingMode) {
             camModeLabel.textContent = lang === 'id' ? 'Kamera Apung: AKTIF' : 'Floating Cam: ON';
           } else {
             camModeLabel.textContent = lang === 'id' ? 'Terbang Bebas: AKTIF' : 'Free-Fly Cam: ON';
@@ -2380,11 +2380,16 @@
 
         const audioLabel = document.getElementById('audio-label');
         if (audioLabel) {
-          if (audioState.enabled) {
+          if (typeof audioEnabled !== 'undefined' && audioEnabled) {
             audioLabel.textContent = lang === 'id' ? 'Suara Nyala' : 'Sound On';
           } else {
             audioLabel.textContent = lang === 'id' ? 'Suara Mati' : 'Sound Off';
           }
+        }
+
+        const touchUiLabel = document.getElementById('touch-ui-label');
+        if (touchUiLabel) {
+          touchUiLabel.textContent = lang === 'id' ? 'Tuas Kendali' : 'Joysticks';
         }
 
         const panelToggleText = document.getElementById('panel-toggle-text');
