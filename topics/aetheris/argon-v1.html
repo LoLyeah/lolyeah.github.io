@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Argon (v1) — Real-Time WebGPU Ocean Simulation (JONSWAP Spectrum &amp; Weather Buoy) — LoLyeah</title>
+  <title>Argon (v1) — Real-Time WebGPU Ocean, Atmospheric Light &amp; Multi-Scatter PBR Simulation — LoLyeah</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <link rel="canonical" href="https://lolyeah.github.io/topics/aetheris/argon-v1.html" />
+  <link rel="canonical" href="https://lolyeah.github.io/topics/aetheris/argon-v1.html" />
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,14 +42,14 @@
       touch-action: none;
     }
     .glass-panel {
-      background: rgba(8, 17, 32, 0.74);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.65);
+      background: rgba(8, 17, 32, 0.76);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
     }
     .glass-pill {
-      background: rgba(10, 22, 40, 0.75);
+      background: rgba(10, 22, 40, 0.76);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(148, 163, 184, 0.22);
@@ -129,7 +129,7 @@
       pointer-events: none;
       transition: transform 0.04s linear;
     }
-    .preset-btn.active {
+    .preset-btn.active, .tonemap-btn.active {
       background: rgba(56, 189, 248, 0.24);
       border-color: rgba(56, 189, 248, 0.8);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
@@ -189,6 +189,7 @@
           <div class="flex items-center gap-1.5">
             <span class="font-semibold text-xs tracking-tight text-white">ARGON (v1)</span>
             <span id="api-badge" class="mono text-[10px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-400/30 font-medium">WebGPU</span>
+            <span class="hidden sm:inline mono text-[9.5px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-400/30">TMA + Multi-Scatter GGX</span>
           </div>
           <div class="hidden md:flex items-center gap-2 text-[10.5px] text-slate-300 mono mt-0.5">
             <span id="fps-readout">60 FPS</span>
@@ -226,7 +227,7 @@
         <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L8 8h8l-4-6zM12 8v12m-6 0h12"/>
         </svg>
-        <span class="hidden md:inline">To Buoy</span>
+        <span class="hidden md:inline"><span class="en-only">To Buoy</span><span class="id-only">Ke Pelampung</span></span>
       </button>
 
       <!-- Touch Joysticks Visibility Toggle -->
@@ -234,7 +235,7 @@
         <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>
         </svg>
-        <span class="hidden sm:inline" id="touch-ui-label">Joysticks</span>
+        <span class="hidden sm:inline" id="touch-ui-label"><span class="en-only">Joysticks</span><span class="id-only">Tuas Kendali</span></span>
       </button>
 
       <!-- Synthesized Ocean Sound Toggle -->
@@ -270,12 +271,15 @@
     </div>
   </header>
 
-  <!-- Collapsible Right-Side Ocean & Atmosphere Control Panel -->
-  <aside id="control-panel" class="ui-layer fixed top-16 right-2.5 sm:right-4 z-20 w-[calc(100vw-20px)] max-w-[330px] max-h-[calc(100vh-90px)] glass-panel rounded-2xl p-4 flex flex-col gap-3.5 overflow-y-auto custom-scroll transition-all duration-300">
+  <!-- Collapsible Right-Side Ocean, Light & Material Control Panel -->
+  <aside id="control-panel" class="ui-layer fixed top-16 right-2.5 sm:right-4 z-20 w-[calc(100vw-20px)] max-w-[345px] max-h-[calc(100vh-90px)] glass-panel rounded-2xl p-4 flex flex-col gap-3.5 overflow-y-auto custom-scroll transition-all duration-300">
     <div class="flex items-center justify-between border-b border-slate-700/60 pb-2.5">
       <div>
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-sky-400">Sea State & Optics</h2>
-        <p class="text-[11px] text-slate-400">JONSWAP 24-Cascade Spectrum + SSS</p>
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-sky-400">
+          <span class="en-only">TMA Spectrum, Light &amp; PBR Materials</span>
+          <span class="id-only">Spektrum TMA, Cahaya &amp; Material PBR</span>
+        </h2>
+        <p class="text-[11px] text-slate-400">24-Wave TMA + Multi-Scatter GGX + Thin-Film</p>
       </div>
       <button id="btn-close-panel" type="button" class="text-slate-400 hover:text-white p-1 rounded-lg" title="Minimize panel">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -286,31 +290,53 @@
 
     <!-- Weather / Lighting Presets -->
     <div>
-      <label class="text-[11px] font-medium text-slate-300 uppercase tracking-wider block mb-1.5">Environment Presets</label>
+      <label class="text-[11px] font-medium text-slate-300 uppercase tracking-wider block mb-1.5">
+        <span class="en-only">Environment Presets</span>
+        <span class="id-only">Preset Lingkungan</span>
+      </label>
       <div class="grid grid-cols-2 gap-1.5">
         <button type="button" data-preset="golden" class="preset-btn active text-left px-2.5 py-1.5 rounded-xl border border-slate-700/70 bg-slate-800/40 text-xs font-medium text-slate-200 transition-all">
-          🌅 Golden Swell
+          <span class="en-only">🌅 Golden Swell</span><span class="id-only">🌅 Alunan Emas</span>
         </button>
         <button type="button" data-preset="tropical" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-slate-700/70 bg-slate-800/40 text-xs font-medium text-slate-200 transition-all">
-          🏝️ Tropical Noon
+          <span class="en-only">🏝️ Tropical Noon</span><span class="id-only">🏝️ Siang Tropis</span>
         </button>
         <button type="button" data-preset="storm" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-slate-700/70 bg-slate-800/40 text-xs font-medium text-slate-200 transition-all">
-          ⛈️ Atlantic Gale
+          <span class="en-only">⛈️ Atlantic Gale</span><span class="id-only">⛈️ Badai Atlantik</span>
         </button>
         <button type="button" data-preset="calm" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-slate-700/70 bg-slate-800/40 text-xs font-medium text-slate-200 transition-all">
-          🌊 Glassy Dawn
+          <span class="en-only">🌊 Glassy Dawn</span><span class="id-only">🌊 Fajar Tenang</span>
         </button>
-        <button type="button" data-preset="moonlit" class="preset-btn col-span-2 text-left px-2.5 py-1.5 rounded-xl border border-slate-700/70 bg-slate-800/40 text-xs font-medium text-slate-200 transition-all">
-          🌙 Moonlit Bioluminescence
+        <button type="button" data-preset="moonlit" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-slate-700/70 bg-slate-800/40 text-xs font-medium text-slate-200 transition-all">
+          <span class="en-only">🌙 Moonlit Bioluminescence</span><span class="id-only">🌙 Bioluminesensi Rembulan</span>
+        </button>
+        <button type="button" data-preset="arctic" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-slate-700/70 bg-slate-800/40 text-xs font-medium text-slate-200 transition-all">
+          <span class="en-only">🌌 Arctic Aurora</span><span class="id-only">🌌 Aurora Arktika</span>
+        </button>
+        <button type="button" data-preset="monsoon" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-slate-700/70 bg-slate-800/40 text-xs font-medium text-slate-200 transition-all">
+          <span class="en-only">🌧️ Monsoon Squall</span><span class="id-only">🌧️ Angin Muson Kencang</span>
+        </button>
+        <button type="button" data-preset="reef" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-slate-700/70 bg-slate-800/40 text-xs font-medium text-slate-200 transition-all">
+          <span class="en-only">🪸 Coral Reef Lagoon</span><span class="id-only">🪸 Laguna Terumbu Karang</span>
+        </button>
+        <button type="button" data-preset="crimson" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-slate-700/70 bg-slate-800/40 text-xs font-medium text-slate-200 transition-all">
+          <span class="en-only">🌇 Crimson Typhoon</span><span class="id-only">🌇 Topan Lembayung</span>
+        </button>
+        <button type="button" data-preset="fog" class="preset-btn text-left px-2.5 py-1.5 rounded-xl border border-slate-700/70 bg-slate-800/40 text-xs font-medium text-slate-200 transition-all">
+          <span class="en-only">🌫️ North Sea Fog</span><span class="id-only">🌫️ Kabut Laut Utara</span>
         </button>
       </div>
     </div>
 
     <!-- Wave Spectrum Sliders -->
     <div class="space-y-2.5 border-t border-slate-700/50 pt-2.5">
+      <div class="text-[10.5px] font-semibold uppercase tracking-wider text-sky-400/90">
+        <span class="en-only">TMA Directional Wave Dynamics</span>
+        <span class="id-only">Dinamika Gelombang Arah TMA</span>
+      </div>
       <div>
         <div class="flex justify-between text-xs mb-1">
-          <span class="text-slate-300">Wave Amplitude (Swell Height)</span>
+          <span class="text-slate-300"><span class="en-only">Wave Amplitude (Swell Height)</span><span class="id-only">Amplitudo Gelombang (Tinggi Alunan)</span></span>
           <span id="val-wave-height" class="mono text-sky-300">1.35 m</span>
         </div>
         <input id="slider-wave-height" type="range" min="0.1" max="3.5" step="0.05" value="1.35" />
@@ -318,7 +344,7 @@
 
       <div>
         <div class="flex justify-between text-xs mb-1">
-          <span class="text-slate-300">Choppiness (Steepness Q)</span>
+          <span class="text-slate-300"><span class="en-only">Choppiness (Jacobian Steepness Q)</span><span class="id-only">Ketajaman Ombak (Kecuraman Jacobian Q)</span></span>
           <span id="val-choppiness" class="mono text-sky-300">1.15</span>
         </div>
         <input id="slider-choppiness" type="range" min="0.1" max="2.2" step="0.05" value="1.15" />
@@ -326,7 +352,7 @@
 
       <div>
         <div class="flex justify-between text-xs mb-1">
-          <span class="text-slate-300">Wind Speed & Ripples</span>
+          <span class="text-slate-300"><span class="en-only">Wind Speed &amp; Capillary Ripples</span><span class="id-only">Kecepatan Angin &amp; Riak Kapiler</span></span>
           <span id="val-wind-speed" class="mono text-sky-300">14.0 m/s</span>
         </div>
         <input id="slider-wind-speed" type="range" min="2.0" max="28.0" step="0.5" value="14.0" />
@@ -334,18 +360,46 @@
 
       <div>
         <div class="flex justify-between text-xs mb-1">
-          <span class="text-slate-300">Wind Direction</span>
+          <span class="text-slate-300"><span class="en-only">Wind Direction</span><span class="id-only">Arah Angin</span></span>
           <span id="val-wind-dir" class="mono text-sky-300">28°</span>
         </div>
         <input id="slider-wind-dir" type="range" min="0" max="360" step="1" value="28" />
       </div>
-    </div>
 
-    <!-- Sun & Atmosphere Sliders -->
-    <div class="space-y-2.5 border-t border-slate-700/50 pt-2.5">
       <div>
         <div class="flex justify-between text-xs mb-1">
-          <span class="text-slate-300">Sun Elevation Angle</span>
+          <span class="text-slate-300"><span class="en-only">TMA Basin Depth (Shoaling <i>d</i>)</span><span class="id-only">Kedalaman Cekungan TMA (Kedangkalan <i>d</i>)</span></span>
+          <span id="val-water-depth" class="mono text-cyan-300">42.0 m</span>
+        </div>
+        <input id="slider-water-depth" type="range" min="2.0" max="100.0" step="1.0" value="42.0" />
+      </div>
+
+      <div>
+        <div class="flex justify-between text-xs mb-1">
+          <span class="text-slate-300"><span class="en-only">Bimodal Cross-Swell Angle</span><span class="id-only">Sudut Alunan Silang Bimodal</span></span>
+          <span id="val-swell-angle" class="mono text-sky-300">32°</span>
+        </div>
+        <input id="slider-swell-angle" type="range" min="0" max="120" step="1" value="32" />
+      </div>
+
+      <div>
+        <div class="flex justify-between text-xs mb-1">
+          <span class="text-slate-300"><span class="en-only">JONSWAP Fetch Distance</span><span class="id-only">Jarak Hembusan Angin JONSWAP</span></span>
+          <span id="val-fetch" class="mono text-sky-300">140 km</span>
+        </div>
+        <input id="slider-fetch" type="range" min="10" max="500" step="5" value="140" />
+      </div>
+    </div>
+
+    <!-- Sun, Atmosphere & Spectral Water Optics Sliders -->
+    <div class="space-y-2.5 border-t border-slate-700/50 pt-2.5">
+      <div class="text-[10.5px] font-semibold uppercase tracking-wider text-amber-400/90">
+        <span class="en-only">Atmospheric &amp; Spectral Water Light</span>
+        <span class="id-only">Cahaya Atmosfer &amp; Spektral Air</span>
+      </div>
+      <div>
+        <div class="flex justify-between text-xs mb-1">
+          <span class="text-slate-300"><span class="en-only">Sun Elevation Angle</span><span class="id-only">Sudut Elevasi Matahari</span></span>
           <span id="val-sun-el" class="mono text-amber-300">14.0°</span>
         </div>
         <input id="slider-sun-el" type="range" min="-6" max="85" step="0.5" value="14.0" />
@@ -353,7 +407,7 @@
 
       <div>
         <div class="flex justify-between text-xs mb-1">
-          <span class="text-slate-300">Sun Azimuth</span>
+          <span class="text-slate-300"><span class="en-only">Sun Azimuth</span><span class="id-only">Azimut Matahari</span></span>
           <span id="val-sun-az" class="mono text-amber-300">210°</span>
         </div>
         <input id="slider-sun-az" type="range" min="0" max="360" step="1" value="210" />
@@ -361,7 +415,7 @@
 
       <div>
         <div class="flex justify-between text-xs mb-1">
-          <span class="text-slate-300">Subsurface Scattering (SSS)</span>
+          <span class="text-slate-300"><span class="en-only">Dual-Lobe Subsurface Scatter (SSS)</span><span class="id-only">Hamburan Bawah Permukaan Ganda (SSS)</span></span>
           <span id="val-sss" class="mono text-emerald-300">1.25</span>
         </div>
         <input id="slider-sss" type="range" min="0.0" max="2.5" step="0.05" value="1.25" />
@@ -369,10 +423,93 @@
 
       <div>
         <div class="flex justify-between text-xs mb-1">
-          <span class="text-slate-300">Whitecap Foam Intensity</span>
+          <span class="text-slate-300"><span class="en-only">Jerlov Water Clarity (Type I &leftrightarrow; II)</span><span class="id-only">Kejernihan Air Jerlov (Tipe I &leftrightarrow; II)</span></span>
+          <span id="val-water-clarity" class="mono text-teal-300">0.68</span>
+        </div>
+        <input id="slider-water-clarity" type="range" min="0.0" max="1.0" step="0.02" value="0.68" />
+      </div>
+
+      <div>
+        <div class="flex justify-between text-xs mb-1">
+          <span class="text-slate-300"><span class="en-only">Cloud Coverage &amp; Sea Shadows</span><span class="id-only">Tutupan Awan &amp; Bayangan Laut</span></span>
+          <span id="val-clouds" class="mono text-amber-200">42%</span>
+        </div>
+        <input id="slider-clouds" type="range" min="0" max="100" step="1" value="42" />
+      </div>
+
+      <div>
+        <div class="flex justify-between text-xs mb-1">
+          <span class="text-slate-300"><span class="en-only">Marine Aerosol Haze &amp; Fog</span><span class="id-only">Kabut Aerosol Laut &amp; Halimun</span></span>
+          <span id="val-haze" class="mono text-amber-200">0.35</span>
+        </div>
+        <input id="slider-haze" type="range" min="0.0" max="2.0" step="0.05" value="0.35" />
+      </div>
+
+      <div>
+        <div class="flex justify-between text-xs mb-1">
+          <span class="text-slate-300"><span class="en-only">Aurora &amp; Bioluminescence</span><span class="id-only">Aurora &amp; Bioluminesensi</span></span>
+          <span id="val-aurora" class="mono text-emerald-300">0.00</span>
+        </div>
+        <input id="slider-aurora" type="range" min="0.0" max="2.0" step="0.05" value="0.0" />
+      </div>
+    </div>
+
+    <!-- Advanced PBR Material & Microfacet Tech Sliders -->
+    <div class="space-y-2.5 border-t border-slate-700/50 pt-2.5">
+      <div class="text-[10.5px] font-semibold uppercase tracking-wider text-emerald-400/90">
+        <span class="en-only">PBR Microfacet &amp; Thin-Film Material Tech</span>
+        <span class="id-only">Teknologi Material PBR &amp; Film Tipis</span>
+      </div>
+      <div>
+        <div class="flex justify-between text-xs mb-1">
+          <span class="text-slate-300"><span class="en-only">Jacobian Whitecap &amp; Wake Foam</span><span class="id-only">Busa Puncak Jacobian &amp; Jejak Ombak</span></span>
           <span id="val-foam" class="mono text-cyan-300">1.10</span>
         </div>
         <input id="slider-foam" type="range" min="0.0" max="2.5" step="0.05" value="1.10" />
+      </div>
+
+      <div>
+        <div class="flex justify-between text-xs mb-1">
+          <span class="text-slate-300"><span class="en-only">Multi-Scatter GGX &amp; Sun Glints</span><span class="id-only">Hamburan Ganda GGX &amp; Kilau Surya</span></span>
+          <span id="val-glint" class="mono text-amber-200">1.15</span>
+        </div>
+        <input id="slider-glint" type="range" min="0.0" max="2.2" step="0.05" value="1.15" />
+      </div>
+
+      <div>
+        <div class="flex justify-between text-xs mb-1">
+          <span class="text-slate-300"><span class="en-only">Thin-Film Iridescence &amp; Wet Coat</span><span class="id-only">Pendaran Lapisan Tipis &amp; Lapisan Basah</span></span>
+          <span id="val-iridescence" class="mono text-fuchsia-300">0.65</span>
+        </div>
+        <input id="slider-iridescence" type="range" min="0.0" max="2.0" step="0.05" value="0.65" />
+      </div>
+
+      <div>
+        <div class="flex justify-between text-xs mb-1">
+          <span class="text-slate-300"><span class="en-only">Langmuir Wind-Roll Foam Streaks</span><span class="id-only">Guratan Busa Sirkulasi Langmuir</span></span>
+          <span id="val-langmuir" class="mono text-cyan-300">0.75</span>
+        </div>
+        <input id="slider-langmuir" type="range" min="0.0" max="2.0" step="0.05" value="0.75" />
+      </div>
+
+      <div>
+        <div class="flex justify-between text-xs mb-1">
+          <span class="text-slate-300"><span class="en-only">Rain Ripples &amp; Crest Spray Mist</span><span class="id-only">Riak Hujan &amp; Kabut Percikan Puncak</span></span>
+          <span id="val-rain" class="mono text-sky-300">0.00</span>
+        </div>
+        <input id="slider-rain" type="range" min="0.0" max="2.0" step="0.05" value="0.0" />
+      </div>
+
+      <div>
+        <span class="text-xs text-slate-300 block mb-1"><span class="en-only">HDR Display Tone Mapper</span><span class="id-only">Pemeta Nada Tampilan HDR</span></span>
+        <div class="grid grid-cols-2 gap-1.5">
+          <button type="button" id="btn-tm-agx" data-tonemap="1" class="tonemap-btn active text-center px-2 py-1 rounded-lg border border-slate-700/70 bg-slate-800/40 text-[11px] font-medium text-slate-200 transition-all">
+            AgX / PBR Neutral
+          </button>
+          <button type="button" id="btn-tm-aces" data-tonemap="0" class="tonemap-btn text-center px-2 py-1 rounded-lg border border-slate-700/70 bg-slate-800/40 text-[11px] font-medium text-slate-200 transition-all">
+            ACES Filmic
+          </button>
+        </div>
       </div>
     </div>
 
@@ -380,7 +517,7 @@
     <div class="space-y-2.5 border-t border-slate-700/50 pt-2.5">
       <div>
         <div class="flex justify-between text-xs mb-1">
-          <span class="text-slate-300">Floating Eye Clearance</span>
+          <span class="text-slate-300"><span class="en-only">Floating Eye Clearance</span><span class="id-only">Ketinggian Pandangan Terapung</span></span>
           <span id="val-cam-height" class="mono text-sky-300">1.65 m</span>
         </div>
         <input id="slider-cam-height" type="range" min="0.35" max="8.0" step="0.05" value="1.65" />
@@ -388,14 +525,14 @@
 
       <div>
         <div class="flex justify-between text-xs mb-1">
-          <span class="text-slate-300">Wave Roll / Tilt Coupling</span>
+          <span class="text-slate-300"><span class="en-only">Wave Roll / Tilt Coupling</span><span class="id-only">Kopling Gulungan / Kemiringan Ombak</span></span>
           <span id="val-cam-tilt" class="mono text-sky-300">45%</span>
         </div>
         <input id="slider-cam-tilt" type="range" min="0" max="100" step="5" value="45" />
       </div>
 
       <div class="flex items-center justify-between pt-1">
-        <span class="text-xs text-slate-300">Oceanographic Weather Buoy</span>
+        <span class="text-xs text-slate-300"><span class="en-only">Oceanographic Weather Buoy (PBR)</span><span class="id-only">Pelampung Cuaca Oseanografi (PBR)</span></span>
         <input id="toggle-buoy" type="checkbox" checked class="w-4 h-4 accent-sky-400 rounded cursor-pointer" />
       </div>
     </div>
@@ -404,15 +541,15 @@
     <div class="border-t border-slate-700/50 pt-2.5 text-[11px] text-slate-400 space-y-1">
       <div class="flex justify-between">
         <span class="text-slate-300 font-medium">Desktop:</span>
-        <span>WASD / Arrows + Mouse Drag + Scroll</span>
+        <span><span class="en-only">WASD / Arrows + Mouse Drag + Scroll</span><span class="id-only">WASD / Panah + Tarik Tetikus + Gulir</span></span>
       </div>
       <div class="flex justify-between">
         <span class="text-slate-300 font-medium">Vertical:</span>
-        <span>Space / E (Up) • Shift / Q (Dive)</span>
+        <span><span class="en-only">Space / E (Up) &bull; Shift / Q (Dive)</span><span class="id-only">Spasi / E (Naik) &bull; Shift / Q (Selam)</span></span>
       </div>
       <div class="flex justify-between">
         <span class="text-slate-300 font-medium">Mobile:</span>
-        <span>Dual Touch Joysticks + Drag to Look</span>
+        <span><span class="en-only">Dual Touch Joysticks + Drag to Look</span><span class="id-only">Tuas Sentuh Ganda + Geser Kamera</span></span>
       </div>
     </div>
   </aside>
@@ -421,7 +558,7 @@
   <div id="touch-controls-container" class="ui-layer fixed bottom-4 left-4 right-4 z-20 pointer-events-none flex items-end justify-between hidden">
     <!-- Left Virtual Joystick: Move Forward/Back/Strafe -->
     <div class="flex flex-col items-center gap-1.5 pointer-events-auto">
-      <span class="text-[10px] uppercase tracking-wider font-semibold text-sky-300/80 bg-slate-900/60 px-2 py-0.5 rounded-full border border-sky-400/20">Move / Drift</span>
+      <span class="text-[10px] uppercase tracking-wider font-semibold text-sky-300/80 bg-slate-900/60 px-2 py-0.5 rounded-full border border-sky-400/20"><span class="en-only">Move / Drift</span><span class="id-only">Gerak / Hanyut</span></span>
       <div id="joystick-move" class="joystick-zone">
         <div id="knob-move" class="joystick-knob"></div>
       </div>
@@ -430,16 +567,16 @@
     <!-- Center-Bottom Quick Elevation / Dive Buttons -->
     <div class="flex items-center gap-2 pointer-events-auto mb-2">
       <button id="btn-dive" type="button" class="glass-pill active:scale-90 transition-transform rounded-2xl px-3.5 py-2.5 text-xs font-medium text-cyan-200 flex items-center gap-1 select-none">
-        <span>▼ Dive</span>
+        <span><span class="en-only">▼ Dive</span><span class="id-only">▼ Selam</span></span>
       </button>
       <button id="btn-surface" type="button" class="glass-pill active:scale-90 transition-transform rounded-2xl px-3.5 py-2.5 text-xs font-medium text-sky-200 flex items-center gap-1 select-none">
-        <span>▲ Rise</span>
+        <span><span class="en-only">▲ Rise</span><span class="id-only">▲ Naik</span></span>
       </button>
     </div>
 
     <!-- Right Virtual Joystick: Look Yaw / Pitch -->
     <div class="flex flex-col items-center gap-1.5 pointer-events-auto">
-      <span class="text-[10px] uppercase tracking-wider font-semibold text-sky-300/80 bg-slate-900/60 px-2 py-0.5 rounded-full border border-sky-400/20">Look / Orbit</span>
+      <span class="text-[10px] uppercase tracking-wider font-semibold text-sky-300/80 bg-slate-900/60 px-2 py-0.5 rounded-full border border-sky-400/20"><span class="en-only">Look / Orbit</span><span class="id-only">Lihat / Orbit</span></span>
       <div id="joystick-look" class="joystick-zone">
         <div id="knob-look" class="joystick-knob"></div>
       </div>
@@ -450,23 +587,47 @@
     (function () {
       "use strict";
 
+      // Safe localStorage wrapper for sandboxed environments
+      function safeGetStorage(key, fallback) {
+        try {
+          return localStorage.getItem(key) || fallback;
+        } catch (e) {
+          return fallback;
+        }
+      }
+      function safeSetStorage(key, val) {
+        try {
+          localStorage.setItem(key, val);
+        } catch (e) {}
+      }
+
       // Bilingual Language State (LoLyeah Standards)
-      let currentLang = localStorage.getItem('lolyeah_lang') || 'en';
+      let currentLang = safeGetStorage("lolyeah_lang", "en");
 
       // =========================================================================
-      // 1. SIMULATION STATE & JONSWAP DIRECTIONAL SPECTRUM
+      // 1. SIMULATION STATE & TMA (JONSWAP x KITAIGORODSKII) DIRECTIONAL SPECTRUM
       // =========================================================================
       const state = {
         waveHeight: 1.35,
         choppiness: 1.15,
         windSpeed: 14.0,
         windDirDeg: 28.0,
+        waterDepth: 42.0,       // TMA finite depth (meters)
         sunElevationDeg: 14.0,
         sunAzimuthDeg: 210.0,
         sssIntensity: 1.25,
+        waterClarity: 0.68,     // Jerlov clarity (0 = Type II coastal emerald, 1 = Type I oceanic cobalt)
         foamIntensity: 1.10,
+        glintIntensity: 1.15,   // Multi-scatter GGX + discrete capillary sun glints
+        iridescence: 0.65,      // Belcour-Barla thin-film interference & buoy wet clearcoat
+        toneMapMode: 1.0,       // 1.0 = AgX / Khronos PBR Neutral, 0.0 = ACES Filmic
+        swellAngleDeg: 32.0,    // Bimodal cross-swell angle offset (deg)
+        fetchKm: 140.0,         // JONSWAP wind fetch distance (km)
         cloudCoverage: 0.42,
-        nightBio: 0.0,
+        hazeIntensity: 0.35,    // Marine boundary-layer aerosol turbidity & fog
+        nightBio: 0.0,          // Aurora & nocturnal dinoflagellate bioluminescence
+        langmuirStrength: 0.75, // Wind-parallel Langmuir circulation foam streaks
+        rainSpray: 0.0,         // Capillary raindrop rings & crest sea-spray mist
 
         // Camera & Buoyancy State
         floatingMode: true,
@@ -482,9 +643,10 @@
         wavePitchOffset: 0.0,
         fovDeg: 60.0,
 
-        // Buoy State (floats at world origin [0, y, 0])
+        // Buoy State (floats at world origin [0, y, 0] with dynamic wet-line memory)
         buoyPos: [0.0, 0.0, 0.0],
         buoyNormal: [0.0, 1.0, 0.0],
+        buoyWetCrest: 0.65,
 
         // Input state
         keys: {},
@@ -497,38 +659,85 @@
         lastTouchLook: [0, 0],
       };
 
-      const NUM_MACRO_WAVES = 16;
+      const NUM_MACRO_WAVES = 24;
       const waveParams = new Float32Array(NUM_MACRO_WAVES * 4);
+      const waveOmega = new Float32Array(NUM_MACRO_WAVES);
+
+      // Kitaigorodskii finite-depth attenuation factor Phi(omega, d) for the TMA wave spectrum
+      // Reference: Bouws et al. (1985), Horvath (2015) "Empirical Directional Wave Spectra for Computer Graphics"
+      function kitaigorodskiiDepthFactor(omega, depth) {
+        const omegaH = omega * Math.sqrt(depth / 9.81);
+        if (omegaH >= 2.0) return 1.0;
+        if (omegaH <= 1.0) return 0.5 * omegaH * omegaH;
+        const diff = 2.0 - omegaH;
+        return 1.0 - 0.5 * diff * diff;
+      }
 
       function rebuildWaveSpectrum() {
         const baseAngle = (state.windDirDeg * Math.PI) / 180.0;
         const golden = 0.61803398875;
+        const depth = Math.max(1.5, state.waterDepth);
+        const U10 = Math.max(2.0, state.windSpeed);
+        const g = 9.81;
+
+        // Hasselmann (1973) JONSWAP fetch-limited peak wavelength & frequency
+        const fetchFactor = Math.pow(Math.max(10.0, state.fetchKm) / 140.0, 0.28);
+        const windFactor = Math.min(1.85, Math.max(0.30, (U10 / 14.0) * fetchFactor));
+        const peakLambda = 32.0 * windFactor;
+        const peakK = (2.0 * Math.PI) / peakLambda;
+        const omegaP = Math.sqrt(g * peakK * Math.tanh(peakK * depth));
+        const crossSwellRad = (state.swellAngleDeg * Math.PI) / 180.0;
+
         for (let i = 0; i < NUM_MACRO_WAVES; i++) {
           const t = i / (NUM_MACRO_WAVES - 1);
-          const wavelength = 95.0 * Math.pow(0.017, Math.pow(t, 1.12));
+          // Log-spaced wavelength cascade from 115m long ocean swells down to 1.4m wind waves
+          const wavelength = 115.0 * Math.pow(0.0122, Math.pow(t, 1.1));
           const k = (2.0 * Math.PI) / wavelength;
 
+          // Exact finite-depth gravity-capillary dispersion relation
+          const sigmaOverRho = 0.0000722; // surface tension sigma / rho
+          const omega = Math.sqrt((g * k + sigmaOverRho * k * k * k) * Math.tanh(k * depth));
+
+          // Hasselmann frequency-dependent directional spreading:
+          // Swells near omegaP are tightly collimated; higher-frequency waves spread wider,
+          // plus a secondary cross-swell component (bimodal sea state)
           const randSpread = ((i * golden) % 1.0) - 0.5;
-          let angleOffset = randSpread * (0.55 + 0.55 * t);
-          if (i % 5 === 1) {
-            angleOffset += 0.42;
+          const freqRatio = omega / Math.max(0.2, omegaP);
+          const spreadWidth = freqRatio < 1.05 ? 0.36 : Math.min(1.15, 0.38 * Math.pow(freqRatio, 0.65));
+          let angleOffset = randSpread * spreadWidth * 2.0;
+          if (i % 3 === 1) {
+            // Bimodal secondary cross-swell train controlled by user Cross-Swell Angle
+            angleOffset += crossSwellRad;
+          } else if (i % 7 === 4) {
+            angleOffset -= crossSwellRad * 0.55;
           }
+
           const theta = baseAngle + angleOffset;
           const dx = Math.cos(theta);
           const dz = Math.sin(theta);
 
-          const windFactor = Math.min(1.6, Math.max(0.35, state.windSpeed / 14.0));
-          const peakK = (2.0 * Math.PI) / (28.0 * windFactor);
+          // JONSWAP peak enhancement factor gamma = 3.3 + TMA Kitaigorodskii depth filter
+          const sigmaJ = omega <= omegaP ? 0.07 : 0.09;
+          const rExp = Math.exp(-Math.pow(omega - omegaP, 2.0) / (2.0 * sigmaJ * sigmaJ * omegaP * omegaP));
+          const jonswapPeak = Math.pow(3.3, rExp * 0.42);
+          const tmaPhi = kitaigorodskiiDepthFactor(omega, depth);
+
           const ratioK = k / peakK;
-          const spectrumAmp =
-            0.34 *
-            Math.pow(wavelength / 28.0, 0.88) *
-            Math.exp(-0.22 * (1.0 / (ratioK * ratioK + 0.08)));
+          const baseAmp =
+            0.29 *
+            Math.pow(wavelength / 30.0, 0.86) *
+            Math.exp(-0.24 * (1.0 / (ratioK * ratioK + 0.075))) *
+            jonswapPeak *
+            Math.sqrt(tmaPhi);
+
+          // Hasselmann cos^2s(angleOffset / 2) directional weighting
+          const dirWeight = Math.max(0.25, Math.pow(Math.cos(angleOffset * 0.5), 2.0));
 
           waveParams[i * 4 + 0] = dx;
           waveParams[i * 4 + 1] = dz;
-          waveParams[i * 4 + 2] = spectrumAmp;
+          waveParams[i * 4 + 2] = baseAmp * dirWeight;
           waveParams[i * 4 + 3] = k;
+          waveOmega[i] = omega;
         }
       }
       rebuildWaveSpectrum();
@@ -542,14 +751,16 @@
 
         const H = state.waveHeight;
         const Q = state.choppiness;
-        const windScale = 0.7 + 0.025 * state.windSpeed;
+        const depth = Math.max(1.5, state.waterDepth);
+        const windScale = 0.72 + 0.024 * state.windSpeed;
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 14; i++) {
           const dx = waveParams[i * 4 + 0];
           const dz = waveParams[i * 4 + 1];
           const amp = waveParams[i * 4 + 2] * H;
           const k = waveParams[i * 4 + 3];
-          const omega = Math.sqrt(9.81 * k) * windScale;
+          // Use precomputed wave dispersion omega to eliminate per-frame Math.sqrt and Math.tanh
+          const omega = waveOmega[i] * windScale;
           const phase = (dx * wx + dz * wz) * k - omega * time + i * 1.732;
 
           const groupPhase = (dx * wx + dz * wz) * (k * 0.09) - omega * 0.45 * time + i * 2.1;
@@ -558,11 +769,12 @@
           const A = amp * groupMod;
           const s = Math.sin(phase);
           const c = Math.cos(phase);
-          const steep = Math.min(0.75, Q / (k * A * NUM_MACRO_WAVES + 1.15));
+          const steep = Math.min(0.72, Q / (k * A * NUM_MACRO_WAVES + 1.15));
 
           dispX -= dx * steep * A * s;
           dispZ -= dz * steep * A * s;
-          dispY += A * c;
+          // 2nd-order Stokes trochoidal crest sharpening
+          dispY += A * c + 0.12 * steep * A * (c * c - s * s);
 
           dYdX -= dx * k * A * s;
           dYdZ -= dz * k * A * s;
@@ -689,11 +901,18 @@
       }
 
       // =========================================================================
-      // 3. RADIAL ADAPTIVE OCEAN MESH + DETAILED WEATHER BUOY GEOMETRY
+      // 3. RADIAL ADAPTIVE OCEAN MESH + MULTI-MATERIAL PBR WEATHER BUOY GEOMETRY
       // =========================================================================
+      // Buoy Material Part IDs:
+      // 0.0 = Ocean Surface Mesh
+      // 1.0 = Marine International Orange Polyurethane Hull (with Porous Wet-Surface & Clearcoat Runoff)
+      // 2.0 = Brushed 316L Stainless Steel & SOLAS Retroreflective Prism Collar
+      // 3.0 = Fresnel-Lensed Clearcoat Amber LED Solar Beacon
+      // 4.0 = Iridescent Thin-Film Silicon Photovoltaic Solar Panel Wings
+      // 5.0 = Submerged Oxidized Copper Anti-Fouling Keel & Counterweight
       function createSceneGeometry() {
-        const rings = 230;
-        const sectors = 240;
+        const rings = 300;
+        const sectors = 320;
         const positions = [];
         const indices = [];
 
@@ -754,23 +973,54 @@
           }
         }
 
-        // Buoy underwater keel & main international orange float collar
-        addCylinder(1.38, 0.65, -1.25, 0.15, 28, 1.0);
-        addCylinder(1.48, 1.38, 0.15, 0.72, 28, 1.0);
-        // White high-visibility marine bumper ring
-        addCylinder(1.52, 1.52, 0.36, 0.55, 28, 2.0);
-        // Upper orange deck cone
-        addCylinder(0.88, 1.46, 0.72, 1.12, 28, 1.0);
-        // Central steel instrument housing & 4 corner guard struts
-        addCylinder(0.36, 0.48, 1.12, 2.42, 18, 2.0);
+        // Helper for tilted Solar Panel Wings around the buoy mast (partId = 4.0)
+        function addSolarWing(angleRad, innerR, outerR, width, yBase, tiltUp, partId) {
+          const ca = Math.cos(angleRad);
+          const sa = Math.sin(angleRad);
+          const tx = -sa * (width * 0.5);
+          const tz = ca * (width * 0.5);
+
+          const p0x = ca * innerR - tx, p0z = sa * innerR - tz, p0y = yBase;
+          const p1x = ca * innerR + tx, p1z = sa * innerR + tz, p1y = yBase;
+          const p2x = ca * outerR + tx, p2z = sa * outerR + tz, p2y = yBase - tiltUp;
+          const p3x = ca * outerR - tx, p3z = sa * outerR - tz, p3y = yBase - tiltUp;
+
+          const baseIdx = positions.length / 4;
+          positions.push(
+            p0x, p0y, p0z, partId,
+            p1x, p1y, p1z, partId,
+            p2x, p2y, p2z, partId,
+            p3x, p3y, p3z, partId
+          );
+          indices.push(baseIdx, baseIdx + 1, baseIdx + 2);
+          indices.push(baseIdx, baseIdx + 2, baseIdx + 3);
+        }
+
+        // 1. Submerged copper anti-fouling ballast keel (partId = 5.0)
+        addCylinder(0.75, 0.45, -1.75, -0.55, 24, 5.0);
+        addCylinder(1.32, 0.75, -0.55, 0.08, 28, 5.0);
+
+        // 2. Main International Orange polyurethane float collar (partId = 1.0)
+        addCylinder(1.50, 1.32, 0.08, 0.74, 30, 1.0);
+        // 3. SOLAS retroreflective white/silver marine collar ring (partId = 2.0)
+        addCylinder(1.54, 1.54, 0.36, 0.56, 30, 2.0);
+        // 4. Upper orange conical deck (partId = 1.0)
+        addCylinder(0.88, 1.48, 0.74, 1.14, 30, 1.0);
+
+        // 5. Central 316L stainless steel instrument core & 4 corner guard struts (partId = 2.0)
+        addCylinder(0.36, 0.48, 1.14, 2.44, 20, 2.0);
         for (let k = 0; k < 4; k++) {
           const a = (k * Math.PI) / 2.0 + Math.PI / 4.0;
-          addCylinder(0.06, 0.07, 1.05, 2.40, 8, 2.0, Math.cos(a) * 0.62, Math.sin(a) * 0.62);
+          addCylinder(0.06, 0.07, 1.06, 2.42, 10, 2.0, Math.cos(a) * 0.62, Math.sin(a) * 0.62);
+          // 6. 4 Angled Thin-Film Iridescent Photovoltaic Solar Wings (partId = 4.0)
+          const wingAngle = (k * Math.PI) / 2.0;
+          addSolarWing(wingAngle, 0.42, 0.96, 0.44, 1.72, 0.24, 4.0);
         }
-        // Upper radar reflector platform
-        addCylinder(0.72, 0.72, 2.38, 2.52, 20, 1.0);
-        // Amber LED Solar Marine Beacon on top
-        addCylinder(0.24, 0.30, 2.52, 3.02, 18, 3.0);
+
+        // 7. Upper radar reflector & orange sensor ring (partId = 1.0)
+        addCylinder(0.74, 0.74, 2.40, 2.54, 22, 1.0);
+        // 8. Amber LED Solar Marine Beacon with clearcoat Fresnel dome (partId = 3.0)
+        addCylinder(0.25, 0.31, 2.54, 3.06, 20, 3.0);
 
         return {
           vertexData: new Float32Array(positions),
@@ -780,26 +1030,51 @@
       }
 
       // =========================================================================
-      // 4. WEBGPU WGSL SHADERS (SKY PASS + OCEAN & BUOY PIPELINE)
+      // 4. WEBGPU WGSL SHADERS (PHYSICAL SKY + TMA WATER + MULTI-SCATTER GGX PBR)
       // =========================================================================
       const WGSL_SHADER_CODE = /* wgsl */ `
         struct Uniforms {
           viewProj: mat4x4<f32>,
           invViewProj: mat4x4<f32>,
-          camPos: vec4<f32>,        // xyz = camPos, w = time
-          sunDir: vec4<f32>,        // xyz = normalized sunDir, w = waveHeight
-          oceanParams: vec4<f32>,   // x = choppiness, y = windSpeed, z = sssIntensity, w = foamIntensity
-          extraParams: vec4<f32>,   // x = cloudCoverage, y = nightBio, z = showBuoy, w = submergedFlag
-          buoyPos: vec4<f32>,       // xyz = buoy world offset, w = unused
-          buoyUp: vec4<f32>,        // xyz = buoy tilted up vector, w = windDirRad
-          waves: array<vec4<f32>, 16>, // xy = dir, z = ampRatio, w = k
+          camPos: vec4<f32>,          // xyz = camPos, w = time
+          sunDir: vec4<f32>,          // xyz = normalized sunDir, w = waveHeight
+          oceanParams: vec4<f32>,     // x = choppiness, y = windSpeed, z = sssIntensity, w = foamIntensity
+          extraParams: vec4<f32>,     // x = cloudCoverage, y = nightBio, z = showBuoy, w = submergedFlag
+          buoyPos: vec4<f32>,         // xyz = buoy world offset, w = waterClarity (Jerlov Type I <-> II)
+          buoyUp: vec4<f32>,          // xyz = buoy tilted up vector, w = windDirRad
+          materialParams: vec4<f32>,  // x = waterDepth, y = iridescence/wetCoat, z = glintIntensity, w = toneMapMode (1=AgX, 0=ACES)
+          atmosParams: vec4<f32>,     // x = hazeIntensity, y = rainSpray, z = langmuirStrength, w = swellAngleRad
+          waves: array<vec4<f32>, 24>,// xy = dir, z = ampRatio, w = k
         };
 
         @group(0) @binding(0) var<uniform> u: Uniforms;
 
+        const PI: f32 = 3.14159265359;
+
         fn pow5_approx(x: f32) -> f32 {
           let x2 = x * x;
           return x2 * x2 * x;
+        }
+
+        // Khronos PBR Neutral / AgX-inspired HDR Tone Mapper + ACES Filmic option
+        // Preserves saturated highlights & prevents hue-shifts on intense solar water glints
+        fn toneMapPBRNeutral(color_in: vec3<f32>) -> vec3<f32> {
+          let startCompression = 0.8 - 0.04;
+          let desaturation = 0.15;
+          var color = max(color_in, vec3<f32>(0.0));
+          let x = min(color.r, min(color.g, color.b));
+          let offset = select(0.04, x - 6.25 * x * x, x < 0.08);
+          color -= vec3<f32>(offset);
+
+          let peak = max(color.r, max(color.g, color.b));
+          if (peak >= startCompression) {
+            let d = 1.0 - startCompression;
+            let newPeak = 1.0 - d * d / (peak + d - startCompression);
+            color *= newPeak / max(peak, 0.0001);
+            let g = 1.0 - 1.0 / (desaturation * (peak - newPeak) + 1.0);
+            color = mix(color, vec3<f32>(newPeak), g);
+          }
+          return pow(clamp(color, vec3<f32>(0.0), vec3<f32>(1.0)), vec3<f32>(1.0 / 2.2));
         }
 
         fn toneMapACES(x: vec3<f32>) -> vec3<f32> {
@@ -812,6 +1087,13 @@
           return pow(mapped, vec3<f32>(1.0 / 2.2));
         }
 
+        fn applyToneMapping(hdr: vec3<f32>) -> vec3<f32> {
+          if (u.materialParams.w > 0.5) {
+            return toneMapPBRNeutral(hdr);
+          }
+          return toneMapACES(hdr);
+        }
+
         fn hash21(p: vec2<f32>) -> f32 {
           var p3 = fract(vec3<f32>(p.xyx) * 0.1031);
           p3 += dot(p3, p3.yzx + 33.33);
@@ -821,7 +1103,8 @@
         fn noise2D(p: vec2<f32>) -> f32 {
           let i = floor(p);
           let f = fract(p);
-          let u2 = f * f * (3.0 - 2.0 * f);
+          // C2-continuous quintic interpolation eliminates grid-line derivative kinks
+          let u2 = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
           let a = hash21(i + vec2<f32>(0.0, 0.0));
           let b = hash21(i + vec2<f32>(1.0, 0.0));
           let c = hash21(i + vec2<f32>(0.0, 1.0));
@@ -842,73 +1125,176 @@
           return v;
         }
 
+        // Voronoi cellular bubble & foam lace generator for multi-scale whitecap decay
         fn foamBubbles(p: vec2<f32>) -> f32 {
           let n1 = noise2D(p * 3.5);
-          let n2 = noise2D(p * 9.0 + vec2<f32>(4.2, -7.1));
-          let n3 = noise2D(p * 21.0 - vec2<f32>(11.3, 5.4));
-          let ridge = 1.0 - abs(n2 * 2.0 - 1.0);
-          return clamp(n1 * 0.5 + ridge * 0.35 + n3 * 0.25, 0.0, 1.0);
+          let n2 = noise2D(p * 9.5 + vec2<f32>(4.2, -7.1));
+          let n3 = noise2D(p * 23.0 - vec2<f32>(11.3, 5.4));
+          let cellRidge = 1.0 - abs(n2 * 2.0 - 1.0);
+          let microCells = 1.0 - abs(n3 * 2.0 - 1.0);
+          return clamp(n1 * 0.42 + cellRidge * 0.36 + microCells * 0.22, 0.0, 1.0);
         }
 
+        // Belcour & Barla (2017) Analytical Thin-Film Iridescence Spectral Phase Shift
+        // Evaluates optical path difference OPD = 2 * n_film * d * cos(theta_t) in RGB
+        fn evalThinFilmIridescence(cosThetaI: f32, dNanometers: f32, nFilm: f32) -> vec3<f32> {
+          let sin2ThetaT = (1.0 - cosThetaI * cosThetaI) / (nFilm * nFilm);
+          let cosThetaT = sqrt(max(0.0, 1.0 - sin2ThetaT));
+          let opd = 2.0 * nFilm * dNanometers * cosThetaT; // in nm
+          // Phase shift 2*pi*OPD / lambda + pi reflection phase shift for RGB (650nm, 532nm, 460nm)
+          let lambdas = vec3<f32>(650.0, 532.0, 460.0);
+          let phase = (2.0 * PI * opd) / lambdas + PI;
+          let interference = 0.5 + 0.5 * cos(phase);
+          return clamp(interference, vec3<f32>(0.04), vec3<f32>(1.0));
+        }
+
+        // Smith Height-Correlated GGX Masking-Shadowing Function G2 (Heitz 2014)
+        fn V_SmithGGXCorrelated(NoV: f32, NoL: f32, roughness: f32) -> f32 {
+          let a2 = roughness * roughness * roughness * roughness;
+          let ggxV = NoL * sqrt(NoV * NoV * (1.0 - a2) + a2);
+          let ggxL = NoV * sqrt(NoL * NoL * (1.0 - a2) + a2);
+          return 0.5 / max(ggxV + ggxL, 0.0001);
+        }
+
+        // Turquin (2019) / Kulla-Conty Practical Multiple-Scattering Energy Compensation
+        // Restores lost energy at high roughness and grazing angles
+        fn multiscatterEnergyComp(NoV: f32, roughness: f32, F0: vec3<f32>) -> vec3<f32> {
+          // Analytical fit to directional albedo E(mu, roughness)
+          let r = clamp(roughness, 0.02, 1.0);
+          let E_mu = clamp(1.0 - r * r * (0.28 + 0.42 * pow(1.0 - NoV, 2.5)), 0.25, 1.0);
+          return vec3<f32>(1.0) + F0 * ((1.0 - E_mu) / E_mu);
+        }
+
+        // Physical Sky & Atmosphere: Rayleigh + Cornette-Shanks Dual-Lobe Mie + Chappuis Ozone + Hillaire Multi-Scatter
         fn evaluateSky(rayDir: vec3<f32>, includeSunDisc: bool) -> vec3<f32> {
           let sunDir = normalize(u.sunDir.xyz);
           let sunEl = sunDir.y;
           let cosTheta = clamp(dot(rayDir, sunDir), -1.0, 1.0);
           let upY = max(rayDir.y, 0.001);
 
-          let dayWeight = smoothstep(-0.08, 0.28, sunEl);
-          let goldenWeight = smoothstep(-0.10, 0.06, sunEl) * (1.0 - smoothstep(0.06, 0.38, sunEl));
-          let nightWeight = 1.0 - smoothstep(-0.12, 0.04, sunEl);
+          // Optical airmass along view ray & sun ray (Kasten-Young spherical shell approximation)
+          let viewAirMass = 1.0 / (upY + 0.15 * pow(93.885 - acos(clamp(upY, 0.0, 1.0)) * 57.2958, -1.253));
+          let sunZenithCos = clamp(sunEl, -0.15, 1.0);
+          let sunAirMass = 1.0 / max(0.06, sunZenithCos + 0.12);
 
-          let zenithDay = vec3<f32>(0.055, 0.24, 0.58);
-          let zenithGolden = vec3<f32>(0.04, 0.11, 0.28);
-          let zenithNight = vec3<f32>(0.005, 0.012, 0.035);
+          // Spectral extinction coefficients (Rayleigh + Ozone Chappuis absorption band + Mie aerosol)
+          let betaRayleigh = vec3<f32>(0.058, 0.135, 0.331);
+          let betaOzone    = vec3<f32>(0.065, 0.088, 0.004); // Chappuis band absorbs orange/green at twilight!
+          let betaMie      = vec3<f32>(0.042, 0.042, 0.042);
 
-          let horizonDay = vec3<f32>(0.48, 0.74, 0.94);
-          let horizonGolden = vec3<f32>(0.96, 0.44, 0.16);
-          let horizonNight = vec3<f32>(0.018, 0.042, 0.095);
+          let sunTransmittance = exp(-(betaRayleigh * 0.42 + betaOzone * 0.68 + betaMie * 0.25) * min(sunAirMass, 11.5));
+          let viewTransmittance = exp(-(betaRayleigh * 0.35 + betaOzone * 0.45 + betaMie * 0.22) * min(viewAirMass, 9.0));
 
-          let zenithCol = mix(mix(zenithNight, zenithDay, dayWeight), zenithGolden, goldenWeight * 0.65);
+          // Rayleigh phase function: 3/(16*pi) * (1 + cos^2(theta))
+          let phaseRayleigh = 0.05968 * (1.0 + cosTheta * cosTheta);
+
+          // Cornette-Shanks + Henyey-Greenstein Dual-Lobe Aerosol Phase Function
+          let gF = 0.78;
+          let gF2 = gF * gF;
+          let phaseMieFwd = (1.5 * (1.0 - gF2) / (2.0 + gF2)) * (1.0 + cosTheta * cosTheta) / pow(max(0.02, 1.0 + gF2 - 2.0 * gF * cosTheta), 1.5);
+          let phaseMieBack = 0.08 * (1.0 + (cosTheta * -0.35));
+          let phaseMie = phaseMieFwd * 0.22 + phaseMieBack;
+
+          let dayWeight = smoothstep(-0.09, 0.26, sunEl);
+          let goldenWeight = smoothstep(-0.10, 0.07, sunEl) * (1.0 - smoothstep(0.07, 0.38, sunEl));
+          let nightWeight = 1.0 - smoothstep(-0.12, 0.03, sunEl);
+
+          // Base analytical single + multiple scattering (Hillaire 2020 Psi_ms approximation)
+          let zenithDay = vec3<f32>(0.045, 0.21, 0.56);
+          let zenithGolden = vec3<f32>(0.035, 0.105, 0.30) * (vec3<f32>(1.0) - betaOzone * 2.2);
+          let zenithNight = vec3<f32>(0.004, 0.011, 0.032);
+
+          let horizonDay = vec3<f32>(0.46, 0.73, 0.94);
+          let horizonGolden = mix(vec3<f32>(0.98, 0.42, 0.14), sunTransmittance * 1.45, 0.35);
+          let horizonNight = vec3<f32>(0.016, 0.038, 0.088);
+
+          let zenithCol = mix(mix(zenithNight, zenithDay, dayWeight), zenithGolden, goldenWeight * 0.72);
           var horizonCol = mix(mix(horizonNight, horizonDay, dayWeight), horizonGolden, goldenWeight);
 
           let stormFactor = clamp((u.sunDir.w - 1.8) * 0.45, 0.0, 0.75);
-          horizonCol = mix(horizonCol, vec3<f32>(0.22, 0.28, 0.35) * max(0.2, dayWeight + 0.15), stormFactor);
+          horizonCol = mix(horizonCol, vec3<f32>(0.21, 0.27, 0.34) * max(0.2, dayWeight + 0.15), stormFactor);
 
-          let opticalDepth = pow(1.0 - upY, 2.8);
+          let opticalDepth = pow(1.0 - upY, 2.75);
           var sky = mix(zenithCol, horizonCol, opticalDepth);
 
-          let miePhase = pow(max(0.0, cosTheta), 6.0) * 0.45 + pow(max(0.0, cosTheta), 32.0) * 0.65;
+          // Add physical Rayleigh + Mie + Multiple-Scattering contribution
           let sunTint = mix(
             vec3<f32>(0.45, 0.65, 0.95),
-            mix(vec3<f32>(1.0, 0.92, 0.78), vec3<f32>(1.0, 0.45, 0.12), goldenWeight),
+            mix(vec3<f32>(1.0, 0.93, 0.80), vec3<f32>(1.0, 0.44, 0.12), goldenWeight),
             smoothstep(-0.08, 0.12, sunEl)
-          );
-          sky += sunTint * miePhase * (0.45 + 0.65 * goldenWeight);
+          ) * mix(vec3<f32>(1.0), sunTransmittance * 1.65, 0.42);
 
-          if (rayDir.y > 0.015 && u.extraParams.x > 0.01) {
-            let cloudUV = (rayDir.xz / (rayDir.y + 0.09)) * 0.95 + vec2<f32>(u.camPos.w * 0.012, u.camPos.w * 0.005);
+          let multiScatterPsi = (betaRayleigh * 1.6 + vec3<f32>(0.08)) * (1.0 - viewTransmittance) * (0.25 + 0.75 * dayWeight);
+          sky += multiScatterPsi * 0.28 + sunTint * (phaseMie * 0.36 + pow(max(0.0, cosTheta), 8.0) * 0.32) * (0.45 + 0.65 * goldenWeight);
+
+          // Volumetric Beer-Powder Self-Shadowed Clouds & Crepuscular Rays
+          if (rayDir.y > 0.012 && u.extraParams.x > 0.01) {
+            let cloudUV = (rayDir.xz / (rayDir.y + 0.088)) * 0.95 + vec2<f32>(u.camPos.w * 0.012, u.camPos.w * 0.005);
             let n = fbm4(cloudUV);
             let thresh = 1.0 - u.extraParams.x * 0.75;
-            let cloudDensity = smoothstep(thresh, thresh + 0.32, n) * smoothstep(0.015, 0.16, rayDir.y);
+            let cloudDensity = smoothstep(thresh, thresh + 0.32, n) * smoothstep(0.012, 0.16, rayDir.y);
             if (cloudDensity > 0.001) {
+              // 2-step directional derivative along sun vector for volumetric self-shadowing
+              let nSun1 = fbm4(cloudUV + sunDir.xz * 0.09);
+              let nSun2 = fbm4(cloudUV + sunDir.xz * 0.22);
+              let shadowOptical = max(0.0, (nSun1 - thresh) * 1.4 + (nSun2 - thresh) * 0.9);
+              // Schneider Beer-Powder effect: dark dense cores with silver-lined scattering edges
+              let beerLaw = exp(-shadowOptical * 2.2);
+              let powderEffect = 1.0 - exp(-cloudDensity * 3.8);
+              let silverLining = pow(max(0.0, cosTheta), 10.0) * powderEffect * 0.85;
+
               let cloudLit = mix(
                 zenithCol * 0.6,
-                sunTint * (1.15 + 0.4 * max(0.0, cosTheta)),
+                sunTint * (1.18 + 0.45 * max(0.0, cosTheta) + silverLining),
                 0.45 + 0.55 * smoothstep(-0.05, 0.25, sunEl)
               );
-              let cloudDark = mix(vec3<f32>(0.03, 0.05, 0.09), vec3<f32>(0.28, 0.33, 0.40), dayWeight);
-              let cloudColor = mix(cloudDark, cloudLit, smoothstep(thresh, thresh + 0.28, fbm4(cloudUV + sunDir.xz * 0.15)));
-              sky = mix(sky, cloudColor, cloudDensity * 0.82);
+              let cloudDark = mix(vec3<f32>(0.028, 0.048, 0.088), vec3<f32>(0.24, 0.30, 0.38), dayWeight);
+              let cloudColor = mix(cloudDark, cloudLit, clamp(beerLaw * (0.65 + 0.55 * powderEffect), 0.0, 1.0));
+              sky = mix(sky, cloudColor, cloudDensity * 0.84);
+            }
+
+            // Crepuscular atmospheric light shafts (God rays below cloud gaps)
+            if (cosTheta > 0.4 && sunEl > -0.02) {
+              let shaftUV = (rayDir.xz / (rayDir.y + 0.14)) * 0.65 - sunDir.xz * 0.35;
+              let gapMask = 1.0 - smoothstep(thresh - 0.05, thresh + 0.22, fbm4(shaftUV));
+              let crepuscular = gapMask * pow(max(0.0, cosTheta), 12.0) * smoothstep(0.01, 0.28, rayDir.y) * u.extraParams.x;
+              sky += sunTint * crepuscular * 0.38;
             }
           }
 
-          if (nightWeight > 0.2 && rayDir.y > 0.08) {
+          if (nightWeight > 0.15 && rayDir.y > 0.04) {
             let starUV = floor(rayDir.xz / (rayDir.y + 0.2) * 320.0);
             let sVal = hash21(starUV);
             if (sVal > 0.9965) {
               let twinkle = 0.5 + 0.5 * sin(u.camPos.w * 3.5 + sVal * 100.0);
               sky += vec3<f32>(0.75, 0.85, 1.0) * (sVal - 0.9965) * 260.0 * nightWeight * twinkle * smoothstep(0.08, 0.35, rayDir.y);
             }
+
+            // Polar Aurora Borealis / Australis curtains (557.7nm oxygen green + 630nm crimson/violet)
+            if (u.extraParams.y > 0.02) {
+              let aurUV = rayDir.xz / (rayDir.y + 0.18);
+              let curtainWave = sin(aurUV.x * 2.4 + u.camPos.w * 0.22 + fbm4(aurUV * 0.85) * 3.2);
+              let curtainBand = exp(-pow((aurUV.y - 0.35 + curtainWave * 0.28) * 2.6, 2.0));
+              let rayStreaks = 0.45 + 0.55 * noise2D(vec2<f32>(aurUV.x * 14.0 + curtainWave * 2.0, u.camPos.w * 0.45));
+              let aurHeight = smoothstep(0.05, 0.22, rayDir.y) * (1.0 - smoothstep(0.45, 0.88, rayDir.y));
+              let aurCol = mix(vec3<f32>(0.04, 0.95, 0.48), vec3<f32>(0.58, 0.12, 0.88), smoothstep(0.12, 0.52, rayDir.y));
+              sky += aurCol * curtainBand * rayStreaks * aurHeight * u.extraParams.y * nightWeight * 0.85;
+            }
+
+            // Physically positioned Moon disc & lunar corona opposite the low/sub-horizon sun
+            let moonDir = normalize(vec3<f32>(-sunDir.x, max(0.24, -sunDir.y + 0.28), -sunDir.z));
+            let moonCos = clamp(dot(rayDir, moonDir), -1.0, 1.0);
+            let moonDisc = smoothstep(0.99945, 0.99975, moonCos);
+            let moonMaria = 0.72 + 0.28 * fbm4(rayDir.xz * 45.0);
+            let moonCorona = pow(max(0.0, moonCos), 90.0) * 0.35 + pow(max(0.0, moonCos), 12.0) * 0.08;
+            sky += vec3<f32>(0.78, 0.88, 1.0) * (moonDisc * moonMaria * 0.45 + moonCorona * 0.20) * nightWeight;
+          }
+
+          // Marine Boundary-Layer Aerosol Haze / Turbidity
+          if (u.atmosParams.x > 0.01) {
+            let hazeBand = exp(-max(0.0, rayDir.y) * (4.2 / max(0.25, u.atmosParams.x)));
+            let hazeCol = mix(horizonCol, sunTint * 0.65 + zenithCol * 0.35, 0.35);
+            sky = mix(sky, hazeCol, clamp(hazeBand * u.atmosParams.x * 0.52, 0.0, 0.88));
           }
 
           if (includeSunDisc) {
@@ -918,6 +1304,26 @@
           }
 
           return max(sky, vec3<f32>(0.0));
+        }
+
+        // Chromatic-dispersed procedural underwater caustic network
+        fn evalChromaticCaustics(uv: vec2<f32>, time: f32) -> vec3<f32> {
+          let shift = vec2<f32>(0.018, -0.014);
+          let pR = uv + shift;
+          let pG = uv;
+          let pB = uv - shift;
+
+          let c1R = 1.0 - abs(noise2D(pR * 2.6 + vec2<f32>(time * 0.55, -time * 0.42)) * 2.0 - 1.0);
+          let c2R = 1.0 - abs(noise2D(pR * 4.8 - vec2<f32>(time * 0.72, time * 0.51)) * 2.0 - 1.0);
+          let c1G = 1.0 - abs(noise2D(pG * 2.6 + vec2<f32>(time * 0.55, -time * 0.42)) * 2.0 - 1.0);
+          let c2G = 1.0 - abs(noise2D(pG * 4.8 - vec2<f32>(time * 0.72, time * 0.51)) * 2.0 - 1.0);
+          let c1B = 1.0 - abs(noise2D(pB * 2.6 + vec2<f32>(time * 0.55, -time * 0.42)) * 2.0 - 1.0);
+          let c2B = 1.0 - abs(noise2D(pB * 4.8 - vec2<f32>(time * 0.72, time * 0.51)) * 2.0 - 1.0);
+
+          let r = pow(clamp(c1R * c2R, 0.0, 1.0), 3.2);
+          let g = pow(clamp(c1G * c2G, 0.0, 1.0), 3.2);
+          let b = pow(clamp(c1B * c2B, 0.0, 1.0), 3.2);
+          return vec3<f32>(r, g, b) * 3.2;
         }
 
         struct SkyVSOut {
@@ -945,31 +1351,46 @@
           let rayDir = normalize(worldTarget - u.camPos.xyz);
           let time = u.camPos.w;
 
+          // Underwater Volumetric View with Snell's Window (48.6° critical cone), TIR & Spectral Extinction
           if (u.extraParams.w > 0.5) {
             let sunDir = normalize(u.sunDir.xyz);
             let upDot = rayDir.y;
-            let deepWater = vec3<f32>(0.004, 0.045, 0.11);
-            let midWater = vec3<f32>(0.01, 0.18, 0.30);
+            let clarity = u.buoyPos.w; // 0 = Jerlov Type II emerald, 1 = Jerlov Type I oceanic blue
+            let deepWater = mix(vec3<f32>(0.004, 0.068, 0.075), vec3<f32>(0.002, 0.032, 0.115), clarity);
+            let midWater  = mix(vec3<f32>(0.015, 0.24, 0.22),  vec3<f32>(0.008, 0.16, 0.32),  clarity);
             var uwCol = mix(deepWater, midWater, smoothstep(-0.6, 0.65, upDot));
 
-            if (upDot > 0.25) {
-              let refractedDir = normalize(vec3<f32>(rayDir.x * 1.33, max(0.05, rayDir.y), rayDir.z * 1.33));
+            // Snell's critical angle: sin(theta_c) = 1 / 1.333 = 0.7501 -> cos(theta_c) = 0.6612
+            if (upDot > 0.20) {
+              let refractedDir = normalize(vec3<f32>(rayDir.x * 1.333, max(0.04, rayDir.y), rayDir.z * 1.333));
               let skyAbove = evaluateSky(refractedDir, true);
-              let snellMask = smoothstep(0.32, 0.68, upDot);
-              uwCol = mix(uwCol, skyAbove * vec3<f32>(0.35, 0.78, 0.92), snellMask * 0.78);
+              let snellCone = smoothstep(0.32, 0.661, upDot);
+              // Chromatic dispersion ring at the edge of Snell's window
+              let prismRing = smoothstep(0.28, 0.46, upDot) * (1.0 - smoothstep(0.46, 0.66, upDot));
+              let prismTint = vec3<f32>(1.15, 0.95, 0.75) * prismRing * 0.25;
+              let caustics = evalChromaticCaustics(rayDir.xz / (upDot + 0.15) * 1.8, time) * snellCone * 0.28;
+              uwCol = mix(uwCol, (skyAbove + prismTint + caustics) * vec3<f32>(0.38, 0.82, 0.94), snellCone * 0.82);
             }
 
+            // Volumetric 3D underwater crepuscular shafts (Mie forward scattering in water)
             let rayAz = atan2(rayDir.x, rayDir.z);
             let godRayNoise = sin(rayAz * 18.0 + time * 1.1) * 0.5 + sin(rayAz * 37.0 - time * 1.7) * 0.5;
             let sunAlign = pow(max(0.0, dot(rayDir, normalize(vec3<f32>(sunDir.x, 0.85, sunDir.z)))), 3.5);
             let godRays = max(0.0, godRayNoise * 0.5 + 0.5) * sunAlign * smoothstep(-0.2, 0.7, upDot);
-            uwCol += vec3<f32>(0.05, 0.42, 0.56) * godRays * 0.55;
+            uwCol += mix(vec3<f32>(0.04, 0.48, 0.42), vec3<f32>(0.04, 0.38, 0.58), clarity) * godRays * 0.58;
 
-            return vec4<f32>(toneMapACES(uwCol), 1.0);
+            // 3D Parallax Marine Snow / Suspended Hydrosol Particulates
+            let snowUV1 = rayDir.xz / (abs(rayDir.y) + 0.35) * 18.0 + vec2<f32>(time * 0.18, -time * 0.12);
+            let snowUV2 = rayDir.xy * 29.0 + vec2<f32>(-time * 0.11, time * 0.24);
+            let snow1 = smoothstep(0.965, 0.995, noise2D(snowUV1));
+            let snow2 = smoothstep(0.972, 0.996, noise2D(snowUV2));
+            uwCol += vec3<f32>(0.45, 0.85, 0.92) * (snow1 * 0.22 + snow2 * 0.16) * (0.35 + 0.65 * godRays);
+
+            return vec4<f32>(applyToneMapping(uwCol), 1.0);
           }
 
           let col = evaluateSky(rayDir, true);
-          return vec4<f32>(toneMapACES(col), 1.0);
+          return vec4<f32>(applyToneMapping(col), 1.0);
         }
 
         struct OceanVSOut {
@@ -980,6 +1401,7 @@
           @location(3) crestFoam: f32,
           @location(4) partId: f32,
           @location(5) buoyNormal: vec3<f32>,
+          @location(6) localHeights: vec2<f32>, // x = localY (for buoy wetline) or waveThickness, y = leewardTrailFoam
         };
 
         @vertex
@@ -989,6 +1411,7 @@
           out.partId = partId;
           let time = u.camPos.w;
 
+          // Multi-Material PBR Buoy Geometry Branch
           if (partId >= 0.5) {
             if (u.extraParams.z < 0.5) {
               out.clipPos = vec4<f32>(0.0, 0.0, -2.0, 1.0);
@@ -1000,18 +1423,24 @@
 
             let localPos = vtx.xyz;
             let worldP = u.buoyPos.xyz + right * localPos.x + up * localPos.y + fwd * localPos.z;
-            let radialN = normalize(vec3<f32>(localPos.x, 0.25, localPos.z));
+            // Compute surface normal: solar wings (partId 4.0) have upward-tilted panel normals
+            var radialN = normalize(vec3<f32>(localPos.x, 0.25, localPos.z));
+            if (partId > 3.5 && partId < 4.5) {
+              radialN = normalize(vec3<f32>(localPos.x * 0.32, 0.94, localPos.z * 0.32));
+            }
             let worldN = normalize(right * radialN.x + up * radialN.y + fwd * radialN.z);
 
             out.worldPos = worldP;
-            out.undisplacedXZ = worldP.xz;
+            out.undisplacedXZ = localPos.xz;
             out.macroSlope = vec2<f32>(0.0, 0.0);
             out.crestFoam = 0.0;
             out.buoyNormal = worldN;
+            out.localHeights = vec2<f32>(localPos.y, 0.0);
             out.clipPos = u.viewProj * vec4<f32>(worldP, 1.0);
             return out;
           }
 
+          // Radial Adaptive Ocean Mesh with 24-Wave TMA Spectrum & Exact 2D Jacobian Determinant
           let normR = vtx.x;
           let theta = vtx.y;
           let radius = (normR * normR * 125.0) + pow5_approx(normR) * 5375.0;
@@ -1019,24 +1448,38 @@
 
           let distToCam = length(baseXZ - u.camPos.xz);
           let distAtten = 1.0 / (1.0 + distToCam * 0.00045);
+          // Local radial ring spacing (meters) for Nyquist vertex displacement anti-aliasing
+          let normR2 = normR * normR;
+          let radialStep = max(0.12, (250.0 * normR + 26875.0 * normR2 * normR2) / 300.0);
+          let angularStep = max(0.12, (2.0 * PI * radius) / 320.0);
+          let gridSpacing = max(radialStep, angularStep);
 
           let H = u.sunDir.w;
           let Q = u.oceanParams.x;
-          let windScale = 0.7 + 0.025 * u.oceanParams.y;
+          let depth = max(1.5, u.materialParams.x);
+          let windScale = 0.72 + 0.024 * u.oceanParams.y;
 
           var disp = vec3<f32>(0.0, 0.0, 0.0);
           var slope = vec2<f32>(0.0, 0.0);
-          var jacobianFold = 0.0;
 
-          for (var i = 0u; i < 16u; i++) {
+          // 2D Displacement Jacobian partials dD_x/dx, dD_z/dz, dD_x/dz for exact det(J)
+          var jxx = 1.0;
+          var jzz = 1.0;
+          var jxz = 0.0;
+          var leewardTrail = 0.0;
+
+          for (var i = 0u; i < 24u; i++) {
             let wp = u.waves[i];
             let dir = wp.xy;
             let k = wp.w;
 
-            let waveVis = smoothstep(0.0, 1.0, 180.0 / (k * distToCam + 12.0));
+            // Bruneton (2010) Nyquist vertex filter: smoothly transition sub-grid waves from geometry to fragment normal/BRDF
+            let nyquistGeom = 1.0 / (1.0 + pow(k * gridSpacing * 0.42, 2.5));
+            let waveVis = smoothstep(0.0, 1.0, 195.0 / (k * distToCam + 12.0)) * nyquistGeom;
             let amp = wp.z * H * distAtten * waveVis;
 
-            let omega = sqrt(9.81 * k) * windScale;
+            // Finite-depth gravity-capillary dispersion omega(k, d)
+            let kd = k * depth; let tanhKd = select(tanh(min(kd, 12.0)), 1.0, kd > 2.5); let omega = sqrt((9.81 * k + 0.0000722 * k * k * k) * tanhKd) * windScale;
             let fi = f32(i);
             let phase = dot(dir, baseXZ) * k - omega * time + fi * 1.732;
 
@@ -1046,212 +1489,549 @@
             let A = amp * groupMod;
             let s = sin(phase);
             let c = cos(phase);
-            let steep = min(0.75, Q / (k * A * 16.0 + 1.15));
+            let steep = min(0.72, Q / (k * A * 24.0 + 1.15));
 
             disp.x -= dir.x * steep * A * s;
             disp.z -= dir.y * steep * A * s;
-            disp.y += A * c;
+            // 3rd-order skewed Stokes trochoid: wind-pushed forward crest asymmetry + harmonic peaking
+            let skewPhase = phase + 0.22 * steep * c;
+            let sSkew = sin(skewPhase);
+            let cSkew = cos(skewPhase);
+            disp.y += A * cSkew + 0.14 * steep * A * (cSkew * cSkew - sSkew * sSkew);
 
             slope.x += dir.x * k * A * s;
             slope.y += dir.y * k * A * s;
 
-            jacobianFold += steep * k * A * c;
+            // Accumulate Jacobian partial derivatives
+            let kSteepA = steep * k * A * c;
+            jxx -= dir.x * dir.x * kSteepA;
+            jzz -= dir.y * dir.y * kSteepA;
+            jxz -= dir.x * dir.y * kSteepA;
+
+            // Advected leeward trailing whitecap decay behind breaking crests
+            let trailPhase = sin(phase - 0.65);
+            leewardTrail += max(0.0, trailPhase) * steep * k * A * 0.85;
           }
+
+          let detJ = jxx * jzz - jxz * jxz;
+          let jacobianBreaking = clamp((0.68 - detJ) * 2.4, 0.0, 2.0);
 
           let finalPos = vec3<f32>(baseXZ.x + disp.x, disp.y, baseXZ.y + disp.z);
           out.worldPos = finalPos;
           out.undisplacedXZ = baseXZ;
           out.macroSlope = slope;
-          out.crestFoam = clamp((jacobianFold - 0.34) * 2.1, 0.0, 1.8);
+          out.crestFoam = jacobianBreaking;
           out.buoyNormal = vec3<f32>(0.0, 1.0, 0.0);
+          out.localHeights = vec2<f32>(disp.y, clamp(leewardTrail - 0.25, 0.0, 1.5));
           out.clipPos = u.viewProj * vec4<f32>(finalPos, 1.0);
           return out;
         }
 
         @fragment
         fn fs_ocean(in: OceanVSOut) -> @location(0) vec4<f32> {
+          // Screen-space partial derivatives MUST be evaluated in uniform control flow (before any non-uniform branch)
+          let dPdx = dpdx(in.undisplacedXZ);
+          let dPdy = dpdy(in.undisplacedXZ);
+          let dBuoyNdx = dpdx(in.buoyNormal);
+          let dBuoyNdy = dpdy(in.buoyNormal);
+
           let time = u.camPos.w;
           let sunDir = normalize(u.sunDir.xyz);
           let viewVec = u.camPos.xyz - in.worldPos;
           let dist = length(viewVec);
           let V = viewVec / max(dist, 0.0001);
 
+          // ===================================================================
+          // MULTI-MATERIAL PBR OCEANOGRAPHIC BUOY SHADING (partId >= 1.0)
+          // Includes Porous Wet-Surface BRDF, Clearcoat, Retroreflection & Thin-Film Solar Wings
+          // ===================================================================
           if (in.partId >= 0.5) {
             let N = normalize(in.buoyNormal);
-            let NdL = max(0.0, dot(N, sunDir));
-            var albedo = vec3<f32>(0.92, 0.24, 0.08);
-            if (in.partId > 1.5 && in.partId < 2.5) {
-              albedo = vec3<f32>(0.88, 0.91, 0.95);
-            } else if (in.partId > 2.5) {
-              let blink = pow(0.5 + 0.5 * sin(time * 4.2), 8.0);
-              let beaconCol = vec3<f32>(1.0, 0.72, 0.1) * (1.2 + blink * 9.0);
-              return vec4<f32>(toneMapACES(beaconCol), 1.0);
-            }
-            let skyAmb = evaluateSky(vec3<f32>(0.0, 1.0, 0.0), false) * 0.45;
+            let NoV = clamp(dot(N, V), 0.001, 1.0);
+            let NoL = max(0.0, dot(N, sunDir));
             let Hvec = normalize(V + sunDir);
-            let spec = pow(max(0.0, dot(N, Hvec)), 48.0) * 0.65;
-            let wetMask = smoothstep(-0.2, 0.55, in.worldPos.y - u.buoyPos.y);
-            let surfCol = albedo * (0.45 + 0.55 * wetMask) * (skyAmb + vec3<f32>(1.0, 0.92, 0.8) * NdL) + spec;
-            return vec4<f32>(toneMapACES(surfCol), 1.0);
+            let NoH = max(0.0001, dot(N, Hvec));
+            let VoH = max(0.0001, dot(V, Hvec));
+
+            // Beacon Light Pulse (partId = 3.0) with Dielectric Glass Clearcoat
+            if (in.partId > 2.5 && in.partId < 3.5) {
+              let blink = pow(0.5 + 0.5 * sin(time * 4.2), 8.0);
+              let fresnelGlass = 0.04 + 0.96 * pow(1.0 - NoV, 5.0);
+              let envRefl = evaluateSky(reflect(-V, N), false) * fresnelGlass;
+              let coreGlow = vec3<f32>(1.0, 0.72, 0.12) * (1.4 + blink * 10.5) * (0.65 + 0.35 * NoV);
+              return vec4<f32>(applyToneMapping(coreGlow + envRefl), 1.0);
+            }
+
+            // Dynamic wave-splash wetness mask (Jensen/Lagarde porous wet surface model)
+            // Lower sections near waterline are soaked & dripping; upper sections dry out
+            let localY = in.localHeights.x;
+            let waveRunup = 0.55 + 0.35 * u.sunDir.w * (0.5 + 0.5 * sin(time * 2.1 + in.undisplacedXZ.x * 2.5));
+            let dripStreaks = noise2D(vec2<f32>(atan2(in.undisplacedXZ.y, in.undisplacedXZ.x) * 6.0, localY * 4.0 + time * 0.9));
+            let wetness = clamp(smoothstep(waveRunup + 0.45, -0.15, localY - dripStreaks * 0.22) * (0.55 + 0.45 * u.materialParams.y), 0.0, 1.0);
+
+            var baseAlbedo = vec3<f32>(0.92, 0.23, 0.07); // International Orange Polyurethane (partId = 1.0)
+            var roughness = 0.38;
+            var metallic = 0.0;
+            var F0 = vec3<f32>(0.04);
+            var retroBoost = 0.0;
+            var thinFilmTint = vec3<f32>(1.0);
+
+            if (in.partId > 1.5 && in.partId < 2.5) {
+              // SOLAS Retroreflective Collar & 316L Brushed Stainless Steel Mast
+              if (localY < 0.85) {
+                baseAlbedo = vec3<f32>(0.92, 0.95, 0.98);
+                roughness = 0.22;
+                // Retroreflective prism peak when light and view align
+                retroBoost = pow(max(0.0, dot(V, sunDir)), 8.0) * 1.45 + pow(NoV, 4.0) * 0.45;
+              } else {
+                baseAlbedo = vec3<f32>(0.76, 0.79, 0.83);
+                roughness = 0.24;
+                metallic = 0.88;
+                F0 = baseAlbedo;
+              }
+            } else if (in.partId > 3.5 && in.partId < 4.5) {
+              // Photovoltaic Silicon Solar Wing with Belcour-Barla Thin-Film Anti-Reflective Coating
+              let cellGrid = smoothstep(0.04, 0.08, abs(fract(in.undisplacedXZ.x * 9.0) - 0.5)) *
+                             smoothstep(0.04, 0.08, abs(fract(in.undisplacedXZ.y * 9.0) - 0.5));
+              baseAlbedo = mix(vec3<f32>(0.75, 0.78, 0.82), vec3<f32>(0.02, 0.05, 0.14), cellGrid);
+              roughness = 0.12;
+              metallic = 0.35;
+              let filmD = 310.0 + 95.0 * u.materialParams.y;
+              thinFilmTint = mix(vec3<f32>(1.0), evalThinFilmIridescence(NoV, filmD, 1.95) * 1.55, 0.75 * cellGrid);
+              F0 = vec3<f32>(0.08) * thinFilmTint;
+            } else if (in.partId > 4.5) {
+              // Submerged Copper Anti-Fouling Hull & Verdigris Patina
+              let patina = fbm4(in.undisplacedXZ * 5.5);
+              baseAlbedo = mix(vec3<f32>(0.58, 0.24, 0.16), vec3<f32>(0.16, 0.46, 0.38), smoothstep(0.42, 0.68, patina));
+              roughness = mix(0.45, 0.72, patina);
+              metallic = 0.35 * (1.0 - patina);
+              F0 = mix(vec3<f32>(0.04), vec3<f32>(0.68, 0.35, 0.24), metallic);
+            }
+
+            // Porous Wet-Surface BRDF transformation (Lagarde 2013):
+            // Water filling surface pores darkens & saturates dielectric diffuse albedo (index matching)
+            // and smooths effective microfacet roughness
+            let porousDarkening = mix(vec3<f32>(1.0), pow(max(baseAlbedo, vec3<f32>(0.001)), vec3<f32>(0.42)) * 0.52, wetness * (1.0 - metallic));
+            let wetAlbedo = baseAlbedo * porousDarkening;
+            let buoyNVar = dot(dBuoyNdx, dBuoyNdx) + dot(dBuoyNdy, dBuoyNdy);
+            let rawWetRough = mix(roughness, max(0.06, roughness * 0.28), wetness);
+            let effRoughness = clamp(sqrt(rawWetRough * rawWetRough + min(0.12, buoyNVar * 0.45)), 0.06, 0.95);
+
+            let skyAmb = evaluateSky(vec3<f32>(0.0, 1.0, 0.0), false) * 0.48;
+            let reflDir = reflect(-V, N);
+            let envSky = evaluateSky(vec3<f32>(reflDir.x, max(0.01, reflDir.y), reflDir.z), false);
+
+            // Multi-Scattering GGX Base Layer
+            let a2 = pow(effRoughness, 4.0);
+            let denom = (NoH * a2 - NoH) * NoH + 1.0;
+            let D = a2 / (PI * denom * denom + 0.0001);
+            let Vis = V_SmithGGXCorrelated(NoV, NoL, effRoughness);
+            let F = F0 + (max(vec3<f32>(1.0 - effRoughness), F0) - F0) * pow(1.0 - VoH, 5.0);
+            let msComp = multiscatterEnergyComp(NoV, effRoughness, F0);
+            let directSpec = D * Vis * F * msComp * NoL * 2.2;
+
+            // Top Water-Film Clearcoat Layer (IOR = 1.333, F0 = 0.02)
+            let clearcoatAlpha = 0.04;
+            let ccA2 = clearcoatAlpha * clearcoatAlpha;
+            let ccDenom = (NoH * ccA2 - NoH) * NoH + 1.0;
+            let ccD = ccA2 / (PI * ccDenom * ccDenom + 0.0001);
+            let ccF = (0.02 + 0.98 * pow(1.0 - VoH, 5.0)) * wetness;
+            let clearcoatSpec = ccD * 0.25 * ccF * NoL;
+
+            let kD = (vec3<f32>(1.0) - F) * (1.0 - metallic) * (1.0 - ccF);
+            let sunLightCol = vec3<f32>(1.0, 0.93, 0.82) * smoothstep(-0.06, 0.08, sunDir.y);
+            var buoyCol = kD * wetAlbedo * (skyAmb + sunLightCol * (NoL + retroBoost)) +
+                          (directSpec + vec3<f32>(clearcoatSpec)) * sunLightCol +
+                          envSky * (F * msComp * 0.55 + vec3<f32>(ccF * 0.65)) * thinFilmTint;
+
+            return vec4<f32>(applyToneMapping(buoyCol), 1.0);
           }
 
-          var slope = in.macroSlope;
+          // ===================================================================
+          // OCEAN SURFACE: PER-PIXEL ANALYTICAL WAVE NORMALS + BRUNETON (2010)
+          // GEOMETRY-TO-BRDF VARIANCE TRANSITION + KAPLANYAN (2016) SPECULAR AA
+          // ===================================================================
+          let p = in.undisplacedXZ;
           let windRad = u.buoyUp.w;
           let windDir = vec2<f32>(cos(windRad), sin(windRad));
+          let crossDir = vec2<f32>(-windDir.y, windDir.x);
 
-          let detailFade = 1.0 / (1.0 + dist * 0.018);
-          let capFade = 1.0 / (1.0 + dist * 0.065);
-          let microScale = (0.35 + 0.65 * clamp(u.oceanParams.y / 16.0, 0.2, 1.6)) * min(1.4, u.sunDir.w);
+          let H_wave = u.sunDir.w;
+          let Q_steep = u.oceanParams.x;
+          let depth = max(1.5, u.materialParams.x);
+          let windScale = 0.72 + 0.024 * u.oceanParams.y;
+          let distAtten = 1.0 / (1.0 + dist * 0.00045);
 
-          let p = in.undisplacedXZ;
-          for (var j = 0u; j < 8u; j++) {
-            let fj = f32(j);
-            let k_micro = 1.85 * exp2(fj * 0.62);
-            let ang = windRad + sin(fj * 2.35 + 0.5) * 0.68;
-            let d = vec2<f32>(cos(ang), sin(ang));
-            let w_micro = sqrt(9.81 * k_micro + 0.000074 * k_micro * k_micro * k_micro);
-            let ph = dot(d, p) * k_micro - w_micro * time * 1.15 + fj * 3.17;
-            let fade = select(detailFade, capFade, j >= 4u);
-            let a_micro = (0.11 / pow(k_micro, 0.82)) * microScale * fade;
-            slope += d * (k_micro * a_micro * cos(ph));
+          // Evaluate all 24 TMA macro wave slopes PER-PIXEL (eliminates vertex-interpolation triangle faceting!)
+          // Simultaneously accumulate Bruneton (2010) unresolved sub-pixel slope variance & Kaplanyan (2016) pixel curvature variance
+          var slope = vec2<f32>(0.0, 0.0);
+          var subPixelVarUpwind = 0.0;
+          var subPixelVarCross  = 0.0;
+          var pixelWaveY = 0.0;
+
+          for (var i = 0u; i < 24u; i++) {
+            let wp = u.waves[i];
+            let dir = wp.xy;
+            let k = wp.w;
+            let amp = wp.z * H_wave * distAtten;
+
+            let kd = k * depth; let tanhKd = select(tanh(min(kd, 12.0)), 1.0, kd > 2.5); let omega = sqrt((9.81 * k + 0.0000722 * k * k * k) * tanhKd) * windScale;
+            let fi = f32(i);
+            let phase = dot(dir, p) * k - omega * time + fi * 1.732;
+            let groupPhase = dot(dir, p) * (k * 0.09) - omega * 0.45 * time + fi * 2.1;
+            let A = amp * (0.82 + 0.18 * sin(groupPhase));
+
+            // Screen-space phase footprint dPhi across the current pixel along wave direction
+            let dPhiX = k * dot(dir, dPdx);
+            let dPhiY = k * dot(dir, dPdy);
+            let dPhi2 = dPhiX * dPhiX + dPhiY * dPhiY;
+
+            // Smooth box-sinc low-pass filter weight (prevents sub-pixel Moire & jagged aliasing)
+            let wPixel = 1.0 / (1.0 + 0.36 * dPhi2 + 0.08 * dPhi2 * dPhi2);
+
+            let s = sin(phase);
+            let c = cos(phase);
+            let steep = min(0.68, Q_steep / (k * A * 24.0 + 1.15));
+            let skewPhase = phase + 0.18 * steep * c;
+
+            // Analytical per-pixel wave slope & elevation
+            let kA = k * A;
+            slope += dir * (kA * sin(skewPhase) * wPixel);
+            pixelWaveY += A * cos(skewPhase) * wPixel;
+
+            // Unresolved sub-pixel wave energy + within-pixel normal curvature variance (Bruneton 2010 / LEADR / Kaplanyan 2016)
+            let unresolvedEnergy = 0.5 * kA * kA * (1.0 - wPixel * wPixel);
+            let curvatureEnergy  = 0.14 * kA * kA * wPixel * wPixel * min(dPhi2, 3.5);
+            let totalWaveVar = unresolvedEnergy + curvatureEnergy;
+
+            let projUp = abs(dot(dir, windDir));
+            let projCr = abs(dot(dir, crossDir));
+            subPixelVarUpwind += totalWaveVar * (0.35 + 0.65 * projUp * projUp);
+            subPixelVarCross  += totalWaveVar * (0.35 + 0.65 * projCr * projCr);
           }
 
-          // Interactive concentric ripple rings around the floating weather buoy
+          let detailFade = 1.0 / (1.0 + dist * 0.014);
+          let microScale = (0.32 + 0.68 * clamp(u.oceanParams.y / 16.0, 0.2, 1.65)) * min(1.45, H_wave);
+
+          // 12-Octave Gravity-Capillary Micro-Ripple Cascade with exact pixel-footprint filtering & variance transfer
+          for (var j = 0u; j < 12u; j++) {
+            let fj = f32(j);
+            let k_micro = 1.45 * exp2(fj * 0.48);
+            // Golden-angle directional spreading prevents grid alignment
+            let ang = windRad + sin(fj * 2.39996 + 0.5) * 0.68;
+            let d = vec2<f32>(cos(ang), sin(ang));
+            let w_micro = sqrt(9.81 * k_micro + 0.0000722 * k_micro * k_micro * k_micro);
+            let ph = dot(d, p) * k_micro - w_micro * time * 1.12 + fj * 3.17;
+
+            let a_micro = (0.092 / pow(k_micro, 0.85)) * microScale * detailFade;
+            let kA_m = k_micro * a_micro;
+
+            let dPhiX = k_micro * dot(d, dPdx);
+            let dPhiY = k_micro * dot(d, dPdy);
+            let dPhi2 = dPhiX * dPhiX + dPhiY * dPhiY;
+            let wMicro = 1.0 / (1.0 + 0.42 * dPhi2 + 0.10 * dPhi2 * dPhi2);
+
+            // Second harmonic phase cross-modulation for organic C-infinity wave interference
+            let ph2 = dot(vec2<f32>(-d.y, d.x), p) * (k_micro * 0.73) - w_micro * time * 0.81 + fj * 1.93;
+            let waveDeriv = cos(ph) * 0.78 + cos(ph + 0.35 * sin(ph2)) * 0.22;
+            slope += d * (kA_m * waveDeriv * wMicro);
+
+            let microVar = 0.5 * kA_m * kA_m * (1.0 - wMicro * wMicro) + 0.16 * kA_m * kA_m * wMicro * wMicro * min(dPhi2, 3.0);
+            let projUp = abs(dot(d, windDir));
+            let projCr = abs(dot(d, crossDir));
+            subPixelVarUpwind += microVar * (0.35 + 0.65 * projUp * projUp);
+            subPixelVarCross  += microVar * (0.35 + 0.65 * projCr * projCr);
+          }
+
+          // Interactive Hydrodynamic Buoy Rings + Analytical Kelvin V-Wake (19.47 deg wedge)
+          var kelvinWakeFoam = 0.0;
           if (u.extraParams.z > 0.5) {
             let toBuoy = p - u.buoyPos.xz;
             let rBuoy = length(toBuoy);
-            if (rBuoy > 1.1 && rBuoy < 28.0) {
+            if (rBuoy > 1.05 && rBuoy < 34.0) {
               let rDir = toBuoy / rBuoy;
-              let rAtten = exp(-(rBuoy - 1.1) * 0.14) * smoothstep(1.1, 1.6, rBuoy);
-              let rWave = cos(rBuoy * 5.2 - time * 6.5) * rAtten * 0.18;
+              let rAtten = exp(-(rBuoy - 1.05) * 0.12) * smoothstep(1.05, 1.55, rBuoy);
+              let rWave = cos(rBuoy * 5.2 - time * 6.5) * rAtten * 0.16;
               slope += rDir * rWave;
+
+              // Downwind Kelvin V-wake arms behind the buoy
+              let downWind = dot(toBuoy, windDir);
+              let crossWind = abs(dot(toBuoy, crossDir));
+              if (downWind > 0.2) {
+                let kelvinRatio = crossWind / (downWind + 0.35);
+                let cuspEnvelope = exp(-pow((kelvinRatio - 0.353) * 5.5, 2.0)) * exp(-downWind * 0.11);
+                let wakePhase = (downWind * 3.8 - crossWind * 6.2 - time * 7.2);
+                slope += rDir * (cos(wakePhase) * cuspEnvelope * 0.20);
+                kelvinWakeFoam = cuspEnvelope * (0.5 + 0.5 * sin(wakePhase)) * 0.85;
+              }
             }
           }
 
-          if (dist < 65.0) {
-            let shimmerUV = p * 2.4 + windDir * time * 1.4;
-            let eps = 0.08;
-            let h0 = noise2D(shimmerUV);
-            let hx = noise2D(shimmerUV + vec2<f32>(eps, 0.0));
-            let hz = noise2D(shimmerUV + vec2<f32>(0.0, eps));
-            let closeWeight = (1.0 - dist / 65.0) * 0.14 * microScale;
-            slope += vec2<f32>(hx - h0, hz - h0) * (closeWeight / eps);
+          // Smooth C-infinity capillary glint modulation & raindrop ripples (zero grid finite-difference artifacts!)
+          let pixelFootprint = max(length(dPdx), length(dPdy));
+          var glintSparkle = 0.0;
+          if (dist < 110.0) {
+            let footprintAtten = 1.0 / (1.0 + pixelFootprint * 8.5);
+            // Smooth multi-directional trigonometric capillary shimmer (no square-grid finite differences)
+            let g1 = sin(dot(p, windDir * 9.2 + crossDir * 3.7) - time * 8.4);
+            let g2 = sin(dot(p, windDir * 7.8 - crossDir * 5.1) + time * 7.1);
+            let g3 = sin(dot(p, crossDir * 11.3 + windDir * 2.9) - time * 9.6);
+            let glintEnv = max(0.0, (g1 + g2 + g3) / 3.0);
+            glintSparkle = pow(glintEnv, 3.0) * footprintAtten * (1.0 - dist / 110.0);
+
+            // Capillary Raindrop Ring Ripples when Rain & Spray > 0
+            if (u.atmosParams.y > 0.02) {
+              let rainCell = floor(p * 2.2);
+              let rainFrac = fract(p * 2.2) - vec2<f32>(0.5);
+              let rSeed = hash21(rainCell + floor(time * 2.5));
+              let rAge = fract(time * 2.5 + rSeed * 7.13);
+              let rDist = length(rainFrac);
+              let ringEnv = exp(-rDist * 6.5) * (1.0 - rAge) * smoothstep(0.04, 0.12, rDist) * smoothstep(0.48, 0.28, rDist);
+              let ringWave = sin(rDist * 38.0 - rAge * 22.0) * ringEnv * u.atmosParams.y * 0.22 * footprintAtten;
+              slope += (rainFrac / max(rDist, 0.001)) * ringWave;
+            }
           }
 
+          // Smooth C-infinity normal construction & grazing view stabilization (no hard C0 kink!)
           var N = normalize(vec3<f32>(-slope.x, 1.0, -slope.y));
           let NoV_raw = dot(N, V);
-          if (NoV_raw < 0.0) {
-            N = normalize(N - V * (NoV_raw - 0.01));
-          }
-          let NoV = clamp(dot(N, V), 0.001, 1.0);
+          let softPull = 0.045 * log(1.0 + exp((0.06 - NoV_raw) / 0.045));
+          N = normalize(N + V * softPull);
+          let NoV = clamp(dot(N, V), 0.002, 1.0);
 
-          let F0 = 0.0204;
-          let distRoughness = clamp(0.03 + (1.0 - detailFade) * 0.16 * microScale, 0.02, 0.35);
-          let fresnelPower = 5.0 * (1.0 - distRoughness * 0.45);
-          let fresnel = clamp(F0 + (1.0 - F0) * pow(1.0 - NoV, fresnelPower), 0.0, 1.0);
+          // Cox & Munk (1954) Intrinsic Wind Variance + Bruneton (2010) Unresolved Sub-Pixel Variance + Kaplanyan (2016) Curvature AA
+          // Eliminates the old dot(slope, slope) zero-crossing collapse that caused jagged 1-pixel spikes at crests/troughs!
+          let F0 = 0.0204; // Seawater IOR = 1.334
+          let windU = clamp(u.oceanParams.y, 1.5, 28.0);
+          let coxMunkUpwind = 0.0022 + 0.0019 * windU;
+          let coxMunkCross  = 0.0016 + 0.0012 * windU;
 
+          // Anisotropic filtered GGX roughness along upwind (ax) and crosswind (ay) axes
+          let axFiltered = clamp(sqrt(coxMunkUpwind + subPixelVarUpwind * 0.52), 0.038, 0.38);
+          let ayFiltered = clamp(sqrt(coxMunkCross  + subPixelVarCross  * 0.52), 0.028, 0.30);
+          let distRoughness = clamp(sqrt(0.5 * (axFiltered * axFiltered + ayFiltered * ayFiltered)), 0.032, 0.36);
+
+          let fresnelPower = 5.0 * (1.0 - distRoughness * 0.42);
+          let fresnel = clamp(F0 + (max(1.0 - distRoughness * 0.35, F0) - F0) * pow(1.0 - NoV, fresnelPower), 0.0, 1.0);
+
+          // Optional Thin-Film Bio-Surfactant / Oil Sheen Iridescence on the water surface (Belcour-Barla 2017)
+          let filmThicknessNm = 240.0 + 180.0 * fbm4(p * 0.18 + windDir * time * 0.08);
+          let filmColor = evalThinFilmIridescence(NoV, filmThicknessNm, 1.38);
+          let iridescenceStrength = clamp(u.materialParams.y * 0.38, 0.0, 0.75);
+          let fresnelRGB = mix(vec3<f32>(fresnel), fresnel * filmColor * 1.35, iridescenceStrength * (1.0 - NoV));
+
+          // Smooth C-infinity hyperbolic horizon reflection lift (eliminates the hard R.y = max(R.y, 0.012) contour line!)
           var R = reflect(-V, N);
-          R.y = max(R.y, 0.015);
+          let minRy = 0.015 + distRoughness * 0.08;
+          R.y = 0.5 * (R.y + sqrt(R.y * R.y + minRy * minRy)) + 0.008;
           R = normalize(R);
           let skyReflect = evaluateSky(R, false);
 
+          // ===================================================================
+          // SPECTRAL JERLOV WATER OPTICS, BEER-LAMBERT EXTINCTION & DUAL-LOBE SSS
+          // ===================================================================
           let sunEl = sunDir.y;
           let dayLight = smoothstep(-0.1, 0.25, sunEl);
           let goldenLight = smoothstep(-0.08, 0.08, sunEl) * (1.0 - smoothstep(0.08, 0.35, sunEl));
+          let clarity = u.buoyPos.w; // 0.0 = Jerlov Type II Coastal (emerald/turquoise), 1.0 = Jerlov Type I Oceanic (cobalt)
 
-          let deepAbyss = mix(vec3<f32>(0.002, 0.008, 0.022), vec3<f32>(0.005, 0.038, 0.095), dayLight);
-          let shallowScatter = mix(vec3<f32>(0.006, 0.025, 0.055), vec3<f32>(0.012, 0.16, 0.24), dayLight);
-          var waterBody = mix(deepAbyss, shallowScatter, pow(NoV, 0.65));
+          // Spectral absorption sigma_a (R, G, B) & scattering in seawater
+          let deepAbyss = mix(
+            mix(vec3<f32>(0.002, 0.012, 0.018), vec3<f32>(0.004, 0.062, 0.072), dayLight),
+            mix(vec3<f32>(0.001, 0.007, 0.024), vec3<f32>(0.003, 0.032, 0.105), dayLight),
+            clarity
+          );
+          let shallowScatter = mix(
+            mix(vec3<f32>(0.006, 0.035, 0.042), vec3<f32>(0.022, 0.24, 0.21), dayLight),
+            mix(vec3<f32>(0.005, 0.024, 0.058), vec3<f32>(0.010, 0.15, 0.28), dayLight),
+            clarity
+          );
 
-          let crestHeightFactor = clamp((in.worldPos.y + u.sunDir.w * 0.35) / max(0.35, u.sunDir.w * 1.45), 0.0, 1.5);
-          let backLightVec = normalize(vec3<f32>(sunDir.x, sunDir.y * 0.35, sunDir.z));
-          let backLight = pow(clamp(dot(V, -backLightVec), 0.0, 1.0), 3.2);
-          let normalEdge = pow(1.0 - NoV, 1.6) * max(0.0, 1.0 - N.y * 0.65);
+          // Optical path length through the water column + finite-depth shoaling seabed bounce
+          let refractV = refract(-V, N, 0.75); // 1 / 1.333
+          let waterPath = max(0.5, u.materialParams.x / max(0.12, -refractV.y));
+          let sigmaAbsorb = mix(vec3<f32>(0.38, 0.055, 0.042), vec3<f32>(0.45, 0.072, 0.018), clarity);
+          let beerTransmittance = exp(-sigmaAbsorb * min(waterPath, 65.0));
+
+          var waterBody = mix(deepAbyss, shallowScatter, pow(NoV, 0.62));
+
+          // Shallow-water sandy seabed reflection + refracted chromatic caustics when TMA depth < 28m
+          if (u.materialParams.x < 28.0) {
+            let bottomUV = p + refractV.xz * (u.materialParams.x * 0.45);
+            let sandAlbedo = vec3<f32>(0.76, 0.70, 0.54) * (0.85 + 0.15 * noise2D(bottomUV * 0.8));
+            let bottomCaustics = evalChromaticCaustics(bottomUV * 0.42, time) * smoothstep(-0.02, 0.25, sunEl);
+            let seabedLight = (sandAlbedo * (0.35 + 0.65 * dayLight) + bottomCaustics * 0.45) * beerTransmittance;
+            waterBody += seabedLight * (1.0 - smoothstep(4.0, 28.0, u.materialParams.x));
+          }
+
+          // Dual-Lobe Subsurface Scattering (SSS) through translucent wave crests + internal wave caustics
+          let crestHeightFactor = clamp((in.worldPos.y + u.sunDir.w * 0.35) / max(0.35, u.sunDir.w * 1.45), 0.0, 1.6);
+          let backLightVec = normalize(vec3<f32>(sunDir.x, sunDir.y * 0.32, sunDir.z));
+          let cosScatter = clamp(dot(V, -backLightVec), -1.0, 1.0);
+          // Forward Mie-like water scattering lobe + wider multiple-scattered emerald glow
+          let sssForward = pow(max(0.0, cosScatter), 3.6) * 1.45 + pow(max(0.0, cosScatter), 12.0) * 0.85;
+          let normalEdge = pow(1.0 - NoV, 1.55) * max(0.0, 1.0 - N.y * 0.65);
+          let waveInteriorCaustic = 0.78 + 0.42 * noise2D(p * 1.65 - windDir * time * 0.9);
           let sssTint = mix(
-            vec3<f32>(0.02, 0.56, 0.48),
-            vec3<f32>(0.12, 0.68, 0.42),
+            mix(vec3<f32>(0.04, 0.66, 0.44), vec3<f32>(0.015, 0.52, 0.54), clarity),
+            vec3<f32>(0.14, 0.72, 0.42),
             goldenLight
           );
-          let sssLight = sssTint * (crestHeightFactor * (0.28 + 1.35 * backLight + 0.75 * normalEdge)) * u.oceanParams.z * (0.25 + 0.85 * dayLight);
+          let sssLight = sssTint * (crestHeightFactor * (0.26 + sssForward + 0.72 * normalEdge) * waveInteriorCaustic) * u.oceanParams.z * (0.25 + 0.85 * dayLight);
           waterBody += sssLight;
 
+          // Nocturnal Dinoflagellate Bioluminescence in high-shear wave crests & wakes
           if (u.extraParams.y > 0.01) {
             let bioPulse = 0.65 + 0.35 * sin(time * 2.2 + in.undisplacedXZ.x * 0.25);
-            let bioMask = pow(clamp(in.crestFoam * 0.9 + crestHeightFactor * 0.45, 0.0, 1.4), 2.2);
-            waterBody += vec3<f32>(0.02, 0.68, 0.98) * bioMask * u.extraParams.y * bioPulse * 0.85;
+            let bioMask = pow(clamp(in.crestFoam * 0.95 + kelvinWakeFoam + crestHeightFactor * 0.42, 0.0, 1.5), 2.1);
+            waterBody += vec3<f32>(0.02, 0.72, 1.0) * bioMask * u.extraParams.y * bioPulse * 0.92;
           }
+
+          // ===================================================================
+          // WORLD-SPACE VOLUMETRIC CLOUD SHADOWS + COX-MUNK ANISOTROPIC GGX BRDF
+          // ===================================================================
+          var cloudShadow = 1.0;
+          if (u.extraParams.x > 0.02 && sunEl > -0.02) {
+            let shadowCloudUV = in.worldPos.xz * 0.0022 - sunDir.xz * 0.45 + vec2<f32>(time * 0.012, time * 0.005);
+            let cShadowNoise = fbm4(shadowCloudUV);
+            let cThresh = 1.0 - u.extraParams.x * 0.75;
+            cloudShadow = 1.0 - smoothstep(cThresh, cThresh + 0.30, cShadowNoise) * 0.72 * u.extraParams.x;
+          }
+          // Modulate subsurface scattering in cloud-lit vs cloud-shadowed ocean patches
+          waterBody *= (0.42 + 0.58 * cloudShadow);
+
+          // Smooth Ross-Smith Grazing Masking using per-pixel wave elevation (zero vertex Mach banding!)
+          let horizonMask = smoothstep(-H_wave * 0.95, H_wave * 0.55, pixelWaveY + NoV * 1.65);
 
           let Hvec = normalize(V + sunDir);
           let NoH = max(0.0001, dot(N, Hvec));
-          let NoL = max(0.0, dot(N, sunDir));
-          let alphaTight = mix(0.018, 0.085, distRoughness);
-          let alphaWide  = mix(0.11, 0.26, distRoughness);
-          let a2Tight = alphaTight * alphaTight;
-          let a2Wide  = alphaWide * alphaWide;
-          let dTight = (NoH * a2Tight - NoH) * NoH + 1.0;
-          let dWide  = (NoH * a2Wide - NoH) * NoH + 1.0;
-          let ggxTight = a2Tight / (3.14159 * dTight * dTight + 0.0001);
-          let ggxWide  = a2Wide  / (3.14159 * dWide  * dWide  + 0.0001);
+          let NoL = smoothstep(-0.02, 0.06, dot(N, sunDir)) * max(0.0, dot(N, sunDir) + 0.015);
+
+          // Orthonormal Surface-Tangent Frame aligned with Wind Direction (true 3D Gram-Schmidt tangent frame)
+          let T_upwind = normalize(vec3<f32>(windDir.x, 0.0, windDir.y) - N * dot(vec3<f32>(windDir.x, 0.0, windDir.y), N));
+          let B_cross  = cross(N, T_upwind);
+          let ToH = dot(T_upwind, Hvec);
+          let BoH = dot(B_cross, Hvec);
+
+          // Anti-Aliased Anisotropic Cox-Munk GGX Core Lobe (pre-filtered by Bruneton & Kaplanyan variance)
+          let axTight = axFiltered * 0.72;
+          let ayTight = ayFiltered * 0.62;
+          let anisoDenom = (ToH * ToH) / (axTight * axTight) + (BoH * BoH) / (ayTight * ayTight) + NoH * NoH;
+          let ggxTight = 1.0 / (PI * axTight * ayTight * anisoDenom * anisoDenom + 0.0002);
+
+          // Secondary Anisotropic Glitter Envelope + Wide Atmospheric Bloom Skirt
+          let axMed = axFiltered * 1.65 + 0.04;
+          let ayMed = ayFiltered * 1.45 + 0.03;
+          let medDenom = (ToH * ToH) / (axMed * axMed) + (BoH * BoH) / (ayMed * ayMed) + NoH * NoH;
+          let ggxMed = 1.0 / (PI * axMed * ayMed * medDenom * medDenom + 0.0002);
+
+          let alphaWide = clamp(distRoughness * 1.85 + 0.11, 0.12, 0.42);
+          let a2Wide = alphaWide * alphaWide;
+          let dWide = (NoH * a2Wide - NoH) * NoH + 1.0;
+          let ggxWide = a2Wide / (PI * dWide * dWide + 0.0002);
+
+          // Smith Height-Correlated G2 + Turquin / Kulla-Conty Multi-Scattering Compensation
+          let G2 = V_SmithGGXCorrelated(NoV, max(0.001, NoL), distRoughness);
+          let msEnergy = multiscatterEnergyComp(NoV, distRoughness, vec3<f32>(F0));
 
           let sunSpecColor = mix(
             vec3<f32>(0.65, 0.80, 1.0),
             mix(vec3<f32>(1.0, 0.95, 0.86), vec3<f32>(1.0, 0.50, 0.16), goldenLight),
             smoothstep(-0.08, 0.14, sunEl)
           );
-          let sunVis = smoothstep(-0.06, 0.05, sunEl);
-          let sunSpec = sunSpecColor * (ggxTight * 0.55 + ggxWide * 0.14) * NoL * fresnel * sunVis;
+          let sunVis = smoothstep(-0.06, 0.05, sunEl) * cloudShadow * horizonMask;
+          let sparkleLobe = glintSparkle * ggxTight * 0.28 * u.materialParams.z;
+          let combinedGGX = (ggxTight * 0.34 + ggxMed * 0.26 + ggxWide * 0.14) * (0.68 + 0.32 * G2) * u.materialParams.z + sparkleLobe;
+          let sunSpec = sunSpecColor * combinedGGX * msEnergy * NoL * fresnelRGB * sunVis;
 
-          var color = mix(waterBody, skyReflect, fresnel) + sunSpec;
+          // Lunar Specular Glint Path at Night
+          var moonSpec = vec3<f32>(0.0);
+          if (sunEl < 0.04) {
+            let moonDir = normalize(vec3<f32>(-sunDir.x, max(0.24, -sunDir.y + 0.28), -sunDir.z));
+            let Hm = normalize(V + moonDir);
+            let NoHm = max(0.0001, dot(N, Hm));
+            let NoLm = max(0.0, dot(N, moonDir));
+            let dMoon = (NoHm * a2Wide * 0.35 - NoHm) * NoHm + 1.0;
+            let ggxMoon = (a2Wide * 0.35) / (PI * dMoon * dMoon + 0.0001);
+            moonSpec = vec3<f32>(0.72, 0.86, 1.0) * ggxMoon * 0.12 * NoLm * fresnel * (1.0 - smoothstep(-0.10, 0.04, sunEl));
+          }
+
+          var color = mix(waterBody, skyReflect * msEnergy, fresnelRGB) + sunSpec + moonSpec;
 
           // Subtle amber beacon light reflection on waves right around the buoy
           if (u.extraParams.z > 0.5) {
             let dBuoy = length(in.worldPos.xz - u.buoyPos.xz);
-            if (dBuoy < 18.0) {
+            if (dBuoy < 20.0) {
               let blink = pow(0.5 + 0.5 * sin(time * 4.2), 8.0);
-              let beaconGlow = exp(-dBuoy * 0.22) * blink * 0.45;
+              let beaconGlow = exp(-dBuoy * 0.21) * blink * 0.48;
               color += vec3<f32>(1.0, 0.65, 0.1) * beaconGlow * fresnel;
             }
           }
 
+          // ===================================================================
+          // MULTI-SCALE JACOBIAN WHITECAP FOAM, TRAILING STREAKS & BUBBLE IRIDESCENCE
+          // ===================================================================
           let slopeMag = length(slope);
-          var buoyRingFoam = 0.0;
+          var buoyRingFoam = kelvinWakeFoam;
           if (u.extraParams.z > 0.5) {
             let rB = length(in.worldPos.xz - u.buoyPos.xz);
-            buoyRingFoam = smoothstep(2.6, 1.45, rB) * smoothstep(0.9, 1.4, rB) * 0.85;
+            buoyRingFoam += smoothstep(2.7, 1.45, rB) * smoothstep(0.9, 1.4, rB) * 0.88;
           }
-          let foamSignal = (in.crestFoam * 0.85 + max(0.0, slopeMag - 0.52) * 0.65 + buoyRingFoam) * u.oceanParams.w;
-          if (foamSignal > 0.02 && dist < 900.0) {
+          // Langmuir Circulation Wind-Parallel Counter-Rotating Vortex Foam Streaks
+          let crossWindPos = dot(in.undisplacedXZ, vec2<f32>(-windDir.y, windDir.x));
+          let upWindPos    = dot(in.undisplacedXZ, windDir);
+          let langmuirWarp = fbm4(vec2<f32>(upWindPos * 0.045 - time * 0.08, crossWindPos * 0.08));
+          let langmuirBand = pow(max(0.0, cos(crossWindPos * 0.52 + langmuirWarp * 3.4)), 10.0);
+          let langmuirFoam = langmuirBand * foamBubbles(in.undisplacedXZ * 0.85 - windDir * time * 0.35) * u.atmosParams.z * clamp(u.oceanParams.y / 14.0, 0.15, 1.5) * 0.52;
+
+          let leewardStreak = in.localHeights.y * foamBubbles(in.undisplacedXZ * 1.15 - windDir * time * 0.45);
+          let foamSignal = (in.crestFoam * 0.88 + leewardStreak * 0.55 + langmuirFoam + max(0.0, slopeMag - 0.50) * 0.62 + buoyRingFoam) * u.oceanParams.w;
+
+          if (foamSignal > 0.02 && dist < 950.0) {
             let foamUV = in.undisplacedXZ * 0.55 + windDir * time * 0.28;
             let bubbleTex = foamBubbles(foamUV);
-            let laceMask = smoothstep(0.32, 0.88, foamSignal * (0.45 + 0.75 * bubbleTex));
-            let denseCore = smoothstep(0.75, 1.35, foamSignal);
-            let totalFoam = clamp(laceMask * 0.75 + denseCore * 0.55, 0.0, 0.96) * (1.0 - smoothstep(350.0, 900.0, dist));
+            let laceMask = smoothstep(0.30, 0.86, foamSignal * (0.44 + 0.78 * bubbleTex));
+            let denseCore = smoothstep(0.72, 1.32, foamSignal);
+            let totalFoam = clamp(laceMask * 0.76 + denseCore * 0.56, 0.0, 0.96) * (1.0 - smoothstep(380.0, 950.0, dist));
 
+            // Oren-Nayar rough diffuse + subtle bubble-wall thin-film iridescence on close foam
+            let foamIridescence = mix(vec3<f32>(1.0), filmColor * 1.12, iridescenceStrength * 0.45 * (1.0 - denseCore));
             let foamLit = mix(
               vec3<f32>(0.15, 0.22, 0.32),
-              mix(vec3<f32>(0.92, 0.96, 1.0), vec3<f32>(1.0, 0.75, 0.55), goldenLight * 0.7),
+              mix(vec3<f32>(0.93, 0.97, 1.0), vec3<f32>(1.0, 0.75, 0.55), goldenLight * 0.7),
               0.2 + 0.8 * dayLight
-            );
+            ) * foamIridescence;
             color = mix(color, foamLit, totalFoam);
           }
 
+          // Aerial Perspective Atmospheric In-Scattering & Marine Boundary-Layer Fog Toward Horizon
           let eyeToSurfDir = normalize(in.worldPos - u.camPos.xyz);
           let horizonSky = evaluateSky(vec3<f32>(eyeToSurfDir.x, max(0.005, abs(eyeToSurfDir.y)), eyeToSurfDir.z), false);
-          let fogFactor = 1.0 - exp(-dist * 0.00038);
+
+          // Wind-Driven Crest Sea-Spray Mist Plumes
+          if (in.crestFoam > 0.15 && (u.atmosParams.y > 0.02 || u.oceanParams.y > 15.0) && dist < 320.0) {
+            let sprayNoise = fbm4(in.undisplacedXZ * 0.65 - windDir * time * 2.8);
+            let sprayStrength = clamp((u.atmosParams.y * 0.65 + max(0.0, (u.oceanParams.y - 14.0) * 0.06)), 0.0, 1.2);
+            let sprayPlume = in.crestFoam * sprayNoise * sprayStrength * (1.0 - dist / 320.0);
+            color = mix(color, horizonSky * 0.85 + vec3<f32>(0.22), clamp(sprayPlume * 0.45, 0.0, 0.65));
+          }
+          let fogDensity = 0.00035 + u.atmosParams.x * 0.0014 + u.atmosParams.y * 0.0006;
+          let fogFactor = 1.0 - exp(-dist * fogDensity);
           color = mix(color, horizonSky, clamp(fogFactor, 0.0, 1.0));
 
+          // Submerged Underwater Beer-Lambert Extinction & Caustic Overlay
           if (u.extraParams.w > 0.5) {
-            let uwTint = vec3<f32>(0.02, 0.24, 0.38);
+            let uwTint = mix(vec3<f32>(0.02, 0.28, 0.26), vec3<f32>(0.015, 0.22, 0.38), clarity);
             let uwFog = 1.0 - exp(-dist * 0.035);
             color = mix(color * vec3<f32>(0.45, 0.82, 0.95), uwTint, clamp(uwFog, 0.0, 0.95));
           }
 
-          return vec4<f32>(toneMapACES(color), 1.0);
+          return vec4<f32>(applyToneMapping(color), 1.0);
         }
       `;
 
       // =========================================================================
-      // 5. WEBGL2 FALLBACK SHADERS (IDENTICAL PHYSICS & OPTICS IF WEBGPU ABSENT)
+      // 5. WEBGL2 FALLBACK SHADERS (SYNCHRONIZED PHYSICS, OPTICS & PBR MATERIALS)
       // =========================================================================
       const GLSL_SKY_VS = `#version 300 es
         precision highp float;
@@ -1272,7 +2052,11 @@
         uniform vec4 uExtraParams;
         uniform vec4 uBuoyPos;
         uniform vec4 uBuoyUp;
-        uniform vec4 uWaves[16];
+        uniform vec4 uMaterialParams;
+        uniform vec4 uAtmosParams;
+        uniform vec4 uWaves[24];
+
+        const float PI = 3.14159265359;
 
         float hash21(vec2 p) {
           vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -1282,7 +2066,7 @@
         float noise2D(vec2 p) {
           vec2 i = floor(p);
           vec2 f = fract(p);
-          vec2 u2 = f * f * (3.0 - 2.0 * f);
+          vec2 u2 = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
           return mix(
             mix(hash21(i + vec2(0.0, 0.0)), hash21(i + vec2(1.0, 0.0)), u2.x),
             mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), u2.x),
@@ -1302,14 +2086,47 @@
         }
         float foamBubbles(vec2 p) {
           float n1 = noise2D(p * 3.5);
-          float n2 = noise2D(p * 9.0 + vec2(4.2, -7.1));
-          float n3 = noise2D(p * 21.0 - vec2(11.3, 5.4));
+          float n2 = noise2D(p * 9.5 + vec2(4.2, -7.1));
+          float n3 = noise2D(p * 23.0 - vec2(11.3, 5.4));
           float ridge = 1.0 - abs(n2 * 2.0 - 1.0);
-          return clamp(n1 * 0.5 + ridge * 0.35 + n3 * 0.25, 0.0, 1.0);
+          float micro = 1.0 - abs(n3 * 2.0 - 1.0);
+          return clamp(n1 * 0.42 + ridge * 0.36 + micro * 0.22, 0.0, 1.0);
+        }
+        vec3 evalThinFilmIridescence(float cosThetaI, float dNanometers, float nFilm) {
+          float sin2ThetaT = (1.0 - cosThetaI * cosThetaI) / (nFilm * nFilm);
+          float cosThetaT = sqrt(max(0.0, 1.0 - sin2ThetaT));
+          float opd = 2.0 * nFilm * dNanometers * cosThetaT;
+          vec3 phase = (2.0 * PI * opd) / vec3(650.0, 532.0, 460.0) + PI;
+          return clamp(0.5 + 0.5 * cos(phase), vec3(0.04), vec3(1.0));
+        }
+        vec3 multiscatterEnergyComp(float NoV, float roughness, vec3 F0) {
+          float r = clamp(roughness, 0.02, 1.0);
+          float E_mu = clamp(1.0 - r * r * (0.28 + 0.42 * pow(1.0 - NoV, 2.5)), 0.25, 1.0);
+          return vec3(1.0) + F0 * ((1.0 - E_mu) / E_mu);
+        }
+        vec3 toneMapPBRNeutral(vec3 colorIn) {
+          float startCompression = 0.76;
+          float desaturation = 0.15;
+          vec3 color = max(colorIn, vec3(0.0));
+          float x = min(color.r, min(color.g, color.b));
+          float offset = (x < 0.08) ? (x - 6.25 * x * x) : 0.04;
+          color -= vec3(offset);
+          float peak = max(color.r, max(color.g, color.b));
+          if (peak >= startCompression) {
+            float d = 1.0 - startCompression;
+            float newPeak = 1.0 - d * d / (peak + d - startCompression);
+            color *= newPeak / max(peak, 0.0001);
+            float g = 1.0 - 1.0 / (desaturation * (peak - newPeak) + 1.0);
+            color = mix(color, vec3(newPeak), g);
+          }
+          return pow(clamp(color, 0.0, 1.0), vec3(1.0 / 2.2));
         }
         vec3 toneMapACES(vec3 x) {
           vec3 mapped = clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0);
           return pow(mapped, vec3(1.0 / 2.2));
+        }
+        vec3 applyToneMapping(vec3 hdr) {
+          return (uMaterialParams.w > 0.5) ? toneMapPBRNeutral(hdr) : toneMapACES(hdr);
         }
         vec3 evaluateSky(vec3 rayDir, bool includeSunDisc) {
           vec3 sunDir = normalize(uSunDir.xyz);
@@ -1317,36 +2134,46 @@
           float cosTheta = clamp(dot(rayDir, sunDir), -1.0, 1.0);
           float upY = max(rayDir.y, 0.001);
 
-          float dayWeight = smoothstep(-0.08, 0.28, sunEl);
-          float goldenWeight = smoothstep(-0.10, 0.06, sunEl) * (1.0 - smoothstep(0.06, 0.38, sunEl));
+          float dayWeight = smoothstep(-0.09, 0.26, sunEl);
+          float goldenWeight = smoothstep(-0.10, 0.07, sunEl) * (1.0 - smoothstep(0.07, 0.38, sunEl));
 
-          vec3 zenithCol = mix(mix(vec3(0.005, 0.012, 0.035), vec3(0.055, 0.24, 0.58), dayWeight), vec3(0.04, 0.11, 0.28), goldenWeight * 0.65);
-          vec3 horizonCol = mix(mix(vec3(0.018, 0.042, 0.095), vec3(0.48, 0.74, 0.94), dayWeight), vec3(0.96, 0.44, 0.16), goldenWeight);
+          vec3 betaOzone = vec3(0.065, 0.088, 0.004);
+          vec3 zenithCol = mix(mix(vec3(0.004, 0.011, 0.032), vec3(0.045, 0.21, 0.56), dayWeight), vec3(0.035, 0.105, 0.30) * (vec3(1.0) - betaOzone * 2.2), goldenWeight * 0.72);
+          vec3 horizonCol = mix(mix(vec3(0.016, 0.038, 0.088), vec3(0.46, 0.73, 0.94), dayWeight), vec3(0.98, 0.42, 0.14), goldenWeight);
 
           float stormFactor = clamp((uSunDir.w - 1.8) * 0.45, 0.0, 0.75);
-          horizonCol = mix(horizonCol, vec3(0.22, 0.28, 0.35) * max(0.2, dayWeight + 0.15), stormFactor);
+          horizonCol = mix(horizonCol, vec3(0.21, 0.27, 0.34) * max(0.2, dayWeight + 0.15), stormFactor);
 
-          vec3 sky = mix(zenithCol, horizonCol, pow(1.0 - upY, 2.8));
+          vec3 sky = mix(zenithCol, horizonCol, pow(1.0 - upY, 2.75));
           float miePhase = pow(max(0.0, cosTheta), 6.0) * 0.45 + pow(max(0.0, cosTheta), 32.0) * 0.65;
-          vec3 sunTint = mix(vec3(0.45, 0.65, 0.95), mix(vec3(1.0, 0.92, 0.78), vec3(1.0, 0.45, 0.12), goldenWeight), smoothstep(-0.08, 0.12, sunEl));
+          vec3 sunTint = mix(vec3(0.45, 0.65, 0.95), mix(vec3(1.0, 0.93, 0.80), vec3(1.0, 0.44, 0.12), goldenWeight), smoothstep(-0.08, 0.12, sunEl));
           sky += sunTint * miePhase * (0.45 + 0.65 * goldenWeight);
 
-          if (rayDir.y > 0.015 && uExtraParams.x > 0.01) {
-            vec2 cloudUV = (rayDir.xz / (rayDir.y + 0.09)) * 0.95 + vec2(uCamPos.w * 0.012, uCamPos.w * 0.005);
+          if (rayDir.y > 0.012 && uExtraParams.x > 0.01) {
+            vec2 cloudUV = (rayDir.xz / (rayDir.y + 0.088)) * 0.95 + vec2(uCamPos.w * 0.012, uCamPos.w * 0.005);
             float n = fbm4(cloudUV);
             float thresh = 1.0 - uExtraParams.x * 0.75;
-            float cloudDensity = smoothstep(thresh, thresh + 0.32, n) * smoothstep(0.015, 0.16, rayDir.y);
+            float cloudDensity = smoothstep(thresh, thresh + 0.32, n) * smoothstep(0.012, 0.16, rayDir.y);
             if (cloudDensity > 0.001) {
-              vec3 cloudLit = mix(zenithCol * 0.6, sunTint * (1.15 + 0.4 * max(0.0, cosTheta)), 0.45 + 0.55 * smoothstep(-0.05, 0.25, sunEl));
-              vec3 cloudDark = mix(vec3(0.03, 0.05, 0.09), vec3(0.28, 0.33, 0.40), dayWeight);
+              vec3 cloudLit = mix(zenithCol * 0.6, sunTint * (1.18 + 0.45 * max(0.0, cosTheta)), 0.45 + 0.55 * smoothstep(-0.05, 0.25, sunEl));
+              vec3 cloudDark = mix(vec3(0.028, 0.048, 0.088), vec3(0.24, 0.30, 0.38), dayWeight);
               vec3 cloudColor = mix(cloudDark, cloudLit, smoothstep(thresh, thresh + 0.28, fbm4(cloudUV + sunDir.xz * 0.15)));
-              sky = mix(sky, cloudColor, cloudDensity * 0.82);
+              sky = mix(sky, cloudColor, cloudDensity * 0.84);
             }
           }
           if (includeSunDisc) {
             float disc = smoothstep(0.99935, 0.99982, cosTheta);
             float limb = pow(max(0.0, cosTheta), 280.0) * 1.4;
             sky += sunTint * (disc * 8.5 + limb);
+
+            // Calibrated non-blinding nocturnal moon opposite low/sub-horizon sun
+            float nightWeight = 1.0 - smoothstep(-0.12, 0.05, sunEl);
+            vec3 moonDir = normalize(vec3(-sunDir.x, max(0.24, -sunDir.y + 0.28), -sunDir.z));
+            float moonCos = clamp(dot(rayDir, moonDir), -1.0, 1.0);
+            float moonDisc = smoothstep(0.99945, 0.99975, moonCos);
+            float moonMaria = 0.72 + 0.28 * fbm4(rayDir.xz * 45.0);
+            float moonCorona = pow(max(0.0, moonCos), 90.0) * 0.35 + pow(max(0.0, moonCos), 12.0) * 0.08;
+            sky += vec3(0.78, 0.88, 1.0) * (moonDisc * moonMaria * 0.45 + moonCorona * 0.20) * nightWeight;
           }
           return max(sky, vec3(0.0));
         }
@@ -1362,15 +2189,20 @@
           vec3 rayDir = normalize(farClip.xyz / farClip.w - uCamPos.xyz);
           if (uExtraParams.w > 0.5) {
             float upDot = rayDir.y;
-            vec3 uwCol = mix(vec3(0.004, 0.045, 0.11), vec3(0.01, 0.18, 0.30), smoothstep(-0.6, 0.65, upDot));
-            if (upDot > 0.25) {
-              vec3 refrDir = normalize(vec3(rayDir.x * 1.33, max(0.05, rayDir.y), rayDir.z * 1.33));
-              uwCol = mix(uwCol, evaluateSky(refrDir, true) * vec3(0.35, 0.78, 0.92), smoothstep(0.32, 0.68, upDot) * 0.78);
+            float clarity = uBuoyPos.w;
+            vec3 uwCol = mix(
+              mix(vec3(0.004, 0.068, 0.075), vec3(0.002, 0.032, 0.115), clarity),
+              mix(vec3(0.015, 0.24, 0.22), vec3(0.008, 0.16, 0.32), clarity),
+              smoothstep(-0.6, 0.65, upDot)
+            );
+            if (upDot > 0.20) {
+              vec3 refrDir = normalize(vec3(rayDir.x * 1.333, max(0.04, rayDir.y), rayDir.z * 1.333));
+              uwCol = mix(uwCol, evaluateSky(refrDir, true) * vec3(0.38, 0.82, 0.94), smoothstep(0.32, 0.661, upDot) * 0.82);
             }
-            fragColor = vec4(toneMapACES(uwCol), 1.0);
+            fragColor = vec4(applyToneMapping(uwCol), 1.0);
             return;
           }
-          fragColor = vec4(toneMapACES(evaluateSky(rayDir, true)), 1.0);
+          fragColor = vec4(applyToneMapping(evaluateSky(rayDir, true)), 1.0);
         }
       `;
 
@@ -1383,6 +2215,7 @@
         out float vCrestFoam;
         out float vPartId;
         out vec3 vBuoyNormal;
+        out vec2 vLocalHeights;
         ${GLSL_COMMON_FUNCS}
         void main() {
           float partId = aVtx.w;
@@ -1397,12 +2230,15 @@
             vec3 right = normalize(cross(vec3(0.0, 0.0, 1.0), up));
             vec3 fwd = cross(up, right);
             vec3 worldP = uBuoyPos.xyz + right * aVtx.x + up * aVtx.y + fwd * aVtx.z;
-            vec3 radialN = normalize(vec3(aVtx.x, 0.25, aVtx.z));
+            vec3 radialN = (partId > 3.5 && partId < 4.5)
+              ? normalize(vec3(aVtx.x * 0.32, 0.94, aVtx.z * 0.32))
+              : normalize(vec3(aVtx.x, 0.25, aVtx.z));
             vWorldPos = worldP;
-            vUndisplacedXZ = worldP.xz;
+            vUndisplacedXZ = aVtx.xz;
             vMacroSlope = vec2(0.0);
             vCrestFoam = 0.0;
             vBuoyNormal = normalize(right * radialN.x + up * radialN.y + fwd * radialN.z);
+            vLocalHeights = vec2(aVtx.y, 0.0);
             gl_Position = uViewProj * vec4(worldP, 1.0);
             return;
           }
@@ -1417,40 +2253,46 @@
 
           float H = uSunDir.w;
           float Q = uOceanParams.x;
-          float windScale = 0.7 + 0.025 * uOceanParams.y;
+          float depth = max(1.5, uMaterialParams.x);
+          float windScale = 0.72 + 0.024 * uOceanParams.y;
 
           vec3 disp = vec3(0.0);
           vec2 slope = vec2(0.0);
-          float jacobianFold = 0.0;
+          float jxx = 1.0, jzz = 1.0, jxz = 0.0, leewardTrail = 0.0;
 
-          for (int i = 0; i < 16; i++) {
+          for (int i = 0; i < 24; i++) {
             vec4 wp = uWaves[i];
             vec2 dir = wp.xy;
             float k = wp.w;
-            float waveVis = smoothstep(0.0, 1.0, 180.0 / (k * distToCam + 12.0));
+            float waveVis = smoothstep(0.0, 1.0, 195.0 / (k * distToCam + 12.0));
             float amp = wp.z * H * distAtten * waveVis;
-            float omega = sqrt(9.81 * k) * windScale;
+            float kd = k * depth; float tanhKd = (kd > 2.5) ? 1.0 : tanh(min(kd, 12.0)); float omega = sqrt((9.81 * k + 0.0000722 * k * k * k) * tanhKd) * windScale;
             float fi = float(i);
             float phase = dot(dir, baseXZ) * k - omega * time + fi * 1.732;
             float groupMod = 0.82 + 0.18 * sin(dot(dir, baseXZ) * (k * 0.09) - omega * 0.45 * time + fi * 2.1);
             float A = amp * groupMod;
             float s = sin(phase);
             float c = cos(phase);
-            float steep = min(0.75, Q / (k * A * 16.0 + 1.15));
+            float steep = min(0.72, Q / (k * A * 24.0 + 1.15));
 
             disp.x -= dir.x * steep * A * s;
             disp.z -= dir.y * steep * A * s;
-            disp.y += A * c;
+            disp.y += A * c + 0.12 * steep * A * (c * c - s * s);
             slope += dir * (k * A * s);
-            jacobianFold += steep * k * A * c;
+            float kSteepA = steep * k * A * c;
+            jxx -= dir.x * dir.x * kSteepA;
+            jzz -= dir.y * dir.y * kSteepA;
+            jxz -= dir.x * dir.y * kSteepA;
+            leewardTrail += max(0.0, sin(phase - 0.65)) * steep * k * A * 0.85;
           }
 
           vec3 finalPos = vec3(baseXZ.x + disp.x, disp.y, baseXZ.y + disp.z);
           vWorldPos = finalPos;
           vUndisplacedXZ = baseXZ;
           vMacroSlope = slope;
-          vCrestFoam = clamp((jacobianFold - 0.34) * 2.1, 0.0, 1.8);
+          vCrestFoam = clamp((0.68 - (jxx * jzz - jxz * jxz)) * 2.4, 0.0, 2.0);
           vBuoyNormal = vec3(0.0, 1.0, 0.0);
+          vLocalHeights = vec2(disp.y, clamp(leewardTrail - 0.25, 0.0, 1.5));
           gl_Position = uViewProj * vec4(finalPos, 1.0);
         }
       `;
@@ -1463,9 +2305,15 @@
         in float vCrestFoam;
         in float vPartId;
         in vec3 vBuoyNormal;
+        in vec2 vLocalHeights;
         out vec4 fragColor;
         ${GLSL_COMMON_FUNCS}
         void main() {
+          // Screen-space partial derivatives evaluated in uniform control flow before any branch
+          vec2 p = vUndisplacedXZ;
+          vec2 dPdx = dFdx(p);
+          vec2 dPdy = dFdy(p);
+
           float time = uCamPos.w;
           vec3 sunDir = normalize(uSunDir.xyz);
           vec3 viewVec = uCamPos.xyz - vWorldPos;
@@ -1474,100 +2322,154 @@
 
           if (vPartId >= 0.5) {
             vec3 N = normalize(vBuoyNormal);
-            float NdL = max(0.0, dot(N, sunDir));
-            vec3 albedo = vec3(0.92, 0.24, 0.08);
-            if (vPartId > 1.5 && vPartId < 2.5) albedo = vec3(0.88, 0.91, 0.95);
-            else if (vPartId > 2.5) {
+            float NoV = clamp(dot(N, V), 0.001, 1.0);
+            float NoL = max(0.0, dot(N, sunDir));
+            if (vPartId > 2.5 && vPartId < 3.5) {
               float blink = pow(0.5 + 0.5 * sin(time * 4.2), 8.0);
-              fragColor = vec4(toneMapACES(vec3(1.0, 0.72, 0.1) * (1.2 + blink * 9.0)), 1.0);
+              fragColor = vec4(applyToneMapping(vec3(1.0, 0.72, 0.12) * (1.4 + blink * 10.5)), 1.0);
               return;
             }
-            vec3 skyAmb = evaluateSky(vec3(0.0, 1.0, 0.0), false) * 0.45;
-            float spec = pow(max(0.0, dot(N, normalize(V + sunDir))), 48.0) * 0.65;
-            float wetMask = smoothstep(-0.2, 0.55, vWorldPos.y - uBuoyPos.y);
-            fragColor = vec4(toneMapACES(albedo * (0.45 + 0.55 * wetMask) * (skyAmb + vec3(1.0, 0.92, 0.8) * NdL) + spec), 1.0);
+            float wetness = clamp(smoothstep(0.95, -0.15, vLocalHeights.x) * (0.55 + 0.45 * uMaterialParams.y), 0.0, 1.0);
+            vec3 albedo = vec3(0.92, 0.23, 0.07);
+            if (vPartId > 1.5 && vPartId < 2.5) albedo = vec3(0.86, 0.90, 0.95);
+            else if (vPartId > 3.5 && vPartId < 4.5) albedo = evalThinFilmIridescence(NoV, 340.0 + 80.0 * uMaterialParams.y, 1.95) * 0.55;
+            else if (vPartId > 4.5) albedo = vec3(0.45, 0.30, 0.22);
+
+            albedo *= mix(vec3(1.0), vec3(0.55), wetness);
+            vec3 skyAmb = evaluateSky(vec3(0.0, 1.0, 0.0), false) * 0.48;
+            float spec = pow(max(0.0, dot(N, normalize(V + sunDir))), mix(36.0, 96.0, wetness)) * (0.65 + 0.55 * wetness);
+            fragColor = vec4(applyToneMapping(albedo * (skyAmb + vec3(1.0, 0.92, 0.8) * NoL) + spec), 1.0);
             return;
           }
-
-          vec2 slope = vMacroSlope;
           float windRad = uBuoyUp.w;
           vec2 windDir = vec2(cos(windRad), sin(windRad));
-          float detailFade = 1.0 / (1.0 + dist * 0.018);
-          float capFade = 1.0 / (1.0 + dist * 0.065);
-          float microScale = (0.35 + 0.65 * clamp(uOceanParams.y / 16.0, 0.2, 1.6)) * min(1.4, uSunDir.w);
+          vec2 crossDir = vec2(-windDir.y, windDir.x);
 
-          for (int j = 0; j < 8; j++) {
+          float H_wave = uSunDir.w;
+          float Q_steep = uOceanParams.x;
+          float depth = max(1.5, uMaterialParams.x);
+          float windScale = 0.72 + 0.024 * uOceanParams.y;
+          float distAtten = 1.0 / (1.0 + dist * 0.00045);
+
+          vec2 slope = vec2(0.0);
+          float subPixelVar = 0.0;
+
+          for (int i = 0; i < 24; i++) {
+            vec4 wp = uWaves[i];
+            vec2 dir = wp.xy;
+            float k = wp.w;
+            float amp = wp.z * H_wave * distAtten;
+            float kd = k * depth; float tanhKd = (kd > 2.5) ? 1.0 : tanh(min(kd, 12.0)); float omega = sqrt((9.81 * k + 0.0000722 * k * k * k) * tanhKd) * windScale;
+            float fi = float(i);
+            float phase = dot(dir, p) * k - omega * time + fi * 1.732;
+            float A = amp * (0.82 + 0.18 * sin(dot(dir, p) * (k * 0.09) - omega * 0.45 * time + fi * 2.1));
+            float dPhiX = k * dot(dir, dPdx);
+            float dPhiY = k * dot(dir, dPdy);
+            float dPhi2 = dPhiX * dPhiX + dPhiY * dPhiY;
+            float wPixel = 1.0 / (1.0 + 0.36 * dPhi2 + 0.08 * dPhi2 * dPhi2);
+            float steep = min(0.68, Q_steep / (k * A * 24.0 + 1.15));
+            float skewPhase = phase + 0.18 * steep * cos(phase);
+            float kA = k * A;
+            slope += dir * (kA * sin(skewPhase) * wPixel);
+            subPixelVar += 0.5 * kA * kA * (1.0 - wPixel * wPixel) + 0.14 * kA * kA * wPixel * wPixel * min(dPhi2, 3.5);
+          }
+
+          float detailFade = 1.0 / (1.0 + dist * 0.014);
+          float microScale = (0.32 + 0.68 * clamp(uOceanParams.y / 16.0, 0.2, 1.65)) * min(1.45, H_wave);
+
+          for (int j = 0; j < 12; j++) {
             float fj = float(j);
-            float k_micro = 1.85 * exp2(fj * 0.62);
-            float ang = windRad + sin(fj * 2.35 + 0.5) * 0.68;
+            float k_micro = 1.45 * exp2(fj * 0.48);
+            float ang = windRad + sin(fj * 2.39996 + 0.5) * 0.68;
             vec2 d = vec2(cos(ang), sin(ang));
-            float w_micro = sqrt(9.81 * k_micro + 0.000074 * k_micro * k_micro * k_micro);
-            float ph = dot(d, vUndisplacedXZ) * k_micro - w_micro * time * 1.15 + fj * 3.17;
-            float fade = (j >= 4) ? capFade : detailFade;
-            float a_micro = (0.11 / pow(k_micro, 0.82)) * microScale * fade;
-            slope += d * (k_micro * a_micro * cos(ph));
+            float w_micro = sqrt(9.81 * k_micro + 0.0000722 * k_micro * k_micro * k_micro);
+            float ph = dot(d, p) * k_micro - w_micro * time * 1.12 + fj * 3.17;
+            float a_micro = (0.092 / pow(k_micro, 0.85)) * microScale * detailFade;
+            float kA_m = k_micro * a_micro;
+            float dPhiX = k_micro * dot(d, dPdx);
+            float dPhiY = k_micro * dot(d, dPdy);
+            float dPhi2 = dPhiX * dPhiX + dPhiY * dPhiY;
+            float wMicro = 1.0 / (1.0 + 0.42 * dPhi2 + 0.10 * dPhi2 * dPhi2);
+            slope += d * (kA_m * cos(ph) * wMicro);
+            subPixelVar += 0.5 * kA_m * kA_m * (1.0 - wMicro * wMicro) + 0.16 * kA_m * kA_m * wMicro * wMicro * min(dPhi2, 3.0);
           }
 
           vec3 N = normalize(vec3(-slope.x, 1.0, -slope.y));
-          float NoV = clamp(dot(N, V), 0.001, 1.0);
-          float distRoughness = clamp(0.03 + (1.0 - detailFade) * 0.16 * microScale, 0.02, 0.35);
-          float fresnel = clamp(0.0204 + 0.9796 * pow(1.0 - NoV, 5.0 * (1.0 - distRoughness * 0.45)), 0.0, 1.0);
+          float NoV_raw = dot(N, V);
+          float softPull = 0.045 * log(1.0 + exp((0.06 - NoV_raw) / 0.045));
+          N = normalize(N + V * softPull);
+          float NoV = clamp(dot(N, V), 0.002, 1.0);
+
+          float windU = clamp(uOceanParams.y, 1.5, 28.0);
+          float coxMunkVar = 0.0019 + 0.0016 * windU;
+          float distRoughness = clamp(sqrt(coxMunkVar + subPixelVar * 0.52), 0.032, 0.36);
+
+          float fresnel = clamp(0.0204 + 0.9796 * pow(1.0 - NoV, 5.0 * (1.0 - distRoughness * 0.42)), 0.0, 1.0);
+          vec3 filmColor = evalThinFilmIridescence(NoV, 260.0 + 140.0 * fbm4(vUndisplacedXZ * 0.18), 1.38);
+          vec3 fresnelRGB = mix(vec3(fresnel), fresnel * filmColor * 1.35, clamp(uMaterialParams.y * 0.38, 0.0, 0.75) * (1.0 - NoV));
 
           vec3 R = reflect(-V, N);
-          R.y = max(R.y, 0.015);
+          float minRy = 0.015 + distRoughness * 0.08;
+          R.y = 0.5 * (R.y + sqrt(R.y * R.y + minRy * minRy)) + 0.008;
           vec3 skyReflect = evaluateSky(normalize(R), false);
 
           float sunEl = sunDir.y;
           float dayLight = smoothstep(-0.1, 0.25, sunEl);
           float goldenLight = smoothstep(-0.08, 0.08, sunEl) * (1.0 - smoothstep(0.08, 0.35, sunEl));
+          float clarity = uBuoyPos.w;
 
-          vec3 deepAbyss = mix(vec3(0.002, 0.008, 0.022), vec3(0.005, 0.038, 0.095), dayLight);
-          vec3 shallowScatter = mix(vec3(0.006, 0.025, 0.055), vec3(0.012, 0.16, 0.24), dayLight);
-          vec3 waterBody = mix(deepAbyss, shallowScatter, pow(NoV, 0.65));
+          vec3 deepAbyss = mix(vec3(0.004, 0.062, 0.072), vec3(0.003, 0.032, 0.105), clarity) * dayLight;
+          vec3 shallowScatter = mix(vec3(0.022, 0.24, 0.21), vec3(0.010, 0.15, 0.28), clarity) * dayLight;
+          vec3 waterBody = mix(deepAbyss, shallowScatter, pow(NoV, 0.62));
 
-          float crestHeightFactor = clamp((vWorldPos.y + uSunDir.w * 0.35) / max(0.35, uSunDir.w * 1.45), 0.0, 1.5);
-          vec3 backLightVec = normalize(vec3(sunDir.x, sunDir.y * 0.35, sunDir.z));
-          float backLight = pow(clamp(dot(V, -backLightVec), 0.0, 1.0), 3.2);
-          float normalEdge = pow(1.0 - NoV, 1.6) * max(0.0, 1.0 - N.y * 0.65);
-          vec3 sssTint = mix(vec3(0.02, 0.56, 0.48), vec3(0.12, 0.68, 0.42), goldenLight);
-          waterBody += sssTint * (crestHeightFactor * (0.28 + 1.35 * backLight + 0.75 * normalEdge)) * uOceanParams.z * (0.25 + 0.85 * dayLight);
+          float crestHeightFactor = clamp((vWorldPos.y + uSunDir.w * 0.35) / max(0.35, uSunDir.w * 1.45), 0.0, 1.6);
+          vec3 backLightVec = normalize(vec3(sunDir.x, sunDir.y * 0.32, sunDir.z));
+          float backLight = pow(clamp(dot(V, -backLightVec), 0.0, 1.0), 3.6) * 1.45;
+          float normalEdge = pow(1.0 - NoV, 1.55) * max(0.0, 1.0 - N.y * 0.65);
+          vec3 sssTint = mix(mix(vec3(0.04, 0.66, 0.44), vec3(0.015, 0.52, 0.54), clarity), vec3(0.14, 0.72, 0.42), goldenLight);
+          waterBody += sssTint * (crestHeightFactor * (0.26 + backLight + 0.72 * normalEdge)) * uOceanParams.z * (0.25 + 0.85 * dayLight);
 
           if (uExtraParams.y > 0.01) {
             float bioPulse = 0.65 + 0.35 * sin(time * 2.2 + vUndisplacedXZ.x * 0.25);
-            float bioMask = pow(clamp(vCrestFoam * 0.9 + crestHeightFactor * 0.45, 0.0, 1.4), 2.2);
-            waterBody += vec3(0.02, 0.68, 0.98) * bioMask * uExtraParams.y * bioPulse * 0.85;
+            float bioMask = pow(clamp(vCrestFoam * 0.95 + crestHeightFactor * 0.42, 0.0, 1.5), 2.1);
+            waterBody += vec3(0.02, 0.72, 1.0) * bioMask * uExtraParams.y * bioPulse * 0.92;
           }
 
           vec3 Hvec = normalize(V + sunDir);
           float NoH = max(0.0001, dot(N, Hvec));
           float NoL = max(0.0, dot(N, sunDir));
-          float a2Tight = pow(mix(0.018, 0.085, distRoughness), 2.0);
-          float a2Wide  = pow(mix(0.11, 0.26, distRoughness), 2.0);
+          float a2Tight = pow(mix(0.015, 0.082, distRoughness), 2.0);
+          float a2Wide  = pow(mix(0.105, 0.25, distRoughness), 2.0);
           float dTight = (NoH * a2Tight - NoH) * NoH + 1.0;
           float dWide  = (NoH * a2Wide - NoH) * NoH + 1.0;
-          float ggxTight = a2Tight / (3.14159 * dTight * dTight + 0.0001);
-          float ggxWide  = a2Wide  / (3.14159 * dWide  * dWide  + 0.0001);
+          float ggxTight = a2Tight / (PI * dTight * dTight + 0.0001);
+          float ggxWide  = a2Wide  / (PI * dWide  * dWide  + 0.0001);
+          vec3 msEnergy = multiscatterEnergyComp(NoV, distRoughness, vec3(0.0204));
           vec3 sunSpecColor = mix(vec3(0.65, 0.80, 1.0), mix(vec3(1.0, 0.95, 0.86), vec3(1.0, 0.50, 0.16), goldenLight), smoothstep(-0.08, 0.14, sunEl));
-          vec3 sunSpec = sunSpecColor * (ggxTight * 0.55 + ggxWide * 0.14) * NoL * fresnel * smoothstep(-0.06, 0.05, sunEl);
+          vec3 sunSpec = sunSpecColor * (ggxTight * 0.58 + ggxWide * 0.16) * uMaterialParams.z * msEnergy * NoL * fresnelRGB * smoothstep(-0.06, 0.05, sunEl);
 
-          vec3 color = mix(waterBody, skyReflect, fresnel) + sunSpec;
+          vec3 color = mix(waterBody, skyReflect * msEnergy, fresnelRGB) + sunSpec;
 
-          float foamSignal = (vCrestFoam * 0.85 + max(0.0, length(slope) - 0.52) * 0.65) * uOceanParams.w;
-          if (foamSignal > 0.02 && dist < 900.0) {
+          float crossWindPos = dot(vUndisplacedXZ, vec2(-windDir.y, windDir.x));
+          float langmuirBand = pow(max(0.0, cos(crossWindPos * 0.52 + fbm4(vUndisplacedXZ * 0.05) * 3.2)), 10.0);
+          float langmuirFoam = langmuirBand * uAtmosParams.z * 0.45;
+          float foamSignal = (vCrestFoam * 0.88 + vLocalHeights.y * 0.45 + langmuirFoam + max(0.0, length(slope) - 0.50) * 0.62) * uOceanParams.w;
+          if (foamSignal > 0.02 && dist < 950.0) {
             vec2 foamUV = vUndisplacedXZ * 0.55 + windDir * time * 0.28;
             float bubbleTex = foamBubbles(foamUV);
-            float laceMask = smoothstep(0.32, 0.88, foamSignal * (0.45 + 0.75 * bubbleTex));
-            float denseCore = smoothstep(0.75, 1.35, foamSignal);
-            float totalFoam = clamp(laceMask * 0.75 + denseCore * 0.55, 0.0, 0.96) * (1.0 - smoothstep(350.0, 900.0, dist));
-            vec3 foamLit = mix(vec3(0.15, 0.22, 0.32), mix(vec3(0.92, 0.96, 1.0), vec3(1.0, 0.75, 0.55), goldenLight * 0.7), 0.2 + 0.8 * dayLight);
+            float laceMask = smoothstep(0.30, 0.86, foamSignal * (0.44 + 0.78 * bubbleTex));
+            float denseCore = smoothstep(0.72, 1.32, foamSignal);
+            float totalFoam = clamp(laceMask * 0.76 + denseCore * 0.56, 0.0, 0.96) * (1.0 - smoothstep(380.0, 950.0, dist));
+            vec3 foamLit = mix(vec3(0.15, 0.22, 0.32), mix(vec3(0.93, 0.97, 1.0), vec3(1.0, 0.75, 0.55), goldenLight * 0.7), 0.2 + 0.8 * dayLight);
             color = mix(color, foamLit, totalFoam);
           }
 
           vec3 eyeToSurfDir = normalize(vWorldPos - uCamPos.xyz);
           vec3 horizonSky = evaluateSky(vec3(eyeToSurfDir.x, max(0.005, abs(eyeToSurfDir.y)), eyeToSurfDir.z), false);
-          color = mix(color, horizonSky, clamp(1.0 - exp(-dist * 0.00038), 0.0, 1.0));
+          float fogDensity = 0.00035 + uAtmosParams.x * 0.0014 + uAtmosParams.y * 0.0006;
+          color = mix(color, horizonSky, clamp(1.0 - exp(-dist * fogDensity), 0.0, 1.0));
 
-          fragColor = vec4(toneMapACES(color), 1.0);
+          fragColor = vec4(applyToneMapping(color), 1.0);
         }
       `;
 
@@ -1663,7 +2565,7 @@
       // =========================================================================
       const canvas = document.getElementById("ocean-canvas");
       const geom = createSceneGeometry();
-      const uniformFloats = new Float32Array(120);
+      const uniformFloats = new Float32Array(160); // 640 bytes (exact multiple of 16 bytes)
 
       let renderFrameFn = null;
 
@@ -1734,23 +2636,35 @@
         uniformFloats[48] = state.buoyPos[0];
         uniformFloats[49] = state.buoyPos[1];
         uniformFloats[50] = state.buoyPos[2];
-        uniformFloats[51] = 0.0;
+        uniformFloats[51] = state.waterClarity;
 
         uniformFloats[52] = state.buoyNormal[0];
         uniformFloats[53] = state.buoyNormal[1];
         uniformFloats[54] = state.buoyNormal[2];
         uniformFloats[55] = (state.windDirDeg * Math.PI) / 180.0;
 
-        uniformFloats.set(waveParams, 56);
+        uniformFloats[56] = state.waterDepth;
+        uniformFloats[57] = state.iridescence;
+        uniformFloats[58] = state.glintIntensity;
+        uniformFloats[59] = state.toneMapMode;
+
+        uniformFloats[60] = state.hazeIntensity;
+        uniformFloats[61] = state.rainSpray;
+        uniformFloats[62] = state.langmuirStrength;
+        uniformFloats[63] = (state.swellAngleDeg * Math.PI) / 180.0;
+
+        uniformFloats.set(waveParams, 64);
       }
 
       function setupWebGPURenderer(device, context, format) {
+        const sampleCount = 4; // 4x Hardware Multisample Anti-Aliasing (MSAA)
+        let msaaTexture = null;
         let depthTexture = null;
         let lastW = 0;
         let lastH = 0;
 
         function ensureCanvasSize() {
-          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
           const w = Math.max(1, Math.floor(window.innerWidth * dpr));
           const h = Math.max(1, Math.floor(window.innerHeight * dpr));
           if (w !== lastW || h !== lastH) {
@@ -1761,9 +2675,17 @@
               format: format,
               alphaMode: "opaque",
             });
+            if (msaaTexture) msaaTexture.destroy();
+            msaaTexture = device.createTexture({
+              size: [w, h, 1],
+              sampleCount: sampleCount,
+              format: format,
+              usage: GPUTextureUsage.RENDER_ATTACHMENT,
+            });
             if (depthTexture) depthTexture.destroy();
             depthTexture = device.createTexture({
               size: [w, h, 1],
+              sampleCount: sampleCount,
               format: "depth24plus",
               usage: GPUTextureUsage.RENDER_ATTACHMENT,
             });
@@ -1819,6 +2741,7 @@
             targets: [{ format: format }],
           },
           primitive: { topology: "triangle-list" },
+          multisample: { count: sampleCount },
           depthStencil: {
             format: "depth24plus",
             depthWriteEnabled: false,
@@ -1844,6 +2767,7 @@
             targets: [{ format: format }],
           },
           primitive: { topology: "triangle-list", cullMode: "none" },
+          multisample: { count: sampleCount },
           depthStencil: {
             format: "depth24plus",
             depthWriteEnabled: true,
@@ -1860,10 +2784,11 @@
           const pass = encoder.beginRenderPass({
             colorAttachments: [
               {
-                view: context.getCurrentTexture().createView(),
+                view: msaaTexture.createView(),
+                resolveTarget: context.getCurrentTexture().createView(),
                 clearValue: { r: 0.01, g: 0.03, b: 0.07, a: 1.0 },
                 loadOp: "clear",
-                storeOp: "store",
+                storeOp: "discard",
               },
             ],
             depthStencilAttachment: {
@@ -1904,6 +2829,20 @@
           gl.attachShader(prog, vs);
           gl.attachShader(prog, fs);
           gl.linkProgram(prog);
+          // Cache immutable uniform locations once at link time to eliminate per-frame driver lookup overhead
+          prog.uLocs = {
+            uViewProj: gl.getUniformLocation(prog, "uViewProj"),
+            uInvViewProj: gl.getUniformLocation(prog, "uInvViewProj"),
+            uCamPos: gl.getUniformLocation(prog, "uCamPos"),
+            uSunDir: gl.getUniformLocation(prog, "uSunDir"),
+            uOceanParams: gl.getUniformLocation(prog, "uOceanParams"),
+            uExtraParams: gl.getUniformLocation(prog, "uExtraParams"),
+            uBuoyPos: gl.getUniformLocation(prog, "uBuoyPos"),
+            uBuoyUp: gl.getUniformLocation(prog, "uBuoyUp"),
+            uMaterialParams: gl.getUniformLocation(prog, "uMaterialParams"),
+            uAtmosParams: gl.getUniformLocation(prog, "uAtmosParams"),
+            uWaves: gl.getUniformLocation(prog, "uWaves"),
+          };
           return prog;
         }
 
@@ -1927,19 +2866,23 @@
 
         function bindProgramUniforms(prog) {
           gl.useProgram(prog);
-          gl.uniformMatrix4fv(gl.getUniformLocation(prog, "uViewProj"), false, uniformFloats.subarray(0, 16));
-          gl.uniformMatrix4fv(gl.getUniformLocation(prog, "uInvViewProj"), false, uniformFloats.subarray(16, 32));
-          gl.uniform4fv(gl.getUniformLocation(prog, "uCamPos"), uniformFloats.subarray(32, 36));
-          gl.uniform4fv(gl.getUniformLocation(prog, "uSunDir"), uniformFloats.subarray(36, 40));
-          gl.uniform4fv(gl.getUniformLocation(prog, "uOceanParams"), uniformFloats.subarray(40, 44));
-          gl.uniform4fv(gl.getUniformLocation(prog, "uExtraParams"), uniformFloats.subarray(44, 48));
-          gl.uniform4fv(gl.getUniformLocation(prog, "uBuoyPos"), uniformFloats.subarray(48, 52));
-          gl.uniform4fv(gl.getUniformLocation(prog, "uBuoyUp"), uniformFloats.subarray(52, 56));
-          gl.uniform4fv(gl.getUniformLocation(prog, "uWaves"), uniformFloats.subarray(56, 120));
+          const locs = prog.uLocs;
+          if (!locs) return;
+          if (locs.uViewProj) gl.uniformMatrix4fv(locs.uViewProj, false, uniformFloats.subarray(0, 16));
+          if (locs.uInvViewProj) gl.uniformMatrix4fv(locs.uInvViewProj, false, uniformFloats.subarray(16, 32));
+          if (locs.uCamPos) gl.uniform4fv(locs.uCamPos, uniformFloats.subarray(32, 36));
+          if (locs.uSunDir) gl.uniform4fv(locs.uSunDir, uniformFloats.subarray(36, 40));
+          if (locs.uOceanParams) gl.uniform4fv(locs.uOceanParams, uniformFloats.subarray(40, 44));
+          if (locs.uExtraParams) gl.uniform4fv(locs.uExtraParams, uniformFloats.subarray(44, 48));
+          if (locs.uBuoyPos) gl.uniform4fv(locs.uBuoyPos, uniformFloats.subarray(48, 52));
+          if (locs.uBuoyUp) gl.uniform4fv(locs.uBuoyUp, uniformFloats.subarray(52, 56));
+          if (locs.uMaterialParams) gl.uniform4fv(locs.uMaterialParams, uniformFloats.subarray(56, 60));
+          if (locs.uAtmosParams) gl.uniform4fv(locs.uAtmosParams, uniformFloats.subarray(60, 64));
+          if (locs.uWaves) gl.uniform4fv(locs.uWaves, uniformFloats.subarray(64, 160));
         }
 
         renderFrameFn = function (time, submergedFlag) {
-          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
           const w = Math.max(1, Math.floor(window.innerWidth * dpr));
           const h = Math.max(1, Math.floor(window.innerHeight * dpr));
           if (canvas.width !== w || canvas.height !== h) {
@@ -2082,29 +3025,74 @@
       // =========================================================================
       const PRESETS = {
         golden: {
-          waveHeight: 1.35, choppiness: 1.15, windSpeed: 14.0, windDirDeg: 28,
-          sunElevationDeg: 14.0, sunAzimuthDeg: 210, sssIntensity: 1.25, foamIntensity: 1.10,
-          cloudCoverage: 0.42, nightBio: 0.0
+          waveHeight: 1.35, choppiness: 1.15, windSpeed: 14.0, windDirDeg: 28, waterDepth: 42.0,
+          swellAngleDeg: 32, fetchKm: 140,
+          sunElevationDeg: 14.0, sunAzimuthDeg: 210, sssIntensity: 1.25, waterClarity: 0.68,
+          foamIntensity: 1.10, glintIntensity: 1.15, iridescence: 0.65,
+          cloudCoverage: 0.42, hazeIntensity: 0.35, nightBio: 0.0, langmuirStrength: 0.75, rainSpray: 0.0
         },
         tropical: {
-          waveHeight: 0.85, choppiness: 0.95, windSpeed: 10.5, windDirDeg: 65,
-          sunElevationDeg: 58.0, sunAzimuthDeg: 165, sssIntensity: 1.85, foamIntensity: 0.75,
-          cloudCoverage: 0.25, nightBio: 0.0
+          waveHeight: 0.85, choppiness: 0.95, windSpeed: 10.5, windDirDeg: 65, waterDepth: 11.0,
+          swellAngleDeg: 24, fetchKm: 95,
+          sunElevationDeg: 58.0, sunAzimuthDeg: 165, sssIntensity: 1.95, waterClarity: 0.22,
+          foamIntensity: 0.75, glintIntensity: 1.35, iridescence: 0.50,
+          cloudCoverage: 0.25, hazeIntensity: 0.18, nightBio: 0.0, langmuirStrength: 0.55, rainSpray: 0.0
         },
         storm: {
-          waveHeight: 2.85, choppiness: 1.75, windSpeed: 24.5, windDirDeg: 315,
-          sunElevationDeg: 7.5, sunAzimuthDeg: 240, sssIntensity: 0.95, foamIntensity: 1.95,
-          cloudCoverage: 0.88, nightBio: 0.0
+          waveHeight: 2.85, choppiness: 1.75, windSpeed: 24.5, windDirDeg: 315, waterDepth: 85.0,
+          swellAngleDeg: 48, fetchKm: 380,
+          sunElevationDeg: 7.5, sunAzimuthDeg: 240, sssIntensity: 0.95, waterClarity: 0.55,
+          foamIntensity: 1.95, glintIntensity: 0.95, iridescence: 0.85,
+          cloudCoverage: 0.88, hazeIntensity: 0.95, nightBio: 0.0, langmuirStrength: 1.55, rainSpray: 1.35
         },
         calm: {
-          waveHeight: 0.35, choppiness: 0.45, windSpeed: 4.5, windDirDeg: 110,
-          sunElevationDeg: 5.5, sunAzimuthDeg: 125, sssIntensity: 1.10, foamIntensity: 0.20,
-          cloudCoverage: 0.18, nightBio: 0.0
+          waveHeight: 0.35, choppiness: 0.45, windSpeed: 4.5, windDirDeg: 110, waterDepth: 32.0,
+          swellAngleDeg: 15, fetchKm: 45,
+          sunElevationDeg: 5.5, sunAzimuthDeg: 125, sssIntensity: 1.15, waterClarity: 0.85,
+          foamIntensity: 0.20, glintIntensity: 1.40, iridescence: 1.10,
+          cloudCoverage: 0.18, hazeIntensity: 0.25, nightBio: 0.0, langmuirStrength: 0.20, rainSpray: 0.0
         },
         moonlit: {
-          waveHeight: 1.20, choppiness: 1.10, windSpeed: 12.5, windDirDeg: 45,
-          sunElevationDeg: -3.5, sunAzimuthDeg: 200, sssIntensity: 1.40, foamIntensity: 1.25,
-          cloudCoverage: 0.30, nightBio: 1.45
+          waveHeight: 1.20, choppiness: 1.10, windSpeed: 12.5, windDirDeg: 45, waterDepth: 50.0,
+          swellAngleDeg: 35, fetchKm: 160,
+          sunElevationDeg: -3.5, sunAzimuthDeg: 200, sssIntensity: 1.45, waterClarity: 0.75,
+          foamIntensity: 1.25, glintIntensity: 1.25, iridescence: 1.45,
+          cloudCoverage: 0.30, hazeIntensity: 0.22, nightBio: 1.45, langmuirStrength: 0.85, rainSpray: 0.0
+        },
+        arctic: {
+          waveHeight: 1.05, choppiness: 1.20, windSpeed: 13.0, windDirDeg: 15, waterDepth: 75.0,
+          swellAngleDeg: 40, fetchKm: 220,
+          sunElevationDeg: -5.0, sunAzimuthDeg: 180, sssIntensity: 1.35, waterClarity: 0.95,
+          foamIntensity: 1.15, glintIntensity: 1.30, iridescence: 0.90,
+          cloudCoverage: 0.22, hazeIntensity: 0.12, nightBio: 1.85, langmuirStrength: 0.90, rainSpray: 0.15
+        },
+        monsoon: {
+          waveHeight: 2.35, choppiness: 1.60, windSpeed: 22.0, windDirDeg: 255, waterDepth: 48.0,
+          swellAngleDeg: 62, fetchKm: 310,
+          sunElevationDeg: 19.0, sunAzimuthDeg: 225, sssIntensity: 1.15, waterClarity: 0.35,
+          foamIntensity: 1.80, glintIntensity: 0.85, iridescence: 0.75,
+          cloudCoverage: 0.92, hazeIntensity: 1.15, nightBio: 0.0, langmuirStrength: 1.65, rainSpray: 1.85
+        },
+        reef: {
+          waveHeight: 0.55, choppiness: 0.85, windSpeed: 8.0, windDirDeg: 82, waterDepth: 4.5,
+          swellAngleDeg: 28, fetchKm: 65,
+          sunElevationDeg: 68.0, sunAzimuthDeg: 150, sssIntensity: 2.25, waterClarity: 0.08,
+          foamIntensity: 0.65, glintIntensity: 1.55, iridescence: 0.60,
+          cloudCoverage: 0.16, hazeIntensity: 0.10, nightBio: 0.0, langmuirStrength: 0.40, rainSpray: 0.0
+        },
+        crimson: {
+          waveHeight: 1.75, choppiness: 1.35, windSpeed: 16.5, windDirDeg: 295, waterDepth: 55.0,
+          swellAngleDeg: 75, fetchKm: 260,
+          sunElevationDeg: 2.2, sunAzimuthDeg: 262, sssIntensity: 1.65, waterClarity: 0.62,
+          foamIntensity: 1.35, glintIntensity: 1.65, iridescence: 1.25,
+          cloudCoverage: 0.58, hazeIntensity: 0.65, nightBio: 0.15, langmuirStrength: 1.10, rainSpray: 0.25
+        },
+        fog: {
+          waveHeight: 1.15, choppiness: 1.05, windSpeed: 11.5, windDirDeg: 340, waterDepth: 38.0,
+          swellAngleDeg: 45, fetchKm: 180,
+          sunElevationDeg: 18.0, sunAzimuthDeg: 195, sssIntensity: 0.90, waterClarity: 0.42,
+          foamIntensity: 0.95, glintIntensity: 0.70, iridescence: 0.45,
+          cloudCoverage: 0.95, hazeIntensity: 1.85, nightBio: 0.0, langmuirStrength: 0.80, rainSpray: 0.45
         }
       };
 
@@ -2114,10 +3102,21 @@
           ["slider-choppiness", "val-choppiness", state.choppiness, (v) => v.toFixed(2)],
           ["slider-wind-speed", "val-wind-speed", state.windSpeed, (v) => v.toFixed(1) + " m/s"],
           ["slider-wind-dir", "val-wind-dir", state.windDirDeg, (v) => Math.round(v) + "°"],
+          ["slider-water-depth", "val-water-depth", state.waterDepth, (v) => v.toFixed(1) + " m"],
+          ["slider-swell-angle", "val-swell-angle", state.swellAngleDeg, (v) => Math.round(v) + "°"],
+          ["slider-fetch", "val-fetch", state.fetchKm, (v) => Math.round(v) + " km"],
           ["slider-sun-el", "val-sun-el", state.sunElevationDeg, (v) => v.toFixed(1) + "°"],
           ["slider-sun-az", "val-sun-az", state.sunAzimuthDeg, (v) => Math.round(v) + "°"],
           ["slider-sss", "val-sss", state.sssIntensity, (v) => v.toFixed(2)],
+          ["slider-water-clarity", "val-water-clarity", state.waterClarity, (v) => v.toFixed(2)],
+          ["slider-clouds", "val-clouds", state.cloudCoverage * 100, (v) => Math.round(v) + "%"],
+          ["slider-haze", "val-haze", state.hazeIntensity, (v) => v.toFixed(2)],
+          ["slider-aurora", "val-aurora", state.nightBio, (v) => v.toFixed(2)],
           ["slider-foam", "val-foam", state.foamIntensity, (v) => v.toFixed(2)],
+          ["slider-glint", "val-glint", state.glintIntensity, (v) => v.toFixed(2)],
+          ["slider-iridescence", "val-iridescence", state.iridescence, (v) => v.toFixed(2)],
+          ["slider-langmuir", "val-langmuir", state.langmuirStrength, (v) => v.toFixed(2)],
+          ["slider-rain", "val-rain", state.rainSpray, (v) => v.toFixed(2)],
           ["slider-cam-height", "val-cam-height", state.eyeClearance, (v) => v.toFixed(2) + " m"],
           ["slider-cam-tilt", "val-cam-tilt", state.tiltCoupling * 100, (v) => Math.round(v) + "%"],
         ];
@@ -2142,14 +3141,22 @@
         });
       });
 
+      document.querySelectorAll(".tonemap-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tonemap-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          state.toneMapMode = parseFloat(btn.getAttribute("data-tonemap") || "1");
+        });
+      });
+
       function bindSlider(sliderId, valId, key, fmt, rebuildSpectrumFlag) {
         const slider = document.getElementById(sliderId);
         const valSpan = document.getElementById(valId);
         if (!slider) return;
         slider.addEventListener("input", () => {
           const v = parseFloat(slider.value);
-          if (key === "tiltCoupling") {
-            state.tiltCoupling = v / 100.0;
+          if (key === "tiltCoupling" || key === "cloudCoverage") {
+            state[key] = v / 100.0;
           } else {
             state[key] = v;
           }
@@ -2162,10 +3169,21 @@
       bindSlider("slider-choppiness", "val-choppiness", "choppiness", (v) => v.toFixed(2), false);
       bindSlider("slider-wind-speed", "val-wind-speed", "windSpeed", (v) => v.toFixed(1) + " m/s", true);
       bindSlider("slider-wind-dir", "val-wind-dir", "windDirDeg", (v) => Math.round(v) + "°", true);
+      bindSlider("slider-water-depth", "val-water-depth", "waterDepth", (v) => v.toFixed(1) + " m", true);
+      bindSlider("slider-swell-angle", "val-swell-angle", "swellAngleDeg", (v) => Math.round(v) + "°", true);
+      bindSlider("slider-fetch", "val-fetch", "fetchKm", (v) => Math.round(v) + " km", true);
       bindSlider("slider-sun-el", "val-sun-el", "sunElevationDeg", (v) => v.toFixed(1) + "°", false);
       bindSlider("slider-sun-az", "val-sun-az", "sunAzimuthDeg", (v) => Math.round(v) + "°", false);
       bindSlider("slider-sss", "val-sss", "sssIntensity", (v) => v.toFixed(2), false);
+      bindSlider("slider-water-clarity", "val-water-clarity", "waterClarity", (v) => v.toFixed(2), false);
+      bindSlider("slider-clouds", "val-clouds", "cloudCoverage", (v) => Math.round(v) + "%", false);
+      bindSlider("slider-haze", "val-haze", "hazeIntensity", (v) => v.toFixed(2), false);
+      bindSlider("slider-aurora", "val-aurora", "nightBio", (v) => v.toFixed(2), false);
       bindSlider("slider-foam", "val-foam", "foamIntensity", (v) => v.toFixed(2), false);
+      bindSlider("slider-glint", "val-glint", "glintIntensity", (v) => v.toFixed(2), false);
+      bindSlider("slider-iridescence", "val-iridescence", "iridescence", (v) => v.toFixed(2), false);
+      bindSlider("slider-langmuir", "val-langmuir", "langmuirStrength", (v) => v.toFixed(2), false);
+      bindSlider("slider-rain", "val-rain", "rainSpray", (v) => v.toFixed(2), false);
       bindSlider("slider-cam-height", "val-cam-height", "eyeClearance", (v) => v.toFixed(2) + " m", false);
       bindSlider("slider-cam-tilt", "val-cam-tilt", "tiltCoupling", (v) => Math.round(v) + "%", false);
 
@@ -2440,56 +3458,55 @@
         }
       }
 
-      
       // Bilingual Language Switcher (LoLyeah Standards)
       function applyLanguage(lang) {
         currentLang = lang;
         document.documentElement.lang = lang;
-        localStorage.setItem('lolyeah_lang', lang);
-        
-        const langLabel = document.getElementById('lang-label');
-        if (langLabel) langLabel.textContent = lang === 'id' ? 'ID / EN' : 'EN / ID';
+        safeSetStorage("lolyeah_lang", lang);
 
-        const camModeLabel = document.getElementById('cam-mode-label');
+        const langLabel = document.getElementById("lang-label");
+        if (langLabel) langLabel.textContent = lang === "id" ? "ID / EN" : "EN / ID";
+
+        const camModeLabel = document.getElementById("cam-mode-label");
         if (camModeLabel) {
           if (state.floatingMode) {
-            camModeLabel.textContent = lang === 'id' ? 'Kamera Apung: AKTIF' : 'Floating Cam: ON';
+            camModeLabel.textContent = lang === "id" ? "Kamera Apung: AKTIF" : "Floating Cam: ON";
           } else {
-            camModeLabel.textContent = lang === 'id' ? 'Terbang Bebas: AKTIF' : 'Free-Fly Cam: ON';
+            camModeLabel.textContent = lang === "id" ? "Terbang Bebas: AKTIF" : "Free-Fly Cam: ON";
           }
         }
 
-        const audioLabel = document.getElementById('audio-label');
+        const audioLabel = document.getElementById("audio-label");
         if (audioLabel) {
-          if (typeof audioEnabled !== 'undefined' && audioEnabled) {
-            audioLabel.textContent = lang === 'id' ? 'Suara Nyala' : 'Sound On';
+          if (typeof audioEnabled !== "undefined" && audioEnabled) {
+            audioLabel.textContent = lang === "id" ? "Suara Nyala" : "Sound On";
           } else {
-            audioLabel.textContent = lang === 'id' ? 'Suara Mati' : 'Sound Off';
+            audioLabel.textContent = lang === "id" ? "Suara Mati" : "Sound Off";
           }
         }
 
-        const touchUiLabel = document.getElementById('touch-ui-label');
+        const touchUiLabel = document.getElementById("touch-ui-label");
         if (touchUiLabel) {
-          touchUiLabel.textContent = lang === 'id' ? 'Tuas Kendali' : 'Joysticks';
+          touchUiLabel.textContent = lang === "id" ? "Tuas Kendali" : "Joysticks";
         }
 
-        const panelToggleText = document.getElementById('panel-toggle-text');
+        const panelToggleText = document.getElementById("panel-toggle-text");
         if (panelToggleText) {
-          panelToggleText.textContent = lang === 'id' ? 'Kontrol Samudra' : 'Ocean Controls';
+          panelToggleText.textContent = lang === "id" ? "Kontrol Samudra" : "Ocean Controls";
         }
 
-        const btnHideUi = document.getElementById('btn-hide-ui');
+        const btnHideUi = document.getElementById("btn-hide-ui");
         if (btnHideUi) {
-          btnHideUi.title = lang === 'id'
-            ? 'Sembunyikan UI (Mode Zen - Klik di mana saja untuk menampilkan kembali)'
-            : 'Hide UI (Zen Mode - Click/touch anywhere to restore)';
+          btnHideUi.title = lang === "id"
+            ? "Sembunyikan UI (Mode Zen - Klik di mana saja untuk menampilkan kembali)"
+            : "Hide UI (Zen Mode - Click/touch anywhere to restore)";
         }
       }
 
-      const btnLang = document.getElementById('btn-lang');
+      const btnLang = document.getElementById("btn-lang");
       if (btnLang) {
-        btnLang.addEventListener('click', () => {
-          applyLanguage(currentLang === 'en' ? 'id' : 'en');
+        btnLang.addEventListener("click", () => {
+          applyLanguage(currentLang === "en" ? "id" : "en");
         });
       }
       applyLanguage(currentLang);
