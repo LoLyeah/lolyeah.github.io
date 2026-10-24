@@ -311,64 +311,230 @@
             line-height: 0;
         }
 
-        /* Hero Section - Serene Swiss Modernist Editorial */
+        /* Hero Section - Swiss Modernist Editorial Masthead */
         .hero {
-            padding: 6rem 5% 4rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            padding: 5rem 5% 3.5rem;
             position: relative;
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border-light);
             transition: background 0.3s ease, border-color 0.3s ease;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            max-width: 840px;
+        .hero-masthead {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: end;
+        }
+
+        @media (min-width: 1024px) {
+            .hero {
+                padding: 5.5rem 5% 4rem;
+            }
+            .hero-masthead {
+                grid-template-columns: minmax(0, 7.5fr) minmax(320px, 4.5fr);
+                gap: 3.5rem;
+            }
+        }
+
+        /* Primary Editorial Column */
+        .hero-editorial {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .hero-display {
+            font-family: var(--font-display);
+            font-size: clamp(2.35rem, 4.5vw + 0.5rem, 3.85rem);
+            font-weight: 700;
+            line-height: 1.08;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            margin: 0 0 1rem 0;
+            text-wrap: balance;
+        }
+
+        #typewriter-title::after {
+            content: none !important;
+            display: none !important;
         }
 
         .hero-subtitle {
+            font-family: var(--font-sans);
             font-size: 1.15rem;
+            font-weight: 400;
+            line-height: 1.65;
             color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            max-width: 680px;
-            line-height: 1.6;
+            max-width: 66ch;
+            margin: 0 0 1.5rem 0;
         }
 
-        .hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2.2rem, 5vw, 3.6rem);
-            font-weight: 700;
-            line-height: 1.12;
-            letter-spacing: -0.025em;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
+        /* Discipline Quick-Access Pills */
+        .hero-pathways {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
         }
 
-        .status-badge {
+        .pathway-pill {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-light);
-            padding: 0.4rem 0.8rem;
+            padding: 0.5rem 0.875rem;
             border-radius: var(--radius-full, 9999px);
-            font-family: var(--font-mono);
-            font-size: var(--text-xs, 0.75rem);
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            line-height: 1.2;
+            cursor: pointer;
+            transition: background-color 120ms cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 120ms cubic-bezier(0.16, 1, 0.3, 1),
+                        color 120ms cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 120ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .pathway-icon {
+            width: 14px;
+            height: 14px;
+            color: var(--accent-primary);
+            flex-shrink: 0;
+            transition: color 120ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (hover: hover) {
+            .pathway-pill:hover {
+                background-color: var(--bg-secondary);
+                border-color: var(--accent-primary);
+                transform: translateY(-1px);
+            }
+        }
+
+        .pathway-pill:active {
+            transform: scale(0.98);
+        }
+
+        .pathway-pill[aria-pressed="true"] {
+            background-color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: #ffffff;
+        }
+
+        .pathway-pill[aria-pressed="true"] .pathway-icon {
+            color: #ffffff;
+        }
+
+        /* Telemetry & Specimen Ledger (Right Column) */
+        .hero-ledger {
+            width: 100%;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg, 14px);
+            padding: 1.25rem 1.5rem;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .ledger-grid {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ledger-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.625rem 0;
+            border-bottom: 1px solid var(--border-light);
+            transition: border-color 0.3s ease;
+        }
+
+        .ledger-row:first-child {
+            padding-top: 0;
+        }
+
+        .ledger-row:last-child {
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .ledger-term {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
             color: var(--text-secondary);
-            margin-top: 1.5rem;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-            transition: all 0.3s ease;
+            margin: 0;
+        }
+
+        .ledger-value {
+            font-family: var(--font-mono);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+            color: var(--text-primary);
+            margin: 0;
+            text-align: right;
+        }
+
+        /* Status Indicator inside Ledger */
+        .status-badge.last-update {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+            box-shadow: none;
         }
 
         .status-dot {
-            width: 6px;
-            height: 6px;
-            background-color: var(--accent-primary);
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
+            background-color: var(--accent-primary);
+            flex-shrink: 0;
             display: inline-block;
+        }
+
+        /* Coarse Pointer Ergonomics (WCAG 2.2 AA 44x44px hit area) */
+        @media (pointer: coarse) {
+            .pathway-pill {
+                min-height: 44px;
+                padding: 0.625rem 1rem;
+            }
+        }
+
+        /* Responsive 320px Reflow */
+        @media (max-width: 480px) {
+            .hero {
+                padding: 3rem 1rem 2rem;
+            }
+            .ledger-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+            .ledger-value {
+                text-align: left;
+            }
+        }
+
+        /* Reduced Motion Guarantee */
+        @media (prefers-reduced-motion: reduce) {
+            .pathway-pill,
+            .pathway-icon {
+                transition-duration: 0.01ms !important;
+            }
         }
 
         /* Topics Section */
@@ -1374,14 +1540,73 @@
         </div>
     </nav>
 
-    <header class="hero">
-        <div class="hero-content">
-            <h1 id="typewriter-title" data-translate-key="headerTitle">LoLyeah Interactive Guides</h1>
-            <p class="hero-subtitle" data-translate-key="headerSubtitle">An evolving collection of deep dives into various topics.</p>
-            <div class="status-badge last-update">
-                <span class="status-dot"></span>
-                <span id="last-update-text" data-translate-key="lastUpdate">Last Update: October 15, 2026</span>
+    <header class="hero" role="banner" aria-label="Compendium Masthead">
+        <div class="hero-masthead">
+            <!-- Primary Editorial Column -->
+            <div class="hero-editorial">
+                <h1 id="typewriter-title" class="hero-display" data-translate-key="headerTitle">The Interactive Compendium.</h1>
+                <p class="hero-subtitle" data-translate-key="headerSubtitle">Evidence-dense visual models, clinical diagnostic pathways, macroeconomic simulators, and physical systems engineered for rapid causal clarity.</p>
+
+                <!-- Curated Discipline Quick-Filters -->
+                <div class="hero-pathways" role="group" aria-label="Core Research Disciplines">
+                    <button type="button" class="pathway-pill" data-hero-filter="clinical" onclick="handleHeroPathwayClick('clinical', event);" aria-label="Filter by Clinical and Medicine" aria-pressed="false">
+                        <svg class="pathway-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <span data-translate-key="heroPathClinical">Clinical Pathways</span>
+                    </button>
+
+                    <button type="button" class="pathway-pill" data-hero-filter="economics" onclick="handleHeroPathwayClick('economics', event);" aria-label="Filter by Policy and Macroeconomics" aria-pressed="false">
+                        <svg class="pathway-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        <span data-translate-key="heroPathMacro">Policy &amp; Macro Models</span>
+                    </button>
+
+                    <button type="button" class="pathway-pill" data-hero-filter="energy" onclick="handleHeroPathwayClick('energy', event);" aria-label="Filter by Automotive and Clean Energy" aria-pressed="false">
+                        <svg class="pathway-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
+                        <span data-translate-key="heroPathEnergy">Clean Energy &amp; TCO</span>
+                    </button>
+
+                    <button type="button" class="pathway-pill" data-hero-filter="science" onclick="handleHeroPathwayClick('science', event);" aria-label="Filter by Physical Science and 3D Systems" aria-pressed="false">
+                        <svg class="pathway-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                        <span data-translate-key="heroPathScience">3D Physics &amp; Systems</span>
+                    </button>
+                </div>
             </div>
+
+            <!-- Architectural Telemetry & Edition Ledger -->
+            <aside class="hero-ledger" aria-label="Publication Specifications">
+                <dl class="ledger-grid">
+                    <div class="ledger-row">
+                        <dt class="ledger-term" data-translate-key="ledgerCompendiums">Published Models</dt>
+                        <dd class="ledger-value" id="hero-model-count">68</dd>
+                    </div>
+                    <div class="ledger-row">
+                        <dt class="ledger-term" data-translate-key="ledgerDisciplines">Core Disciplines</dt>
+                        <dd class="ledger-value" data-translate-key="ledgerDisciplinesVal">04 Domains</dd>
+                    </div>
+                    <div class="ledger-row">
+                        <dt class="ledger-term" data-translate-key="ledgerArchitecture">Architecture</dt>
+                        <dd class="ledger-value" data-translate-key="ledgerArchitectureVal">Zero-Dependency Static</dd>
+                    </div>
+                    <div class="ledger-row ledger-row-status">
+                        <dt class="ledger-term" data-translate-key="ledgerRevision">Edition Status</dt>
+                        <dd class="ledger-value status-badge last-update">
+                            <span class="status-dot" aria-hidden="true"></span>
+                            <span id="last-update-text" data-translate-key="lastUpdate">Updated May 25, 2026</span>
+                        </dd>
+                    </div>
+                </dl>
+            </aside>
         </div>
     </header>
 
@@ -3086,8 +3311,18 @@
         // --- Translations ---
         const translations = {
             en: {
-                headerTitle: "LoLyeah Interactive Guides",
-                headerSubtitle: "An evolving collection of deep dives into various topics.",
+                headerTitle: "The Interactive Compendium.",
+                headerSubtitle: "Evidence-dense visual models, clinical diagnostic pathways, macroeconomic simulators, and physical systems engineered for rapid causal clarity.",
+                heroPathClinical: "Clinical Pathways",
+                heroPathMacro: "Policy & Macro Models",
+                heroPathEnergy: "Clean Energy & TCO",
+                heroPathScience: "3D Physics & Systems",
+                ledgerCompendiums: "Published Models",
+                ledgerDisciplines: "Core Disciplines",
+                ledgerDisciplinesVal: "04 Domains",
+                ledgerArchitecture: "Architecture",
+                ledgerArchitectureVal: "Zero-Dependency Static",
+                ledgerRevision: "Edition Status",
                 mainTitle: "Explore a Topic",
                 lastUpdate: "Last Update: May 25, 2026",
                 tagAuto: "Automotive",
@@ -3361,8 +3596,18 @@
                 subpageGummyPhysics: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>Viscoelastic Science'
             },
             id: {
-                headerTitle: "Panduan Interaktif LoLyeah",
-                headerSubtitle: "Koleksi panduan mendalam tentang berbagai topik yang terus berkembang.",
+                headerTitle: "Kompendium Interaktif.",
+                headerSubtitle: "Model visual berbasis bukti, alur diagnostik klinis, simulator makroekonomi, dan sistem fisis yang dirancang untuk kejelasan kausal secara cepat.",
+                heroPathClinical: "Alur Klinis",
+                heroPathMacro: "Model Kebijakan & Makro",
+                heroPathEnergy: "Energi Bersih & TCO",
+                heroPathScience: "Fisika 3D & Sistem",
+                ledgerCompendiums: "Model Terpublikasi",
+                ledgerDisciplines: "Disiplin Utama",
+                ledgerDisciplinesVal: "04 Domain",
+                ledgerArchitecture: "Arsitektur",
+                ledgerArchitectureVal: "Statis Tanpa Dependensi",
+                ledgerRevision: "Status Edisi",
                 mainTitle: "Jelajahi Topik",
                 lastUpdate: "Pembaruan Terakhir: 25 Mei 2026",
                 tagAuto: "Otomotif",
@@ -3758,8 +4003,35 @@
                 b.classList.toggle('active', isActive);
                 b.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
+            syncHeroPathwayPills(category);
             applyFilterAndSearch();
             scrollToTopics();
+        }
+
+        // --- Hero Masthead Pathway Sync & Telemetry ---
+        function syncHeroPathwayPills(category) {
+            document.querySelectorAll('.pathway-pill').forEach(pill => {
+                const filter = pill.getAttribute('data-hero-filter');
+                const isActive = (filter === category);
+                pill.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+        }
+
+        function handleHeroPathwayClick(category, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            const targetCategory = (currentCategory === category) ? 'all' : category;
+            filterByCategory(targetCategory, event);
+        }
+
+        function updateHeroModelCount() {
+            const countEl = document.getElementById('hero-model-count');
+            if (countEl) {
+                const total = document.querySelectorAll('.feature-card').length;
+                countEl.textContent = total ? String(total).padStart(2, '0') : '68';
+            }
         }
 
         // --- Language Switcher ---
@@ -4329,6 +4601,9 @@
             initBookmarks();
             loadUrlState();
             setupEventListeners();
+
+            updateHeroModelCount();
+            syncHeroPathwayPills(currentCategory);
 
             let savedLang = 'en';
             try { savedLang = localStorage.getItem('lolyeah_lang') || localStorage.getItem('pref_lang') || 'en'; } catch (e) {}
