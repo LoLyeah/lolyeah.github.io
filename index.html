@@ -311,22 +311,53 @@
             line-height: 0;
         }
 
-        /* Hero Section - Swiss Modernist Editorial Masthead */
+        /* Hero Section - Atmospheric Visual Showcase Masthead */
         .hero {
-            padding: 5rem 5% 3.5rem;
             position: relative;
-            background: var(--bg-secondary);
+            padding: 5rem 5% 3.5rem;
+            background: 
+                radial-gradient(circle at 85% 20%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 15% 85%, rgba(99, 102, 241, 0.10) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.02) 0%, transparent 60%),
+                var(--bg-secondary);
             border-bottom: 1px solid var(--border-light);
+            overflow: hidden;
             transition: background 0.3s ease, border-color 0.3s ease;
         }
 
+        /* Subtle technical grid pattern in background */
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(15, 23, 42, 0.06) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        [data-theme="dark"] .hero {
+            background: 
+                radial-gradient(circle at 85% 25%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 10% 75%, rgba(99, 102, 241, 0.12) 0%, transparent 45%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.015) 0%, transparent 100%),
+                #090a0f;
+        }
+
+        [data-theme="dark"] .hero::before {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            opacity: 0.8;
+        }
+
         .hero-masthead {
+            position: relative;
+            z-index: 2;
             max-width: 1440px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr;
-            gap: 2rem;
-            align-items: end;
+            gap: 2.5rem;
+            align-items: center;
         }
 
         @media (min-width: 1024px) {
@@ -334,7 +365,7 @@
                 padding: 5.5rem 5% 4rem;
             }
             .hero-masthead {
-                grid-template-columns: minmax(0, 7.5fr) minmax(320px, 4.5fr);
+                grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
                 gap: 3.5rem;
             }
         }
@@ -368,7 +399,7 @@
             font-weight: 400;
             line-height: 1.65;
             color: var(--text-secondary);
-            max-width: 66ch;
+            max-width: 62ch;
             margin: 0 0 1.5rem 0;
         }
 
@@ -430,86 +461,325 @@
             color: #ffffff;
         }
 
-        /* Telemetry & Specimen Ledger (Right Column) */
-        .hero-ledger {
-            width: 100%;
-            background-color: var(--bg-primary);
+        /* Integrated Telemetry Specs Ribbon */
+        .hero-telemetry-ribbon {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem 0.85rem;
+            margin-top: 1.5rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: var(--radius-full, 9999px);
+            background: var(--bg-primary);
             border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg, 14px);
-            padding: 1.25rem 1.5rem;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
             transition: background 0.3s ease, border-color 0.3s ease;
         }
 
-        .ledger-grid {
-            margin: 0;
-            display: flex;
-            flex-direction: column;
+        [data-theme="dark"] .hero-telemetry-ribbon {
+            background: rgba(255, 255, 255, 0.035);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+            color: #94a3b8;
         }
 
-        .ledger-row {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            gap: 1rem;
-            padding: 0.625rem 0;
-            border-bottom: 1px solid var(--border-light);
-            transition: border-color 0.3s ease;
-        }
-
-        .ledger-row:first-child {
-            padding-top: 0;
-        }
-
-        .ledger-row:last-child {
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-
-        .ledger-term {
-            font-family: var(--font-sans);
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            margin: 0;
-        }
-
-        .ledger-value {
-            font-family: var(--font-mono);
-            font-size: 0.8125rem;
-            font-weight: 500;
-            font-variant-numeric: tabular-nums;
-            color: var(--text-primary);
-            margin: 0;
-            text-align: right;
-        }
-
-        /* Status Indicator inside Ledger */
-        .status-badge.last-update {
+        .telemetry-item {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            background: transparent;
-            border: none;
-            padding: 0;
-            margin: 0;
-            box-shadow: none;
+            gap: 0.35rem;
+            white-space: nowrap;
         }
 
-        .status-dot {
-            width: 7px;
-            height: 7px;
+        .telemetry-val {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .telemetry-val {
+            color: #f8fafc;
+        }
+
+        .telemetry-separator {
+            color: var(--border-light);
+            user-select: none;
+        }
+
+        [data-theme="dark"] .telemetry-separator {
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        .telemetry-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--accent-primary);
+            display: inline-block;
+        }
+
+        .telemetry-badge {
+            font-weight: 500;
+        }
+
+        @media (max-width: 640px) {
+            .hero-telemetry-ribbon {
+                flex-wrap: wrap;
+                border-radius: var(--radius-md, 8px);
+                padding: 0.5rem 0.75rem;
+                gap: 0.5rem 0.75rem;
+            }
+            .hero-telemetry-ribbon .telemetry-separator {
+                display: none;
+            }
+        }
+
+        /* Featured Visual Showcase Card */
+        .hero-showcase {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .showcase-card {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg, 14px);
+            overflow: hidden;
+            box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.08);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        @media (hover: hover) {
+            .showcase-card:hover {
+                box-shadow: 0 20px 48px -8px rgba(15, 23, 42, 0.14);
+                border-color: var(--accent-primary);
+            }
+        }
+
+        [data-theme="dark"] .showcase-card {
+            background: #11131a;
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.6);
+        }
+
+        [data-theme="dark"] .showcase-card:hover {
+            border-color: rgba(255, 255, 255, 0.22);
+            box-shadow: 0 20px 48px -8px rgba(0, 0, 0, 0.75);
+        }
+
+        .showcase-media-wrap {
+            position: relative;
+            width: 100%;
+            height: 210px;
+            overflow: hidden;
+            background: #090a0f;
+        }
+
+        @media (min-width: 640px) {
+            .showcase-media-wrap {
+                height: 220px;
+            }
+        }
+
+        .showcase-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            transition: opacity 0.2s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: block;
+        }
+
+        .showcase-card:hover .showcase-img {
+            transform: scale(1.025);
+        }
+
+        .showcase-top-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: var(--radius-full, 9999px);
+            background: rgba(9, 10, 15, 0.82);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #f8fafc;
+            font-family: var(--font-mono);
+            font-size: var(--text-xs, 0.75rem);
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .showcase-dot {
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background-color: var(--accent-primary);
             flex-shrink: 0;
-            display: inline-block;
+        }
+
+        /* Showcase Metadata Body under the image (Zero Text Collision) */
+        .showcase-body {
+            padding: 1rem 1.25rem 1.15rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-light);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        [data-theme="dark"] .showcase-body {
+            background: #11131a;
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .showcase-title {
+            font-family: var(--font-display);
+            font-size: var(--text-lg, 1.125rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+
+        .showcase-desc {
+            font-family: var(--font-sans);
+            font-size: var(--text-sm, 0.875rem);
+            color: var(--text-secondary);
+            margin: 0;
+            line-height: 1.45;
+        }
+
+        .showcase-action-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding-top: 0.25rem;
+        }
+
+        .showcase-tech-tag {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs, 0.75rem);
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            padding: 3px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.02em;
+        }
+
+        [data-theme="dark"] .showcase-tech-tag {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+        }
+
+        .showcase-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            padding: 0.45rem 0.9rem;
+            border-radius: var(--radius-full, 9999px);
+            background: #047857;
+            color: #ffffff;
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        [data-theme="dark"] .showcase-cta {
+            background: var(--accent-primary);
+        }
+
+        @media (hover: hover) {
+            .showcase-cta:hover {
+                background: #065f46;
+                color: #ffffff;
+                transform: translateY(-1px);
+            }
+            [data-theme="dark"] .showcase-cta:hover {
+                background: var(--accent-hover);
+            }
+        }
+
+        .showcase-cta:active {
+            transform: scale(0.98);
+        }
+
+        /* Micro Showcase Tabs */
+        .showcase-tabs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid var(--border-light);
+            background: var(--bg-secondary);
+        }
+
+        [data-theme="dark"] .showcase-tabs {
+            border-color: rgba(255, 255, 255, 0.08);
+            background: #0d0f15;
+        }
+
+        .showcase-tab {
+            padding: 10px 8px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .showcase-tab:hover {
+            color: var(--text-primary);
+            background: rgba(15, 23, 42, 0.03);
+        }
+
+        [data-theme="dark"] .showcase-tab:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: #f8fafc;
+        }
+
+        .showcase-tab.active {
+            color: var(--accent-primary);
+            border-bottom-color: var(--accent-primary);
+            background: var(--bg-primary);
+        }
+
+        [data-theme="dark"] .showcase-tab.active {
+            color: #34d399;
+            background: #141720;
         }
 
         /* Coarse Pointer Ergonomics (WCAG 2.2 AA 44x44px hit area) */
         @media (pointer: coarse) {
-            .pathway-pill {
+            .pathway-pill,
+            .showcase-tab {
                 min-height: 44px;
+            }
+            .pathway-pill {
                 padding: 0.625rem 1rem;
             }
         }
@@ -519,20 +789,18 @@
             .hero {
                 padding: 3rem 1rem 2rem;
             }
-            .ledger-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.25rem;
-            }
-            .ledger-value {
-                text-align: left;
+            .showcase-tabs {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
         /* Reduced Motion Guarantee */
         @media (prefers-reduced-motion: reduce) {
             .pathway-pill,
-            .pathway-icon {
+            .pathway-icon,
+            .showcase-img,
+            .showcase-cta,
+            .showcase-tab {
                 transition-duration: 0.01ms !important;
             }
         }
@@ -1581,32 +1849,76 @@
                         <span data-translate-key="heroPathScience">3D Physics &amp; Systems</span>
                     </button>
                 </div>
+
+                <!-- Integrated Telemetry Specs Ribbon -->
+                <div class="hero-telemetry-ribbon" aria-label="Publication Specifications">
+                    <div class="telemetry-item">
+                        <strong class="telemetry-val" id="hero-model-count">68</strong>
+                        <span data-translate-key="specModels">Models</span>
+                    </div>
+                    <span class="telemetry-separator" aria-hidden="true">/</span>
+                    <div class="telemetry-item">
+                        <strong class="telemetry-val">4</strong>
+                        <span data-translate-key="specDisciplines">Disciplines</span>
+                    </div>
+                    <span class="telemetry-separator" aria-hidden="true">/</span>
+                    <div class="telemetry-item">
+                        <span class="telemetry-dot" aria-hidden="true"></span>
+                        <span id="last-update-text" data-translate-key="lastUpdate">Updated Oct 24, 2026</span>
+                    </div>
+                    <span class="telemetry-separator" aria-hidden="true">/</span>
+                    <div class="telemetry-item">
+                        <span class="telemetry-badge" data-translate-key="specZeroDep">Zero-Dep Static</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- Architectural Telemetry & Edition Ledger -->
-            <aside class="hero-ledger" aria-label="Publication Specifications">
-                <dl class="ledger-grid">
-                    <div class="ledger-row">
-                        <dt class="ledger-term" data-translate-key="ledgerCompendiums">Published Models</dt>
-                        <dd class="ledger-value" id="hero-model-count">68</dd>
+            <!-- Featured Visual Showcase (Spotlight Card with Real Photos & Shaders) -->
+            <div class="hero-showcase" aria-label="Featured Interactive Showcase">
+                <div class="showcase-card" id="heroShowcaseCard">
+                    <!-- Visual Preview Window with Live Badge -->
+                    <div class="showcase-media-wrap">
+                        <img id="showcaseImg" src="assets/hero-showcase/aetheris.webp" alt="Aetheris 3D Ocean Simulation preview" class="showcase-img" loading="eager" width="800" height="500">
+                        <div class="showcase-top-badge">
+                            <span class="showcase-dot" aria-hidden="true"></span>
+                            <span id="showcaseBadgeText" data-translate-key="showcaseBadgeAetheris">WebGPU 3D Shader</span>
+                        </div>
                     </div>
-                    <div class="ledger-row">
-                        <dt class="ledger-term" data-translate-key="ledgerDisciplines">Core Disciplines</dt>
-                        <dd class="ledger-value" data-translate-key="ledgerDisciplinesVal">04 Domains</dd>
+
+                    <!-- Dedicated Metadata Body (Zero Text Collision over Screenshot) -->
+                    <div class="showcase-body">
+                        <div class="showcase-info">
+                            <h2 class="showcase-title" id="showcaseTitle" data-translate-key="showcaseTitleAetheris">Aetheris: WebGPU Ocean Simulation</h2>
+                            <p class="showcase-desc" id="showcaseDesc" data-translate-key="showcaseDescAetheris">24-wave TMA spectrum, multi-scatter GGX optics &amp; real-time hydrodynamics.</p>
+                        </div>
+                        <div class="showcase-action-row">
+                            <span class="showcase-tech-tag" id="showcaseTech">WGSL · 6-Cascade FFT</span>
+                            <a href="./topics/aetheris.html" class="showcase-cta" id="showcaseLink" data-translate-key="showcaseCta">
+                                <span data-translate-key="showcaseCtaText">Launch Simulation</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
-                    <div class="ledger-row">
-                        <dt class="ledger-term" data-translate-key="ledgerArchitecture">Architecture</dt>
-                        <dd class="ledger-value" data-translate-key="ledgerArchitectureVal">Zero-Dependency Static</dd>
+                    <!-- Micro Showcase Switcher Tabs -->
+                    <div class="showcase-tabs" role="tablist" aria-label="Showcase topics">
+                        <button type="button" class="showcase-tab active" data-showcase-key="aetheris" onclick="switchShowcase('aetheris');" role="tab" aria-selected="true" aria-label="Show Aetheris Ocean Simulation">
+                            <span>Aetheris 3D</span>
+                        </button>
+                        <button type="button" class="showcase-tab" data-showcase-key="anesthesia" onclick="switchShowcase('anesthesia');" role="tab" aria-selected="false" aria-label="Show Anesthesia Resuscitation">
+                            <span>Anesthesia</span>
+                        </button>
+                        <button type="button" class="showcase-tab" data-showcase-key="hybrid_cars" onclick="switchShowcase('hybrid_cars');" role="tab" aria-selected="false" aria-label="Show Hybrid Cars TCO">
+                            <span>Hybrid Cars</span>
+                        </button>
+                        <button type="button" class="showcase-tab" data-showcase-key="gemstones" onclick="switchShowcase('gemstones');" role="tab" aria-selected="false" aria-label="Show Gemstones Optics">
+                            <span>Gemstones</span>
+                        </button>
                     </div>
-                    <div class="ledger-row ledger-row-status">
-                        <dt class="ledger-term" data-translate-key="ledgerRevision">Edition Status</dt>
-                        <dd class="ledger-value status-badge last-update">
-                            <span class="status-dot" aria-hidden="true"></span>
-                            <span id="last-update-text" data-translate-key="lastUpdate">Updated May 25, 2026</span>
-                        </dd>
-                    </div>
-                </dl>
-            </aside>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -3323,6 +3635,13 @@
                 ledgerArchitecture: "Architecture",
                 ledgerArchitectureVal: "Zero-Dependency Static",
                 ledgerRevision: "Edition Status",
+                specModels: "Models",
+                specDisciplines: "Disciplines",
+                specZeroDep: "Zero-Dep Static",
+                showcaseBadgeAetheris: "WebGPU 3D Shader",
+                showcaseTitleAetheris: "Aetheris: WebGPU Ocean Simulation",
+                showcaseDescAetheris: "24-wave TMA spectrum, multi-scatter GGX optics & real-time hydrodynamics.",
+                showcaseCtaText: "Launch Simulation",
                 mainTitle: "Explore a Topic",
                 lastUpdate: "Last Update: May 25, 2026",
                 tagAuto: "Automotive",
@@ -3608,6 +3927,13 @@
                 ledgerArchitecture: "Arsitektur",
                 ledgerArchitectureVal: "Statis Tanpa Dependensi",
                 ledgerRevision: "Status Edisi",
+                specModels: "Model",
+                specDisciplines: "Disiplin",
+                specZeroDep: "Statis Tanpa Dependensi",
+                showcaseBadgeAetheris: "Shader 3D WebGPU",
+                showcaseTitleAetheris: "Aetheris: Simulasi Samudra WebGPU",
+                showcaseDescAetheris: "Spektrum TMA 24-gelombang, optika multi-scatter GGX & hidrodinamika real-time.",
+                showcaseCtaText: "Jalankan Simulasi",
                 mainTitle: "Jelajahi Topik",
                 lastUpdate: "Pembaruan Terakhir: 25 Mei 2026",
                 tagAuto: "Otomotif",
@@ -4008,7 +4334,92 @@
             scrollToTopics();
         }
 
-        // --- Hero Masthead Pathway Sync & Telemetry ---
+        // --- Hero Visual Showcase & Pathway Sync ---
+        const SHOWCASE_ITEMS = {
+            aetheris: {
+                img: 'assets/hero-showcase/aetheris.webp',
+                url: './topics/aetheris.html',
+                badgeEn: 'WebGPU 3D Shader',
+                badgeId: 'Shader 3D WebGPU',
+                techEn: 'WGSL · 6-Cascade FFT',
+                techId: 'WGSL · 6-Cascade FFT',
+                titleEn: 'Aetheris: WebGPU Ocean Simulation',
+                titleId: 'Aetheris: Simulasi Samudra WebGPU',
+                descEn: '24-wave TMA spectrum, multi-scatter GGX optics & real-time hydrodynamics.',
+                descId: 'Spektrum TMA 24-gelombang, optika multi-scatter GGX & hidrodinamika real-time.'
+            },
+            anesthesia: {
+                img: 'assets/hero-showcase/anesthesia.webp',
+                url: './topics/anesthesia.html',
+                badgeEn: 'Clinical Resuscitation',
+                badgeId: 'Resusitasi Klinis',
+                techEn: 'ACLS · Rapid Sequence Triage',
+                techId: 'ACLS · Triase Sekuens Cepat',
+                titleEn: 'Anesthesia & Acute Resuscitation Engine',
+                titleId: 'Anestesi & Engine Resusitasi Akut',
+                descEn: 'Point-of-care clinical calculators, ACLS CPR timers, Broselow tape & offline PWA.',
+                descId: 'Kalkulator klinis point-of-care, timer RJP ACLS, pita Broselow & PWA offline.'
+            },
+            hybrid_cars: {
+                img: 'assets/hero-showcase/hybrid_cars.webp',
+                url: './topics/indonesia-hybrid-cars.html',
+                badgeEn: 'Clean Energy & TCO',
+                badgeId: 'Energi Bersih & TCO',
+                techEn: 'TCO Parity · 6 Architectures',
+                techId: 'Paritas TCO · 6 Arsitektur',
+                titleEn: 'Indonesia Hybrid Cars & TCO Matrix',
+                titleId: 'Mobil Hybrid Indonesia & Matriks TCO',
+                descEn: 'MHEV vs HEV vs EREV vs PHEV efficiency analysis & total cost of ownership calculator.',
+                descId: 'Analisis efisiensi MHEV vs HEV vs EREV vs PHEV & kalkulator biaya kepemilikan.'
+            },
+            gemstones: {
+                img: 'assets/hero-showcase/gemstones.webp',
+                url: './topics/gemstones.html',
+                badgeEn: 'Optical Physics Lab',
+                badgeId: 'Lab Fisika Optik',
+                techEn: 'Refractive Index · 40+ Minerals',
+                techId: 'Indeks Bias · 40+ Mineral',
+                titleEn: 'Gemstones: Optical Physics & Minerals',
+                titleId: 'Batu Permata: Fisika Optik & Mineral',
+                descEn: 'Light dispersion simulator, refraction indices & comprehensive 40+ mineral database.',
+                descId: 'Simulator dispersi cahaya, indeks bias & database komprehensif 40+ mineral.'
+            }
+        };
+
+        let currentShowcaseKey = 'aetheris';
+
+        function switchShowcase(key) {
+            const item = SHOWCASE_ITEMS[key];
+            if (!item) return;
+            currentShowcaseKey = key;
+
+            const img = document.getElementById('showcaseImg');
+            const badge = document.getElementById('showcaseBadgeText');
+            const tech = document.getElementById('showcaseTech');
+            const title = document.getElementById('showcaseTitle');
+            const desc = document.getElementById('showcaseDesc');
+            const link = document.getElementById('showcaseLink');
+
+            if (img) {
+                img.style.opacity = '0.5';
+                setTimeout(() => {
+                    img.src = item.img;
+                    img.style.opacity = '1';
+                }, 100);
+            }
+            if (badge) badge.textContent = (currentLang === 'id') ? item.badgeId : item.badgeEn;
+            if (tech) tech.textContent = (currentLang === 'id') ? item.techId : item.techEn;
+            if (title) title.textContent = (currentLang === 'id') ? item.titleId : item.titleEn;
+            if (desc) desc.textContent = (currentLang === 'id') ? item.descId : item.descEn;
+            if (link) link.href = item.url;
+
+            document.querySelectorAll('.showcase-tab').forEach(tab => {
+                const isActive = tab.getAttribute('data-showcase-key') === key;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            });
+        }
+
         function syncHeroPathwayPills(category) {
             document.querySelectorAll('.pathway-pill').forEach(pill => {
                 const filter = pill.getAttribute('data-hero-filter');
@@ -4024,6 +4435,12 @@
             }
             const targetCategory = (currentCategory === category) ? 'all' : category;
             filterByCategory(targetCategory, event);
+
+            // Connect pathway clicks to visual showcase tabs
+            if (category === 'clinical') switchShowcase('anesthesia');
+            else if (category === 'energy') switchShowcase('hybrid_cars');
+            else if (category === 'science') switchShowcase('aetheris');
+            else if (category === 'economics') switchShowcase('hybrid_cars');
         }
 
         function updateHeroModelCount() {
@@ -4062,6 +4479,7 @@
             document.getElementById('lang-en').classList.toggle('active', lang === 'en');
             document.getElementById('lang-id').classList.toggle('active', lang === 'id');
 
+            switchShowcase(currentShowcaseKey);
             applyFilterAndSearch();
         }
 
