@@ -94,10 +94,10 @@
           },
           {
             "@type": "Question",
-            "name": "Which APK architecture should I download for my Android device?",
+            "name": "Which architecture does suravidl support on Android?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Most modern smartphones and tablets manufactured since 2018 use ARM64-v8a. Older 32-bit devices use armeabi-v7a, while Chromebooks and Android emulators typically use x86_64. If unsure, choose the Universal APK."
+              "text": "suravidl officially releases an optimized 64-bit ARM64-v8a APK for Android 8.0+ devices, providing native hardware acceleration for Snapdragon, Google Tensor, Dimensity, and Exynos chipsets."
             }
           }
         ]
@@ -1490,23 +1490,60 @@
     /* ==========================================================================
        11. DOWNLOAD CENTER (#download) & FAQ (#faq)
        ========================================================================== */
-    .apk-grid {
+    .dl-featured-card {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-bottom: 28px;
+      grid-template-columns: 1.35fr 0.95fr;
+      gap: 32px;
+      align-items: center;
+      padding: 34px 38px;
+      margin-bottom: 24px;
     }
 
-    .apk-card {
+    .dl-badge-wrap {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 16px;
-      position: relative;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
     }
 
-    .apk-card.recommended {
-      border-color: var(--accent-primary);
+    .dl-size-pill {
+      font-size: 0.78rem;
+      color: var(--accent-primary);
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--bg-glass-subtle);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .dl-featured-title {
+      font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .dl-spec-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .chip-spec {
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--bg-glass-subtle);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+    }
+
+    .dl-cta-btn {
+      width: 100%;
+      min-height: 52px;
+      font-size: 0.96rem;
+      border-radius: 14px;
     }
 
     .rec-badge {
@@ -1518,7 +1555,7 @@
       font-size: 0.7rem;
       font-weight: 800;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 0;
     }
 
     .sha-box {
@@ -1538,6 +1575,14 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .dl-featured-card {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 24px;
+      }
     }
 
     .faq-list {
@@ -1645,7 +1690,6 @@
       .studio-layout,
       .calc-grid,
       .step-panel.active { grid-template-columns: 1fr; }
-      .apk-grid,
       .desktop-strip { grid-template-columns: repeat(2, 1fr); }
       .cli-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -1689,7 +1733,6 @@
       .bento-card.span-5,
       .bento-card.span-6 { grid-column: span 12; }
       .stepper-tabs,
-      .apk-grid,
       .desktop-strip,
       .cli-grid,
       .studio-select-row,
@@ -1829,17 +1872,17 @@
         </p>
 
         <div class="hero-cta-cluster">
-          <a href="https://github.com/LoLyeah/suravidl/releases/download/v0.46.15/suravidl-v0.46.15-universal.apk" class="btn-primary-lg">
+          <a href="https://github.com/LoLyeah/suravidl/releases/download/v0.46.15/suravidl-v0.46.15-arm64-v8a.apk" class="btn-primary-lg">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
               <polyline points="7 10 12 15 17 10"/>
               <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
-            <span data-i18n="hero_cta_primary">Download APK (v0.46.15)</span>
+            <span data-i18n="hero_cta_primary">Download ARM64 APK (v0.46.15)</span>
           </a>
 
           <a href="#download" class="btn-glass-lg" data-i18n="hero_cta_secondary">
-            Desktop &amp; All Architectures
+            Desktop &amp; CLI Releases
           </a>
 
           <a href="#studio" class="btn-glass-lg" data-i18n="hero_cta_studio">
@@ -2604,74 +2647,37 @@ resolver.update(mediaUri, values, null, null)
           </p>
         </div>
 
-        <!-- Android APK Cards -->
-        <div class="apk-grid">
-          <div class="glass-card apk-card recommended">
-            <div>
-              <span class="rec-badge" data-i18n="dl_rec">Recommended · Modern Phones</span>
-              <h3 class="bento-title">ARM64-v8a APK</h3>
-              <p class="bento-text" style="font-size:0.85rem;">Optimized 64-bit native build for Snapdragon, Tensor, Exynos, and Dimensity devices (Android 8.0+).</p>
+        <!-- Official Android ARM64 Release Card -->
+        <div class="glass-card dl-featured-card">
+          <div class="dl-featured-info">
+            <div class="dl-badge-wrap">
+              <span class="rec-badge" data-i18n="dl_rec">Official Release · Android 8.0+</span>
+              <span class="mono dl-size-pill">v0.46.15 · 24.8 MB</span>
             </div>
-            <div>
-              <div class="sha-box mono" style="margin-bottom: 12px;">
-                <span>SHA256: 9f8a4c...31e2</span>
-                <button type="button" class="btn-copy-mini" data-copy="9f8a4c71d208b44e19a8301c6f7e2d11b890a45c32d1f0e8a77b65c4123031e2">Copy</button>
-              </div>
-              <a href="https://github.com/LoLyeah/suravidl/releases/download/v0.46.15/suravidl-v0.46.15-arm64-v8a.apk" class="btn-primary-lg" style="width:100%; min-height:44px; font-size:0.88rem;">
-                Download ARM64 (24.8 MB)
-              </a>
-            </div>
-          </div>
-
-          <div class="glass-card apk-card">
-            <div>
-              <span class="rec-badge" style="background:var(--bg-glass-subtle); color:var(--text-secondary);">All Architectures</span>
-              <h3 class="bento-title">Universal APK</h3>
-              <p class="bento-text" style="font-size:0.85rem;">Contains native FFmpeg &amp; Python libraries for all CPU architectures in a single package.</p>
-            </div>
-            <div>
-              <div class="sha-box mono" style="margin-bottom: 12px;">
-                <span>SHA256: 4b2e19...8c04</span>
-                <button type="button" class="btn-copy-mini" data-copy="4b2e19c83a50f7129d804e61c3a9f77201e5b44d9081a3c2f67e1109d4458c04">Copy</button>
-              </div>
-              <a href="https://github.com/LoLyeah/suravidl/releases/download/v0.46.15/suravidl-v0.46.15-universal.apk" class="btn-glass-lg" style="width:100%; min-height:44px; font-size:0.88rem;">
-                Download Universal (58.2 MB)
-              </a>
+            <h3 class="dl-featured-title" data-i18n="dl_arm64_title">suravidl for Android (ARM64-v8a)</h3>
+            <p class="bento-text" style="font-size:0.92rem; max-width:620px;" data-i18n="dl_arm64_desc">
+              High-velocity native 64-bit build optimized for Qualcomm Snapdragon, Google Tensor, MediaTek Dimensity, and Samsung Exynos processors. Features embedded zero-copy FFmpeg muxer and native Scoped MediaStore integration.
+            </p>
+            <div class="dl-spec-chips">
+              <span class="chip-spec">Android 8.0 to 15</span>
+              <span class="chip-spec">ARM64-v8a Architecture</span>
+              <span class="chip-spec">Zero Telemetry</span>
+              <span class="chip-spec">Scoped MediaStore</span>
             </div>
           </div>
-
-          <div class="glass-card apk-card">
-            <div>
-              <span class="rec-badge" style="background:var(--bg-glass-subtle); color:var(--text-secondary);">Legacy 32-Bit</span>
-              <h3 class="bento-title">armeabi-v7a APK</h3>
-              <p class="bento-text" style="font-size:0.85rem;">Lightweight build for older 32-bit Android phones, Android TV boxes, and low-RAM tablets.</p>
+          <div class="dl-featured-actions">
+            <div class="sha-box mono" style="margin-bottom: 14px;">
+              <span>SHA256: 9f8a4c...31e2</span>
+              <button type="button" class="btn-copy-mini" data-copy="9f8a4c71d208b44e19a8301c6f7e2d11b890a45c32d1f0e8a77b65c4123031e2">Copy</button>
             </div>
-            <div>
-              <div class="sha-box mono" style="margin-bottom: 12px;">
-                <span>SHA256: 7c1d05...a910</span>
-                <button type="button" class="btn-copy-mini" data-copy="7c1d05e92f41a8830b621c90e4d7a11583f2c09e41b7d6a502c8f19e3341a910">Copy</button>
-              </div>
-              <a href="https://github.com/LoLyeah/suravidl/releases/download/v0.46.15/suravidl-v0.46.15-armeabi-v7a.apk" class="btn-glass-lg" style="width:100%; min-height:44px; font-size:0.88rem;">
-                Download ARMv7 (21.4 MB)
-              </a>
-            </div>
-          </div>
-
-          <div class="glass-card apk-card">
-            <div>
-              <span class="rec-badge" style="background:var(--bg-glass-subtle); color:var(--text-secondary);">Chromebook &amp; PC</span>
-              <h3 class="bento-title">x86_64 APK</h3>
-              <p class="bento-text" style="font-size:0.85rem;">Native Intel/AMD 64-bit build for ChromeOS, Waydroid, WSA, and Android Studio emulators.</p>
-            </div>
-            <div>
-              <div class="sha-box mono" style="margin-bottom: 12px;">
-                <span>SHA256: 2e9f64...5d77</span>
-                <button type="button" class="btn-copy-mini" data-copy="2e9f64a10c83b7521d904e68f3a1c22904b7e55d8190a4c3e67f2210b8835d77">Copy</button>
-              </div>
-              <a href="https://github.com/LoLyeah/suravidl/releases/download/v0.46.15/suravidl-v0.46.15-x86_64.apk" class="btn-glass-lg" style="width:100%; min-height:44px; font-size:0.88rem;">
-                Download x86_64 (26.1 MB)
-              </a>
-            </div>
+            <a href="https://github.com/LoLyeah/suravidl/releases/download/v0.46.15/suravidl-v0.46.15-arm64-v8a.apk" class="btn-primary-lg dl-cta-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <span>Download ARM64 APK (24.8 MB)</span>
+            </a>
           </div>
         </div>
 
@@ -2745,11 +2751,11 @@ resolver.update(mediaUri, values, null, null)
 
           <details class="faq-item">
             <summary>
-              <span data-i18n="faq_q3">Which APK architecture should I download for my Android device?</span>
+              <span data-i18n="faq_q3">Which architecture does suravidl support on Android?</span>
               <span class="mono" style="color:var(--accent-primary);">+</span>
             </summary>
             <p data-i18n="faq_a3">
-              Most modern smartphones and tablets manufactured since 2018 use ARM64-v8a. Older 32-bit devices use armeabi-v7a, while Chromebooks and Android emulators typically use x86_64. If unsure, choose the Universal APK.
+              suravidl officially releases an optimized 64-bit ARM64-v8a APK for Android 8.0+ devices, delivering direct hardware acceleration for Snapdragon, Google Tensor, Dimensity, and Exynos processors.
             </p>
           </details>
         </div>
@@ -2815,8 +2821,8 @@ resolver.update(mediaUri, values, null, null)
           hero_title_1: 'Capture streams.',
           hero_title_2: 'Ingest anywhere.',
           hero_subtitle: 'A high-velocity media downloader and stream ingestion engine for Android and desktop. Built with 8x concurrent HTTP range chunking, zero-copy FFmpeg container muxing, live DVR buffer capture, and native Android Scoped MediaStore indexing.',
-          hero_cta_primary: 'Download APK (v0.46.15)',
-          hero_cta_secondary: 'Desktop & All Architectures',
+          hero_cta_primary: 'Download ARM64 APK (v0.46.15)',
+          hero_cta_secondary: 'Desktop & CLI Releases',
           hero_cta_studio: 'Launch Ingestion Studio',
           copy_btn: 'Copy',
           trust_1: 'Free & open source (MIT)',
@@ -2867,14 +2873,14 @@ resolver.update(mediaUri, values, null, null)
           dl_eyebrow: 'Release v0.46.15',
           dl_title: 'Download suravidl for Android & Desktop',
           dl_desc: 'Signed, reproducible builds with verified SHA-256 checksums. Zero trackers, zero ads, and 100% open-source MIT license.',
-          dl_rec: 'Recommended · Modern Phones',
+          dl_rec: 'Official Release · Android 8.0+',
           faq_title: 'Frequently Asked Technical Questions',
           faq_q1: 'How does suravidl handle Android 10–15 storage permissions?',
           faq_a1: 'suravidl uses the native Android Scoped MediaStore API with IS_PENDING atomic flags. Media is written to isolated cache segments during muxing and revealed to public Movies/suravidl or Music/suravidl collections only after checksum verification, requiring zero invasive broad-storage permissions.',
           faq_q2: 'Does suravidl re-encode video or audio streams by default?',
           faq_a2: 'No. By default, suravidl executes zero-copy stream pass-through (-c copy) via its embedded FFmpeg pipeline, preserving 100% of the source video and audio bitstreams without generation loss or CPU thermal throttling.',
-          faq_q3: 'Which APK architecture should I download for my Android device?',
-          faq_a3: 'Most modern smartphones and tablets manufactured since 2018 use ARM64-v8a. Older 32-bit devices use armeabi-v7a, while Chromebooks and Android emulators typically use x86_64. If unsure, choose the Universal APK.'
+          faq_q3: 'Which architecture does suravidl support on Android?',
+          faq_a3: 'suravidl officially releases an optimized 64-bit ARM64-v8a APK for Android 8.0+ devices, delivering direct hardware acceleration for Snapdragon, Google Tensor, Dimensity, and Exynos processors.'
         },
         id: {
           skip_link: 'Langsung ke konten utama',
@@ -2890,8 +2896,8 @@ resolver.update(mediaUri, values, null, null)
           hero_title_1: 'Tangkap aliran media.',
           hero_title_2: 'Ingesti di mana saja.',
           hero_subtitle: 'Pengunduh media berkecepatan tinggi dan mesin ingesti stream untuk Android dan desktop. Dibangun dengan 8x HTTP range chunking paralel, muxing FFmpeg tanpa salin ulang, tangkapan buffer DVR siaran langsung, dan pengindeksan MediaStore Android.',
-          hero_cta_primary: 'Unduh APK (v0.46.15)',
-          hero_cta_secondary: 'Desktop & Semua Arsitektur',
+          hero_cta_primary: 'Unduh APK ARM64 (v0.46.15)',
+          hero_cta_secondary: 'Rilis Desktop & CLI',
           hero_cta_studio: 'Buka Studio Ingesti',
           copy_btn: 'Salin',
           trust_1: 'Gratis & sumber terbuka (MIT)',
@@ -2942,14 +2948,14 @@ resolver.update(mediaUri, values, null, null)
           dl_eyebrow: 'Rilis v0.46.15',
           dl_title: 'Unduh suravidl untuk Android & Desktop',
           dl_desc: 'Paket terverifikasi dengan checksum SHA-256. Tanpa pelacak, tanpa iklan, dan 100% lisensi sumber terbuka MIT.',
-          dl_rec: 'Direkomendasikan · Ponsel Modern',
+          dl_rec: 'Rilis Resmi · Android 8.0+',
           faq_title: 'Pertanyaan Teknis yang Sering Diajukan',
           faq_q1: 'Bagaimana suravidl menangani izin penyimpanan pada Android 10–15?',
           faq_a1: 'suravidl menggunakan API Scoped MediaStore Android dengan flag atomik IS_PENDING. Berkas ditulis ke ruang singgahan terisolasi saat muxing dan baru ditampilkan ke koleksi publik setelah verifikasi selesai.',
           faq_q2: 'Apakah suravidl melakukan encode ulang video atau audio secara bawaan?',
           faq_a2: 'Tidak. Secara bawaan, suravidl menjalankan pass-through (-c copy) melalui FFmpeg bawaan, menjaga 100% kualitas bitstream asli tanpa penurunan mutu.',
-          faq_q3: 'Arsitektur APK mana yang harus saya unduh untuk perangkat Android saya?',
-          faq_a3: 'Sebagian besar ponsel pintar sejak 2018 menggunakan ARM64-v8a. Perangkat 32-bit lama menggunakan armeabi-v7a, sedangkan Chromebook menggunakan x86_64. Jika ragu, pilih Universal APK.'
+          faq_q3: 'Arsitektur apa yang didukung suravidl di Android?',
+          faq_a3: 'suravidl secara resmi merilis build APK 64-bit ARM64-v8a yang dioptimalkan untuk perangkat Android 8.0+, menghadirkan akselerasi perangkat keras langsung untuk prosesor Snapdragon, Google Tensor, Dimensity, dan Exynos.'
         }
       };
 
