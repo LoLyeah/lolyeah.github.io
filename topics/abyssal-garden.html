@@ -60,10 +60,7 @@ body {
   font: 700 clamp(12px, .65vw + .8vh, 28px)/1.4 system-ui, -apple-system, sans-serif; color: #e8fbff;
   -webkit-user-select: none; user-select: none;
 }
-/* A phone held upright gets the whole page turned on its side, so the scene is always landscape */
-@media (orientation: portrait) and (pointer: coarse) {
-  body { width: 100dvh; height: 100dvw; transform-origin: 0 0; transform: rotate(90deg) translateY(-100%); }
-}
+/* Mobile orientation: natural portrait and landscape supported */
 
 /* The scene: blurred and dimmed behind the menu, comes into focus when you dive */
 canvas {
@@ -131,7 +128,35 @@ button:active, a:active { transform: translateY(.08em); filter: brightness(.92);
 #tourBtn.on { background: linear-gradient(#ffd97d, #f09819); color: #03222d; box-shadow: 0 0 1.2em #f0981999; }
 
 /* GitHub, Support & Compendium links */
-#f { position: absolute; left: 0; right: 0; bottom: 1em; display: flex; justify-content: center; gap: .9em; font-size: .72em; }
+#f {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .75em;
+  font-size: .72em;
+}
+@media (min-width: 641px) and (min-height: 641px) {
+  #f {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 1em;
+  }
+}
+@media (max-width: 640px), (max-height: 640px) {
+  #f {
+    position: relative;
+    width: 100%;
+    margin-top: .8em;
+    padding-bottom: 2em;
+    flex-wrap: wrap;
+  }
+  #f a {
+    min-height: 42px;
+    padding: .5em 1em;
+    font-size: .95em;
+  }
+}
 #f .btn-gh { background: #fff; color: #03222d; }
 #f .btn-kofi { background: #ff5e5b; color: #fff; }
 #f .btn-compendium { background: #0c3d52; color: #7ff3ff; box-shadow: inset 0 0 0 1.5px #7ff3ff66, 0 .25em .8em #0009; }
@@ -140,13 +165,21 @@ svg { width: 1.4em; height: 1.4em; fill: currentColor; }
 
 /* Compendium top navigation */
 .comp-nav-bar {
-  position: absolute; top: 1.2em; left: 1.2em; display: flex; align-items: center; gap: .65em; z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: min(34em, 94vw);
+  margin-bottom: .2em;
+  z-index: 10;
+  pointer-events: auto;
 }
 .comp-nav-pill {
   display: inline-flex; align-items: center; gap: .5em; padding: .45em .9em; border-radius: 2em;
   background: #031e29cc; color: #7ff3ff; box-shadow: inset 0 0 0 1.5px #7ff3ff66, 0 .25em .8em #0009;
   font-size: .76em; letter-spacing: .08em; text-transform: uppercase; font-weight: 800; text-decoration: none;
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: transform .12s, filter .12s, background .2s, color .2s;
+  min-height: 38px;
 }
 .comp-nav-pill:hover {
   background: #0a3d52; color: #b8f7ff; transform: translateY(-1px); filter: brightness(1.15);
@@ -159,10 +192,11 @@ svg { width: 1.4em; height: 1.4em; fill: currentColor; }
   background: #07273699; color: #9ff6ffb3; box-shadow: inset 0 0 0 1px #7ff3ff33;
   font-size: .72em; letter-spacing: .08em; text-transform: uppercase; font-weight: 700;
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  min-height: 38px;
 }
-@media (max-width: 640px) {
+@media (max-width: 480px) {
   .comp-badge { display: none; }
-  .comp-nav-bar { top: .8em; left: .8em; }
+  .comp-nav-bar { top: .8em; left: .8em; right: .8em; }
 }
 
 .comp-hud-btn {
@@ -267,6 +301,107 @@ input[type=range]::-webkit-slider-thumb {
   opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 10;
 }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Responsive mobile & small viewport layout guarantees */
+@media (max-width: 640px), (max-height: 640px) {
+  #m {
+    place-content: start center;
+    padding: max(4.2em, env(safe-area-inset-top, 4.2em)) 1em max(2.5em, env(safe-area-inset-bottom, 2.5em));
+    gap: 1em;
+  }
+  h1 {
+    font-size: clamp(1.8rem, 7.5vw, 2.8rem);
+    letter-spacing: .04em;
+    line-height: 1.1;
+  }
+  #sub {
+    font-size: clamp(0.62rem, 2.8vw, 0.74rem);
+    letter-spacing: .12em;
+    margin-top: -.35em;
+  }
+  #a {
+    width: 100%;
+    max-width: min(34em, 94vw);
+  }
+}
+
+@media (max-width: 520px) {
+  #act {
+    grid-template-columns: 1fr 1fr;
+    gap: .5em;
+  }
+  #d {
+    grid-column: 1 / -1;
+    padding: .85em .6em;
+    font-size: 1.15em;
+    min-height: 48px;
+  }
+  #tourBtn, #snapBtn {
+    padding: .7em .4em;
+    font-size: .82em;
+    min-height: 44px;
+  }
+  #q, #t {
+    flex-wrap: wrap;
+    gap: .35em;
+    padding: .5em .6em;
+  }
+  #q span, #t span {
+    flex: 1 0 100%;
+    text-align: left;
+    font-size: .8em;
+    margin-bottom: .15em;
+  }
+  #q button, #t button {
+    flex: 1 1 calc(25% - .35em);
+    min-height: 40px;
+    padding: .4em .2em;
+    font-size: .78em;
+  }
+  #vp {
+    grid-template-columns: repeat(3, 1fr);
+    gap: .35em;
+    padding: .4em;
+  }
+  #vp button {
+    min-height: 44px;
+    padding: .45em .2em;
+    font-size: .75em;
+  }
+}
+
+@media (max-width: 600px) {
+  #env {
+    grid-template-columns: 1fr;
+    gap: .65em;
+    padding: .75em 1em;
+  }
+  .sl {
+    grid-template-columns: 6.5em 1fr 2.8em;
+    min-height: 38px;
+  }
+  input[type=range] {
+    height: .55em;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    width: 1.4em;
+    height: 1.4em;
+  }
+  #hudBar {
+    gap: .3em;
+  }
+  .ibtn {
+    padding: .4em .55em;
+    font-size: .85em;
+    min-height: 38px;
+  }
+  #diveHud {
+    font-size: .66em;
+    padding: .35em .75em;
+    gap: .55em;
+    max-width: 92vw;
+  }
+}
 </style>
 </head>
 <body class="l">
@@ -2625,7 +2760,7 @@ const touch = (e) => {
   let f = null, first = false; for (let i = 0; i < tN; i++) if (e.touches[i].identifier === tId) f = e.touches[i];
   if (!f) { tId = -1; if (tN) { f = e.touches[0]; tId = f.identifier; first = true; } }
   if (f) {
-    const x = rot.matches ? f.clientY : f.clientX, y = rot.matches ? -f.clientX : f.clientY, s = 1100 / min(innerWidth, innerHeight);
+    const x = f.clientX, y = f.clientY, s = 1100 / min(innerWidth, innerHeight);
     if (first) { tx0 = x; ty0 = y; } else { mdx += (x - tx) * s; mdy += (y - ty) * s; }
     tx = x; ty = y;
   }
@@ -2642,7 +2777,6 @@ const ui = (m) => {
 };
 const go = () => {
   sound(); ui(false); bDive.textContent = 'Resume';
-  if (mob) document.documentElement.requestFullscreen?.()?.then(() => screen.orientation.lock('landscape')).catch(() => 0);
   if (!mob) capture();
 };
 bDive.onclick = go;
